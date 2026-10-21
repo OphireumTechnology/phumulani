@@ -1,0 +1,6 @@
+{
+  "name": "Phumulani AI Community Platform",
+  "description": "Comprehensive digital platform for Phumulani empowering immigrant and refugee survivors through community programs, volunteer recruitment, ethical donor management, governance, and human-in-the-loop AI workforce orchestration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

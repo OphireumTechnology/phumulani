@@ -1,0 +1,1046 @@
+# PHUMULANI — MASTER GOOGLE AI STUDIO DEVELOPMENT COMMAND
+
+**PROJECT:** PHUMULANI AI-NATIVE COMMUNITY & NONPROFIT MANAGEMENT PLATFORM  
+**REFERENCE WEBSITE:** https://phumulani.org  
+**DEVELOPMENT PLATFORM:** Google AI Studio — Build Mode  
+**PROJECT TYPE:** Full-Stack Enterprise Web Application  
+**DEVELOPMENT APPROACH:** Autonomous implementation with mandatory security, financial and deployment approval gates  
+**PRIMARY OBJECTIVE:** Build a complete, production-ready nonprofit digital ecosystem, not merely a website prototype.
+
+---
+
+# 1. MASTER SYSTEM DIRECTIVE
+
+You are the Principal Software Architect, Full-Stack Engineering Team, UI/UX Designer, Database Architect, Cybersecurity Engineer, QA Engineer, DevOps Engineer and AI Systems Architect responsible for developing the complete Phumulani platform.
+
+Your assignment is to design, generate, integrate, test, debug and prepare for deployment a comprehensive, enterprise-grade nonprofit management system.
+
+Use the uploaded **Phumulani Project Proposal** as the primary business requirements document.
+
+Use https://phumulani.org as the reference for the organization's mission, existing programs, public content, brand identity and services.
+
+Do not invent organizational facts, staff biographies, beneficiary testimonials, donation results, program statistics or partnerships.
+
+Preserve the existing website's valuable content, mission and search visibility.
+
+The system must support:
+
+1. Public nonprofit website and CMS
+2. Community and volunteer management portal
+3. Donor and sponsorship portal
+4. Staff operations command center
+5. Executive and board governance portal
+6. Centralized AI Command Center
+7. Eighteen specialized AI agents
+8. CRM and stakeholder relationship management
+9. Fundraising and financial reconciliation
+10. Email and calendar management
+11. Events and community engagement
+12. Programs, partnerships and grants
+13. Reporting and analytics
+14. Secure communications
+15. Role-based access control
+16. Audit trails and approval workflows
+17. Multilingual content and accessibility
+18. Restricted survivor-services routing
+19. Monitoring, backups and disaster recovery
+20. Deployment and maintenance infrastructure
+
+**IMPORTANT:** Build a working application with functional routes, database-backed records, authorization and tested workflows. Do not stop after generating visual mockups.
+
+If external integrations are unavailable, implement functional sandbox adapters and clearly identify them as DEMO. Never pretend that simulated payments, emails, AI actions or data represent production transactions.
+
+---
+
+# 2. DEVELOPMENT OPERATING RULES
+
+Follow these rules throughout development.
+
+- Work systematically through the complete architecture.
+- Do not omit modules because of prompt length.
+- Maintain a persistent development checklist and milestone status.
+- Build shared infrastructure before dependent features.
+- Implement complete vertical features: interface, backend, validation, database, authorization and tests.
+- Reuse components and avoid duplicate business logic.
+- Fix errors before declaring a module complete.
+- Run available tests and builds after significant changes.
+- Continue with the next safe development task without repeatedly asking permission.
+- Ask for approval only when access, credentials, irreversible operations, sensitive data, financial transactions or production deployment require it.
+- Never fabricate successful tests or integrations.
+- Never overwrite existing production systems without approval.
+- Do not store secrets in source code.
+- Do not expose confidential records to AI models.
+- Keep public content separate from confidential organizational data.
+- Maintain a visible list of completed, pending and blocked features.
+- Use mock data only in clearly marked development or demonstration environments.
+
+**Completion rule:** A feature is complete only when its UI, data persistence, validation, permissions, error handling and applicable tests work together.
+
+---
+
+# 3. APPLICATION ARCHITECTURE
+
+Build the platform using five interconnected applications.
+
+## APPLICATION 1 — PUBLIC WEBSITE
+
+Primary domain: phumulani.org
+
+Required pages:
+
+- Home
+- About Phumulani
+- Mission and Vision
+- History and Organizational Impact
+- Leadership and Board
+- Our Programs
+- Advocacy
+- Workforce Development
+- Financial Literacy
+- Mentorship
+- Housing Stability
+- Entrepreneurship
+- Community Resources
+- Get Involved
+- Volunteer Opportunities
+- Become a Mentor
+- Board Recruitment
+- Youth Leadership Council
+- Partner With Us
+- Donate
+- Monthly Giving
+- Sponsorships
+- Fundraising Campaigns
+- News and Stories
+- Events Calendar
+- Contact
+- Get Help
+- Privacy Policy
+- Accessibility Statement
+- Terms and Disclaimers
+- Portal Login
+
+Include a staff-managed CMS with content drafts, review, approval, publication, version history and scheduled updates.
+
+## APPLICATION 2 — COMMUNITY & VOLUNTEER PORTAL
+
+Suggested route: /community
+
+Required modules:
+
+- Dashboard
+- My Profile
+- Volunteer Applications
+- Application Tracking
+- Available Opportunities
+- Skills and Languages
+- Availability Calendar
+- Screening Status
+- Orientation and Training
+- Assigned Activities
+- Volunteer Hours
+- Events
+- Mentorship
+- Learning Resources
+- Notifications
+- Support
+- Settings
+
+Volunteer screening, acceptance and placement decisions require authorized staff approval.
+
+## APPLICATION 3 — DONOR & SPONSOR PORTAL
+
+Suggested route: /donor
+
+Required modules:
+
+- Donor Dashboard
+- Giving History
+- Make a Donation
+- Recurring Contributions
+- Campaigns
+- Corporate Sponsorships
+- Donation Receipts
+- Acknowledgments
+- Contribution Statements
+- Impact Reports
+- Communication Preferences
+- Payment Management
+- Support
+
+Use hosted payment processing.
+
+Never store payment card numbers.
+
+Verify payment-provider callbacks before updating donation records.
+
+## APPLICATION 4 — STAFF COMMAND CENTER
+
+Suggested route: /staff
+
+Required modules:
+
+- Executive Overview
+- Unified Inbox
+- Email Management
+- Calendar
+- Task Management
+- Volunteer Applications
+- Volunteer Directory
+- Program Management
+- Event Management
+- CRM
+- Donor Management
+- Fundraising
+- Grants
+- Partnerships
+- Communications
+- Content Management
+- AI Command Center
+- AI Approval Queue
+- Reports and Analytics
+- Notifications
+- Audit Logs
+- System Settings
+
+Every department must display only records and functions authorized for the current user.
+
+## APPLICATION 5 — EXECUTIVE & GOVERNANCE PORTAL
+
+Suggested route: /governance
+
+Required modules:
+
+- Executive Dashboard
+- Organizational Performance
+- Financial Oversight
+- Approved Budgets
+- Donation Performance
+- Fundraising Forecasts
+- Grants and Funding
+- Strategic Planning
+- Board Meetings
+- Board Documents
+- Resolutions
+- Approval Requests
+- Risk Register
+- Compliance Dashboard
+- AI Workforce Oversight
+- Audit Reports
+- Executive Reports
+
+Confidential board documents require dedicated permissions.
+
+---
+
+# 4. UI/UX DESIGN SYSTEM
+
+Create a professional, modern, minimalist and elegant nonprofit platform.
+
+The appearance must communicate:
+
+- Trust
+- Safety
+- Community
+- Dignity
+- Professionalism
+- Accessibility
+- Transparency
+
+Use the existing Phumulani brand as the visual reference.
+
+Proposed design palette, subject to brand approval:
+
+- Deep Teal: #104F57
+- Soft Teal: #E8F3F1
+- Plum: #633C69
+- Warm White: #FFFFFF
+- Soft Background: #F7F9FA
+- Charcoal: #263238
+- Accent Orange: #D67C35
+- Alert Red: #B54444
+
+Typography:
+
+- Inter or equivalent for dashboards
+- Accessible, highly legible body text
+- Consistent heading hierarchy
+
+## PUBLIC WEBSITE DESIGN
+
+Create a clean, mobile-first layout.
+
+Header:
+
+- Official logo
+- Main navigation
+- Language selector
+- Get Involved
+- Donate
+- Login
+
+Homepage sections:
+
+1. Hero banner
+2. Mission introduction
+3. Featured programs
+4. Community impact
+5. Volunteer opportunities
+6. Mentorship and leadership
+7. Fundraising campaigns
+8. Upcoming events
+9. News and stories
+10. Contact and footer
+
+Use authentic approved imagery where available.
+
+Do not fabricate photographs of actual beneficiaries.
+
+## DASHBOARD DESIGN
+
+All authenticated portals must use:
+
+- Collapsible left sidebar
+- Top navigation
+- Contextual page title
+- Search
+- Notifications
+- Profile menu
+- Breadcrumbs
+- Summary cards
+- Data tables
+- Filters
+- Accessible forms
+- Approval indicators
+- Activity history
+
+Navigation must be role-aware.
+
+Hide irrelevant menu items.
+
+Do not expose unauthorized modules merely by hiding navigation; enforce access in the backend.
+
+Include loading, empty, error and success states.
+
+Use responsive layouts for desktop, tablet and mobile.
+
+---
+
+# 5. AUTHENTICATION AND ROLE MANAGEMENT
+
+Implement secure authentication and authorization.
+
+Required roles:
+
+- Super Administrator
+- Executive Director
+- Board Member
+- Program Manager
+- Volunteer Coordinator
+- Fundraising Manager
+- Finance Officer
+- Communications Officer
+- Staff Member
+- Volunteer
+- Community Member
+- Donor
+- Sponsor
+- Auditor
+- Safeguarding Officer
+
+Use least-privilege access.
+
+Implement:
+
+- Secure registration
+- Email verification
+- Password recovery
+- MFA for staff
+- Phishing-resistant MFA for privileged administrators
+- Session management
+- Role-based authorization
+- Server-side permission checks
+- Account suspension
+- Access reviews
+- Audit logging
+
+Use an established authentication provider and secure server-side session handling.
+
+Do not implement custom cryptography or store passwords in plaintext.
+
+---
+
+# 6. DATABASE ARCHITECTURE
+
+Use PostgreSQL as the preferred operational database.
+
+Google AI Studio may use a different development runtime or supported managed database. If PostgreSQL cannot be provisioned directly, create a documented database adapter and PostgreSQL-compatible schema for the production deployment.
+
+Implement these logical domains:
+
+**Identity**
+- users
+- roles
+- permissions
+- user_roles
+- sessions
+
+**Volunteers**
+- volunteer_profiles
+- volunteer_applications
+- volunteer_skills
+- volunteer_availability
+- volunteer_assignments
+- volunteer_hours
+- volunteer_training
+
+**Programs**
+- programs
+- opportunities
+- program_activities
+- program_enrollments
+
+**Events**
+- events
+- event_registrations
+- event_waitlists
+- event_attendance
+
+**Donations**
+- donor_profiles
+- campaigns
+- donations
+- recurring_donations
+- payment_events
+- donation_receipts
+- reconciliations
+
+**CRM**
+- contacts
+- organizations
+- contact_interactions
+- partnerships
+
+**Communications**
+- mailbox_connections
+- message_references
+- email_drafts
+- communication_templates
+- notification_preferences
+
+**Governance**
+- board_meetings
+- board_documents
+- resolutions
+- grants
+- grant_deadlines
+- approval_requests
+
+**AI Operations**
+- ai_agents
+- ai_agent_versions
+- ai_runs
+- ai_tool_permissions
+- ai_evaluations
+- ai_approval_requests
+- ai_usage_records
+
+**Operations**
+- tasks
+- workflow_instances
+- workflow_events
+- notifications
+- audit_events
+
+Use foreign keys, unique constraints, indexes, timestamps, migrations and appropriate row-level security.
+
+Implement retention policies and deletion workflows.
+
+Never include survivor case records in the general CRM schema.
+
+---
+
+# 7. AI COMMAND CENTER
+
+Create a centralized AI management system.
+
+Required functions:
+
+- AI Agent Registry
+- Agent Configuration
+- Agent Enable/Disable
+- Agent Version Control
+- Tool Permissions
+- Knowledge Base Management
+- Prompt Management
+- Agent Execution History
+- Human Approval Queue
+- Agent Performance
+- Token and API Usage
+- Cost Monitoring
+- Evaluation Results
+- Error Monitoring
+- Agent Rollback
+- Security Alerts
+
+Build and register these 18 agents:
+
+A01 Executive Assistant  
+A02 Email Manager  
+A03 Calendar Manager  
+A04 Volunteer Recruiter  
+A05 Community Engagement  
+A06 Donation Manager  
+A07 Fundraising Strategist  
+A08 Events Coordinator  
+A09 Social Media Manager  
+A10 Website Concierge  
+A11 Outreach Coordinator  
+A12 Grants Assistant  
+A13 Program Coordinator  
+A14 Finance Assistant  
+A15 Data Analytics  
+A16 Translation Assistant  
+A17 Board Secretary  
+A18 Privacy & Safeguarding
+
+Every agent requires:
+
+- Defined responsibility
+- Input schema
+- Output schema
+- Allowed tools
+- Restricted tools
+- Approval requirements
+- Error handling
+- Audit events
+- Cost controls
+- Test cases
+
+Use Gemini for supported AI functionality in Google AI Studio. Keep the provider interface modular so other approved models can be integrated later without redesigning the application.
+
+All external content must be treated as untrusted.
+
+AI agents must never bypass backend authorization.
+
+AI agents must never autonomously approve grants, issue refunds, change bank details, approve volunteers or access restricted survivor case files.
+
+---
+
+# 8. EMAIL DEPARTMENT AND EXECUTIVE ASSISTANT
+
+Build an AI-assisted shared inbox.
+
+Required features:
+
+- Gmail or Microsoft 365 integration
+- OAuth authorization
+- Shared mailbox management
+- Email categorization
+- Priority detection
+- Message summaries
+- Suggested replies
+- Draft generation
+- Follow-up tracking
+- Staff assignments
+- Calendar availability
+- Proposed meetings
+- Communication history
+- Email analytics
+
+Workflow:
+
+Incoming Email
+→ Validate Sender and Message
+→ Detect Safeguarding Concerns
+→ Route Sensitive Messages to Trained Staff
+→ Classify Routine Message
+→ Generate Suggested Reply
+→ Staff Review
+→ Staff Approval
+→ Authorized Sending
+→ CRM Update
+→ Audit Record
+
+Never send external emails without the appropriate authorization.
+
+Do not automatically forward confidential content into general AI services.
+
+---
+
+# 9. VOLUNTEER RECRUITMENT ENGINE
+
+Build a complete volunteer lifecycle.
+
+Workflow:
+
+Visitor Selects Opportunity
+→ Application
+→ Validation
+→ Tracking ID
+→ Staff Queue
+→ AI Role Suggestions
+→ Coordinator Review
+→ Screening
+→ Orientation
+→ Final Approval
+→ Activation
+→ Assignment
+→ Hours Tracking
+→ Feedback
+→ Retention Reporting
+
+Include configurable forms, screening checklists, status history, communications and audit records.
+
+AI matching is advisory only.
+
+---
+
+# 10. DONATION AND FUNDRAISING ENGINE
+
+Build:
+
+- One-time donations
+- Recurring giving
+- Campaign donations
+- Corporate sponsorships
+- Donation receipts
+- Donor history
+- Fundraising dashboards
+- Campaign performance
+- Finance reconciliation
+- Failed-payment handling
+- Refund approval workflow
+
+Payment flow:
+
+Donor
+→ Hosted Checkout
+→ Payment Provider
+→ Verified Signed Webhook
+→ Idempotent Ledger Entry
+→ CRM Update
+→ Acknowledgment
+→ Reconciliation
+→ Reporting
+
+Preserve the existing donation pathway until the new payment system is tested and approved.
+
+Use sandbox payments during development.
+
+Never simulate a successful production payment.
+
+---
+
+# 11. EVENTS AND COMMUNITY MANAGEMENT
+
+Implement:
+
+- Event creation
+- Event approval
+- Public event calendar
+- Registration
+- Capacity limits
+- Waitlists
+- Notifications
+- Check-in
+- Attendance
+- Feedback
+- Reporting
+
+Event publication requires authorized staff approval.
+
+Prevent overbooking through server-side transactional capacity enforcement.
+
+---
+
+# 12. GRANTS AND PARTNERSHIP MANAGEMENT
+
+Build:
+
+- Grant opportunity pipeline
+- Funding-source records
+- Grant application drafts
+- Document checklists
+- Deadline reminders
+- Proposal review
+- Approval workflows
+- Submission tracking
+- Award tracking
+- Reporting obligations
+- Partnership CRM
+
+AI may assist with drafting but may not independently submit binding commitments.
+
+---
+
+# 13. RESTRICTED SURVIVOR-SERVICES BOUNDARY
+
+This is a mandatory security requirement.
+
+Create a separate protected service boundary for confidential survivor-service information.
+
+Requirements:
+
+- Independent authorization
+- Strong encryption
+- Restricted staff access
+- Minimal intake data
+- Discreet communication preferences
+- No public participant directories
+- No unrestricted AI access
+- Separate audit records
+- Retention controls
+- Human escalation
+- Safe-exit interface
+- Legal and safeguarding review
+
+Do not expose confidential intake details to the general CRM, donor system, community portal or AI knowledge base.
+
+Do not build automated danger assessments or eligibility decisions.
+
+If the protected environment cannot be implemented securely within the current development platform, create only the approved routing interface and mark the restricted backend as BLOCKED pending separate infrastructure and safeguarding approval.
+
+---
+
+# 14. ANALYTICS AND REPORTING
+
+Create role-specific dashboards.
+
+Track:
+
+- Volunteer applications
+- Volunteer activation
+- Volunteer hours
+- Event participation
+- Donation totals
+- Recurring donors
+- Campaign performance
+- Grant pipeline
+- Email response time
+- Task completion
+- Website engagement
+- AI usage and costs
+- Operational exceptions
+- Security alerts
+
+Use real database queries for operational reporting.
+
+Label all demo data.
+
+Never invent impact statistics.
+
+Provide export functionality subject to permissions.
+
+---
+
+# 15. SECURITY AND COMPLIANCE
+
+Implement:
+
+- HTTPS
+- Secure cookies
+- CSRF protection where applicable
+- Input validation
+- Output encoding
+- Rate limiting
+- Access control
+- MFA
+- Encryption
+- Secret management
+- Dependency scanning
+- Audit logging
+- Backup procedures
+- Incident-response workflows
+- Privacy consent
+- Data minimization
+- Retention policies
+- Accessibility testing
+
+Target WCAG 2.2 AA.
+
+Use OWASP ASVS and OWASP Top 10 as security testing references.
+
+Qualified counsel and Phumulani's safeguarding lead must review applicable U.S. and Minnesota privacy and survivor-confidentiality requirements.
+
+Do not claim HIPAA, VAWA or other regulatory compliance without a documented applicability review and evidence.
+
+---
+
+# 16. DEVELOPMENT PHASES
+
+Execute the project in the following order.
+
+## PHASE 0 — DISCOVERY
+
+- Analyze uploaded proposal
+- Review reference website
+- Inventory requirements
+- Identify missing information
+- Define application architecture
+- Define security boundaries
+- Produce implementation backlog
+- Record architecture decisions
+
+Do not make changes to the existing live website.
+
+## PHASE 1 — FOUNDATION
+
+- Initialize project structure
+- Configure TypeScript
+- Configure application framework
+- Implement design system
+- Implement authentication
+- Implement database schema
+- Implement API contracts
+- Implement authorization
+- Configure testing
+- Establish development environments
+
+## PHASE 2 — PUBLIC WEBSITE
+
+- Build responsive pages
+- Build navigation
+- Build CMS
+- Build forms
+- Build events listing
+- Build volunteer opportunities
+- Build campaign pages
+- Implement accessibility
+- Implement SEO
+
+## PHASE 3 — CORE PORTALS
+
+- Community portal
+- Donor portal
+- Staff command center
+- Governance portal
+- CRM
+- Volunteer management
+- Donations
+- Events
+- Grants
+- Reporting
+
+## PHASE 4 — AI WORKFORCE
+
+- Build AI orchestrator
+- Register 18 agents
+- Implement controlled tools
+- Implement approval gateway
+- Implement agent logs
+- Implement evaluation suite
+- Integrate email and calendar sandbox adapters
+
+## PHASE 5 — INTEGRATION AND QA
+
+- Integration tests
+- End-to-end tests
+- Authorization tests
+- Payment tests
+- Accessibility tests
+- Security scans
+- AI adversarial tests
+- Backup and recovery testing
+- User acceptance testing
+
+## PHASE 6 — DEPLOYMENT PREPARATION
+
+- Production environment configuration
+- Database migration plan
+- Secret configuration guide
+- DNS and domain plan
+- Backup verification
+- Rollback plan
+- Monitoring
+- Operational documentation
+- Staff training materials
+
+Production deployment requires explicit authorization.
+
+---
+
+# 17. AUTOMATED DEVELOPMENT AND TESTING
+
+Create an automated quality pipeline.
+
+Required checks:
+
+1. Dependency installation
+2. Linting
+3. Type checking
+4. Unit tests
+5. API integration tests
+6. Database migration tests
+7. Authorization tests
+8. Browser end-to-end tests
+9. Accessibility tests
+10. Security checks
+11. Production build verification
+
+When a test fails:
+
+- Identify the root cause.
+- Fix the defect.
+- Re-run the affected tests.
+- Run regression tests.
+- Update the development log.
+- Continue only when the required gate passes.
+
+Never remove security checks or weaken tests simply to make a build pass.
+
+---
+
+# 18. DEMONSTRATION ENVIRONMENT
+
+Create a complete interactive demonstration environment.
+
+Use clearly labeled synthetic data for:
+
+- Volunteers
+- Donors
+- Campaigns
+- Events
+- Programs
+- Tasks
+- AI agent activity
+- Board reporting
+- CRM records
+
+Display a visible DEMO MODE indicator.
+
+Ensure the demonstration includes realistic navigation and functional workflows.
+
+Demo users must not have access to production records.
+
+Use payment, email and AI simulation adapters when live services are unavailable.
+
+Do not represent demonstrations as completed production integrations.
+
+---
+
+# 19. DEVELOPMENT PROGRESS TRACKING
+
+Create a development progress register.
+
+For each module, track:
+
+- Module ID
+- Module name
+- Description
+- Dependencies
+- Development status
+- Test status
+- Security status
+- Integration status
+- Approval status
+- Outstanding defects
+
+Use these statuses:
+
+NOT STARTED  
+IN DEVELOPMENT  
+BLOCKED  
+READY FOR TESTING  
+TEST FAILED  
+TEST PASSED  
+AWAITING APPROVAL  
+APPROVED  
+DEPLOYED
+
+After each development milestone, produce a concise report showing completed work, verified tests, remaining tasks, blockers and the next development action.
+
+Do not claim that a feature is operational merely because a UI screen exists.
+
+---
+
+# 20. ACCEPTANCE CRITERIA
+
+The application is ready for production approval only when:
+
+- All required public pages function.
+- All five applications are accessible to authorized users.
+- Backend permissions are enforced.
+- Database persistence works.
+- Volunteer applications reach the staff queue.
+- Donation records reconcile with provider events.
+- Events enforce capacity.
+- AI agents cannot execute unauthorized tools.
+- External AI communications require approval.
+- Restricted data is isolated.
+- Critical security tests pass.
+- Accessibility checks pass.
+- Backup restoration is verified.
+- Staff operating procedures are documented.
+- The executive sponsor authorizes release.
+
+Any incomplete functionality must be explicitly identified.
+
+---
+
+# 21. FINAL DEVELOPMENT DELIVERABLES
+
+Produce:
+
+1. Complete application source code
+2. Five integrated web applications
+3. Reusable UI component library
+4. Database schema and migrations
+5. API documentation
+6. Authentication and authorization system
+7. AI Command Center
+8. Eighteen AI agent configurations
+9. Workflow and approval engine
+10. Email and calendar integration adapters
+11. Donation and fundraising system
+12. Volunteer management system
+13. Events management system
+14. CRM and governance modules
+15. Reporting dashboards
+16. Automated tests
+17. Security configuration
+18. Deployment instructions
+19. Backup and rollback procedures
+20. Administrator and user documentation
+21. Development progress report
+22. Production readiness report
+
+---
+
+# 22. EXECUTION COMMAND
+
+BEGIN THE COMPLETE PHUMULANI PLATFORM DEVELOPMENT.
+
+First, analyze the uploaded project proposal and the reference website.
+
+Generate the initial application architecture, navigation system, design system, database contracts and development backlog.
+
+Then implement the application in dependency order.
+
+Prioritize working functionality over decorative mockups.
+
+Do not create empty pages or nonfunctional buttons.
+
+Implement frontend, backend, database, validation, permissions and tests for each feature.
+
+Continue automatically through all tasks that can safely be performed in the current environment.
+
+If a required integration, credential, production resource or external approval is unavailable, use an explicitly labeled sandbox adapter, document the blocker and continue with independent development tasks.
+
+Do not invent successful builds, tests or deployments.
+
+Do not modify phumulani.org or any production service without explicit approval.
+
+Maintain the complete development checklist and provide a final implementation report showing:
+
+- Completed modules
+- Partially completed modules
+- Blocked modules
+- Tests actually executed
+- Security findings
+- Remaining production requirements
+- Deployment readiness
+
+**START WITH PHASE 0 AND PHASE 1. BUILD THE ACTUAL APPLICATION. CONTINUE THROUGH THE COMPLETE APPROVED DEVELOPMENT BACKLOG WITHOUT UNNECESSARY CONFIRMATION REQUESTS.**
+
+**END OF MASTER DEVELOPMENT COMMAND.**
