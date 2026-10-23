@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="ayGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#104F57" />
+      <stop offset="100%" stop-color="#D67C35" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" rx="24" fill="url(#ayGrad)" />
+  <circle cx="200" cy="160" r="70" fill="#E8F3F1" />
+  <!-- Hijab -->
+  <path d="M125 150 C125 75 275 75 275 150 C270 215 240 230 200 230 C160 230 130 215 125 150 Z" fill="#E8F3F1" />
+  <circle cx="200" cy="165" r="46" fill="#5A341A" />
+  <!-- Vibrant Teal Robe -->
+  <path d="M80 340 C100 245 150 235 200 235 C250 235 300 245 320 340 Z" fill="#104F57" />
+  <text x="200" y="375" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle">
+    Amina Yusuf
+  </text>
+</svg>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="erGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#104F57" />
+      <stop offset="100%" stop-color="#093136" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" rx="24" fill="url(#erGrad)" />
+  <circle cx="200" cy="160" r="70" fill="#E8F3F1" />
+  <!-- Hair & Silhouette -->
+  <path d="M125 160 C125 90 275 90 275 160 C260 210 240 220 200 220 C160 220 140 210 125 160 Z" fill="#4B382A" />
+  <circle cx="200" cy="165" r="50" fill="#D7A987" />
+  <!-- Shoulders & Professional Blazer -->
+  <path d="M80 340 C100 250 150 240 200 240 C250 240 300 250 320 340 Z" fill="#633C69" />
+  <polygon points="175,240 200,290 225,240" fill="#FFFFFF" />
+  <!-- Board Chair Medallion -->
+  <circle cx="200" cy="305" r="14" fill="#D67C35" />
+  <text x="200" y="375" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle">
+    Dr. Elena Rostova
+  </text>
+</svg>

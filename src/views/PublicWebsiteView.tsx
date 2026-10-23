@@ -33,16 +33,20 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 
+import { FounderSection } from '../components/FounderSection';
+
 interface PublicWebsiteViewProps {
   currentUser: User;
   onViewChange: (view: string) => void;
   onOpenReceipt: (donation: any) => void;
+  onOpenMediaRegistry?: () => void;
 }
 
 export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
   currentUser,
   onViewChange,
   onOpenReceipt,
+  onOpenMediaRegistry,
 }) => {
   const state = db.getState();
   const programs = state.programs;
@@ -150,7 +154,10 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       const res = db.registerForEvent(selectedEvent.id, rsvpName, rsvpEmail, rsvpPhone);
       setRsvpFeedback(res);
     } catch (err: any) {
-      alert(err.message);
+      setRsvpFeedback({
+        status: 'waitlist',
+        message: err.message || 'Capacity limit reached. Please join the waitlist or contact community support.',
+      });
     }
   };
 
@@ -225,45 +232,70 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               </div>
             </div>
 
-            {/* RIGHT COLUMN: Community Visual Card (~42%) */}
+            {/* RIGHT COLUMN: Authentic Community & Founder Visual Card (~42%) */}
             <div className="lg:col-span-5">
-              <div className="bg-white rounded-2xl border border-teal-200/90 p-6 sm:p-7 shadow-lg space-y-5 relative overflow-hidden">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-[#104F57] text-white flex items-center justify-center font-serif text-xl font-bold">
-                      CD
-                    </div>
-                    <div>
-                      <div className="font-serif font-bold text-sm text-slate-900">Comfort Dondo</div>
-                      <div className="text-[11px] text-[#104F57] font-semibold">Founder &amp; Executive Director</div>
-                    </div>
-                  </div>
-                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                    Minnesota 501(c)(3)
-                  </span>
-                </div>
-
-                <p className="text-xs text-slate-600 leading-relaxed italic">
-                  "Healing is finding the community, protection, and economic independence to stand tall again. At Phumulani, every survivor is met with trauma-informed care and unwavering sisterhood."
-                </p>
-
-                <div className="grid grid-cols-2 gap-3 pt-1 text-xs">
-                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <div className="font-serif text-lg font-bold text-[#104F57]">1,450+</div>
-                    <div className="text-[11px] text-slate-500 mt-0.5">Survivors &amp; Families</div>
-                  </div>
-                  <div className="bg-slate-50 p-3 rounded-xl border border-slate-200">
-                    <div className="font-serif text-lg font-bold text-[#633C69]">$480k+</div>
-                    <div className="text-[11px] text-slate-500 mt-0.5">Relief &amp; Housing Aid</div>
+              <div className="bg-white rounded-2xl border border-teal-200/90 shadow-xl overflow-hidden relative space-y-4">
+                {/* Community Gathering Hero Image */}
+                <div className="relative aspect-[16/10] bg-slate-100 overflow-hidden border-b border-teal-100">
+                  <img
+                    src="/media/homepage/community-hero-healing.svg"
+                    alt="Authentic community sisterhood gathering at Phumulani Community Center"
+                    className="w-full h-full object-cover"
+                    loading="eager"
+                  />
+                  <div className="absolute bottom-2.5 left-2.5 bg-slate-900/80 backdrop-blur-xs text-white px-3 py-1 rounded-full text-[10px] font-bold border border-white/20 flex items-center gap-1.5">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span>Culturally Grounded Sanctuary</span>
                   </div>
                 </div>
 
-                <div className="p-3 bg-teal-50/70 border border-teal-200 rounded-xl flex items-center justify-between text-xs">
-                  <div className="flex items-center gap-2">
-                    <ShieldCheck className="w-4 h-4 text-[#104F57]" />
-                    <span className="font-semibold text-teal-950">Strict Survivor Confidentiality</span>
+                <div className="p-5 sm:p-6 space-y-4 pt-1">
+                  {/* Founder Identification */}
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src="/media/founder/comfort-dondo-official-portrait.svg"
+                        alt="Comfort Dondo, Founder of Phumulani"
+                        className="w-12 h-12 rounded-xl object-cover border-2 border-[#104F57] shadow-sm shrink-0"
+                      />
+                      <div>
+                        <div className="font-serif font-bold text-base text-slate-900">Comfort Dondo</div>
+                        <div className="text-[11px] text-[#104F57] font-semibold">Founder &amp; Executive Director</div>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => {
+                        document.getElementById('founder-section')?.scrollIntoView({ behavior: 'smooth' });
+                      }}
+                      className="text-xs font-bold text-[#633C69] hover:underline flex items-center gap-0.5 cursor-pointer"
+                    >
+                      <span>Story &amp; Video</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
                   </div>
-                  <span className="text-[10px] text-teal-700 font-mono">Isolated Boundary</span>
+
+                  <p className="text-xs text-slate-600 leading-relaxed italic">
+                    "Healing is finding the community, protection, and economic independence to stand tall again. At Phumulani, every survivor is met with trauma-informed care and unwavering sisterhood."
+                  </p>
+
+                  <div className="grid grid-cols-2 gap-3 text-xs">
+                    <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                      <div className="font-serif text-lg font-bold text-[#104F57]">1,450+</div>
+                      <div className="text-[10px] text-slate-500">Survivors &amp; Families</div>
+                    </div>
+                    <div className="bg-slate-50 p-2.5 rounded-xl border border-slate-200">
+                      <div className="font-serif text-lg font-bold text-[#633C69]">$480k+</div>
+                      <div className="text-[10px] text-slate-500">Emergency Housing Aid</div>
+                    </div>
+                  </div>
+
+                  <div className="p-2.5 bg-teal-50/70 border border-teal-200 rounded-xl flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-2">
+                      <ShieldCheck className="w-4 h-4 text-[#104F57]" />
+                      <span className="font-semibold text-teal-950 text-[11px]">Strict Survivor Confidentiality</span>
+                    </div>
+                    <span className="text-[9px] text-teal-700 font-mono font-bold">VAWA &amp; Safe Harbor</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -295,6 +327,9 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         </div>
       </section>
 
+      {/* 2.5 FOUNDER LEGACY, ORIGINAL VIDEOS & PUBLICATIONS */}
+      <FounderSection />
+
       {/* 3. SIX CORE PROGRAMS */}
       <section id="programs-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="space-y-4 text-center max-w-2xl mx-auto mb-10">
@@ -308,57 +343,82 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {programs.map((prog) => (
-            <div
-              key={prog.id}
-              className="bg-white rounded-xl border border-slate-200 p-6 flex flex-col justify-between hover:border-teal-400 hover:shadow-md transition-all group"
-            >
-              <div className="space-y-4">
-                <div className="w-10 h-10 rounded-lg bg-[#E8F3F1] text-[#104F57] flex items-center justify-center font-bold">
-                  {prog.slug === 'advocacy' && <Shield className="w-5 h-5" />}
-                  {prog.slug === 'workforce' && <Briefcase className="w-5 h-5" />}
-                  {prog.slug === 'financial_literacy' && <DollarSign className="w-5 h-5" />}
-                  {prog.slug === 'mentorship' && <Users className="w-5 h-5" />}
-                  {prog.slug === 'housing' && <Home className="w-5 h-5" />}
-                  {prog.slug === 'entrepreneurship' && <Sparkles className="w-5 h-5" />}
+          {programs.map((prog) => {
+            const programIllustrations: Record<string, string> = {
+              advocacy: '/media/programs/legal-protection-advocacy.svg',
+              workforce: '/media/programs/workforce-resume-coaching.svg',
+              financial_literacy: '/media/programs/entrepreneurship-lab.svg',
+              mentorship: '/media/programs/youth-mentorship.svg',
+              housing: '/media/programs/healing-homes-housing.svg',
+              entrepreneurship: '/media/programs/entrepreneurship-lab.svg',
+            };
+            const imageSrc = programIllustrations[prog.slug] || '/media/programs/tea-healing-circles.svg';
+
+            return (
+              <div
+                key={prog.id}
+                className="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:border-teal-400 hover:shadow-lg transition-all group"
+              >
+                {/* Authentic Program Artwork */}
+                <div className="aspect-[4/3] w-full bg-slate-100 overflow-hidden border-b border-slate-100">
+                  <img
+                    src={imageSrc}
+                    alt={prog.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
                 </div>
 
-                <div>
-                  <h3 className="font-serif text-lg font-bold text-slate-900 group-hover:text-[#104F57] transition-colors">
-                    {prog.name}
-                  </h3>
-                  <p className="text-xs text-slate-600 mt-2 leading-relaxed">
-                    {prog.description}
-                  </p>
-                </div>
+                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-2 text-[#104F57] text-xs font-bold uppercase tracking-wider">
+                      {prog.slug === 'advocacy' && <Shield className="w-4 h-4 text-[#104F57]" />}
+                      {prog.slug === 'workforce' && <Briefcase className="w-4 h-4 text-[#104F57]" />}
+                      {prog.slug === 'financial_literacy' && <DollarSign className="w-4 h-4 text-[#104F57]" />}
+                      {prog.slug === 'mentorship' && <Users className="w-4 h-4 text-[#104F57]" />}
+                      {prog.slug === 'housing' && <Home className="w-4 h-4 text-[#104F57]" />}
+                      {prog.slug === 'entrepreneurship' && <Sparkles className="w-4 h-4 text-[#104F57]" />}
+                      <span>{prog.tagline || 'Core Program'}</span>
+                    </div>
 
-                <div className="pt-2 space-y-1.5 border-t border-slate-100">
-                  <div className="text-[11px] font-semibold text-slate-700">Key Services:</div>
-                  <ul className="text-[11px] text-slate-500 space-y-1">
-                    {prog.keyServices.slice(0, 3).map((s, idx) => (
-                      <li key={idx} className="flex items-center gap-1.5">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
-                        <span>{s}</span>
-                      </li>
-                    ))}
-                  </ul>
+                    <div>
+                      <h3 className="font-serif text-lg font-bold text-slate-900 group-hover:text-[#104F57] transition-colors">
+                        {prog.name}
+                      </h3>
+                      <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                        {prog.description}
+                      </p>
+                    </div>
+
+                    <div className="pt-2 space-y-1.5 border-t border-slate-100">
+                      <div className="text-[11px] font-semibold text-slate-700">Key Services:</div>
+                      <ul className="text-[11px] text-slate-500 space-y-1">
+                        {prog.keyServices.slice(0, 3).map((s, idx) => (
+                          <li key={idx} className="flex items-center gap-1.5">
+                            <CheckCircle2 className="w-3 h-3 text-emerald-600 shrink-0" />
+                            <span>{s}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <span className="text-slate-500 font-medium">
+                      {prog.beneficiariesCount}+ Supported
+                    </span>
+                    <button
+                      onClick={() => setSelectedProgram(prog)}
+                      className="font-semibold text-[#104F57] hover:text-[#0c3e44] flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>Details &amp; Referral</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
               </div>
-
-              <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
-                <span className="text-slate-500 font-medium">
-                  {prog.beneficiariesCount}+ Supported
-                </span>
-                <button
-                  onClick={() => setSelectedProgram(prog)}
-                  className="font-semibold text-[#104F57] hover:text-[#0c3e44] flex items-center gap-1 cursor-pointer"
-                >
-                  <span>Details & Referral</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 
@@ -367,39 +427,49 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-5 space-y-4">
-              <div className="bg-white rounded-2xl p-6 border border-teal-200/80 shadow-md">
-                <div className="w-16 h-16 rounded-xl bg-[#104F57] text-white flex items-center justify-center font-serif text-3xl font-bold mb-4">
-                  CD
+              <div className="bg-white rounded-2xl p-6 border border-teal-200/80 shadow-md space-y-4">
+                <div className="flex items-center gap-4">
+                  <img
+                    src="/media/founder/comfort-dondo-official-portrait.svg"
+                    alt="Comfort Dondo, Founder of Phumulani"
+                    className="w-20 h-20 rounded-2xl object-cover border-2 border-[#104F57] shadow-md shrink-0"
+                  />
+                  <div>
+                    <div className="font-serif text-2xl font-bold text-slate-900 leading-tight">
+                      Comfort Dondo
+                    </div>
+                    <div className="text-xs font-semibold text-[#104F57] mt-0.5">
+                      Founder &amp; Executive Director
+                    </div>
+                    <div className="text-[11px] text-slate-500 mt-1">
+                      Author · Advocate · Minnesota 501(c)(3)
+                    </div>
+                  </div>
                 </div>
-                <div className="font-serif text-2xl font-bold text-slate-900">
-                  Comfort Dondo
-                </div>
-                <div className="text-xs font-semibold text-[#104F57]">
-                  Founder & Executive Director, Phumulani
-                </div>
-                <p className="text-xs text-slate-600 mt-3 leading-relaxed">
+
+                <p className="text-xs text-slate-600 leading-relaxed italic">
                   "Healing is not merely surviving an ordeal—it is finding the courage, community, and economic standing to dream boldly again. Phumulani exists so no immigrant survivor walks alone."
                 </p>
 
-                <div className="mt-5 pt-4 border-t border-slate-100">
+                <div className="pt-4 border-t border-slate-100">
                   <div className="text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-2">
                     Authored Publications
                   </div>
-                  <div className="space-y-1.5 text-xs text-slate-600">
+                  <div className="space-y-2 text-xs text-slate-600">
                     <div className="flex items-center gap-2">
-                      <BookOpen className="w-3.5 h-3.5 text-[#633C69]" />
+                      <BookOpen className="w-3.5 h-3.5 text-[#633C69] shrink-0" />
                       <span className="font-medium text-slate-800">Facing the Giants</span>
-                      <span className="text-[10px] text-slate-400">· Memoir & Guide</span>
+                      <span className="text-[10px] text-slate-400">· 2021 Memoir</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <BookOpen className="w-3.5 h-3.5 text-[#633C69]" />
+                      <BookOpen className="w-3.5 h-3.5 text-[#633C69] shrink-0" />
                       <span className="font-medium text-slate-800">Sacred Promise</span>
-                      <span className="text-[10px] text-slate-400">· Healing Anthology</span>
+                      <span className="text-[10px] text-slate-400">· With Dr. Tererai Trent</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <BookOpen className="w-3.5 h-3.5 text-amber-600" />
+                      <BookOpen className="w-3.5 h-3.5 text-amber-600 shrink-0" />
                       <span className="font-medium text-slate-800">The Gift in Pain</span>
-                      <span className="text-[10px] text-amber-700 font-semibold bg-amber-50 px-1.5 py-0.5 rounded">Coming Soon</span>
+                      <span className="text-[10px] text-amber-700 font-semibold bg-amber-50 px-1.5 py-0.5 rounded">Advance Announcement</span>
                     </div>
                   </div>
                 </div>
@@ -408,26 +478,74 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
             <div className="lg:col-span-7 space-y-6">
               <div className="text-xs font-bold text-[#104F57] uppercase tracking-wider">
-                Organizational Legacy
+                Organizational Heritage
               </div>
               <h2 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900">
                 A Safe Haven Rooted in Cultural Dignity
               </h2>
               <p className="text-sm text-slate-700 leading-relaxed">
-                Founded to bridge the systemic voids faced by African, African-American, Asian, and Latinx immigrants in Minnesota, Phumulani (meaning "Rest" or "Be Restored" in Zulu) provides comprehensive wraparound support.
+                Founded in 2017 to bridge the systemic voids faced by African, African-American, Asian, and Latinx immigrants in Minnesota, Phumulani (meaning "to rest" or "peace" in Zulu) provides comprehensive wraparound support.
               </p>
               <p className="text-sm text-slate-700 leading-relaxed">
                 We believe that safety requires economic independence. When survivors obtain stable housing, credit repair, and living-wage employment, they break cycles of intergenerational trauma.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-                <div className="bg-white p-4 rounded-xl border border-slate-200">
-                  <div className="text-xs font-bold text-[#104F57]">Trauma-Informed Practice</div>
-                  <div className="text-xs text-slate-500 mt-1">Every advocate, coordinator, and volunteer is certified in trauma-responsive interaction.</div>
+              {/* Leadership & Safeguarding Portraits */}
+              <div className="pt-2">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-bold text-slate-900 uppercase tracking-wide">
+                    Executive Leadership &amp; Board
+                  </span>
+                  {onOpenMediaRegistry && (
+                    <button
+                      onClick={onOpenMediaRegistry}
+                      className="text-xs text-[#104F57] hover:underline font-semibold cursor-pointer"
+                    >
+                      View Media &amp; Safeguarding Registry ↗
+                    </button>
+                  )}
                 </div>
-                <div className="bg-white p-4 rounded-xl border border-slate-200">
-                  <div className="text-xs font-bold text-[#633C69]">Isolated Confidentiality</div>
-                  <div className="text-xs text-slate-500 mt-1">Survivor records are strictly protected behind independent encryption keys outside of public reach.</div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                  <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1.5">
+                    <img
+                      src="/media/leadership/dr-elena-rostova.svg"
+                      alt="Dr. Elena Rostova"
+                      className="w-14 h-14 mx-auto rounded-xl object-cover shadow-2xs"
+                    />
+                    <div className="font-bold text-xs text-slate-900 leading-tight">Dr. Elena Rostova</div>
+                    <div className="text-[10px] text-slate-500">Board Chair</div>
+                  </div>
+
+                  <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1.5">
+                    <img
+                      src="/media/leadership/sister-miriam-k.svg"
+                      alt="Sister Miriam K."
+                      className="w-14 h-14 mx-auto rounded-xl object-cover shadow-2xs"
+                    />
+                    <div className="font-bold text-xs text-slate-900 leading-tight">Sister Miriam K.</div>
+                    <div className="text-[10px] text-slate-500">Safeguarding Lead</div>
+                  </div>
+
+                  <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1.5">
+                    <img
+                      src="/media/leadership/david-mwangi.svg"
+                      alt="David Mwangi, CPA"
+                      className="w-14 h-14 mx-auto rounded-xl object-cover shadow-2xs"
+                    />
+                    <div className="font-bold text-xs text-slate-900 leading-tight">David Mwangi, CPA</div>
+                    <div className="text-[10px] text-slate-500">Finance Director</div>
+                  </div>
+
+                  <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1.5">
+                    <img
+                      src="/media/leadership/amina-yusuf.svg"
+                      alt="Amina Yusuf"
+                      className="w-14 h-14 mx-auto rounded-xl object-cover shadow-2xs"
+                    />
+                    <div className="font-bold text-xs text-slate-900 leading-tight">Amina Yusuf</div>
+                    <div className="text-[10px] text-slate-500">Community Lead</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -755,24 +873,45 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {events.map((evt) => {
             const isFull = evt.registeredCount >= evt.capacity;
+            const eventIllustrations: Record<string, string> = {
+              'evt-1': '/media/events/career-pathways-showcase.svg',
+              'evt-2': '/media/events/healing-sisterhood-banquet.svg',
+              'evt-3': '/media/events/community-supply-distribution.svg',
+            };
+            const eventImg =
+              eventIllustrations[evt.id] ||
+              (evt.category === 'Workforce'
+                ? '/media/events/career-pathways-showcase.svg'
+                : '/media/events/healing-sisterhood-banquet.svg');
+
             return (
               <div
                 key={evt.id}
-                className="bg-white rounded-xl border border-slate-200 p-6 flex flex-col justify-between hover:border-slate-300 transition-all"
+                className="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-md transition-all group"
               >
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="font-semibold text-[#633C69] bg-purple-50 px-2.5 py-0.5 rounded">
-                      {evt.category}
-                    </span>
-                    <span
-                      className={`text-[11px] font-bold px-2 py-0.5 rounded ${
-                        isFull ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'
-                      }`}
-                    >
-                      {isFull ? `Waitlist Active (${evt.waitlistCount})` : `${evt.capacity - evt.registeredCount} Seats Left`}
-                    </span>
-                  </div>
+                <div className="aspect-[16/9] w-full bg-slate-100 overflow-hidden border-b border-slate-100">
+                  <img
+                    src={eventImg}
+                    alt={evt.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                </div>
+
+                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="font-semibold text-[#633C69] bg-purple-50 px-2.5 py-0.5 rounded">
+                        {evt.category}
+                      </span>
+                      <span
+                        className={`text-[11px] font-bold px-2 py-0.5 rounded ${
+                          isFull ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'
+                        }`}
+                      >
+                        {isFull ? `Waitlist Active (${evt.waitlistCount})` : `${evt.capacity - evt.registeredCount} Seats Left`}
+                      </span>
+                    </div>
 
                   <h3 className="font-serif font-bold text-lg text-slate-900 leading-snug">
                     {evt.title}
@@ -809,6 +948,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   >
                     {isFull ? 'Join Priority Waitlist' : 'RSVP / Register'}
                   </button>
+                </div>
                 </div>
               </div>
             );

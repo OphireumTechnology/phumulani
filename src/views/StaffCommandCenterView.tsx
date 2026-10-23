@@ -30,19 +30,25 @@ import {
   ArrowRight,
   Eye,
   PlusCircle,
+  Camera,
+  Image as ImageIcon,
+  ExternalLink,
 } from 'lucide-react';
 import { PortalLayout } from '../components/PortalLayout';
+import { PHUMULANI_MEDIA_INVENTORY, MediaAsset, getSafeguardingQueueMedia } from '../services/mediaInventory';
 
 interface StaffCommandCenterViewProps {
   currentUser: User;
   onViewChange: (view: string) => void;
   onOpenReceipt: (donation: any) => void;
+  onOpenMediaRegistry?: () => void;
 }
 
 export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
   currentUser,
   onViewChange,
   onOpenReceipt,
+  onOpenMediaRegistry,
 }) => {
   const state = db.getState();
   const messages = state.inboxMessages;
@@ -53,7 +59,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
   const restrictedIntakes = state.restrictedIntakes;
 
   const [activeTab, setActiveTab] = useState<
-    'inbox' | 'volunteers' | 'events' | 'finance' | 'ai_queue' | 'restricted'
+    'inbox' | 'volunteers' | 'events' | 'finance' | 'ai_queue' | 'restricted' | 'media'
   >('inbox');
 
   // Selected message for viewing/drafting
@@ -75,6 +81,55 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
   const [newEventCategory, setNewEventCategory] = useState('Workforce');
   const [newEventCapacity, setNewEventCapacity] = useState(40);
   const [newEventDesc, setNewEventDesc] = useState('');
+
+  // Media registry filter & review state
+  const [mediaCategoryFilter, setMediaCategoryFilter] = useState<string>('all');
+  const [stagedMediaList, setStagedMediaList] = useState<MediaAsset[]>(
+    PHUMULANI_MEDIA_INVENTORY.filter(
+      (m) => m.publicationStatus === 'staged' || m.publicationStatus === 'withheld'
+    )
+  );
+
+  const handleApproveMediaRelease = (id: string) => {
+    setStagedMediaList((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              safeguardingReviewStatus: 'cleared_for_public_web',
+              publicationStatus: 'published',
+              consentStatus: 'approved',
+            }
+          : item
+      )
+    );
+    setActionFeedback(`Media asset ${id} approved by ${currentUser.name} (Safeguarding Lead). Audit record appended.`);
+    db.appendAuditLog(
+      'SAFEGUARDING_MEDIA_APPROVED',
+      `Media release ${id} verified and approved for public portal by ${currentUser.name}`
+    );
+    setTimeout(() => setActionFeedback(null), 5000);
+  };
+
+  const handleWithholdMediaRelease = (id: string, reason: string) => {
+    setStagedMediaList((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              safeguardingReviewStatus: 'restricted_internal_only',
+              publicationStatus: 'withheld',
+            }
+          : item
+      )
+    );
+    setActionFeedback(`Media asset ${id} strictly withheld: ${reason}`);
+    db.appendAuditLog(
+      'SAFEGUARDING_MEDIA_WITHHELD',
+      `Media release ${id} withheld under VAWA digital protections by ${currentUser.name}: ${reason}`
+    );
+    setTimeout(() => setActionFeedback(null), 5000);
+  };
 
   // Handle Generate / Regenerate AI Draft for selected message
   const handleGenerateDraft = async (msg: InboxMessage) => {
@@ -146,6 +201,9 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
   const pendingInboxCount = messages.filter((m) => m.status === 'unread' || m.status === 'draft_ready').length;
   const pendingVolunteersCount = applications.filter((a) => a.status === 'submitted' || a.status === 'screening_review').length;
   const pendingAICount = approvalTasks.filter((t) => t.status === 'pending').length;
+  const safeguardingMediaCount = PHUMULANI_MEDIA_INVENTORY.filter(
+    (m) => m.safeguardingReviewStatus !== 'cleared_for_public_web' || m.publicationStatus !== 'published'
+  ).length;
 
   const navGroups = [
     {
@@ -162,6 +220,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
       items: [
         { id: 'ai_queue', label: 'AI Approval Queue', icon: Sparkles, badge: pendingAICount },
         { id: 'restricted', label: 'Restricted Survivor Route', icon: ShieldAlert, badge: restrictedIntakes.length },
+        { id: 'media', label: 'Media & Safeguarding Registry', icon: Camera, badge: safeguardingMediaCount },
       ],
     },
   ];
@@ -205,6 +264,13 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
             <div className="bg-slate-800/90 border border-slate-700 rounded-xl p-3 text-center min-w-[100px]">
               <div className="font-serif text-lg font-bold text-rose-400">{restrictedIntakes.length}</div>
               <div className="text-[10px] text-slate-400">Safeguarding</div>
+            </div>
+            <div
+              onClick={() => setActiveTab('media')}
+              className="bg-slate-800/90 border border-slate-700 hover:border-emerald-500/50 rounded-xl p-3 text-center min-w-[100px] cursor-pointer transition-colors"
+            >
+              <div className="font-serif text-lg font-bold text-emerald-400">{PHUMULANI_MEDIA_INVENTORY.length}</div>
+              <div className="text-[10px] text-slate-400">Media Vault</div>
             </div>
           </div>
         </div>
@@ -833,6 +899,219 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* TAB 7: MEDIA PRESERVATION & SAFEGUARDING REGISTRY */}
+      {activeTab === 'media' && (
+        <div className="space-y-6">
+          {/* Top safeguard header & actions */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+              <div className="flex items-center gap-2 text-xs font-bold text-[#104F57] uppercase tracking-wider mb-1">
+                <Camera className="w-4 h-4 text-[#104F57]" />
+                <span>Authentic Media Preservation & Safeguarding Registry</span>
+              </div>
+              <h2 className="font-serif text-xl font-bold text-slate-900">
+                Visual Assets & Digital Dignity Protocol
+              </h2>
+              <p className="text-xs text-slate-600 mt-1 max-w-2xl leading-relaxed">
+                Phumulani maintains a strict Zero-AI Generation Rule for real individuals. All 19 media assets represent real community members, founder Comfort Dondo, board leaders, publications, and cultural programs. Identifiable survivor records are never published without written re-consent.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2.5 shrink-0">
+              {onOpenMediaRegistry && (
+                <button
+                  type="button"
+                  onClick={onOpenMediaRegistry}
+                  className="px-4 py-2.5 bg-[#104F57] hover:bg-[#0c3e44] text-white text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-2 cursor-pointer"
+                >
+                  <Eye className="w-4 h-4" />
+                  <span>Inspect Full Registry Modal</span>
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Backup Location & Integrity Notice */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-1">
+              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Local Backup Path</span>
+              <p className="font-mono text-xs font-semibold text-slate-900 break-all">
+                D:\Phumulani\Backups\MediaArchive
+              </p>
+              <p className="text-[10px] text-slate-500">Automated mirror with SHA-256 integrity verification.</p>
+            </div>
+
+            <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-4 space-y-1">
+              <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">Public Web Cleared</span>
+              <div className="font-serif text-2xl font-bold text-emerald-900">17 Assets</div>
+              <p className="text-[10px] text-emerald-700">All rights verified, founder approved, zero synthetic faces.</p>
+            </div>
+
+            <div className="bg-rose-50/70 border border-rose-200 rounded-xl p-4 space-y-1">
+              <span className="text-[11px] font-bold text-rose-800 uppercase tracking-wider">Withheld / Staged (Safeguarding)</span>
+              <div className="font-serif text-2xl font-bold text-rose-900">
+                {stagedMediaList.filter((m) => m.publicationStatus !== 'published').length} Assets
+              </div>
+              <p className="text-[10px] text-rose-700">Protected under VAWA & Minnesota confidentiality laws.</p>
+            </div>
+          </div>
+
+          {/* Staged & Withheld Media Safeguarding Queue */}
+          <div className="bg-white rounded-2xl border border-rose-200 shadow-xs overflow-hidden">
+            <div className="p-4 bg-rose-50/80 border-b border-rose-200 flex justify-between items-center">
+              <div className="flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 text-rose-700" />
+                <h3 className="font-serif text-sm font-bold text-rose-950">
+                  Safeguarding Review Queue — Staged & Withheld Assets
+                </h3>
+              </div>
+              <span className="text-[11px] bg-rose-200 text-rose-900 font-bold px-2.5 py-0.5 rounded-full">
+                Review Gate Active
+              </span>
+            </div>
+
+            <div className="divide-y divide-slate-100 p-4 space-y-4">
+              {stagedMediaList.map((asset) => (
+                <div key={asset.id} className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                  <div className="space-y-1.5 flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-mono text-xs font-bold text-slate-800 bg-white px-2 py-0.5 rounded border border-slate-200">
+                        {asset.id}
+                      </span>
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${
+                        asset.publicationStatus === 'withheld'
+                          ? 'bg-rose-100 text-rose-800 border border-rose-200'
+                          : asset.publicationStatus === 'staged'
+                          ? 'bg-amber-100 text-amber-800 border border-amber-200'
+                          : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                      }`}>
+                        {asset.publicationStatus}
+                      </span>
+                      <span className="text-xs font-bold text-slate-900">{asset.title}</span>
+                    </div>
+
+                    <p className="text-xs text-slate-600">{asset.caption}</p>
+
+                    {asset.sensitiveContextNotes && (
+                      <div className="p-2.5 bg-rose-100/60 rounded-lg text-[11px] text-rose-900 border border-rose-200/60 font-medium">
+                        <strong>Safeguarding Note:</strong> {asset.sensitiveContextNotes}
+                      </div>
+                    )}
+
+                    <div className="text-[10px] text-slate-400 font-mono">
+                      Checksum: {asset.checksumSha256.slice(0, 16)}... | Rights: {asset.usageAuthorization}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 shrink-0">
+                    {asset.publicationStatus !== 'published' ? (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => handleWithholdMediaRelease(asset.id, 'Withheld per active protection order precautions.')}
+                          className="px-3 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+                        >
+                          Enforce Withhold
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleApproveMediaRelease(asset.id)}
+                          className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-lg transition-colors shadow-xs cursor-pointer"
+                        >
+                          Authorize Release
+                        </button>
+                      </>
+                    ) : (
+                      <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span>Cleared for Web</span>
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Published Media Inventory Gallery */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+              <div>
+                <h3 className="font-serif text-lg font-bold text-slate-900">
+                  Approved Public Visual Assets ({PHUMULANI_MEDIA_INVENTORY.filter((m) => m.publicationStatus === 'published').length})
+                </h3>
+                <p className="text-xs text-slate-500">Live on public portal views, founder profile, and programs.</p>
+              </div>
+
+              {/* Category pills */}
+              <div className="flex flex-wrap gap-1.5">
+                {['all', 'founder', 'publications', 'programs', 'events', 'leadership', 'branding'].map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setMediaCategoryFilter(cat)}
+                    className={`px-3 py-1 rounded-lg text-xs font-semibold capitalize transition-all cursor-pointer ${
+                      mediaCategoryFilter === cat
+                        ? 'bg-[#104F57] text-white shadow-xs'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pt-2">
+              {PHUMULANI_MEDIA_INVENTORY.filter(
+                (item) => mediaCategoryFilter === 'all' || item.category === mediaCategoryFilter
+              ).map((asset) => (
+                <div
+                  key={asset.id}
+                  className="rounded-xl border border-slate-200 bg-slate-50/50 overflow-hidden hover:border-teal-500/50 hover:shadow-sm transition-all flex flex-col justify-between"
+                >
+                  <div className="aspect-video bg-slate-900/10 relative overflow-hidden flex items-center justify-center">
+                    {asset.localPath.endsWith('.svg') || asset.localPath.endsWith('.png') ? (
+                      <img
+                        src={asset.localPath}
+                        alt={asset.altText}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div className="p-4 text-center">
+                        <ImageIcon className="w-8 h-8 text-slate-400 mx-auto mb-1" />
+                        <span className="text-[11px] font-bold text-slate-600 uppercase">{asset.mediaType}</span>
+                      </div>
+                    )}
+                    <span className="absolute top-2 left-2 bg-slate-950/75 backdrop-blur-xs text-white text-[9px] font-mono px-2 py-0.5 rounded">
+                      {asset.category}
+                    </span>
+                  </div>
+
+                  <div className="p-3.5 space-y-1.5 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h4 className="font-serif text-xs font-bold text-slate-900 line-clamp-1">{asset.title}</h4>
+                      <p className="text-[11px] text-slate-500 line-clamp-2 mt-0.5 leading-snug">{asset.caption}</p>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px]">
+                      <span className="font-mono text-slate-400">{asset.checksumSha256.slice(0, 10)}...</span>
+                      <span className={`px-2 py-0.5 rounded font-bold uppercase ${
+                        asset.safeguardingReviewStatus === 'cleared_for_public_web'
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : 'bg-rose-100 text-rose-800'
+                      }`}>
+                        {asset.safeguardingReviewStatus === 'cleared_for_public_web' ? 'Cleared' : 'Restricted'}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}

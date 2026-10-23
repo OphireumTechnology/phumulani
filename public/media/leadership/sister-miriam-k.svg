@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="smGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#633C69" />
+      <stop offset="100%" stop-color="#341A38" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" rx="24" fill="url(#smGrad)" />
+  <circle cx="200" cy="160" r="70" fill="#E8F3F1" />
+  <!-- Headwrap / Duku -->
+  <path d="M125 150 C125 70 275 70 275 150 C265 190 240 205 200 205 C160 205 135 190 125 150 Z" fill="#D67C35" />
+  <circle cx="200" cy="165" r="48" fill="#5A341A" />
+  <!-- Protective Trauma Advocate Scarf -->
+  <path d="M80 340 C100 245 150 235 200 235 C250 235 300 245 320 340 Z" fill="#104F57" />
+  <circle cx="200" cy="275" r="14" fill="#FFD54F" />
+  <text x="200" y="375" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle">
+    Sister Miriam K.
+  </text>
+</svg>

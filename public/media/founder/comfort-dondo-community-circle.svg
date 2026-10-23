@@ -1,0 +1,116 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="100%" height="100%">
+  <defs>
+    <linearGradient id="roomBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#F7F9FA" />
+      <stop offset="60%" stop-color="#E8F3F1" />
+      <stop offset="100%" stop-color="#D4E8E5" />
+    </linearGradient>
+    <linearGradient id="rugGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#633C69" />
+      <stop offset="100%" stop-color="#412446" />
+    </linearGradient>
+    <linearGradient id="teaTable" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#9C5221" />
+      <stop offset="100%" stop-color="#64310E" />
+    </linearGradient>
+  </defs>
+
+  <!-- Sunlit Community Healing Center Room -->
+  <rect width="1200" height="800" fill="url(#roomBg)" />
+
+  <!-- Warm Sunlit Window in Background -->
+  <rect x="350" y="40" width="500" height="300" rx="20" fill="#FFFFFF" stroke="#CDE3DF" stroke-width="6" />
+  <line x1="600" y1="40" x2="600" y2="340" stroke="#CDE3DF" stroke-width="4" />
+  <line x1="350" y1="180" x2="850" y2="180" stroke="#CDE3DF" stroke-width="4" />
+  <circle cx="600" cy="180" r="80" fill="#FDF1E8" opacity="0.6" />
+
+  <!-- Phumulani Wall Motto -->
+  <text x="600" y="380" font-family="'Playfair Display', Georgia, serif" font-weight="700" font-size="24" fill="#104F57" text-anchor="middle">
+    "A Sacred Space to Rest, Rebuild, and Reclaim Voice"
+  </text>
+  <text x="600" y="408" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="13" fill="#D67C35" letter-spacing="3" text-anchor="middle">
+    TEA HEALING CIRCLE · BROOKLYN PARK COMMUNITY LAB
+  </text>
+
+  <!-- Circular Handwoven Community Rug -->
+  <ellipse cx="600" cy="620" rx="460" ry="150" fill="url(#rugGrad)" opacity="0.95" />
+  <ellipse cx="600" cy="620" rx="430" ry="135" fill="none" stroke="#D67C35" stroke-width="4" stroke-dasharray="16 10" />
+
+  <!-- Center Tea Table -->
+  <ellipse cx="600" cy="600" rx="160" ry="60" fill="url(#teaTable)" />
+  <ellipse cx="600" cy="590" rx="150" ry="50" fill="#B2652B" />
+
+  <!-- Spiced Tea Set (Cultural Healing Tea Tradition) -->
+  <ellipse cx="600" cy="580" rx="50" ry="25" fill="#FFFFFF" stroke="#D67C35" stroke-width="2" />
+  <!-- Traditional Ceramic Teapot -->
+  <path d="M585 540 C570 550 570 575 600 575 C630 575 630 550 615 540 Z" fill="#D67C35" />
+  <circle cx="600" cy="535" r="8" fill="#F9A825" />
+  <path d="M575 550 Q 555 550 560 565" fill="none" stroke="#D67C35" stroke-width="4" stroke-linecap="round" />
+  <path d="M625 555 Q 645 565 635 575" fill="none" stroke="#D67C35" stroke-width="4" stroke-linecap="round" />
+  <!-- Aromatic Tea Steam -->
+  <path d="M596 525 Q 590 510 598 495" fill="none" stroke="#FFFFFF" stroke-width="2.5" opacity="0.7" stroke-linecap="round" />
+  <path d="M604 525 Q 612 510 604 495" fill="none" stroke="#FFFFFF" stroke-width="2.5" opacity="0.7" stroke-linecap="round" />
+
+  <!-- Little Teacups for the Women -->
+  <circle cx="530" cy="585" r="10" fill="#E8F3F1" stroke="#104F57" stroke-width="2" />
+  <circle cx="670" cy="585" r="10" fill="#E8F3F1" stroke="#104F57" stroke-width="2" />
+  <circle cx="560" cy="610" r="10" fill="#E8F3F1" stroke="#104F57" stroke-width="2" />
+  <circle cx="640" cy="610" r="10" fill="#E8F3F1" stroke="#104F57" stroke-width="2" />
+
+  <!-- Sisterhood Circle: Authentic Women in Discussion (Seated around Table) -->
+  
+  <!-- LEFT: Participant 1 (Somali Immigrant Advocate) -->
+  <g transform="translate(240, 480)">
+    <!-- Body -->
+    <path d="M0 160 C15 70 60 70 80 160 Z" fill="#104F57" />
+    <circle cx="45" cy="45" r="30" fill="#5A341A" />
+    <!-- Hijab / Scarf -->
+    <path d="M15 50 C15 15 75 15 75 50 C75 85 65 95 45 95 C25 95 15 85 15 50 Z" fill="#D67C35" />
+    <!-- Hands in lap -->
+    <circle cx="45" cy="120" r="12" fill="#5A341A" />
+  </g>
+
+  <!-- CENTER-LEFT: Participant 2 (Oromo Community Member) -->
+  <g transform="translate(390, 495)">
+    <path d="M0 150 C15 65 65 65 80 150 Z" fill="#633C69" />
+    <circle cx="42" cy="45" r="28" fill="#4B2711" />
+    <path d="M18 45 C18 20 66 20 66 45 C66 75 55 85 42 85 C29 85 18 75 18 45 Z" fill="#F3EAF4" />
+  </g>
+
+  <!-- CENTER (HEAD OF TABLE): Comfort Dondo (Founder Facilitator) -->
+  <g transform="translate(540, 430)">
+    <!-- Seated with poise & open gestures of welcome -->
+    <path d="M-10 210 C15 90 105 90 130 210 Z" fill="#104F57" />
+    <!-- Orange Leadership Scarf -->
+    <path d="M25 110 C40 150 80 150 95 110 L110 210 L10 210 Z" fill="#D67C35" />
+    <!-- Headwrap -->
+    <circle cx="60" cy="50" r="34" fill="#633C69" />
+    <path d="M22 55 C22 15 98 15 98 55 C90 75 30 75 22 55 Z" fill="#7d4b84" stroke="#D67C35" stroke-width="3" />
+    <circle cx="60" cy="60" r="26" fill="#553019" />
+    <!-- Open Warm Hands Welcoming Participants -->
+    <path d="M10 130 Q -15 115 -10 100" fill="none" stroke="#553019" stroke-width="8" stroke-linecap="round" />
+    <path d="M110 130 Q 135 115 130 100" fill="none" stroke="#553019" stroke-width="8" stroke-linecap="round" />
+  </g>
+
+  <!-- CENTER-RIGHT: Participant 3 (Youth Sisterhood Mentee) -->
+  <g transform="translate(730, 495)">
+    <path d="M0 150 C15 65 65 65 80 150 Z" fill="#1E5C65" />
+    <circle cx="42" cy="45" r="28" fill="#5A341A" />
+    <path d="M15 45 C15 15 69 15 69 45 C69 75 60 85 42 85 C24 85 15 75 15 45 Z" fill="#FFE082" />
+  </g>
+
+  <!-- RIGHT: Participant 4 (Workforce Program Graduate) -->
+  <g transform="translate(880, 480)">
+    <path d="M0 160 C15 70 60 70 80 160 Z" fill="#2E3A40" />
+    <circle cx="45" cy="45" r="30" fill="#4B2711" />
+    <path d="M15 48 C15 18 75 18 75 48 C75 80 65 90 45 90 C25 90 15 80 15 48 Z" fill="#D67C35" />
+  </g>
+
+  <!-- Caption Plaque -->
+  <g transform="translate(250, 720)">
+    <rect width="700" height="50" rx="8" fill="#104F57" opacity="0.9" />
+    <text x="350" y="31" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="13" fill="#FFFFFF" text-anchor="middle">
+      Culturally Attuned Healing · Safe Disclosure · Intergenerational Sisterhood
+    </text>
+  </g>
+</svg>

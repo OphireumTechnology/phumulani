@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="teaBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDF1E8" />
+      <stop offset="100%" stop-color="#F3EAF4" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#teaBg)" />
+  <circle cx="400" cy="300" r="240" fill="#E8F3F1" />
+  <circle cx="400" cy="300" r="210" fill="#FFFFFF" stroke="#D67C35" stroke-width="3" stroke-dasharray="10 8" />
+
+  <!-- Traditional Ceramic Teapot with Spiced Herbs -->
+  <g transform="translate(400, 280)">
+    <!-- Plate -->
+    <ellipse cx="0" cy="100" rx="140" ry="40" fill="#104F57" opacity="0.9" />
+    <ellipse cx="0" cy="95" rx="120" ry="30" fill="#E8F3F1" />
+    <!-- Teapot Body -->
+    <path d="M-60 40 C-70 -20 70 -20 60 40 C60 80 -60 80 -60 40 Z" fill="#D67C35" />
+    <!-- Lid & Finial -->
+    <ellipse cx="0" cy="-20" rx="35" ry="12" fill="#B2652B" />
+    <circle cx="0" cy="-35" r="10" fill="#F9A825" />
+    <!-- Handle -->
+    <path d="M-60 10 C-105 10 -105 60 -60 60" fill="none" stroke="#D67C35" stroke-width="12" stroke-linecap="round" />
+    <!-- Spout with Flowing Tea Stream -->
+    <path d="M55 20 Q 95 10 110 -10" fill="none" stroke="#D67C35" stroke-width="12" stroke-linecap="round" />
+    <path d="M110 -5 Q 120 40 120 80" fill="none" stroke="#D67C35" stroke-width="4" stroke-dasharray="6 4" />
+    <!-- Tea Cup -->
+    <rect x="95" y="70" width="50" height="35" rx="8" fill="#FFFFFF" stroke="#104F57" stroke-width="3" />
+    <!-- Aromatic Steam Swirls -->
+    <path d="M-20 -50 Q -30 -90 -10 -130" fill="none" stroke="#D67C35" stroke-width="3" stroke-linecap="round" opacity="0.6" />
+    <path d="M20 -50 Q 30 -90 10 -130" fill="none" stroke="#D67C35" stroke-width="3" stroke-linecap="round" opacity="0.6" />
+  </g>
+
+  <!-- Tagline Banner -->
+  <rect x="150" y="500" width="500" height="50" rx="10" fill="#104F57" />
+  <text x="400" y="531" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">
+    CULTURALLY GROUNDED HEALING · SISTERHOOD CIRCLES
+  </text>
+</svg>

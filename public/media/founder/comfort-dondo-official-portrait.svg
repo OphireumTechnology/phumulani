@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1000" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgFounder" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#104F57" />
+      <stop offset="60%" stop-color="#18434a" />
+      <stop offset="100%" stop-color="#633C69" />
+    </linearGradient>
+    <linearGradient id="shawlGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D67C35" />
+      <stop offset="50%" stop-color="#E58B43" />
+      <stop offset="100%" stop-color="#9C4410" />
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6B4126" />
+      <stop offset="50%" stop-color="#553019" />
+      <stop offset="100%" stop-color="#3F200E" />
+    </linearGradient>
+    <linearGradient id="goldGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#F9A825" />
+      <stop offset="100%" stop-color="#FBC02D" />
+    </linearGradient>
+    <filter id="portraitShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="800" height="1000" fill="url(#bgFounder)" />
+
+  <!-- Subtle African Geometric Heritage Motif in Background -->
+  <g opacity="0.08" stroke="#FFFFFF" stroke-width="2" fill="none">
+    <polygon points="100,80 150,150 50,150" />
+    <polygon points="250,50 300,120 200,120" />
+    <polygon points="650,100 700,170 600,170" />
+    <circle cx="700" cy="300" r="80" />
+    <circle cx="100" cy="400" r="60" />
+    <path d="M 0 500 Q 200 450 400 500 T 800 500" />
+  </g>
+
+  <!-- Halo of Warmth & Purpose -->
+  <circle cx="400" cy="380" r="240" fill="#E8F3F1" opacity="0.1" />
+  <circle cx="400" cy="380" r="200" fill="#D67C35" opacity="0.15" />
+
+  <!-- Main Dignified Portrait Group -->
+  <g filter="url(#portraitShadow)">
+    <!-- Shoulders & Professional Attire -->
+    <path d="M160 850 C180 620 280 560 400 560 C520 560 620 620 640 850 L660 1000 L140 1000 Z" fill="#1C2833" />
+    
+    <!-- Rich Traditional Gold-Embroidered Scarf / Shawl of Leadership -->
+    <path d="M260 580 C290 680 300 850 320 1000 L480 1000 C500 850 510 680 540 580 C500 565 400 560 260 580 Z" fill="url(#shawlGrad)" />
+    <!-- Shawl Geometric Accents -->
+    <path d="M300 660 L500 660" stroke="#FFE082" stroke-width="4" stroke-dasharray="12 8" />
+    <path d="M310 740 L490 740" stroke="#FFE082" stroke-width="4" stroke-dasharray="12 8" />
+    <path d="M320 830 L480 830" stroke="#FFE082" stroke-width="4" stroke-dasharray="12 8" />
+
+    <!-- Neck & Graceful Poise -->
+    <path d="M350 460 L450 460 L460 570 L340 570 Z" fill="url(#skinGrad)" />
+    <!-- Golden Statement Necklace -->
+    <path d="M335 550 C370 585 430 585 465 550" fill="none" stroke="url(#goldGlow)" stroke-width="10" stroke-linecap="round" />
+    <circle cx="400" cy="578" r="10" fill="#F9A825" />
+
+    <!-- Head & Facial Contour -->
+    <path d="M280 340 C280 200 520 200 520 340 C520 450 480 510 400 510 C320 510 280 450 280 340 Z" fill="url(#skinGrad)" />
+
+    <!-- Authentic Elegant Headwrap / Crown (Gele / Duku of Dignity) -->
+    <path d="M250 290 C250 140 330 90 400 90 C470 90 550 140 550 290 C530 230 490 190 400 190 C310 190 270 230 250 290 Z" fill="#633C69" />
+    <path d="M260 270 C280 160 360 130 400 130 C440 130 520 160 540 270 C500 240 450 225 400 225 C350 225 300 240 260 270 Z" fill="#7d4b84" />
+    <path d="M280 240 C320 180 370 165 400 165 C430 165 480 180 520 240" fill="none" stroke="#D67C35" stroke-width="6" stroke-linecap="round" />
+
+    <!-- Facial Features: Radiant, Warm, Survivor Leadership -->
+    <!-- Eyes -->
+    <path d="M330 350 Q 360 340 380 352" fill="none" stroke="#1A0D07" stroke-width="5" stroke-linecap="round" />
+    <circle cx="355" cy="355" r="9" fill="#1A0D07" />
+    <circle cx="358" cy="352" r="3" fill="#FFFFFF" />
+
+    <path d="M420 352 Q 440 340 470 350" fill="none" stroke="#1A0D07" stroke-width="5" stroke-linecap="round" />
+    <circle cx="445" cy="355" r="9" fill="#1A0D07" />
+    <circle cx="448" cy="352" r="3" fill="#FFFFFF" />
+
+    <!-- Eyebrows -->
+    <path d="M320 335 Q 355 320 385 338" fill="none" stroke="#221109" stroke-width="6" stroke-linecap="round" />
+    <path d="M415 338 Q 445 320 480 335" fill="none" stroke="#221109" stroke-width="6" stroke-linecap="round" />
+
+    <!-- Nose -->
+    <path d="M395 348 L390 410 Q 400 422 410 410 L405 348" fill="none" stroke="#482512" stroke-width="4" stroke-linecap="round" />
+
+    <!-- Warm, Compassionate Smile -->
+    <path d="M350 445 Q 400 480 450 445" fill="none" stroke="#3D1808" stroke-width="5" stroke-linecap="round" />
+    <path d="M358 448 Q 400 475 442 448 Z" fill="#FFFFFF" opacity="0.9" />
+
+    <!-- Earring Accents -->
+    <circle cx="275" cy="385" r="8" fill="url(#goldGlow)" />
+    <circle cx="525" cy="385" r="8" fill="url(#goldGlow)" />
+  </g>
+
+  <!-- Elegant Profile Plaque Overlay at Bottom -->
+  <g transform="translate(60, 850)">
+    <rect width="680" height="110" rx="16" fill="#104F57" opacity="0.96" stroke="#D67C35" stroke-width="2" />
+    <text x="340" y="42" font-family="'Playfair Display', Georgia, serif" font-weight="700" font-size="30" fill="#FFFFFF" text-anchor="middle">
+      Comfort Dondo
+    </text>
+    <text x="340" y="72" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="14" fill="#F9A825" letter-spacing="2" text-anchor="middle">
+      FOUNDER &amp; EXECUTIVE DIRECTOR · PHUMULANI
+    </text>
+    <text x="340" y="94" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="500" font-size="12" fill="#E8F3F1" text-anchor="middle">
+      Author · Community Advocate · Survivor Leader · Minnesota 501(c)(3)
+    </text>
+  </g>
+</svg>

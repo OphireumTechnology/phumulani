@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="100%" height="100%">
+  <defs>
+    <linearGradient id="distBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FDF1E8" />
+      <stop offset="100%" stop-color="#E8F3F1" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="800" fill="url(#distBg)" />
+
+  <!-- Volunteer Depot Boxes & Relief Kits Stacked with Care -->
+  <g transform="translate(600, 440)">
+    <!-- Main Center Distribution Table -->
+    <rect x="-400" y="80" width="800" height="25" rx="6" fill="#263238" />
+
+    <!-- Care Packages Stamped with Phumulani Heart -->
+    <rect x="-350" y="-80" width="160" height="150" rx="8" fill="#D67C35" />
+    <rect x="-340" y="-70" width="140" height="130" rx="4" fill="#E58B43" />
+    <circle cx="-270" cy="-5" r="28" fill="#FFFFFF" />
+    <path d="M-280 -5 Q -270 -15 -260 -5 Q -270 10 -280 -5 Z" fill="#D67C35" />
+
+    <rect x="-160" y="-120" width="160" height="190" rx="8" fill="#104F57" />
+    <rect x="-150" y="-110" width="140" height="170" rx="4" fill="#17636D" />
+    <circle cx="-80" cy="-25" r="32" fill="#FFFFFF" />
+    <text x="-80" y="-17" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="900" font-size="20" fill="#104F57" text-anchor="middle">
+      FOOD
+    </text>
+
+    <rect x="30" y="-100" width="160" height="170" rx="8" fill="#633C69" />
+    <rect x="40" y="-90" width="140" height="150" rx="4" fill="#75477B" />
+    <circle cx="110" cy="-15" r="30" fill="#FFFFFF" />
+    <text x="110" y="-7" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="900" font-size="16" fill="#633C69" text-anchor="middle">
+      CARE
+    </text>
+
+    <rect x="220" y="-60" width="150" height="130" rx="8" fill="#D67C35" />
+    <rect x="230" y="-50" width="130" height="110" rx="4" fill="#E58B43" />
+    <circle cx="295" cy="5" r="24" fill="#FFFFFF" />
+    <text x="295" y="12" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="900" font-size="14" fill="#D67C35" text-anchor="middle">
+      WINTER
+    </text>
+  </g>
+
+  <!-- Title Badge -->
+  <g transform="translate(350, 640)">
+    <rect width="500" height="60" rx="12" fill="#104F57" />
+    <text x="250" y="37" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="16" fill="#FFFFFF" text-anchor="middle">
+      COMMUNITY SUPPLY &amp; FOOD RELIEF DISTRIBUTION
+    </text>
+  </g>
+</svg>

@@ -9,9 +9,10 @@ import { ShieldCheck, Heart, Phone, ExternalLink, LifeBuoy } from 'lucide-react'
 
 interface FooterProps {
   onViewChange: (view: string) => void;
+  onOpenMediaRegistry?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
+export const Footer: React.FC<FooterProps> = ({ onViewChange, onOpenMediaRegistry }) => {
   return (
     <footer className="bg-slate-900 text-slate-300 border-t border-slate-800 text-xs no-print">
       {/* Emergency Hotline Bar */}
@@ -136,14 +137,22 @@ export const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
 
         <div className="mt-12 pt-6 border-t border-slate-800 flex flex-wrap items-center justify-between text-slate-400 gap-3">
           <div>
-            © {new Date().getFullYear()} Phumulani. All rights reserved. Registered 501(c)(3) in Minnesota.
+            © {new Date().getFullYear()} Phumulani (Minnesota African Women Against Violence). All rights reserved. Registered 501(c)(3) public charity.
           </div>
-          <div className="flex items-center gap-4 text-[11px]">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-[11px]">
+            {onOpenMediaRegistry && (
+              <button
+                onClick={onOpenMediaRegistry}
+                className="text-amber-400 hover:text-amber-300 font-semibold underline flex items-center gap-1 cursor-pointer"
+              >
+                <span>Media Preservation Registry</span>
+              </button>
+            )}
             <span>Safe Exit Protected</span>
             <span>·</span>
-            <span>Zero Tracking on Help Pages</span>
+            <span>Zero Tracking on Safe Pages</span>
             <span>·</span>
-            <span>Human-Approved AI Actions</span>
+            <span>Human-Supervised AI Workforce</span>
           </div>
         </div>
       </div>

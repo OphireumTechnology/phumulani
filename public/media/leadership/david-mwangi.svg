@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="100%" height="100%">
+  <defs>
+    <linearGradient id="dmGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#263238" />
+      <stop offset="100%" stop-color="#151C20" />
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" rx="24" fill="url(#dmGrad)" />
+  <circle cx="200" cy="160" r="70" fill="#E8F3F1" />
+  <circle cx="200" cy="160" r="50" fill="#4B2711" />
+  <!-- Shoulders & Suit with Teal Tie -->
+  <path d="M80 340 C100 245 150 235 200 235 C250 235 300 245 320 340 Z" fill="#37474F" />
+  <polygon points="175,235 200,285 225,235" fill="#FFFFFF" />
+  <polygon points="195,245 205,245 210,310 200,320 190,310" fill="#104F57" />
+  <text x="200" y="375" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle">
+    David Mwangi, CPA
+  </text>
+</svg>

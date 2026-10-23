@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="legBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8F3F1" />
+      <stop offset="100%" stop-color="#D0E7E2" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#legBg)" />
+  <circle cx="400" cy="280" r="230" fill="#FFFFFF" stroke="#104F57" stroke-width="2" />
+
+  <!-- Protective Shield & Legal Scales of Justice -->
+  <g transform="translate(400, 260)">
+    <!-- Protective Sanctuary Shield -->
+    <path d="M0 -140 Q 140 -140 140 -20 Q 140 120 0 170 Q -140 120 -140 -20 Q -140 -140 0 -140 Z" fill="#104F57" />
+    <path d="M0 -125 Q 125 -125 125 -15 Q 125 110 0 155 Q -125 110 -125 -15 Q -125 -125 0 -125 Z" fill="#19626C" />
+
+    <!-- Scales of Justice Emblem Inside Shield -->
+    <g transform="translate(0, -10)" stroke="#FFD54F" stroke-width="5" fill="none" stroke-linecap="round">
+      <line x1="0" y1="-60" x2="0" y2="70" />
+      <line x1="-70" y1="-30" x2="70" y2="-30" stroke-width="6" />
+      <!-- Left Pan -->
+      <line x1="-70" y1="-30" x2="-90" y2="20" stroke-width="3" />
+      <line x1="-70" y1="-30" x2="-50" y2="20" stroke-width="3" />
+      <path d="M-100 20 Q -70 40 -40 20 Z" fill="#FFD54F" stroke="none" />
+      <!-- Right Pan -->
+      <line x1="70" y1="-30" x2="50" y2="20" stroke-width="3" />
+      <line x1="70" y1="-30" x2="90" y2="20" stroke-width="3" />
+      <path d="M40 20 Q 70 40 100 20 Z" fill="#FFD54F" stroke="none" />
+      <!-- Balance Peak -->
+      <circle cx="0" cy="-60" r="8" fill="#FFD54F" />
+    </g>
+
+    <!-- Safe Harbor Protection Heart -->
+    <circle cx="0" cy="115" r="18" fill="#D67C35" />
+    <path d="M-8 115 Q 0 105 8 115 Q 0 128 -8 115 Z" fill="#FFFFFF" />
+  </g>
+
+  <!-- Tagline Banner -->
+  <rect x="150" y="500" width="500" height="50" rx="10" fill="#104F57" />
+  <text x="400" y="531" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">
+    SURVIVOR ADVOCACY · COURT ACCOMPANIMENT &amp; ORDERS
+  </text>
+</svg>

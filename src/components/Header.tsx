@@ -170,21 +170,23 @@ export const Header: React.FC<HeaderProps> = ({
             }}
             className="flex items-center gap-3 text-left group cursor-pointer focus-visible:outline-2 focus-visible:outline-[#104F57]"
           >
-            <div className="w-10 h-10 rounded-lg bg-[#104F57] text-white flex items-center justify-center font-serif text-2xl font-bold shadow-xs group-hover:bg-[#0c3e44] transition-colors shrink-0">
-              P
-            </div>
+            <img
+              src="/media/branding/phumulani-logo-primary.svg"
+              alt="Phumulani Logo Emblem"
+              className="w-10 h-10 object-contain rounded-lg shadow-xs group-hover:scale-105 transition-transform shrink-0"
+            />
             <div>
               <div className="font-serif text-xl font-bold text-[#104F57] tracking-tight group-hover:text-[#633C69] transition-colors leading-none">
                 PHUMULANI
               </div>
               <div className="text-[10px] tracking-wider uppercase text-slate-500 font-semibold mt-1">
-                Healing · Advocacy · Empowerment
+                MN African Women Against Violence
               </div>
             </div>
           </button>
 
           {/* CENTER: Main Website Navigation (Desktop) */}
-          <nav className="hidden lg:flex items-center gap-6 text-[13px] font-semibold text-slate-700">
+          <nav className="hidden lg:flex items-center gap-5 text-[13px] font-semibold text-slate-700">
             <button
               onClick={() => {
                 onViewChange('public');
@@ -195,6 +197,12 @@ export const Header: React.FC<HeaderProps> = ({
               }`}
             >
               Home
+            </button>
+            <button
+              onClick={() => navigateToSection('founder-section')}
+              className="hover:text-[#104F57] text-[#633C69] font-bold transition-colors cursor-pointer"
+            >
+              Founder &amp; Legacy
             </button>
             <button
               onClick={() => navigateToSection('programs-section')}

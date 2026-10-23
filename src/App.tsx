@@ -12,6 +12,7 @@ import { Footer } from './components/Footer';
 import { RoleSwitcherBar } from './components/RoleSwitcherBar';
 import { WebsiteConciergeModal } from './components/WebsiteConciergeModal';
 import { ReceiptModal } from './components/ReceiptModal';
+import { MediaLibraryModal } from './components/MediaLibraryModal';
 import { PublicWebsiteView } from './views/PublicWebsiteView';
 import { CommunityPortalView } from './views/CommunityPortalView';
 import { DonorPortalView } from './views/DonorPortalView';
@@ -25,6 +26,7 @@ export default function App() {
   const [activeView, setActiveView] = useState<string>('public');
   const [currentLang, setCurrentLang] = useState<string>('en');
   const [activeReceiptDonation, setActiveReceiptDonation] = useState<Donation | null>(null);
+  const [isMediaRegistryOpen, setIsMediaRegistryOpen] = useState(false);
 
   // Subscribe to reactive database changes
   useEffect(() => {
@@ -67,6 +69,7 @@ export default function App() {
             currentUser={dbState.currentUser}
             onViewChange={setActiveView}
             onOpenReceipt={(donation) => setActiveReceiptDonation(donation)}
+            onOpenMediaRegistry={() => setIsMediaRegistryOpen(true)}
           />
         )}
 
@@ -90,6 +93,7 @@ export default function App() {
             currentUser={dbState.currentUser}
             onViewChange={setActiveView}
             onOpenReceipt={(donation) => setActiveReceiptDonation(donation)}
+            onOpenMediaRegistry={() => setIsMediaRegistryOpen(true)}
           />
         )}
 
@@ -124,8 +128,19 @@ export default function App() {
         onClose={() => setActiveReceiptDonation(null)}
       />
 
+      {/* 5.5 AUTHENTIC MEDIA PRESERVATION & SAFEGUARDING REGISTRY MODAL */}
+      <MediaLibraryModal
+        isOpen={isMediaRegistryOpen}
+        onClose={() => setIsMediaRegistryOpen(false)}
+      />
+
       {/* 6. GLOBAL FOOTER (on public view) */}
-      {activeView === 'public' && <Footer onViewChange={setActiveView} />}
+      {activeView === 'public' && (
+        <Footer
+          onViewChange={setActiveView}
+          onOpenMediaRegistry={() => setIsMediaRegistryOpen(true)}
+        />
+      )}
     </div>
   );
 }
