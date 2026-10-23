@@ -44,6 +44,7 @@ export const GovernancePortalView: React.FC<GovernancePortalViewProps> = ({
   const donations = state.donations;
 
   const [activeTab, setActiveTab] = useState<'kpis' | 'grants' | 'board' | 'risks' | 'audit'>('kpis');
+  const [activeDocketGrant, setActiveDocketGrant] = useState<any | null>(null);
 
   const totalFundraisingYTD = donations
     .filter((d) => d.status === 'succeeded')
@@ -280,10 +281,8 @@ export const GovernancePortalView: React.FC<GovernancePortalViewProps> = ({
                     )}
                   </div>
                   <button
-                    onClick={() => {
-                      alert(`Opening grant docket for ${grt.funderName}. All data conforms to Minnesota non-profit disclosure guidelines.`);
-                    }}
-                    className="font-semibold text-[#104F57] hover:underline"
+                    onClick={() => setActiveDocketGrant(grt)}
+                    className="font-semibold text-[#104F57] hover:underline cursor-pointer"
                   >
                     View Proposal Docket
                   </button>
@@ -446,6 +445,47 @@ export const GovernancePortalView: React.FC<GovernancePortalViewProps> = ({
         </div>
       )}
       </div>
+
+      {activeDocketGrant && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full border border-slate-200 shadow-2xl p-6 space-y-4">
+            <div className="flex justify-between items-start border-b border-slate-100 pb-3">
+              <div>
+                <span className="text-[11px] font-bold text-[#104F57] uppercase tracking-wider">Grant Proposal Docket</span>
+                <h3 className="font-serif text-lg font-bold text-slate-900">{activeDocketGrant.funderName}</h3>
+              </div>
+              <button
+                onClick={() => setActiveDocketGrant(null)}
+                className="text-slate-400 hover:text-slate-700 cursor-pointer p-1 rounded-md"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="space-y-3 text-xs text-slate-700">
+              <div className="p-3 bg-teal-50 border border-teal-200 rounded-lg">
+                <span className="font-bold text-[#104F57]">Opportunity:</span> {activeDocketGrant.opportunityTitle}
+              </div>
+              <div className="grid grid-cols-2 gap-2 text-slate-600">
+                <div><strong>Requested:</strong> ${activeDocketGrant.amountRequested?.toLocaleString()}</div>
+                <div><strong>Target Program:</strong> {activeDocketGrant.programTarget}</div>
+                <div><strong>Deadline:</strong> {activeDocketGrant.deadline}</div>
+                <div><strong>Stage:</strong> <span className="capitalize">{activeDocketGrant.stage?.replace('_', ' ')}</span></div>
+              </div>
+              <p className="text-[11px] text-slate-500 italic">
+                All proposal documentation conforms to Minnesota non-profit governance standards and IRS 501(c)(3) disclosure guidelines.
+              </p>
+            </div>
+            <div className="flex justify-end pt-2">
+              <button
+                onClick={() => setActiveDocketGrant(null)}
+                className="px-4 py-2 bg-[#104F57] hover:bg-[#0c3e44] text-white rounded-lg text-xs font-bold cursor-pointer"
+              >
+                Close Docket
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </PortalLayout>
   );
 };

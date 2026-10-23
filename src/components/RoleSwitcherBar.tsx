@@ -39,10 +39,18 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
     }
   };
 
+  const [resetStatus, setResetStatus] = React.useState<'idle' | 'confirming' | 'done'>('idle');
+
   const handleResetData = () => {
-    if (confirm('Reset entire interactive database to original baseline seed data?')) {
+    if (resetStatus === 'idle') {
+      setResetStatus('confirming');
+      setTimeout(() => setResetStatus('idle'), 4000);
+      return;
+    }
+    if (resetStatus === 'confirming') {
       db.resetDatabase();
-      alert('Database successfully reset to seed data.');
+      setResetStatus('done');
+      setTimeout(() => setResetStatus('idle'), 2500);
     }
   };
 
@@ -114,11 +122,23 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
       <div className="flex items-center gap-2">
         <button
           onClick={handleResetData}
-          className="flex items-center gap-1.5 px-2 py-0.5 bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white rounded border border-slate-700 transition-colors text-[11px]"
+          className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded border transition-colors text-[11px] cursor-pointer ${
+            resetStatus === 'confirming'
+              ? 'bg-rose-900 border-rose-500 text-rose-100 font-bold animate-pulse'
+              : resetStatus === 'done'
+              ? 'bg-emerald-900 border-emerald-500 text-emerald-100 font-bold'
+              : 'bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border-slate-700'
+          }`}
           title="Restore baseline test records"
         >
-          <RefreshCw className="w-3 h-3 text-slate-400" />
-          <span>Reset Demo Data</span>
+          <RefreshCw className={`w-3 h-3 ${resetStatus === 'done' ? 'text-emerald-400 rotate-180' : 'text-slate-400'}`} />
+          <span>
+            {resetStatus === 'confirming'
+              ? 'Click to Confirm Reset'
+              : resetStatus === 'done'
+              ? 'Reset Complete!'
+              : 'Reset Demo Data'}
+          </span>
         </button>
 
         <button

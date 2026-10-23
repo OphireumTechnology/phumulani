@@ -209,6 +209,21 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
           </div>
         </div>
 
+        {actionFeedback && (
+          <div className="bg-emerald-50 border border-emerald-300 text-emerald-950 px-4 py-3 rounded-xl text-xs font-medium flex items-center justify-between shadow-xs animate-in fade-in">
+            <div className="flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <span>{actionFeedback}</span>
+            </div>
+            <button
+              onClick={() => setActionFeedback(null)}
+              className="text-emerald-700 hover:text-emerald-900 font-bold ml-2 cursor-pointer"
+            >
+              ✕
+            </button>
+          </div>
+        )}
+
       {/* TAB 1: UNIFIED INBOX & AI TRIAGE (WORKFLOW A) */}
       {activeTab === 'inbox' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs min-h-[580px]">
@@ -808,7 +823,8 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                   </span>
                   <button
                     onClick={() => {
-                      alert(`Confidential safety protocol initiated for reference ${item.anonymousCode}. A certified trauma advocate will make discreet contact during the designated safe window.`);
+                      setActionFeedback(`Confidential safety protocol initiated for reference ${item.anonymousCode}. A certified trauma advocate will make discreet contact during the designated safe window.`);
+                      setTimeout(() => setActionFeedback(null), 6000);
                     }}
                     className="px-4 py-1.5 bg-rose-800 hover:bg-rose-900 text-white rounded-lg font-bold cursor-pointer"
                   >
