@@ -20,6 +20,8 @@ import {
   Layers,
   ChevronDown,
   LogIn,
+  ShieldCheck,
+  Activity,
 } from 'lucide-react';
 
 interface HeaderProps {
@@ -72,6 +74,8 @@ export const Header: React.FC<HeaderProps> = ({
 
   const portals = [
     { id: 'public', label: 'Public Website & CMS', icon: Globe, desc: 'Public community pages, mission, and giving' },
+    { id: 'master-admin', label: 'Master Administrator (/admin/master)', icon: ShieldCheck, desc: 'Centralized enterprise control across all 15 operational modules' },
+    { id: 'production-status', label: 'Live Production Status (Sec 16)', icon: Activity, desc: 'Real-time health probes & component verification grid' },
     { id: 'community', label: 'Community & Volunteer Hub', icon: Users, desc: 'Applications, hours, mentorship & training' },
     { id: 'donor', label: 'Donor & Sponsor Portal', icon: Heart, desc: 'Giving history, receipts, sponsorship tiers' },
     { id: 'staff', label: 'Staff Command Center', icon: Briefcase, desc: 'Unified inbox, AI review, CRM, volunteer screening' },

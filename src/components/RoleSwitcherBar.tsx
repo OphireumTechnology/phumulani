@@ -26,15 +26,19 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
     const selected = users.find((u) => u.id === userId);
     if (selected) {
       db.setCurrentUser(selected);
-      // Auto route to appropriate portal if relevant
-      if (selected.role === 'volunteer' && activeView !== 'community') {
+      // Auto route to appropriate portal
+      if (selected.role === 'PLATFORM_SUPER_ADMIN') {
+        onViewChange('master-admin');
+      } else if (selected.role === 'volunteer' && activeView !== 'community') {
         onViewChange('community');
       } else if (selected.role === 'donor' && activeView !== 'donor') {
         onViewChange('donor');
-      } else if (['staff', 'volunteer_coordinator', 'finance_officer', 'safeguarding_officer'].includes(selected.role) && activeView === 'public') {
+      } else if (['staff', 'volunteer_coordinator', 'finance_officer', 'safeguarding_officer', 'program_manager'].includes(selected.role) && activeView === 'public') {
         onViewChange('staff');
-      } else if (['executive_director', 'board_member'].includes(selected.role) && activeView === 'public') {
+      } else if (['executive_director', 'board_member', 'governance_officer'].includes(selected.role) && activeView === 'public') {
         onViewChange('governance');
+      } else if (selected.role === 'community_advocate' || selected.role === 'community_member') {
+        onViewChange('community');
       }
     }
   };
@@ -59,7 +63,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
     volunteer: 'Volunteer',
     donor: 'Donor / Sponsor',
     sponsor: 'Corporate Sponsor',
-    staff: 'Staff Member',
+    staff: 'Staff Administrator',
     volunteer_coordinator: 'Volunteer Coordinator',
     finance_officer: 'Finance Director',
     communications_officer: 'Communications Lead',
@@ -67,6 +71,11 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
     board_member: 'Board Chair',
     safeguarding_officer: 'Safeguarding Officer',
     super_admin: 'Super Administrator',
+    PLATFORM_SUPER_ADMIN: 'Master Administrator',
+    governance_officer: 'Governance Officer',
+    program_manager: 'Program Manager',
+    community_advocate: 'Community Advocate',
+    community_member: 'Community Member',
   };
 
   const [isCollapsed, setIsCollapsed] = React.useState(false);
@@ -142,6 +151,55 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
         </button>
 
         <button
+          onClick={() => onViewChange('master-admin')}
+          className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
+            activeView === 'master-admin'
+              ? 'bg-amber-400 text-slate-950 border border-amber-300'
+              : 'bg-slate-800 text-amber-300 hover:text-white border border-amber-500/40'
+          }`}
+          title="Master Administrator Command Dashboard (/admin/master)"
+        >
+          <Shield className="w-3 h-3 text-amber-400" />
+          <span>Master Admin</span>
+        </button>
+
+        <button
+          onClick={() => onViewChange('fundraising')}
+          className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
+            activeView === 'fundraising'
+              ? 'bg-teal-400 text-slate-950 border border-teal-300'
+              : 'bg-slate-800 text-teal-300 hover:text-white border border-teal-500/40'
+          }`}
+          title="Enterprise Fundraising CRM & Donor Intelligence (/admin/master/fundraising)"
+        >
+          <span>Fundraising CRM</span>
+        </button>
+
+        <button
+          onClick={() => onViewChange('email-command')}
+          className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
+            activeView === 'email-command'
+              ? 'bg-emerald-400 text-slate-950 border border-emerald-300'
+              : 'bg-slate-800 text-emerald-300 hover:text-white border border-emerald-500/40'
+          }`}
+          title="Enterprise AI Email Command Center (/admin/master/email)"
+        >
+          <span>Email Command</span>
+        </button>
+
+        <button
+          onClick={() => onViewChange('production-status')}
+          className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] ${
+            activeView === 'production-status'
+              ? 'bg-teal-500/20 text-teal-300 border border-teal-500/40'
+              : 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700'
+          }`}
+          title="Section 16 Live Production Component Status"
+        >
+          <span>Live Status</span>
+        </button>
+
+        <button
           onClick={() => onViewChange('readiness')}
           className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] ${
             activeView === 'readiness'
@@ -150,7 +208,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
           }`}
         >
           <UserCheck className="w-3 h-3 text-amber-400" />
-          <span>12 Release Gates</span>
+          <span>12 Gates</span>
         </button>
 
         <button

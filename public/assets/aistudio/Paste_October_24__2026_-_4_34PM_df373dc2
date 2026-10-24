@@ -1,0 +1,1334 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+# PHASE 11 — PRODUCTION INTEGRITY, DONOR DATABASE ACTIVATION & FUNDRAISING OPERATIONS
+
+## MASTER DEVELOPMENT AND EXECUTION DIRECTIVE
+
+**Project:** Phumulani AI Community Platform  
+**Technology Developer:** Ophireum Technology  
+**Existing Repository:** OphireumTechnology/phumulani  
+**Reported Development Branch:** `feature/phumulani-email-enterprise`  
+**Master Administrator:** `/admin/master`  
+**Fundraising Department:** `/admin/master/fundraising`  
+**AI Email Department:** `/admin/master/email`  
+**Production Status:** `/admin/master/fundraising/production-status`
+
+**Development classification:** Critical Priority  
+**Execution approach:** Incremental development, independent verification, supervised activation  
+**Primary objective:** Transform the existing fundraising platform into a verified, production-ready system capable of securely managing actual donors, communications, funding opportunities, grants, donations, and program funding.
+
+---
+
+# SECTION 01 — DEVELOPMENT AUTHORITY AND EXISTING SYSTEM PRESERVATION
+
+Google AI Studio:
+
+Continue development of the existing Phumulani AI Community Platform.
+
+The previous development report identifies the following implemented systems:
+
+1. Master Administrator Command Center.
+2. Enterprise AI Email Management Department.
+3. Five organizational mailbox integrations.
+4. Fundraising CRM.
+5. Donor database management.
+6. Donor intelligence and segmentation.
+7. Individual giving.
+8. Major gift management.
+9. Corporate giving and CSR.
+10. Institutional funding.
+11. Government and foundation grants.
+12. International funding.
+13. Fundraising campaign management.
+14. AI Outreach Center.
+15. Communications Approval Center.
+16. Donor stewardship.
+17. Donation verification.
+18. Program funding allocation.
+19. Fundraising analytics.
+20. Financial and operational reports.
+21. Safeguarding controls.
+22. Production status monitoring.
+
+The previous report also identifies 51 automated acceptance tests.
+
+**Do not rebuild these systems without a verified technical reason.**
+
+Inspect the existing implementation and identify:
+
+- Features that are fully functional.
+- Features that are implemented but unverified.
+- Features connected to actual providers.
+- Features using development or demonstration data.
+- Missing backend integrations.
+- Broken workflows.
+- Security vulnerabilities.
+- Data integrity problems.
+- Production configuration deficiencies.
+
+Preserve the existing application architecture, branding, navigation, authentication, database records, and functioning components.
+
+Do not delete or overwrite existing donor records.
+
+Do not replace the repository or change the development workspace without authorization.
+
+---
+
+# SECTION 02 — FIRST PRIORITY: INDEPENDENT PRODUCTION AUDIT
+
+## MILESTONE 11.01 — COMPLETE SYSTEM VERIFICATION
+
+Before implementing additional functionality, independently inspect the existing code and deployed infrastructure.
+
+### 2.1 Repository verification
+
+Confirm:
+
+- Repository identity.
+- Current branch.
+- Latest commit.
+- Working tree status.
+- Existing uncommitted changes.
+- Application framework.
+- Database architecture.
+- Deployment configuration.
+- Environment configuration.
+- Existing automated tests.
+
+Preserve all existing work.
+
+Do not commit, push, merge, or deploy without the required approval.
+
+### 2.2 Frontend verification
+
+Inspect:
+
+- Master Administrator dashboard.
+- Fundraising dashboard.
+- AI Email dashboard.
+- All 22 fundraising routes.
+- Sidebar navigation.
+- Context panels.
+- Data tables.
+- Charts.
+- Campaign pipelines.
+- Grant pipelines.
+- Approval interfaces.
+- Responsive behavior.
+
+Verify that all pages render correctly.
+
+Do not consider successful TypeScript compilation proof of runtime functionality.
+
+### 2.3 Backend verification
+
+Verify:
+
+- Actual API endpoints.
+- Server-side authorization.
+- Database connections.
+- Database persistence.
+- Authentication services.
+- Background workers.
+- Email synchronization.
+- Outbound email transport.
+- AI orchestration.
+- Payment integration.
+- Audit logging.
+- Backup and recovery.
+
+Every production status must be supported by evidence.
+
+### 2.4 Required evidence
+
+For every verified component, record:
+
+- Component name.
+- Relevant source files.
+- Actual endpoint or integration.
+- Test performed.
+- Test result.
+- Execution timestamp.
+- Evidence reference.
+- Error details.
+- Production status.
+
+Do not expose passwords, access tokens, donor personal information, or other secrets in evidence reports.
+
+### Acceptance gate
+
+No component may be labeled PRODUCTION VERIFIED without actual technical evidence.
+
+---
+
+# SECTION 03 — FINANCIAL DATA INTEGRITY AND RECONCILIATION
+
+## MILESTONE 11.02 — FUNDRAISING LEDGER VALIDATION
+
+The previous report contains the following figures:
+
+| Metric | Reported value |
+|---|---:|
+| Verified donations | $390,000 |
+| Verified grants awarded | $270,000 |
+| Campaign funding targets | $725,000 |
+| Program funding gaps | $489,500 |
+| Monthly recurring giving | $350 |
+| Submitted grant requests | $300,000 |
+| Corporate sponsorship proposals | $175,000 |
+
+These figures must be independently validated.
+
+### 3.1 Financial classification
+
+Enforce separate accounting classifications:
+
+1. Identified funding opportunities.
+2. Qualified funding opportunities.
+3. Proposals under preparation.
+4. Applications submitted.
+5. Funding commitments.
+6. Grant awards.
+7. Outstanding receivables.
+8. Verified cash received.
+9. Restricted contributions.
+10. Unrestricted contributions.
+11. Allocated funding.
+12. Actual expenditures.
+
+Do not count a grant award as cash received unless funds have actually been received and reconciled.
+
+Do not count a donor pledge as a completed donation.
+
+Do not count a corporate proposal as confirmed sponsorship revenue.
+
+### 3.2 Program funding discrepancy
+
+The previous report identifies ten program funding gaps totaling $512,500 when the individual rows are added.
+
+However, the dashboard KPI reports $489,500.
+
+Investigate the $23,000 discrepancy.
+
+Determine whether it results from:
+
+- Incorrect aggregation.
+- Duplicate allocation.
+- Missing transaction.
+- Incorrect funding restriction.
+- Stale cached values.
+- Different reporting dates.
+- Misclassified funds.
+- Inconsistent database records.
+
+Do not modify historical transactions merely to force the totals to match.
+
+Produce a reconciliation report identifying the authoritative records and the reason for the difference.
+
+### 3.3 Financial evidence requirements
+
+Verified donations must have appropriate supporting records.
+
+Examples include:
+
+- Payment provider transaction identifiers.
+- Bank reconciliation references.
+- Authorized donation records.
+- Confirmed settlement status.
+- Restricted funding designations.
+- Receipt records.
+
+Grant awards must have supporting award documentation.
+
+### 3.4 Tax receipt validation
+
+Verify the organization's actual tax-exempt status and receipt requirements before enabling official donor tax receipts.
+
+Do not treat receipt generation functionality as evidence of tax-exempt eligibility.
+
+### Acceptance gate
+
+All financial KPIs must reconcile to authoritative records.
+
+Unresolved discrepancies must remain visible as exceptions.
+
+---
+
+# SECTION 04 — EXISTING DONOR DATABASE ACTIVATION
+
+## MILESTONE 11.03 — DONOR DATA ONBOARDING
+
+This is the first major operational activation priority after system integrity verification.
+
+Phumulani possesses an existing database containing contacts from different sectors.
+
+These include:
+
+- Individuals.
+- Recurring donors.
+- Major donors.
+- Corporations.
+- CSR departments.
+- Private foundations.
+- Family foundations.
+- Community foundations.
+- Government agencies.
+- Institutional grantmakers.
+- International organizations.
+- Professional associations.
+- Community organizations.
+- Potential funding partners.
+
+The system must securely manage this database.
+
+### 4.1 Donor import preparation
+
+Inspect the existing donor import engine.
+
+Confirm support for:
+
+- CSV.
+- XLSX.
+- JSON.
+- Authorized CRM integrations.
+
+Build or verify a secure import workflow:
+
+SOURCE SELECTION
+
+FILE VALIDATION
+
+MALWARE SCANNING
+
+FIELD MAPPING
+
+DATA NORMALIZATION
+
+DUPLICATE DETECTION
+
+CONSENT REVIEW
+
+IMPORT PREVIEW
+
+AUTHORIZED APPROVAL
+
+DATABASE IMPORT
+
+POST-IMPORT VALIDATION
+
+AUDIT REGISTRATION
+
+### 4.2 Donor data classification
+
+Categorize contacts into:
+
+**Individual Giving**
+
+- One-time donors.
+- Recurring donors.
+- Major donors.
+- Community supporters.
+- Legacy giving contacts.
+
+**Corporate Giving**
+
+- Corporate donations.
+- CSR partnerships.
+- Corporate sponsorships.
+- Employee giving.
+- Matching gifts.
+- In-kind contributions.
+
+**Institutional Funding**
+
+- Private foundations.
+- Family foundations.
+- Community foundations.
+- Government agencies.
+- International organizations.
+- Grantmaking institutions.
+- Educational institutions.
+
+### 4.3 Donor data provenance
+
+Each imported record must retain:
+
+- Original source.
+- Import batch.
+- Import date.
+- Data owner.
+- Available consent evidence.
+- Communication permissions.
+- Relationship history.
+- Last verified date.
+
+Do not infer fundraising consent from the mere existence of an email address.
+
+### 4.4 Duplicate prevention
+
+Detect duplicates using appropriate identifiers.
+
+Do not automatically merge records based solely on similar names.
+
+Require review for uncertain matches.
+
+### 4.5 Privacy requirements
+
+Restrict access to donor personal information.
+
+Do not use sensitive personal characteristics for fundraising persuasion or inferred donor wealth.
+
+Keep confidential survivor records outside the general donor database.
+
+### Acceptance gate
+
+A controlled import using authorized test records must demonstrate accurate persistence, deduplication, permissions, rollback procedures, and audit logging.
+
+Actual donor database import requires explicit authorization.
+
+---
+
+# SECTION 05 — AI EMAIL MANAGEMENT PRODUCTION VERIFICATION
+
+## MILESTONE 11.04 — FIVE-MAILBOX CONNECTIVITY
+
+Existing route:
+
+`/admin/master/email`
+
+Verify the five reported organizational mailboxes:
+
+1. info@phumulani.org
+2. donations@phumulani.org
+3. grants@phumulani.org
+4. executive@phumulani.org
+5. partnerships@phumulani.org
+
+### 5.1 Provider verification
+
+Identify the actual email service provider.
+
+Verify:
+
+- Authorized mailbox ownership.
+- Provider API connectivity.
+- OAuth authorization where supported.
+- Incoming message synchronization.
+- Message persistence.
+- Attachment handling.
+- Provider message identifiers.
+- Mailbox filtering.
+- Outbound delivery.
+- Delivery failure handling.
+- Retry processing.
+- Duplicate prevention.
+
+SMTP configuration alone does not establish incoming mailbox synchronization.
+
+### 5.2 End-to-end communication test
+
+Demonstrate:
+
+INCOMING EMAIL
+
+↓
+
+SECURITY SCREENING
+
+↓
+
+CLASSIFICATION
+
+↓
+
+PRIORITY ASSIGNMENT
+
+↓
+
+DONOR RECORD MATCHING
+
+↓
+
+AI RESPONSE DRAFT
+
+↓
+
+HUMAN REVIEW
+
+↓
+
+APPROVAL
+
+↓
+
+AUTHORIZED SENDING
+
+↓
+
+PROVIDER DELIVERY CONFIRMATION
+
+↓
+
+CRM UPDATE
+
+↓
+
+FOLLOW-UP TASK
+
+↓
+
+AUDIT LOG
+
+### 5.3 Email approval integrity
+
+Ensure that approval is bound to:
+
+- Exact recipients.
+- Sending mailbox.
+- Subject.
+- Message body.
+- Attachments.
+- Approved version.
+- Approver identity.
+
+Any material change after approval must invalidate authorization.
+
+### 5.4 Auto-responder validation
+
+Verify AR01–AR10.
+
+Test:
+
+- Authorized templates.
+- Frequency limits.
+- Duplicate prevention.
+- Suppression rules.
+- Unsubscribe handling.
+- Provider outages.
+- Delivery retries.
+- Safeguarding exclusions.
+
+No confidential survivor correspondence may enter ordinary auto-response workflows.
+
+### Acceptance gate
+
+Complete the workflow using an explicitly authorized test mailbox and test recipients.
+
+Do not initiate live donor communications during verification.
+
+---
+
+# SECTION 06 — DONOR ENGAGEMENT AND FUNDRAISING CAMPAIGN ACTIVATION
+
+## MILESTONE 11.05 — CONTROLLED FUNDRAISING PILOT
+
+After database and email verification, prepare one controlled fundraising pilot.
+
+Do not activate every campaign simultaneously.
+
+### 6.1 Pilot selection
+
+Select one approved Phumulani program with:
+
+- Verified program ownership.
+- Approved objectives.
+- Approved budget.
+- Documented funding requirement.
+- Authorized campaign manager.
+- Accurate program description.
+- Approved fundraising materials.
+
+### 6.2 Pilot audience
+
+Select a small, authorized donor audience.
+
+Require:
+
+- Valid contact information.
+- Appropriate communication permission.
+- No suppression or opt-out restrictions.
+- Documented relationship where applicable.
+- Approved campaign relevance.
+
+### 6.3 Campaign workflow
+
+PROGRAM SELECTION
+
+↓
+
+BUDGET VERIFICATION
+
+↓
+
+CAMPAIGN CREATION
+
+↓
+
+AUDIENCE VALIDATION
+
+↓
+
+AI MESSAGE PREPARATION
+
+↓
+
+FUNDRAISING MANAGER REVIEW
+
+↓
+
+EXECUTIVE APPROVAL
+
+↓
+
+AUTHORIZED DISTRIBUTION
+
+↓
+
+RESPONSE CLASSIFICATION
+
+↓
+
+CRM FOLLOW-UP
+
+↓
+
+VERIFIED CONTRIBUTIONS
+
+↓
+
+DONOR ACKNOWLEDGMENT
+
+↓
+
+IMPACT REPORTING
+
+### 6.4 AI message preparation
+
+The AI Fundraising Strategist may prepare:
+
+- Campaign introductions.
+- Program descriptions.
+- Funding appeals.
+- Corporate partnership invitations.
+- Grant inquiries.
+- Donor appreciation messages.
+- Follow-up correspondence.
+
+All statements must be grounded in approved organizational information.
+
+Do not fabricate program results, donor commitments, matching offers, or beneficiary stories.
+
+### 6.5 Pilot measurements
+
+Track:
+
+- Authorized recipients.
+- Accepted sends.
+- Provider delivery outcomes.
+- Bounce rate.
+- Spam complaints.
+- Unsubscribe requests.
+- Responses received.
+- Qualified donor inquiries.
+- Follow-up completion.
+- Verified donations.
+- Campaign expenses.
+
+Do not assume email opens accurately represent donor engagement.
+
+### Acceptance gate
+
+The pilot must pass staff approval, delivery, suppression, safeguarding, CRM, and audit tests.
+
+Actual external campaign distribution requires explicit authorization.
+
+---
+
+# SECTION 07 — GRANT ACQUISITION ACTIVATION
+
+## MILESTONE 11.06 — FOUNDATION AND GOVERNMENT GRANT OPERATIONS
+
+Existing route:
+
+`/admin/master/fundraising/grants`
+
+Verify the existing grants management system.
+
+### 7.1 Grant record verification
+
+Each opportunity must include:
+
+- Grantmaker.
+- Official funding program.
+- Published eligibility.
+- Funding range.
+- Application deadline.
+- Required documents.
+- Eligible activities.
+- Geographic restrictions.
+- Matching requirements.
+- Reporting obligations.
+- Official application instructions.
+- Assigned staff owner.
+- Application status.
+
+### 7.2 Grant intelligence
+
+Integrate A12 Grants Assistant to:
+
+- Review published grant requirements.
+- Match approved programs to eligibility criteria.
+- Identify missing documentation.
+- Prepare application checklists.
+- Draft narratives.
+- Organize approved budgets.
+- Monitor deadlines.
+- Prepare staff reminders.
+
+### 7.3 Government funding
+
+Keep government grant applications separate from ordinary fundraising email campaigns.
+
+Use official application procedures.
+
+Require authorization before submission.
+
+Do not represent informal communications as government approvals.
+
+### 7.4 Existing grant records
+
+Audit the reported grant records involving Minnesota agencies and foundations.
+
+Verify whether they are:
+
+- Demonstration examples.
+- Identified opportunities.
+- Submitted applications.
+- Confirmed awards.
+- Executed agreements.
+- Funded grants.
+
+Do not assume that named grantmakers have approved funding.
+
+### Acceptance gate
+
+Demonstrate a complete grant application preparation workflow with supporting evidence and human review.
+
+---
+
+# SECTION 08 — CORPORATE CSR AND SPONSORSHIP ACTIVATION
+
+## MILESTONE 11.07 — CORPORATE PARTNERSHIP OPERATIONS
+
+Existing routes:
+
+`/admin/master/fundraising/corporate`
+
+`/admin/master/fundraising/csr`
+
+Verify:
+
+- Corporate contact profiles.
+- CSR program interests.
+- Partnership history.
+- Sponsorship opportunities.
+- Proposal preparation.
+- Executive approvals.
+- Meeting scheduling.
+- Partnership agreements.
+- Verified contributions.
+- Reporting obligations.
+
+### Corporate workflow
+
+CORPORATE CONTACT
+
+↓
+
+RELATIONSHIP VERIFICATION
+
+↓
+
+PROGRAM ALIGNMENT
+
+↓
+
+SPONSORSHIP PROPOSAL
+
+↓
+
+MANAGEMENT APPROVAL
+
+↓
+
+AUTHORIZED OUTREACH
+
+↓
+
+MEETING
+
+↓
+
+PROPOSAL REVIEW
+
+↓
+
+AGREEMENT
+
+↓
+
+VERIFIED CONTRIBUTION
+
+↓
+
+PROGRAM DELIVERY
+
+↓
+
+PARTNERSHIP REPORTING
+
+### Acceptance gate
+
+All corporate opportunities must have clear status classifications.
+
+Unverified sponsorship proposals must not appear as confirmed funding.
+
+---
+
+# SECTION 09 — AI EXECUTIVE FUNDRAISING ASSISTANT
+
+## MILESTONE 11.08 — EXECUTIVE DECISION SUPPORT
+
+Integrate existing agents:
+
+- A01 Executive Assistant.
+- A02 Email Manager.
+- A03 Calendar Manager.
+- A06 Donation Manager.
+- A07 Fundraising Strategist.
+- A12 Grants Assistant.
+- A14 Finance Assistant.
+- A15 Data Analytics.
+- A18 Privacy & Safeguarding.
+
+### 9.1 Daily executive briefing
+
+Provide a daily dashboard briefing covering:
+
+1. Urgent donor correspondence.
+2. Pending fundraising approvals.
+3. Upcoming grant deadlines.
+4. Corporate partnership meetings.
+5. Major donor follow-ups.
+6. Active campaign performance.
+7. Verified funds received.
+8. Program funding gaps.
+9. Outstanding financial exceptions.
+10. Recommended executive decisions.
+
+### 9.2 AI recommendation controls
+
+Every recommendation must identify:
+
+- Source records.
+- Reason for recommendation.
+- Proposed next action.
+- Responsible staff member.
+- Approval requirements.
+- Relevant deadline.
+
+AI must not independently authorize financial commitments, submit grant applications, or send personalized donor solicitations.
+
+### Acceptance gate
+
+Executive recommendations must be traceable to actual authorized records.
+
+---
+
+# SECTION 10 — FINANCIAL REPORTING AND PROGRAM FUNDING
+
+## MILESTONE 11.09 — VERIFIED REPORTING
+
+Existing routes:
+
+`/admin/master/fundraising/reports`
+
+`/admin/master/fundraising/programs`
+
+`/admin/master/fundraising/analytics`
+
+### 10.1 Financial dashboards
+
+Display:
+
+- Verified cash received.
+- Verified grants awarded.
+- Outstanding grant receivables.
+- Pledges.
+- Active opportunities.
+- Restricted contributions.
+- Unrestricted contributions.
+- Allocated funding.
+- Expenditures.
+- Available program balances.
+- Program funding gaps.
+
+### 10.2 Reconciliation
+
+Ensure all totals reconcile with authoritative financial records.
+
+Use database-derived calculations.
+
+Avoid hardcoded financial values.
+
+### 10.3 Reporting
+
+Verify all 20 reported fundraising reports.
+
+Each report must include:
+
+- Reporting period.
+- Data source.
+- Generation timestamp.
+- Applied filters.
+- Verification status.
+- Responsible owner.
+
+### 10.4 Export controls
+
+Support authorized exports.
+
+Apply appropriate permissions, privacy protections, and audit logging.
+
+### Acceptance gate
+
+Reports must reproduce the same financial totals when generated from the same underlying records and reporting period.
+
+---
+
+# SECTION 11 — SAFEGUARDING AND PRIVACY
+
+## MILESTONE 11.10 — SECURITY VALIDATION
+
+Preserve strict separation between:
+
+1. General organizational communications.
+2. Donor and fundraising information.
+3. Confidential survivor services and case records.
+
+### Required controls
+
+- Server-side authorization.
+- Least-privilege access.
+- Restricted safeguarding roles.
+- Secure session management.
+- MFA for privileged accounts.
+- Database access restrictions.
+- Audit logging.
+- Secure file handling.
+- AI input classification.
+- Prompt-injection protection.
+- Safe communication-channel controls.
+
+Confidential survivor inquiries must not be processed by general fundraising AI.
+
+Do not automatically reply to potentially unsafe survivor correspondence.
+
+Do not expose confidential case information to ordinary Master Administrator fundraising views.
+
+### Acceptance gate
+
+Independent negative tests must demonstrate that unauthorized roles and general AI services cannot access confidential survivor records.
+
+---
+
+# SECTION 12 — EMAIL COMPLIANCE AND DONOR COMMUNICATION PERMISSIONS
+
+## MILESTONE 11.11 — COMMUNICATION GOVERNANCE
+
+Implement or verify:
+
+- Consent evidence.
+- Contact source provenance.
+- Communication preferences.
+- Suppression lists.
+- Unsubscribe requests.
+- Bounce processing.
+- Spam complaint handling.
+- Sender identity.
+- SPF configuration.
+- DKIM signing.
+- DMARC alignment.
+- Provider sending limits.
+- Campaign authorization.
+- Message audit trails.
+
+Apply applicable fundraising communication, privacy, and email regulations.
+
+Do not assume CAN-SPAM compliance alone establishes that every contact may be solicited.
+
+Require appropriate permission and authorization before live outreach.
+
+### Acceptance gate
+
+Contacts who are suppressed, opted out, or otherwise ineligible must be excluded from applicable fundraising communications.
+
+---
+
+# SECTION 13 — PRODUCTION HEALTH AND OPERATIONS MONITORING
+
+## MILESTONE 11.12 — LIVE OPERATIONS MONITORING
+
+Extend the existing production status dashboard.
+
+**Route:**
+
+`/admin/master/fundraising/production-status`
+
+### Monitor:
+
+1. Frontend.
+2. Backend API.
+3. Database.
+4. Authentication.
+5. AI Email Manager.
+6. Mailbox synchronization.
+7. Outbound email delivery.
+8. Fundraising CRM.
+9. Donor database.
+10. Campaign management.
+11. Grant management.
+12. AI workforce.
+13. Approval engine.
+14. Payment integration.
+15. Financial reconciliation.
+16. Audit logging.
+17. Backup systems.
+18. Security controls.
+
+### Status values
+
+NOT CONFIGURED
+
+IN DEVELOPMENT
+
+IMPLEMENTED — UNVERIFIED
+
+TESTED
+
+CONNECTED
+
+PRODUCTION VERIFIED
+
+DEGRADED
+
+BLOCKED
+
+FAILED
+
+### Monitoring requirements
+
+Display:
+
+- Last successful check.
+- Current status.
+- Verification method.
+- Error details.
+- Recovery recommendation.
+- Responsible administrator.
+- Last incident.
+- Relevant logs.
+
+Do not use simulated green statuses for unavailable production services.
+
+---
+
+# SECTION 14 — ADDITIONAL AUTOMATED ACCEPTANCE TESTS
+
+Create a new Phase 11 test group without replacing the previous 51 tests.
+
+### Production verification tests
+
+TEST-P11-01 — Repository and branch integrity.
+
+TEST-P11-02 — Existing fundraising routes.
+
+TEST-P11-03 — Authentication and MFA.
+
+TEST-P11-04 — Database connection.
+
+TEST-P11-05 — Persistent donor records.
+
+TEST-P11-06 — Financial KPI reconciliation.
+
+TEST-P11-07 — Program funding gap reconciliation.
+
+TEST-P11-08 — Donation settlement verification.
+
+TEST-P11-09 — Grant award evidence validation.
+
+TEST-P11-10 — Donor import preview.
+
+TEST-P11-11 — Donor import approval.
+
+TEST-P11-12 — Duplicate prevention.
+
+TEST-P11-13 — Communication permission enforcement.
+
+TEST-P11-14 — Organizational mailbox synchronization.
+
+TEST-P11-15 — Incoming email processing.
+
+TEST-P11-16 — AI classification.
+
+TEST-P11-17 — AI draft preparation.
+
+TEST-P11-18 — Human approval enforcement.
+
+TEST-P11-19 — Unauthorized sending blocked.
+
+TEST-P11-20 — Approved test email delivery.
+
+TEST-P11-21 — Delivery retry and idempotency.
+
+TEST-P11-22 — Auto-responder suppression.
+
+TEST-P11-23 — Donor-to-email CRM matching.
+
+TEST-P11-24 — Fundraising campaign simulation.
+
+TEST-P11-25 — Grant application workflow.
+
+TEST-P11-26 — Corporate sponsorship workflow.
+
+TEST-P11-27 — Executive briefing accuracy.
+
+TEST-P11-28 — Safeguarding isolation.
+
+TEST-P11-29 — Audit trail integrity.
+
+TEST-P11-30 — Backup and restoration.
+
+TEST-P11-31 — Production monitoring accuracy.
+
+TEST-P11-32 — Financial reporting consistency.
+
+TEST-P11-33 — Email opt-out enforcement.
+
+TEST-P11-34 — Restricted funding controls.
+
+TEST-P11-35 — Complete authorized fundraising workflow.
+
+Use controlled test data and test accounts.
+
+External sending tests must use explicitly authorized test recipients.
+
+Report actual test counts and results.
+
+Do not mark unexecuted or blocked tests as passed.
+
+---
+
+# SECTION 15 — DEVELOPMENT APPROVAL GATES
+
+Continue reversible development work without repeated approval requests.
+
+However, stop and request explicit authorization before:
+
+1. Importing the real donor database.
+2. Connecting new production email accounts.
+3. Sending real donor solicitations.
+4. Launching external fundraising campaigns.
+5. Submitting grant applications.
+6. Executing sponsorship agreements.
+7. Modifying production financial records.
+8. Applying production database migrations.
+9. Rotating production credentials.
+10. Changing privileged account permissions.
+11. Deploying to production.
+12. Merging into the protected main branch.
+13. Executing payment, refund, or disbursement transactions.
+
+Prepare the necessary changes and present a consolidated approval request.
+
+Do not bypass these gates.
+
+---
+
+# SECTION 16 — REQUIRED DELIVERABLES
+
+At the conclusion of Phase 11, provide:
+
+### Deliverable 01
+Complete existing-system technical audit.
+
+### Deliverable 02
+Verified repository and branch report.
+
+### Deliverable 03
+Database integrity assessment.
+
+### Deliverable 04
+Financial reconciliation report.
+
+### Deliverable 05
+Program funding gap discrepancy resolution.
+
+### Deliverable 06
+Donor database import readiness report.
+
+### Deliverable 07
+Donor segmentation verification.
+
+### Deliverable 08
+Email provider connectivity report.
+
+### Deliverable 09
+Five-mailbox operational verification.
+
+### Deliverable 10
+Email approval and delivery verification.
+
+### Deliverable 11
+Auto-responder safety report.
+
+### Deliverable 12
+Fundraising pilot configuration.
+
+### Deliverable 13
+Grant pipeline verification.
+
+### Deliverable 14
+Corporate sponsorship verification.
+
+### Deliverable 15
+Executive AI briefing integration.
+
+### Deliverable 16
+Financial reporting validation.
+
+### Deliverable 17
+Security and safeguarding assessment.
+
+### Deliverable 18
+Communication compliance assessment.
+
+### Deliverable 19
+Production monitoring dashboard.
+
+### Deliverable 20
+Phase 11 automated test suite.
+
+### Deliverable 21
+Consolidated development report.
+
+### Deliverable 22
+Deployment readiness checklist.
+
+### Deliverable 23
+Outstanding risks and blockers register.
+
+### Deliverable 24
+Required human approvals register.
+
+### Deliverable 25
+Prepared pull request for review.
+
+---
+
+# SECTION 17 — REQUIRED EXECUTION ORDER
+
+Execute in this sequence:
+
+**STEP 01:** Inspect the existing repository and development branch.
+
+**STEP 02:** Audit Phase 8–10 implementation claims against actual code and services.
+
+**STEP 03:** Verify existing database and authentication infrastructure.
+
+**STEP 04:** Investigate financial reporting discrepancies.
+
+**STEP 05:** Validate donor database architecture.
+
+**STEP 06:** Prepare secure donor import and segmentation.
+
+**STEP 07:** Verify the five organizational mailboxes.
+
+**STEP 08:** Validate AI email processing and human approval.
+
+**STEP 09:** Test outbound delivery using authorized test recipients.
+
+**STEP 10:** Verify grant and corporate partnership workflows.
+
+**STEP 11:** Prepare one controlled fundraising campaign pilot.
+
+**STEP 12:** Validate AI executive reporting.
+
+**STEP 13:** Verify financial and program reporting.
+
+**STEP 14:** Complete security and safeguarding tests.
+
+**STEP 15:** Complete Phase 11 automated acceptance testing.
+
+**STEP 16:** Update the production readiness dashboard.
+
+**STEP 17:** Generate a consolidated implementation report.
+
+**STEP 18:** Prepare a pull request and identify outstanding approval gates.
+
+Do not proceed to live external fundraising activity without authorization.
+
+---
+
+# SECTION 18 — FINAL EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+BEGIN PHASE 11 DEVELOPMENT IMMEDIATELY.
+
+USE THE EXISTING PHUMULANI AI COMMUNITY PLATFORM.
+
+PRESERVE ALL COMPLETED MASTER ADMINISTRATOR, AI EMAIL MANAGEMENT, FUNDRAISING CRM, DONOR INTELLIGENCE, CAMPAIGN, GRANT, AND SECURITY FEATURES.
+
+DO NOT REBUILD FUNCTIONAL SYSTEMS.
+
+FIRST VERIFY THE EXISTING PRODUCTION IMPLEMENTATION.
+
+RECONCILE FINANCIAL DATA AND INVESTIGATE THE $23,000 PROGRAM FUNDING GAP DISCREPANCY.
+
+VERIFY THE DONOR DATABASE AND FIVE ORGANIZATIONAL MAILBOXES.
+
+PREPARE THE PLATFORM FOR SECURE IMPORT OF PHUMULANI'S EXISTING DONOR CONTACT DATABASE.
+
+VERIFY THE COMPLETE EMAIL-TO-CRM WORKFLOW.
+
+PREPARE ONE CONTROLLED FUNDRAISING CAMPAIGN PILOT.
+
+VALIDATE FOUNDATION, GOVERNMENT, AND CORPORATE FUNDING WORKFLOWS.
+
+IMPLEMENT ADDITIONAL TESTING, OPERATIONAL MONITORING, AND FINANCIAL INTEGRITY CONTROLS WHERE REQUIRED.
+
+CONTINUE THROUGH DEVELOPMENT, TESTING, AND DOCUMENTATION WITHOUT UNNECESSARY INTERRUPTION.
+
+PRESERVE THE CURRENT SOURCE CODE, DATABASE RECORDS, AND SECURITY BOUNDARIES.
+
+STOP AT REQUIRED HUMAN APPROVAL GATES FOR PRODUCTION CHANGES AND EXTERNAL ACTIONS.
+
+DO NOT FABRICATE TEST RESULTS, FINANCIAL TRANSACTIONS, DONOR RECORDS, GRANT AWARDS, OR PRODUCTION VERIFICATION EVIDENCE.
+
+AT COMPLETION, GENERATE THE FULL PHASE 11 PRODUCTION READINESS REPORT.
+
+## FINAL DEVELOPMENT OBJECTIVE
+
+Deliver a production-verified, secure, and operational Phumulani fundraising infrastructure that can:
+
+- Manage actual donor relationships.
+- Identify legitimate funding opportunities.
+- Support approved fundraising communications.
+- Coordinate grant applications.
+- Develop corporate partnerships.
+- Track verified donations.
+- Maintain financial accountability.
+- Support approved community programs.
+- Provide reliable executive reporting.
+
+**END OF PHASE 11 MASTER DEVELOPMENT DIRECTIVE.**

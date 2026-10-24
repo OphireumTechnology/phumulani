@@ -16,7 +16,12 @@ export type UserRole =
   | 'executive_director'
   | 'board_member'
   | 'safeguarding_officer'
-  | 'super_admin';
+  | 'super_admin'
+  | 'PLATFORM_SUPER_ADMIN' // Phase 8 Master Administrator
+  | 'governance_officer'
+  | 'program_manager'
+  | 'community_advocate'
+  | 'community_member';
 
 export interface User {
   id: string;
@@ -28,6 +33,72 @@ export interface User {
   mfaEnabled: boolean;
   department?: string;
   permissions: string[];
+  status?: 'active' | 'suspended' | 'pending_activation' | 'invited';
+  createdAt?: string;
+  lastLoginAt?: string;
+  phoneNumber?: string;
+  invitedBy?: string;
+  emergencyRecoveryConfigured?: boolean;
+}
+
+// Production Health & Enterprise Status (Phase 8 Section 16)
+export type ProductionComponentId =
+  | 'FRONTEND'
+  | 'BACKEND'
+  | 'DATABASE'
+  | 'AUTHENTICATION'
+  | 'MASTER ADMIN'
+  | 'VOLUNTEER PORTAL'
+  | 'DONOR PORTAL'
+  | 'STAFF PORTAL'
+  | 'EXECUTIVE PORTAL'
+  | 'AI WORKFORCE'
+  | 'EMAIL'
+  | 'PAYMENTS'
+  | 'BACKUPS'
+  | 'SECURITY'
+  | 'DEPLOYMENT';
+
+export type ProductionOperationalStatus =
+  | 'LIVE'
+  | 'OFFLINE'
+  | 'UNVERIFIED'
+  | 'CONNECTED'
+  | 'DISCONNECTED'
+  | 'ACTIVE'
+  | 'FAILED'
+  | 'PROVISIONED'
+  | 'PENDING'
+  | 'OPERATIONAL'
+  | 'BLOCKED'
+  | 'PAUSED'
+  | 'DISABLED'
+  | 'VERIFIED'
+  | 'PASSED'
+  | 'CURRENT'
+  | 'OUTDATED';
+
+export interface ProductionHealthCheckItem {
+  id: ProductionComponentId;
+  name: string;
+  category: 'Core Infrastructure' | 'Operational Dashboards' | 'Enterprise Integrations' | 'Security & Governance';
+  status: ProductionOperationalStatus;
+  latencyMs: number;
+  lastChecked: string;
+  targetEndpoint: string;
+  verificationEvidence: string;
+  isFailClosed: boolean;
+}
+
+export interface SystemSettingItem {
+  key: string;
+  category: 'Organization' | 'Security' | 'AI Workforce' | 'Finance' | 'Communications';
+  label: string;
+  value: string | boolean | number;
+  description: string;
+  requiresReauth: boolean;
+  lastModifiedBy: string;
+  lastModifiedAt: string;
 }
 
 // Programs
@@ -312,3 +383,7 @@ export interface AuditLogItem {
   ipAddress: string;
   status: 'success' | 'flagged' | 'denied';
 }
+
+// Enterprise Email, Fundraising Intelligence & Executive Communications Types
+export * from './emailEnterprise';
+export * from './fundraising';

@@ -1,0 +1,472 @@
+-- ============================================================================
+-- PHUMULANI AI-NATIVE COMMUNITY PLATFORM
+-- PRODUCTION ENTERPRISE DATABASE SCHEMA (POSTGRESQL 15+)
+-- VAWA & CJIS Compliant Architecture with Immutable Audit Trail
+-- ============================================================================
+
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+
+-- ============================================================================
+-- 1. ACCESS CONTROL, USERS, ROLES & PERMISSIONS
+-- ============================================================================
+
+CREATE TYPE user_role AS ENUM (
+    'visitor',
+    'volunteer',
+    'donor',
+    'sponsor',
+    'staff',
+    'volunteer_coordinator',
+    'finance_officer',
+    'communications_officer',
+    'executive_director',
+    'board_member',
+    'safeguarding_officer',
+    'super_admin',
+    'PLATFORM_SUPER_ADMIN',
+    'governance_officer',
+    'program_manager',
+    'community_advocate',
+    'community_member'
+);
+
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
+    role user_role NOT NULL DEFAULT 'visitor',
+    title VARCHAR(150),
+    department VARCHAR(100),
+    avatar_url TEXT,
+    mfa_enabled BOOLEAN NOT NULL DEFAULT true,
+    mfa_secret_encrypted TEXT,
+    phone_number VARCHAR(50),
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_login_at TIMESTAMPTZ,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_users_role ON users(role);
+CREATE INDEX idx_users_email ON users(email);
+
+CREATE TABLE user_permissions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    permission_key VARCHAR(100) NOT NULL,
+    granted_by UUID REFERENCES users(id),
+    granted_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT uq_user_permission UNIQUE (user_id, permission_key)
+);
+
+-- ============================================================================
+-- 2. VOLUNTEER LIFECYCLE MANAGEMENT
+-- ============================================================================
+
+CREATE TYPE screening_status AS ENUM (
+    'submitted',
+    'screening_review',
+    'background_check',
+    'orientation_scheduled',
+    'training_completed',
+    'approved_active',
+    'declined',
+    'inactive'
+);
+
+CREATE TABLE volunteer_opportunities (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR(255) NOT NULL,
+    program_id VARCHAR(100) NOT NULL,
+    program_name VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    requirements TEXT[] NOT NULL DEFAULT '{}',
+    commitment_hours VARCHAR(100) NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    languages_needed TEXT[] NOT NULL DEFAULT '{}',
+    open_slots INT NOT NULL DEFAULT 5,
+    is_urgent BOOLEAN NOT NULL DEFAULT false,
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE volunteer_applications (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    tracking_id VARCHAR(50) UNIQUE NOT NULL,
+    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    full_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(50) NOT NULL,
+    preferred_language VARCHAR(50) NOT NULL DEFAULT 'English',
+    opportunity_id UUID REFERENCES volunteer_opportunities(id) ON DELETE RESTRICT,
+    opportunity_title VARCHAR(255) NOT NULL,
+    skills TEXT[] NOT NULL DEFAULT '{}',
+    availability TEXT[] NOT NULL DEFAULT '{}',
+    motivation TEXT NOT NULL,
+    status screening_status NOT NULL DEFAULT 'submitted',
+    ai_suggested_match_notes TEXT,
+    safeguarding_acknowledged BOOLEAN NOT NULL DEFAULT false,
+    reviewed_by_user_id UUID REFERENCES users(id),
+    reviewed_at TIMESTAMPTZ,
+    staff_notes TEXT,
+    submitted_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_volunteer_applications_tracking ON volunteer_applications(tracking_id);
+CREATE INDEX idx_volunteer_applications_status ON volunteer_applications(status);
+
+CREATE TABLE volunteer_hours (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    volunteer_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    volunteer_name VARCHAR(255) NOT NULL,
+    opportunity_title VARCHAR(255) NOT NULL,
+    service_date DATE NOT NULL,
+    hours NUMERIC(5,2) NOT NULL CHECK (hours > 0 AND hours <= 24),
+    activity_description TEXT NOT NULL,
+    verified BOOLEAN NOT NULL DEFAULT false,
+    verified_by_user_id UUID REFERENCES users(id),
+    verified_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_volunteer_hours_volunteer ON volunteer_hours(volunteer_id);
+CREATE INDEX idx_volunteer_hours_verified ON volunteer_hours(verified);
+
+-- ============================================================================
+-- 3. DONATIONS, FUNDRAISING CAMPAIGNS & 501(C)(3) RECONCILIATION
+-- ============================================================================
+
+CREATE TYPE payment_frequency AS ENUM ('one_time', 'monthly', 'annual');
+CREATE TYPE payment_status AS ENUM ('pending', 'succeeded', 'failed', 'refunded');
+
+CREATE TABLE campaigns (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR(255) NOT NULL,
+    target_amount NUMERIC(12,2) NOT NULL,
+    raised_amount NUMERIC(12,2) NOT NULL DEFAULT 0.00,
+    donor_count INT NOT NULL DEFAULT 0,
+    deadline DATE NOT NULL,
+    description TEXT NOT NULL,
+    impact_metric VARCHAR(255) NOT NULL,
+    is_featured BOOLEAN NOT NULL DEFAULT false,
+    is_active BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE donors (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID REFERENCES users(id) ON DELETE SET NULL,
+    full_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    phone VARCHAR(50),
+    organization_name VARCHAR(255),
+    lifetime_giving NUMERIC(12,2) NOT NULL DEFAULT 0.00,
+    donation_count INT NOT NULL DEFAULT 0,
+    donor_tier VARCHAR(50) NOT NULL DEFAULT 'Supporter',
+    is_anonymous_preference BOOLEAN NOT NULL DEFAULT false,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_donation_at TIMESTAMPTZ
+);
+
+CREATE TABLE donations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    transaction_id VARCHAR(100) UNIQUE NOT NULL,
+    idempotency_key VARCHAR(100) UNIQUE NOT NULL,
+    donor_id UUID REFERENCES donors(id) ON DELETE SET NULL,
+    donor_name VARCHAR(255) NOT NULL,
+    donor_email VARCHAR(255) NOT NULL,
+    amount NUMERIC(10,2) NOT NULL CHECK (amount > 0),
+    frequency payment_frequency NOT NULL DEFAULT 'one_time',
+    campaign_id UUID REFERENCES campaigns(id) ON DELETE RESTRICT,
+    campaign_title VARCHAR(255) NOT NULL,
+    payment_method VARCHAR(50) NOT NULL,
+    status payment_status NOT NULL DEFAULT 'pending',
+    is_anonymous BOOLEAN NOT NULL DEFAULT false,
+    receipt_number VARCHAR(100) UNIQUE NOT NULL,
+    reconciled BOOLEAN NOT NULL DEFAULT false,
+    reconciled_at TIMESTAMPTZ,
+    reconciled_by UUID REFERENCES users(id),
+    provider_fee NUMERIC(8,2) NOT NULL DEFAULT 0.00,
+    net_amount NUMERIC(10,2) GENERATED ALWAYS AS (amount - provider_fee) STORED,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_donations_txn ON donations(transaction_id);
+CREATE INDEX idx_donations_receipt ON donations(receipt_number);
+CREATE INDEX idx_donations_campaign ON donations(campaign_id);
+
+-- ============================================================================
+-- 4. EVENTS & CAPACITY ENFORCEMENT
+-- ============================================================================
+
+CREATE TABLE events (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR(255) NOT NULL,
+    event_date DATE NOT NULL,
+    event_time VARCHAR(100) NOT NULL,
+    location VARCHAR(255) NOT NULL,
+    is_virtual BOOLEAN NOT NULL DEFAULT false,
+    category VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    capacity INT NOT NULL CHECK (capacity > 0),
+    registered_count INT NOT NULL DEFAULT 0 CHECK (registered_count <= capacity),
+    waitlist_count INT NOT NULL DEFAULT 0,
+    is_approved BOOLEAN NOT NULL DEFAULT true,
+    accessibility_notes TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE event_registrations (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+    attendee_name VARCHAR(255) NOT NULL,
+    attendee_email VARCHAR(255) NOT NULL,
+    phone VARCHAR(50) NOT NULL,
+    special_needs TEXT,
+    status VARCHAR(50) NOT NULL DEFAULT 'confirmed' CHECK (status IN ('confirmed', 'waitlist', 'checked_in', 'cancelled')),
+    registered_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_registrations_event ON event_registrations(event_id);
+CREATE INDEX idx_registrations_email ON event_registrations(attendee_email);
+
+-- ============================================================================
+-- 5. CRM & STAKEHOLDER MANAGEMENT
+-- ============================================================================
+
+CREATE TABLE crm_contacts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    full_name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(50),
+    organization_name VARCHAR(255),
+    stakeholder_type VARCHAR(50) NOT NULL DEFAULT 'community_partner',
+    engagement_score INT NOT NULL DEFAULT 50,
+    tags TEXT[] NOT NULL DEFAULT '{}',
+    assigned_staff_id UUID REFERENCES users(id),
+    last_contact_date TIMESTAMPTZ,
+    notes TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE crm_interactions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    contact_id UUID NOT NULL REFERENCES crm_contacts(id) ON DELETE CASCADE,
+    interaction_type VARCHAR(50) NOT NULL,
+    summary VARCHAR(255) NOT NULL,
+    details TEXT,
+    conducted_by UUID NOT NULL REFERENCES users(id),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================================================
+-- 6. GRANTS & GOVERNANCE
+-- ============================================================================
+
+CREATE TABLE grants (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    funder_name VARCHAR(255) NOT NULL,
+    opportunity_title VARCHAR(255) NOT NULL,
+    amount_requested NUMERIC(12,2) NOT NULL,
+    stage VARCHAR(50) NOT NULL DEFAULT 'research',
+    deadline DATE NOT NULL,
+    program_target VARCHAR(100) NOT NULL,
+    executive_approved BOOLEAN NOT NULL DEFAULT false,
+    executive_approved_by UUID REFERENCES users(id),
+    executive_approved_at TIMESTAMPTZ,
+    ai_assistance_notes TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE board_resolutions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    reference_no VARCHAR(50) UNIQUE NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    meeting_date DATE NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'proposed',
+    summary TEXT NOT NULL,
+    voting_result VARCHAR(100) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE risk_items (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    category VARCHAR(50) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    severity VARCHAR(20) NOT NULL CHECK (severity IN ('low', 'medium', 'high', 'critical')),
+    mitigation TEXT NOT NULL,
+    owner_name VARCHAR(150) NOT NULL,
+    last_reviewed_at DATE NOT NULL DEFAULT CURRENT_DATE
+);
+
+-- ============================================================================
+-- 7. EMAIL AUTOMATION & INBOX TRIAGE
+-- ============================================================================
+
+CREATE TABLE inbox_messages (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    from_name VARCHAR(255) NOT NULL,
+    from_email VARCHAR(255) NOT NULL,
+    subject VARCHAR(255) NOT NULL,
+    received_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    body TEXT NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    urgency VARCHAR(20) NOT NULL DEFAULT 'normal',
+    is_safeguarding_alert BOOLEAN NOT NULL DEFAULT false,
+    assigned_staff_id UUID REFERENCES users(id),
+    status VARCHAR(50) NOT NULL DEFAULT 'unread',
+    ai_draft_reply TEXT,
+    ai_reasoning TEXT,
+    approved_by_user_id UUID REFERENCES users(id),
+    approved_at TIMESTAMPTZ
+);
+
+CREATE INDEX idx_inbox_safeguarding ON inbox_messages(is_safeguarding_alert);
+CREATE INDEX idx_inbox_status ON inbox_messages(status);
+
+-- ============================================================================
+-- 8. AI WORKFORCE ORCHESTRATION & HUMAN APPROVAL QUEUE
+-- ============================================================================
+
+CREATE TABLE ai_agents (
+    id VARCHAR(10) PRIMARY KEY, -- e.g., 'A01' through 'A18'
+    name VARCHAR(255) NOT NULL,
+    role VARCHAR(255) NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    description TEXT NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'supervised', 'shadow', 'paused')),
+    version VARCHAR(20) NOT NULL DEFAULT '2.4.0',
+    system_prompt_summary TEXT NOT NULL,
+    tool_allowlist TEXT[] NOT NULL DEFAULT '{}',
+    restricted_tools TEXT[] NOT NULL DEFAULT '{}',
+    requires_human_approval BOOLEAN NOT NULL DEFAULT true,
+    calls_this_month INT NOT NULL DEFAULT 0,
+    token_usage BIGINT NOT NULL DEFAULT 0,
+    cost_estimate_usd NUMERIC(10,4) NOT NULL DEFAULT 0.0000,
+    last_evaluation_score NUMERIC(5,2) NOT NULL DEFAULT 98.50,
+    escalation_officer VARCHAR(150) NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE ai_approval_tasks (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    agent_id VARCHAR(10) NOT NULL REFERENCES ai_agents(id),
+    agent_name VARCHAR(255) NOT NULL,
+    task_type VARCHAR(50) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    proposed_content TEXT NOT NULL,
+    context_summary TEXT NOT NULL,
+    risk_score VARCHAR(20) NOT NULL DEFAULT 'low',
+    status VARCHAR(50) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected', 'revised')),
+    reviewed_by_user_id UUID REFERENCES users(id),
+    reviewed_at TIMESTAMPTZ,
+    review_notes TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================================================
+-- 9. RESTRICTED SURVIVOR SERVICES (VAWA / CJIS SEPARATE BOUNDARY)
+-- Zero exposure to standard volunteer or public APIs
+-- ============================================================================
+
+CREATE TABLE restricted_intakes (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    anonymous_code VARCHAR(50) UNIQUE NOT NULL,
+    urgency_level VARCHAR(50) NOT NULL,
+    preferred_contact_method VARCHAR(50) NOT NULL,
+    language_needed VARCHAR(50) NOT NULL DEFAULT 'English',
+    safe_time_to_contact VARCHAR(100) NOT NULL,
+    assigned_specialist VARCHAR(255) NOT NULL DEFAULT 'Sister Miriam K. (Safeguarding Lead)',
+    status VARCHAR(50) NOT NULL DEFAULT 'new',
+    notes_encrypted_summary TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_updated TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Row-Level Security on Restricted Boundary
+ALTER TABLE restricted_intakes ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY restricted_intakes_safeguarding_only ON restricted_intakes
+    FOR ALL
+    USING (
+        current_setting('app.current_user_role', true) IN ('safeguarding_officer', 'executive_director')
+    );
+
+-- ============================================================================
+-- 10. AUTHENTIC MEDIA VAULT & PRESERVATION REGISTRY
+-- Zero AI substitution for real survivors / community members
+-- ============================================================================
+
+CREATE TABLE media_registry (
+    id VARCHAR(100) PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    original_filename VARCHAR(255) NOT NULL,
+    file_path TEXT NOT NULL,
+    sha256_checksum VARCHAR(64) NOT NULL,
+    dimensions VARCHAR(50) NOT NULL,
+    mime_type VARCHAR(100) NOT NULL,
+    depicted_subject VARCHAR(255) NOT NULL,
+    safeguarding_review_status VARCHAR(50) NOT NULL DEFAULT 'cleared_for_public_web',
+    publication_status VARCHAR(50) NOT NULL DEFAULT 'published',
+    consent_status VARCHAR(50) NOT NULL DEFAULT 'approved',
+    consent_recorded_date DATE NOT NULL,
+    is_founder_media BOOLEAN NOT NULL DEFAULT false,
+    caption TEXT NOT NULL,
+    alt_text TEXT NOT NULL,
+    copyright_credit VARCHAR(255) NOT NULL,
+    local_backup_verified BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ============================================================================
+-- 11. IMMUTABLE AUDIT TRAIL (APPEND-ONLY)
+-- ============================================================================
+
+CREATE TABLE audit_events (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    timestamp TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    actor_email VARCHAR(255) NOT NULL,
+    actor_role VARCHAR(50) NOT NULL,
+    action VARCHAR(100) NOT NULL,
+    resource VARCHAR(150) NOT NULL,
+    details TEXT NOT NULL,
+    ip_address VARCHAR(50) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'success' CHECK (status IN ('success', 'flagged', 'denied')),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_audit_timestamp ON audit_events(timestamp DESC);
+CREATE INDEX idx_audit_actor ON audit_events(actor_email);
+CREATE INDEX idx_audit_action ON audit_events(action);
+
+-- Protect Audit Log from modification or deletion
+CREATE OR REPLACE FUNCTION prevent_audit_tampering()
+RETURNS TRIGGER AS $$
+BEGIN
+    RAISE EXCEPTION 'Audit log is append-only and cannot be updated or deleted.';
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_audit_no_update_delete
+BEFORE UPDATE OR DELETE ON audit_events
+FOR EACH ROW EXECUTE FUNCTION prevent_audit_tampering();
+
+-- ============================================================================
+-- 10. SYSTEM SETTINGS & OPERATIONAL POLICIES
+-- ============================================================================
+
+CREATE TABLE system_settings (
+    key VARCHAR(100) PRIMARY KEY,
+    category VARCHAR(50) NOT NULL,
+    label VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    value JSONB NOT NULL,
+    requires_reauth BOOLEAN NOT NULL DEFAULT false,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_by UUID REFERENCES users(id)
+);
+
+CREATE INDEX idx_system_settings_category ON system_settings(category);

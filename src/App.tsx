@@ -20,6 +20,7 @@ import { StaffCommandCenterView } from './views/StaffCommandCenterView';
 import { GovernancePortalView } from './views/GovernancePortalView';
 import { AIWorkforceView } from './views/AIWorkforceView';
 import { ReadinessChecklistView } from './views/ReadinessChecklistView';
+import { MasterAdministratorView } from './views/MasterAdministratorView';
 
 export default function App() {
   const [dbState, setDbState] = useState(db.getState());
@@ -115,6 +116,38 @@ export default function App() {
           <ReadinessChecklistView
             currentUser={dbState.currentUser}
             onViewChange={setActiveView}
+          />
+        )}
+
+        {activeView === 'master-admin' && (
+          <MasterAdministratorView
+            currentUser={dbState.currentUser}
+            onViewChange={setActiveView}
+            initialTab="overview"
+          />
+        )}
+
+        {activeView === 'production-status' && (
+          <MasterAdministratorView
+            currentUser={dbState.currentUser}
+            onViewChange={setActiveView}
+            initialTab="production_status"
+          />
+        )}
+
+        {activeView === 'email-command' && (
+          <MasterAdministratorView
+            currentUser={dbState.currentUser}
+            onViewChange={setActiveView}
+            initialTab="email_command_center"
+          />
+        )}
+
+        {activeView === 'fundraising' && (
+          <MasterAdministratorView
+            currentUser={dbState.currentUser}
+            onViewChange={setActiveView}
+            initialTab="fundraising_command_center"
           />
         )}
       </main>
