@@ -611,3 +611,160 @@ CREATE TABLE weekly_development_reports (
     is_approved_for_distribution BOOLEAN NOT NULL DEFAULT true,
     published_date TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+-- ============================================================================
+-- 12. PHASE 14: ENTERPRISE AI EMAIL MANAGER & SYNCHRONIZATION INFRASTRUCTURE
+-- ============================================================================
+
+CREATE TYPE mailbox_conn_status AS ENUM (
+    'NOT_CONFIGURED',
+    'AUTHORIZATION_REQUIRED',
+    'CONNECTING',
+    'CONNECTED',
+    'SYNCING',
+    'DEGRADED',
+    'DISCONNECTED',
+    'AUTHENTICATION_FAILED',
+    'RATE_LIMITED',
+    'ERROR'
+);
+
+CREATE TABLE enterprise_connected_mailboxes (
+    id VARCHAR(50) PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    display_name VARCHAR(255) NOT NULL,
+    department VARCHAR(100) NOT NULL,
+    provider VARCHAR(100) NOT NULL DEFAULT 'Google Workspace',
+    connection_state mailbox_conn_status NOT NULL DEFAULT 'CONNECTED',
+    mailbox_type VARCHAR(50) NOT NULL DEFAULT 'primary',
+    provider_account_id VARCHAR(150),
+    auth_status VARCHAR(50) NOT NULL DEFAULT 'authorized',
+    permission_scopes TEXT[] NOT NULL DEFAULT '{"gmail.readonly", "gmail.send", "gmail.modify"}',
+    reauth_required BOOLEAN NOT NULL DEFAULT false,
+    two_way_sync_enabled BOOLEAN NOT NULL DEFAULT true,
+    historical_import_status VARCHAR(50) NOT NULL DEFAULT 'completed',
+    historical_import_progress NUMERIC(5,2) NOT NULL DEFAULT 100.0,
+    historical_discovered INT NOT NULL DEFAULT 0,
+    total_imported_messages INT NOT NULL DEFAULT 0,
+    historical_remaining INT NOT NULL DEFAULT 0,
+    sync_lag_seconds INT NOT NULL DEFAULT 15,
+    sent_messages_reconciled INT NOT NULL DEFAULT 0,
+    duplicates_prevented INT NOT NULL DEFAULT 0,
+    auth_failures INT NOT NULL DEFAULT 0,
+    rate_limit_events INT NOT NULL DEFAULT 0,
+    attachment_sync_failures INT NOT NULL DEFAULT 0,
+    last_synced_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_attempt_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    next_scheduled_sync TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE enterprise_historical_import_jobs (
+    id VARCHAR(50) PRIMARY KEY,
+    mailbox_id VARCHAR(50) REFERENCES enterprise_connected_mailboxes(id),
+    mailbox_email VARCHAR(255) NOT NULL,
+    provider VARCHAR(100) NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'idle',
+    stage VARCHAR(50) NOT NULL DEFAULT 'completed',
+    scope VARCHAR(50) NOT NULL DEFAULT 'all_history',
+    total_found INT NOT NULL DEFAULT 0,
+    imported_count INT NOT NULL DEFAULT 0,
+    duplicates_skipped INT NOT NULL DEFAULT 0,
+    safeguarding_quarantined INT NOT NULL DEFAULT 0,
+    errors_count INT NOT NULL DEFAULT 0,
+    cursor VARCHAR(150) NOT NULL,
+    batch_size INT NOT NULL DEFAULT 50,
+    progress_percent NUMERIC(5,2) NOT NULL DEFAULT 0.0,
+    is_resumable BOOLEAN NOT NULL DEFAULT true,
+    last_checkpoint_at TIMESTAMPTZ,
+    completed_at TIMESTAMPTZ,
+    audit_evidence TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE enterprise_mailbox_checkpoints (
+    mailbox_id VARCHAR(50) PRIMARY KEY REFERENCES enterprise_connected_mailboxes(id),
+    email VARCHAR(255) NOT NULL,
+    provider VARCHAR(100) NOT NULL,
+    history_id VARCHAR(100) NOT NULL,
+    delta_token VARCHAR(150) NOT NULL,
+    last_successful_sync_at TIMESTAMPTZ NOT NULL,
+    last_checkpoint_at TIMESTAMPTZ NOT NULL,
+    new_messages_count INT NOT NULL DEFAULT 0,
+    sent_messages_count INT NOT NULL DEFAULT 0,
+    rate_limit_backoff_ms INT NOT NULL DEFAULT 0,
+    backoff_until TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE enterprise_email_threads (
+    id VARCHAR(50) PRIMARY KEY,
+    mailbox_id VARCHAR(50) REFERENCES enterprise_connected_mailboxes(id),
+    mailbox_email VARCHAR(255) NOT NULL,
+    thread_subject VARCHAR(500) NOT NULL,
+    participant_emails TEXT[] NOT NULL DEFAULT '{}',
+    message_count INT NOT NULL DEFAULT 1,
+    last_message_at TIMESTAMPTZ NOT NULL,
+    classification VARCHAR(50) NOT NULL DEFAULT '23_general_inquiries',
+    priority VARCHAR(10) NOT NULL DEFAULT 'P3',
+    status VARCHAR(50) NOT NULL DEFAULT 'unread',
+    assigned_staff_name VARCHAR(150),
+    sla_deadline TIMESTAMPTZ NOT NULL,
+    is_overdue BOOLEAN NOT NULL DEFAULT false,
+    folder VARCHAR(50) NOT NULL DEFAULT 'INBOX',
+    is_read BOOLEAN NOT NULL DEFAULT false,
+    is_archived BOOLEAN NOT NULL DEFAULT false,
+    is_historical BOOLEAN NOT NULL DEFAULT false,
+    crm_entity_type VARCHAR(50),
+    crm_entity_id VARCHAR(100),
+    crm_entity_name VARCHAR(255),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_threads_mailbox ON enterprise_email_threads(mailbox_email);
+CREATE INDEX idx_threads_classification ON enterprise_email_threads(classification);
+CREATE INDEX idx_threads_priority ON enterprise_email_threads(priority);
+CREATE INDEX idx_threads_status ON enterprise_email_threads(status);
+
+CREATE TABLE enterprise_email_messages (
+    id VARCHAR(50) PRIMARY KEY,
+    thread_id VARCHAR(50) REFERENCES enterprise_email_threads(id) ON DELETE CASCADE,
+    sender_name VARCHAR(255) NOT NULL,
+    sender_email VARCHAR(255) NOT NULL,
+    recipient_email VARCHAR(255) NOT NULL,
+    subject VARCHAR(500) NOT NULL,
+    body_text TEXT NOT NULL,
+    direction VARCHAR(20) NOT NULL DEFAULT 'inbound',
+    provider_message_id VARCHAR(150),
+    rfc_message_id VARCHAR(255),
+    folder VARCHAR(50) NOT NULL DEFAULT 'INBOX',
+    is_read BOOLEAN NOT NULL DEFAULT false,
+    is_archived BOOLEAN NOT NULL DEFAULT false,
+    is_historical BOOLEAN NOT NULL DEFAULT false,
+    received_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_messages_thread ON enterprise_email_messages(thread_id);
+CREATE INDEX idx_messages_provider_id ON enterprise_email_messages(provider_message_id);
+CREATE INDEX idx_messages_rfc_id ON enterprise_email_messages(rfc_message_id);
+
+CREATE TABLE enterprise_outbound_authorizations (
+    id VARCHAR(50) PRIMARY KEY,
+    draft_id VARCHAR(50) NOT NULL,
+    thread_id VARCHAR(50) REFERENCES enterprise_email_threads(id),
+    sender_mailbox VARCHAR(255) NOT NULL,
+    recipient_emails TEXT[] NOT NULL DEFAULT '{}',
+    subject VARCHAR(500) NOT NULL,
+    body_text TEXT NOT NULL,
+    approved_by_user_id UUID REFERENCES users(id),
+    approved_by_name VARCHAR(150) NOT NULL,
+    approved_at TIMESTAMPTZ NOT NULL,
+    idempotency_key VARCHAR(150) UNIQUE NOT NULL,
+    provider_submission_id VARCHAR(150),
+    delivery_status VARCHAR(50) NOT NULL DEFAULT 'delivered',
+    reconciled_in_sent_folder BOOLEAN NOT NULL DEFAULT true,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_outbound_auth_idempotency ON enterprise_outbound_authorizations(idempotency_key);
+

@@ -417,7 +417,7 @@ class DatabaseService {
   }
 
 
-  private saveState(state: AppDatabaseState): void {
+  public saveState(state: AppDatabaseState): void {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     } catch {

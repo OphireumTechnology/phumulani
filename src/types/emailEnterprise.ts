@@ -78,23 +78,54 @@ export const PRIORITY_CONFIG: Record<
 
 export type EmailFolder = 'INBOX' | 'SENT' | 'ARCHIVE' | 'TRASH' | 'SPAM' | 'DRAFTS';
 
+export type MailboxConnectionState =
+  | 'NOT_CONFIGURED'
+  | 'AUTHORIZATION_REQUIRED'
+  | 'CONNECTING'
+  | 'CONNECTED'
+  | 'SYNCING'
+  | 'DEGRADED'
+  | 'DISCONNECTED'
+  | 'AUTHENTICATION_FAILED'
+  | 'RATE_LIMITED'
+  | 'ERROR'
+  | 'connected'
+  | 'syncing'
+  | 'error'
+  | 'disconnected';
+
+export type MailboxType = 'primary' | 'collaborative' | 'shared' | 'alias';
+
 export interface ConnectedMailbox {
   id: string;
   email: string;
   displayName: string;
   department: string;
   provider: 'Google Workspace' | 'Microsoft 365' | 'Custom IMAP/SMTP';
-  status: 'connected' | 'syncing' | 'error' | 'disconnected';
+  status: MailboxConnectionState;
+  connectionState?: MailboxConnectionState;
+  mailboxType?: MailboxType;
   lastSyncedAt: string;
+  lastAttemptAt?: string;
   unreadCount: number;
   totalThreads: number;
   isDefault?: boolean;
   providerAccountId?: string;
   authStatus?: 'authorized' | 'pending_auth' | 'expired' | 'revoked';
+  permissionScopes?: string[];
+  reauthRequired?: boolean;
   twoWaySyncEnabled?: boolean;
   historicalImportStatus?: 'not_started' | 'in_progress' | 'paused' | 'completed' | 'failed';
   historicalImportProgress?: number;
   totalImportedMessages?: number;
+  historicalDiscovered?: number;
+  historicalRemaining?: number;
+  syncLagSeconds?: number;
+  sentMessagesReconciled?: number;
+  duplicatesPrevented?: number;
+  authFailures?: number;
+  rateLimitEvents?: number;
+  attachmentSyncFailures?: number;
   pendingSyncJobs?: number;
   failedJobs?: number;
   retryCount?: number;
@@ -103,6 +134,60 @@ export interface ConnectedMailbox {
   nextScheduledSync?: string;
   newMessagesCount?: number;
   lastSyncAt?: string;
+}
+
+export interface MailboxHealthMetrics {
+  mailboxId: string;
+  mailboxEmail: string;
+  connectionStatus: MailboxConnectionState;
+  historicalDiscovered: number;
+  historicalImported: number;
+  historicalRemaining: number;
+  importCompletionPercent: number;
+  lastSuccessfulSync: string;
+  syncLagSeconds: number;
+  newMessagesSynchronized: number;
+  sentMessagesReconciled: number;
+  failedSyncJobs: number;
+  duplicatesPrevented: number;
+  authFailures: number;
+  rateLimitEvents: number;
+  attachmentSyncFailures: number;
+  pendingRetries: number;
+  lastReconciliationAt: string;
+}
+
+export interface EmailAttachmentItem {
+  id: string;
+  filename: string;
+  name?: string;
+  sizeBytes: number;
+  fileType: string;
+  mimeType: string;
+  isQuarantined: boolean;
+  scanStatus: 'clean' | 'quarantined' | 'pending';
+  sha256?: string;
+  storagePath?: string;
+  downloadUrl?: string;
+}
+
+export interface OutboundEmailAuthorization {
+  id: string;
+  draftId: string;
+  threadId: string;
+  senderMailbox: string;
+  recipientEmails: string[];
+  subject: string;
+  bodyText: string;
+  approvedByUserId: string;
+  approvedByName: string;
+  approvedAt: string;
+  idempotencyKey: string;
+  providerSubmissionId?: string;
+  deliveryStatus: 'submitted' | 'delivered' | 'bounced' | 'failed';
+  dispatchedAt?: string;
+  reconciledInSentFolder: boolean;
+  error?: string;
 }
 
 export type HistoricalImportStage =
@@ -299,6 +384,25 @@ export interface EmailDraft {
   createdAt: string;
 }
 
+export type ConversationStatus =
+  | 'NEW'
+  | 'TRIAGED'
+  | 'ASSIGNED'
+  | 'IN_PROGRESS'
+  | 'AWAITING_APPROVAL'
+  | 'AWAITING_EXTERNAL_RESPONSE'
+  | 'RESOLVED'
+  | 'ARCHIVED'
+  | 'ESCALATED'
+  | 'unread'
+  | 'in_review'
+  | 'awaiting_approval'
+  | 'responded'
+  | 'resolved'
+  | 'escalated_safeguarding'
+  | 'new'
+  | 'triage_ready';
+
 export interface EnterpriseEmailMessage {
   id: string;
   threadId: string;
@@ -314,6 +418,8 @@ export interface EnterpriseEmailMessage {
   autoResponderRuleId?: AutoResponderRuleId;
   providerMessageId?: string;
   providerThreadId?: string;
+  rfcMessageId?: string;
+  inReplyToRfcId?: string;
   folder?: EmailFolder;
   labels?: string[];
   isRead?: boolean;
@@ -331,6 +437,7 @@ export interface EnterpriseEmailMessage {
     isQuarantined?: boolean;
     scanStatus?: 'clean' | 'quarantined' | 'pending';
     storagePath?: string;
+    sha256?: string;
   }>;
 }
 
@@ -344,7 +451,7 @@ export interface EnterpriseEmailThread {
   lastMessageAt: string;
   classification: EmailClassificationCategory;
   priority: EmailPriorityLevel;
-  status: 'unread' | 'in_review' | 'awaiting_approval' | 'responded' | 'resolved' | 'escalated_safeguarding' | 'new' | 'triage_ready';
+  status: ConversationStatus;
   assignedStaffId?: string;
   assignedStaffName?: string;
   slaDeadline: string;
@@ -367,6 +474,12 @@ export interface EnterpriseEmailThread {
   providerThreadId?: string;
   providerMessageId?: string;
   syncState?: 'synced' | 'pending_push' | 'conflict' | 'error';
+  internalNotes?: Array<{
+    id: string;
+    authorName: string;
+    text: string;
+    createdAt: string;
+  }>;
 }
 
 // CRM & Fundraising

@@ -1,0 +1,1092 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+## PHASE 14 — ENTERPRISE AI EMAIL MANAGER
+### Unified Mailbox Synchronization, Historical Email Recovery, AI Intelligence & Secure Communications
+
+**Development Organization:** Ophireum Technology  
+**Project:** Phumulani AI Community Platform  
+**Primary Route:** `/admin/master/email`  
+**Integration:** Master Administrator, Fundraising CRM, Client Development Portal  
+**Priority:** CRITICAL — EMAIL OPERATIONS  
+**Development Mode:** Existing-system enhancement, not replacement
+
+---
+
+# 01. MASTER DEVELOPMENT OBJECTIVE
+
+GOOGLE AI STUDIO:
+
+Continue developing the existing Phumulani AI Community Platform.
+
+**FOCUS EXCLUSIVELY ON THE ENTERPRISE AI EMAIL MANAGEMENT SYSTEM.**
+
+Do not initiate unrelated development of fundraising dashboards, client portals, or other departments.
+
+The primary goal is to create a complete organizational email management environment where authorized staff can:
+
+1. Connect existing organizational mailboxes.
+2. Import and synchronize all historical emails.
+3. Continuously synchronize newly received emails.
+4. Synchronize sent messages and replies.
+5. Manage all connected mailboxes from one unified inbox.
+6. Search historical and current correspondence.
+7. Use AI to classify and prioritize messages.
+8. Generate context-aware draft replies.
+9. Review and approve outbound communications.
+10. Send authorized messages through the appropriate mailbox.
+11. Track conversations and response deadlines.
+12. Connect relevant correspondence to donor and fundraising records.
+13. Manage attachments securely.
+14. Detect synchronization failures.
+15. Review complete communication audit trails.
+
+The system must work with real provider integrations, not simulated mailbox records.
+
+**A successful frontend build or automated unit test does not establish that live email synchronization is operational.**
+
+---
+
+# 02. PRESERVE EXISTING DEVELOPMENT
+
+Inspect the current repository before modifying any code.
+
+Repository:
+
+`OphireumTechnology/phumulani`
+
+Primary development route:
+
+`/admin/master/email`
+
+Inspect existing components and services, including:
+
+- `EmailCommandCenterView.tsx`
+- `emailEnterpriseService.ts`
+- Existing authentication and role permissions.
+- Existing database schema.
+- Existing email synchronization logic.
+- Existing AI classification services.
+- Existing approval engine.
+- Existing autoresponder rules.
+- Existing fundraising CRM integration.
+- Existing automated acceptance tests.
+
+Reuse functioning components.
+
+Do not duplicate the Email Manager.
+
+Do not remove existing functionality.
+
+Preserve previously corrected TypeScript compatibility issues involving optional synchronization timestamps and historical import statuses.
+
+---
+
+# 03. FIVE ORGANIZATIONAL MAILBOXES
+
+The Email Manager must support the existing organizational addresses:
+
+| Mailbox | Primary function |
+|---|---|
+| `info@phumulani.org` | General inquiries and community communication |
+| `donations@phumulani.org` | Donations and donor relationships |
+| `grants@phumulani.org` | Grant applications and institutional correspondence |
+| `executive@phumulani.org` | Executive communications |
+| `partnerships@phumulani.org` | Corporate and organizational partnerships |
+
+All five addresses must appear in one central management interface.
+
+However, do not assume that each address is a separate provider mailbox. Some may be aliases, shared mailboxes, or forwarding addresses.
+
+Inspect the actual provider configuration and identify the correct synchronization mechanism for each address.
+
+Support adding additional organizational mailboxes in the future.
+
+---
+
+# 04. UNIFIED EMAIL MANAGEMENT ARCHITECTURE
+
+Implement:
+
+```text
+PHUMULANI AI COMMUNITY PLATFORM
+│
+└── MASTER ADMINISTRATOR
+    │
+    └── ENTERPRISE AI EMAIL MANAGER
+        │
+        ├── UNIFIED INBOX
+        │   ├── info@phumulani.org
+        │   ├── donations@phumulani.org
+        │   ├── grants@phumulani.org
+        │   ├── executive@phumulani.org
+        │   └── partnerships@phumulani.org
+        │
+        ├── HISTORICAL EMAIL SYNCHRONIZATION
+        │   ├── Existing Inbox Messages
+        │   ├── Sent Messages
+        │   ├── Archived Messages
+        │   ├── Conversation Threads
+        │   └── Attachments
+        │
+        ├── CONTINUOUS SYNCHRONIZATION
+        │   ├── New Incoming Emails
+        │   ├── New Sent Emails
+        │   ├── Read / Unread State
+        │   ├── Folder Changes
+        │   └── Provider Sync Checkpoints
+        │
+        ├── AI EMAIL INTELLIGENCE
+        │   ├── Classification
+        │   ├── Priority Detection
+        │   ├── Conversation Summaries
+        │   ├── Draft Replies
+        │   └── Recommended Actions
+        │
+        ├── HUMAN APPROVAL CENTER
+        │   ├── Draft Review
+        │   ├── Edit
+        │   ├── Approve
+        │   ├── Reject
+        │   └── Authorized Send
+        │
+        ├── DONOR & CRM INTEGRATION
+        │
+        ├── EMAIL SEARCH & ARCHIVE
+        │
+        ├── ATTACHMENT MANAGEMENT
+        │
+        ├── SYNCHRONIZATION HEALTH
+        │
+        └── SECURITY & AUDIT LOGGING
+```
+
+All connected mailboxes must be managed through one interface while preserving individual mailbox identities and permissions.
+
+---
+
+# 05. EMAIL MANAGER USER INTERFACE
+
+Maintain the existing premium minimalist design.
+
+Use:
+
+**Left collapsible navigation + central email workspace + right contextual inspector.**
+
+## Left navigation
+
+Create or enhance:
+
+**EMAIL OPERATIONS**
+- Unified Inbox
+- All Mailboxes
+- Unread
+- Priority
+- Assigned to Me
+- Awaiting Reply
+- Sent
+- Drafts
+- Scheduled
+- Archive
+- Spam / Junk
+- Trash
+
+**AI INTELLIGENCE**
+- AI Triage
+- AI Drafts
+- Conversation Summaries
+- Suggested Actions
+
+**WORKFLOWS**
+- Approval Queue
+- Follow-ups
+- Escalations
+- Autoresponders
+
+**ORGANIZATIONAL RELATIONSHIPS**
+- Donor Correspondence
+- Grant Correspondence
+- Partnership Correspondence
+- General Inquiries
+
+**ADMINISTRATION**
+- Mailbox Connections
+- Historical Import
+- Synchronization Monitor
+- Email Templates
+- Security & Audit
+- Settings
+
+## Center workspace
+
+Display:
+
+- Mailbox selector.
+- Search bar.
+- Folder filters.
+- Conversation list.
+- Message preview.
+- Threaded conversation history.
+- Compose and reply controls.
+- AI recommendations.
+- Assignment and status controls.
+
+## Right inspector
+
+Display:
+
+- Sender identity.
+- Recipient mailbox.
+- Contact relationship.
+- Historical conversation summary.
+- Relevant CRM record.
+- Consent and suppression status.
+- AI classification.
+- Priority.
+- Assigned staff member.
+- Response deadline.
+- Approval status.
+- Synchronization metadata.
+
+Do not expose CRM records to users without the corresponding permissions.
+
+---
+
+# 06. MAILBOX CONNECTION MANAGER
+
+Implement a production-capable Mailbox Connection Manager.
+
+Support appropriate provider integrations, including:
+
+- Microsoft 365 / Exchange Online.
+- Google Workspace / Gmail.
+- Standards-compliant IMAP providers.
+- Provider-supported outbound transport.
+
+Determine the actual provider for each Phumulani mailbox before implementing provider-specific functionality.
+
+Prefer OAuth and provider-native APIs when available.
+
+Do not assume that IMAP and SMTP are universally available.
+
+## Mailbox connection information
+
+Display:
+
+- Email address.
+- Provider.
+- Mailbox type.
+- Connection status.
+- Authentication status.
+- Last successful synchronization.
+- Last attempted synchronization.
+- Historical import progress.
+- New messages detected.
+- Synchronization errors.
+- Permission scope.
+- Reauthorization requirements.
+
+Supported states:
+
+NOT_CONFIGURED
+
+AUTHORIZATION_REQUIRED
+
+CONNECTING
+
+CONNECTED
+
+SYNCING
+
+DEGRADED
+
+DISCONNECTED
+
+AUTHENTICATION_FAILED
+
+RATE_LIMITED
+
+ERROR
+
+Do not mark a mailbox CONNECTED solely because its address exists in the database.
+
+---
+
+# 07. COMPLETE HISTORICAL EMAIL SYNCHRONIZATION
+
+**THIS IS A PRIMARY PHASE 14 REQUIREMENT.**
+
+The system must support importing all available historical organizational correspondence from connected mailboxes.
+
+The historical synchronization engine must retrieve, subject to provider access and retention limits:
+
+- Existing inbox emails.
+- Sent emails.
+- Archived emails.
+- Existing conversation threads.
+- Available message metadata.
+- Accessible attachments.
+- Available folder and label information.
+
+## Historical synchronization requirements
+
+Implement:
+
+1. Full mailbox discovery.
+2. Historical message enumeration.
+3. Batch synchronization.
+4. Provider pagination.
+5. Rate-limit handling.
+6. Retry with exponential backoff.
+7. Durable synchronization checkpoints.
+8. Duplicate prevention.
+9. Interrupted-job recovery.
+10. Import progress tracking.
+11. Failed-message reporting.
+12. Historical thread reconstruction.
+13. Attachment metadata synchronization.
+14. Import completion verification.
+15. Reconciliation against provider counts where supported.
+
+Historical synchronization must be resumable.
+
+A failed import must not require restarting the entire mailbox import.
+
+## Critical protection
+
+**Never delete original provider emails during import.**
+
+Use a non-destructive synchronization process.
+
+Do not mark an import complete merely because one batch has succeeded.
+
+---
+
+# 08. EXISTING AND NEW EMAILS IN ONE MANAGEMENT SYSTEM
+
+The unified inbox must combine:
+
+**A. Historical correspondence**
+
+Previously received and sent messages.
+
+**B. Newly synchronized correspondence**
+
+Messages received or sent after integration.
+
+**C. Messages created through Phumulani**
+
+Authorized outbound communications generated through the Email Manager.
+
+All messages must appear within the correct conversation threads.
+
+Avoid duplicate conversations when the same email appears through multiple folders, labels, aliases, or synchronization cycles.
+
+## Message identity
+
+Preserve:
+
+- Provider message ID.
+- RFC Message-ID where available.
+- Mailbox identifier.
+- Conversation or thread identifier.
+- Sender.
+- Recipients.
+- Subject.
+- Original timestamps.
+- Folder or label membership.
+- Provider synchronization metadata.
+
+Use provider-specific identifiers and stable mailbox scoping to prevent duplication.
+
+Do not assume RFC Message-ID is globally unique or always present.
+
+---
+
+# 09. CONTINUOUS EMAIL SYNCHRONIZATION
+
+After historical synchronization, maintain continuous updates.
+
+Support:
+
+- New incoming messages.
+- New sent messages.
+- Reply synchronization.
+- Message updates.
+- Folder and label changes.
+- Read/unread changes.
+- Provider-side deletions or moves.
+- Attachment availability changes.
+
+Use provider-supported change notifications, push mechanisms, or scheduled incremental synchronization.
+
+Implement durable checkpoints.
+
+If provider notifications are unavailable or interrupted, use controlled polling and reconciliation.
+
+## Synchronization frequency
+
+Allow administrators to configure appropriate polling intervals within provider limits.
+
+Display:
+
+- Last successful sync.
+- Next scheduled sync.
+- Sync latency.
+- Pending changes.
+- Failed jobs.
+- Recovery status.
+
+Never claim real-time synchronization if the provider integration only performs periodic polling.
+
+---
+
+# 10. ADVANCED UNIFIED SEARCH
+
+Implement secure email search across connected mailboxes.
+
+Support filters for:
+
+- Sender.
+- Recipient.
+- Subject.
+- Message body.
+- Date range.
+- Mailbox.
+- Folder.
+- Read/unread.
+- Attachment presence.
+- Priority.
+- Assigned staff member.
+- CRM contact.
+- Approval status.
+
+Search historical and newly synchronized messages together.
+
+Enforce mailbox-level access restrictions in search results.
+
+Never return unauthorized messages through search, AI summaries, exports, or autocomplete.
+
+---
+
+# 11. AI EMAIL TRIAGE
+
+Integrate the existing AI Email Intelligence engine.
+
+Automatically classify eligible incoming messages into appropriate organizational categories.
+
+Examples:
+
+- General inquiries.
+- Donation inquiries.
+- Donor follow-ups.
+- Grant opportunities.
+- Grant applications.
+- Corporate partnerships.
+- Sponsorship requests.
+- Volunteer inquiries.
+- Community programs.
+- Executive correspondence.
+- Financial inquiries.
+- Complaints.
+- Urgent operational issues.
+
+Reuse the existing classification taxonomy where appropriate.
+
+Do not replace the previously implemented categories without reviewing compatibility.
+
+## Priority levels
+
+Maintain the existing P0–P4 priority structure.
+
+P0 safety-critical messages require immediate authorized human escalation.
+
+Do not treat a routine email autoresponder or an ordinary one-hour SLA as sufficient for a crisis.
+
+---
+
+# 12. AI EMAIL DRAFTING
+
+Implement contextual AI drafting.
+
+Supported actions:
+
+- Draft reply.
+- Summarize conversation.
+- Suggest follow-up.
+- Rewrite professionally.
+- Adjust tone.
+- Translate.
+- Extract action items.
+- Identify missing information.
+- Prepare executive response.
+- Prepare donor acknowledgment.
+- Prepare grant correspondence.
+- Prepare partnership response.
+
+Preserve the existing nine communication tone styles where implemented.
+
+## Drafting requirements
+
+AI-generated drafts must use authorized, verified organizational information.
+
+Do not invent:
+
+- Donation receipts.
+- Grant awards.
+- Funding commitments.
+- Organizational approvals.
+- Program outcomes.
+- Legal assurances.
+- Financial transactions.
+
+Every AI-generated outbound draft must enter the human approval workflow.
+
+---
+
+# 13. HUMAN APPROVAL AND OUTBOUND COMMUNICATIONS
+
+**NO UNAPPROVED AI-GENERATED EMAIL MAY BE SENT.**
+
+Maintain the existing fail-closed approval architecture.
+
+Workflow:
+
+```text
+Incoming Email
+     ↓
+AI Classification
+     ↓
+AI Draft Generation
+     ↓
+Human Review
+     ↓
+Edit / Approve / Reject
+     ↓
+Authorized Send
+     ↓
+Provider Delivery Result
+     ↓
+Sent Folder Reconciliation
+     ↓
+Audit Record
+```
+
+Required controls:
+
+- Approver identity.
+- Approval timestamp.
+- Approved content version.
+- Sender mailbox.
+- Recipient list.
+- Attachment references.
+- Authorization record.
+- Provider submission result.
+
+Any material change to recipients, content, or attachments after approval must require reapproval.
+
+A provider accepting a message does not prove delivery to the recipient's inbox.
+
+Track submission, delivery evidence, bounces, and failures separately.
+
+---
+
+# 14. EMAIL COMPOSE AND REPLY CENTER
+
+Implement a complete email composition interface.
+
+Support:
+
+- New message.
+- Reply.
+- Reply all.
+- Forward.
+- Save draft.
+- Add attachments.
+- Select sender mailbox.
+- Select authorized recipients.
+- Insert approved templates.
+- Request AI drafting assistance.
+- Submit for approval.
+- Send after authorization.
+
+Use the correct organizational sender identity.
+
+Do not permit unauthorized staff to send from executive or restricted mailboxes.
+
+Prevent accidental duplicate sends through idempotency controls.
+
+---
+
+# 15. CONVERSATION MANAGEMENT
+
+Implement enterprise conversation management.
+
+Each conversation should support:
+
+- Assigned staff member.
+- Responsible department.
+- Status.
+- Priority.
+- Tags.
+- Internal notes.
+- Response deadline.
+- Follow-up reminders.
+- Related contact.
+- Related campaign or grant.
+- Complete authorized conversation history.
+
+Suggested conversation statuses:
+
+NEW
+
+TRIAGED
+
+ASSIGNED
+
+IN_PROGRESS
+
+AWAITING_APPROVAL
+
+AWAITING_EXTERNAL_RESPONSE
+
+RESOLVED
+
+ARCHIVED
+
+ESCALATED
+
+Internal notes must never be sent to external email recipients.
+
+---
+
+# 16. DONOR AND FUNDRAISING CRM INTEGRATION
+
+Connect relevant email conversations to the existing fundraising CRM.
+
+Examples:
+
+**Donations mailbox**
+
+Associate authorized donor correspondence with the relevant donor record.
+
+**Grants mailbox**
+
+Associate grant correspondence with the appropriate funding opportunity.
+
+**Partnerships mailbox**
+
+Associate corporate and institutional communications with partnership records.
+
+**Executive mailbox**
+
+Apply stricter permissions to sensitive executive correspondence.
+
+## Integration safeguards
+
+Do not automatically create verified donations from email promises.
+
+Do not treat a grant inquiry as an awarded grant.
+
+Do not add contacts to fundraising campaigns without valid permission and applicable compliance checks.
+
+Preserve donor consent and communication preferences.
+
+---
+
+# 17. ATTACHMENT MANAGEMENT
+
+Implement secure attachment handling.
+
+Support:
+
+- Attachment metadata.
+- Authorized preview.
+- Download.
+- Upload.
+- File-type validation.
+- Size limits.
+- Malware scanning.
+- Secure storage.
+- Access auditing.
+
+Do not expose attachments through public storage URLs.
+
+Do not automatically feed confidential attachments into AI processing.
+
+Respect organizational retention and access policies.
+
+---
+
+# 18. AUTORESPONDER GOVERNANCE
+
+Preserve existing AR01–AR10 rules.
+
+Audit each rule against the live mailbox integration.
+
+Requirements:
+
+- Authorized activation.
+- Defined triggering conditions.
+- Recipient suppression checks.
+- Duplicate-response prevention.
+- Rate limits.
+- Human escalation.
+- Audit logging.
+- Emergency disable control.
+
+## Safeguarding restrictions
+
+Confidential survivor communications must remain outside general marketing, fundraising, and unrestricted AI workflows.
+
+Do not send automatic crisis responses unless explicitly authorized under an approved safeguarding protocol.
+
+Safety-critical messages must be routed to appropriately authorized human responders.
+
+---
+
+# 19. SYNCHRONIZATION HEALTH COMMAND CENTER
+
+Create a dedicated synchronization monitoring interface.
+
+Display a health card for each organizational mailbox.
+
+## Required metrics
+
+1. Connection status.
+2. Historical messages discovered.
+3. Historical messages imported.
+4. Historical messages remaining.
+5. Import completion percentage.
+6. Last successful synchronization.
+7. Current synchronization lag.
+8. New messages synchronized.
+9. Sent messages reconciled.
+10. Failed synchronization jobs.
+11. Duplicate messages prevented.
+12. Authentication failures.
+13. Provider rate-limit events.
+14. Attachment synchronization failures.
+15. Pending retries.
+16. Last successful reconciliation.
+
+Separate verified metrics from unavailable or estimated values.
+
+Provide administrator controls for:
+
+- Start historical import.
+- Pause import.
+- Resume import.
+- Retry failed messages.
+- Run incremental synchronization.
+- Reauthorize mailbox.
+- Review error logs.
+- Export sanitized synchronization reports.
+
+Bulk historical imports and provider-modifying operations must require explicit authorized initiation.
+
+---
+
+# 20. EMAIL SECURITY AND DATA GOVERNANCE
+
+Enforce:
+
+- Server-side authentication.
+- Role-based mailbox access.
+- Least-privilege provider scopes.
+- Encrypted credential storage.
+- Secure token rotation.
+- TLS for supported provider connections.
+- Audit logging.
+- Attachment security.
+- Data retention policies.
+- Provider permission validation.
+
+## Critical credential requirement
+
+Rotate any previously exposed synchronization credentials.
+
+Never place provider OAuth tokens, mailbox passwords, or backend secrets in frontend JavaScript.
+
+GitHub Pages must not directly hold mailbox provider credentials.
+
+Use the existing secure backend where available.
+
+If the current backend is insufficient, document the required infrastructure before implementing live connections.
+
+---
+
+# 21. EMAIL DATA MODEL
+
+Inspect existing PostgreSQL tables and migrations.
+
+Reuse existing entities wherever possible.
+
+Required logical records include:
+
+- Mailbox connections.
+- Provider identities.
+- Authentication references.
+- Email messages.
+- Conversation threads.
+- Folder memberships.
+- Attachments.
+- Synchronization jobs.
+- Synchronization checkpoints.
+- Import batches.
+- Failed synchronization events.
+- AI classifications.
+- AI-generated drafts.
+- Approval decisions.
+- Outbound delivery attempts.
+- Staff assignments.
+- CRM associations.
+- Audit events.
+
+Use migrations for necessary schema changes.
+
+Do not overwrite existing email history.
+
+Ensure synchronization operations are idempotent.
+
+---
+
+# 22. AUTOMATED TESTING — PHASE 14
+
+Create the following acceptance tests.
+
+**TEST-P14-01** — Mailbox provider configuration validation.
+
+**TEST-P14-02** — Secure provider authentication.
+
+**TEST-P14-03** — Unauthorized mailbox access blocked.
+
+**TEST-P14-04** — Five organizational mailbox identities supported.
+
+**TEST-P14-05** — Historical inbox import.
+
+**TEST-P14-06** — Historical sent-message import.
+
+**TEST-P14-07** — Archived-message import.
+
+**TEST-P14-08** — Historical thread reconstruction.
+
+**TEST-P14-09** — Duplicate message prevention.
+
+**TEST-P14-10** — Interrupted import recovery.
+
+**TEST-P14-11** — Durable checkpoint persistence.
+
+**TEST-P14-12** — Provider pagination.
+
+**TEST-P14-13** — Provider rate-limit recovery.
+
+**TEST-P14-14** — Incremental incoming synchronization.
+
+**TEST-P14-15** — Incremental sent-message synchronization.
+
+**TEST-P14-16** — Read/unread synchronization.
+
+**TEST-P14-17** — Folder and label synchronization.
+
+**TEST-P14-18** — Provider deletion handling.
+
+**TEST-P14-19** — Unified inbox aggregation.
+
+**TEST-P14-20** — Mailbox-level search authorization.
+
+**TEST-P14-21** — Historical email search.
+
+**TEST-P14-22** — Conversation assignment.
+
+**TEST-P14-23** — AI classification.
+
+**TEST-P14-24** — AI draft generation.
+
+**TEST-P14-25** — Human approval enforcement.
+
+**TEST-P14-26** — Unauthorized outbound send blocked.
+
+**TEST-P14-27** — Approved outbound send.
+
+**TEST-P14-28** — Duplicate-send prevention.
+
+**TEST-P14-29** — Sent-folder reconciliation.
+
+**TEST-P14-30** — Attachment access protection.
+
+**TEST-P14-31** — CRM contact association.
+
+**TEST-P14-32** — Grant correspondence association.
+
+**TEST-P14-33** — Autoresponder safety suppression.
+
+**TEST-P14-34** — Survivor-data isolation.
+
+**TEST-P14-35** — Synchronization health metrics.
+
+**TEST-P14-36** — Authentication failure detection.
+
+**TEST-P14-37** — Token expiration recovery.
+
+**TEST-P14-38** — Audit logging.
+
+**TEST-P14-39** — TypeScript validation.
+
+**TEST-P14-40** — Production build.
+
+**TEST-P14-41** — Existing Phumulani regression tests.
+
+**TEST-P14-42** — Real provider integration smoke test.
+
+**TEST-P14-43** — Authorized test-message send and receive.
+
+**TEST-P14-44** — Historical and incremental synchronization reconciliation.
+
+**TEST-P14-45** — End-to-end approved email workflow.
+
+Do not claim that provider integration tests passed if they were executed only against mocks.
+
+---
+
+# 23. DEVELOPMENT MILESTONES
+
+Execute sequentially.
+
+### M14.01 — Existing Email System Audit
+
+Inspect the current Email Command Center, provider connections, database schema, backend services, and synchronization logic.
+
+Identify:
+
+- Implemented features.
+- Missing features.
+- Simulated integrations.
+- Real provider connections.
+- Security risks.
+- Required infrastructure.
+- Existing test coverage.
+
+**Deliverable:** Email System Architecture and Integration Audit.
+
+**Approval gate:** Present the findings before major changes.
+
+### M14.02 — Mailbox Connection Manager
+
+Complete real provider connection management.
+
+### M14.03 — Historical Email Import Engine
+
+Implement resumable historical synchronization.
+
+### M14.04 — Continuous Synchronization
+
+Implement provider-supported incremental updates.
+
+### M14.05 — Unified Inbox
+
+Combine historical and new messages.
+
+### M14.06 — Advanced Search and Threading
+
+Implement conversation search, reconstruction, and assignment.
+
+### M14.07 — AI Email Intelligence
+
+Complete classification, summarization, and drafting.
+
+### M14.08 — Human Approval and Sending
+
+Complete the approved outbound communication lifecycle.
+
+### M14.09 — CRM Integration
+
+Connect authorized donor, grant, and partnership correspondence.
+
+### M14.10 — Synchronization Health and Security
+
+Complete monitoring, safeguarding, and operational controls.
+
+### M14.11 — Automated Testing
+
+Execute all Phase 14 tests and existing regression tests.
+
+### M14.12 — Production Integration Verification
+
+Verify real provider connectivity, persistence, approved test sends, synchronization accuracy, and operational recovery.
+
+Do not proceed to production deployment without approval.
+
+---
+
+# 24. REQUIRED DELIVERABLES
+
+Deliver:
+
+1. Enterprise Unified Inbox.
+2. Five-mailbox connection management.
+3. Historical email synchronization engine.
+4. Continuous email synchronization engine.
+5. Inbox and sent-message reconciliation.
+6. Conversation threading.
+7. Advanced email search.
+8. AI email classification.
+9. AI-generated response drafts.
+10. Human approval workflow.
+11. Authorized outbound sending.
+12. Conversation assignment and follow-ups.
+13. Donor CRM correspondence integration.
+14. Grant correspondence integration.
+15. Corporate partnership correspondence integration.
+16. Secure attachment management.
+17. Autoresponder governance.
+18. Synchronization health dashboard.
+19. Provider error recovery.
+20. Complete audit logging.
+21. Updated database migrations.
+22. Phase 14 automated acceptance tests.
+23. Provider integration verification report.
+24. Updated Email Manager operations documentation.
+25. Final Phase 14 implementation and readiness register.
+
+---
+
+# 25. FINAL MASTER EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+**BEGIN PHASE 14 — ENTERPRISE AI EMAIL MANAGER DEVELOPMENT.**
+
+FOCUS ALL DEVELOPMENT EFFORT ON THE EXISTING EMAIL MANAGEMENT SYSTEM AT:
+
+`/admin/master/email`
+
+THE PRIMARY OBJECTIVE IS TO SYNCHRONIZE ALL EXISTING ORGANIZATIONAL EMAILS AND ALL FUTURE EMAILS INTO ONE CENTRALIZED MANAGEMENT SYSTEM.
+
+THE SYSTEM MUST SUPPORT:
+
+- ALL FIVE ORGANIZATIONAL MAILBOXES.
+- COMPLETE AVAILABLE HISTORICAL EMAIL IMPORT.
+- CONTINUOUS INCOMING EMAIL SYNCHRONIZATION.
+- SENT EMAIL SYNCHRONIZATION.
+- UNIFIED CONVERSATION MANAGEMENT.
+- ADVANCED SEARCH.
+- AI CLASSIFICATION.
+- AI-GENERATED DRAFTS.
+- MANDATORY HUMAN APPROVAL.
+- AUTHORIZED EMAIL SENDING.
+- DONOR AND GRANT CRM INTEGRATION.
+- SYNCHRONIZATION HEALTH MONITORING.
+- SECURE AUDIT TRAILS.
+
+PRESERVE THE EXISTING PHUMULANI WEBSITE, MASTER ADMINISTRATOR, FUNDRAISING DEPARTMENT, AND CLIENT DEVELOPMENT PORTAL.
+
+DO NOT CREATE MOCK EMAIL CONNECTIONS OR SIMULATED PRODUCTION SUCCESS STATES.
+
+DO NOT SEND LIVE EMAILS, START BULK IMPORTS, OR MODIFY PROVIDER MAILBOX CONTENTS WITHOUT EXPLICIT AUTHORIZATION.
+
+START WITH M14.01 — EXISTING EMAIL SYSTEM AUDIT.
+
+IDENTIFY THE ACTUAL EMAIL PROVIDER, AVAILABLE AUTHENTICATION METHODS, EXISTING SYNC CAPABILITIES, AND ANY MISSING BACKEND INFRASTRUCTURE.
+
+PRESENT THE AUDIT RESULTS AND IMPLEMENTATION PLAN FOR APPROVAL BEFORE MAKING SUBSTANTIAL CHANGES.
+
+**END OF PHASE 14 MASTER DEVELOPMENT DIRECTIVE.**
