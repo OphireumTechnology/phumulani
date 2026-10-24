@@ -21,6 +21,7 @@ import { GovernancePortalView } from './views/GovernancePortalView';
 import { AIWorkforceView } from './views/AIWorkforceView';
 import { ReadinessChecklistView } from './views/ReadinessChecklistView';
 import { MasterAdministratorView } from './views/MasterAdministratorView';
+import { ClientDevelopmentPortalView } from './views/ClientDevelopmentPortalView';
 
 export default function App() {
   const [dbState, setDbState] = useState(db.getState());
@@ -148,6 +149,21 @@ export default function App() {
             currentUser={dbState.currentUser}
             onViewChange={setActiveView}
             initialTab="fundraising_command_center"
+          />
+        )}
+
+        {activeView === 'development-ops' && (
+          <MasterAdministratorView
+            currentUser={dbState.currentUser}
+            onViewChange={setActiveView}
+            initialTab="development_operations"
+          />
+        )}
+
+        {activeView === 'client-development' && (
+          <ClientDevelopmentPortalView
+            currentUser={dbState.currentUser}
+            onViewChange={setActiveView}
           />
         )}
       </main>

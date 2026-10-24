@@ -29,6 +29,10 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
       // Auto route to appropriate portal
       if (selected.role === 'PLATFORM_SUPER_ADMIN') {
         onViewChange('master-admin');
+      } else if (['CLIENT_PROJECT_ADMIN', 'CLIENT_PROJECT_VIEWER', 'CLIENT_APPROVER'].includes(selected.role)) {
+        onViewChange('client-development');
+      } else if (['DEVELOPMENT_ADMIN', 'DEVELOPER'].includes(selected.role)) {
+        onViewChange('development-ops');
       } else if (selected.role === 'volunteer' && activeView !== 'community') {
         onViewChange('community');
       } else if (selected.role === 'donor' && activeView !== 'donor') {
@@ -76,6 +80,11 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
     program_manager: 'Program Manager',
     community_advocate: 'Community Advocate',
     community_member: 'Community Member',
+    CLIENT_PROJECT_ADMIN: 'Client Project Lead',
+    CLIENT_PROJECT_VIEWER: 'Client Project Viewer',
+    CLIENT_APPROVER: 'Client Approver (CEO)',
+    DEVELOPMENT_ADMIN: 'DevOps Administrator',
+    DEVELOPER: 'Senior Engineer',
   };
 
   const [isCollapsed, setIsCollapsed] = React.useState(false);
@@ -161,6 +170,31 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
         >
           <Shield className="w-3 h-3 text-amber-400" />
           <span>Master Admin</span>
+        </button>
+
+        <button
+          onClick={() => onViewChange('client-development')}
+          className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
+            activeView === 'client-development'
+              ? 'bg-amber-400 text-slate-950 border border-amber-300'
+              : 'bg-slate-800 text-amber-300 hover:text-white border border-amber-500/40'
+          }`}
+          title="Client Development Transparency Portal (/client/project-dashboard)"
+        >
+          <Sparkles className="w-3 h-3 text-amber-400" />
+          <span>Client Portal</span>
+        </button>
+
+        <button
+          onClick={() => onViewChange('development-ops')}
+          className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
+            activeView === 'development-ops'
+              ? 'bg-teal-400 text-slate-950 border border-teal-300'
+              : 'bg-slate-800 text-teal-300 hover:text-white border border-teal-500/40'
+          }`}
+          title="Development Operations Hub (/admin/master/development)"
+        >
+          <span>Dev Ops</span>
         </button>
 
         <button

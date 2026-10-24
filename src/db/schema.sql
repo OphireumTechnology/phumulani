@@ -28,7 +28,12 @@ CREATE TYPE user_role AS ENUM (
     'governance_officer',
     'program_manager',
     'community_advocate',
-    'community_member'
+    'community_member',
+    'DEVELOPMENT_ADMIN',
+    'DEVELOPER',
+    'CLIENT_PROJECT_ADMIN',
+    'CLIENT_PROJECT_VIEWER',
+    'CLIENT_APPROVER'
 );
 
 CREATE TABLE users (
@@ -470,3 +475,139 @@ CREATE TABLE system_settings (
 );
 
 CREATE INDEX idx_system_settings_category ON system_settings(category);
+
+-- ============================================================================
+-- 11. PHASE 13: DEVELOPMENT TRANSPARENCY, GIT SYNC & CLIENT COLLABORATION
+-- ============================================================================
+
+CREATE TYPE milestone_dev_status AS ENUM (
+    'NOT_STARTED',
+    'IN_DEVELOPMENT',
+    'IMPLEMENTED_UNVERIFIED',
+    'TESTING',
+    'BLOCKED',
+    'READY_FOR_CLIENT_REVIEW',
+    'CLIENT_APPROVED',
+    'PRODUCTION_VERIFIED',
+    'FAILED'
+);
+
+CREATE TABLE development_milestones (
+    id VARCHAR(50) PRIMARY KEY,
+    phase INT NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    weight NUMERIC(5,2) NOT NULL DEFAULT 1.0,
+    dependencies TEXT[] NOT NULL DEFAULT '{}',
+    assigned_owner VARCHAR(150) NOT NULL,
+    start_date TIMESTAMPTZ NOT NULL,
+    target_date TIMESTAMPTZ NOT NULL,
+    actual_completion_date TIMESTAMPTZ,
+    development_status milestone_dev_status NOT NULL DEFAULT 'NOT_STARTED',
+    testing_status VARCHAR(50) NOT NULL DEFAULT 'UNTESTED',
+    client_acceptance_status VARCHAR(50) NOT NULL DEFAULT 'PENDING',
+    evidence TEXT[] NOT NULL DEFAULT '{}',
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE development_features (
+    id VARCHAR(50) PRIMARY KEY,
+    milestone_id VARCHAR(50) REFERENCES development_milestones(id),
+    title VARCHAR(255) NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    description TEXT NOT NULL,
+    assigned_owner VARCHAR(150) NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'BACKLOG',
+    acceptance_criteria TEXT[] NOT NULL DEFAULT '{}',
+    evidence_sha VARCHAR(100),
+    client_feedback_count INT NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE local_sync_reports (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    project VARCHAR(100) NOT NULL,
+    branch VARCHAR(100) NOT NULL,
+    local_path TEXT NOT NULL,
+    controller_path TEXT NOT NULL,
+    local_commit VARCHAR(100) NOT NULL,
+    remote_commit VARCHAR(100) NOT NULL,
+    ahead INT NOT NULL DEFAULT 0,
+    behind INT NOT NULL DEFAULT 0,
+    uncommitted_changes INT NOT NULL DEFAULT 0,
+    status VARCHAR(50) NOT NULL,
+    checked_at TIMESTAMPTZ NOT NULL,
+    reported_by VARCHAR(150) NOT NULL,
+    is_stale BOOLEAN NOT NULL DEFAULT false,
+    sanitized_summary TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE client_feedbacks (
+    id VARCHAR(50) PRIMARY KEY,
+    feedback_type VARCHAR(100) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    submitted_by VARCHAR(150) NOT NULL,
+    submitter_email VARCHAR(255) NOT NULL,
+    submitter_role VARCHAR(100) NOT NULL,
+    priority VARCHAR(50) NOT NULL DEFAULT 'MEDIUM',
+    status VARCHAR(50) NOT NULL DEFAULT 'SUBMITTED',
+    related_feature_id VARCHAR(50),
+    assigned_developer VARCHAR(150),
+    resolution_notes TEXT,
+    resolved_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE change_requests (
+    id VARCHAR(50) PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    rationale TEXT NOT NULL,
+    requested_by VARCHAR(150) NOT NULL,
+    estimated_hours NUMERIC(6,2) NOT NULL DEFAULT 0,
+    budget_impact_usd NUMERIC(10,2) NOT NULL DEFAULT 0,
+    schedule_impact_days INT NOT NULL DEFAULT 0,
+    status VARCHAR(50) NOT NULL DEFAULT 'PROPOSED',
+    approved_by VARCHAR(150),
+    approval_date TIMESTAMPTZ,
+    implementation_notes TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE milestone_approvals (
+    id VARCHAR(50) PRIMARY KEY,
+    milestone_id VARCHAR(50) REFERENCES development_milestones(id),
+    approver_id UUID REFERENCES users(id),
+    approver_name VARCHAR(150) NOT NULL,
+    approver_role VARCHAR(100) NOT NULL,
+    decision VARCHAR(50) NOT NULL,
+    approved_artifact_version VARCHAR(100) NOT NULL,
+    comments TEXT NOT NULL,
+    audit_reference VARCHAR(150) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE weekly_development_reports (
+    id VARCHAR(50) PRIMARY KEY,
+    reporting_period VARCHAR(150) NOT NULL,
+    executive_summary TEXT NOT NULL,
+    completed_milestones TEXT[] NOT NULL DEFAULT '{}',
+    active_milestones TEXT[] NOT NULL DEFAULT '{}',
+    new_features_delivered TEXT[] NOT NULL DEFAULT '{}',
+    tests_completed_count INT NOT NULL DEFAULT 0,
+    tests_passed_count INT NOT NULL DEFAULT 0,
+    github_activity_summary TEXT NOT NULL,
+    deployment_status_summary TEXT NOT NULL,
+    client_feedback_summary TEXT NOT NULL,
+    pending_approvals TEXT[] NOT NULL DEFAULT '{}',
+    risks_and_blockers TEXT[] NOT NULL DEFAULT '{}',
+    next_development_priorities TEXT[] NOT NULL DEFAULT '{}',
+    generated_by VARCHAR(150) NOT NULL,
+    verified_by VARCHAR(150) NOT NULL,
+    is_approved_for_distribution BOOLEAN NOT NULL DEFAULT true,
+    published_date TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

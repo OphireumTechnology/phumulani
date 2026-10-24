@@ -108,7 +108,36 @@ import {
   INITIAL_CONTROLLED_PILOT_METRICS,
   INITIAL_FINANCIAL_RECONCILIATION,
 } from './fundraisingSeed';
-
+import {
+  DevelopmentMilestone,
+  DevelopmentFeature,
+  GitHubCommitRecord,
+  GitHubPullRequest,
+  GitHubWorkflowRun,
+  GitHubRepoMetadata,
+  LocalSyncReport,
+  DevelopmentActivityEvent,
+  ClientFeedbackItem,
+  ChangeRequestItem,
+  ProjectDocumentRecord,
+  WeeklyDevelopmentReport,
+  MilestoneApprovalRecord,
+} from '../types/developmentOps';
+import {
+  INITIAL_DEVELOPMENT_MILESTONES,
+  INITIAL_DEVELOPMENT_FEATURES,
+  INITIAL_GITHUB_METADATA,
+  INITIAL_GITHUB_COMMITS,
+  INITIAL_GITHUB_PULL_REQUESTS,
+  INITIAL_GITHUB_WORKFLOW_RUNS,
+  INITIAL_LOCAL_SYNC_REPORT,
+  INITIAL_DEVELOPMENT_ACTIVITIES,
+  INITIAL_CLIENT_FEEDBACK,
+  INITIAL_CHANGE_REQUESTS,
+  INITIAL_PROJECT_DOCUMENTS,
+  INITIAL_WEEKLY_REPORTS,
+} from './developmentOpsSeed';
+import { DevelopmentOpsService } from './developmentOpsService';
 
 const STORAGE_KEY = 'phumulani_database_v1';
 
@@ -162,6 +191,19 @@ export interface AppDatabaseState {
   syncCheckpoints: MailboxSyncCheckpoint[];
   syncConflicts: EmailConflictRecord[];
   syncAuditLogs: SyncAuditLogItem[];
+  // Phase 13: Client Development Transparency, GitHub Integration & Local Synchronization
+  developmentMilestones: DevelopmentMilestone[];
+  developmentFeatures: DevelopmentFeature[];
+  githubMetadata: GitHubRepoMetadata;
+  githubCommits: GitHubCommitRecord[];
+  githubPullRequests: GitHubPullRequest[];
+  githubWorkflowRuns: GitHubWorkflowRun[];
+  localSyncReport: LocalSyncReport;
+  developmentActivities: DevelopmentActivityEvent[];
+  clientFeedbacks: ClientFeedbackItem[];
+  changeRequests: ChangeRequestItem[];
+  projectDocuments: ProjectDocumentRecord[];
+  weeklyReports: WeeklyDevelopmentReport[];
 }
 
 
@@ -290,6 +332,19 @@ function getInitialState(): AppDatabaseState {
     syncCheckpoints: INITIAL_MAILBOX_SYNC_CHECKPOINTS,
     syncConflicts: INITIAL_SYNC_CONFLICT_RECORDS,
     syncAuditLogs: INITIAL_SYNC_AUDIT_LOGS,
+    // Phase 13: Client Development Transparency, GitHub Integration & Local Synchronization
+    developmentMilestones: INITIAL_DEVELOPMENT_MILESTONES,
+    developmentFeatures: INITIAL_DEVELOPMENT_FEATURES,
+    githubMetadata: INITIAL_GITHUB_METADATA,
+    githubCommits: INITIAL_GITHUB_COMMITS,
+    githubPullRequests: INITIAL_GITHUB_PULL_REQUESTS,
+    githubWorkflowRuns: INITIAL_GITHUB_WORKFLOW_RUNS,
+    localSyncReport: INITIAL_LOCAL_SYNC_REPORT,
+    developmentActivities: INITIAL_DEVELOPMENT_ACTIVITIES,
+    clientFeedbacks: INITIAL_CLIENT_FEEDBACK,
+    changeRequests: INITIAL_CHANGE_REQUESTS,
+    projectDocuments: INITIAL_PROJECT_DOCUMENTS,
+    weeklyReports: INITIAL_WEEKLY_REPORTS,
   };
 }
 
@@ -339,6 +394,19 @@ class DatabaseService {
           syncCheckpoints: parsed.syncCheckpoints?.length ? parsed.syncCheckpoints : initial.syncCheckpoints,
           syncConflicts: parsed.syncConflicts?.length ? parsed.syncConflicts : initial.syncConflicts,
           syncAuditLogs: parsed.syncAuditLogs?.length ? parsed.syncAuditLogs : initial.syncAuditLogs,
+          // Phase 13 Development Transparency collections
+          developmentMilestones: parsed.developmentMilestones?.length ? parsed.developmentMilestones : initial.developmentMilestones,
+          developmentFeatures: parsed.developmentFeatures?.length ? parsed.developmentFeatures : initial.developmentFeatures,
+          githubMetadata: parsed.githubMetadata || initial.githubMetadata,
+          githubCommits: parsed.githubCommits?.length ? parsed.githubCommits : initial.githubCommits,
+          githubPullRequests: parsed.githubPullRequests?.length ? parsed.githubPullRequests : initial.githubPullRequests,
+          githubWorkflowRuns: parsed.githubWorkflowRuns?.length ? parsed.githubWorkflowRuns : initial.githubWorkflowRuns,
+          localSyncReport: parsed.localSyncReport || initial.localSyncReport,
+          developmentActivities: parsed.developmentActivities?.length ? parsed.developmentActivities : initial.developmentActivities,
+          clientFeedbacks: parsed.clientFeedbacks?.length ? parsed.clientFeedbacks : initial.clientFeedbacks,
+          changeRequests: parsed.changeRequests?.length ? parsed.changeRequests : initial.changeRequests,
+          projectDocuments: parsed.projectDocuments?.length ? parsed.projectDocuments : initial.projectDocuments,
+          weeklyReports: parsed.weeklyReports?.length ? parsed.weeklyReports : initial.weeklyReports,
         };
       }
     } catch {
@@ -1803,6 +1871,315 @@ class DatabaseService {
     const updated = { ...this.state.financialReconciliation, ...updates, reconciledAt: new Date().toISOString() };
     this.saveState({ ...this.state, financialReconciliation: updated });
     this.appendAuditLog('FINANCIAL_RECONCILIATION_UPDATED', `Authoritative financial reconciliation re-calculated by ${actor.name}`);
+  }
+
+  // ==========================================================================
+  // PHASE 13: CLIENT DEVELOPMENT TRANSPARENCY & GITHUB / LOCAL SYNC ENGINE
+  // ==========================================================================
+
+  public getDevelopmentMilestones(): DevelopmentMilestone[] {
+    return this.state.developmentMilestones;
+  }
+
+  public updateDevelopmentMilestone(id: string, updates: Partial<DevelopmentMilestone>): void {
+    const actor = this.state.currentUser;
+    const updated = this.state.developmentMilestones.map((m) =>
+      m.id === id ? { ...m, ...updates } : m
+    );
+    this.saveState({ ...this.state, developmentMilestones: updated });
+    this.appendAuditLog('MILESTONE_UPDATED', `Milestone ${id} updated by ${actor.name} (${actor.role})`);
+  }
+
+  public approveMilestone(
+    milestoneId: string,
+    approverId: string,
+    approverName: string,
+    approverRole: string,
+    decision: 'APPROVED' | 'REJECTED' | 'CONDITIONAL_APPROVAL',
+    artifactVersion: string,
+    comments: string
+  ): MilestoneApprovalRecord {
+    const milestone = this.state.developmentMilestones.find((m) => m.id === milestoneId);
+    if (!milestone) throw new Error(`Milestone ${milestoneId} not found.`);
+
+    const { updatedMilestone, approvalRecord } = DevelopmentOpsService.executeMilestoneApproval(
+      milestone,
+      approverId,
+      approverName,
+      approverRole,
+      decision,
+      artifactVersion,
+      comments
+    );
+
+    const updatedList = this.state.developmentMilestones.map((m) =>
+      m.id === milestoneId ? updatedMilestone : m
+    );
+
+    this.saveState({ ...this.state, developmentMilestones: updatedList });
+    this.appendAuditLog(
+      'CLIENT_MILESTONE_APPROVAL',
+      `Milestone ${milestoneId} "${milestone.title}" decision: ${decision} by ${approverName} (${approverRole}) on artifact ${artifactVersion}. AuditRef: ${approvalRecord.auditReference}`
+    );
+
+    this.addDevelopmentActivity({
+      type: 'MILESTONE_APPROVED',
+      sourceSystem: 'CLIENT_PORTAL',
+      responsibleActor: `${approverName} (${approverRole})`,
+      component: 'Milestone Management',
+      eventStatus: decision === 'APPROVED' ? 'SUCCESS' : 'WARNING',
+      title: `Milestone ${milestoneId} ${decision}`,
+      clientDescription: `${approverName} formally evaluated milestone ${milestoneId} (${milestone.title}): ${decision}. Comments: "${comments}"`,
+      evidenceReference: `ARTIFACT_SHA: ${artifactVersion}`,
+    });
+
+    return approvalRecord;
+  }
+
+  public getDevelopmentFeatures(): DevelopmentFeature[] {
+    return this.state.developmentFeatures;
+  }
+
+  public updateDevelopmentFeature(id: string, updates: Partial<DevelopmentFeature>): void {
+    const actor = this.state.currentUser;
+    const updated = this.state.developmentFeatures.map((f) =>
+      f.id === id ? { ...f, ...updates, lastUpdated: new Date().toISOString() } : f
+    );
+    this.saveState({ ...this.state, developmentFeatures: updated });
+    this.appendAuditLog('FEATURE_UPDATED', `Feature ${id} updated by ${actor.name}`);
+  }
+
+  public getGitHubMetadata(): GitHubRepoMetadata {
+    return this.state.githubMetadata;
+  }
+
+  public getGitHubCommits(): GitHubCommitRecord[] {
+    return this.state.githubCommits;
+  }
+
+  public getGitHubPullRequests(): GitHubPullRequest[] {
+    return this.state.githubPullRequests;
+  }
+
+  public getGitHubWorkflowRuns(): GitHubWorkflowRun[] {
+    return this.state.githubWorkflowRuns;
+  }
+
+  public refreshGitHubWorkflows(): void {
+    const actor = this.state.currentUser;
+    const updatedMeta: GitHubRepoMetadata = {
+      ...this.state.githubMetadata,
+      lastSyncedAt: new Date().toISOString(),
+    };
+    this.saveState({ ...this.state, githubMetadata: updatedMeta });
+    this.appendAuditLog('GITHUB_SYNC_REFRESH', `GitHub repository metadata verified by ${actor.name}`);
+  }
+
+  public getLocalSyncReport(): LocalSyncReport {
+    return this.state.localSyncReport;
+  }
+
+  public ingestLocalSyncReport(
+    payload: any,
+    authToken: string
+  ): { success: boolean; error?: string; report?: LocalSyncReport } {
+    const result = DevelopmentOpsService.validateAndIngestSyncReport(payload, authToken);
+    if (!result.success || !result.report) {
+      this.appendAuditLog('LOCAL_SYNC_INGESTION_REJECTED', `Unauthorized or invalid sync report rejected: ${result.error}`);
+      return result;
+    }
+
+    this.saveState({ ...this.state, localSyncReport: result.report });
+    this.appendAuditLog(
+      'LOCAL_SYNC_INGESTION_SUCCESS',
+      `Ingested Windows Sync Controller report from ${result.report.controllerPath} (Status: ${result.report.status}, Commit: ${result.report.localCommit})`
+    );
+
+    this.addDevelopmentActivity({
+      type: 'LOCAL_SYNC_INGESTED',
+      sourceSystem: 'WINDOWS_SYNC_CONTROLLER',
+      responsibleActor: result.report.reportedBy,
+      component: 'Windows Controller Hub',
+      eventStatus: result.report.status === 'SYNCHRONIZED' ? 'SUCCESS' : 'WARNING',
+      title: `Windows Drive Status: ${result.report.status}`,
+      clientDescription: result.report.sanitizedSummary,
+      evidenceReference: `COMMIT: ${result.report.localCommit}`,
+    });
+
+    return result;
+  }
+
+  public getDevelopmentActivities(): DevelopmentActivityEvent[] {
+    return this.state.developmentActivities;
+  }
+
+  public addDevelopmentActivity(
+    event: Omit<DevelopmentActivityEvent, 'id' | 'timestamp'>
+  ): DevelopmentActivityEvent {
+    const newEvent: DevelopmentActivityEvent = {
+      ...event,
+      id: `ACT-${Date.now().toString(36).toUpperCase()}`,
+      timestamp: new Date().toISOString(),
+    };
+    this.saveState({
+      ...this.state,
+      developmentActivities: [newEvent, ...this.state.developmentActivities].slice(0, 50),
+    });
+    return newEvent;
+  }
+
+  public getClientFeedbacks(): ClientFeedbackItem[] {
+    return this.state.clientFeedbacks;
+  }
+
+  public submitClientFeedback(
+    item: Omit<ClientFeedbackItem, 'id' | 'submissionDate' | 'status' | 'doesImpactScopeOrBudget'> & {
+      doesImpactScopeOrBudget?: boolean;
+    }
+  ): ClientFeedbackItem {
+    const actor = this.state.currentUser;
+    const newId = `FB-${(this.state.clientFeedbacks.length + 101).toString()}`;
+    const newFeedback: ClientFeedbackItem = {
+      ...item,
+      id: newId,
+      submissionDate: new Date().toISOString(),
+      status: 'SUBMITTED',
+      doesImpactScopeOrBudget: false,
+    };
+
+    this.saveState({
+      ...this.state,
+      clientFeedbacks: [newFeedback, ...this.state.clientFeedbacks],
+    });
+
+    this.appendAuditLog(
+      'CLIENT_FEEDBACK_SUBMITTED',
+      `Client feedback ${newId} "${item.title}" submitted by ${item.submittedBy} (${item.submitterRole})`
+    );
+
+    this.addDevelopmentActivity({
+      type: 'CLIENT_FEEDBACK_SUBMITTED',
+      sourceSystem: 'CLIENT_PORTAL',
+      responsibleActor: `${item.submittedBy} (${item.submitterRole})`,
+      component: 'Client Collaboration',
+      eventStatus: 'INFO',
+      title: `Feedback Submitted: ${item.title}`,
+      clientDescription: `${item.submittedBy} submitted ${item.feedbackType} feedback: "${item.title}". Assigned to development team for assessment.`,
+      evidenceReference: `REF: ${newId}`,
+    });
+
+    return newFeedback;
+  }
+
+  public resolveClientFeedback(id: string, resolutionNotes: string): void {
+    const actor = this.state.currentUser;
+    const item = this.state.clientFeedbacks.find((f) => f.id === id);
+    if (!item) return;
+
+    const updated = this.state.clientFeedbacks.map((f) =>
+      f.id === id
+        ? {
+            ...f,
+            status: 'RESOLVED' as const,
+            resolutionNotes,
+            resolvedAt: new Date().toISOString(),
+            assignedDeveloper: actor.name,
+          }
+        : f
+    );
+
+    this.saveState({ ...this.state, clientFeedbacks: updated });
+    this.appendAuditLog('CLIENT_FEEDBACK_RESOLVED', `Feedback ${id} marked resolved by ${actor.name}: ${resolutionNotes}`);
+
+    this.addDevelopmentActivity({
+      type: 'DEFECT_RESOLVED',
+      sourceSystem: 'GOOGLE_AI_STUDIO',
+      responsibleActor: actor.name,
+      component: 'Client Collaboration',
+      eventStatus: 'SUCCESS',
+      title: `Feedback ${id} Resolved`,
+      clientDescription: `Resolution verified by ${actor.name}: "${resolutionNotes}"`,
+      evidenceReference: `REF: ${id}`,
+    });
+  }
+
+  public getChangeRequests(): ChangeRequestItem[] {
+    return this.state.changeRequests;
+  }
+
+  public submitChangeRequest(
+    cr: Omit<ChangeRequestItem, 'id' | 'requestDate' | 'status'>
+  ): ChangeRequestItem {
+    const newId = `CR-${(this.state.changeRequests.length + 201).toString()}`;
+    const newCR: ChangeRequestItem = {
+      ...cr,
+      id: newId,
+      requestDate: new Date().toISOString(),
+      status: 'PROPOSED',
+    };
+
+    this.saveState({
+      ...this.state,
+      changeRequests: [newCR, ...this.state.changeRequests],
+    });
+
+    this.appendAuditLog(
+      'CHANGE_REQUEST_PROPOSED',
+      `Formal Change Request ${newId} "${cr.title}" proposed by ${cr.requestedBy} (Impact: $${cr.budgetImpactUSD}, ${cr.scheduleImpactDays} days)`
+    );
+
+    return newCR;
+  }
+
+  public approveChangeRequest(id: string, approverName: string): void {
+    const actor = this.state.currentUser;
+    const cr = this.state.changeRequests.find((c) => c.id === id);
+    if (!cr) return;
+
+    const updated = this.state.changeRequests.map((c) =>
+      c.id === id
+        ? {
+            ...c,
+            status: 'APPROVED' as const,
+            approvedBy: approverName,
+            approvalDate: new Date().toISOString(),
+          }
+        : c
+    );
+
+    this.saveState({ ...this.state, changeRequests: updated });
+    this.appendAuditLog('CHANGE_REQUEST_APPROVED', `Change Request ${id} approved by ${approverName} (Authorized by ${actor.name})`);
+  }
+
+  public getProjectDocuments(): ProjectDocumentRecord[] {
+    return this.state.projectDocuments;
+  }
+
+  public getWeeklyReports(): WeeklyDevelopmentReport[] {
+    return this.state.weeklyReports;
+  }
+
+  public publishWeeklyReport(
+    report: Omit<WeeklyDevelopmentReport, 'id' | 'publishedDate'>
+  ): WeeklyDevelopmentReport {
+    const newId = `WDR-2026-W${Math.floor(Date.now() / (7 * 24 * 3600 * 1000)) % 52}`;
+    const newReport: WeeklyDevelopmentReport = {
+      ...report,
+      id: newId,
+      publishedDate: new Date().toISOString(),
+    };
+
+    this.saveState({
+      ...this.state,
+      weeklyReports: [newReport, ...this.state.weeklyReports],
+    });
+
+    this.appendAuditLog(
+      'WEEKLY_REPORT_PUBLISHED',
+      `Weekly Development Report ${newId} published for period "${report.reportingPeriod}"`
+    );
+
+    return newReport;
   }
 }
 

@@ -162,6 +162,38 @@ export function getDatabaseMetadata(): DatabaseTableMeta[] {
       description: 'Platform-wide operational policies, feature flags, and security configurations',
       securityClassification: 'RESTRICTED_STAFF',
     },
+    {
+      tableName: 'development_milestones',
+      domain: 'Development Transparency',
+      primaryKey: 'id (VARCHAR)',
+      rowCount: state.developmentMilestones?.length || 0,
+      description: 'Phase 1-13 development roadmap milestones with weights, dependencies, and evidence links',
+      securityClassification: 'PUBLIC',
+    },
+    {
+      tableName: 'development_features',
+      domain: 'Development Transparency',
+      primaryKey: 'id (VARCHAR)',
+      rowCount: state.developmentFeatures?.length || 0,
+      description: 'Delivered application features with acceptance criteria and commit hashes',
+      securityClassification: 'PUBLIC',
+    },
+    {
+      tableName: 'client_feedbacks',
+      domain: 'Client Collaboration',
+      primaryKey: 'id (VARCHAR)',
+      rowCount: state.clientFeedbacks?.length || 0,
+      description: 'Client feedback observations, suggestions, and resolution notes',
+      securityClassification: 'RESTRICTED_STAFF',
+    },
+    {
+      tableName: 'weekly_development_reports',
+      domain: 'Development Transparency',
+      primaryKey: 'id (VARCHAR)',
+      rowCount: state.weeklyReports?.length || 0,
+      description: '15-section structured weekly progress reports grounded in verified system data',
+      securityClassification: 'PUBLIC',
+    },
   ];
 }
 

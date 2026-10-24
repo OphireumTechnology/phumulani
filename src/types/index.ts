@@ -21,7 +21,15 @@ export type UserRole =
   | 'governance_officer'
   | 'program_manager'
   | 'community_advocate'
-  | 'community_member';
+  | 'community_member'
+  // Phase 13 Development Transparency Roles
+  | 'DEVELOPMENT_ADMIN'
+  | 'DEVELOPER'
+  | 'CLIENT_PROJECT_ADMIN'
+  | 'CLIENT_PROJECT_VIEWER'
+  | 'CLIENT_APPROVER';
+
+export * from './developmentOps';
 
 export interface User {
   id: string;

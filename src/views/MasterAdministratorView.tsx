@@ -12,6 +12,7 @@ import { ProductionHealthService, SystemVerificationProbeReport } from '../servi
 import { AutomatedTestRunner, TestSuiteSummary } from '../services/automatedTestRunner';
 import { EmailCommandCenterView } from './EmailCommandCenterView';
 import { FundraisingCommandCenterView } from './FundraisingCommandCenterView';
+import { DevelopmentOperationsView } from './DevelopmentOperationsView';
 import {
   ShieldAlert,
   ShieldCheck,
@@ -54,6 +55,7 @@ import {
   Bell,
   LogOut,
   Play,
+  FolderGit2,
 } from 'lucide-react';
 
 interface MasterAdministratorViewProps {
@@ -186,6 +188,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
 
   const sidebarItems = [
     { id: 'overview', label: '01 Enterprise Overview', icon: LayoutDashboard },
+    { id: 'development_operations', label: 'Development Operations (P13)', icon: FolderGit2, badge: 'P13 Active' },
     { id: 'fundraising_command_center', label: 'Fundraising & CRM (Sec 03)', icon: DollarSign, badge: 'Directive P0' },
     { id: 'email_command_center', label: 'Email Command Center (P0)', icon: Mail, badge: 'P0 Enterprise' },
     { id: 'production_status', label: 'Production Status (Sec 16)', icon: Activity, badge: probeReport ? `${probeReport.verifiedCount}/15` : 'Check' },
@@ -435,6 +438,16 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
               currentUser={currentUser}
               onViewChange={onViewChange}
               onBackToMasterAdmin={() => setActiveModule('overview')}
+            />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE: DEVELOPMENT OPERATIONS & GITHUB INTEGRATION (PHASE 13) */}
+          {/* ============================================================ */}
+          {activeModule === 'development_operations' && (
+            <DevelopmentOperationsView
+              currentUser={currentUser}
+              onViewChange={onViewChange}
             />
           )}
 
