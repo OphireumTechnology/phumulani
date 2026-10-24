@@ -1792,7 +1792,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         <td className="p-2.5 font-bold font-sans text-slate-900">{cp.mailboxEmail}</td>
                         <td className="p-2.5 text-slate-600">{cp.historyId}</td>
                         <td className="p-2.5 text-teal-800 font-semibold truncate max-w-xs">{cp.deltaToken}</td>
-                        <td className="p-2.5 text-slate-500">{new Date(cp.lastCheckpointAt).toLocaleTimeString()}</td>
+                        <td className="p-2.5 text-slate-500">{cp.lastCheckpointAt ? new Date(cp.lastCheckpointAt).toLocaleTimeString() : 'Not yet synchronized'}</td>
                         <td className="p-2.5">
                           {cp.rateLimitBackoffMs && cp.rateLimitBackoffMs > 0 ? (
                             <span className="text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded font-bold">
@@ -2842,7 +2842,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 >
                   {mailboxes.map((mbx) => (
                     <option key={mbx.id} value={mbx.id}>
-                      {mbx.email} ({mbx.displayName}) — {mbx.historicalImportStatus.toUpperCase()}
+                      {mbx.email} ({mbx.displayName}) — {(mbx.historicalImportStatus ?? 'NOT_STARTED').toUpperCase()}
                     </option>
                   ))}
                 </select>
