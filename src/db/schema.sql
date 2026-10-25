@@ -768,3 +768,85 @@ CREATE TABLE enterprise_outbound_authorizations (
 
 CREATE INDEX idx_outbound_auth_idempotency ON enterprise_outbound_authorizations(idempotency_key);
 
+-- ============================================================================
+-- 13. ENTERPRISE AI FUNDRAISING CRM, DONOR INTELLIGENCE & AI WORKFORCE (18 AGENTS)
+-- ============================================================================
+
+CREATE TABLE fundraising_donors (
+    id VARCHAR(50) PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    organization_name VARCHAR(255),
+    contact_type VARCHAR(50) NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    giving_tier VARCHAR(50) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phone VARCHAR(50),
+    preferred_channel VARCHAR(50) NOT NULL DEFAULT 'EMAIL',
+    relationship_owner VARCHAR(150) NOT NULL,
+    stage VARCHAR(50) NOT NULL DEFAULT 'PROSPECTING',
+    lifetime_giving NUMERIC(12,2) NOT NULL DEFAULT 0.00,
+    largest_gift NUMERIC(12,2) NOT NULL DEFAULT 0.00,
+    gift_count INT NOT NULL DEFAULT 0,
+    last_gift_date TIMESTAMPTZ,
+    last_gift_amount NUMERIC(12,2),
+    estimated_capacity NUMERIC(12,2) NOT NULL DEFAULT 0.00,
+    readiness_to_give VARCHAR(20) NOT NULL DEFAULT 'MEDIUM',
+    program_interests TEXT[] NOT NULL DEFAULT '{}',
+    consent_status VARCHAR(50) NOT NULL DEFAULT 'OPTED_IN',
+    consent_evidence TEXT,
+    internal_notes TEXT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_fundraising_donors_stage ON fundraising_donors(stage);
+CREATE INDEX idx_fundraising_donors_tier ON fundraising_donors(giving_tier);
+CREATE INDEX idx_fundraising_donors_category ON fundraising_donors(category);
+
+CREATE TABLE fundraising_ai_agents (
+    id VARCHAR(50) PRIMARY KEY,
+    code VARCHAR(50) NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    role VARCHAR(150) NOT NULL,
+    category VARCHAR(50) NOT NULL,
+    description TEXT NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'IDLE',
+    assigned_tools TEXT[] NOT NULL DEFAULT '{}',
+    restricted_tools TEXT[] NOT NULL DEFAULT '{}',
+    requires_human_approval BOOLEAN NOT NULL DEFAULT true,
+    escalation_officer VARCHAR(150) NOT NULL,
+    completed_tasks_count INT NOT NULL DEFAULT 0,
+    failed_tasks_count INT NOT NULL DEFAULT 0,
+    pending_approvals_count INT NOT NULL DEFAULT 0,
+    confidence_score NUMERIC(5,2) NOT NULL DEFAULT 95.0,
+    input_schema_summary TEXT NOT NULL,
+    output_schema_summary TEXT NOT NULL,
+    last_active_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_fundraising_agents_category ON fundraising_ai_agents(category);
+CREATE INDEX idx_fundraising_agents_status ON fundraising_ai_agents(status);
+
+CREATE TABLE fundraising_agent_tasks (
+    id VARCHAR(50) PRIMARY KEY,
+    agent_id VARCHAR(50) REFERENCES fundraising_ai_agents(id) ON DELETE CASCADE,
+    agent_name VARCHAR(255) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    status VARCHAR(50) NOT NULL DEFAULT 'COMPLETED',
+    input_payload JSONB NOT NULL DEFAULT '{}',
+    output_result TEXT,
+    structured_output JSONB,
+    duration_ms INT NOT NULL DEFAULT 0,
+    requires_human_approval BOOLEAN NOT NULL DEFAULT false,
+    approval_status VARCHAR(50) DEFAULT 'APPROVED',
+    approved_by VARCHAR(150),
+    error_message TEXT,
+    audit_log_id VARCHAR(100),
+    started_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    completed_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_agent_tasks_agent_id ON fundraising_agent_tasks(agent_id);
+CREATE INDEX idx_agent_tasks_status ON fundraising_agent_tasks(status);
+
+

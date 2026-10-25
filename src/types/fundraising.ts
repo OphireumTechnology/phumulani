@@ -379,6 +379,67 @@ export interface FinancialReconciliationDetails {
 }
 
 
+export type AgentExecutionState =
+  | 'IDLE'
+  | 'QUEUED'
+  | 'RUNNING'
+  | 'WAITING_FOR_DATA'
+  | 'WAITING_FOR_APPROVAL'
+  | 'COMPLETED'
+  | 'FAILED'
+  | 'BLOCKED'
+  | 'CANCELLED';
+
+export interface FundraisingAgentTask {
+  id: string;
+  agentId: string;
+  agentName: string;
+  title: string;
+  status: AgentExecutionState;
+  inputPayload: Record<string, any>;
+  outputResult?: string;
+  structuredOutput?: Record<string, any>;
+  startedAt?: string;
+  completedAt?: string;
+  durationMs?: number;
+  requiresHumanApproval: boolean;
+  approvalStatus?: 'PENDING' | 'APPROVED' | 'REJECTED';
+  approvedBy?: string;
+  errorMessage?: string;
+  auditLogId?: string;
+}
+
+export interface FundraisingAIAgent {
+  id: string; // 'FUND-AI-001' ... 'FUND-AI-018'
+  code: string; // 'AGENT 01' ... 'AGENT 18'
+  name: string;
+  role: string;
+  category:
+    | 'ORCHESTRATION'
+    | 'INTELLIGENCE'
+    | 'RESEARCH'
+    | 'OUTREACH'
+    | 'GRANTS'
+    | 'PARTNERSHIPS'
+    | 'STEWARDSHIP'
+    | 'FINANCE'
+    | 'SECURITY';
+  description: string;
+  status: AgentExecutionState;
+  assignedTools: string[];
+  restrictedTools: string[];
+  requiresHumanApproval: boolean;
+  escalationOfficer: string;
+  recentTasks: FundraisingAgentTask[];
+  completedTasksCount: number;
+  failedTasksCount: number;
+  pendingApprovalsCount: number;
+  lastActiveAt: string;
+  confidenceScore: number;
+  inputSchemaSummary: string;
+  outputSchemaSummary: string;
+}
+
 export type FundraisingSubRoute =
   | 'command-center'
   | 'donors'
@@ -402,4 +463,6 @@ export type FundraisingSubRoute =
   | 'analytics'
   | 'compliance'
   | 'settings'
-  | 'production-status';
+  | 'production-status'
+  | 'agents';
+

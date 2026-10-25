@@ -194,6 +194,30 @@ export function getDatabaseMetadata(): DatabaseTableMeta[] {
       description: '15-section structured weekly progress reports grounded in verified system data',
       securityClassification: 'PUBLIC',
     },
+    {
+      tableName: 'fundraising_donors',
+      domain: 'Fundraising CRM & Intelligence',
+      primaryKey: 'id (VARCHAR)',
+      rowCount: state.fundraisingDonors?.length || 0,
+      description: 'Institutional, corporate, and individual donor contacts with giving tiers and capacity scores',
+      securityClassification: 'RESTRICTED_STAFF',
+    },
+    {
+      tableName: 'fundraising_ai_agents',
+      domain: 'AI Fundraising Workforce',
+      primaryKey: 'id (VARCHAR)',
+      rowCount: state.fundraisingAIAgents?.length || 18,
+      description: '18 specialized autonomous and supervised fundraising agents (FUND-AI-001 through FUND-AI-018)',
+      securityClassification: 'RESTRICTED_STAFF',
+    },
+    {
+      tableName: 'fundraising_agent_tasks',
+      domain: 'AI Fundraising Workforce',
+      primaryKey: 'id (VARCHAR)',
+      rowCount: (state.fundraisingAIAgents || []).reduce((sum, a) => sum + (a.recentTasks?.length || 0), 0),
+      description: 'Autonomous and supervised execution tasks with structured inputs, outputs, and human sign-offs',
+      securityClassification: 'AUDIT_APPEND_ONLY',
+    },
   ];
 }
 

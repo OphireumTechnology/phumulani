@@ -1,14 +1,15 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- * Phumulani AI Workforce Orchestrator and Policy Gateway
+ * Phumulani AI Workforce Orchestrator & Client-Side Gateway
+ * Communicates with secure server-side AI endpoints (/api/ai/*)
+ * No API keys or SDK credentials ever embedded in the browser
  */
 
-import { GoogleGenAI } from '@google/genai';
 import { db } from './db';
 
 // Curated Knowledge Base for Agent A10 (Website Concierge) and Public Assistance
-const PHUMULANI_PUBLIC_KNOWLEDGE = `
+export const PHUMULANI_PUBLIC_KNOWLEDGE = `
 Phumulani is a 501(c)(3) nonprofit organization headquartered in Minnesota, founded by Comfort Dondo.
 Our Mission: Empowering immigrant and refugee survivors of gender-based violence, domestic abuse, and systemic trauma through culturally attuned, holistic support, advocacy, and economic independence.
 Key Programs:
@@ -51,20 +52,6 @@ export interface EvaluationScenario {
 }
 
 class AIOrchestratorService {
-  private genAI: GoogleGenAI | null = null;
-  private apiKey: string | null = null;
-
-  constructor() {
-    this.apiKey = (typeof process !== 'undefined' && process.env?.GEMINI_API_KEY) || (import.meta as any).env?.VITE_GEMINI_API_KEY || null;
-    if (this.apiKey) {
-      try {
-        this.genAI = new GoogleGenAI({ apiKey: this.apiKey });
-      } catch {
-        this.genAI = null;
-      }
-    }
-  }
-
   /**
    * Policy and Approval Gateway check before any tool execution
    */
@@ -89,7 +76,6 @@ class AIOrchestratorService {
     const isSafeguardingCrisis = crisisKeywords.some((kw) => payloadText.toLowerCase().includes(kw));
 
     if (isSafeguardingCrisis) {
-      // Per Section 6.1 & 6.5: Automated drafting STOPS. Escalated directly to trained human queue.
       return {
         allowed: false,
         reason: 'CRITICAL SAFEGUARDING POLICY: Detected potential domestic abuse or physical safety concern. Automated actions halted per Section 7.3.',
@@ -139,42 +125,33 @@ class AIOrchestratorService {
 
   /**
    * Run Agent A10 - Website Concierge for visitors
+   * Calls secure server-side endpoint /api/ai/concierge
    */
-  public async queryWebsiteConcierge(userQuestion: string, conversationHistory: { role: 'user' | 'model'; text: string }[] = []): Promise<string> {
+  public async queryWebsiteConcierge(
+    userQuestion: string,
+    conversationHistory: { role: 'user' | 'model'; text: string }[] = []
+  ): Promise<string> {
     const policy = this.evaluatePolicy('A10', 'knowledge_base:public_search', userQuestion);
 
     if (policy.isSafeguardingCrisis) {
       return `If you or someone you know is in immediate danger, please call 911 or Minnesota Day One Crisis Line at 1-866-223-1111 immediately. You can also discreetly click our "Get Help" tab or "Safe Exit" button in the top bar. Our trained human advocates are ready to assist you safely and confidentially.`;
     }
 
-    // If Gemini client is active, call Gemini 2.5 Flash
-    if (this.genAI) {
-      try {
-        const systemInstruction = `You are the official Website Concierge for Phumulani (Minnesota 501(c)(3)).
-Your tone is warm, dignified, supportive, and concise.
-Answer only using the following verified facts:
-${PHUMULANI_PUBLIC_KNOWLEDGE}
+    // Call server-side AI endpoint
+    try {
+      const res = await fetch('/api/ai/concierge', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: userQuestion, conversationHistory }),
+      });
 
-Rules:
-1. Never fabricate program facts or statistics.
-2. If asked about emergency support or domestic violence, provide the Minnesota Day One Crisis Line (1-866-223-1111) and the Phumulani Get Help link.
-3. Be helpful regarding volunteering, community programs, donating, and Comfort Dondo's published books.`;
-
-        const response = await this.genAI.models.generateContent({
-          model: 'gemini-2.5-flash',
-          contents: userQuestion,
-          config: {
-            systemInstruction,
-            temperature: 0.2,
-          },
-        });
-
-        const reply = response.text || 'Thank you for reaching out to Phumulani. How can we best support you today?';
+      if (res.ok) {
+        const data = await res.json();
         db.recordAgentRun('A10', 350, 0.0007);
-        return reply;
-      } catch (err) {
-        console.warn('Gemini API call failed, falling back to local knowledge engine:', err);
+        return data.output || 'Thank you for contacting Phumulani.';
       }
+    } catch {
+      // Fall through to deterministic fallback if server endpoint is unreachable
     }
 
     // Local deterministic high-fidelity knowledge fallback
@@ -220,8 +197,14 @@ Visit our "Our Programs" tab to explore detailed service descriptions and eligib
 
   /**
    * Run Agent A02 - Email Manager Draft Generator
+   * Calls secure server-side endpoint /api/ai/email-draft
    */
-  public async generateEmailDraft(messageBody: string, senderName: string, subject: string): Promise<{ draft: string; urgency: 'urgent' | 'high' | 'normal'; reasoning: string }> {
+  public async generateEmailDraft(
+    messageBody: string,
+    senderName: string,
+    subject: string,
+    toneStyle = 'professional'
+  ): Promise<{ draft: string; urgency: 'urgent' | 'high' | 'normal'; reasoning: string }> {
     const policy = this.evaluatePolicy('A02', 'drafts:create', messageBody);
 
     if (policy.isSafeguardingCrisis) {
@@ -232,41 +215,35 @@ Visit our "Our Programs" tab to explore detailed service descriptions and eligib
       };
     }
 
-    // If Gemini client is active
-    if (this.genAI) {
-      try {
-        const prompt = `Draft a polite, professional, trauma-informed email response on behalf of Phumulani.
-Sender: ${senderName}
-Subject: ${subject}
-Message Body: ${messageBody}
+    const currentUser = db.getState().currentUser;
 
-Requirements:
-- Professional, empathetic, helpful.
-- Reference staff review requirement.
-- Do NOT make binding financial or legal promises.
-- Output JSON format: {"draft": "...", "urgency": "high"|"normal", "reasoning": "..."}`;
+    try {
+      const res = await fetch('/api/ai/email-draft', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          messageBody,
+          senderName,
+          subject,
+          toneStyle,
+          role: currentUser.role,
+        }),
+      });
 
-        const response = await this.genAI.models.generateContent({
-          model: 'gemini-2.5-flash',
-          contents: prompt,
-          config: {
-            responseMimeType: 'application/json',
-          },
-        });
-
-        const parsed = JSON.parse(response.text || '{}');
+      if (res.ok) {
+        const data = await res.json();
         db.recordAgentRun('A02', 450, 0.0009);
         return {
-          draft: parsed.draft || 'Thank you for reaching out to Phumulani. Our team has received your message and will review it shortly.',
-          urgency: parsed.urgency || 'normal',
-          reasoning: parsed.reasoning || 'Draft generated with Gemini 2.5 Flash and queued for staff review.',
+          draft: data.draft,
+          urgency: data.urgency || 'normal',
+          reasoning: data.reasoning,
         };
-      } catch (err) {
-        console.warn('Gemini draft error, using local template:', err);
       }
+    } catch {
+      // Fall through to deterministic template if offline
     }
 
-    // High quality local fallback draft
+    // High quality deterministic fallback draft
     db.recordAgentRun('A02', 200, 0.0004);
     return {
       draft: `Dear ${senderName},\n\nThank you for reaching out to Phumulani regarding "${subject}". We deeply appreciate your interest in our community programs and mission.\n\nOur team has reviewed your note and would be glad to coordinate next steps with you. A staff coordinator will connect with you within 1 business day with specific details.\n\nWarm regards,\nPhumulani Operations Team\nMinneapolis, Minnesota`,

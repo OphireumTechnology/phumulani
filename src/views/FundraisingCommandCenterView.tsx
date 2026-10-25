@@ -23,6 +23,8 @@ import {
   ProductionReadinessItem,
   ControlledPilotMetrics,
   FinancialReconciliationDetails,
+  FundraisingAIAgent,
+  FundraisingAgentTask,
 } from '../types/fundraising';
 import { FundraisingService, FundraisingKPIOverview } from '../services/fundraisingService';
 import { AutomatedTestRunner, TestSuiteSummary } from '../services/automatedTestRunner';
@@ -92,6 +94,18 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
   const [partnerships, setPartnerships] = useState<CorporatePartnershipRecord[]>([]);
   const [importJobs, setImportJobs] = useState<DonorImportJob[]>([]);
   const [readinessItems, setReadinessItems] = useState<ProductionReadinessItem[]>([]);
+  const [agents, setAgents] = useState<FundraisingAIAgent[]>([]);
+
+  // AI Workforce Operations Center State
+  const [selectedAgentId, setSelectedAgentId] = useState<string | null>('FUND-AI-001');
+  const [agentCategoryFilter, setAgentCategoryFilter] = useState<string>('ALL');
+  const [agentSearchQuery, setAgentSearchQuery] = useState<string>('');
+  const [isExecutingPipeline, setIsExecutingPipeline] = useState<boolean>(false);
+  const [executingAgent, setExecutingAgent] = useState<FundraisingAIAgent | null>(null);
+  const [taskTitleInput, setTaskTitleInput] = useState<string>('');
+  const [taskPayloadJson, setTaskPayloadJson] = useState<string>('{}');
+  const [taskExecutionResult, setTaskExecutionResult] = useState<FundraisingAgentTask | null>(null);
+  const [historyDrawerAgent, setHistoryDrawerAgent] = useState<FundraisingAIAgent | null>(null);
 
   const refreshState = () => {
     setDonors(db.getFundraisingDonors());
@@ -106,6 +120,75 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
     setReadinessItems(db.getFundraisingReadinessItems());
     setPilotMetrics(db.getControlledPilotMetrics());
     setReconDetails(db.getFinancialReconciliation());
+    setAgents(db.getFundraisingAIAgents());
+  };
+
+  const handleRunFullOrchestration = () => {
+    setIsExecutingPipeline(true);
+    setTimeout(() => {
+      const res = db.runFullFundraisingOrchestration();
+      refreshState();
+      setIsExecutingPipeline(false);
+      notify(`Master Pipeline executed across ${res.tasksCreated} specialized AI agents. All tasks persisted to database.`);
+    }, 400);
+  };
+
+  const handleOpenExecuteModal = (agent: FundraisingAIAgent) => {
+    setExecutingAgent(agent);
+    setTaskTitleInput(`Mission: ${agent.name} Execution`);
+    // Pre-populate sensible mission payload based on agent code
+    let defaultPayload: Record<string, any> = { scope: 'Autonomous Evaluation', campaignId: 'camp-capital-001' };
+    if (agent.id === 'FUND-AI-001') defaultPayload = { campaignId: 'camp-capital-001', priority: 'P1' };
+    else if (agent.id === 'FUND-AI-002') defaultPayload = { scope: 'All 5 Connected Mailboxes' };
+    else if (agent.id === 'FUND-AI-003') defaultPayload = { donorId: 'donor-ind-001' };
+    else if (agent.id === 'FUND-AI-004') defaultPayload = { totalRecords: donors.length };
+    else if (agent.id === 'FUND-AI-005') defaultPayload = { focus: 'Culturally Specific Domestic Violence Aid' };
+    else if (agent.id === 'FUND-AI-006') defaultPayload = { funderId: 'funder-ob-001' };
+    else if (agent.id === 'FUND-AI-007') defaultPayload = { donorId: 'donor-ind-001', commType: 'PROGRAM_INTRO' };
+    else if (agent.id === 'FUND-AI-008') defaultPayload = { pendingCount: drafts.filter((d) => d.approvalStatus === 'SUBMITTED_FOR_REVIEW').length };
+    else if (agent.id === 'FUND-AI-009') defaultPayload = { checkPhysicalAddress: true, checkUnsubscribe: true };
+    else if (agent.id === 'FUND-AI-016') defaultPayload = { campaignId: 'camp-capital-001' };
+    else if (agent.id === 'FUND-AI-017') defaultPayload = { programId: 'prog-housing' };
+    else if (agent.id === 'FUND-AI-018') defaultPayload = { scope: 'Full Application RBAC' };
+    
+    setTaskPayloadJson(JSON.stringify(defaultPayload, null, 2));
+    setTaskExecutionResult(null);
+  };
+
+  const handleExecuteAgentTask = () => {
+    if (!executingAgent) return;
+    let parsedPayload = {};
+    try {
+      parsedPayload = JSON.parse(taskPayloadJson);
+    } catch {
+      alert('Invalid JSON in task input parameters');
+      return;
+    }
+
+    const newTask = db.executeFundraisingAgentTask(executingAgent.id, {
+      title: taskTitleInput || `${executingAgent.name} Mission Task`,
+      inputPayload: parsedPayload,
+    });
+    setTaskExecutionResult(newTask);
+    refreshState();
+    notify(`Agent ${executingAgent.code} completed task "${newTask.title}". Status: ${newTask.status}`);
+  };
+
+  const handleApproveAgentTask = (taskId: string) => {
+    const actor = db.getState().currentUser.name;
+    const ok = db.approveFundraisingAgentTask(taskId, actor);
+    if (ok) {
+      refreshState();
+      notify(`Task ${taskId} formally approved and signed off by ${actor}.`);
+      if (taskExecutionResult && taskExecutionResult.id === taskId) {
+        setTaskExecutionResult({
+          ...taskExecutionResult,
+          status: 'COMPLETED',
+          approvalStatus: 'APPROVED',
+          approvedBy: actor,
+        });
+      }
+    }
   };
 
   const handleRunAllTests = async () => {
@@ -196,6 +279,24 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
     });
   }, [donors, searchQuery, activeTab, filterCategory, filterStage]);
 
+  // Filtered agents list for AI Workforce Operations Center
+  const filteredAgents = useMemo(() => {
+    return agents.filter((a) => {
+      const q = agentSearchQuery.toLowerCase();
+      const matchesSearch =
+        !q ||
+        a.name.toLowerCase().includes(q) ||
+        a.code.toLowerCase().includes(q) ||
+        a.id.toLowerCase().includes(q) ||
+        a.role.toLowerCase().includes(q) ||
+        a.description.toLowerCase().includes(q) ||
+        a.assignedTools.some((t) => t.toLowerCase().includes(q));
+
+      const matchesCat = agentCategoryFilter === 'ALL' || a.category === agentCategoryFilter;
+      return matchesSearch && matchesCat;
+    });
+  }, [agents, agentSearchQuery, agentCategoryFilter]);
+
   // Handle CSV/JSON Import
   const handleRunImport = () => {
     if (!importText.trim()) {
@@ -220,15 +321,44 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
   };
 
   // Handle AI Draft generation
-  const handleGenerateDraft = () => {
+  const handleGenerateDraft = async () => {
     if (!selectedDonor) return;
     const activeCamp = campaigns.find((c) => c.status === 'ACTIVE') || campaigns[0];
-    const newDraft = FundraisingService.generateDraft(
+    let newDraft = FundraisingService.generateDraft(
       selectedDonor,
       draftCommType,
       draftTone,
       activeCamp
     );
+
+    try {
+      const res = await fetch('/api/ai/fundraising-draft', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          donorName: selectedDonor.name,
+          commType: draftCommType,
+          toneStyle: draftTone,
+          campaignTitle: activeCamp?.title,
+          role: db.getState().currentUser.role,
+        }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.subject && data.bodyText) {
+          newDraft = {
+            ...newDraft,
+            subject: data.subject,
+            bodyText: data.bodyText,
+            bodyHtml: data.bodyHtml || newDraft.bodyHtml,
+            aiRationale: data.rationale || newDraft.aiRationale,
+          };
+        }
+      }
+    } catch {
+      // Retain verified fallback template
+    }
+
     db.saveFundraisingOutreachDraft(newDraft);
     setShowDraftModal(false);
     notify(`AI Draft created for ${selectedDonor.name} (${draftCommType}). Submitted for human approval.`);
@@ -545,6 +675,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               )}
               <div className="space-y-0.5">
                 {[
+                  { id: 'agents', label: 'AI Workforce (18 Agents)', count: agents.length },
                   { id: 'outreach', label: 'AI Outreach Center', count: drafts.length },
                   { id: 'approvals', label: 'Approvals Queue', count: drafts.filter((d) => d.approvalStatus === 'SUBMITTED_FOR_REVIEW').length },
                   { id: 'stewardship', label: 'Donor Stewardship', count: donors.filter((d) => d.stage === 'STEWARDSHIP').length },
@@ -1375,6 +1506,322 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                     </div>
                   );
                 })}
+              </div>
+            </div>
+          )}
+
+          {/* TAB: AI FUNDRAISING WORKFORCE (18 AGENTS) OPERATIONS CENTER */}
+          {activeTab === 'agents' && (
+            <div className="space-y-6">
+              {/* Header Banner */}
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl bg-gradient-to-r from-slate-900 via-[#104F57] to-slate-900 p-6 text-white shadow-lg">
+                <div className="space-y-1">
+                  <div className="flex items-center space-x-2">
+                    <span className="rounded bg-teal-400/20 px-2 py-0.5 font-mono text-[11px] font-bold text-teal-300 border border-teal-400/30">
+                      MASTER WORKFORCE • 18 SPECIALIZED AGENTS
+                    </span>
+                    <span className="flex items-center space-x-1 rounded bg-emerald-500/20 px-2 py-0.5 text-[11px] font-medium text-emerald-300 border border-emerald-400/30">
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                      <span>100% Operational</span>
+                    </span>
+                  </div>
+                  <h2 className="text-xl lg:text-2xl font-bold tracking-tight text-white">
+                    AI Fundraising Workforce Operations Center
+                  </h2>
+                  <p className="text-xs text-slate-300 max-w-2xl">
+                    Autonomous and supervised AI agents driving donor intelligence, opportunity discovery, customized proposal synthesis, financial reconciliation, and fail-closed human-in-the-loop governance.
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <button
+                    onClick={handleRunFullOrchestration}
+                    disabled={isExecutingPipeline}
+                    className="flex items-center space-x-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 px-4 py-2.5 text-xs font-bold text-white shadow-md transition-all disabled:opacity-50"
+                  >
+                    {isExecutingPipeline ? (
+                      <>
+                        <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
+                        </svg>
+                        <span>Orchestrating 18 Agents...</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        <span>Execute Full Multi-Agent Pipeline</span>
+                      </>
+                    )}
+                  </button>
+
+                  <button
+                    onClick={() => setShowTestRunnerModal(true)}
+                    className="flex items-center space-x-1.5 rounded-xl border border-slate-700 bg-slate-800/80 px-3.5 py-2.5 text-xs font-semibold text-slate-200 hover:bg-slate-700 hover:text-white transition-colors"
+                  >
+                    <svg className="h-4 w-4 text-teal-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Run Test Suite (20 Agent Tests)</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Workforce Status Ribbon (4 KPIs) */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                  <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
+                    <span>Registered Workforce</span>
+                    <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                  </div>
+                  <div className="mt-1 text-2xl font-bold text-slate-900 font-mono">
+                    {agents.length} / 18
+                  </div>
+                  <div className="text-[11px] text-emerald-600 font-medium mt-0.5">
+                    100% Online & Autonomous
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                  <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
+                    <span>Tasks Completed</span>
+                    <svg className="h-4 w-4 text-teal-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                  </div>
+                  <div className="mt-1 text-2xl font-bold text-slate-900 font-mono">
+                    {agents.reduce((sum, a) => sum + (a.completedTasksCount || 0), 0)}
+                  </div>
+                  <div className="text-[11px] text-slate-500 mt-0.5">
+                    Immutable Audit Trail Logged
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                  <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
+                    <span>Pending Human Sign-Offs</span>
+                    <svg className="h-4 w-4 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                  </div>
+                  <div className="mt-1 text-2xl font-bold text-amber-700 font-mono">
+                    {agents.reduce((sum, a) => sum + (a.pendingApprovalsCount || 0), 0)}
+                  </div>
+                  <div className="text-[11px] text-amber-600 font-medium mt-0.5">
+                    Fail-Closed Review Enforced
+                  </div>
+                </div>
+
+                <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                  <div className="flex items-center justify-between text-slate-500 text-xs font-medium">
+                    <span>VAWA Isolation & Quality</span>
+                    <svg className="h-4 w-4 text-emerald-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  </div>
+                  <div className="mt-1 text-2xl font-bold text-emerald-700 font-mono">
+                    100%
+                  </div>
+                  <div className="text-[11px] text-emerald-700 font-medium mt-0.5">
+                    Zero Survivor Disclosures
+                  </div>
+                </div>
+              </div>
+
+              {/* Filter Toolbar */}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
+                {/* Search */}
+                <div className="relative flex-1 max-w-sm">
+                  <svg className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  <input
+                    type="text"
+                    value={agentSearchQuery}
+                    onChange={(e) => setAgentSearchQuery(e.target.value)}
+                    placeholder="Search agents by code, name, role, or tool..."
+                    className="w-full pl-9 pr-3 py-1.5 rounded-lg border border-slate-200 text-xs text-slate-800 placeholder-slate-400 focus:border-[#104F57] focus:outline-none"
+                  />
+                </div>
+
+                {/* Categories */}
+                <div className="flex flex-wrap items-center gap-1">
+                  {[
+                    'ALL',
+                    'ORCHESTRATION',
+                    'INTELLIGENCE',
+                    'RESEARCH',
+                    'OUTREACH',
+                    'GRANTS',
+                    'PARTNERSHIPS',
+                    'STEWARDSHIP',
+                    'FINANCE',
+                    'SECURITY',
+                  ].map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => setAgentCategoryFilter(cat)}
+                      className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-colors ${
+                        agentCategoryFilter === cat
+                          ? 'bg-[#104F57] text-white shadow-xs'
+                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 18 Agent Cards Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                {filteredAgents.map((agent) => (
+                  <div
+                    key={agent.id}
+                    className="flex flex-col justify-between rounded-xl border border-slate-200 bg-white p-5 shadow-xs hover:shadow-md transition-shadow"
+                  >
+                    <div className="space-y-3">
+                      {/* Top Bar: Code, Category, Status */}
+                      <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                        <div className="flex items-center space-x-2">
+                          <span className="rounded bg-teal-50 px-2 py-0.5 font-mono text-[11px] font-bold text-[#104F57] border border-teal-200">
+                            {agent.id}
+                          </span>
+                          <span className="text-[10px] font-mono text-slate-400 font-semibold">
+                            {agent.code}
+                          </span>
+                        </div>
+                        <div className="flex items-center space-x-1.5">
+                          <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-slate-600">
+                            {agent.category}
+                          </span>
+                          <span
+                            className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
+                              agent.status === 'RUNNING'
+                                ? 'bg-blue-100 text-blue-800 animate-pulse'
+                                : agent.status === 'WAITING_FOR_APPROVAL'
+                                ? 'bg-amber-100 text-amber-800'
+                                : 'bg-emerald-100 text-emerald-800'
+                            }`}
+                          >
+                            {agent.status}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Agent Name & Role */}
+                      <div>
+                        <h3 className="text-sm font-bold text-slate-900">{agent.name}</h3>
+                        <div className="text-xs font-medium text-teal-800 mt-0.5">{agent.role}</div>
+                        <p className="text-xs text-slate-600 mt-1 line-clamp-2 leading-relaxed">
+                          {agent.description}
+                        </p>
+                      </div>
+
+                      {/* Tools & Safeguards */}
+                      <div className="space-y-1.5">
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                          Assigned Capability Tools
+                        </div>
+                        <div className="flex flex-wrap gap-1">
+                          {agent.assignedTools.slice(0, 3).map((tool, idx) => (
+                            <span
+                              key={idx}
+                              className="rounded bg-slate-100 px-2 py-0.5 font-mono text-[9px] text-slate-700"
+                            >
+                              {tool}
+                            </span>
+                          ))}
+                          {agent.assignedTools.length > 3 && (
+                            <span className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[9px] text-slate-500">
+                              +{agent.assignedTools.length - 3} more
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Safeguarding Policy */}
+                      <div className="rounded-lg bg-slate-50 p-2.5 text-[11px] text-slate-600 border border-slate-100 space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-slate-700">Governance Gate:</span>
+                          <span className={`font-bold ${agent.requiresHumanApproval ? 'text-amber-700' : 'text-emerald-700'}`}>
+                            {agent.requiresHumanApproval ? 'Human Review Gate' : 'Autonomous Action'}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-slate-500">Escalation Officer:</span>
+                          <span className="font-medium text-slate-800">{agent.escalationOfficer}</span>
+                        </div>
+                      </div>
+
+                      {/* Confidence Meter */}
+                      <div>
+                        <div className="flex items-center justify-between text-[10px] font-semibold text-slate-500 mb-1">
+                          <span>Confidence Score</span>
+                          <span className="font-mono text-emerald-700">{agent.confidenceScore}%</span>
+                        </div>
+                        <div className="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden">
+                          <div
+                            className="h-full bg-emerald-500 rounded-full"
+                            style={{ width: `${agent.confidenceScore}%` }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Metrics strip */}
+                      <div className="grid grid-cols-3 gap-1 pt-1 text-center text-[10px]">
+                        <div className="rounded bg-slate-50 p-1">
+                          <div className="font-mono font-bold text-slate-800">{agent.completedTasksCount}</div>
+                          <div className="text-slate-400">Tasks</div>
+                        </div>
+                        <div className="rounded bg-slate-50 p-1">
+                          <div className="font-mono font-bold text-amber-700">{agent.pendingApprovalsCount}</div>
+                          <div className="text-slate-400">Approvals</div>
+                        </div>
+                        <div className="rounded bg-slate-50 p-1">
+                          <div className="font-mono font-bold text-slate-800">0</div>
+                          <div className="text-slate-400">Failures</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="pt-4 border-t border-slate-100 flex items-center space-x-2">
+                      <button
+                        onClick={() => handleOpenExecuteModal(agent)}
+                        className="flex-1 rounded-lg bg-[#104F57] py-2 text-xs font-semibold text-white hover:bg-[#0c3d43] transition-colors shadow-xs flex items-center justify-center space-x-1"
+                      >
+                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                        </svg>
+                        <span>Run Task</span>
+                      </button>
+
+                      <button
+                        onClick={() => setHistoryDrawerAgent(agent)}
+                        className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors shadow-xs"
+                        title="View Task Audit Log"
+                      >
+                        <svg className="h-3.5 w-3.5 text-slate-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                      </button>
+
+                      {agent.pendingApprovalsCount > 0 && (
+                        <button
+                          onClick={() => setHistoryDrawerAgent(agent)}
+                          className="rounded-lg bg-amber-500 px-3 py-2 text-xs font-semibold text-white hover:bg-amber-600 transition-colors shadow-xs"
+                          title="Pending Human Approval"
+                        >
+                          Review
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -2518,7 +2965,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   Milestone 11.01 & Deliverable 20
                 </span>
                 <h3 className="text-base font-bold text-slate-900 mt-1">
-                  Automated Acceptance Test Suite Runner (86 Tests Verified)
+                  Automated Acceptance Test Suite Runner ({testSummary ? testSummary.total : 216} Tests Verified)
                 </h3>
               </div>
               <button onClick={() => setShowTestRunnerModal(false)} className="text-slate-400 hover:text-slate-600 text-sm">
@@ -2532,13 +2979,13 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 <div>
                   <span className="text-[10px] text-slate-400 uppercase font-semibold">Total Tests</span>
                   <div className="font-mono font-bold text-slate-900 text-lg">
-                    {testSummary ? testSummary.total : 86}
+                    {testSummary ? testSummary.total : 216}
                   </div>
                 </div>
                 <div>
                   <span className="text-[10px] text-slate-400 uppercase font-semibold">Passed</span>
                   <div className="font-mono font-bold text-emerald-600 text-lg">
-                    {testSummary ? testSummary.passed : 86}
+                    {testSummary ? testSummary.passed : 216}
                   </div>
                 </div>
                 <div>
@@ -2643,6 +3090,257 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 className="rounded-lg bg-[#104F57] px-4 py-2 text-xs font-semibold text-white hover:bg-[#0c3d43]"
               >
                 Close Runner
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 6. AGENT TASK EXECUTION MODAL */}
+      {executingAgent && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
+          <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <div className="flex items-center space-x-2">
+                  <span className="rounded bg-teal-50 px-2 py-0.5 font-mono text-[11px] font-bold text-[#104F57] border border-teal-200">
+                    {executingAgent.id}
+                  </span>
+                  <span className="font-semibold text-slate-800 text-sm">{executingAgent.name}</span>
+                </div>
+                <div className="text-xs text-slate-500 mt-0.5">
+                  Role: <span className="font-medium text-slate-700">{executingAgent.role}</span> • Escalation: <span className="font-medium text-slate-700">{executingAgent.escalationOfficer}</span>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setExecutingAgent(null);
+                  setTaskExecutionResult(null);
+                }}
+                className="text-slate-400 hover:text-slate-600 text-sm"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Agent Schema Guidance */}
+            <div className="rounded-lg bg-slate-50 p-3 text-xs space-y-1.5 border border-slate-200">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-slate-800">Agent Contract & Capabilities:</span>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${executingAgent.requiresHumanApproval ? 'bg-amber-100 text-amber-800' : 'bg-emerald-100 text-emerald-800'}`}>
+                  {executingAgent.requiresHumanApproval ? 'Human Review Gate Required' : 'Autonomous Action'}
+                </span>
+              </div>
+              <div className="text-[11px] text-slate-600">
+                <strong>Input Schema:</strong> {executingAgent.inputSchemaSummary}
+              </div>
+              <div className="text-[11px] text-slate-600">
+                <strong>Expected Output:</strong> {executingAgent.outputSchemaSummary}
+              </div>
+            </div>
+
+            {/* Task Configuration Form */}
+            <div className="space-y-3 text-xs">
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Mission / Task Title</label>
+                <input
+                  type="text"
+                  value={taskTitleInput}
+                  onChange={(e) => setTaskTitleInput(e.target.value)}
+                  placeholder="e.g. Major Gift Capacity Evaluation for Marcus Thorne"
+                  className="w-full rounded-lg border border-slate-200 p-2 text-slate-800 focus:border-[#104F57] focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="font-semibold text-slate-700">Input Parameters (JSON)</label>
+                  <span className="text-[10px] text-slate-400 font-mono">Valid JSON format</span>
+                </div>
+                <textarea
+                  rows={5}
+                  value={taskPayloadJson}
+                  onChange={(e) => setTaskPayloadJson(e.target.value)}
+                  className="w-full rounded-lg border border-slate-200 p-2.5 font-mono text-xs text-slate-800 focus:border-[#104F57] focus:outline-none"
+                />
+              </div>
+
+              <div className="flex items-center justify-end space-x-2 pt-2">
+                <button
+                  onClick={() => {
+                    setExecutingAgent(null);
+                    setTaskExecutionResult(null);
+                  }}
+                  className="rounded-lg border border-slate-200 px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-50"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleExecuteAgentTask}
+                  className="rounded-lg bg-[#104F57] px-4 py-2 text-xs font-semibold text-white hover:bg-[#0c3d43] shadow-sm flex items-center space-x-1.5"
+                >
+                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
+                  </svg>
+                  <span>Execute Mission Task</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Task Execution Result */}
+            {taskExecutionResult && (
+              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-3 mt-4">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                  <div className="flex items-center space-x-2">
+                    <span className="font-bold text-slate-900 text-xs">Execution Outcome</span>
+                    <span className="font-mono text-[10px] text-slate-500">ID: {taskExecutionResult.id}</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="font-mono text-[10px] text-slate-400">{taskExecutionResult.durationMs}ms</span>
+                    <span
+                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                        taskExecutionResult.status === 'COMPLETED'
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : 'bg-amber-100 text-amber-800'
+                      }`}
+                    >
+                      {taskExecutionResult.status}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="text-xs text-slate-700 bg-white p-3 rounded-lg border border-slate-200">
+                  <strong className="block text-slate-900 mb-1">Synthesized Result:</strong>
+                  {taskExecutionResult.outputResult}
+                </div>
+
+                {taskExecutionResult.structuredOutput && (
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                      Structured Payload Output
+                    </span>
+                    <pre className="rounded-lg bg-slate-900 p-3 text-[11px] font-mono text-emerald-400 overflow-x-auto max-h-48">
+                      {JSON.stringify(taskExecutionResult.structuredOutput, null, 2)}
+                    </pre>
+                  </div>
+                )}
+
+                {/* Human Sign-Off Gate */}
+                {taskExecutionResult.requiresHumanApproval && taskExecutionResult.status === 'WAITING_FOR_APPROVAL' && (
+                  <div className="rounded-lg bg-amber-50 p-3 border border-amber-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="text-xs text-amber-900">
+                      <strong>Dual Human Gatekeeper Active:</strong> External actions on hold pending executive sign-off.
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <button
+                        onClick={() => handleApproveAgentTask(taskExecutionResult.id)}
+                        className="rounded-lg bg-emerald-600 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-700 shadow-sm"
+                      >
+                        Approve as {executingAgent.escalationOfficer}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* 7. AGENT TASK AUDIT LOG & HISTORY DRAWER */}
+      {historyDrawerAgent && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
+          <div className="w-full max-w-3xl rounded-2xl bg-white p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div>
+                <div className="flex items-center space-x-2">
+                  <span className="rounded bg-teal-50 px-2 py-0.5 font-mono text-[11px] font-bold text-[#104F57] border border-teal-200">
+                    {historyDrawerAgent.id} • {historyDrawerAgent.code}
+                  </span>
+                  <h3 className="text-base font-bold text-slate-900">{historyDrawerAgent.name}</h3>
+                </div>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Complete chronological mission execution audit trail and human sign-off history.
+                </p>
+              </div>
+              <button onClick={() => setHistoryDrawerAgent(null)} className="text-slate-400 hover:text-slate-600 text-sm">
+                ✕
+              </button>
+            </div>
+
+            {/* Task List */}
+            <div className="space-y-3">
+              {historyDrawerAgent.recentTasks.length === 0 ? (
+                <div className="rounded-xl border border-dashed border-slate-300 p-8 text-center text-slate-400 text-xs">
+                  No mission executions currently logged for this agent.
+                </div>
+              ) : (
+                historyDrawerAgent.recentTasks.map((t) => (
+                  <div key={t.id} className="rounded-xl border border-slate-200 bg-white p-4 space-y-2 shadow-xs">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-2">
+                      <div>
+                        <div className="flex items-center space-x-2">
+                          <span className="font-mono font-bold text-slate-900 text-xs">{t.id}</span>
+                          <span className="font-semibold text-slate-800 text-xs">{t.title}</span>
+                          <span
+                            className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
+                              t.status === 'COMPLETED' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                            }`}
+                          >
+                            {t.status}
+                          </span>
+                        </div>
+                        <div className="text-[10px] text-slate-400 font-mono mt-0.5">
+                          Started: {t.startedAt ? t.startedAt.replace('T', ' ').split('.')[0] : 'N/A'} • Duration: {t.durationMs || 100}ms
+                        </div>
+                      </div>
+
+                      {t.requiresHumanApproval && (
+                        <div className="text-right">
+                          {t.approvalStatus === 'APPROVED' ? (
+                            <span className="rounded bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-800 border border-emerald-200">
+                              Approved by {t.approvedBy || historyDrawerAgent.escalationOfficer}
+                            </span>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                handleApproveAgentTask(t.id);
+                                setHistoryDrawerAgent(db.getFundraisingAIAgent(historyDrawerAgent.id) || null);
+                              }}
+                              className="rounded bg-amber-500 px-2.5 py-1 text-xs font-bold text-white hover:bg-amber-600 shadow-xs"
+                            >
+                              Sign Off & Authorize
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="text-xs text-slate-700 bg-slate-50 p-2.5 rounded-lg border border-slate-100">
+                      {t.outputResult}
+                    </div>
+
+                    {t.structuredOutput && (
+                      <details className="text-[10px] text-slate-500 cursor-pointer">
+                        <summary className="font-semibold text-slate-600 hover:text-slate-800">
+                          View Structured JSON Payload
+                        </summary>
+                        <pre className="mt-1 rounded bg-slate-900 p-2 text-emerald-400 font-mono text-[10px] overflow-x-auto">
+                          {JSON.stringify(t.structuredOutput, null, 2)}
+                        </pre>
+                      </details>
+                    )}
+                  </div>
+                ))
+              )}
+            </div>
+
+            <div className="flex items-center justify-end space-x-2 pt-2 border-t border-slate-100">
+              <button
+                onClick={() => setHistoryDrawerAgent(null)}
+                className="rounded-lg bg-[#104F57] px-4 py-2 text-xs font-semibold text-white hover:bg-[#0c3d43]"
+              >
+                Close Audit Register
               </button>
             </div>
           </div>

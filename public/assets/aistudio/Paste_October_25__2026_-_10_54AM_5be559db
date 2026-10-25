@@ -1,0 +1,2248 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+## ENTERPRISE FUNDRAISING INTELLIGENCE, EMAIL MANAGEMENT & AI AGENT WORKFORCE
+### COMPLETE MASTER PLAN, SYSTEM DESIGN, DEVELOPMENT & EXECUTION DIRECTIVE
+
+**Organization:** Phumulani  
+**Technology Developer:** Ophireum Technology  
+**Existing Repository:** `OphireumTechnology/phumulani`  
+**Primary Administration Route:** `/admin/master`  
+**Email Management Route:** `/admin/master/email`  
+**Fundraising Management Route:** `/admin/master/fundraising`  
+**Development Priority:** CRITICAL  
+**Implementation Strategy:** Preserve → Audit → Design → Integrate → Develop → Test → Verify  
+**Target:** A fully integrated, secure, AI-powered nonprofit fundraising and communications platform.
+
+---
+
+# PART 1 — MASTER EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+CONTINUE DEVELOPING THE EXISTING PHUMULANI AI COMMUNITY PLATFORM.
+
+YOUR PRIMARY OBJECTIVE IS TO IMPLEMENT THE COMPLETE FUNDRAISING AND COMMUNICATIONS ARCHITECTURE DEPICTED IN THE PROVIDED **PHUMULANI AI FUNDRAISING WORKFLOW DIAGRAM**.
+
+USE THE DIAGRAM AS THE PRIMARY FUNCTIONAL AND ARCHITECTURAL REFERENCE.
+
+DO NOT TREAT IT AS A SIMPLE VISUAL MOCKUP.
+
+EVERY MAJOR COMPONENT SHOWN IN THE DIAGRAM MUST CORRESPOND TO A REAL FUNCTIONAL APPLICATION MODULE, DATABASE ENTITY, SERVICE, WORKFLOW, OR AI AGENT.
+
+THE APPLICATION MUST OPERATE AS ONE CONNECTED ENTERPRISE SYSTEM.
+
+### PRIMARY COMPONENTS
+
+1. Master Administrator.
+2. Organizational Mailboxes.
+3. AI Email Manager.
+4. Fundraising CRM.
+5. Donor Intelligence.
+6. Individual Donor Management.
+7. Corporate Donor Management.
+8. Institutional Donor Management.
+9. Funding Opportunities.
+10. AI Fundraising Workforce.
+11. AI Outreach.
+12. AI Grant Assistant.
+13. AI Donor Stewardship.
+14. Human Review and Approval.
+15. Authorized Communication.
+16. Donor Engagement.
+17. Donations, Grants, and Sponsorships.
+18. Payment and Award Verification.
+19. Program Funding and Reporting.
+
+All components must exchange authorized information through secure, auditable integrations.
+
+---
+
+# PART 2 — PRESERVE THE EXISTING PLATFORM
+
+Before implementing changes, inspect the existing repository.
+
+**Repository:**
+
+`OphireumTechnology/phumulani`
+
+### EXISTING SYSTEMS TO PRESERVE
+
+- Master Administrator.
+- Email Command Center.
+- Enterprise AI Email Manager.
+- Fundraising CRM.
+- Donor management.
+- Grant management.
+- Corporate partnership management.
+- Client Development Portal.
+- Existing authentication.
+- Existing role-based access controls.
+- Existing PostgreSQL schema definitions.
+- Existing AI services.
+- Existing automated acceptance tests.
+- Existing safeguarding protections.
+- Existing approval workflows.
+- Existing emergency administrative controls.
+
+Previous reports indicate that the Email Manager contains 216 passing automated tests.
+
+Re-run the actual tests and establish the current baseline.
+
+Do not assume reported functionality is production-connected.
+
+### KNOWN INFRASTRUCTURE GAPS
+
+The latest operational audit reported:
+
+- Google Workspace OAuth authorization pending.
+- No external PostgreSQL database connected.
+- Browser-local persistence still in use.
+- Synchronization workers dependent on browser sessions.
+- No live historical email import completed.
+- No authorized live email dispatch verified.
+
+Resolve these issues as part of the implementation program.
+
+Do not conceal or bypass them.
+
+### PRESERVATION RULES
+
+Do not:
+
+- Create a replacement application.
+- Remove working modules.
+- Overwrite existing data.
+- Force-push to GitHub.
+- Destroy local changes.
+- Disable security controls.
+- Replace real functionality with mock data.
+- Deploy to production without authorization.
+
+---
+
+# PART 3 — MASTER SYSTEM ARCHITECTURE
+
+Implement the following integrated architecture.
+
+```text
+PHUMULANI AI COMMUNITY PLATFORM
+│
+├── MASTER ADMINISTRATOR
+│   ├── User Management
+│   ├── System Monitoring
+│   ├── Security & Compliance
+│   └── Audit & Reporting
+│
+├── AI EMAIL MANAGER
+│   ├── Organizational Mailboxes
+│   ├── Unified Inbox
+│   ├── Historical Email Synchronization
+│   ├── Continuous Email Synchronization
+│   ├── AI Classification
+│   ├── AI Prioritization
+│   ├── AI Drafting
+│   ├── Auto-Responder Governance
+│   ├── Human Approval
+│   └── CRM Integration
+│
+├── FUNDRAISING CRM
+│   ├── Donor Profiles
+│   ├── Giving History
+│   ├── Campaign Management
+│   ├── Opportunities
+│   ├── Follow-ups
+│   └── Impact Reporting
+│
+├── DONOR INTELLIGENCE
+│   ├── Data Analysis
+│   ├── Segmentation
+│   ├── Opportunity Matching
+│   └── Personalized Engagement
+│
+├── DONOR SEGMENTS
+│   ├── Individuals
+│   ├── Corporations
+│   └── Institutions
+│
+├── FUNDING OPPORTUNITIES
+│   ├── Identification
+│   ├── Qualification
+│   ├── Tracking
+│   ├── Management
+│   └── Funding Pipeline
+│
+├── AI FUNDRAISING WORKFORCE
+│   ├── AI Orchestrator
+│   ├── AI Outreach
+│   ├── AI Grant Assistant
+│   ├── AI Donor Stewardship
+│   └── Specialist AI Agents
+│
+├── HUMAN REVIEW & APPROVAL
+│
+├── AUTHORIZED COMMUNICATION
+│
+├── DONOR ENGAGEMENT
+│
+├── DONATIONS / GRANTS / SPONSORSHIPS
+│
+├── PAYMENT & AWARD VERIFICATION
+│
+└── PROGRAM FUNDING & REPORTING
+```
+
+### ARCHITECTURAL PRINCIPLE
+
+All modules must share a consistent identity, authorization, workflow, and audit architecture.
+
+Do not duplicate donor databases across departments.
+
+Do not duplicate organizational contacts unnecessarily.
+
+Do not create independent AI systems that cannot coordinate.
+
+---
+
+# PART 4 — MASTER ADMINISTRATOR
+
+## MODULE 01 — CENTRAL MANAGEMENT
+
+**Route:** `/admin/master`
+
+The Master Administrator must control the entire integrated platform.
+
+### REQUIRED FEATURES
+
+#### User Management
+
+- User accounts.
+- Staff invitations.
+- Roles.
+- Permissions.
+- Department access.
+- Account activation.
+- Account suspension.
+- Session management.
+
+#### System Monitoring
+
+- Email synchronization status.
+- Fundraising workflow status.
+- AI agent health.
+- Background worker status.
+- Database health.
+- API integration health.
+- Failed jobs.
+- Operational alerts.
+
+#### Security & Compliance
+
+- Role-based access.
+- Data protection.
+- Safeguarding isolation.
+- Approval policies.
+- Secret management.
+- Audit controls.
+
+#### Audit & Reporting
+
+- User actions.
+- AI agent actions.
+- Approval decisions.
+- Email dispatches.
+- CRM changes.
+- Donation verification.
+- Grant award verification.
+- System configuration changes.
+
+### MASTER ADMINISTRATOR DASHBOARD
+
+Provide executive KPI cards for:
+
+- Active donors.
+- Active fundraising opportunities.
+- Total verified contributions.
+- Active campaigns.
+- Pending approvals.
+- Email synchronization health.
+- AI agent activity.
+- Grant deadlines.
+- Corporate partnership pipeline.
+- Program funding allocations.
+- Security alerts.
+- System readiness.
+
+Use real persisted records.
+
+---
+
+# PART 5 — ORGANIZATIONAL EMAIL MANAGEMENT
+
+## MODULE 02 — AI EMAIL MANAGER
+
+**Route:** `/admin/master/email`
+
+Integrate the five organizational addresses:
+
+- `info@phumulani.org`
+- `donations@phumulani.org`
+- `grants@phumulani.org`
+- `executive@phumulani.org`
+- `partnerships@phumulani.org`
+
+### REQUIRED CAPABILITIES
+
+1. Mailbox connection management.
+2. Secure Google Workspace authentication.
+3. Historical email recovery.
+4. Continuous incremental synchronization.
+5. Unified inbox.
+6. Conversation threading.
+7. Email search.
+8. AI classification.
+9. AI prioritization.
+10. AI summaries.
+11. AI drafting.
+12. Staff assignment.
+13. Internal notes.
+14. Human approval.
+15. Authorized sending.
+16. Sent-folder reconciliation.
+17. CRM linking.
+18. Attachment security.
+19. Audit logging.
+20. Synchronization monitoring.
+
+### FUNDRAISING INTEGRATION
+
+The Email Manager must recognize eligible correspondence relating to:
+
+- Individual donations.
+- Corporate donations.
+- Grant opportunities.
+- Sponsorship proposals.
+- Partnership requests.
+- Donor stewardship.
+- Funding commitments.
+- Reporting requirements.
+
+Relevant emails should be linked to authorized CRM records.
+
+Do not treat an email promise as a completed donation.
+
+### CRITICAL
+
+Live mailbox access requires authorized Google Workspace consent.
+
+Do not initiate bulk imports or send external emails without explicit approval.
+
+---
+
+# PART 6 — FUNDRAISING CRM
+
+## MODULE 03 — DONOR RELATIONSHIP MANAGEMENT
+
+**Route:** `/admin/master/fundraising`
+
+Create or complete the existing Fundraising CRM.
+
+### CORE CRM MODULES
+
+#### Donor Profiles
+
+Store:
+
+- Donor identifier.
+- Donor type.
+- Name.
+- Organization.
+- Contact information.
+- Relationship owner.
+- Communication preferences.
+- Giving history.
+- Engagement history.
+- Interests.
+- Funding preferences.
+- Consent status.
+- CRM status.
+
+#### Giving History
+
+Track:
+
+- Verified donations.
+- Donation dates.
+- Amounts.
+- Campaigns.
+- Payment references.
+- Recurring donation schedules.
+- Receipt status.
+- Refunds and adjustments.
+
+#### Campaign Management
+
+Support:
+
+- Campaign creation.
+- Campaign goals.
+- Target audiences.
+- Approved communications.
+- Budget.
+- Timeline.
+- Contributions.
+- Performance.
+- Impact reporting.
+
+#### Opportunities
+
+Support:
+
+- Major gifts.
+- Grant opportunities.
+- Corporate sponsorships.
+- CSR partnerships.
+- Recurring giving.
+- Matching gifts.
+
+#### Follow-ups
+
+Support:
+
+- Assigned staff.
+- Due dates.
+- Conversation links.
+- AI recommendations.
+- Completion status.
+- Escalations.
+
+#### Impact Reporting
+
+Support:
+
+- Verified funding received.
+- Program allocations.
+- Spending summaries.
+- Beneficiary impact metrics.
+- Donor reports.
+- Board reports.
+
+### CRM INTEGRATION RULE
+
+The Email Manager and Fundraising CRM must reference the same authorized donor and organizational contact records.
+
+---
+
+# PART 7 — DONOR INTELLIGENCE
+
+## MODULE 04 — AI DONOR INTELLIGENCE ENGINE
+
+Build a Donor Intelligence layer connecting the Email Manager and Fundraising CRM.
+
+### FOUR PRIMARY FUNCTIONS
+
+**1. Data Analysis**
+
+Analyze:
+
+- Verified giving history.
+- Engagement frequency.
+- Campaign participation.
+- Communication history.
+- Funding preferences.
+- Opportunity status.
+
+**2. Segmentation**
+
+Organize contacts into relevant fundraising segments.
+
+**3. Opportunity Matching**
+
+Recommend potential alignment between verified organizational funding needs and documented donor interests.
+
+**4. Personalized Engagement**
+
+Recommend appropriate communications, stewardship actions, and follow-ups.
+
+### INTELLIGENCE OUTPUT
+
+Each authorized donor profile may include:
+
+- Relationship summary.
+- Engagement timeline.
+- Relevant giving history.
+- Funding interests.
+- Open opportunities.
+- Recommended next action.
+- Assigned relationship manager.
+- AI recommendation confidence.
+- Supporting evidence.
+
+### SAFEGUARDS
+
+Do not infer sensitive personal traits.
+
+Do not infer wealth or financial capacity from protected characteristics or unrelated personal information.
+
+Do not present speculative AI scores as verified facts.
+
+Do not automatically enroll contacts in outreach campaigns.
+
+---
+
+# PART 8 — INDIVIDUAL DONORS
+
+## MODULE 05 — INDIVIDUAL DONOR MANAGEMENT
+
+Implement dedicated workflows for:
+
+### Recurring Donors
+
+- Giving schedules.
+- Renewal tracking.
+- Failed payment notifications.
+- Stewardship plans.
+- Retention reporting.
+
+### One-Time Donors
+
+- Donation acknowledgment.
+- Relationship development.
+- Campaign attribution.
+- Follow-up recommendations.
+
+### Major Donors
+
+- Relationship ownership.
+- Major gift opportunities.
+- Meeting history.
+- Proposal tracking.
+- Stewardship milestones.
+
+### Community Supporters
+
+- Community engagement.
+- Volunteer participation.
+- Campaign interest.
+- Approved communication preferences.
+
+### Legacy Donors
+
+- Planned giving inquiries.
+- Authorized relationship tracking.
+- Appropriate legal and financial referral workflows.
+
+### REQUIRED DASHBOARD
+
+Display:
+
+- Donor counts.
+- Verified giving totals.
+- Active relationships.
+- Follow-up requirements.
+- Retention trends.
+- Open opportunities.
+
+---
+
+# PART 9 — CORPORATE DONORS
+
+## MODULE 06 — CORPORATE FUNDRAISING
+
+Implement dedicated corporate relationship management.
+
+### FUNDING TYPES
+
+- Corporate donations.
+- CSR partnerships.
+- Sponsorships.
+- Employee giving programs.
+- Matching gifts.
+
+### CORPORATE PROFILE
+
+Store:
+
+- Company name.
+- Authorized contact.
+- Industry.
+- Partnership interests.
+- Corporate giving programs.
+- Relationship owner.
+- Open opportunities.
+- Proposal history.
+- Sponsorship commitments.
+- Verified contributions.
+
+### CORPORATE WORKFLOWS
+
+1. Identify an eligible opportunity.
+2. Research documented program requirements.
+3. Evaluate organizational fit.
+4. Create an opportunity record.
+5. Assign a relationship manager.
+6. Generate an AI-assisted proposal draft.
+7. Submit for human review.
+8. Conduct authorized outreach.
+9. Track engagement.
+10. Record verified outcomes.
+
+### RESTRICTIONS
+
+Do not send unsolicited automated campaigns without applicable authorization and consent.
+
+Do not fabricate corporate giving programs.
+
+---
+
+# PART 10 — INSTITUTIONAL FUNDERS
+
+## MODULE 07 — INSTITUTIONAL FUNDRAISING
+
+Implement support for:
+
+- Foundations.
+- Government entities.
+- Grantmakers.
+- International NGOs.
+- Religious and community groups.
+- Universities.
+- Professional associations.
+
+### INSTITUTIONAL PROFILE
+
+Store:
+
+- Institution name.
+- Funding category.
+- Program interests.
+- Eligibility requirements.
+- Geographic restrictions.
+- Application deadlines.
+- Grant amounts where published.
+- Submission requirements.
+- Reporting obligations.
+- Contact information.
+- Source evidence.
+- Verification date.
+
+### FUNDING OPPORTUNITY STATES
+
+DISCOVERED
+
+UNDER_RESEARCH
+
+QUALIFICATION_REQUIRED
+
+QUALIFIED
+
+NOT_ELIGIBLE
+
+READY_FOR_PROPOSAL
+
+DRAFTING
+
+INTERNAL_REVIEW
+
+APPROVED_FOR_SUBMISSION
+
+SUBMITTED
+
+UNDER_FUNDER_REVIEW
+
+AWARDED
+
+DECLINED
+
+CLOSED
+
+### REQUIRED FEATURES
+
+- Opportunity database.
+- Deadline calendar.
+- Eligibility checklist.
+- Grant document library.
+- Proposal workflow.
+- Approval workflow.
+- Submission tracking.
+- Award verification.
+- Reporting requirements.
+
+---
+
+# PART 11 — FUNDING OPPORTUNITY ENGINE
+
+## MODULE 08 — FUNDING OPPORTUNITIES
+
+Build a central Funding Opportunities workspace.
+
+### PRIMARY WORKFLOW
+
+**Identify → Qualify → Track → Manage → Maximize Funding Potential**
+
+### IDENTIFICATION
+
+Support:
+
+- Authorized manual entry.
+- Public funding opportunity research.
+- Relevant email detection.
+- CRM referrals.
+- Approved data imports.
+
+### QUALIFICATION
+
+Check:
+
+- Eligibility.
+- Mission alignment.
+- Geographic requirements.
+- Application deadlines.
+- Funding restrictions.
+- Required documentation.
+- Organizational capacity.
+
+### TRACKING
+
+Monitor:
+
+- Opportunity stage.
+- Assigned owner.
+- Deadline.
+- Required documents.
+- Communication history.
+- Approval status.
+- Submission status.
+- Funder decision.
+
+### MANAGEMENT
+
+Support:
+
+- Task assignments.
+- Document preparation.
+- Internal review.
+- Proposal revisions.
+- Authorized submission.
+- Follow-ups.
+- Reporting obligations.
+
+### OPPORTUNITY SCORING
+
+AI may provide explainable recommendations based on documented criteria.
+
+Scores must be labeled as estimates.
+
+Do not present AI predictions as funding guarantees.
+
+---
+
+# PART 12 — AI FUNDRAISING WORKFORCE
+
+## MODULE 09 — MULTI-AGENT FUNDRAISING SYSTEM
+
+Build an integrated AI workforce.
+
+### AGENT ARCHITECTURE
+
+Each agent must have:
+
+- Unique ID.
+- Defined purpose.
+- Authorized tools.
+- Input schema.
+- Output schema.
+- Task lifecycle.
+- Execution history.
+- Confidence indicators.
+- Escalation rules.
+- Audit logging.
+- Security boundaries.
+
+### AGENT EXECUTION STATES
+
+IDLE
+
+QUEUED
+
+RUNNING
+
+WAITING_FOR_DATA
+
+WAITING_FOR_APPROVAL
+
+COMPLETED
+
+FAILED
+
+BLOCKED
+
+CANCELLED
+
+### CORE POLICY
+
+Agents may autonomously perform approved internal research, classification, analysis, drafting, and task preparation.
+
+Agents may not independently:
+
+- Send external email.
+- Submit grant applications.
+- Sign agreements.
+- Approve financial transactions.
+- Issue tax receipts.
+- Modify banking information.
+- Approve their own work.
+- Release confidential information.
+
+---
+
+# PART 13 — AI AGENT REGISTRY
+
+Implement the following 18 specialized AI agents.
+
+## AGENT 01 — FUNDRAISING ORCHESTRATOR
+
+**ID:** `FUND-AI-001`
+
+Coordinates fundraising AI workflows.
+
+Responsibilities:
+
+- Assign agent tasks.
+- Manage dependencies.
+- Track execution.
+- Coordinate specialist agents.
+- Detect failures.
+- Escalate blocked work.
+- Aggregate recommendations.
+
+---
+
+## AGENT 02 — EMAIL INTELLIGENCE AGENT
+
+**ID:** `FUND-AI-002`
+
+Responsibilities:
+
+- Classify fundraising correspondence.
+- Identify relevant CRM entities.
+- Summarize authorized conversations.
+- Detect follow-up needs.
+- Recommend appropriate specialist agents.
+
+---
+
+## AGENT 03 — DONOR RESEARCH AGENT
+
+**ID:** `FUND-AI-003`
+
+Responsibilities:
+
+- Research publicly available organizational funding information.
+- Analyze verified donor records.
+- Identify documented interests.
+- Prepare evidence-based donor research summaries.
+
+Do not use unauthorized private information.
+
+---
+
+## AGENT 04 — DONOR SEGMENTATION AGENT
+
+**ID:** `FUND-AI-004`
+
+Responsibilities:
+
+- Segment authorized donor records.
+- Analyze engagement patterns.
+- Recommend appropriate stewardship categories.
+- Explain segmentation decisions.
+
+---
+
+## AGENT 05 — FUNDING OPPORTUNITY DISCOVERY AGENT
+
+**ID:** `FUND-AI-005`
+
+Responsibilities:
+
+- Identify relevant funding opportunities.
+- Collect published eligibility criteria.
+- Record deadlines.
+- Preserve source references.
+- Recommend qualification review.
+
+---
+
+## AGENT 06 — FUNDING ELIGIBILITY AGENT
+
+**ID:** `FUND-AI-006`
+
+Responsibilities:
+
+- Compare opportunity requirements against verified organizational information.
+- Identify missing documents.
+- Identify eligibility blockers.
+- Produce eligibility checklists.
+
+---
+
+## AGENT 07 — AI OUTREACH AGENT
+
+**ID:** `FUND-AI-007`
+
+Responsibilities:
+
+- Prepare personalized communication drafts.
+- Recommend appropriate audiences.
+- Draft campaign messages.
+- Analyze responses.
+- Recommend follow-ups.
+
+No autonomous external sending.
+
+---
+
+## AGENT 08 — GRANT RESEARCH AGENT
+
+**ID:** `FUND-AI-008`
+
+Responsibilities:
+
+- Research funding opportunities.
+- Analyze published grant guidelines.
+- Identify deadlines.
+- Summarize requirements.
+- Preserve source evidence.
+
+---
+
+## AGENT 09 — GRANT PROPOSAL AGENT
+
+**ID:** `FUND-AI-009`
+
+Responsibilities:
+
+- Prepare proposal drafts.
+- Draft letters of inquiry.
+- Organize approved program information.
+- Identify missing proposal sections.
+- Assist with revisions.
+
+Do not invent program outcomes or financial figures.
+
+---
+
+## AGENT 10 — GRANT COMPLIANCE AGENT
+
+**ID:** `FUND-AI-010`
+
+Responsibilities:
+
+- Check eligibility.
+- Review submission requirements.
+- Identify documentation gaps.
+- Track reporting obligations.
+- Flag unsupported claims.
+
+---
+
+## AGENT 11 — CORPORATE PARTNERSHIP AGENT
+
+**ID:** `FUND-AI-011`
+
+Responsibilities:
+
+- Research corporate giving programs.
+- Identify CSR alignment.
+- Prepare sponsorship proposals.
+- Recommend partnership follow-ups.
+- Track authorized opportunities.
+
+---
+
+## AGENT 12 — DONOR STEWARDSHIP AGENT
+
+**ID:** `FUND-AI-012`
+
+Responsibilities:
+
+- Recommend donor acknowledgments.
+- Track stewardship milestones.
+- Prepare impact updates.
+- Identify renewal opportunities.
+- Recommend relationship-building activities.
+
+---
+
+## AGENT 13 — MAJOR GIFTS AGENT
+
+**ID:** `FUND-AI-013`
+
+Responsibilities:
+
+- Organize major gift opportunities.
+- Summarize relationship history.
+- Recommend cultivation steps.
+- Draft authorized proposal materials.
+- Track commitments and follow-ups.
+
+---
+
+## AGENT 14 — CAMPAIGN INTELLIGENCE AGENT
+
+**ID:** `FUND-AI-014`
+
+Responsibilities:
+
+- Analyze campaign performance.
+- Identify engagement trends.
+- Recommend improvements.
+- Compare verified outcomes against goals.
+
+---
+
+## AGENT 15 — HUMAN APPROVAL COORDINATION AGENT
+
+**ID:** `FUND-AI-015`
+
+Responsibilities:
+
+- Route drafts for review.
+- Identify authorized approvers.
+- Track approval status.
+- Notify staff of pending decisions.
+- Maintain approval evidence.
+
+Cannot approve its own output.
+
+---
+
+## AGENT 16 — PAYMENT & AWARD VERIFICATION ASSISTANT
+
+**ID:** `FUND-AI-016`
+
+Responsibilities:
+
+- Identify records requiring reconciliation.
+- Compare authorized transaction references.
+- Flag inconsistencies.
+- Prepare verification summaries.
+- Recommend finance review.
+
+Cannot independently confirm payments without authoritative evidence.
+
+---
+
+## AGENT 17 — PROGRAM IMPACT REPORTING AGENT
+
+**ID:** `FUND-AI-017`
+
+Responsibilities:
+
+- Compile verified funding data.
+- Analyze approved program metrics.
+- Draft impact reports.
+- Prepare donor updates.
+- Identify missing evidence.
+
+---
+
+## AGENT 18 — SECURITY & AUDIT AGENT
+
+**ID:** `FUND-AI-018`
+
+Responsibilities:
+
+- Monitor authorized workflow logs.
+- Detect approval violations.
+- Identify suspicious activity.
+- Review agent permissions.
+- Produce audit summaries.
+
+Cannot alter or delete audit records.
+
+---
+
+# PART 14 — AI AGENT OPERATIONS CENTER
+
+## MODULE 10 — AI WORKFORCE DASHBOARD
+
+Create an AI Agent Operations Center inside the existing Fundraising Department.
+
+Suggested route:
+
+`/admin/master/fundraising/agents`
+
+Use existing routing conventions if a different nested structure is already established.
+
+### DASHBOARD FEATURES
+
+Display:
+
+- Registered agents.
+- Active agents.
+- Idle agents.
+- Queued tasks.
+- Completed tasks.
+- Failed tasks.
+- Tasks awaiting approval.
+- Agent execution history.
+- Agent recommendations.
+- Workflow dependencies.
+- Security alerts.
+
+### AGENT DETAIL PAGE
+
+Each agent must have:
+
+- Name.
+- Description.
+- Assigned tools.
+- Current status.
+- Recent tasks.
+- Task outputs.
+- Error history.
+- Audit events.
+- Performance metrics.
+
+### ADMINISTRATIVE CONTROLS
+
+Allow authorized staff to:
+
+- Start approved internal tasks.
+- Pause agents.
+- Resume agents.
+- Retry failed tasks.
+- Review outputs.
+- Approve recommendations.
+- Disable optional agents.
+
+Mandatory security controls must not be disableable through ordinary agent settings.
+
+### REAL EXECUTION REQUIREMENT
+
+Do not create static agent cards that merely display ACTIVE.
+
+Every agent must have an executable backend workflow and verifiable task history.
+
+---
+
+# PART 15 — AI OUTREACH
+
+## MODULE 11 — AI OUTREACH WORKSPACE
+
+Build the workflow shown in the diagram.
+
+### REQUIRED FEATURES
+
+#### Personalized Communications
+
+Create approved communication drafts using authorized donor context.
+
+#### Campaign Drafts
+
+Prepare fundraising campaign messages.
+
+#### Audience Targeting
+
+Recommend appropriate audiences based on documented interests and consent.
+
+#### Response Analysis
+
+Analyze authorized incoming responses and recommend follow-ups.
+
+### OUTREACH WORKFLOW
+
+```text
+Authorized CRM Segment
+       ↓
+AI Outreach Agent
+       ↓
+Draft Generation
+       ↓
+Quality and Compliance Review
+       ↓
+Human Approval
+       ↓
+Authorized Communication
+       ↓
+Response Tracking
+       ↓
+CRM Update
+```
+
+No unapproved bulk sending.
+
+No unauthorized contact scraping.
+
+No automatic enrollment in marketing campaigns.
+
+---
+
+# PART 16 — AI GRANT ASSISTANT
+
+## MODULE 12 — GRANT ASSISTANT WORKSPACE
+
+Build a complete grant management assistant.
+
+### REQUIRED FEATURES
+
+1. Opportunity research.
+2. Eligibility checks.
+3. Proposal drafting.
+4. Deadline tracking.
+5. Submission management.
+6. Reporting requirements.
+7. Grant document management.
+8. Application status tracking.
+
+### GRANT WORKFLOW
+
+```text
+Funding Opportunity
+       ↓
+Research
+       ↓
+Eligibility Review
+       ↓
+Opportunity Qualification
+       ↓
+Proposal Draft
+       ↓
+Documentation Check
+       ↓
+Human Review
+       ↓
+Approval
+       ↓
+Authorized Submission
+       ↓
+Funder Decision Tracking
+       ↓
+Award Verification
+       ↓
+Reporting
+```
+
+### SUBMISSION POLICY
+
+AI agents may prepare submission packages.
+
+External grant submissions require authorized human action or an explicitly approved, narrowly scoped submission workflow.
+
+---
+
+# PART 17 — AI DONOR STEWARDSHIP
+
+## MODULE 13 — DONOR STEWARDSHIP WORKSPACE
+
+Build a donor relationship management workflow.
+
+### REQUIRED FEATURES
+
+#### Relationship Management
+
+Track authorized donor interactions.
+
+#### Acknowledgments
+
+Prepare acknowledgment drafts after verified donation events.
+
+#### Impact Reporting
+
+Generate evidence-based donor impact summaries.
+
+#### Renewal Campaigns
+
+Prepare approved recurring-donor renewal workflows.
+
+#### Long-Term Engagement
+
+Track stewardship milestones and recommended follow-ups.
+
+### STEWARDSHIP WORKFLOW
+
+```text
+Verified Donor Relationship
+       ↓
+Donor Stewardship Agent
+       ↓
+Relationship Analysis
+       ↓
+Recommended Action
+       ↓
+Draft Communication
+       ↓
+Human Approval
+       ↓
+Authorized Outreach
+       ↓
+Engagement Tracking
+```
+
+---
+
+# PART 18 — HUMAN REVIEW & APPROVAL
+
+## MODULE 14 — CENTRAL APPROVAL CENTER
+
+This is a mandatory control between AI-generated recommendations and external action.
+
+### REQUIRED APPROVAL TYPES
+
+- Email drafts.
+- Fundraising campaigns.
+- Grant proposals.
+- Sponsorship proposals.
+- Donor acknowledgments.
+- Executive communications.
+- External reports.
+- Sensitive CRM changes.
+
+### APPROVAL STATES
+
+DRAFT
+
+PENDING_REVIEW
+
+CHANGES_REQUESTED
+
+APPROVED
+
+REJECTED
+
+EXECUTED
+
+FAILED
+
+### APPROVAL RECORD
+
+Store:
+
+- Artifact ID.
+- Artifact version.
+- Content hash.
+- Requesting user.
+- Responsible agent.
+- Approver.
+- Decision.
+- Timestamp.
+- Authorized action.
+- Execution result.
+
+### FAIL-CLOSED POLICY
+
+If approval cannot be verified, block execution.
+
+A material change to an approved artifact requires reapproval.
+
+---
+
+# PART 19 — AUTHORIZED COMMUNICATION
+
+## MODULE 15 — COMMUNICATION DISPATCH
+
+Implement the diagram's authorized communication stage.
+
+### SUPPORTED ACTIONS
+
+- Send approved email.
+- Schedule approved email.
+- Track provider submission.
+- Track replies.
+- Record communication history.
+- Update CRM relationships.
+
+### REQUIRED FLOW
+
+```text
+Approved Communication
+       ↓
+Authorization Validation
+       ↓
+Recipient Verification
+       ↓
+Consent / Suppression Check
+       ↓
+Emergency Control Check
+       ↓
+Idempotency Verification
+       ↓
+Provider Dispatch
+       ↓
+Sent-Folder Reconciliation
+       ↓
+Audit Logging
+```
+
+### IMPORTANT
+
+A provider accepting an email does not establish that the recipient received it.
+
+Track submission, bounce evidence, and confirmed delivery separately.
+
+---
+
+# PART 20 — DONOR ENGAGEMENT
+
+## MODULE 16 — ENGAGEMENT MANAGEMENT
+
+Implement:
+
+- Conversations.
+- Meetings.
+- Relationship building.
+- Commitment development.
+- Follow-up management.
+
+### ENGAGEMENT TIMELINE
+
+For each authorized donor or institutional contact, display:
+
+- Email correspondence.
+- Meetings.
+- Calls.
+- Notes.
+- Proposals.
+- Follow-ups.
+- Pledges.
+- Verified contributions.
+- Reporting obligations.
+
+### COMMITMENT STATUS
+
+DISTINGUISH:
+
+INTEREST_EXPRESSED
+
+DISCUSSION_IN_PROGRESS
+
+VERBAL_INDICATION
+
+PLEDGE_RECORDED
+
+AGREEMENT_PENDING
+
+AGREEMENT_EXECUTED
+
+PAYMENT_PENDING
+
+PAYMENT_VERIFIED
+
+CLOSED
+
+Do not treat an expression of interest as a financial commitment.
+
+---
+
+# PART 21 — DONATIONS, GRANTS & SPONSORSHIPS
+
+## MODULE 17 — FUNDING TRANSACTIONS
+
+Support the funding categories shown in the diagram.
+
+### FUNDING TYPES
+
+1. One-time gifts.
+2. Recurring donations.
+3. Grant awards.
+4. Corporate sponsorships.
+5. In-kind support.
+
+### TRANSACTION RECORDS
+
+Store:
+
+- Transaction identifier.
+- Funding type.
+- Donor or funder.
+- Amount.
+- Currency.
+- Date.
+- Campaign.
+- Program designation.
+- Payment or award reference.
+- Verification status.
+- Reconciliation status.
+- Receipt status.
+- Audit trail.
+
+### IN-KIND SUPPORT
+
+Support:
+
+- Item or service description.
+- Donor identity.
+- Receipt date.
+- Documentation.
+- Valuation evidence where applicable.
+- Authorized finance review.
+
+Do not automatically assign unsupported financial values.
+
+---
+
+# PART 22 — PAYMENT & AWARD VERIFICATION
+
+## MODULE 18 — FINANCIAL VERIFICATION
+
+Build the verification stage shown in the diagram.
+
+### REQUIRED FUNCTIONS
+
+#### Verify Transactions
+
+Reconcile payments against authorized payment-provider or financial records.
+
+#### Confirm Awards
+
+Verify grants against authoritative award notices or executed agreements.
+
+#### Reconcile Records
+
+Match:
+
+- CRM records.
+- Payment references.
+- Bank or payment processor records.
+- Grant award documentation.
+- Sponsorship agreements.
+
+#### Update CRM
+
+Update verified funding records only after appropriate validation.
+
+### FINANCIAL CONTROL RULES
+
+AI agents cannot:
+
+- Invent payment confirmation.
+- Alter banking instructions.
+- Issue unverified receipts.
+- Approve financial transactions.
+- Mark unreceived funding as received.
+
+Use finance-approved workflows and auditable verification evidence.
+
+---
+
+# PART 23 — PROGRAM FUNDING & REPORTING
+
+## MODULE 19 — PROGRAM IMPACT MANAGEMENT
+
+Implement the final stage of the workflow diagram.
+
+### PRIMARY FUNCTIONS
+
+#### Fund Community Programs
+
+Track approved funding allocations.
+
+#### Track Impact
+
+Record verified program outcomes.
+
+#### Financial Reporting
+
+Generate reports using reconciled financial records.
+
+#### Share Success With Donors
+
+Prepare accurate, approved donor impact communications.
+
+### PROGRAM RECORDS
+
+Store:
+
+- Program name.
+- Funding source.
+- Approved allocation.
+- Expenditure.
+- Remaining budget.
+- Reporting period.
+- Approved impact metrics.
+- Evidence references.
+- Reporting obligations.
+
+### REQUIRED REPORTS
+
+- Funding allocation report.
+- Program expenditure report.
+- Grant reporting summary.
+- Donor impact report.
+- Corporate sponsorship impact report.
+- Executive fundraising report.
+- Board governance report.
+
+Do not fabricate program outcomes or beneficiary counts.
+
+---
+
+# PART 24 — UNIFIED DATABASE DESIGN
+
+Implement or reuse PostgreSQL entities for:
+
+### ORGANIZATIONAL ADMINISTRATION
+
+- Users.
+- Roles.
+- Permissions.
+- Audit events.
+
+### EMAIL MANAGEMENT
+
+- Mailboxes.
+- Email messages.
+- Threads.
+- Attachments.
+- Synchronization jobs.
+- Drafts.
+- Approvals.
+- Dispatch attempts.
+
+### FUNDRAISING CRM
+
+- Donors.
+- Organizations.
+- Contacts.
+- Donor segments.
+- Campaigns.
+- Opportunities.
+- Activities.
+- Follow-ups.
+
+### GRANTS
+
+- Funders.
+- Grant opportunities.
+- Applications.
+- Requirements.
+- Submissions.
+- Awards.
+- Reporting obligations.
+
+### AI AGENTS
+
+- Agent definitions.
+- Agent permissions.
+- Agent tasks.
+- Task dependencies.
+- Agent outputs.
+- Agent execution logs.
+
+### FINANCIAL RECORDS
+
+- Donations.
+- Pledges.
+- Sponsorships.
+- Grant awards.
+- Payment verification.
+- Reconciliation.
+- Funding allocations.
+
+### PROGRAM REPORTING
+
+- Programs.
+- Impact metrics.
+- Reporting periods.
+- Supporting evidence.
+
+### DATABASE REQUIREMENTS
+
+- Referential integrity.
+- Unique constraints.
+- Secure migrations.
+- Transactional updates.
+- Row-level authorization.
+- Encryption.
+- Backup and recovery.
+- Audit timestamps.
+
+Do not duplicate existing database tables unnecessarily.
+
+---
+
+# PART 25 — MASTER UI DESIGN PLAN
+
+Build the platform using a consistent enterprise design system.
+
+### VISUAL DESIGN
+
+- Clean and minimalist.
+- Professional nonprofit enterprise appearance.
+- Responsive layouts.
+- Accessible typography.
+- Clear navigation.
+- Consistent icons.
+- Color-coded workflow status.
+- Meaningful KPI cards.
+- Tables and timelines.
+- Contextual AI assistance.
+
+### MASTER ADMINISTRATOR
+
+Use:
+
+**Left navigation + center operations dashboard + right intelligence panel.**
+
+### EMAIL MANAGER
+
+Use:
+
+**Mailbox navigation + message workspace + conversation intelligence panel.**
+
+### FUNDRAISING CRM
+
+Use:
+
+**Fundraising navigation + CRM workspace + donor intelligence panel.**
+
+### AI AGENT OPERATIONS
+
+Use:
+
+**Agent registry + task workspace + execution inspector.**
+
+### REQUIRED NAVIGATION
+
+Under the Fundraising Department, provide:
+
+- Overview.
+- Donor CRM.
+- Individual Donors.
+- Corporate Donors.
+- Institutional Funders.
+- Funding Opportunities.
+- AI Fundraising Workforce.
+- AI Outreach.
+- Grant Assistant.
+- Donor Stewardship.
+- Campaigns.
+- Approvals.
+- Engagement.
+- Donations & Grants.
+- Financial Verification.
+- Program Funding.
+- Impact Reporting.
+- Settings.
+
+Use existing routes and components where available.
+
+---
+
+# PART 26 — END-TO-END INTEGRATION WORKFLOW
+
+The complete system must support the following sequence.
+
+```text
+ORGANIZATIONAL EMAIL OR APPROVED FUNDING LEAD
+                    ↓
+             AI EMAIL MANAGER
+                    ↓
+            FUNDRAISING CRM
+                    ↓
+            DONOR INTELLIGENCE
+                    ↓
+       DONOR / FUNDER SEGMENTATION
+                    ↓
+          FUNDING OPPORTUNITY
+                    ↓
+         AI FUNDRAISING WORKFORCE
+                    ↓
+      OUTREACH / GRANTS / STEWARDSHIP
+                    ↓
+          HUMAN REVIEW & APPROVAL
+                    ↓
+        AUTHORIZED COMMUNICATION
+                    ↓
+            DONOR ENGAGEMENT
+                    ↓
+       DONATION / GRANT / SPONSORSHIP
+                    ↓
+       PAYMENT OR AWARD VERIFICATION
+                    ↓
+          VERIFIED CRM RECORD
+                    ↓
+         PROGRAM FUNDING ALLOCATION
+                    ↓
+        PROGRAM IMPACT & REPORTING
+                    ↓
+       APPROVED DONOR IMPACT UPDATE
+```
+
+### CRITICAL
+
+The system must not automatically advance every contact through the entire workflow.
+
+Each transition must reflect an actual event, an authorized decision, or verified evidence.
+
+Funding is not considered received until verified.
+
+Program allocation requires authorized financial approval.
+
+---
+
+# PART 27 — SECURITY & SAFEGUARDING
+
+Maintain strict confidentiality controls.
+
+### REQUIRED CONTROLS
+
+- Server-side authentication.
+- Role-based access.
+- Mailbox-level permissions.
+- Donor-data authorization.
+- Executive mailbox restrictions.
+- Secure provider credentials.
+- AI tool permissions.
+- Audit logging.
+- Attachment security.
+- Human approval enforcement.
+- Emergency shutdown controls.
+
+### SURVIVOR SAFEGUARDING
+
+Confidential survivor-related information must remain isolated from general fundraising, marketing, and unrestricted AI workflows.
+
+Do not expose safeguarding records through:
+
+- Donor intelligence.
+- CRM search.
+- AI fundraising agents.
+- Outreach campaigns.
+- Executive dashboards without authorization.
+- Client development portals.
+- Public reporting.
+
+Implement actual backend restrictions and negative-access tests.
+
+---
+
+# PART 28 — AUTOMATED TESTING
+
+Preserve all existing tests.
+
+Add comprehensive integration tests.
+
+### TEST GROUP 1 — MASTER ADMINISTRATOR
+
+- Role enforcement.
+- User permissions.
+- Security monitoring.
+- Audit logging.
+
+### TEST GROUP 2 — EMAIL MANAGEMENT
+
+- Mailbox access.
+- Historical synchronization.
+- Incremental synchronization.
+- Classification.
+- Approval.
+- Authorized dispatch.
+
+### TEST GROUP 3 — FUNDRAISING CRM
+
+- Donor creation.
+- Contact deduplication.
+- Giving history.
+- Campaigns.
+- Opportunities.
+- Follow-ups.
+
+### TEST GROUP 4 — DONOR INTELLIGENCE
+
+- Segmentation.
+- Opportunity matching.
+- Explainable recommendations.
+- Access control.
+
+### TEST GROUP 5 — AI AGENTS
+
+- Agent registration.
+- Agent execution.
+- Task dependencies.
+- Tool authorization.
+- Error recovery.
+- Human escalation.
+
+### TEST GROUP 6 — GRANTS
+
+- Eligibility checks.
+- Proposal workflows.
+- Deadlines.
+- Submission authorization.
+- Award verification.
+
+### TEST GROUP 7 — OUTREACH
+
+- Audience authorization.
+- Consent checks.
+- Draft generation.
+- Human approval.
+- Dispatch restrictions.
+
+### TEST GROUP 8 — FINANCE
+
+- Payment verification.
+- Award verification.
+- Reconciliation.
+- Unauthorized modification prevention.
+
+### TEST GROUP 9 — REPORTING
+
+- Funding allocation accuracy.
+- Impact evidence.
+- Financial reporting.
+- Donor communications.
+
+### TEST GROUP 10 — SECURITY
+
+- Confidential data isolation.
+- Executive restrictions.
+- Agent permission boundaries.
+- Approval enforcement.
+- Emergency controls.
+
+### TEST GROUP 11 — REGRESSION
+
+- Existing Email Manager.
+- Existing Fundraising CRM.
+- Existing Master Administrator.
+- Existing Client Development Portal.
+- TypeScript.
+- Production build.
+
+### TEST POLICY
+
+Report actual test execution.
+
+Distinguish:
+
+- Unit tests.
+- Integration tests.
+- End-to-end tests.
+- Live provider tests.
+- Production verification.
+
+Do not claim a live integration passed when only mock services were tested.
+
+---
+
+# PART 29 — DEVELOPMENT MASTER PLAN
+
+Execute the following milestones sequentially.
+
+## PHASE 1 — ARCHITECTURE & FOUNDATION
+
+**M-FUND-01:** Audit existing platform and diagram coverage.
+
+**M-FUND-02:** Finalize integrated system architecture.
+
+**M-FUND-03:** Verify backend and PostgreSQL infrastructure.
+
+**M-FUND-04:** Complete authentication, RBAC, and audit architecture.
+
+## PHASE 2 — EMAIL & CRM INTEGRATION
+
+**M-FUND-05:** Complete Email Manager backend integration.
+
+**M-FUND-06:** Complete donor CRM data model.
+
+**M-FUND-07:** Implement email-to-CRM relationship mapping.
+
+**M-FUND-08:** Implement shared contact management.
+
+## PHASE 3 — DONOR INTELLIGENCE
+
+**M-FUND-09:** Implement Donor Intelligence engine.
+
+**M-FUND-10:** Complete Individual Donor Management.
+
+**M-FUND-11:** Complete Corporate Donor Management.
+
+**M-FUND-12:** Complete Institutional Funder Management.
+
+## PHASE 4 — FUNDING OPPORTUNITIES
+
+**M-FUND-13:** Implement funding opportunity discovery.
+
+**M-FUND-14:** Implement qualification and eligibility.
+
+**M-FUND-15:** Implement funding pipeline management.
+
+## PHASE 5 — AI FUNDRAISING WORKFORCE
+
+**M-FUND-16:** Implement AI Agent Orchestrator.
+
+**M-FUND-17:** Implement AI agent registry and task execution.
+
+**M-FUND-18:** Implement donor intelligence agents.
+
+**M-FUND-19:** Implement outreach agents.
+
+**M-FUND-20:** Implement grant research and proposal agents.
+
+**M-FUND-21:** Implement partnership and stewardship agents.
+
+**M-FUND-22:** Implement financial verification and impact agents.
+
+**M-FUND-23:** Complete AI Agent Operations Center.
+
+## PHASE 6 — HUMAN REVIEW & COMMUNICATION
+
+**M-FUND-24:** Complete centralized approval workflows.
+
+**M-FUND-25:** Complete authorized communication integration.
+
+**M-FUND-26:** Complete donor engagement tracking.
+
+## PHASE 7 — FUNDING & FINANCIAL VERIFICATION
+
+**M-FUND-27:** Complete donation management.
+
+**M-FUND-28:** Complete grant award management.
+
+**M-FUND-29:** Complete sponsorship management.
+
+**M-FUND-30:** Complete payment and award reconciliation.
+
+## PHASE 8 — PROGRAM FUNDING & REPORTING
+
+**M-FUND-31:** Implement program funding allocations.
+
+**M-FUND-32:** Implement impact measurement.
+
+**M-FUND-33:** Implement executive and donor reporting.
+
+## PHASE 9 — VERIFICATION & RELEASE PREPARATION
+
+**M-FUND-34:** Run all automated tests.
+
+**M-FUND-35:** Complete security and safeguarding verification.
+
+**M-FUND-36:** Complete integration verification.
+
+**M-FUND-37:** Prepare operational readiness register.
+
+**M-FUND-38:** Prepare deployment and rollback documentation.
+
+---
+
+# PART 30 — REQUIRED DEVELOPMENT DELIVERABLES
+
+Deliver:
+
+1. Integrated Master Administrator.
+2. Complete Enterprise AI Email Manager.
+3. Functional Fundraising CRM.
+4. Donor Intelligence Engine.
+5. Individual Donor Management.
+6. Corporate Donor Management.
+7. Institutional Funder Management.
+8. Funding Opportunity Pipeline.
+9. AI Fundraising Workforce.
+10. Eighteen executable AI agents.
+11. AI Agent Operations Center.
+12. AI Outreach Workspace.
+13. AI Grant Assistant.
+14. AI Donor Stewardship Workspace.
+15. Human Approval Center.
+16. Authorized Communications Engine.
+17. Donor Engagement Timeline.
+18. Donations Management.
+19. Recurring Giving Management.
+20. Grant Award Management.
+21. Corporate Sponsorship Management.
+22. Payment Verification.
+23. Grant Award Verification.
+24. Financial Reconciliation.
+25. Program Funding Allocation.
+26. Program Impact Reporting.
+27. Executive Reporting.
+28. Secure PostgreSQL Persistence.
+29. Secure Backend APIs.
+30. Durable Background Workers.
+31. Role-Based Security.
+32. Safeguarding Isolation.
+33. Complete Audit Logging.
+34. Automated Acceptance Tests.
+35. Integration Verification Register.
+36. Production Readiness Report.
+
+---
+
+# PART 31 — EVIDENCE-BASED COMPLETION POLICY
+
+For every milestone, provide:
+
+- Milestone ID.
+- Feature name.
+- Existing implementation reused.
+- New implementation completed.
+- Source files changed.
+- Database migrations.
+- API endpoints.
+- AI agent services.
+- Tests executed.
+- Test results.
+- Security verification.
+- Integration evidence.
+- Known limitations.
+- Remaining blockers.
+- Git commit reference.
+
+### STATUS DEFINITIONS
+
+NOT_STARTED
+
+IN_PROGRESS
+
+IMPLEMENTED_UNVERIFIED
+
+MOCK_VERIFIED
+
+BACKEND_VERIFIED
+
+INTEGRATION_VERIFIED
+
+PRODUCTION_VERIFIED
+
+BLOCKED
+
+FAILED
+
+Do not mark features production-verified without supporting evidence.
+
+---
+
+# PART 32 — FINAL MASTER EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+BEGIN IMPLEMENTING THE COMPLETE PHUMULANI AI FUNDRAISING WORKFLOW SHOWN IN THE PROVIDED REFERENCE DIAGRAM.
+
+FOCUS ON BUILDING EVERY FUNCTIONAL COMPONENT IN THE DIAGRAM.
+
+DO NOT STOP AT DESIGN.
+
+DO NOT STOP AT DASHBOARDS.
+
+DO NOT STOP AT STATIC AI AGENT CARDS.
+
+DO NOT STOP AT MOCK CRM DATA.
+
+BUILD THE ACTUAL APPLICATION MODULES, BACKEND SERVICES, DATABASE INTEGRATIONS, AI AGENTS, WORKFLOWS, APPROVAL SYSTEMS, FINANCIAL VERIFICATION CONTROLS, AND REPORTING CAPABILITIES.
+
+### IMPLEMENT THE COMPLETE WORKFLOW
+
+MASTER ADMINISTRATOR
+
+↓
+
+AI EMAIL MANAGER + FUNDRAISING CRM
+
+↓
+
+DONOR INTELLIGENCE
+
+↓
+
+INDIVIDUALS + CORPORATIONS + INSTITUTIONS
+
+↓
+
+FUNDING OPPORTUNITIES
+
+↓
+
+AI FUNDRAISING WORKFORCE
+
+↓
+
+AI OUTREACH + GRANT ASSISTANT + DONOR STEWARDSHIP
+
+↓
+
+HUMAN REVIEW & APPROVAL
+
+↓
+
+AUTHORIZED COMMUNICATION
+
+↓
+
+DONOR ENGAGEMENT
+
+↓
+
+DONATIONS + GRANTS + SPONSORSHIPS
+
+↓
+
+PAYMENT & AWARD VERIFICATION
+
+↓
+
+PROGRAM FUNDING & REPORTING
+
+### DEVELOPMENT REQUIREMENTS
+
+PRESERVE THE EXISTING APPLICATION.
+
+REUSE WORKING MODULES.
+
+IMPLEMENT ALL MISSING FUNCTIONALITY.
+
+BUILD REAL EXECUTABLE AI AGENTS.
+
+CONNECT AGENTS THROUGH A CENTRAL ORCHESTRATOR.
+
+ENSURE ALL MODULES SHARE AUTHORIZED CRM DATA.
+
+ENFORCE HUMAN APPROVAL BEFORE EXTERNAL ACTIONS.
+
+ENSURE FINANCIAL RECORDS ARE VERIFIED BEFORE BEING REPORTED AS RECEIVED FUNDING.
+
+ENSURE CONFIDENTIAL SURVIVOR DATA REMAINS ISOLATED.
+
+COMPLETE ALL AUTHORIZED DEVELOPMENT TASKS WITHOUT UNNECESSARY INTERRUPTIONS.
+
+RUN THE AUTOMATED TEST SUITE.
+
+VERIFY THE DATABASE AND BACKEND.
+
+PRODUCE A COMPLETE IMPLEMENTATION AND OPERATIONAL READINESS REPORT.
+
+### FIRST REQUIRED ACTION
+
+START WITH:
+
+**M-FUND-01 — EXISTING PLATFORM AUDIT AND REFERENCE DIAGRAM COVERAGE ANALYSIS.**
+
+Create a component-by-component comparison between the provided workflow diagram and the existing Phumulani implementation.
+
+Identify:
+
+1. Features already implemented.
+2. Features partially implemented.
+3. Features missing.
+4. Features using mock data.
+5. Features requiring live integrations.
+6. Database gaps.
+7. AI agent gaps.
+8. Security gaps.
+9. Testing gaps.
+10. Production blockers.
+
+Then execute all authorized, non-destructive development milestones in the order defined above.
+
+### FINAL REQUIRED REPORT
+
+Produce:
+
+**PHUMULANI AI FUNDRAISING WORKFLOW — COMPLETE MASTER DEVELOPMENT, AI AGENT IMPLEMENTATION & OPERATIONAL READINESS REGISTER**
+
+Include the full implementation inventory, 18-agent registry, integration status, test results, security findings, outstanding blockers, and production readiness assessment.
+
+**BEGIN DEVELOPMENT NOW.**
+
+**END OF MASTER DEVELOPMENT DIRECTIVE.**
