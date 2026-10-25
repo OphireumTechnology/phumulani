@@ -4,7 +4,8 @@
  * Phumulani AI Community Platform — Full-Stack Server & Secure AI Gateway
  */
 
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { createServer as createViteServer } from 'vite';
 import path from 'path';
 import dotenv from 'dotenv';
