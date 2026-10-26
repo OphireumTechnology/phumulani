@@ -84,7 +84,10 @@ export type ProductionOperationalStatus =
   | 'VERIFIED'
   | 'PASSED'
   | 'CURRENT'
-  | 'OUTDATED';
+  | 'OUTDATED'
+  | 'STAGED_READY'
+  | 'SIMULATED_OAUTH_PENDING'
+  | 'STAGED_PENDING_AUTH';
 
 export interface ProductionHealthCheckItem {
   id: ProductionComponentId;

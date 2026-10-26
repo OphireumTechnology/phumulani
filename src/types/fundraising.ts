@@ -424,6 +424,10 @@ export interface FinancialReconciliationDetails {
   actionTaken: string;
   reconciledAt: string;
   reconciledBy: string;
+  demonstrationFixtureAmount?: number;
+  softPledgesSeparated?: number;
+  syntheticTestTransactions?: number;
+  financialStatus?: string;
   programBreakdown: {
     programId: string;
     programName: string;

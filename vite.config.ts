@@ -7,6 +7,12 @@ export default defineConfig(() => {
   return {
     base: process.env.BASE_PATH || '/',
     plugins: [react(), tailwindcss()],
+    define: {
+      global: 'globalThis',
+    },
+    optimizeDeps: {
+      exclude: ['pg'],
+    },
     resolve: {
       alias: {
         '@': path.resolve(import.meta.dirname, '.'),

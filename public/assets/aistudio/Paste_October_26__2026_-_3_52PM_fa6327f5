@@ -1,0 +1,1259 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+# PHASE 17 — FINAL DEVELOPMENT COMPLETION
+## OPERATIONAL ACTIVATION, PRODUCTION INFRASTRUCTURE, SECURITY ASSURANCE & RELEASE READINESS
+
+**Project:** Phumulani AI Community Platform
+
+**Development Organization:** Ophireum Technology
+
+**Repository:** OphireumTechnology/phumulani
+
+**Primary Branch:** main
+
+**Local Windows Repository:**
+D:\Phumulani\Development\phumulani-platform
+
+**Local Synchronization Controller:**
+D:\Phumulani\SyncController
+
+**Primary Application Routes:**
+
+- /admin/master
+- /admin/master/email
+- /admin/master/fundraising
+- /admin/master/fundraising/agents
+- /admin/master/development
+- /client/project-dashboard
+
+**Reference Architecture:** Attached Phumulani AI Fundraising Workflow Diagram
+
+**Reported Development Baseline:** 252 automated tests passing
+
+**Current Readiness Classification:** INTEGRATION_COMPLETE_STAGED_READY
+
+**Development Objective:** FINISH THE EXISTING PLATFORM AND PREPARE IT FOR CONTROLLED PRODUCTION ACTIVATION.
+
+---
+
+# PART 1 — EXECUTIVE DEVELOPMENT COMMAND
+
+GOOGLE AI STUDIO:
+
+YOU ARE NOW ENTERING THE FINAL DEVELOPMENT COMPLETION STAGE OF THE PHUMULANI AI COMMUNITY PLATFORM.
+
+THIS DIRECTIVE CONTINUES ALL PREVIOUSLY COMPLETED DEVELOPMENT.
+
+DO NOT START A NEW APPLICATION.
+
+DO NOT REBUILD EXISTING MODULES.
+
+DO NOT CREATE ANOTHER EMAIL MANAGER.
+
+DO NOT CREATE ANOTHER FUNDRAISING CRM.
+
+DO NOT CREATE ADDITIONAL AI AGENTS.
+
+DO NOT RECREATE EXISTING APPROVAL SYSTEMS.
+
+DO NOT DUPLICATE DATABASE TABLES OR WORKFLOW ENGINES.
+
+DO NOT REPEAT PREVIOUSLY COMPLETED TESTS AS NEW DEVELOPMENT DELIVERABLES.
+
+THE PRIMARY OBJECTIVE IS TO COMPLETE THE REMAINING TECHNICAL WORK NECESSARY TO MAKE THE EXISTING PHUMULANI PLATFORM RELIABLE, SECURE, DEPLOYABLE, AND READY FOR AUTHORIZED ORGANIZATIONAL USE.
+
+FOCUS ON:
+
+1. Final codebase verification.
+2. Production database readiness.
+3. Google Workspace integration readiness.
+4. Durable background processing.
+5. AI agent operational reliability.
+6. Financial and program data integrity.
+7. End-to-end security assurance.
+8. Staff user acceptance.
+9. Deployment engineering.
+10. Monitoring, backup, and recovery.
+11. Documentation and administrator handover.
+12. Final production readiness certification.
+
+COMPLETE ALL DEVELOPMENT TASKS THAT DO NOT REQUIRE EXTERNAL AUTHORIZATION.
+
+WHEN AN EXTERNAL CREDENTIAL, ADMINISTRATOR CONSENT, BILLABLE RESOURCE, OR PRODUCTION RELEASE APPROVAL IS REQUIRED, PREPARE THE INTEGRATION AND REPORT THE EXACT BLOCKER.
+
+DO NOT INVENT CREDENTIALS.
+
+DO NOT SIMULATE SUCCESSFUL LIVE CONNECTIONS.
+
+DO NOT PERFORM UNAUTHORIZED PRODUCTION ACTIONS.
+
+---
+
+# PART 2 — PRESERVE THE EXISTING IMPLEMENTATION
+
+## 2.1 Confirmed Development History
+
+Previous Google AI Studio reports indicate that the platform already contains:
+
+### Master Administration
+
+- Central administration.
+- User management.
+- Role-based access.
+- Operational monitoring.
+- Security controls.
+- Audit reporting.
+
+### Enterprise AI Email Manager
+
+- Five organizational mailbox configurations.
+- Unified inbox.
+- Historical message handling.
+- Incremental synchronization architecture.
+- AI classification.
+- Prioritization.
+- Draft preparation.
+- Human approval.
+- CRM linking.
+- Staff collaboration notes.
+- Emergency controls.
+
+### Fundraising CRM
+
+- Individual donors.
+- Corporate partners.
+- Institutional funders.
+- Funding opportunities.
+- Campaigns.
+- Giving history.
+- Engagement timelines.
+- Grant management.
+- Stewardship.
+- Impact reporting.
+
+### AI Fundraising Workforce
+
+- FUND-AI-001 through FUND-AI-018.
+- Five specialized orchestration pipelines.
+- Contextual task execution.
+- Human escalation.
+- Execution logs.
+- Approval controls.
+
+### Financial Operations
+
+- Donation tracking.
+- Grant award tracking.
+- Sponsorship tracking.
+- Pledge separation.
+- Reconciliation workflows.
+- Program funding attribution.
+
+### Development Infrastructure
+
+- Server-side Gemini integration.
+- PostgreSQL driver support.
+- Embedded durable storage.
+- Application build verification.
+- Automated acceptance testing.
+- GitHub synchronization monitoring.
+- Development transparency portal.
+
+DO NOT REIMPLEMENT THESE COMPONENTS UNLESS A VERIFIED DEFECT OR MISSING REQUIREMENT JUSTIFIES THE CHANGE.
+
+---
+
+# PART 3 — M17.01 FINAL CODEBASE AND DEPENDENCY AUDIT
+
+BEGIN BY INSPECTING THE CURRENT SOURCE CODE.
+
+Review:
+
+- package.json
+- package-lock.json
+- vite.config.ts
+- server.ts
+- src/services/db.ts
+- src/services/postgresPersistenceAdapter.ts
+- src/services/emailEnterpriseService.ts
+- src/services/fundraisingService.ts
+- src/services/automatedTestRunner.ts
+- src/db/schema.sql
+- src/db/databaseDefinition.ts
+- scripts/verify_suite.ts
+
+Also inspect:
+
+- Authentication services.
+- Authorization middleware.
+- Background workers.
+- Agent orchestration services.
+- Financial reconciliation services.
+- Deployment configuration.
+- GitHub Actions workflows.
+- Environment variable handling.
+
+## REQUIRED CHECKS
+
+Identify:
+
+1. Unfinished TODOs affecting production operation.
+2. Dead or duplicated code.
+3. Unused dependencies.
+4. Browser imports of Node-only modules.
+5. Unhandled promise rejections.
+6. Unsafe environment variable usage.
+7. Missing runtime input validation.
+8. Inconsistent API error responses.
+9. Missing database transactions.
+10. Missing authorization checks.
+11. Hardcoded demonstration values in operational code.
+12. Missing production configuration.
+13. Missing recovery procedures.
+
+## DELIVERABLE
+
+Create:
+
+phase17_final_codebase_gap_register.md
+
+Do not modify code merely for stylistic refactoring.
+
+Prioritize verified functional and security defects.
+
+---
+
+# PART 4 — M17.02 PRODUCTION DATABASE COMPLETION
+
+## CURRENT REPORTED CONDITION
+
+The application currently uses:
+
+data/phumulani_persistent_db.json
+
+for embedded durable persistence.
+
+PostgreSQL driver support has been implemented using pg.Pool.
+
+The external PostgreSQL deployment remains unverified.
+
+## REQUIRED DEVELOPMENT
+
+Complete the production database integration.
+
+### DATABASE CONNECTION
+
+Verify:
+
+- DATABASE_URL handling.
+- TLS configuration.
+- Connection pool configuration.
+- Connection timeout behavior.
+- Authentication failures.
+- Fail-fast behavior.
+- Health reporting.
+
+### DATABASE MIGRATIONS
+
+Implement or verify:
+
+- Versioned migrations.
+- Migration history.
+- Transactional migration execution where supported.
+- Migration failure recovery.
+- Schema validation.
+- Required indexes.
+- Foreign-key relationships.
+- Uniqueness constraints.
+
+### DATA ACCESS
+
+Ensure operational services use the configured production database rather than silently continuing to write business records to embedded JSON storage.
+
+### TRANSACTIONS
+
+Verify transaction boundaries for:
+
+- CRM contact creation.
+- Opportunity creation.
+- Agent task updates.
+- Human approval decisions.
+- Outbound communication records.
+- Donation verification.
+- Financial reconciliation.
+- Program allocations.
+
+### CONCURRENCY
+
+Test simultaneous updates from multiple authorized sessions.
+
+Prevent:
+
+- Lost updates.
+- Duplicate records.
+- Double dispatch.
+- Double financial posting.
+- Inconsistent workflow states.
+
+### BACKUP AND RECOVERY
+
+Prepare:
+
+- Backup procedures.
+- Restore procedures.
+- Recovery point objectives.
+- Recovery time objectives.
+- Migration rollback guidance.
+- Data integrity verification.
+
+### IMPORTANT
+
+Do not automatically migrate demonstration data into production.
+
+Do not provision billable cloud infrastructure without authorization.
+
+If an isolated PostgreSQL instance is available, run actual database integration tests.
+
+If no database is available, complete the integration code and report the remaining deployment blocker.
+
+---
+
+# PART 5 — M17.03 GOOGLE WORKSPACE ACTIVATION READINESS
+
+## ORGANIZATIONAL MAILBOXES
+
+1. info@phumulani.org
+2. donations@phumulani.org
+3. grants@phumulani.org
+4. executive@phumulani.org
+5. partnerships@phumulani.org
+
+## CURRENT REPORTED STATUS
+
+SIMULATED — LIVE OAUTH REQUIRED.
+
+Preserve this status until authenticated provider requests succeed.
+
+## REQUIRED DEVELOPMENT
+
+### OAUTH CONFIGURATION
+
+Verify:
+
+- OAuth authorization-code flow.
+- Redirect URI validation.
+- State parameter protection.
+- PKCE where applicable.
+- Secure token storage.
+- Token refresh.
+- Revocation handling.
+- Permission scope restrictions.
+- Authorization error handling.
+
+### MAILBOX IDENTITY
+
+Confirm the integration design supports:
+
+- Individual user accounts.
+- Shared or delegated access.
+- Google Groups.
+- Aliases.
+- Restricted executive access.
+
+Do not assume every address has its own Gmail API account.
+
+### HISTORICAL EMAIL IMPORT
+
+Verify:
+
+- Pagination.
+- Checkpoint persistence.
+- Duplicate suppression.
+- Resume after interruption.
+- Attachment security.
+- Progress reporting.
+- Error recovery.
+
+### CONTINUOUS SYNCHRONIZATION
+
+Verify:
+
+- Incremental polling or authorized notification processing.
+- Provider history cursor handling.
+- Deleted or moved messages.
+- Read/unread changes.
+- Sent-folder reconciliation.
+- Token expiration.
+- Rate limiting.
+- Retry behavior.
+
+### EMAIL SECURITY
+
+Preserve:
+
+- Human approval requirements.
+- Executive mailbox restrictions.
+- Safeguarding quarantine.
+- Suppression lists.
+- Emergency dispatch shutdown.
+- Message audit records.
+
+### ACTIVATION GATE
+
+Do not execute live mailbox import or external email dispatch without explicit administrator authorization.
+
+---
+
+# PART 6 — M17.04 BACKGROUND WORKER AND JOB QUEUE COMPLETION
+
+Verify that critical background operations continue without an open browser session.
+
+## REQUIRED WORKERS
+
+- Historical mailbox import.
+- Incremental email synchronization.
+- AI classification.
+- CRM opportunity ingestion.
+- AI agent orchestration.
+- Grant deadline monitoring.
+- Donor follow-up reminders.
+- Approved communication scheduling.
+- Reconciliation processing.
+- Operational health monitoring.
+
+## REQUIRED RELIABILITY FEATURES
+
+- Durable job records.
+- Job ownership.
+- Lease expiration or equivalent recovery.
+- Retry policies.
+- Exponential backoff.
+- Dead-letter or failed-job handling.
+- Idempotency.
+- Cancellation.
+- Timeout enforcement.
+- Worker restart recovery.
+
+## TESTING
+
+Demonstrate:
+
+1. Job starts.
+2. Job state is persisted.
+3. Worker is interrupted.
+4. Worker restarts.
+5. Job resumes or safely retries.
+6. Duplicate side effects are prevented.
+7. Audit records remain consistent.
+
+Do not claim durable worker execution if task state exists only in server memory.
+
+---
+
+# PART 7 — M17.05 FINAL AI AGENT OPERATIONAL VALIDATION
+
+Preserve the existing 18-agent registry.
+
+## VERIFY ALL AGENTS
+
+FUND-AI-001 — Director Orchestrator
+
+FUND-AI-002 — Mailbox Opportunity Ingestion
+
+FUND-AI-003 — Major Donor Research
+
+FUND-AI-004 — Donor Segmentation
+
+FUND-AI-005 — Grant Discovery
+
+FUND-AI-006 — Grant Eligibility
+
+FUND-AI-007 — Outreach Drafting
+
+FUND-AI-008 — Human Review Gatekeeper
+
+FUND-AI-009 — Communication Compliance
+
+FUND-AI-010 — Grant Lifecycle
+
+FUND-AI-011 — Corporate CSR Alignment
+
+FUND-AI-012 — Donor Stewardship
+
+FUND-AI-013 — Campaign Analytics
+
+FUND-AI-014 — Lapsed Donor Engagement
+
+FUND-AI-015 — In-Kind Support Evaluation
+
+FUND-AI-016 — Financial Reconciliation Assistance
+
+FUND-AI-017 — Program Funding and Impact Reporting
+
+FUND-AI-018 — Safeguarding Monitoring
+
+## REQUIRED CHECKS
+
+For each agent:
+
+1. Verify execution entry point.
+2. Verify authorized tool access.
+3. Verify task input validation.
+4. Verify model invocation where applicable.
+5. Verify deterministic fallback labeling.
+6. Verify result persistence.
+7. Verify error handling.
+8. Verify human escalation.
+9. Verify audit logging.
+10. Verify downstream workflow integration.
+
+## SECURITY
+
+AI agents must not:
+
+- Access unauthorized survivor information.
+- Send unapproved external communications.
+- Confirm unsupported donations.
+- Modify bank account details.
+- Bypass human approval.
+- Execute unrestricted external tools.
+- Expose credentials.
+
+## OUTPUT
+
+Produce an 18-agent operational verification matrix.
+
+---
+
+# PART 8 — M17.06 COMPLETE STAFF USER ACCEPTANCE TESTING
+
+The platform must be usable by authorized staff, not merely pass automated tests.
+
+## REQUIRED STAFF ROLES
+
+Test relevant workflows for:
+
+- Master Administrator.
+- Executive Director.
+- Fundraising Administrator.
+- Development Officer.
+- Grant Manager.
+- Corporate Partnerships Officer.
+- Finance Reviewer.
+- Safeguarding Officer.
+- Read-only Executive or Board Viewer.
+
+Use existing roles and permissions where appropriate.
+
+Do not create duplicate roles unnecessarily.
+
+## USER ACCEPTANCE SCENARIOS
+
+### SCENARIO 1 — EMAIL TO CRM
+
+An authorized staff member:
+
+1. Opens an email.
+2. Reviews classification.
+3. Opens the linked CRM contact.
+4. Reviews the funding opportunity.
+5. Assigns follow-up.
+6. Requests AI assistance.
+7. Reviews the result.
+
+### SCENARIO 2 — GRANT APPLICATION
+
+A grant manager:
+
+1. Opens a grant opportunity.
+2. Reviews eligibility.
+3. Starts the existing AI workflow.
+4. Reviews generated materials.
+5. Requests revisions.
+6. Submits the final draft for approval.
+7. Tracks the approved application.
+
+### SCENARIO 3 — CORPORATE SPONSORSHIP
+
+A partnerships officer:
+
+1. Opens a corporate profile.
+2. Reviews CSR alignment.
+3. Prepares a proposal.
+4. Records a meeting.
+5. Submits communication for approval.
+6. Tracks engagement.
+
+### SCENARIO 4 — DONOR STEWARDSHIP
+
+A development officer:
+
+1. Opens a donor profile.
+2. Reviews giving history.
+3. Requests a stewardship recommendation.
+4. Prepares an acknowledgment.
+5. Submits it for approval.
+6. Records the resulting engagement.
+
+### SCENARIO 5 — FINANCIAL VERIFICATION
+
+A finance reviewer:
+
+1. Opens a funding record.
+2. Reviews the supporting evidence.
+3. Identifies whether it is synthetic or authoritative.
+4. Reviews reconciliation results.
+5. Approves or rejects the verification according to role permissions.
+
+### SCENARIO 6 — PROGRAM REPORTING
+
+An authorized program manager:
+
+1. Opens verified funding records.
+2. Reviews funding restrictions.
+3. Prepares an allocation.
+4. Submits it for approval.
+5. Reviews source-backed program outcomes.
+6. Prepares an impact report.
+
+## ACCEPTANCE RULE
+
+Automated browser tests may demonstrate technical usability.
+
+Actual organizational user acceptance must be recorded separately and cannot be self-certified by the development agent.
+
+---
+
+# PART 9 — M17.07 SECURITY AND SAFEGUARDING ASSURANCE
+
+Verify security across the complete platform.
+
+## AUTHENTICATION
+
+- Session expiration.
+- Session revocation.
+- Unauthorized access rejection.
+- Secure cookie configuration.
+- CSRF protection where applicable.
+- Credential handling.
+
+## AUTHORIZATION
+
+- Role-based access.
+- Mailbox-specific restrictions.
+- CRM record permissions.
+- Approval permissions.
+- Financial verification permissions.
+- Administrative emergency controls.
+
+## SAFEGUARDING
+
+Verify that confidential survivor records remain inaccessible to unauthorized fundraising workflows.
+
+Test:
+
+- Direct API requests.
+- Search.
+- Exports.
+- Agent tool calls.
+- CRM linking.
+- Email ingestion.
+- Reporting.
+- Cross-role access.
+
+Do not rely solely on keyword detection.
+
+Use synthetic restricted records.
+
+## AI SECURITY
+
+Verify resistance to:
+
+- Prompt injection in emails.
+- Malicious attachment instructions.
+- Unauthorized tool invocation.
+- Data exfiltration attempts.
+- Approval bypass attempts.
+- Cross-role context leakage.
+
+## AUDIT INTEGRITY
+
+Verify that audit records are:
+
+- Durable.
+- Access-controlled.
+- Tamper-evident where required.
+- Traceable to authenticated actors.
+- Protected from unauthorized deletion or modification.
+
+---
+
+# PART 10 — M17.08 FINANCIAL DATA AND PROGRAM REPORTING ASSURANCE
+
+Preserve the distinction between demonstration data and actual organizational financial records.
+
+## SYNTHETIC RECORDS
+
+$325,000 — SYNTHETIC_FIXTURE
+
+$175,000 — NOT_RECEIVED_FUNDS
+
+$50,000 — SYNTHETIC_TEST_TRANSACTION
+
+These must never appear as verified organizational revenue.
+
+## FINANCIAL WORKFLOWS
+
+Verify:
+
+- Donation lifecycle.
+- Recurring giving.
+- Grant award tracking.
+- Corporate sponsorships.
+- In-kind contributions.
+- Payment verification.
+- Reconciliation.
+- Program allocations.
+- Impact reporting.
+
+## AUTHORITATIVE VERIFICATION
+
+Real financial records must be supported by appropriate authorized evidence.
+
+Do not mark a payment verified merely because a transaction reference exists.
+
+Do not allow AI agents to issue real tax receipts without verified donation records and required organizational controls.
+
+## PROGRAM IMPACT
+
+Ensure reported impact metrics are traceable to authorized source records.
+
+Sensitive survivor information must not appear in fundraising reports.
+
+---
+
+# PART 11 — M17.09 FINAL USER INTERFACE AND WORKFLOW QUALITY
+
+Preserve the current Phumulani visual identity.
+
+Do not redesign the application.
+
+## VERIFY
+
+- Responsive layouts.
+- Collapsible navigation.
+- Contextual panels.
+- Search and filtering.
+- Form validation.
+- Clear error messages.
+- Loading indicators.
+- Empty states.
+- Accessibility.
+- Keyboard navigation.
+- Accurate operational status indicators.
+
+## CRITICAL
+
+Remove misleading operational labels.
+
+Examples:
+
+SIMULATED — OAUTH REQUIRED
+
+DATABASE NOT CONNECTED
+
+AWAITING HUMAN APPROVAL
+
+SYNTHETIC FINANCIAL DATA
+
+WORKER DEGRADED
+
+PRODUCTION VERIFICATION PENDING
+
+Do not show a green operational status when a critical dependency is unavailable.
+
+---
+
+# PART 12 — M17.10 DEPLOYMENT ENGINEERING
+
+Prepare the existing application for controlled deployment.
+
+## REQUIRED WORK
+
+Verify:
+
+- Production build.
+- Runtime environment variables.
+- Secure server configuration.
+- Reverse-proxy compatibility.
+- Backend hosting requirements.
+- Database connectivity.
+- Worker process deployment.
+- Static asset delivery.
+- Health endpoints.
+- Application startup behavior.
+- Graceful shutdown.
+- Error reporting.
+
+## GITHUB ACTIONS
+
+Review existing CI/CD workflows.
+
+Ensure they distinguish:
+
+- Build success.
+- Test success.
+- Deployment skipped.
+- Deployment failed.
+- Deployment succeeded.
+- Production health verified.
+
+A skipped deployment is not a successful production deployment.
+
+## GIT SAFETY
+
+Preserve the existing repository.
+
+Do not force-push.
+
+Do not overwrite uncommitted work.
+
+Do not delete backups.
+
+Do not perform destructive Git operations.
+
+Do not deploy to production without explicit authorization.
+
+---
+
+# PART 13 — M17.11 MONITORING AND INCIDENT RESPONSE
+
+Prepare operational monitoring for:
+
+- Application availability.
+- Database connectivity.
+- Mailbox synchronization.
+- OAuth failures.
+- Agent execution failures.
+- Background worker failures.
+- Approval queue delays.
+- Email dispatch failures.
+- Financial reconciliation exceptions.
+- Safeguarding security events.
+
+## REQUIRED FEATURES
+
+- Structured logs.
+- Health checks.
+- Error classification.
+- Alert thresholds.
+- Incident identifiers.
+- Administrator escalation.
+- Recovery documentation.
+
+Do not log:
+
+- API keys.
+- OAuth tokens.
+- Survivor case details.
+- Sensitive attachments.
+- Confidential financial records.
+
+---
+
+# PART 14 — M17.12 DATA MIGRATION AND DEMONSTRATION CLEANUP
+
+Do not delete existing demonstration data indiscriminately.
+
+Instead, establish a controlled separation between:
+
+- Synthetic development fixtures.
+- Test accounts.
+- Demonstration financial records.
+- Actual organizational records.
+- Production configuration.
+
+## REQUIRED CONTROLS
+
+- Explicit environment tagging.
+- Separate test and production data stores.
+- Migration validation.
+- Duplicate detection.
+- Import audit logs.
+- Rollback planning.
+
+Never migrate confidential records into a new environment without authorization.
+
+---
+
+# PART 15 — M17.13 FINAL AUTOMATED TESTING
+
+## EXISTING BASELINE
+
+252 automated tests reported passing.
+
+Preserve this baseline.
+
+Do not remove existing tests.
+
+Do not inflate the count with duplicate assertions.
+
+## ADD TESTS ONLY FOR VERIFIED GAPS
+
+Prioritize:
+
+- Actual PostgreSQL integration.
+- Concurrent transactions.
+- Worker restart recovery.
+- OAuth security.
+- Mailbox permission boundaries.
+- Agent authorization.
+- Prompt injection resistance.
+- Approval enforcement.
+- Audit integrity.
+- Financial evidence validation.
+- Synthetic data isolation.
+- Sensitive-data access restrictions.
+- Browser compatibility.
+- Deployment health.
+
+## REQUIRED TEST COMMANDS
+
+Run the repository's actual supported commands, including where applicable:
+
+npm run lint
+
+npm run build
+
+npx tsc --noEmit
+
+and the established automated verification suite.
+
+Do not claim a command passed unless it was actually executed.
+
+## REPORT SEPARATELY
+
+- Unit tests.
+- Application regression tests.
+- Database integration tests.
+- Provider simulation tests.
+- Live provider tests.
+- Browser end-to-end tests.
+- Security tests.
+- Staff user acceptance results.
+
+---
+
+# PART 16 — M17.14 ADMINISTRATOR ACTIVATION CHECKLIST
+
+Prepare a precise checklist of external actions required to activate the platform.
+
+## GOOGLE WORKSPACE ADMINISTRATOR
+
+Document:
+
+- OAuth application configuration.
+- Required scopes.
+- Authorized mailbox identities.
+- Consent requirements.
+- Secure credential entry.
+- Initial synchronization approval.
+
+## DATABASE ADMINISTRATOR
+
+Document:
+
+- PostgreSQL provisioning requirements.
+- Connection configuration.
+- Migration procedure.
+- Backup requirements.
+- Recovery verification.
+
+## FINANCE AUTHORITY
+
+Document:
+
+- Approved financial integration provider.
+- Required permissions.
+- Reconciliation policies.
+- Evidence requirements.
+- Financial approval roles.
+
+## ORGANIZATIONAL LEADERSHIP
+
+Document:
+
+- Staff access approval.
+- User acceptance sign-off.
+- Operational policies.
+- Production release authorization.
+
+Do not request passwords or secrets in chat output.
+
+Use secure credential-entry mechanisms.
+
+---
+
+# PART 17 — M17.15 FINAL DOCUMENTATION AND HANDOVER
+
+Generate a complete administrator and staff documentation package.
+
+## REQUIRED DOCUMENTS
+
+1. Platform Architecture Overview.
+2. Master Administrator Guide.
+3. Enterprise Email Manager Guide.
+4. Fundraising CRM Guide.
+5. Donor Intelligence Guide.
+6. AI Workforce Operations Guide.
+7. Grant Management Guide.
+8. Corporate CSR Management Guide.
+9. Donor Stewardship Guide.
+10. Human Approval Guide.
+11. Financial Reconciliation Guide.
+12. Program Impact Reporting Guide.
+13. Google Workspace Authorization Guide.
+14. PostgreSQL Deployment Guide.
+15. Backup and Recovery Guide.
+16. Security and Safeguarding Operations Guide.
+17. Incident Response Guide.
+18. Production Release Checklist.
+
+Reuse existing documentation where accurate.
+
+Do not generate duplicate manuals unnecessarily.
+
+---
+
+# PART 18 — FINAL ACCEPTANCE REQUIREMENTS
+
+The development-completion stage is successful when:
+
+1. All previously implemented fundraising modules remain functional.
+2. Existing routes remain operational.
+3. The 18-agent workforce remains available.
+4. All five specialized AI workflows remain functional.
+5. Human approval controls remain enforced.
+6. Safeguarding boundaries remain intact.
+7. Email-to-CRM workflows remain functional.
+8. Donor Intelligence uses authorized records.
+9. Opportunity lifecycle transitions remain consistent.
+10. Financial demonstration records remain isolated.
+11. Program impact reports preserve evidence references.
+12. Production database integration code is complete.
+13. Database migrations are prepared and tested where infrastructure is available.
+14. Background workers support durable execution.
+15. OAuth integration code is ready for authorized activation.
+16. Monitoring and recovery procedures are prepared.
+17. Deployment configuration is validated.
+18. Existing automated tests continue passing.
+19. Newly identified defects are resolved.
+20. Remaining external blockers are accurately documented.
+
+### PRODUCTION READINESS REQUIREMENTS
+
+Do not issue a PRODUCTION_VERIFIED status until:
+
+- Required production infrastructure is operational.
+- Required provider authorizations are completed.
+- Production data security is verified.
+- Backup and recovery are tested.
+- Appropriate staff acceptance is recorded.
+- Production deployment is authorized.
+- Production health is confirmed.
+
+---
+
+# PART 19 — REQUIRED FINAL REPORT
+
+Generate:
+
+PHUMULANI AI COMMUNITY PLATFORM
+PHASE 17 — FINAL DEVELOPMENT COMPLETION AND PRODUCTION ACTIVATION READINESS REGISTER
+
+The report must include:
+
+### A. DEVELOPMENT BASELINE
+
+- Repository.
+- Branch.
+- Commit SHA.
+- Existing test baseline.
+- Current application architecture.
+
+### B. COMPLETED DEVELOPMENT
+
+- Files changed.
+- Defects resolved.
+- Integrations completed.
+- Database changes.
+- Security changes.
+- Worker improvements.
+- Deployment changes.
+
+### C. VERIFICATION EVIDENCE
+
+- Actual test commands.
+- Actual results.
+- Database integration evidence.
+- AI execution evidence.
+- Security test results.
+- Browser test results.
+- Deployment readiness results.
+
+### D. REMAINING BLOCKERS
+
+- Google Workspace OAuth.
+- Production PostgreSQL provisioning.
+- Financial provider authorization.
+- Staff acceptance.
+- Production release approval.
+
+List only blockers that remain unresolved after the work.
+
+### E. FINAL READINESS CLASSIFICATION
+
+Use one of:
+
+DEVELOPMENT_IN_PROGRESS
+
+DEVELOPMENT_COMPLETE_STAGED
+
+EXTERNAL_AUTHORIZATION_PENDING
+
+PRODUCTION_DEPLOYMENT_READY
+
+PRODUCTION_VERIFIED
+
+BLOCKED
+
+FAILED
+
+The status must match actual evidence.
+
+---
+
+# PART 20 — FINAL EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+THIS IS THE FINAL DEVELOPMENT COMPLETION DIRECTIVE FOR THE EXISTING PHUMULANI PLATFORM.
+
+DO NOT START ANOTHER BROAD FEATURE-BUILDING PHASE.
+
+DO NOT REBUILD THE 15-STAGE FUNDRAISING ARCHITECTURE.
+
+DO NOT REBUILD THE 18-AGENT AI WORKFORCE.
+
+DO NOT REBUILD THE ENTERPRISE EMAIL MANAGER.
+
+DO NOT REBUILD THE FUNDRAISING CRM.
+
+DO NOT DUPLICATE APPROVAL SYSTEMS.
+
+DO NOT REPEAT COMPLETED PRODUCTION-HARDENING TASKS.
+
+FOCUS EXCLUSIVELY ON:
+
+- REMAINING VERIFIED DEFECTS.
+- PRODUCTION DATABASE ENGINEERING.
+- GOOGLE WORKSPACE INTEGRATION READINESS.
+- DURABLE BACKGROUND PROCESSING.
+- SECURITY AND SAFEGUARDING ASSURANCE.
+- FINANCIAL DATA INTEGRITY.
+- USER ACCEPTANCE SUPPORT.
+- DEPLOYMENT ENGINEERING.
+- MONITORING AND RECOVERY.
+- FINAL DOCUMENTATION.
+- OPERATIONAL HANDOVER.
+
+PRESERVE ALL EXISTING FUNCTIONALITY.
+
+PRESERVE THE 252-TEST BASELINE.
+
+COMPLETE EVERY AUTHORIZED DEVELOPMENT TASK.
+
+DO NOT FABRICATE SUCCESSFUL LIVE INTEGRATIONS.
+
+DO NOT ACCESS LIVE BANKING SERVICES WITHOUT AUTHORIZATION.
+
+DO NOT SEND LIVE EXTERNAL EMAIL WITHOUT AUTHORIZATION.
+
+DO NOT DEPLOY TO PRODUCTION WITHOUT EXPLICIT RELEASE APPROVAL.
+
+WHEN EXTERNAL AUTHORIZATION IS REQUIRED, RECORD THE BLOCKER AND CONTINUE OTHER INDEPENDENT WORK.
+
+GENERATE THE FINAL DEVELOPMENT COMPLETION REGISTER WITH ACTUAL VERIFICATION EVIDENCE.
+
+### FIRST ACTION
+
+EXECUTE M17.01 — FINAL CODEBASE AND DEPENDENCY AUDIT.
+
+### SECOND ACTION
+
+COMPLETE ONLY THE GAPS IDENTIFIED BY THAT AUDIT.
+
+### THIRD ACTION
+
+EXECUTE THE FULL REGRESSION, INTEGRATION, SECURITY, AND DEPLOYMENT READINESS TESTS.
+
+### FOURTH ACTION
+
+PRODUCE THE FINAL ADMINISTRATOR ACTIVATION CHECKLIST AND PRODUCTION READINESS REGISTER.
+
+### FINAL OBJECTIVE
+
+DELIVER A COMPLETE, SECURE, AUDITABLE, PRODUCTION-PREPARED PHUMULANI AI COMMUNITY PLATFORM THAT SUPPORTS THE ENTIRE ATTACHED FUNDRAISING WORKFLOW:
+
+MASTER ADMINISTRATOR
+
+↓
+
+AI EMAIL MANAGER AND FUNDRAISING CRM
+
+↓
+
+DONOR INTELLIGENCE
+
+↓
+
+INDIVIDUALS, CORPORATIONS, AND INSTITUTIONS
+
+↓
+
+FUNDING OPPORTUNITIES
+
+↓
+
+18-AGENT AI FUNDRAISING WORKFORCE
+
+↓
+
+AI OUTREACH, GRANT ASSISTANT, AND DONOR STEWARDSHIP
+
+↓
+
+HUMAN REVIEW AND APPROVAL
+
+↓
+
+AUTHORIZED COMMUNICATION
+
+↓
+
+DONOR ENGAGEMENT
+
+↓
+
+DONATIONS, GRANTS, AND SPONSORSHIPS
+
+↓
+
+PAYMENT AND AWARD VERIFICATION
+
+↓
+
+PROGRAM FUNDING AND IMPACT REPORTING
+
+DO NOT DECLARE PRODUCTION SUCCESS UNTIL LIVE INFRASTRUCTURE AND AUTHORIZED OPERATIONAL VERIFICATION ARE COMPLETE.
+
+BEGIN PHASE 17 DEVELOPMENT COMPLETION NOW.

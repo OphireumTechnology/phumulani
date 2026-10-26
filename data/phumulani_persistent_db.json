@@ -3,8 +3,8 @@
     "platform": "Phumulani AI Community Platform",
     "schema": "PostgreSQL 15+ Compatible DDL",
     "engine": "ISOLATED_EMBEDDED_DURABLE",
-    "persistedAt": "2026-10-26T06:49:28.512Z",
-    "tablesCount": 3,
+    "persistedAt": "2026-10-26T08:50:34.984Z",
+    "tablesCount": 5,
     "classification": "INTEGRATION_COMPLETE_STAGED_READY"
   },
   "tables": {
@@ -12,7 +12,7 @@
       {
         "id": "test-1",
         "value": "phumulani_durable_test",
-        "timestamp": "2026-10-26T06:49:28.511Z"
+        "timestamp": "2026-10-26T08:50:34.983Z"
       },
       {
         "id": "test-txn-1",
@@ -213,6 +213,125 @@
         "id": "cg-1792992379899-11",
         "index": 11,
         "timestamp": "2026-10-26T05:26:19.899Z"
+      }
+    ],
+    "schema_migrations": [
+      {
+        "id": "mig-20261026_001",
+        "version": "20261026_001",
+        "name": "core_access_and_identity_schema",
+        "appliedAt": "2026-10-26T08:09:01.239Z",
+        "checksum": "692bcc896c4f007b42d6849a9d3ce7a0fcf3742d96ab96833c58ca7b6d93b293",
+        "executionTimeMs": 1,
+        "status": "SUCCESS",
+        "appliedBy": "Automated Test Suite"
+      },
+      {
+        "id": "mig-20261026_002",
+        "version": "20261026_002",
+        "name": "enterprise_email_and_synchronization",
+        "appliedAt": "2026-10-26T08:09:01.240Z",
+        "checksum": "2853f225de59e3a5d70577ebaddc6e4fa43714da0317ed0dfcb548513dfef7cf",
+        "executionTimeMs": 1,
+        "status": "SUCCESS",
+        "appliedBy": "Automated Test Suite"
+      },
+      {
+        "id": "mig-20261026_003",
+        "version": "20261026_003",
+        "name": "fundraising_crm_and_intelligence",
+        "appliedAt": "2026-10-26T08:09:01.241Z",
+        "checksum": "9cf3a3e3aa2ad6690798a588dac2b3bdab289ffd21561b03d01dd3553c68aa4e",
+        "executionTimeMs": 1,
+        "status": "SUCCESS",
+        "appliedBy": "Automated Test Suite"
+      },
+      {
+        "id": "mig-20261026_004",
+        "version": "20261026_004",
+        "name": "vawa_safeguarding_quarantine_partition",
+        "appliedAt": "2026-10-26T08:09:01.241Z",
+        "checksum": "9999a09c4cf022e947b6a11bebe9ec13e74168415889ecf803abdea4a73641a2",
+        "executionTimeMs": 1,
+        "status": "SUCCESS",
+        "appliedBy": "Automated Test Suite"
+      },
+      {
+        "id": "mig-20261026_005",
+        "version": "20261026_005",
+        "name": "durable_background_jobs_queue",
+        "appliedAt": "2026-10-26T08:09:01.242Z",
+        "checksum": "3d2ebb1755a89f5dc1fe5da547c02be9bc02e8b063888304535cebfcf023bc40",
+        "executionTimeMs": 1,
+        "status": "SUCCESS",
+        "appliedBy": "Automated Test Suite"
+      },
+      {
+        "id": "mig-20261026_006",
+        "version": "20261026_006",
+        "name": "immutable_audit_log_and_tamper_proofing",
+        "appliedAt": "2026-10-26T08:09:01.243Z",
+        "checksum": "7dce8948cecbb512aebd86eb9d9fe3829bd0211980375d08237e17c18606006a",
+        "executionTimeMs": 1,
+        "status": "SUCCESS",
+        "appliedBy": "Automated Test Suite"
+      }
+    ],
+    "background_jobs": [
+      {
+        "id": "job-1793002141244-d517g",
+        "type": "AI_CLASSIFICATION",
+        "idempotencyKey": "idem-test-1793002141244",
+        "status": "COMPLETED",
+        "payload": {
+          "messageId": "msg-idem-01",
+          "subject": "Grant Inquiry"
+        },
+        "retryCount": 0,
+        "maxRetries": 3,
+        "backoffDelayMs": 1000,
+        "executionTimeoutMs": 15000,
+        "createdAt": "2026-10-26T08:09:01.244Z",
+        "updatedAt": "2026-10-26T08:09:01.245Z",
+        "result": {
+          "messageId": "msg-idem-01",
+          "category": "DONATION_MAJOR",
+          "confidence": 0.94,
+          "safeguardingAlert": false
+        },
+        "completedAt": "2026-10-26T08:09:01.245Z"
+      },
+      {
+        "id": "stale-job-1793002141245",
+        "type": "CRM_OPPORTUNITY_INGESTION",
+        "idempotencyKey": "idem-stale-1793002141245",
+        "status": "RETRYING",
+        "payload": {
+          "donorEmail": "crashed_worker@example.org"
+        },
+        "retryCount": 0,
+        "maxRetries": 3,
+        "backoffDelayMs": 1000,
+        "executionTimeoutMs": 15000,
+        "createdAt": "2026-10-26T08:07:01.245Z",
+        "updatedAt": "2026-10-26T08:09:01.245Z",
+        "errorMessage": "Worker lease expired. Resumed by worker worker-1031-9sl4v"
+      },
+      {
+        "id": "fail-dlq-1793002141246",
+        "type": "UNREGISTERED_TYPE_FOR_TEST",
+        "idempotencyKey": "idem-dlq-1793002141246",
+        "status": "DEAD_LETTER",
+        "payload": {
+          "test": true
+        },
+        "retryCount": 0,
+        "maxRetries": 2,
+        "backoffDelayMs": 500,
+        "executionTimeoutMs": 5000,
+        "createdAt": "2026-10-26T08:09:01.246Z",
+        "updatedAt": "2026-10-26T08:09:01.246Z",
+        "errorMessage": "No handler registered for job type UNREGISTERED_TYPE_FOR_TEST"
       }
     ]
   }

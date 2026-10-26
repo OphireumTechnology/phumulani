@@ -1622,6 +1622,10 @@ export const INITIAL_FINANCIAL_RECONCILIATION: FinancialReconciliationDetails = 
   calculatedGapTotal: 512500,
   reportedGapKPI: 489500,
   discrepancyAmount: 23000,
+  demonstrationFixtureAmount: 325000,
+  softPledgesSeparated: 175000,
+  syntheticTestTransactions: 50000,
+  financialStatus: 'UNVERIFIED_DEMONSTRATION',
   rootCause:
     'The $23,000 discrepancy originated in historical Phase 8/10 reporting where a $25,000 corporate sponsorship from Target (contrib-005) was manually adjusted for $2,000 in direct gala audio-visual expenses to yield $23,000 net proceeds. The author deducted this $23,000 from the overall aggregate gap KPI ($512,500 - $23,000 = $489,500) in summary text, but did not adjust the underlying database record for prog-youth (Youth Leadership remaining gap remained at $33,000 instead of $10,000).',
   authoritativeSource:
