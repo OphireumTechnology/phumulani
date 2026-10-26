@@ -458,10 +458,30 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
   // Handle Reject Draft
   const handleRejectDraft = (threadId: string) => {
-    db.rejectEmailDraft(threadId, 'Requires tone adjustment and updated financial appendix.');
+    db.rejectEmailDraft(threadId, 'Draft does not meet institutional standards.');
     setActionNotice({
       type: 'info',
       message: `Draft rejected and routed back to review queue.`,
+    });
+    setTimeout(() => setActionNotice(null), 5000);
+  };
+
+  // Handle Request Changes
+  const handleRequestChanges = (threadId: string) => {
+    db.requestChangesEmailDraft(threadId, 'Staff review requested revisions to tone and factual alignment.');
+    setActionNotice({
+      type: 'warning',
+      message: `Revisions requested. Draft marked as changes_requested for editing.`,
+    });
+    setTimeout(() => setActionNotice(null), 5000);
+  };
+
+  // Handle Return to Draft
+  const handleReturnToDraft = (threadId: string) => {
+    db.returnToDraftEmailDraft(threadId, 'Returned to draft workspace by reviewer.');
+    setActionNotice({
+      type: 'info',
+      message: `Draft returned to initial drafting workspace.`,
     });
     setTimeout(() => setActionNotice(null), 5000);
   };
@@ -1575,22 +1595,40 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             )}
 
                             {selectedThread.draft.status !== 'approved' && selectedThread.draft.status !== 'sent' && (
-                              <>
+                              <div className="flex items-center gap-1.5 flex-wrap">
                                 <button
                                   onClick={() => handleApproveDraft(selectedThread.id)}
                                   className="px-3 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-xs cursor-pointer"
+                                  title="Approve draft and bind to current version"
                                 >
                                   <ThumbsUp className="w-3 h-3" />
                                   <span>Approve Draft</span>
                                 </button>
                                 <button
+                                  onClick={() => handleRequestChanges(selectedThread.id)}
+                                  className="px-2.5 py-1 text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer"
+                                  title="Request staff modifications before re-review"
+                                >
+                                  <RotateCcw className="w-3 h-3" />
+                                  <span>Request Changes</span>
+                                </button>
+                                <button
+                                  onClick={() => handleReturnToDraft(selectedThread.id)}
+                                  className="px-2.5 py-1 text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer"
+                                  title="Return to drafting stage"
+                                >
+                                  <FileCheck className="w-3 h-3" />
+                                  <span>Return to Draft</span>
+                                </button>
+                                <button
                                   onClick={() => handleRejectDraft(selectedThread.id)}
                                   className="px-2.5 py-1 text-rose-700 hover:bg-rose-50 border border-rose-200 rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer"
+                                  title="Reject proposed draft"
                                 >
                                   <ThumbsDown className="w-3 h-3" />
                                   <span>Reject</span>
                                 </button>
-                              </>
+                              </div>
                             )}
                           </div>
 

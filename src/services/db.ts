@@ -1457,15 +1457,22 @@ class DatabaseService {
     const thread = this.state.enterpriseEmailThreads.find((t) => t.id === threadId);
     if (!thread || !thread.draft) return;
 
+    const version = (thread.draft.version || 1) + 1;
     const approvedDraft: EmailDraft = {
       ...thread.draft,
       status: 'approved',
       approvedByStaff: actor.name,
+      approvedByUserId: actor.id,
       approvedAt: new Date().toISOString(),
+      approvedBody: thread.draft.proposedBody,
+      approvedRecipient: thread.draft.recipientEmail,
+      approvedSubject: thread.draft.suggestedSubject,
+      approvedVersion: version,
+      version,
     };
 
     const updated = this.state.enterpriseEmailThreads.map((t) =>
-      t.id === threadId ? { ...t, draft: approvedDraft } : t
+      t.id === threadId ? { ...t, draft: approvedDraft, status: 'awaiting_approval' as const } : t
     );
     this.saveState({ ...this.state, enterpriseEmailThreads: updated });
     this.appendAuditLog('EMAIL_DRAFT_APPROVED', `AI Draft for thread "${thread.threadSubject}" authorized by ${actor.name} (${actor.role})`);
@@ -1480,6 +1487,8 @@ class DatabaseService {
       ...thread.draft,
       status: 'rejected',
       rejectionReason: reason,
+      approvedByStaff: undefined,
+      approvedAt: undefined,
     };
 
     const updated = this.state.enterpriseEmailThreads.map((t) =>
@@ -1487,6 +1496,47 @@ class DatabaseService {
     );
     this.saveState({ ...this.state, enterpriseEmailThreads: updated });
     this.appendAuditLog('EMAIL_DRAFT_REJECTED', `AI Draft for thread "${thread.threadSubject}" rejected by ${actor.name}. Reason: ${reason}`);
+  }
+
+  public requestChangesEmailDraft(threadId: string, changesReason: string): void {
+    const actor = this.state.currentUser;
+    const thread = this.state.enterpriseEmailThreads.find((t) => t.id === threadId);
+    if (!thread || !thread.draft) return;
+
+    const updatedDraft: EmailDraft = {
+      ...thread.draft,
+      status: 'changes_requested',
+      changesRequestedReason: changesReason,
+      humanFeedbackNotes: changesReason,
+      approvedByStaff: undefined,
+      approvedAt: undefined,
+    };
+
+    const updated = this.state.enterpriseEmailThreads.map((t) =>
+      t.id === threadId ? { ...t, draft: updatedDraft, status: 'in_review' as const } : t
+    );
+    this.saveState({ ...this.state, enterpriseEmailThreads: updated });
+    this.appendAuditLog('EMAIL_DRAFT_CHANGES_REQUESTED', `Changes requested on draft for "${thread.threadSubject}" by ${actor.name}: ${changesReason}`);
+  }
+
+  public returnToDraftEmailDraft(threadId: string, reason: string): void {
+    const actor = this.state.currentUser;
+    const thread = this.state.enterpriseEmailThreads.find((t) => t.id === threadId);
+    if (!thread || !thread.draft) return;
+
+    const resetDraft: EmailDraft = {
+      ...thread.draft,
+      status: 'returned_to_draft',
+      returnToDraftReason: reason,
+      approvedByStaff: undefined,
+      approvedAt: undefined,
+    };
+
+    const updated = this.state.enterpriseEmailThreads.map((t) =>
+      t.id === threadId ? { ...t, draft: resetDraft, status: 'in_review' as const } : t
+    );
+    this.saveState({ ...this.state, enterpriseEmailThreads: updated });
+    this.appendAuditLog('EMAIL_DRAFT_RETURNED_TO_DRAFT', `Draft for "${thread.threadSubject}" returned to draft state by ${actor.name}. Reason: ${reason}`);
   }
 
   public sendApprovedEmail(threadId: string): void {
@@ -1497,6 +1547,17 @@ class DatabaseService {
       throw new Error('Safety policy violation: Email draft must be explicitly APPROVED by human staff before sending.');
     }
 
+    // Server-Side Internal Note Boundary Enforcement:
+    let body = thread.draft.proposedBody;
+    if (thread.internalNotes && thread.internalNotes.length > 0) {
+      for (const note of thread.internalNotes) {
+        if (note.text && body.includes(note.text)) {
+          body = body.split(note.text).join('').trim();
+        }
+      }
+    }
+    body = body.replace(/\[INTERNAL NOTE[\s\S]*?\]/gi, '').trim();
+
     const sentMessage = {
       id: `msg-sent-${Date.now()}`,
       threadId,
@@ -1504,7 +1565,7 @@ class DatabaseService {
       senderEmail: thread.mailboxEmail,
       recipientEmail: thread.draft.recipientEmail,
       subject: thread.draft.suggestedSubject,
-      bodyText: thread.draft.proposedBody,
+      bodyText: body,
       receivedAt: new Date().toISOString(),
       direction: 'outbound' as const,
     };

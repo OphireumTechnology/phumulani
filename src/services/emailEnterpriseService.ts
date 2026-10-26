@@ -478,6 +478,17 @@ export class EmailEnterpriseService {
         return false;
       }
 
+      // 1b. Mandatory Executive Mailbox Isolation Boundary: Exclude executive communications from unauthorized users in search queries
+      const isExecutiveThread =
+        t.mailboxEmail === 'executive@phumulani.org' ||
+        t.mailboxId === 'mbx-exec' ||
+        t.mailboxId === 'mbx-exec-01' ||
+        t.classification === '02_executive';
+
+      if (isExecutiveThread && !EmailEnterpriseService.checkMailboxAccessAuthorization(role, 'executive@phumulani.org')) {
+        return false;
+      }
+
       // 2. Folder filter
       if (appliedFilters.folder && appliedFilters.folder !== 'all') {
         const threadFolder = t.folder || (t.isArchived ? 'ARCHIVE' : 'INBOX');
@@ -1024,7 +1035,166 @@ export class EmailEnterpriseService {
   }
 
   /**
-   * 15. Fail-Closed Human Approval & Outbound Email Dispatch (Phase 14 — M14.08 / TEST-P14-25, TEST-P14-26, TEST-P14-27, TEST-P14-28)
+   * 15a. Quad-Action Draft Approval State Machine (Phase 18 — Part 13)
+   */
+  public static approveDraft(
+    threadId: string,
+    approverUser: { id: string; name: string; role: string }
+  ): { success: boolean; draft?: EmailDraft; error?: string } {
+    const thread = db.getState().enterpriseEmailThreads.find((t) => t.id === threadId);
+    if (!thread || !thread.draft) {
+      return { success: false, error: 'Target thread or draft not found.' };
+    }
+
+    if (approverUser.role === 'visitor') {
+      return { success: false, error: 'ACCESS DENIED: Visitors cannot approve organizational email drafts.' };
+    }
+
+    const version = (thread.draft.version || 1) + 1;
+    const approvedDraft: EmailDraft = {
+      ...thread.draft,
+      status: 'approved',
+      approvedByStaff: approverUser.name,
+      approvedByUserId: approverUser.id,
+      approvedAt: new Date().toISOString(),
+      approvedBody: thread.draft.proposedBody,
+      approvedRecipient: thread.draft.recipientEmail,
+      approvedSubject: thread.draft.suggestedSubject,
+      approvedVersion: version,
+      version,
+    };
+
+    const updatedThreads = db.getState().enterpriseEmailThreads.map((t) =>
+      t.id === threadId
+        ? {
+            ...t,
+            draft: approvedDraft,
+            status: 'awaiting_approval' as ConversationStatus,
+          }
+        : t
+    );
+    db.saveState({ ...db.getState(), enterpriseEmailThreads: updatedThreads });
+
+    db.appendSyncAuditLog({
+      mailboxEmail: thread.mailboxEmail,
+      action: 'DRAFT_APPROVAL_GRANTED',
+      actor: approverUser.name,
+      details: `Draft [${approvedDraft.id}] approved for ${approvedDraft.recipientEmail} subject "${approvedDraft.suggestedSubject}". Content bound to version ${version}.`,
+      direction: 'internal',
+      status: 'success',
+    });
+
+    return { success: true, draft: approvedDraft };
+  }
+
+  public static rejectDraft(
+    threadId: string,
+    approverUser: { id: string; name: string; role: string },
+    rejectionReason: string
+  ): { success: boolean; draft?: EmailDraft; error?: string } {
+    const thread = db.getState().enterpriseEmailThreads.find((t) => t.id === threadId);
+    if (!thread || !thread.draft) {
+      return { success: false, error: 'Target thread or draft not found.' };
+    }
+
+    const rejectedDraft: EmailDraft = {
+      ...thread.draft,
+      status: 'rejected',
+      rejectionReason: rejectionReason || 'Draft does not meet institutional standards.',
+      approvedByStaff: undefined,
+      approvedAt: undefined,
+    };
+
+    const updatedThreads = db.getState().enterpriseEmailThreads.map((t) =>
+      t.id === threadId ? { ...t, draft: rejectedDraft } : t
+    );
+    db.saveState({ ...db.getState(), enterpriseEmailThreads: updatedThreads });
+
+    db.appendSyncAuditLog({
+      mailboxEmail: thread.mailboxEmail,
+      action: 'DRAFT_REJECTED',
+      actor: approverUser.name,
+      details: `Draft [${rejectedDraft.id}] rejected by ${approverUser.name}. Reason: ${rejectedDraft.rejectionReason}`,
+      direction: 'internal',
+      status: 'warning',
+    });
+
+    return { success: true, draft: rejectedDraft };
+  }
+
+  public static requestChangesDraft(
+    threadId: string,
+    reviewerUser: { id: string; name: string; role: string },
+    changesRequestedReason: string
+  ): { success: boolean; draft?: EmailDraft; error?: string } {
+    const thread = db.getState().enterpriseEmailThreads.find((t) => t.id === threadId);
+    if (!thread || !thread.draft) {
+      return { success: false, error: 'Target thread or draft not found.' };
+    }
+
+    const updatedDraft: EmailDraft = {
+      ...thread.draft,
+      status: 'changes_requested',
+      changesRequestedReason: changesRequestedReason || 'Revisions requested by reviewer.',
+      humanFeedbackNotes: changesRequestedReason,
+      approvedByStaff: undefined,
+      approvedAt: undefined,
+    };
+
+    const updatedThreads = db.getState().enterpriseEmailThreads.map((t) =>
+      t.id === threadId ? { ...t, draft: updatedDraft } : t
+    );
+    db.saveState({ ...db.getState(), enterpriseEmailThreads: updatedThreads });
+
+    db.appendSyncAuditLog({
+      mailboxEmail: thread.mailboxEmail,
+      action: 'DRAFT_CHANGES_REQUESTED',
+      actor: reviewerUser.name,
+      details: `Changes requested on draft [${updatedDraft.id}]: "${changesRequestedReason}". Status changed to changes_requested.`,
+      direction: 'internal',
+      status: 'warning',
+    });
+
+    return { success: true, draft: updatedDraft };
+  }
+
+  public static returnToDraft(
+    threadId: string,
+    actorUser: { id: string; name: string; role: string },
+    reason: string
+  ): { success: boolean; draft?: EmailDraft; error?: string } {
+    const thread = db.getState().enterpriseEmailThreads.find((t) => t.id === threadId);
+    if (!thread || !thread.draft) {
+      return { success: false, error: 'Target thread or draft not found.' };
+    }
+
+    const resetDraft: EmailDraft = {
+      ...thread.draft,
+      status: 'returned_to_draft',
+      returnToDraftReason: reason || 'Returned to draft for further editing.',
+      approvedByStaff: undefined,
+      approvedAt: undefined,
+    };
+
+    const updatedThreads = db.getState().enterpriseEmailThreads.map((t) =>
+      t.id === threadId ? { ...t, draft: resetDraft } : t
+    );
+    db.saveState({ ...db.getState(), enterpriseEmailThreads: updatedThreads });
+
+    db.appendSyncAuditLog({
+      mailboxEmail: thread.mailboxEmail,
+      action: 'DRAFT_RETURNED_TO_DRAFT',
+      actor: actorUser.name,
+      details: `Draft [${resetDraft.id}] returned to draft state. Reason: ${reason}`,
+      direction: 'internal',
+      status: 'warning',
+    });
+
+    return { success: true, draft: resetDraft };
+  }
+
+  /**
+   * 15b. Fail-Closed Human Approval & Outbound Email Dispatch with Strict Note Stripping & Material Invalidation
    */
   public static authorizeAndSendOutboundDraft(
     threadId: string,
@@ -1048,6 +1218,26 @@ export class EmailEnterpriseService {
       };
     }
 
+    // Server-Side Material Change Invalidation:
+    // If body was modified after approval was granted, invalidate approval immediately
+    const approvedBody = thread.draft.approvedBody || thread.draft.proposedBody;
+    if (options.updatedBody && options.updatedBody.trim() !== approvedBody.trim()) {
+      // Material modification detected! Invalidate approval state
+      this.returnToDraft(threadId, approverUser, 'Material change detected post-approval: body modified. Approval invalidated.');
+      db.appendSyncAuditLog({
+        mailboxEmail: thread.mailboxEmail,
+        action: 'POST_APPROVAL_MODIFICATION_BLOCKED',
+        actor: 'Security Gateway',
+        details: `Outbound dispatch blocked: Draft [${thread.draft.id}] was modified after approval. Re-approval required.`,
+        direction: 'outbound',
+        status: 'error',
+      });
+      return {
+        success: false,
+        error: 'MATERIAL CHANGE DETECTED: Message content was modified after human approval. Approval has been invalidated and returned to draft for re-review.',
+      };
+    }
+
     // Role check: Only authorized staff can send
     if (approverUser.role === 'visitor') {
       return {
@@ -1055,6 +1245,37 @@ export class EmailEnterpriseService {
         error: 'ACCESS DENIED: Insufficient permissions to dispatch authorized organizational email.',
       };
     }
+
+    // Check for quarantined attachments
+    const latestMessage = thread.messages[thread.messages.length - 1];
+    if (latestMessage?.attachments?.some((att) => att.isQuarantined || att.scanStatus === 'quarantined')) {
+      return {
+        success: false,
+        error: 'SECURITY VIOLATION: Quarantined attachment detected on thread. Dispatch blocked.',
+      };
+    }
+
+    // Server-Side Internal Note Boundary Enforcement:
+    // Internal notes must NEVER be included in outbound email content. Strip any note occurrences or leak markers.
+    let sanitizedBody = options.updatedBody || thread.draft.proposedBody;
+    if (thread.internalNotes && thread.internalNotes.length > 0) {
+      for (const note of thread.internalNotes) {
+        if (note.text && sanitizedBody.includes(note.text)) {
+          sanitizedBody = sanitizedBody.split(note.text).join('').trim();
+          db.appendSyncAuditLog({
+            mailboxEmail: thread.mailboxEmail,
+            action: 'INTERNAL_NOTE_LEAK_PREVENTED',
+            actor: 'Dispatch Security Boundary',
+            details: `Internal staff note by ${note.authorName} was stripped from outbound payload to ${thread.draft.recipientEmail}.`,
+            direction: 'outbound',
+            status: 'warning',
+          });
+        }
+      }
+    }
+    // Also remove any internal collaboration tags if injected
+    sanitizedBody = sanitizedBody.replace(/\[INTERNAL NOTE[\s\S]*?\]/gi, '').trim();
+    sanitizedBody = sanitizedBody.replace(/CONFIDENTIAL STAFF NOTE:[\s\S]*?(?=\n\n|$)/gi, '').trim();
 
     // Idempotency check: Check if idempotencyKey was already consumed
     const existingAuthLogs = db.getSyncAuditLogs().filter((l) => l.action === 'OUTBOUND_DISPATCH_AUTHORIZED');
@@ -1076,7 +1297,7 @@ export class EmailEnterpriseService {
       senderMailbox: thread.mailboxEmail,
       recipientEmails: [thread.draft.recipientEmail],
       subject: thread.draft.suggestedSubject,
-      bodyText: options.updatedBody || thread.draft.proposedBody,
+      bodyText: sanitizedBody,
       approvedByUserId: approverUser.id,
       approvedByName: approverUser.name,
       approvedAt: new Date().toISOString(),
@@ -1095,7 +1316,7 @@ export class EmailEnterpriseService {
       senderEmail: thread.mailboxEmail,
       recipientEmail: thread.draft.recipientEmail,
       subject: thread.draft.suggestedSubject,
-      bodyText: options.updatedBody || thread.draft.proposedBody,
+      bodyText: sanitizedBody,
       receivedAt: new Date().toISOString(),
       direction: 'outbound',
       providerMessageId: providerSubmissionId,
@@ -1138,6 +1359,308 @@ export class EmailEnterpriseService {
       success: true,
       authorizationRecord: authRecord,
     };
+  }
+
+  /**
+   * 15c. Five-Mailbox Identity Architecture Specification (Part 5)
+   */
+  public static getMailboxIdentityProfile(email: string): {
+    email: string;
+    displayName: string;
+    mailboxType: 'collaborative_group' | 'primary_user' | 'executive_primary' | 'alias';
+    primaryAuthMailbox?: string;
+    requiresIndependentOAuth: boolean;
+    department: string;
+    purpose: string;
+    gatedDualControl: boolean;
+    accessRoles: string[];
+  } {
+    const norm = email.toLowerCase().trim();
+    switch (norm) {
+      case 'info@phumulani.org':
+        return {
+          email: 'info@phumulani.org',
+          displayName: 'Phumulani Front Office & Community Inquiries',
+          mailboxType: 'collaborative_group',
+          requiresIndependentOAuth: true,
+          department: 'Operations & Community',
+          purpose: 'General organizational communications, community partnerships, volunteer inquiries.',
+          gatedDualControl: false,
+          accessRoles: ['staff', 'community_officer', 'volunteer_lead', 'super_admin', 'PLATFORM_SUPER_ADMIN'],
+        };
+      case 'donations@phumulani.org':
+        return {
+          email: 'donations@phumulani.org',
+          displayName: 'Phumulani Giving & Major Gifts',
+          mailboxType: 'primary_user',
+          requiresIndependentOAuth: true,
+          department: 'Development & Fundraising',
+          purpose: 'Donor relations, gift engagement, acknowledgment preparation, CRM synchronization.',
+          gatedDualControl: false,
+          accessRoles: ['staff', 'development_officer', 'finance_officer', 'super_admin', 'PLATFORM_SUPER_ADMIN'],
+        };
+      case 'grants@phumulani.org':
+        return {
+          email: 'grants@phumulani.org',
+          displayName: 'Phumulani Institutional Grants & Compliance',
+          mailboxType: 'primary_user',
+          requiresIndependentOAuth: true,
+          department: 'Grants & Governance',
+          purpose: 'Institutional foundation and government grants, application tracking, reporting obligations.',
+          gatedDualControl: false,
+          accessRoles: ['staff', 'grants_officer', 'finance_officer', 'super_admin', 'PLATFORM_SUPER_ADMIN'],
+        };
+      case 'executive@phumulani.org':
+        return {
+          email: 'executive@phumulani.org',
+          displayName: 'Executive Office — Comfort Dondo',
+          mailboxType: 'executive_primary',
+          requiresIndependentOAuth: true,
+          department: 'Executive Leadership',
+          purpose: 'Executive leadership communications, legislative testimony, high-level donor negotiations.',
+          gatedDualControl: true,
+          accessRoles: ['executive_director', 'super_admin', 'PLATFORM_SUPER_ADMIN'],
+        };
+      case 'partnerships@phumulani.org':
+        return {
+          email: 'partnerships@phumulani.org',
+          displayName: 'Corporate Sponsorships & CSR Relations',
+          mailboxType: 'alias',
+          primaryAuthMailbox: 'donations@phumulani.org',
+          requiresIndependentOAuth: false, // Workspace alias: routes to development team, does NOT hold independent OAuth token
+          department: 'Corporate Relations',
+          purpose: 'Corporate CSR, sponsorships, employee matching gift programs, institutional alliances.',
+          gatedDualControl: false,
+          accessRoles: ['staff', 'development_officer', 'super_admin', 'PLATFORM_SUPER_ADMIN'],
+        };
+      default:
+        return {
+          email,
+          displayName: 'Custom Mailbox',
+          mailboxType: 'primary_user',
+          requiresIndependentOAuth: true,
+          department: 'General Operations',
+          purpose: 'Standard communications',
+          gatedDualControl: false,
+          accessRoles: ['staff'],
+        };
+    }
+  }
+
+  /**
+   * 15d. AI Email Agent Workforce Capabilities Mapping (Part 11)
+   * Reuses the existing 18-agent fundraising workforce without duplicating agent entities.
+   */
+  public static getEmailAgentCapabilitiesMapping(): Array<{
+    capabilityId: string;
+    capabilityName: string;
+    agentId: string;
+    agentName: string;
+    requiredInput: string;
+    authorizedDataAccess: string;
+    executionPath: string;
+    output: string;
+    humanApprovalRequired: boolean;
+    auditRecord: string;
+    failureHandling: string;
+  }> {
+    return [
+      {
+        capabilityId: 'EAC-01',
+        capabilityName: 'Email Orchestration',
+        agentId: 'FUND-AI-001',
+        agentName: 'Executive Strategy & Capital Campaign Director',
+        requiredInput: 'Inbound message metadata, thread context, mailbox identity',
+        authorizedDataAccess: 'All organizational mailboxes (read-only triage)',
+        executionPath: 'EmailEnterpriseService.classifyMessage -> assignStaff -> routeWorkflow',
+        output: 'Assigned thread, SLA deadline, department routing recommendation',
+        humanApprovalRequired: false,
+        auditRecord: 'SYNC_AUDIT: MESSAGE_ORCHESTRATED',
+        failureHandling: 'Fallback to info@phumulani.org default triage queue with P2 priority',
+      },
+      {
+        capabilityId: 'EAC-02',
+        capabilityName: 'Mailbox Synchronization Intelligence',
+        agentId: 'FUND-AI-018',
+        agentName: 'Fundraising Systems Integration & Automation Lead',
+        requiredInput: 'MailboxSyncCheckpoint, deltaToken, syncLagSeconds',
+        authorizedDataAccess: 'Mailbox sync state, connection health telemetry',
+        executionPath: 'BackgroundWorkerService.runSyncCycle -> detectSyncConflict',
+        output: 'Sync health metrics, retry queue item, conflict record if divergent',
+        humanApprovalRequired: false,
+        auditRecord: 'SYNC_AUDIT: SYNC_TELEMETRY_RECORDED',
+        failureHandling: 'Exponential backoff with circuit breaker after 3 consecutive failures',
+      },
+      {
+        capabilityId: 'EAC-03',
+        capabilityName: 'Email Classification',
+        agentId: 'FUND-AI-002',
+        agentName: 'Lead Prospect Intelligence & Foundation Researcher',
+        requiredInput: 'Email subject, body text, sender email address',
+        authorizedDataAccess: 'Inbound message content, 25-category taxonomy definition',
+        executionPath: 'EmailEnterpriseService.classifyMessage(subject, body, sender)',
+        output: 'Category (01-25), confidence score, classification reasoning',
+        humanApprovalRequired: false,
+        auditRecord: 'SYNC_AUDIT: EMAIL_CLASSIFIED',
+        failureHandling: 'Default to Category 23 (General Inquiries) with confidence 85%',
+      },
+      {
+        capabilityId: 'EAC-04',
+        capabilityName: 'Priority and SLA Monitoring',
+        agentId: 'FUND-AI-017',
+        agentName: 'Ethics, Safeguarding & Donor Data Privacy Officer',
+        requiredInput: 'Classified category, subject, body, timestamp',
+        authorizedDataAccess: 'SLA priority table (P0 1h, P1 4h, P2 24h, P3 48h, P4 72h)',
+        executionPath: 'EmailEnterpriseService.calculatePriority(category, subject, body)',
+        output: 'Priority level (P0-P4), SLA hours, ISO deadline string',
+        humanApprovalRequired: false,
+        auditRecord: 'SYNC_AUDIT: SLA_DEADLINE_ESTABLISHED',
+        failureHandling: 'Default to P3 (48h SLA) unless crisis/deadline tokens present',
+      },
+      {
+        capabilityId: 'EAC-05',
+        capabilityName: 'Contact Resolution & Deduplication',
+        agentId: 'FUND-AI-003',
+        agentName: 'Major Gifts Officer & UHNW Relationship Architect',
+        requiredInput: 'Sender email, sender name, message metadata',
+        authorizedDataAccess: 'CRM donor directory, contact profiles (read-only)',
+        executionPath: 'EmailEnterpriseService.matchEmailsToCRM(thread, donors, grants, partnerships)',
+        output: 'Matched CRM constituent record or new prospective donor stub',
+        humanApprovalRequired: false,
+        auditRecord: 'AUDIT: CRM_CONTACT_MATCHED',
+        failureHandling: 'Preserve original message sender identifier without duplicate creation',
+      },
+      {
+        capabilityId: 'EAC-06',
+        capabilityName: 'Fundraising Opportunity Detection',
+        agentId: 'FUND-AI-004',
+        agentName: 'Corporate Social Responsibility & Sponsorship Director',
+        requiredInput: 'Classified thread (Categories 04, 06, 07, 10, 11, 12)',
+        authorizedDataAccess: 'Funding opportunity pipeline, program gift targets',
+        executionPath: 'EmailEnterpriseService.ingestAndLinkFundraisingEmail(thread, message)',
+        output: 'FundingOpportunity record in IDENTIFIED stage with confidence rationale',
+        humanApprovalRequired: true,
+        auditRecord: 'AUDIT: EMAIL_TO_CRM_INGESTED',
+        failureHandling: 'Log opportunity suggestion for development officer manual review',
+      },
+      {
+        capabilityId: 'EAC-07',
+        capabilityName: 'Response Drafting',
+        agentId: 'FUND-AI-008',
+        agentName: 'Digital Giving & Multi-Channel Campaign Strategist',
+        requiredInput: 'Thread history, latest message, chosen tone style (1 of 9)',
+        authorizedDataAccess: 'Verified 501(c)(3) organizational facts, program descriptions',
+        executionPath: 'EmailEnterpriseService.generateDraft(thread, toneStyle, actorName)',
+        output: 'EmailDraft in pending_approval status with verified context summary',
+        humanApprovalRequired: true,
+        auditRecord: 'SYNC_AUDIT: DRAFT_GENERATED',
+        failureHandling: 'Generate safe generic acknowledgment template requesting staff review',
+      },
+      {
+        capabilityId: 'EAC-08',
+        capabilityName: 'Communication Compliance & Policy Gate',
+        agentId: 'FUND-AI-017',
+        agentName: 'Ethics, Safeguarding & Donor Data Privacy Officer',
+        requiredInput: 'Draft body, recipient address, CAN-SPAM / MN non-profit disclosures',
+        authorizedDataAccess: '501(c)(3) tax disclosure templates, opt-out suppression list',
+        executionPath: 'aiOrchestrator.evaluatePolicy(agentId, "email:outbound", draftContent)',
+        output: 'Compliance verification token or violation warning',
+        humanApprovalRequired: true,
+        auditRecord: 'POLICY_AUDIT: OUTBOUND_COMPLIANCE_VERIFIED',
+        failureHandling: 'Hard stop: draft cannot transition to approved state if compliance fails',
+      },
+      {
+        capabilityId: 'EAC-09',
+        capabilityName: 'Human Approval Coordination',
+        agentId: 'FUND-AI-001',
+        agentName: 'Executive Strategy & Capital Campaign Director',
+        requiredInput: 'Draft ID, approver user identity, review action',
+        authorizedDataAccess: 'Staff role permissions, approval queue',
+        executionPath: 'EmailEnterpriseService.approveDraft | rejectDraft | requestChangesDraft',
+        output: 'Updated draft state bound to version, approver identity and timestamp',
+        humanApprovalRequired: true,
+        auditRecord: 'SYNC_AUDIT: DRAFT_APPROVAL_GRANTED',
+        failureHandling: 'Revert to pending_approval if approver role invalid or session expired',
+      },
+      {
+        capabilityId: 'EAC-10',
+        capabilityName: 'Donor Stewardship Assistance',
+        agentId: 'FUND-AI-007',
+        agentName: 'Donor Stewardship & Impact Reporting Specialist',
+        requiredInput: 'Verified gift confirmation or recurring donor inquiry',
+        authorizedDataAccess: 'Giving history, program milestone metrics (housing, circles)',
+        executionPath: 'EmailEnterpriseService.generateDraft(thread, "donor_appreciation")',
+        output: 'Personalized acknowledgment draft with 501(c)(3) tax receipt grounding',
+        humanApprovalRequired: true,
+        auditRecord: 'CRM_AUDIT: STEWARDSHIP_DRAFT_PREPARED',
+        failureHandling: 'Defer to Development Officer queue without automated sending',
+      },
+      {
+        capabilityId: 'EAC-11',
+        capabilityName: 'Grant Correspondence Assistance',
+        agentId: 'FUND-AI-005',
+        agentName: 'Government Grants & Public Funding Specialist',
+        requiredInput: 'Grant RFP/LOI communication, institutional foundation thread',
+        authorizedDataAccess: 'SAM.gov registration, audited 2025 financials, logic model',
+        executionPath: 'EmailEnterpriseService.generateDraft(thread, "grant_correspondence")',
+        output: 'Institutional diligence draft citing verified compliance credentials',
+        humanApprovalRequired: true,
+        auditRecord: 'GRANT_AUDIT: GRANT_CORRESPONDENCE_PREPARED',
+        failureHandling: 'Route to David Mwangi, CPA and Comfort Dondo for joint review',
+      },
+      {
+        capabilityId: 'EAC-12',
+        capabilityName: 'Executive Communication Assistance',
+        agentId: 'FUND-AI-001',
+        agentName: 'Executive Strategy & Capital Campaign Director',
+        requiredInput: 'executive@phumulani.org inbound communication',
+        authorizedDataAccess: 'Restricted executive mailbox (Comfort Dondo dual authorization)',
+        executionPath: 'EmailEnterpriseService.generateDraft(thread, "executive")',
+        output: 'Executive draft holding for Comfort Dondo direct sign-off',
+        humanApprovalRequired: true,
+        auditRecord: 'AUDIT: EXECUTIVE_COMMUNICATION_GATED',
+        failureHandling: 'Strict isolation: exclude from general CRM and staff search results',
+      },
+      {
+        capabilityId: 'EAC-13',
+        capabilityName: 'Follow-Up Intelligence',
+        agentId: 'FUND-AI-009',
+        agentName: 'Donor Retention & Recurring Giving Strategist',
+        requiredInput: 'Thread response timestamps, SLA deadline, overdue flags',
+        authorizedDataAccess: 'Follow-up task registry, staff task assignments',
+        executionPath: 'EmailEnterpriseService.calculateAnalytics -> identifyOverdueThreads',
+        output: 'FollowUpTask records with urgency ratings and assigned staff',
+        humanApprovalRequired: false,
+        auditRecord: 'SYNC_AUDIT: FOLLOW_UP_FLAGGED',
+        failureHandling: 'Alert mailbox owner upon SLA breach threshold (24h overdue)',
+      },
+      {
+        capabilityId: 'EAC-14',
+        capabilityName: 'Safeguarding Protection & Air-Gap Intercept',
+        agentId: 'FUND-AI-017',
+        agentName: 'Ethics, Safeguarding & Donor Data Privacy Officer',
+        requiredInput: 'All incoming messages across all 5 mailboxes',
+        authorizedDataAccess: 'Confidential crisis indicator patterns, VAWA Title IV rules',
+        executionPath: 'EmailEnterpriseService.classifyMessage -> detectSafeguardingCrisis',
+        output: 'Quarantine directive, zero CRM ingestion, Sister Miriam K. routing',
+        humanApprovalRequired: true,
+        auditRecord: 'AUDIT: SAFEGUARDING_AIR_GAP_INTERCEPT',
+        failureHandling: 'Fail-closed: default to quarantine on any ambiguity or crisis signal',
+      },
+      {
+        capabilityId: 'EAC-15',
+        capabilityName: 'Audit and Operational Reporting',
+        agentId: 'FUND-AI-016',
+        agentName: 'Fundraising Analytics & Predictive Modeling Scientist',
+        requiredInput: 'Sync audit logs, mailbox health metrics, dispatch authorization logs',
+        authorizedDataAccess: 'Sanitized audit logs (survivor disclosures and OAuth tokens redacted)',
+        executionPath: 'EmailEnterpriseService.sanitizeAndExportSyncReport',
+        output: 'Daily briefing, weekly summary, and monthly executive dossier',
+        humanApprovalRequired: false,
+        auditRecord: 'SYNC_AUDIT: SANITIZED_SYNC_REPORT_EXPORTED',
+        failureHandling: 'Generate partial report noting unreached mailboxes without crashing',
+      },
+    ];
   }
 
   /**

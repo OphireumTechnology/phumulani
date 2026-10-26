@@ -1,0 +1,5 @@
+{
+  "summary":  "Phumulani Google Workspace Activation Runbook detailing the step-by-step procedures for Google Cloud OAuth configuration, mailbox identity mapping, permission scopes, historical import batching, continuous sync, authorized dispatch, and incident recovery.",
+  "updatedAt":  "2026-10-26T09:34:14.246094999Z",
+  "userFacing":  true
+}

@@ -373,14 +373,22 @@ export interface EmailDraft {
   verifiedContextSummary: string;
   requiredStaffAction: string;
   confidenceScore: number; // 0 - 100
-  status: 'draft' | 'pending_approval' | 'approved' | 'rejected' | 'sent';
+  status: 'draft' | 'pending_approval' | 'approved' | 'rejected' | 'sent' | 'changes_requested' | 'returned_to_draft';
   generatedByAgent: string; // e.g. 'A02 Email Manager'
   requestedByStaff?: string;
   approvedByStaff?: string;
+  approvedByUserId?: string;
   approvedAt?: string;
+  approvedBody?: string;
+  approvedRecipient?: string;
+  approvedSubject?: string;
+  approvedVersion?: number;
   sentAt?: string;
   rejectionReason?: string;
+  changesRequestedReason?: string;
+  returnToDraftReason?: string;
   humanFeedbackNotes?: string;
+  version?: number;
   createdAt: string;
 }
 
