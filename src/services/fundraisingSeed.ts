@@ -20,6 +20,7 @@ import {
   FinancialReconciliationDetails,
   FundraisingAIAgent,
   FundraisingAgentTask,
+  DonorEngagementActivity,
 } from '../types/fundraising';
 
 
@@ -2335,6 +2336,50 @@ export const INITIAL_FUNDRAISING_AI_AGENTS: FundraisingAIAgent[] = [
     confidenceScore: 100.0,
     inputSchemaSummary: '{ auditScope: string, timeframeMinutes: number }',
     outputSchemaSummary: '{ violationsCount: number, safeguardingIsolationVerified: boolean, integrityScore: number }',
+  },
+];
+
+export const INITIAL_DONOR_ENGAGEMENT_ACTIVITIES: DonorEngagementActivity[] = [
+  {
+    id: 'act-001',
+    donorId: 'donor-ind-001',
+    donorName: 'Dr. Evelyn Vance & Marcus Vance',
+    opportunityId: 'opp-ind-001',
+    activityType: 'MEETING',
+    title: 'Annual Philanthropic Strategic Consultation',
+    summary: 'Executive director Comfort Dondo met with Dr. Evelyn Vance regarding $50k challenge match pledge for Safe Haven transitional housing bridge fund.',
+    sourceEmailThreadId: 'thread-001',
+    sourceProviderMsgId: 'msg-prov-001',
+    staffActor: 'Comfort Dondo',
+    timestamp: '2026-10-14T11:00:00Z',
+    requiresFollowUp: true,
+    followUpDate: '2026-11-01T10:00:00Z',
+  },
+  {
+    id: 'act-002',
+    donorId: 'donor-corp-001',
+    donorName: 'Target Corporation Community Giving',
+    opportunityId: 'opp-corp-001',
+    activityType: 'PROPOSAL',
+    title: 'Workforce Digital Literacy Lab Sponsorship Proposal',
+    summary: 'Submitted $25,000 corporate CSR partnership proposal for bilingual career coaching labs.',
+    staffActor: 'David Mwangi, CPA',
+    timestamp: '2026-10-18T14:30:00Z',
+    requiresFollowUp: false,
+  },
+  {
+    id: 'act-003',
+    donorId: 'donor-inst-001',
+    donorName: 'The McKnight Foundation',
+    opportunityId: 'opp-inst-001',
+    activityType: 'INBOUND_REPLY',
+    title: 'Grant Opportunity Guideline Clarification',
+    summary: 'Program officer confirmed eligibility under Minnesota Community Resiliency Initiative and invited formal LOI.',
+    sourceEmailThreadId: 'thread-grants-001',
+    staffActor: 'Comfort Dondo',
+    timestamp: '2026-10-20T09:15:00Z',
+    requiresFollowUp: true,
+    followUpDate: '2026-10-30T17:00:00Z',
   },
 ];
 

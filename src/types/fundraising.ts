@@ -244,6 +244,33 @@ export interface VerifiedContribution {
   receiptNumber: string;
 }
 
+export type EngagementActivityType =
+  | 'OUTBOUND_EMAIL'
+  | 'INBOUND_REPLY'
+  | 'MEETING'
+  | 'PHONE_CALL'
+  | 'PROPOSAL'
+  | 'PLEDGE_COMMITMENT'
+  | 'STIPULATION'
+  | 'SITE_VISIT';
+
+export interface DonorEngagementActivity {
+  id: string;
+  donorId: string;
+  donorName: string;
+  opportunityId?: string;
+  activityType: EngagementActivityType;
+  title: string;
+  summary: string;
+  sourceEmailThreadId?: string;
+  sourceProviderMsgId?: string;
+  staffActor: string;
+  timestamp: string;
+  requiresFollowUp: boolean;
+  followUpDate?: string;
+  metadata?: Record<string, any>;
+}
+
 export interface ProgramFundingRecord {
   programId: string;
   programName: string;
@@ -407,6 +434,7 @@ export interface FundraisingAgentTask {
   approvedBy?: string;
   errorMessage?: string;
   auditLogId?: string;
+  modelUsed?: 'gemini-2.5-flash' | 'deterministic_offline_fallback' | string;
 }
 
 export interface FundraisingAIAgent {

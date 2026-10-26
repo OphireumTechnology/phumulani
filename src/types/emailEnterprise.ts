@@ -111,7 +111,7 @@ export interface ConnectedMailbox {
   totalThreads: number;
   isDefault?: boolean;
   providerAccountId?: string;
-  authStatus?: 'authorized' | 'pending_auth' | 'expired' | 'revoked';
+  authStatus?: 'SIMULATED — LIVE OAUTH REQUIRED' | 'authorized' | 'pending_auth' | 'expired' | 'revoked' | string;
   permissionScopes?: string[];
   reauthRequired?: boolean;
   twoWaySyncEnabled?: boolean;

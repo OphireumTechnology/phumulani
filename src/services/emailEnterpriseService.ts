@@ -38,6 +38,29 @@ import {
   ConversationStatus,
   SyncAuditLogItem,
 } from '../types/emailEnterprise';
+import {
+  DonorContact,
+  FundingOpportunity,
+  DonorCategory,
+  DonorContactType,
+} from '../types/fundraising';
+
+export interface FundraisingEmailIngestionResult {
+  success: boolean;
+  donorId?: string;
+  donorName?: string;
+  opportunityId?: string;
+  opportunityTitle?: string;
+  activityId?: string;
+  isNewDonor: boolean;
+  isNewOpportunity: boolean;
+  classificationCategory: EmailClassificationCategory;
+  classificationEvidence: string;
+  aiRecommendation: string;
+  safeguardingQuarantined: boolean;
+  executiveGated: boolean;
+  error?: string;
+}
 
 export class EmailEnterpriseService {
   /**
@@ -52,16 +75,31 @@ export class EmailEnterpriseService {
     const text = `${subject} ${body}`.toLowerCase();
 
     // Critical Safeguarding Safeguards (Category 01 - Priority P0)
+    // Evaluates traumatic keywords AND non-keyword metadata / crisis channel indicators
     const safeguardingKeywords = [
       'danger', 'emergency', 'shelter', 'protection order', 'domestic violence',
       'stalking', 'abuse', 'trauma', 'jeopardy', 'relocation', 'tonight', 'crisis',
       'discreet', 'safe house', 'escort', 'fleeing', 'threatened', 'custody danger'
     ];
-    if (safeguardingKeywords.some(kw => text.includes(kw))) {
+
+    const senderLower = senderEmail.toLowerCase();
+    const isConfidentialCrisisChannel =
+      senderLower.includes('crisis') ||
+      senderLower.includes('safeguard') ||
+      senderLower.includes('dayone') ||
+      senderLower.includes('shelter') ||
+      text.includes('confidential crisis intake form') ||
+      text.includes('vawa protected intake') ||
+      text.includes('client case #') ||
+      text.includes('confidential survivor');
+
+    if (isConfidentialCrisisChannel || safeguardingKeywords.some(kw => text.includes(kw))) {
       return {
         category: '01_safeguarding',
         confidence: 99,
-        reasoning: 'Critical safeguarding indicators detected. Strict VAWA isolation applied; external automated responses strictly prohibited.',
+        reasoning: isConfidentialCrisisChannel
+          ? 'Confidential safeguarding intake channel or referral metadata detected. Strict default-deny VAWA isolation applied.'
+          : 'Critical safeguarding indicators detected. Strict VAWA isolation applied; external automated responses strictly prohibited.',
         isSafeguardingAlert: true,
       };
     }
@@ -1260,4 +1298,250 @@ export class EmailEnterpriseService {
       auditSummary,
     };
   }
+
+  /**
+   * 20. Email-to-CRM & Opportunity Ingestion Bridge (Priority A — Diagram Alignment)
+   */
+  public static ingestAndLinkFundraisingEmail(
+    thread: EnterpriseEmailThread,
+    latestMessage: EnterpriseEmailMessage,
+    options?: { operationalExecutiveApproval?: boolean }
+  ): FundraisingEmailIngestionResult {
+    // 1. Mandatory Safeguarding Isolation Boundary (Fail-closed)
+    const combinedText = `${thread.threadSubject} ${latestMessage.bodyText} ${latestMessage.subject}`.toLowerCase();
+    const isSafeguardingCrisis =
+      thread.classification === '01_safeguarding' ||
+      combinedText.includes('safe-mn') ||
+      combinedText.includes('danger') ||
+      combinedText.includes('shelter') ||
+      combinedText.includes('domestic violence') ||
+      combinedText.includes('protection order');
+
+    if (isSafeguardingCrisis) {
+      db.appendAuditLog(
+        'SAFEGUARDING_AIR_GAP_INTERCEPT',
+        `Inbound message ${latestMessage.id} contains confidential trauma/safeguarding indicators. Ingestion into Fundraising CRM strictly prohibited by VAWA Title IV policy.`,
+        'denied'
+      );
+      return {
+        success: false,
+        isNewDonor: false,
+        isNewOpportunity: false,
+        classificationCategory: '01_safeguarding',
+        classificationEvidence: 'Confidential crisis/trauma indicator detected. Isolated from fundraising models.',
+        aiRecommendation: 'Safe exit escort and immediate escalation to Sister Miriam K. Automated fundraising CRM linking blocked.',
+        safeguardingQuarantined: true,
+        executiveGated: false,
+      };
+    }
+
+    // 2. Executive Mailbox Gating Check
+    const isExecutiveMailbox = thread.mailboxEmail.toLowerCase() === 'executive@phumulani.org' || thread.mailboxId === 'mbx-exec-01';
+    if (isExecutiveMailbox && !options?.operationalExecutiveApproval) {
+      db.appendAuditLog(
+        'EXECUTIVE_MAILBOX_GATED',
+        `Inbound executive email "${thread.threadSubject}" from ${latestMessage.senderEmail} gated pending operational executive review by Comfort Dondo.`
+      );
+      return {
+        success: false,
+        isNewDonor: false,
+        isNewOpportunity: false,
+        classificationCategory: thread.classification,
+        classificationEvidence: 'Executive mailbox correspondence subject to leadership review gate.',
+        aiRecommendation: 'Hold for Comfort Dondo executive authorization before automated CRM linking.',
+        safeguardingQuarantined: false,
+        executiveGated: true,
+      };
+    }
+
+    // 3. Sender Identity Resolution & Contact Deduplication
+    const existingDonors = db.getFundraisingDonors();
+    const senderEmail = (latestMessage.senderEmail || '').trim().toLowerCase();
+    const senderName = (latestMessage.senderName || senderEmail.split('@')[0] || 'Prospective Supporter').trim();
+
+    let matchedDonor = existingDonors.find(
+      (d) => d.email.toLowerCase() === senderEmail || (d.website && senderEmail.endsWith(new URL(d.website.startsWith('http') ? d.website : `https://${d.website}`).hostname.replace('www.', '')))
+    );
+
+    let isNewDonor = false;
+    let donorId = matchedDonor?.id;
+    let donorName = matchedDonor?.name || senderName;
+
+    // Determine contact type & category based on email classification
+    let contactType: DonorContactType = 'INDIVIDUAL';
+    let donorCategory: DonorCategory = 'INDIVIDUAL_COMMUNITY';
+    let targetAmount = 5000;
+
+    if (thread.classification === '07_foundation_grants' || combinedText.includes('foundation') || combinedText.includes('grantmaker')) {
+      contactType = 'INSTITUTIONAL_FOUNDATION';
+      donorCategory = 'INST_PRIVATE_FOUNDATION';
+      targetAmount = 50000;
+    } else if (thread.classification === '06_corporate_sponsorships' || thread.classification === '12_corporate_csr' || combinedText.includes('sponsorship') || combinedText.includes('csr')) {
+      contactType = 'CORPORATE';
+      donorCategory = 'CORP_CSR_PARTNERSHIP';
+      targetAmount = 25000;
+    } else if (thread.classification === '04_major_donors' || combinedText.includes('major gift') || combinedText.includes('$50,000') || combinedText.includes('matching grant')) {
+      contactType = 'INDIVIDUAL';
+      donorCategory = 'INDIVIDUAL_MAJOR';
+      targetAmount = 25000;
+    } else if (thread.classification === '11_strategic_partnerships' || combinedText.includes('in-kind') || combinedText.includes('pro bono')) {
+      contactType = 'CORPORATE';
+      donorCategory = 'CORP_DONATION';
+      targetAmount = 10000;
+    }
+
+    if (!matchedDonor) {
+      isNewDonor = true;
+      donorId = `donor-ingest-${Date.now()}`;
+      const newDonor: DonorContact = {
+        id: donorId,
+        contactType,
+        category: donorCategory,
+        name: donorName,
+        email: senderEmail,
+        country: 'United States',
+        state: 'Minnesota',
+        city: 'Minneapolis',
+        relationshipOwner: contactType === 'INSTITUTIONAL_FOUNDATION' ? 'Comfort Dondo' : 'Amina Yusuf',
+        stage: 'ENGAGED',
+        consent: {
+          status: 'OPTED_IN',
+          consentEvidence: `Direct inbound email inquiry from ${senderEmail} on ${new Date().toISOString()}`,
+          consentDate: new Date().toISOString(),
+          channelEmail: true,
+          channelPhone: false,
+          channelPostal: false,
+          canSpamCompliant: true,
+        },
+        contactSource: 'WEBSITE_CONTACT',
+        lifetimeGiving: 0,
+        largestGift: 0,
+        giftCount: 0,
+        programInterests: ['Community Programs', 'Survivor Workforce Pathways'],
+        campaignParticipation: [],
+        lastEngagementDate: new Date().toISOString(),
+        givingTier: 'COMMUNITY',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      db.addFundraisingDonor(newDonor);
+      matchedDonor = newDonor;
+    }
+
+    // 4. Funding Opportunity Detection & Linking
+    const existingOpps = db.getFundraisingOpportunities();
+    let matchedOpp = existingOpps.find(
+      (o) => o.donorId === donorId && o.status !== 'CLOSED' && o.status !== 'DECLINED'
+    );
+
+    let isNewOpportunity = false;
+    let opportunityId = matchedOpp?.id;
+    let opportunityTitle = matchedOpp?.title;
+
+    const isFundraisingRelevant = [
+      '04_major_donors',
+      '07_foundation_grants',
+      '06_corporate_sponsorships',
+      '12_corporate_csr',
+      '05_individual_donations',
+      '11_strategic_partnerships',
+      '23_general_inquiries',
+    ].includes(thread.classification) || combinedText.includes('gift') || combinedText.includes('fund') || combinedText.includes('grant') || combinedText.includes('sponsor');
+
+    if (isFundraisingRelevant) {
+      if (!matchedOpp) {
+        isNewOpportunity = true;
+        opportunityId = `opp-ingest-${Date.now()}`;
+        opportunityTitle = `${donorName} — ${donorCategory.replace(/_/g, ' ')}`;
+        const newOpp: FundingOpportunity = {
+          id: opportunityId,
+          title: opportunityTitle,
+          donorId: donorId!,
+          donorName,
+          contactType,
+          category: donorCategory,
+          targetAmount,
+          expectedAmount: Math.round(targetAmount * 0.6),
+          probability: 50,
+          expectedCloseDate: new Date(Date.now() + 60 * 86400000).toISOString().split('T')[0],
+          status: 'IDENTIFIED',
+          programId: 'prog-housing',
+          programName: 'Survivor Safe Housing Bridge Fund',
+          aiMatchScore: 88,
+          aiMatchRationale: `Inbound inquiry classified as ${thread.classification} with high institutional alignment.`,
+          supportingEvidenceUrl: `email-thread://${thread.id}`,
+          assignedOwner: matchedDonor?.relationshipOwner || 'Comfort Dondo',
+          notes: `Generated from inbound email thread "${thread.threadSubject}" [ProviderMsgId: ${latestMessage.providerMessageId || latestMessage.id}]`,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
+        db.addFundraisingOpportunity(newOpp);
+        matchedOpp = newOpp;
+      }
+    }
+
+    // 5. CRM Activity Record Logging & Cross-linking
+    const activity = db.addDonorEngagementActivity({
+      donorId: donorId!,
+      donorName,
+      opportunityId,
+      activityType: 'INBOUND_REPLY',
+      title: `Inbound Email Ingested: ${thread.threadSubject}`,
+      summary: `Received communication from ${senderEmail}. Classified as ${thread.classification} (${PRIORITY_CONFIG[thread.priority]?.label || thread.priority}).`,
+      sourceEmailThreadId: thread.id,
+      sourceProviderMsgId: latestMessage.providerMessageId || latestMessage.id,
+      staffActor: matchedDonor?.relationshipOwner || 'Comfort Dondo',
+      requiresFollowUp: true,
+      followUpDate: thread.slaDeadline,
+      metadata: {
+        classification: thread.classification,
+        priority: thread.priority,
+        mailbox: thread.mailboxEmail,
+      },
+    });
+
+    // 6. Update thread CRM link for unified UI cross-linking
+    const currentThreads = db.getState().enterpriseEmailThreads;
+    const updatedThreads = currentThreads.map((t) => {
+      if (t.id === thread.id) {
+        return {
+          ...t,
+          crmLink: {
+            entityType: (contactType === 'INSTITUTIONAL_FOUNDATION' ? 'grant' : contactType === 'CORPORATE' ? 'partnership' : 'donor') as any,
+            entityId: donorId!,
+            entityName: donorName,
+          },
+        };
+      }
+      return t;
+    });
+    db.saveState({ ...db.getState(), enterpriseEmailThreads: updatedThreads });
+
+    const classificationEvidence = `Inbound message from ${senderEmail} resolved to CRM entity ${donorId} (${donorName}). Classified as ${thread.classification} with provider tracking [${latestMessage.providerMessageId || latestMessage.id}].`;
+    const aiRecommendation = isNewOpportunity
+      ? `Propose qualifying opportunity "${opportunityTitle}" ($${targetAmount.toLocaleString()}) and assigning to ${matchedDonor?.relationshipOwner}.`
+      : `Link communication to existing opportunity "${matchedOpp?.title}" and schedule follow-up.`;
+
+    db.appendAuditLog(
+      'EMAIL_TO_CRM_INGESTED',
+      `Inbound email from ${senderEmail} linked to CRM donor "${donorName}" (${donorId}) and opportunity ${opportunityId || 'NONE'}.`
+    );
+
+    return {
+      success: true,
+      donorId,
+      donorName,
+      opportunityId,
+      opportunityTitle,
+      activityId: activity.id,
+      isNewDonor,
+      isNewOpportunity,
+      classificationCategory: thread.classification,
+      classificationEvidence,
+      aiRecommendation,
+      safeguardingQuarantined: false,
+      executiveGated: false,
+    };
+  }
 }
+

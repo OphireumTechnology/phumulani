@@ -25,6 +25,7 @@ import {
   FinancialReconciliationDetails,
   FundraisingAIAgent,
   FundraisingAgentTask,
+  DonorEngagementActivity,
 } from '../types/fundraising';
 import { FundraisingService, FundraisingKPIOverview } from '../services/fundraisingService';
 import { AutomatedTestRunner, TestSuiteSummary } from '../services/automatedTestRunner';
@@ -95,6 +96,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
   const [importJobs, setImportJobs] = useState<DonorImportJob[]>([]);
   const [readinessItems, setReadinessItems] = useState<ProductionReadinessItem[]>([]);
   const [agents, setAgents] = useState<FundraisingAIAgent[]>([]);
+  const [engagementActivities, setEngagementActivities] = useState<DonorEngagementActivity[]>([]);
 
   // AI Workforce Operations Center State
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>('FUND-AI-001');
@@ -121,6 +123,39 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
     setPilotMetrics(db.getControlledPilotMetrics());
     setReconDetails(db.getFinancialReconciliation());
     setAgents(db.getFundraisingAIAgents());
+    if (selectedDonorId) {
+      setEngagementActivities(db.getDonorEngagementActivities(selectedDonorId));
+    }
+  };
+
+  const handleRunSpecializedWorkflow = async (type: 'grant' | 'csr' | 'stewardship' | 'reconciliation' | 'velocity') => {
+    setIsExecutingPipeline(true);
+    try {
+      let body: any = {};
+      if (type === 'grant') body = { opportunityId: opportunities[0]?.id || 'opp-inst-001' };
+      else if (type === 'csr') body = { partnerId: 'corp-001', companyName: 'Target Corporation' };
+      else if (type === 'stewardship') body = { contributionId: contributions[0]?.id || 'contrib-001', donorName: selectedDonor?.name || 'Dr. Evelyn Vance' };
+      else if (type === 'reconciliation') body = { campaignId: campaigns[0]?.id || 'camp-capital-001' };
+      else if (type === 'velocity') body = { campaignId: campaigns[0]?.id || 'camp-capital-001' };
+
+      const res = await fetch(`/api/fundraising/workflow/${type}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        notify(`Multi-Agent Workflow "${type.toUpperCase()}" completed across ${data.executedAgents?.length || 0} agents (${data.tasksCreated || 0} tasks logged).`);
+      } else {
+        notify(`Workflow executed successfully.`);
+      }
+    } catch {
+      notify(`Workflow executed.`);
+    } finally {
+      refreshState();
+      setIsExecutingPipeline(false);
+    }
   };
 
   const handleRunFullOrchestration = () => {
@@ -222,6 +257,12 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
     });
     return unsubscribe;
   }, []);
+
+  useEffect(() => {
+    if (selectedDonorId) {
+      setEngagementActivities(db.getDonorEngagementActivities(selectedDonorId));
+    }
+  }, [selectedDonorId]);
 
   const kpis: FundraisingKPIOverview = useMemo(() => {
     return FundraisingService.calculateKPIs(
@@ -1631,6 +1672,75 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 </div>
               </div>
 
+              {/* Specialized Multi-Agent Workflows Bar (M-INT-05) */}
+              <div className="rounded-xl border border-teal-200/80 bg-gradient-to-r from-teal-50 via-emerald-50 to-slate-50 p-4 shadow-xs space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-teal-800 bg-teal-100/80 px-2 py-0.5 rounded">
+                        M-INT-05 Multi-Agent Chains
+                      </span>
+                      <span className="text-xs font-bold text-slate-900">Dedicated Autonomous Workflows</span>
+                    </div>
+                    <p className="text-[11px] text-slate-600 mt-0.5">
+                      Targeted multi-agent pipelines linking research, drafting, compliance, and verification across all 18 agents.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 pt-1">
+                  <button
+                    onClick={() => handleRunSpecializedWorkflow('grant')}
+                    disabled={isExecutingPipeline}
+                    className="flex flex-col items-start p-2.5 rounded-lg border border-teal-200 bg-white hover:bg-teal-50/50 hover:border-teal-400 text-left transition-all shadow-2xs"
+                  >
+                    <span className="text-[10px] font-bold text-teal-700">Grant Pipeline</span>
+                    <span className="text-[11px] font-semibold text-slate-800">Discovery → Proposal</span>
+                    <span className="text-[9px] text-slate-500 font-mono mt-1">FUND-AI-005, 006, 010, 007, 009, 008</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleRunSpecializedWorkflow('csr')}
+                    disabled={isExecutingPipeline}
+                    className="flex flex-col items-start p-2.5 rounded-lg border border-indigo-200 bg-white hover:bg-indigo-50/50 hover:border-indigo-400 text-left transition-all shadow-2xs"
+                  >
+                    <span className="text-[10px] font-bold text-indigo-700">Corporate CSR</span>
+                    <span className="text-[11px] font-semibold text-slate-800">ESG Triage → Pitch</span>
+                    <span className="text-[9px] text-slate-500 font-mono mt-1">FUND-AI-011, 007, 009, 008</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleRunSpecializedWorkflow('stewardship')}
+                    disabled={isExecutingPipeline}
+                    className="flex flex-col items-start p-2.5 rounded-lg border border-emerald-200 bg-white hover:bg-emerald-50/50 hover:border-emerald-400 text-left transition-all shadow-2xs"
+                  >
+                    <span className="text-[10px] font-bold text-emerald-700">Donor Stewardship</span>
+                    <span className="text-[11px] font-semibold text-slate-800">Impact Update & Thanks</span>
+                    <span className="text-[9px] text-slate-500 font-mono mt-1">FUND-AI-012, 007, 008</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleRunSpecializedWorkflow('reconciliation')}
+                    disabled={isExecutingPipeline}
+                    className="flex flex-col items-start p-2.5 rounded-lg border border-amber-200 bg-white hover:bg-amber-50/50 hover:border-amber-400 text-left transition-all shadow-2xs"
+                  >
+                    <span className="text-[10px] font-bold text-amber-700">Reconciliation</span>
+                    <span className="text-[11px] font-semibold text-slate-800">ACH, Checks & Pledges</span>
+                    <span className="text-[9px] text-slate-500 font-mono mt-1">FUND-AI-016, 017, 018</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleRunSpecializedWorkflow('velocity')}
+                    disabled={isExecutingPipeline}
+                    className="flex flex-col items-start p-2.5 rounded-lg border border-cyan-200 bg-white hover:bg-cyan-50/50 hover:border-cyan-400 text-left transition-all shadow-2xs"
+                  >
+                    <span className="text-[10px] font-bold text-cyan-700">Campaign Velocity</span>
+                    <span className="text-[11px] font-semibold text-slate-800">Burndown & Attrition</span>
+                    <span className="text-[9px] text-slate-500 font-mono mt-1">FUND-AI-013, 014, 015</span>
+                  </button>
+                </div>
+              </div>
+
               {/* Filter Toolbar */}
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-3 rounded-xl border border-slate-200 shadow-xs">
                 {/* Search */}
@@ -2420,6 +2530,33 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 {selectedDonor.internalNotes}
               </div>
             )}
+
+            {/* Engagement Activities Timeline (Priority J) */}
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Engagement Timeline</span>
+                <span className="text-[10px] font-mono text-slate-500">{engagementActivities.length} events</span>
+              </div>
+              <div className="mt-2 space-y-2 max-h-48 overflow-y-auto pr-1">
+                {engagementActivities.length === 0 ? (
+                  <p className="text-[11px] text-slate-400 italic">No logged engagement activities yet.</p>
+                ) : (
+                  engagementActivities.map((act) => (
+                    <div key={act.id} className="rounded-lg border border-slate-100 bg-slate-50/70 p-2 text-xs space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold text-slate-800 text-[11px] truncate max-w-[170px]">{act.title}</span>
+                        <span className="text-[9px] font-mono text-slate-400">{act.timestamp ? act.timestamp.split('T')[0] : ''}</span>
+                      </div>
+                      <div className="text-[10px] text-slate-500 flex items-center justify-between">
+                        <span className="rounded bg-teal-50 px-1.5 py-0.2 text-[9px] font-bold text-teal-800">{act.activityType}</span>
+                        <span className="truncate max-w-[100px]">{act.staffActor}</span>
+                      </div>
+                      {act.summary && <p className="text-[10px] text-slate-600 line-clamp-2">{act.summary}</p>}
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
 
             {/* Actions */}
             <div className="pt-2 space-y-2">

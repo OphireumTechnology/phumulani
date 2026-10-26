@@ -1,0 +1,1205 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+## TARGETED DEVELOPMENT CONTINUATION DIRECTIVE
+### DIAGRAM ALIGNMENT, INTEGRATION GAP CLOSURE & END-TO-END OPERATIONAL VERIFICATION
+
+**Organization:** Phumulani  
+**Technology Developer:** Ophireum Technology  
+**Repository:** `OphireumTechnology/phumulani`  
+**Master Administrator:** `/admin/master`  
+**Enterprise Email Manager:** `/admin/master/email`  
+**Fundraising CRM:** `/admin/master/fundraising`  
+**AI Workforce:** `/admin/master/fundraising/agents`
+
+**Development Mode:** CONTINUE EXISTING IMPLEMENTATION  
+**Primary Reference:** Attached Phumulani AI Fundraising Workflow Diagram  
+**Priority:** INTEGRATION AND COMPLETION  
+**Instruction Type:** NON-REDUNDANT CONTINUATION
+
+---
+
+# 1. IMPORTANT — DO NOT REPEAT PREVIOUS DEVELOPMENT
+
+GOOGLE AI STUDIO:
+
+THIS IS A CONTINUATION OF THE EXISTING PHUMULANI DEVELOPMENT PROGRAM.
+
+IT IS NOT A REQUEST TO REBUILD THE APPLICATION.
+
+PREVIOUS DIRECTIVES HAVE ALREADY COVERED:
+
+- Phase 13: Development Transparency and GitHub Integration.
+- Phase 14: Enterprise AI Email Manager.
+- Phase 15: Master Email Management and AI Operations.
+- Phase 16: Live Infrastructure and Operational Integration.
+- The 18-Agent AI Fundraising Workforce.
+- The Master Fundraising Workflow Architecture.
+- Human Review and Approval.
+- Financial Verification Controls.
+- Safeguarding and Data Isolation.
+- Automated Acceptance Testing.
+
+DO NOT REIMPLEMENT THESE COMPONENTS FROM SCRATCH.
+
+DO NOT CREATE DUPLICATE DATABASE TABLES.
+
+DO NOT CREATE DUPLICATE AI AGENTS.
+
+DO NOT CREATE ADDITIONAL STATIC DASHBOARDS FOR FEATURES THAT ALREADY HAVE FUNCTIONAL VIEWS.
+
+DO NOT RENAME OR RESTRUCTURE EXISTING ROUTES WITHOUT A VERIFIED TECHNICAL NEED.
+
+DO NOT REPLACE EXISTING SERVICES WITH SIMPLIFIED DEMONSTRATIONS.
+
+### YOUR MISSION
+
+Identify what is already working, determine which connections between components remain incomplete, and implement only the missing functionality required to make the supplied fundraising workflow operate end to end.
+
+---
+
+# 2. ESTABLISH THE CURRENT IMPLEMENTATION BASELINE
+
+Before editing source files, inspect the actual repository.
+
+Review:
+
+- `server.ts`
+- `src/services/db.ts`
+- `src/db/schema.sql`
+- `src/db/databaseDefinition.ts`
+- `src/services/automatedTestRunner.ts`
+- Existing email services.
+- Existing fundraising services.
+- Existing AI agent services.
+- Existing approval services.
+- Existing financial verification services.
+- Existing security and safeguarding services.
+- Existing route definitions.
+
+Review the available operational registers, including:
+
+- Phase 13 Development Transparency Register.
+- Phase 14 Email Manager Audit Register.
+- Phase 15 Master Email Audit Register.
+- Fundraising Master Operational Register.
+- Any Phase 16 Infrastructure Readiness Register already created.
+
+Treat previous reports as historical evidence, not proof of the current deployed state.
+
+### KNOWN REPORTED BASELINE
+
+Previous reports indicate:
+
+1. Eighteen fundraising agents are registered.
+2. Agent execution is implemented through backend endpoints.
+3. Server-side Gemini integration is implemented.
+4. Multi-agent orchestration is implemented.
+5. The coordinated orchestration pipeline currently executes approximately 10 agents.
+6. Human approval enforcement has passed backend tests.
+7. Safeguarding negative-access tests have passed.
+8. The existing automated test suite contains 216 reported passing tests.
+9. Five organizational mailboxes remain blocked by missing OAuth authorization.
+10. PostgreSQL schema definitions exist, but an external PostgreSQL instance has not been verified.
+11. Financial demonstration balances are synthetic and must not be treated as actual revenue.
+
+Verify whether any of these conditions have changed.
+
+---
+
+# 3. PRIMARY DEVELOPMENT OBJECTIVE
+
+The supplied diagram defines the complete fundraising workflow:
+
+```text
+MASTER ADMINISTRATOR
+        |
+        v
+AI EMAIL MANAGER <----> FUNDRAISING CRM
+        |
+        v
+DONOR INTELLIGENCE
+        |
+        v
+INDIVIDUALS / CORPORATIONS / INSTITUTIONS
+        |
+        v
+FUNDING OPPORTUNITIES
+        |
+        v
+AI FUNDRAISING WORKFORCE
+        |
+        v
+AI OUTREACH / GRANT ASSISTANT / DONOR STEWARDSHIP
+        |
+        v
+HUMAN REVIEW AND APPROVAL
+        |
+        v
+AUTHORIZED COMMUNICATION
+        |
+        v
+DONOR ENGAGEMENT
+        |
+        v
+DONATIONS / GRANTS / SPONSORSHIPS
+        |
+        v
+PAYMENT AND AWARD VERIFICATION
+        |
+        v
+PROGRAM FUNDING AND REPORTING
+```
+
+THE NEXT DEVELOPMENT STAGE MUST FOCUS ON THE CONNECTIONS BETWEEN THESE EXISTING COMPONENTS.
+
+The goal is not to create more features independently.
+
+The goal is to make existing features work together.
+
+---
+
+# 4. FIRST TASK — CREATE A DIAGRAM-TO-CODE INTEGRATION MATRIX
+
+Inspect every major component shown in the reference diagram.
+
+For each component, identify:
+
+1. Existing application route.
+2. Existing frontend component.
+3. Existing backend service.
+4. Existing database entities.
+5. Existing AI agents involved.
+6. Existing API endpoints.
+7. Incoming workflow connections.
+8. Outgoing workflow connections.
+9. Actual persistence mechanism.
+10. Current verification status.
+11. Missing functionality.
+12. Required changes.
+
+### REQUIRED OUTPUT
+
+Create:
+
+`phumulani_diagram_integration_gap_register.md`
+
+### CLASSIFICATION
+
+Use:
+
+- COMPLETE_AND_VERIFIED
+- COMPLETE_BUT_NOT_INTEGRATED
+- PARTIALLY_IMPLEMENTED
+- IMPLEMENTED_WITH_SYNTHETIC_DATA
+- EXTERNAL_AUTHORIZATION_REQUIRED
+- MISSING
+- BLOCKED
+
+### DEVELOPMENT RULE
+
+If a component is complete and verified, do not rebuild it.
+
+If a component exists but is disconnected, implement the missing integration.
+
+If a component uses synthetic data, preserve the demonstration environment while implementing the real data path.
+
+If a component is blocked by external authorization, prepare the integration and report the blocker.
+
+If a component is missing, implement it using the existing architecture.
+
+---
+
+# 5. PRIORITY A — EMAIL MANAGER TO FUNDRAISING CRM
+
+This is the first major integration priority.
+
+### EXISTING SYSTEMS
+
+- Enterprise AI Email Manager.
+- Five organizational mailbox configurations.
+- Email classification.
+- Email priority management.
+- Fundraising CRM.
+- Donor and institutional contact records.
+
+### REQUIRED GAP-CLOSURE WORK
+
+Verify and complete the workflow:
+
+```text
+AUTHORIZED INCOMING EMAIL
+        ↓
+SECURITY AND SAFEGUARDING SCREENING
+        ↓
+EMAIL CLASSIFICATION
+        ↓
+SENDER IDENTITY RESOLUTION
+        ↓
+CRM CONTACT MATCHING
+        ↓
+FUNDRAISING OPPORTUNITY DETECTION
+        ↓
+STAFF ASSIGNMENT
+        ↓
+CRM ACTIVITY RECORD
+        ↓
+AI RECOMMENDATION
+```
+
+### REQUIRED BEHAVIOR
+
+When an authorized fundraising email is received:
+
+1. Preserve its provider message ID.
+2. Preserve its conversation or thread ID.
+3. Identify the sending organization or individual.
+4. Match against existing CRM contacts.
+5. Prevent duplicate CRM contacts.
+6. Identify possible fundraising relevance.
+7. Link to an existing opportunity where appropriate.
+8. Propose a new opportunity when no match exists.
+9. Record the classification evidence.
+10. Notify the responsible staff member.
+
+Do not automatically convert every email into a fundraising opportunity.
+
+Do not allow unrestricted AI access to the executive mailbox.
+
+Do not ingest confidential survivor correspondence into fundraising workflows.
+
+### EXTERNAL DEPENDENCY
+
+Google Workspace OAuth authorization remains an external requirement until proven otherwise.
+
+Prepare the authorization flow but do not fabricate provider connectivity.
+
+---
+
+# 6. PRIORITY B — CRM TO DONOR INTELLIGENCE
+
+Do not rebuild the existing Donor Intelligence Engine.
+
+Verify that it receives authorized, persistent CRM data.
+
+### REQUIRED INTEGRATION
+
+```text
+CRM CONTACT
+    +
+GIVING HISTORY
+    +
+ENGAGEMENT HISTORY
+    +
+DOCUMENTED FUNDING INTERESTS
+        ↓
+DONOR INTELLIGENCE
+        ↓
+SEGMENTATION
+        ↓
+OPPORTUNITY RECOMMENDATIONS
+        ↓
+STAFF REVIEW
+```
+
+### COMPLETE ONLY MISSING CONNECTIONS
+
+Verify:
+
+- CRM identifiers.
+- Giving-history references.
+- Contact segmentation.
+- Individual donor categories.
+- Corporate CSR categories.
+- Institutional funding categories.
+- Relationship ownership.
+- Recommendation provenance.
+
+### AI OUTPUT REQUIREMENTS
+
+Every recommendation must distinguish:
+
+- Verified facts.
+- Documented preferences.
+- AI interpretations.
+- Missing information.
+- Suggested staff action.
+
+Do not present speculative capacity or wealth estimates as confirmed financial facts.
+
+---
+
+# 7. PRIORITY C — DONOR INTELLIGENCE TO FUNDING OPPORTUNITIES
+
+Connect existing donor intelligence outputs to the Funding Opportunities workspace.
+
+### REQUIRED WORKFLOW
+
+```text
+AUTHORIZED DONOR INTELLIGENCE
+        ↓
+POTENTIAL FUNDING MATCH
+        ↓
+ELIGIBILITY OR FIT REVIEW
+        ↓
+FUNDING OPPORTUNITY RECORD
+        ↓
+ASSIGNED RELATIONSHIP OWNER
+        ↓
+QUALIFICATION TASKS
+        ↓
+APPROVED NEXT ACTION
+```
+
+### VERIFY EXISTING SUPPORT FOR
+
+- Individual major gifts.
+- Recurring giving.
+- Corporate donations.
+- CSR partnerships.
+- Sponsorships.
+- Matching gifts.
+- Foundation grants.
+- Government funding.
+- Institutional partnerships.
+- In-kind contributions.
+
+### REQUIRED GAP CLOSURE
+
+Ensure each opportunity is linked to:
+
+- An authorized CRM entity.
+- Its funding category.
+- Its assigned owner.
+- Its lifecycle stage.
+- Its evidence source.
+- Its next action.
+- Its relevant AI recommendations.
+
+Do not create duplicate opportunity pipelines.
+
+---
+
+# 8. PRIORITY D — FUNDING OPPORTUNITIES TO AI WORKFORCE
+
+Reuse the existing 18 fundraising AI agents.
+
+### EXISTING REGISTRY
+
+- FUND-AI-001 — Director Orchestrator.
+- FUND-AI-002 — Mailbox Opportunity Ingestion.
+- FUND-AI-003 — Major Donor Research.
+- FUND-AI-004 — Donor Segmentation.
+- FUND-AI-005 — Grant Discovery.
+- FUND-AI-006 — Grant Eligibility.
+- FUND-AI-007 — Outreach Drafting.
+- FUND-AI-008 — Human Approval Gatekeeper.
+- FUND-AI-009 — Communications Compliance.
+- FUND-AI-010 — Grant Lifecycle Tracking.
+- FUND-AI-011 — Corporate CSR Alignment.
+- FUND-AI-012 — Donor Stewardship.
+- FUND-AI-013 — Campaign and Pledge Analytics.
+- FUND-AI-014 — Lapsed Donor Engagement.
+- FUND-AI-015 — In-Kind Support Evaluation.
+- FUND-AI-016 — Financial Reconciliation Assistance.
+- FUND-AI-017 — Program Funding and Impact Reporting.
+- FUND-AI-018 — Safeguarding Monitoring.
+
+### DO NOT CREATE ANOTHER AGENT REGISTRY.
+
+### REQUIRED WORK
+
+Inspect the existing orchestration engine.
+
+Determine which agents currently participate in actual coordinated workflows.
+
+For agents not included in the existing 10-agent orchestration pipeline:
+
+- Determine whether they require orchestration.
+- Identify appropriate triggering events.
+- Define authorized task dependencies.
+- Connect them to relevant workflows.
+- Verify persistent execution history.
+
+Not every agent should run on every opportunity.
+
+### REQUIRED ORCHESTRATION EXAMPLES
+
+**Grant opportunity:**
+
+Opportunity
+→ Grant Research
+→ Eligibility
+→ Proposal Preparation
+→ Compliance Review
+→ Human Approval.
+
+**Corporate partnership:**
+
+Corporate CRM Record
+→ CSR Alignment
+→ Opportunity Qualification
+→ Outreach Draft
+→ Compliance Review
+→ Human Approval.
+
+**Donor stewardship:**
+
+Verified Donation
+→ Donor Stewardship
+→ Acknowledgment Draft
+→ Human Approval
+→ Authorized Communication.
+
+**Financial verification:**
+
+Pending Funding Record
+→ Authoritative Evidence Check
+→ Reconciliation Assistance
+→ Finance Review
+→ Verified Record.
+
+### CRITICAL
+
+Use existing agents and services.
+
+Extend only missing orchestration connections.
+
+---
+
+# 9. PRIORITY E — AI OUTPUTS TO HUMAN REVIEW
+
+The human approval system has already been reported as backend verified.
+
+Do not create a second approval system.
+
+### REQUIRED INTEGRATION
+
+Ensure all applicable AI-generated external-action artifacts use the existing approval engine.
+
+Examples:
+
+- Donor outreach drafts.
+- Grant proposals.
+- Corporate sponsorship proposals.
+- Donor acknowledgments.
+- External impact reports.
+- Sensitive financial changes.
+
+### VERIFY
+
+- Artifact version binding.
+- Content hashing.
+- Authorized approvers.
+- Separation of duties.
+- Approval expiration or invalidation.
+- Reapproval after material changes.
+- Server-side enforcement.
+- Immutable or tamper-evident audit evidence.
+
+### IMPORTANT
+
+SHA-256 hashing alone does not prove that an audit log is immutable.
+
+Verify that stored approval and audit records cannot be silently altered by unauthorized users.
+
+---
+
+# 10. PRIORITY F — HUMAN APPROVAL TO AUTHORIZED COMMUNICATION
+
+Complete the connection between approved artifacts and the existing Email Manager dispatch service.
+
+### REQUIRED FLOW
+
+```text
+APPROVED ARTIFACT
+        ↓
+APPROVAL VALIDATION
+        ↓
+AUTHORIZED SENDER CHECK
+        ↓
+RECIPIENT AND CONSENT VALIDATION
+        ↓
+SUPPRESSION CHECK
+        ↓
+EMERGENCY CONTROL CHECK
+        ↓
+IDEMPOTENCY CHECK
+        ↓
+AUTHORIZED PROVIDER DISPATCH
+        ↓
+SENT RECORD RECONCILIATION
+        ↓
+CRM ENGAGEMENT UPDATE
+```
+
+### REQUIRED BEHAVIOR
+
+An approved draft must remain linked to:
+
+- Its original CRM record.
+- Its relevant funding opportunity.
+- Its approval record.
+- Its final content version.
+- Its provider dispatch result.
+- Its audit event.
+
+### RESTRICTION
+
+Do not send live external email until Google Workspace authorization and explicit operational approval are complete.
+
+Use isolated test accounts or simulated providers for pre-authorization testing, and label those tests accurately.
+
+---
+
+# 11. PRIORITY G — AUTHORIZED COMMUNICATION TO DONOR ENGAGEMENT
+
+Connect the Email Manager and CRM engagement history.
+
+### REQUIRED WORKFLOW
+
+```text
+AUTHORIZED COMMUNICATION
+        ↓
+PROVIDER EVENT
+        ↓
+CRM CONVERSATION RECORD
+        ↓
+ENGAGEMENT ACTIVITY
+        ↓
+STAFF FOLLOW-UP
+        ↓
+RELATIONSHIP DEVELOPMENT
+```
+
+### REQUIRED EVENTS
+
+- Outbound communication submitted.
+- Provider rejection or failure.
+- Incoming response received.
+- Staff follow-up created.
+- Meeting recorded.
+- Proposal discussed.
+- Commitment recorded.
+
+### IMPORTANT
+
+Do not automatically classify a positive response as a confirmed donation.
+
+Keep expressions of interest, pledges, signed commitments, and received funds separate.
+
+---
+
+# 12. PRIORITY H — DONOR ENGAGEMENT TO FUNDING RECORDS
+
+Verify the existing donation, grant, sponsorship, and pledge workflows.
+
+### REQUIRED CONNECTIONS
+
+**Individual Giving**
+
+Donor
+→ Giving Opportunity
+→ Commitment
+→ Payment Evidence
+→ Verified Contribution.
+
+**Corporate Sponsorship**
+
+Corporate Partner
+→ Sponsorship Opportunity
+→ Proposal
+→ Agreement
+→ Payment Evidence
+→ Verified Funding.
+
+**Institutional Grant**
+
+Grant Opportunity
+→ Application
+→ Award Notice
+→ Award Record
+→ Disbursement Evidence
+→ Verified Receipt.
+
+**In-Kind Support**
+
+Donor
+→ In-Kind Commitment
+→ Receipt Documentation
+→ Authorized Valuation Review
+→ Recorded Contribution.
+
+### REQUIRED CONTROL
+
+Do not merge:
+
+- Potential opportunity value.
+- Soft pledge.
+- Signed commitment.
+- Award amount.
+- Expected disbursement.
+- Received payment.
+
+These are distinct financial and operational states.
+
+---
+
+# 13. PRIORITY I — FUNDING VERIFICATION TO PROGRAM REPORTING
+
+Do not rebuild the existing financial reporting interface.
+
+Verify the underlying evidence and data connections.
+
+### REQUIRED WORKFLOW
+
+```text
+VERIFIED FUNDING RECORD
+        ↓
+AUTHORIZED FINANCIAL REVIEW
+        ↓
+APPROVED PROGRAM ALLOCATION
+        ↓
+PROGRAM EXPENDITURE RECORD
+        ↓
+VERIFIED PROGRAM OUTCOMES
+        ↓
+IMPACT REPORT
+        ↓
+HUMAN APPROVAL
+        ↓
+AUTHORIZED DONOR COMMUNICATION
+```
+
+### REQUIRED INTEGRITY
+
+The previously identified $325,000 demonstration balance must remain classified as:
+
+SYNTHETIC_FIXTURE
+
+The previously reported $175,000 in soft pledges must not be treated as received funding.
+
+Do not use demonstration balances in real financial or donor impact reports.
+
+### REQUIRED OUTPUT
+
+Provide a clear distinction between:
+
+- Demonstration financial data.
+- Unverified commitments.
+- Authoritatively verified transactions.
+- Approved program allocations.
+- Actual expenditures.
+- Verified program outcomes.
+
+---
+
+# 14. PRIORITY J — DATABASE PERSISTENCE
+
+Previous reports indicate 28 PostgreSQL table definitions exist.
+
+Do not create a competing database architecture.
+
+### REQUIRED WORK
+
+Inspect the existing schema and data-access services.
+
+Identify which workflows still rely on:
+
+- Browser-local state.
+- In-memory data.
+- Demonstration fixtures.
+- Non-durable task storage.
+
+### COMPLETE
+
+- PostgreSQL connection adapter.
+- Database migrations.
+- Persistent email records.
+- Persistent CRM relationships.
+- Persistent AI tasks.
+- Persistent approval records.
+- Persistent financial verification records.
+- Persistent workflow events.
+- Persistent audit references.
+
+### VERIFICATION
+
+Prove that authorized records survive:
+
+1. Browser refresh.
+2. Browser closure.
+3. Application server restart.
+4. Background worker restart.
+
+Where appropriate, verify concurrent access from separate authorized sessions.
+
+### EXTERNAL DEPENDENCY
+
+If production PostgreSQL is not provisioned, prepare the deployment configuration and run isolated integration tests against an available development database.
+
+Do not claim production persistence until verified.
+
+Do not provision billable infrastructure without approval.
+
+---
+
+# 15. PRIORITY K — BACKGROUND WORKER DURABILITY
+
+Inspect existing worker and synchronization services.
+
+Do not create duplicate schedulers.
+
+### VERIFY
+
+- Historical email import checkpoints.
+- Incremental email synchronization.
+- Agent task queues.
+- Workflow retries.
+- Scheduled follow-ups.
+- Grant deadline monitoring.
+- Approval notifications.
+- Failed-job recovery.
+
+### REQUIRED BEHAVIOR
+
+Background processing must not depend on an open browser.
+
+Jobs must support:
+
+- Persistent state.
+- Idempotency.
+- Retry policies.
+- Failure visibility.
+- Cancellation where appropriate.
+- Safe recovery after restart.
+
+---
+
+# 16. PRIORITY L — USER INTERFACE ALIGNMENT
+
+Use the attached diagram to validate navigation and workflow visibility.
+
+DO NOT REDESIGN THE ENTIRE APPLICATION.
+
+Preserve the existing enterprise layout.
+
+### MASTER ADMINISTRATOR
+
+Ensure the user can access:
+
+- Email Manager.
+- Fundraising CRM.
+- AI Workforce.
+- Approvals.
+- Operational monitoring.
+- Financial reporting.
+
+### EMAIL MANAGER
+
+Ensure relevant emails provide direct navigation to:
+
+- CRM contact.
+- Funding opportunity.
+- Assigned staff member.
+- AI recommendation.
+- Approval workflow.
+
+### FUNDRAISING CRM
+
+Ensure donor and opportunity records provide direct navigation to:
+
+- Conversation history.
+- AI agent tasks.
+- Grant documents.
+- Outreach drafts.
+- Engagement timeline.
+- Financial verification.
+- Impact reports.
+
+### AI WORKFORCE
+
+Ensure agent tasks display:
+
+- Source opportunity.
+- Assigned agent.
+- Actual execution state.
+- Output.
+- Supporting evidence.
+- Approval requirements.
+- Resulting workflow action.
+
+### UI CHANGE POLICY
+
+Modify interfaces only where a missing integration, workflow action, or status indicator requires it.
+
+Do not add duplicate navigation sections.
+
+Do not add decorative metrics without a verified data source.
+
+---
+
+# 17. PRIORITY M — SECURITY AND SAFEGUARDING
+
+Preserve existing security controls.
+
+### VERIFY INTEGRATION BOUNDARIES
+
+- Email-to-CRM authorization.
+- Executive mailbox restrictions.
+- AI tool permissions.
+- Donor-data access.
+- Human approval enforcement.
+- Financial verification permissions.
+- Audit-log protection.
+- Emergency shutdown behavior.
+
+### SAFEGUARDING REQUIREMENT
+
+Confidential survivor information must remain excluded from general fundraising workflows.
+
+Verify this at:
+
+1. API authorization layer.
+2. Database access layer.
+3. Search and retrieval layer.
+4. AI tool-access layer.
+5. Export and reporting layer.
+
+Do not rely solely on string matching against identifiers such as `SAFE-MN-*`.
+
+Use actual record classification and authorization boundaries.
+
+Do not expose real survivor information in tests.
+
+---
+
+# 18. TESTING — ADD INTEGRATION COVERAGE, NOT DUPLICATE TEST COUNTS
+
+The reported baseline is 216 passing automated tests.
+
+Preserve that baseline.
+
+Do not remove tests merely to produce a passing suite.
+
+### ADD TARGETED TESTS FOR
+
+**TEST-INTEGRATION-01**
+Email classification creates an authorized CRM activity.
+
+**TEST-INTEGRATION-02**
+Existing CRM contacts are reused rather than duplicated.
+
+**TEST-INTEGRATION-03**
+Email-to-opportunity links preserve source references.
+
+**TEST-INTEGRATION-04**
+Donor Intelligence uses authorized CRM data.
+
+**TEST-INTEGRATION-05**
+Funding opportunities trigger the appropriate AI agents.
+
+**TEST-INTEGRATION-06**
+Agent task outputs are persisted.
+
+**TEST-INTEGRATION-07**
+Orchestration handles dependency failures.
+
+**TEST-INTEGRATION-08**
+AI drafts enter the existing approval workflow.
+
+**TEST-INTEGRATION-09**
+Modified approved drafts cannot be dispatched.
+
+**TEST-INTEGRATION-10**
+Approved communications preserve CRM links.
+
+**TEST-INTEGRATION-11**
+Incoming replies update the correct engagement timeline.
+
+**TEST-INTEGRATION-12**
+Pledges do not appear as verified revenue.
+
+**TEST-INTEGRATION-13**
+Synthetic financial records are excluded from actual reports.
+
+**TEST-INTEGRATION-14**
+Verified funding requires authoritative evidence.
+
+**TEST-INTEGRATION-15**
+Program allocations require authorized approval.
+
+**TEST-INTEGRATION-16**
+Confidential survivor data cannot enter fundraising workflows.
+
+**TEST-INTEGRATION-17**
+Executive mailbox restrictions are enforced.
+
+**TEST-INTEGRATION-18**
+Persistent records survive server restart.
+
+**TEST-INTEGRATION-19**
+Background jobs recover safely after interruption.
+
+**TEST-INTEGRATION-20**
+The complete fundraising workflow can be demonstrated using isolated synthetic data.
+
+### TEST REPORTING
+
+Report separately:
+
+- Existing regression tests.
+- Newly added integration tests.
+- Database integration tests.
+- Provider integration tests.
+- Security tests.
+- End-to-end workflow tests.
+
+Do not describe mock-provider tests as live Gmail verification.
+
+---
+
+# 19. TARGETED DEVELOPMENT MILESTONES
+
+Use the following continuation milestones.
+
+These are integration milestones, not instructions to recreate existing modules.
+
+### M-INT-01 — BASELINE AND GAP REGISTER
+
+Audit current source code and diagram coverage.
+
+Deliver a verified integration matrix.
+
+### M-INT-02 — EMAIL-TO-CRM INTEGRATION
+
+Complete sender resolution, contact matching, and opportunity linking.
+
+### M-INT-03 — DONOR INTELLIGENCE INTEGRATION
+
+Complete persistent CRM-to-intelligence data flows.
+
+### M-INT-04 — FUNDING OPPORTUNITY INTEGRATION
+
+Connect donor segments and institutional records to opportunity workflows.
+
+### M-INT-05 — AI AGENT ORCHESTRATION COMPLETION
+
+Verify appropriate execution paths for all 18 agents without duplicating the registry.
+
+### M-INT-06 — APPROVAL-TO-COMMUNICATION INTEGRATION
+
+Connect existing AI drafts, approvals, dispatch services, and CRM history.
+
+### M-INT-07 — ENGAGEMENT-TO-FUNDING INTEGRATION
+
+Connect donor engagement, commitments, financial evidence, and verified funding records.
+
+### M-INT-08 — FINANCIAL-TO-PROGRAM REPORTING INTEGRATION
+
+Connect verified funding to authorized allocations and impact reporting.
+
+### M-INT-09 — PERSISTENCE AND BACKGROUND WORKERS
+
+Complete remaining database and durable processing requirements.
+
+### M-INT-10 — END-TO-END VERIFICATION
+
+Run integration tests, preserve regression coverage, and verify the full workflow.
+
+---
+
+# 20. REQUIRED END-TO-END DEMONSTRATION
+
+After implementation, demonstrate the entire workflow using clearly labeled synthetic data.
+
+### DEMONSTRATION SCENARIO A — FOUNDATION GRANT
+
+1. A synthetic foundation inquiry enters the authorized email ingestion path.
+2. The Email Manager classifies it.
+3. The CRM identifies or creates the correct institutional record.
+4. A grant opportunity is created.
+5. The Grant Research Agent reviews the opportunity.
+6. The Eligibility Agent evaluates published criteria.
+7. The Grant Assistant prepares a draft.
+8. The draft enters human review.
+9. Approval is recorded.
+10. Authorized communication is simulated through an isolated provider.
+11. The CRM records the engagement.
+12. A synthetic award is recorded.
+13. The award remains separate from received funds.
+14. A simulated authoritative payment event is reconciled.
+15. A program allocation is prepared.
+16. An impact report is generated using approved demonstration metrics.
+
+### DEMONSTRATION SCENARIO B — CORPORATE CSR PARTNERSHIP
+
+1. A synthetic corporate inquiry is ingested.
+2. The organization is matched to a CRM record.
+3. A CSR opportunity is identified.
+4. The Corporate Partnership Agent evaluates alignment.
+5. The Outreach Agent prepares a proposal.
+6. Human approval is obtained.
+7. Authorized dispatch is simulated.
+8. Engagement is recorded.
+9. A sponsorship agreement is represented.
+10. A synthetic payment is verified within the isolated test environment.
+11. The CRM and reporting modules update consistently.
+
+### DEMONSTRATION SCENARIO C — INDIVIDUAL DONOR
+
+1. A synthetic individual donor is identified.
+2. The CRM retrieves giving history.
+3. Donor Intelligence recommends an appropriate stewardship action.
+4. The Stewardship Agent prepares an acknowledgment or engagement draft.
+5. Human review is completed.
+6. Communication is simulated.
+7. Engagement is recorded.
+8. A synthetic donation event is processed.
+9. The donation is reconciled against isolated test evidence.
+10. The program reporting system receives the appropriate verified test record.
+
+### CRITICAL
+
+All demonstration records must remain visibly marked as synthetic.
+
+Do not send real emails or record demonstration contributions as actual organizational revenue.
+
+---
+
+# 21. REQUIRED DEVELOPMENT EVIDENCE
+
+For every milestone, provide:
+
+- Milestone ID.
+- Existing implementation reused.
+- Actual missing functionality identified.
+- Files changed.
+- Database changes.
+- Backend endpoints changed.
+- AI agents involved.
+- Workflow connections completed.
+- Tests executed.
+- Test results.
+- Security verification.
+- Remaining blockers.
+
+Do not repeat descriptions of already completed features as new deliverables.
+
+---
+
+# 22. EXTERNAL AUTHORIZATION GATES
+
+The following actions require separate authorization:
+
+### GOOGLE WORKSPACE
+
+- OAuth consent.
+- Historical mailbox import.
+- Live synchronization.
+- External email sending.
+
+### POSTGRESQL
+
+- Production database provisioning.
+- Production migration execution.
+- Production data transfer.
+
+### FINANCIAL SYSTEMS
+
+- Banking integration.
+- Payment processor authorization.
+- Access to real financial statements.
+- Production reconciliation.
+
+### DEPLOYMENT
+
+- Production release.
+- Live DNS or hosting changes.
+- Destructive database operations.
+
+Continue independent development while these items are blocked.
+
+Do not fabricate successful integration results.
+
+---
+
+# 23. FINAL REQUIRED ARTIFACT
+
+Generate:
+
+**PHUMULANI — FUNDRAISING WORKFLOW INTEGRATION COMPLETION AND EVIDENCE REGISTER**
+
+Include:
+
+1. Diagram-to-code integration matrix.
+2. Reused existing components.
+3. Completed integration gaps.
+4. Remaining missing functionality.
+5. All 18 agents and their actual workflow participation.
+6. Email-to-CRM integration evidence.
+7. Donor Intelligence integration evidence.
+8. Funding Opportunity integration evidence.
+9. Human approval and dispatch evidence.
+10. Engagement tracking evidence.
+11. Financial verification evidence.
+12. Program reporting evidence.
+13. Database persistence status.
+14. Background worker status.
+15. Security and safeguarding results.
+16. Existing regression test results.
+17. New integration test results.
+18. External authorization blockers.
+19. Git commit references.
+20. Operational readiness assessment.
+
+---
+
+# 24. FINAL EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+THIS DIRECTIVE SUPERSEDES THE PREVIOUS BROAD FEATURE-BUILDING INSTRUCTION ONLY FOR THE PURPOSE OF THE CURRENT DEVELOPMENT STAGE.
+
+IT DOES NOT CANCEL PREVIOUS SECURITY, FUNCTIONAL, OR ACCEPTANCE REQUIREMENTS.
+
+YOUR JOB IS TO COMPLETE THE EXISTING PHUMULANI FUNDRAISING WORKFLOW — NOT TO REBUILD IT.
+
+FOCUS ON:
+
+1. IDENTIFYING ACTUAL INTEGRATION GAPS.
+2. REUSING EXISTING IMPLEMENTATIONS.
+3. CONNECTING THE EMAIL MANAGER AND CRM.
+4. CONNECTING DONOR INTELLIGENCE AND FUNDING OPPORTUNITIES.
+5. INTEGRATING THE EXISTING 18 AI AGENTS INTO APPROPRIATE WORKFLOWS.
+6. CONNECTING AI OUTPUTS TO EXISTING HUMAN APPROVAL CONTROLS.
+7. CONNECTING AUTHORIZED COMMUNICATION TO DONOR ENGAGEMENT.
+8. CONNECTING DONOR ENGAGEMENT TO VERIFIED FUNDING.
+9. CONNECTING VERIFIED FUNDING TO PROGRAM IMPACT REPORTING.
+10. VERIFYING DATABASE PERSISTENCE, SECURITY, AND END-TO-END EXECUTION.
+
+DO NOT REBUILD COMPLETED MODULES.
+
+DO NOT DUPLICATE DATABASE ENTITIES.
+
+DO NOT CREATE ANOTHER AI WORKFORCE.
+
+DO NOT CREATE ANOTHER APPROVAL ENGINE.
+
+DO NOT CLAIM LIVE CONNECTIVITY WITHOUT PROVIDER EVIDENCE.
+
+DO NOT PRESENT SYNTHETIC FINANCIAL DATA AS REAL REVENUE.
+
+PRESERVE THE EXISTING APPLICATION AND ALL ACCEPTANCE TESTS.
+
+IMPLEMENT ONLY VERIFIED MISSING FUNCTIONALITY.
+
+RUN ALL RELEVANT TESTS.
+
+PRODUCE THE COMPLETE EVIDENCE REGISTER.
+
+**BEGIN WITH M-INT-01 — CURRENT CODEBASE AUDIT AND DIAGRAM-TO-CODE INTEGRATION GAP ANALYSIS.**
+
+THEN EXECUTE M-INT-02 THROUGH M-INT-10 FOR THE GAPS ACTUALLY IDENTIFIED.
+
+**PRIMARY OBJECTIVE: MAKE THE EXISTING PHUMULANI FUNDRAISING ARCHITECTURE OPERATE AS ONE INTEGRATED, SECURE, AUDITABLE SYSTEM.**
+
+**BEGIN NOW.**
