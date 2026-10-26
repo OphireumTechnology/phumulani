@@ -1,0 +1,5 @@
+{
+  "summary":  "Milestone 21.02 PostgreSQL Live Verification Report documenting database persistence evaluation, the 6 versioned schema migrations, fail-fast production rules, and exact provisioning instructions.",
+  "updatedAt":  "2026-10-26T13:19:46.195121652Z",
+  "userFacing":  true
+}

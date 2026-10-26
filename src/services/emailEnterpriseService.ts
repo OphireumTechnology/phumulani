@@ -2000,6 +2000,21 @@ export class EmailEnterpriseService {
         };
         db.addFundraisingOpportunity(newOpp);
         matchedOpp = newOpp;
+      } else {
+        const updates: Partial<FundingOpportunity> = {};
+        if (!matchedOpp.supportingEvidenceUrl?.includes(thread.id)) {
+          updates.supportingEvidenceUrl = matchedOpp.supportingEvidenceUrl
+            ? `${matchedOpp.supportingEvidenceUrl}, email-thread://${thread.id}`
+            : `email-thread://${thread.id}`;
+          matchedOpp.supportingEvidenceUrl = updates.supportingEvidenceUrl;
+        }
+        if (latestMessage.providerMessageId && !matchedOpp.notes.includes(latestMessage.providerMessageId)) {
+          updates.notes = `${matchedOpp.notes} [ProviderMsgId: ${latestMessage.providerMessageId}]`;
+          matchedOpp.notes = updates.notes;
+        }
+        if (Object.keys(updates).length > 0) {
+          db.updateFundraisingOpportunity(matchedOpp.id, updates);
+        }
       }
     }
 

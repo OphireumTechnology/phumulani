@@ -1,0 +1,1091 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+# PHASE 22 — LIVE PRODUCTION ACTIVATION
+## REAL POSTGRESQL CONNECTION, GOOGLE WORKSPACE AUTHORIZATION AND FIRST LIVE EMAIL RETRIEVAL
+
+**PROJECT:** Phumulani AI Community Platform  
+**DEVELOPMENT ORGANIZATION:** Ophireum Technology  
+**REPOSITORY:** `OphireumTechnology/phumulani`  
+**PRIMARY TARGET:** `/admin/master/email`  
+**MASTER ADMINISTRATOR:** `/admin/master`  
+**DEPLOYMENT TARGET:** Existing authorized Google Cloud Run service  
+**OPERATIONAL MODE:** `PRODUCTION_ONLY`  
+**PREVIOUS PHASE:** Phase 21  
+**REPORTED REGRESSION BASELINE:** 276/276 passing
+
+**EXECUTION PRIORITY:** LIVE SERVICE ACTIVATION — NOT ADDITIONAL FEATURE DEVELOPMENT.
+
+---
+
+# 1. MASTER EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+BEGIN PHASE 22 IMMEDIATELY.
+
+PHASES 17 THROUGH 21 HAVE ALREADY IMPLEMENTED THE ENTERPRISE AI EMAIL MANAGEMENT ARCHITECTURE.
+
+THE EXISTING PLATFORM REPORTEDLY INCLUDES:
+
+- FIVE ORGANIZATIONAL EMAIL IDENTITIES.
+- THREE-PANEL ENTERPRISE EMAIL WORKSPACE.
+- HISTORICAL EMAIL IMPORT ENGINE.
+- INCREMENTAL SYNCHRONIZATION ENGINE.
+- AI EMAIL CLASSIFICATION.
+- AI DRAFT GENERATION.
+- HUMAN REVIEW AND APPROVAL.
+- EMAIL-TO-CRM INTEGRATION.
+- POSTGRESQL PERSISTENCE ADAPTER.
+- SIX VERSIONED DATABASE MIGRATIONS.
+- DURABLE BACKGROUND WORKERS.
+- SERVER-SIDE AI GATEWAY.
+- SECURITY AND SAFEGUARDING CONTROLS.
+- PRODUCTION-ONLY CONFIGURATION.
+- 276 AUTOMATED ACCEPTANCE TESTS.
+
+DO NOT REBUILD THESE COMPONENTS.
+
+DO NOT CREATE ANOTHER EMAIL MANAGER.
+
+DO NOT ADD MORE AI AGENTS.
+
+DO NOT CREATE ANOTHER CRM.
+
+DO NOT GENERATE ANOTHER GENERAL DEVELOPMENT AUDIT.
+
+DO NOT REPEAT PHASE 21 DOCUMENTATION.
+
+**THIS PHASE MUST ATTEMPT ACTUAL AUTHORIZED SERVICE ACTIVATION.**
+
+THE PRIMARY SUCCESS CONDITION IS:
+
+**A REAL EMAIL FROM AN AUTHORIZED PHUMULANI GOOGLE WORKSPACE MAILBOX MUST BE RETRIEVED THROUGH THE REAL PROVIDER API, PERSISTED IN THE REAL PRODUCTION DATABASE, AND DISPLAYED IN THE EXISTING EMAIL MANAGER.**
+
+If the environment does not provide the necessary credentials or permissions, do not simulate success.
+
+Stop the blocked operation, identify the exact required administrator action, and preserve the completed implementation.
+
+---
+
+# 2. STRICT PRODUCTION-ONLY RULES
+
+The following are prohibited in production:
+
+```text
+DEMO_MAILBOXES
+MOCK_GOOGLE_WORKSPACE_CONNECTIONS
+SYNTHETIC_EMAIL_MESSAGES
+FAKE_OAUTH_TOKENS
+SIMULATED_PROVIDER_RESPONSES
+FAKE_MESSAGE_COUNTS
+MOCK_EMAIL_DELIVERY
+JSON_DATABASE_FALLBACK
+SYNTHETIC_DONOR_RECORDS
+UNVERIFIED_FINANCIAL_TRANSACTIONS
+FABRICATED_AI_EXECUTIONS
+```
+
+Retain isolated fixtures for automated testing, but never mix them with production data.
+
+Do not seed the production database with fake messages merely to make the Email Manager appear populated.
+
+If there are no authorized real emails available, show an accurate empty state.
+
+**No external account access, infrastructure provisioning, mailbox import, or outbound sending may occur without the required organizational authorization.**
+
+---
+
+# 3. PHASE 22 MILESTONE EXECUTION RULE
+
+Execute the following milestones in order:
+
+| Milestone | Objective | Mandatory evidence |
+|---|---|---|
+| M22.01 | Verify actual cloud permissions | Observed IAM and runtime capabilities |
+| M22.02 | Connect real PostgreSQL | Successful authenticated database query |
+| M22.03 | Verify database migrations and persistence | Actual transaction and restart verification |
+| M22.04 | Configure Google Workspace OAuth | Actual authorized OAuth configuration |
+| M22.05 | Connect pilot mailbox | Successful authenticated Gmail API request |
+| M22.06 | Retrieve first real email | Actual provider message ID |
+| M22.07 | Persist and display real email | Database record and UI verification |
+| M22.08 | Verify security and synchronization | Real-provider and backend evidence |
+| M22.09 | Complete operational handover | Accurate activation and blocker report |
+
+**A milestone cannot be marked LIVE_VERIFIED without evidence from the real external service.**
+
+---
+
+# M22.01 — VERIFY ACTUAL GOOGLE CLOUD ENVIRONMENT AND PERMISSIONS
+
+## Objective
+
+Determine what Google AI Studio can actually access and operate.
+
+Inspect the existing deployment environment.
+
+Verify:
+
+1. Google Cloud project identity.
+2. Existing Cloud Run service.
+3. Runtime service account.
+4. Authorized IAM permissions.
+5. Available secret management.
+6. Existing Cloud SQL instances.
+7. Existing VPC/network configuration.
+8. Existing OAuth credentials.
+9. Gmail API enablement.
+10. Deployment permissions.
+
+Use the existing application and deployment configuration.
+
+Do not create another hosting environment.
+
+Do not deploy to a demonstration account.
+
+Do not assume that an AI Studio preview environment has permission to administer the organization's Google Cloud project.
+
+## Required result
+
+Produce a concise capability matrix:
+
+```text
+CLOUD_PROJECT_ACCESS:
+CLOUD_RUN_ACCESS:
+CLOUD_SQL_ACCESS:
+SECRET_MANAGER_ACCESS:
+GOOGLE_WORKSPACE_ADMIN_ACCESS:
+OAUTH_CONFIGURATION_ACCESS:
+DEPLOYMENT_PERMISSION:
+```
+
+For each item report:
+
+- `VERIFIED`
+- `AUTHORIZATION_REQUIRED`
+- `NOT_AVAILABLE`
+- `FAILED`
+
+Do not expose credentials or sensitive IAM details.
+
+## Milestone completion condition
+
+Actual access capabilities are established.
+
+If required permissions are missing, identify the exact role that must grant them.
+
+---
+
+# M22.02 — CONNECT THE REAL PRODUCTION POSTGRESQL DATABASE
+
+## Objective
+
+Eliminate the existing database infrastructure blocker.
+
+Previous status:
+
+```text
+POSTGRESQL_STATUS=NOT_CONNECTED
+DATABASE_URL=UNSET
+APPLICATION_READINESS=BLOCKED
+```
+
+## Required action
+
+Inspect whether an authorized PostgreSQL instance already exists.
+
+If it exists:
+
+1. Verify its actual endpoint.
+2. Verify network connectivity.
+3. Verify authentication.
+4. Verify TLS requirements.
+5. Verify database identity.
+6. Verify the application database user.
+7. Verify connection pooling.
+8. Execute a non-destructive connection query.
+
+If no instance exists:
+
+Determine whether the current execution environment has explicit authorization and permissions to provision one.
+
+If authorization is granted, provision or configure an approved managed PostgreSQL instance.
+
+If authorization is missing, do not provision billable infrastructure.
+
+Instead, produce the exact administrator action required.
+
+## Preferred deployment architecture
+
+Use the existing authorized Google Cloud project.
+
+Prefer managed PostgreSQL with:
+
+- Supported PostgreSQL version.
+- Private or otherwise securely restricted connectivity.
+- TLS where applicable.
+- Encrypted storage.
+- Managed credentials.
+- Automated backups.
+- Appropriate availability settings.
+- Restricted application database privileges.
+
+Do not hardcode database passwords.
+
+Use approved server-side secret storage.
+
+Where supported, use Cloud SQL connectors or other approved secure connection methods rather than exposing the database publicly.
+
+## Required connection evidence
+
+Execute an actual authenticated database query.
+
+Record:
+
+```text
+DATABASE_PROVIDER:
+DATABASE_INSTANCE:
+DATABASE_NAME:
+POSTGRESQL_VERSION:
+CONNECTION_TEST:
+TLS_STATUS:
+VERIFICATION_TIMESTAMP:
+```
+
+Redact sensitive connection information.
+
+## Milestone success
+
+```text
+M22.02=LIVE_VERIFIED
+```
+
+Only when the actual connection succeeds.
+
+Otherwise:
+
+```text
+M22.02=INFRASTRUCTURE_REQUIRED
+```
+
+or:
+
+```text
+M22.02=AUTHORIZATION_REQUIRED
+```
+
+---
+
+# M22.03 — VERIFY REAL DATABASE MIGRATIONS AND PERSISTENCE
+
+## Objective
+
+Confirm the existing database infrastructure can safely store real organizational correspondence.
+
+## Required action
+
+Inspect the six existing versioned migrations:
+
+```text
+20261026_001
+20261026_002
+20261026_003
+20261026_004
+20261026_005
+20261026_006
+```
+
+Do not recreate equivalent migrations.
+
+Before applying changes:
+
+1. Inspect current schema state.
+2. Verify migration history.
+3. Review migration effects.
+4. Confirm backup readiness.
+5. Confirm authorization to execute migrations.
+
+Apply approved pending migrations.
+
+Do not run destructive changes without explicit approval.
+
+## Persistence verification
+
+Perform a controlled, authorized database operation using a dedicated technical verification record that cannot be confused with organizational email or donor data.
+
+Verify:
+
+1. Transaction begins.
+2. Verification record is written.
+3. Transaction commits.
+4. Record can be retrieved.
+5. Application connection is restarted.
+6. Record remains available.
+7. Cleanup occurs where appropriate.
+8. No existing organizational records are modified.
+
+Do not insert fake donor correspondence.
+
+Do not generate fake financial transactions.
+
+## Required result
+
+```text
+POSTGRESQL=CONNECTED
+SCHEMA_MIGRATIONS=VERIFIED
+TRANSACTION_INTEGRITY=VERIFIED
+RESTART_PERSISTENCE=VERIFIED
+```
+
+Backup restoration must be tested in an authorized isolated recovery target, not by destructively restoring over the live production database.
+
+## Milestone success
+
+Actual database persistence is verified.
+
+---
+
+# M22.04 — COMPLETE REAL GOOGLE WORKSPACE OAUTH AUTHORIZATION
+
+## Objective
+
+Eliminate the Google Workspace authorization blocker.
+
+Previous status:
+
+```text
+GOOGLE_WORKSPACE=AUTHORIZATION_REQUIRED
+```
+
+## Organizational mailbox identities
+
+```text
+info@phumulani.org
+donations@phumulani.org
+grants@phumulani.org
+executive@phumulani.org
+partnerships@phumulani.org
+```
+
+## Pilot mailbox
+
+```text
+donations@phumulani.org
+```
+
+## Required action
+
+Inspect the existing OAuth implementation.
+
+Verify actual:
+
+1. Google Cloud OAuth client.
+2. Gmail API enablement.
+3. Consent screen configuration.
+4. Authorized redirect URI.
+5. OAuth authorization-code flow.
+6. State validation.
+7. Token exchange.
+8. Secure token storage.
+9. Refresh-token lifecycle.
+10. Granted scopes.
+
+Use the minimum authorized Gmail scopes necessary.
+
+For the initial read-only retrieval milestone, prefer read-only access.
+
+Do not request Gmail modification or sending permissions until those operations are approved.
+
+Do not request unrestricted mailbox access.
+
+## Important identity verification
+
+Confirm that `donations@phumulani.org` is a real Google Workspace mailbox controlled by the organization.
+
+Do not use a personal Gmail account as a substitute.
+
+Do not create a demonstration Gmail account.
+
+Do not impersonate an organizational administrator.
+
+An account's ability to sign in to Google does not by itself prove that it has Workspace administrator authority.
+
+## Required result
+
+After actual administrator consent and account authorization:
+
+```text
+OAUTH_CONFIGURATION=VERIFIED
+GMAIL_API=ENABLED
+PILOT_ACCOUNT=AUTHORIZED
+TOKEN_STORAGE=SECURE
+```
+
+If consent is unavailable:
+
+```text
+M22.04=AUTHORIZATION_REQUIRED
+```
+
+Identify the exact administrator action needed.
+
+Do not claim OAuth activation succeeded based solely on the existence of code.
+
+---
+
+# M22.05 — VERIFY THE ACTUAL PILOT MAILBOX CONNECTION
+
+## Objective
+
+Demonstrate real Gmail API access.
+
+## Dependency
+
+M22.04 must be authorized.
+
+## Required action
+
+Using the authorized pilot account:
+
+```text
+donations@phumulani.org
+```
+
+Perform a real authenticated provider request.
+
+Verify:
+
+1. Provider authentication succeeds.
+2. The actual mailbox identity matches the approved account.
+3. The granted scopes permit the requested operation.
+4. The Gmail API returns a valid response.
+5. The application records the provider verification timestamp.
+6. The connection status is updated using actual evidence.
+
+## Required status
+
+```text
+MAILBOX=donations@phumulani.org
+PROVIDER=GOOGLE_WORKSPACE
+AUTHENTICATION=LIVE_VERIFIED
+MAILBOX_IDENTITY=VERIFIED
+CONNECTION=CONNECTED
+```
+
+Do not mark the mailbox connected merely because OAuth configuration exists.
+
+Do not use cached mock responses.
+
+Do not invent provider identifiers.
+
+## Milestone success
+
+An actual authenticated Gmail API request succeeds.
+
+---
+
+# M22.06 — RETRIEVE THE FIRST REAL ORGANIZATIONAL EMAIL
+
+## Objective
+
+Retrieve actual authorized correspondence from the pilot mailbox.
+
+**THIS IS THE PRIMARY PHASE 22 LIVE ACTIVATION MILESTONE.**
+
+## Required authorization
+
+The responsible organizational administrator must authorize the scope of message access.
+
+Use the minimum message access needed for verification.
+
+Do not retrieve sensitive correspondence unnecessarily.
+
+## Required action
+
+1. Confirm active mailbox authorization.
+2. Request a limited approved message listing.
+3. Select an authorized message.
+4. Retrieve it through the actual Gmail API.
+5. Verify provider message ID.
+6. Verify thread ID.
+7. Verify message timestamp.
+8. Validate sender and recipient metadata.
+9. Apply access-control restrictions.
+10. Prepare the record for secure persistence.
+
+## Required evidence
+
+```text
+MAILBOX=donations@phumulani.org
+MESSAGE_SOURCE=GOOGLE_GMAIL_API
+PROVIDER_REQUEST=SUCCESS
+REAL_MESSAGE_RETRIEVED=TRUE
+MESSAGE_ID=<REDACTED_OR_HASHED_REFERENCE>
+THREAD_ID=<REDACTED_OR_HASHED_REFERENCE>
+RETRIEVAL_TIMESTAMP=<ACTUAL_TIMESTAMP>
+```
+
+Do not publish the full email body in development logs or reports.
+
+Do not send an automatic response.
+
+Do not create donor records without appropriate validation.
+
+## If the mailbox is empty
+
+Do not invent a message.
+
+Report that the authorized mailbox contains no retrievable messages within the approved scope.
+
+Arrange a controlled inbound test message only with explicit authorization.
+
+Do not send unsolicited messages to real donors.
+
+## Milestone success
+
+At least one real authorized provider message is retrieved successfully.
+
+---
+
+# M22.07 — STORE AND DISPLAY THE REAL EMAIL
+
+## Objective
+
+Complete the real end-to-end email ingestion path.
+
+## Required workflow
+
+```text
+REAL PHUMULANI GOOGLE WORKSPACE MAILBOX
+                  |
+                  v
+          AUTHORIZED GMAIL API
+                  |
+                  v
+          REAL MESSAGE RETRIEVAL
+                  |
+                  v
+       SECURITY AND ACCESS CHECKS
+                  |
+                  v
+        PRODUCTION POSTGRESQL
+                  |
+                  v
+        EXISTING EMAIL MANAGER
+                  |
+                  v
+         /admin/master/email
+```
+
+## Required action
+
+1. Validate the retrieved message.
+2. Apply safeguarding restrictions.
+3. Deduplicate by provider ID and RFC Message-ID where available.
+4. Persist the authorized record in PostgreSQL.
+5. Preserve the provider thread identifier.
+6. Preserve the original timestamp.
+7. Associate the correct organizational mailbox.
+8. Verify database retrieval.
+9. Open `/admin/master/email`.
+10. Display the message to an authorized staff user.
+11. Verify sender, subject, date, and thread.
+12. Confirm unauthorized users cannot retrieve it.
+
+## Critical restrictions
+
+Do not seed a fake message.
+
+Do not populate the inbox using fixture data.
+
+Do not bypass PostgreSQL persistence.
+
+Do not expose private message content in public health endpoints.
+
+Do not allow unrestricted executive or safeguarding access.
+
+## Required verification
+
+```text
+REAL_PROVIDER_MESSAGE=VERIFIED
+POSTGRESQL_RECORD=VERIFIED
+EMAIL_MANAGER_DISPLAY=VERIFIED
+ACCESS_CONTROL=VERIFIED
+```
+
+## Milestone success
+
+An authorized staff member can view the actual persisted organizational email in the existing Email Manager.
+
+---
+
+# M22.08 — VERIFY LIVE EMAIL PROCESSING AND SYNCHRONIZATION
+
+## Objective
+
+Validate the existing email-management pipeline against the newly connected live mailbox.
+
+## Required checks
+
+### A. Incremental synchronization
+
+Verify:
+
+- Actual new-message discovery.
+- Provider cursor persistence.
+- Duplicate suppression.
+- Worker execution.
+- Retry handling.
+- Recovery after interruption.
+
+### B. AI classification
+
+For an authorized, nonrestricted message:
+
+- Invoke the real configured AI gateway.
+- Record actual model execution.
+- Classify the message.
+- Determine priority.
+- Present the result for staff review.
+
+Do not claim a model invocation occurred if it did not.
+
+### C. CRM integration
+
+Where an authorized matching CRM record exists:
+
+- Link the message.
+- Preserve source identifiers.
+- Avoid duplicate contacts.
+- Preserve audit history.
+
+Do not invent a donor profile merely to pass the test.
+
+### D. Human approval
+
+Verify:
+
+- Draft creation.
+- Approval request.
+- Four-action review.
+- Material-change invalidation.
+- Dispatch prevention for unapproved drafts.
+
+### E. Outbound communication
+
+Do not send a real email during this milestone unless separately authorized.
+
+Live dispatch verification may remain pending without invalidating the already verified inbound-email milestones.
+
+### F. Safeguarding
+
+Confirm:
+
+- Restricted correspondence remains isolated.
+- Executive mailbox permissions remain enforced.
+- Confidential data does not enter general fundraising AI.
+- Internal notes cannot leak into outbound messages.
+
+## Required result
+
+Report each capability independently:
+
+```text
+INCREMENTAL_SYNC:
+AI_CLASSIFICATION:
+CRM_LINKING:
+HUMAN_APPROVAL:
+OUTBOUND_DISPATCH:
+SAFEGUARDING:
+```
+
+Do not use one overall PASS result to conceal blocked operations.
+
+---
+
+# M22.09 — STRICT COMPLETION REPORT AND ADMINISTRATOR HANDOVER
+
+## Objective
+
+Provide a concise evidence-based operational report.
+
+Do not produce another collection of general readiness documents without new execution evidence.
+
+Generate one primary artifact:
+
+`phumulani_phase22_live_activation_evidence_report.md`
+
+## Required report structure
+
+### SECTION 1 — Actual environment
+
+- Google Cloud project verification.
+- Cloud Run service verification.
+- Runtime permissions.
+- Secret management status.
+
+### SECTION 2 — PostgreSQL
+
+- Actual connection result.
+- Database identity.
+- Migration results.
+- Persistence verification.
+- Backup readiness.
+
+### SECTION 3 — Google Workspace
+
+- Actual OAuth authorization status.
+- Pilot mailbox identity.
+- Granted scope summary.
+- Provider verification result.
+
+### SECTION 4 — First real email
+
+- Actual provider retrieval result.
+- Redacted message reference.
+- Retrieval timestamp.
+- Database persistence.
+- Email Manager display verification.
+
+### SECTION 5 — Operational workflows
+
+- Incremental synchronization.
+- AI classification.
+- CRM linking.
+- Human approvals.
+- Safeguarding.
+
+### SECTION 6 — Test results
+
+- TypeScript validation.
+- Production build.
+- Existing regression suite.
+- Actual live provider verification.
+
+### SECTION 7 — Remaining blockers
+
+For each blocker:
+
+- Exact missing requirement.
+- Responsible authorized role.
+- Required action.
+- Affected milestone.
+- Verification procedure.
+
+### SECTION 8 — Final classification
+
+```text
+PHASE_22_STATUS:
+PRODUCTION_POSTGRESQL:
+DATABASE_MIGRATIONS:
+GOOGLE_WORKSPACE_OAUTH:
+PILOT_MAILBOX_CONNECTION:
+FIRST_REAL_EMAIL_RETRIEVAL:
+REAL_EMAIL_PERSISTENCE:
+EMAIL_MANAGER_DISPLAY:
+INCREMENTAL_SYNCHRONIZATION:
+AI_EMAIL_CLASSIFICATION:
+EMAIL_CRM_INTEGRATION:
+HUMAN_APPROVAL:
+SAFEGUARDING:
+OUTBOUND_EMAIL:
+```
+
+Use only evidence-based status values.
+
+---
+
+# 4. MANDATORY EXECUTION EVIDENCE FORMAT
+
+For each live milestone, provide:
+
+```text
+MILESTONE_ID:
+ACTUAL_SERVICE:
+ENVIRONMENT:
+AUTHORIZATION_STATUS:
+OPERATION_ATTEMPTED:
+OBSERVED_RESULT:
+EXECUTION_TIMESTAMP:
+EVIDENCE_REFERENCE:
+SECURITY_VALIDATION:
+FINAL_STATUS:
+```
+
+Evidence must come from real operations.
+
+Examples of acceptable evidence:
+
+- Successful authenticated PostgreSQL query.
+- Actual migration-history record.
+- Successful authenticated Gmail API response.
+- Actual provider message identifier.
+- Actual database persistence verification.
+- Authorized browser verification of the real message.
+- Actual synchronization checkpoint.
+
+Examples of unacceptable evidence:
+
+- A mock provider response.
+- A generated fixture.
+- A sample OAuth token.
+- A simulated database connection.
+- A passing unit test presented as proof of live integration.
+- A checklist saying a service is ready.
+- A document describing what an administrator should eventually do.
+
+---
+
+# 5. NO DOCUMENTATION-ONLY COMPLETION
+
+The previous phases generated extensive implementation and readiness documentation.
+
+Phase 22 must not repeat that pattern.
+
+**The primary deliverable is operational evidence.**
+
+Documentation is secondary.
+
+Do not report:
+
+```text
+M22.02=COMPLETE
+```
+
+when PostgreSQL is not connected.
+
+Do not report:
+
+```text
+M22.05=COMPLETE
+```
+
+when Google Workspace OAuth is still awaiting authorization.
+
+Do not report:
+
+```text
+M22.06=COMPLETE
+```
+
+when no actual message has been retrieved.
+
+Do not report:
+
+```text
+M22.07=COMPLETE
+```
+
+when the Email Manager contains only synthetic records.
+
+If the environment cannot complete a live action, report:
+
+```text
+BLOCKED_BY_EXTERNAL_AUTHORIZATION
+```
+
+or:
+
+```text
+BLOCKED_BY_INFRASTRUCTURE
+```
+
+Do not use `IMPLEMENTATION_COMPLETE` to imply that the blocked live milestone succeeded.
+
+---
+
+# 6. REQUIRED ADMINISTRATOR ACTIVATION REQUESTS
+
+If live credentials or permissions are missing, prepare the exact administrator actions.
+
+## Database administrator
+
+Provide:
+
+- Required Google Cloud project.
+- Required Cloud SQL configuration.
+- Database name and role requirements.
+- Required network access.
+- Required secret configuration.
+- Required deployment update.
+- Connection verification procedure.
+
+Do not request that passwords be pasted into chat.
+
+## Google Workspace administrator
+
+Provide:
+
+- Required Google Cloud project.
+- Gmail API enablement procedure.
+- OAuth client configuration.
+- Authorized redirect URI.
+- Minimum required scopes.
+- Pilot mailbox authorization procedure.
+- Provider verification procedure.
+
+Do not assume a personal Gmail account has Workspace administrator permissions.
+
+## Organizational leadership
+
+Request approval only for actions that require it:
+
+- Production infrastructure provisioning.
+- Historical correspondence access.
+- Live mailbox synchronization.
+- External email dispatch.
+- Staff operational acceptance.
+
+Do not invent approvals or signatures.
+
+---
+
+# 7. PROTECT THE EXISTING APPLICATION
+
+Preserve:
+
+- All 276 existing acceptance tests.
+- The 18 AI fundraising agents.
+- The five existing fundraising workflows.
+- The Enterprise Email Manager.
+- The CRM.
+- The approval engine.
+- The safeguarding controls.
+- The existing database migrations.
+- The existing worker service.
+- The production-only environment restrictions.
+
+Do not modify unrelated modules.
+
+Do not force-push repository history.
+
+Do not delete existing work.
+
+Do not perform unauthorized DNS changes.
+
+Do not expose production secrets.
+
+Do not run destructive operations against organizational data.
+
+---
+
+# 8. FINAL PHASE 22 SUCCESS DEFINITION
+
+Phase 22 achieves its primary technical objective only when all the following are true:
+
+**GATE 1 — REAL DATABASE**
+
+An authorized production PostgreSQL instance is connected, migrations are verified, and persistence works.
+
+**GATE 2 — REAL GOOGLE WORKSPACE**
+
+The actual `donations@phumulani.org` mailbox has completed authorized OAuth and passed an authenticated provider request.
+
+**GATE 3 — FIRST REAL EMAIL**
+
+At least one authorized real email has been retrieved through the Gmail API.
+
+**GATE 4 — REAL PERSISTENCE**
+
+The retrieved message has been securely stored in production PostgreSQL.
+
+**GATE 5 — REAL EMAIL MANAGER**
+
+An authorized staff user can open the actual message in `/admin/master/email`.
+
+**GATE 6 — SECURITY**
+
+Mailbox permissions, approval boundaries, and safeguarding restrictions remain enforced.
+
+If all six gates pass:
+
+```text
+PHASE_22_PRIMARY_OBJECTIVE=LIVE_VERIFIED
+```
+
+This classification confirms the initial live email ingestion path. It does not, by itself, establish that all five mailboxes, outbound sending, or the entire platform are production-operational.
+
+If any required gate is blocked:
+
+```text
+PHASE_22_PRIMARY_OBJECTIVE=BLOCKED
+```
+
+Report the exact missing requirement.
+
+---
+
+# 9. FINAL EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+BEGIN PHASE 22 NOW.
+
+**STOP GENERATING ADDITIONAL DEMONSTRATION FEATURES.**
+
+**STOP REPEATING COMPLETED DEVELOPMENT WORK.**
+
+**STOP TREATING DOCUMENTATION AS LIVE ACTIVATION.**
+
+FOCUS STRICTLY ON:
+
+1. ACTUAL GOOGLE CLOUD PERMISSIONS.
+2. ACTUAL POSTGRESQL CONNECTIVITY.
+3. ACTUAL DATABASE MIGRATIONS AND PERSISTENCE.
+4. ACTUAL GOOGLE WORKSPACE OAUTH AUTHORIZATION.
+5. ACTUAL `donations@phumulani.org` MAILBOX CONNECTIVITY.
+6. ACTUAL GMAIL API MESSAGE RETRIEVAL.
+7. ACTUAL POSTGRESQL MESSAGE STORAGE.
+8. ACTUAL EMAIL DISPLAY IN `/admin/master/email`.
+9. ACTUAL SECURITY AND SYNCHRONIZATION VERIFICATION.
+
+DO NOT USE DEMO ACCOUNTS.
+
+DO NOT USE FAKE MESSAGES.
+
+DO NOT USE SIMULATED PROVIDER RESPONSES.
+
+DO NOT FABRICATE CONNECTION RESULTS.
+
+DO NOT CLAIM SUCCESS WITHOUT EVIDENCE.
+
+DO NOT BYPASS AUTHORIZATION.
+
+IF EXTERNAL ACCESS IS REQUIRED, STOP THE AFFECTED OPERATION AND REQUEST THE EXACT AUTHORIZED ACTION.
+
+## FINAL TARGET
+
+```text
+PHUMULANI PRODUCTION EMAIL ACTIVATION
+
+AUTHORIZED GOOGLE WORKSPACE
+            |
+            v
+donations@phumulani.org
+            |
+            v
+REAL GMAIL API CONNECTION
+            |
+            v
+REAL ORGANIZATIONAL EMAIL
+            |
+            v
+PRODUCTION POSTGRESQL
+            |
+            v
+SECURE EMAIL INGESTION
+            |
+            v
+/admin/master/email
+            |
+            v
+AUTHORIZED STAFF ACCESS
+            |
+            v
+AI CLASSIFICATION + CRM
+            |
+            v
+HUMAN REVIEW AND APPROVAL
+```
+
+**PHASE 22 IS NOT COMPLETE UNTIL THE FIRST REAL ORGANIZATIONAL EMAIL IS SUCCESSFULLY RETRIEVED, PERSISTED, AND DISPLAYED — OR THE EXACT EXTERNAL BLOCKER IS REPORTED WITHOUT A FALSE COMPLETION CLAIM.**
+
+**EXECUTE MILESTONE M22.01 IMMEDIATELY.**

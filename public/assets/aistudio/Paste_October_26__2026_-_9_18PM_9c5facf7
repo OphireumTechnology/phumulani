@@ -1,0 +1,1495 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+# PHASE 21 — LIVE ENTERPRISE EMAIL MANAGEMENT
+## STRICT MILESTONE EXECUTION, REAL GOOGLE WORKSPACE ACTIVATION, HISTORICAL EMAIL RECOVERY AND PRODUCTION VERIFICATION
+
+**PROJECT:** Phumulani AI Community Platform  
+**DEVELOPMENT ORGANIZATION:** Ophireum Technology  
+**REPOSITORY:** `OphireumTechnology/phumulani`  
+**PRIMARY BRANCH:** `main`  
+**PRIMARY DEVELOPMENT TARGET:** `/admin/master/email`  
+**MASTER ADMINISTRATOR:** `/admin/master`  
+**FUNDRAISING CRM:** `/admin/master/fundraising`  
+**REPORTED BASELINE:** 276/276 passing tests  
+**REQUIRED OPERATIONAL MODE:** `PRODUCTION_ONLY`
+
+**REFERENCE DOCUMENTS:**
+1. Phumulani Project Proposal — October 20, 2026.
+2. Phumulani Website Architecture, AI Platform Design and Phase-by-Phase Development Plan — October 21, 2026.
+
+**PRIMARY DIRECTIVE: COMPLETE THE EXISTING ENTERPRISE EMAIL MANAGEMENT SYSTEM FOR REAL ORGANIZATIONAL USE.**
+
+---
+
+# 1. NON-NEGOTIABLE DEVELOPMENT RULES
+
+GOOGLE AI STUDIO:
+
+BEGIN PHASE 21.
+
+THIS PHASE MUST FOCUS STRICTLY ON ENTERPRISE EMAIL MANAGEMENT.
+
+DO NOT DEVELOP UNRELATED FEATURES.
+
+DO NOT REBUILD COMPLETED MODULES.
+
+DO NOT CREATE ANOTHER EMAIL MANAGER.
+
+DO NOT CREATE A SECOND FUNDRAISING CRM.
+
+DO NOT DUPLICATE THE EXISTING 18 AI AGENTS.
+
+DO NOT CREATE A SECOND APPROVAL SYSTEM.
+
+DO NOT REPLACE WORKING PERSISTENCE INFRASTRUCTURE WITHOUT A VERIFIED REASON.
+
+THE USER REQUIRES A LIVE OPERATIONAL SYSTEM.
+
+THEREFORE:
+
+**NO DEMONSTRATION EMAIL ACCOUNTS.**
+
+**NO SYNTHETIC MESSAGES IN PRODUCTION.**
+
+**NO MOCK PROVIDER RESPONSES PRESENTED AS LIVE CONNECTIVITY.**
+
+**NO ARTIFICIAL EMAIL COUNTS.**
+
+**NO SIMULATED EMAIL DELIVERY.**
+
+**NO FAKE DONOR CORRESPONDENCE.**
+
+**NO AUTOMATIC FALLBACK TO DEMONSTRATION MODE.**
+
+**NO CLAIM OF PRODUCTION SUCCESS WITHOUT REAL EXTERNAL-SERVICE EVIDENCE.**
+
+Isolated synthetic fixtures remain permitted for automated testing outside production.
+
+The existing production-only safeguards must remain enabled.
+
+## AUTHORIZATION REQUIREMENT
+
+Live development means building against real infrastructure and activating authorized services.
+
+It does not permit unauthorized access to organizational correspondence.
+
+Do not:
+
+- Invent OAuth credentials.
+- Bypass Google Workspace administrator consent.
+- Retrieve private mail without permission.
+- Send external messages without approval.
+- Create or modify production infrastructure without authorization.
+- Expose secrets in logs, prompts, commits, or reports.
+
+When authorization is unavailable, complete the independent implementation work and record the precise blocker.
+
+**DO NOT REPLACE A BLOCKED LIVE ACTION WITH A DEMONSTRATION.**
+
+---
+
+# 2. MILESTONE EXECUTION CONTRACT
+
+Execute milestones sequentially.
+
+Do not skip dependencies.
+
+Every milestone must produce:
+
+1. A verified technical result.
+2. The actual files changed.
+3. The actual service tested.
+4. The verification method.
+5. The observed result.
+6. The responsible approval authority.
+7. Any remaining blocker.
+8. The milestone classification.
+
+Use these classifications:
+
+- `NOT_STARTED`
+- `IN_PROGRESS`
+- `IMPLEMENTATION_COMPLETE`
+- `AUTHORIZATION_REQUIRED`
+- `INFRASTRUCTURE_REQUIRED`
+- `CONNECTED_UNVERIFIED`
+- `LIVE_VERIFIED`
+- `BLOCKED`
+- `FAILED`
+
+**A milestone is not `LIVE_VERIFIED` merely because its code compiles or its mocked tests pass.**
+
+Do not proceed to a dependent live operation while its prerequisite is blocked.
+
+Independent development, security verification, and documentation may continue.
+
+---
+
+# MILESTONE 21.01
+## EXISTING EMAIL SYSTEM AND LIVE INFRASTRUCTURE AUDIT
+
+### Objective
+
+Establish the exact operational state of the existing Enterprise Email Manager.
+
+### Required inspection
+
+Inspect the actual repository and deployment configuration, including:
+
+- `src/services/emailEnterpriseService.ts`
+- `src/services/emailEnterpriseSeed.ts`
+- `src/types/emailEnterprise.ts`
+- `src/services/environmentService.ts`
+- `src/services/postgresPersistenceAdapter.ts`
+- `src/services/databaseMigrationService.ts`
+- `src/services/backgroundWorkerService.ts`
+- `src/services/automatedTestRunner.ts`
+- `server.ts`
+- `scripts/verify_suite.ts`
+- Existing Email Manager UI components.
+- Existing OAuth handlers.
+- Existing email API routes.
+- Existing approval and CRM integration services.
+
+Inspect actual paths before editing. Do not assume historical filenames still exist.
+
+### Verify
+
+1. Application runtime.
+2. Deployment target.
+3. Production configuration.
+4. Database connection.
+5. OAuth configuration.
+6. Gmail API authorization.
+7. Mailbox identity mapping.
+8. Email persistence.
+9. Worker status.
+10. AI gateway status.
+11. Email approval enforcement.
+12. Existing automated tests.
+
+### Required output
+
+Create:
+
+`phase21_m01_live_email_system_audit.md`
+
+### Exit criteria
+
+The report identifies exactly what is implemented, what is genuinely connected, and what remains blocked.
+
+No production data may be modified during this audit.
+
+---
+
+# MILESTONE 21.02
+## REAL POSTGRESQL DATABASE CONNECTION
+
+### Objective
+
+Establish the persistent database required for live email operations.
+
+### Dependency
+
+Milestone 21.01 completed.
+
+### Required development
+
+Reuse the existing PostgreSQL persistence adapter.
+
+Verify the actual deployment environment.
+
+Determine whether a production PostgreSQL instance is available.
+
+The preferred architecture is managed PostgreSQL with secure connectivity, encrypted storage, and operational backups.
+
+Do not automatically provision a paid cloud service without explicit authorization.
+
+### If database access is authorized
+
+Perform:
+
+1. Real connection verification.
+2. Database identity verification.
+3. TLS verification.
+4. Connection pool verification.
+5. Existing migration review.
+6. Authorized migration execution.
+7. Schema integrity verification.
+8. Transaction verification.
+9. Controlled persistence verification.
+10. Backup and restore verification.
+
+The existing six migrations must be inspected and reused.
+
+Do not regenerate equivalent migrations.
+
+Do not run destructive migrations without approval.
+
+### Required operational result
+
+```text
+POSTGRESQL_CONNECTION=LIVE_VERIFIED
+DATABASE_PERSISTENCE=LIVE_VERIFIED
+DATABASE_MIGRATIONS=VERIFIED
+DATABASE_BACKUP=VERIFIED
+```
+
+Only report these values after real successful operations.
+
+### If infrastructure is unavailable
+
+Report:
+
+```text
+POSTGRESQL_CONNECTION=INFRASTRUCTURE_REQUIRED
+EMAIL_IMPORT=BLOCKED
+LIVE_EMAIL_PERSISTENCE=BLOCKED
+```
+
+Provide exact provisioning and secret-configuration instructions.
+
+### Exit criteria
+
+Real email import cannot begin until durable production persistence is available and verified.
+
+### Deliverable
+
+`phase21_m02_postgresql_live_verification.md`
+
+---
+
+# MILESTONE 21.03
+## GOOGLE WORKSPACE IDENTITY VERIFICATION
+
+### Objective
+
+Confirm the actual Google Workspace identities used by Phumulani.
+
+### Required organizational addresses
+
+**General communications**
+
+`info@phumulani.org`
+
+**Fundraising and donations**
+
+`donations@phumulani.org`
+
+**Institutional grants**
+
+`grants@phumulani.org`
+
+**Executive communications**
+
+`executive@phumulani.org`
+
+**Corporate partnerships**
+
+`partnerships@phumulani.org`
+
+### Previously reported identity mapping
+
+| Address | Reported configuration |
+|---|---|
+| info@phumulani.org | Google Group |
+| donations@phumulani.org | Primary user mailbox |
+| grants@phumulani.org | Primary user mailbox |
+| executive@phumulani.org | Restricted executive mailbox |
+| partnerships@phumulani.org | Alias routing to donations@phumulani.org |
+
+Verify this mapping using actual authorized Google Workspace administration.
+
+Do not treat the previously reported mapping as independent proof.
+
+### Required checks
+
+For each address determine:
+
+1. Actual identity type.
+2. Primary account ownership.
+3. Alias destination, if applicable.
+4. Google Group configuration, if applicable.
+5. Authorized administrators.
+6. Permitted staff roles.
+7. OAuth requirements.
+8. Historical message retrieval method.
+9. Sending permissions.
+10. Required security restrictions.
+
+### Special requirement: Google Groups
+
+If `info@phumulani.org` is a Google Group, determine the actual authorized method for retrieving its conversation history.
+
+Do not assume Gmail API access to a Group archive.
+
+Do not silently replace Group history with an unrelated mailbox.
+
+### Special requirement: aliases
+
+If `partnerships@phumulani.org` is an alias, verify its receiving mailbox and authorized send-as configuration.
+
+Do not invent a separate OAuth identity.
+
+### Exit criteria
+
+The actual identity configuration is documented and approved by the responsible administrator.
+
+### Deliverable
+
+`phase21_m03_google_workspace_identity_register.md`
+
+---
+
+# MILESTONE 21.04
+## REAL GOOGLE WORKSPACE OAUTH AUTHORIZATION
+
+### Objective
+
+Connect the application to actual authorized Google Workspace accounts.
+
+### Dependency
+
+Milestone 21.03 completed.
+
+### Required development
+
+Reuse the existing OAuth implementation.
+
+Verify:
+
+- Google Cloud project configuration.
+- Gmail API enablement.
+- OAuth consent configuration.
+- Authorized redirect URIs.
+- Authorization-code flow.
+- OAuth state protection.
+- Token exchange.
+- Secure token storage.
+- Token refresh.
+- Token revocation.
+- Scope validation.
+- Provider identity verification.
+
+Use only the permissions required for the approved operation.
+
+Start with read-only access if that satisfies the initial pilot.
+
+Request modification or sending scopes only when those operations are approved.
+
+### Production secrets
+
+Use an approved server-side secrets mechanism.
+
+Never place credentials in:
+
+- Frontend source code.
+- Browser storage.
+- Repository files.
+- Public API responses.
+- Development reports.
+- AI Studio prompts.
+
+### Required proof
+
+A mailbox is `CONNECTED` only after an authenticated request succeeds against the actual Google provider.
+
+A configured OAuth client is not proof of mailbox access.
+
+### Required result
+
+```text
+GOOGLE_WORKSPACE_OAUTH=LIVE_VERIFIED
+PILOT_MAILBOX_AUTHORIZATION=LIVE_VERIFIED
+```
+
+If authorization is missing:
+
+```text
+GOOGLE_WORKSPACE_OAUTH=AUTHORIZATION_REQUIRED
+```
+
+### Exit criteria
+
+An authorized mailbox can be accessed through the actual provider API.
+
+### Deliverable
+
+`phase21_m04_google_workspace_oauth_verification.md`
+
+---
+
+# MILESTONE 21.05
+## LIVE PILOT MAILBOX ACTIVATION
+
+### Objective
+
+Activate the first real organizational mailbox.
+
+### Pilot mailbox
+
+`donations@phumulani.org`
+
+Use this mailbox only after its actual identity and administrator authorization are confirmed.
+
+### Required sequence
+
+1. Verify the authorized Google account.
+2. Complete OAuth authorization.
+3. Confirm granted scopes.
+4. Retrieve mailbox metadata.
+5. Retrieve a limited approved message sample.
+6. Verify real provider message IDs.
+7. Verify real thread identifiers.
+8. Verify actual timestamps.
+9. Persist approved metadata securely.
+10. Verify mailbox-specific access restrictions.
+11. Confirm audit logging.
+12. Record the provider response.
+
+### Important
+
+Do not send email during this milestone.
+
+Do not import the entire mailbox before the pilot verification succeeds.
+
+Do not expose real message content in the completion report.
+
+### Required evidence
+
+Record:
+
+- Verified mailbox identity.
+- Provider request outcome.
+- Timestamp of verification.
+- Granted scope summary.
+- Persistence result.
+- Security checks.
+
+### Exit criteria
+
+The pilot mailbox is genuinely connected and can retrieve authorized real correspondence.
+
+### Deliverable
+
+`phase21_m05_pilot_mailbox_activation.md`
+
+---
+
+# MILESTONE 21.06
+## REAL HISTORICAL EMAIL RECOVERY
+
+### Objective
+
+Recover authorized historical organizational correspondence.
+
+### Dependencies
+
+- Milestone 21.02: Database verified.
+- Milestone 21.05: Pilot mailbox verified.
+- Explicit approval of historical import scope.
+
+### Required execution
+
+Reuse the existing historical import engine.
+
+Process:
+
+```text
+AUTHORIZED GOOGLE WORKSPACE MAILBOX
+                 |
+                 v
+         MESSAGE DISCOVERY
+                 |
+                 v
+       PAGINATED RETRIEVAL
+                 |
+                 v
+      CHECKPOINT PERSISTENCE
+                 |
+                 v
+       MESSAGE DEDUPLICATION
+                 |
+                 v
+       SECURE EMAIL STORAGE
+                 |
+                 v
+       THREAD RECONSTRUCTION
+                 |
+                 v
+     SECURITY CLASSIFICATION
+                 |
+                 v
+        AUTHORIZED STAFF VIEW
+```
+
+### Required safeguards
+
+- Read-only provider operations during historical recovery.
+- No automatic replies.
+- No donor solicitation.
+- No grant submission.
+- No mass outreach.
+- No financial transaction creation.
+- No unauthorized AI disclosure.
+- No destructive mailbox modifications.
+
+### Required metrics
+
+Use actual counts:
+
+```text
+MESSAGES_DISCOVERED=<ACTUAL_COUNT>
+MESSAGES_IMPORTED=<ACTUAL_COUNT>
+DUPLICATES_SKIPPED=<ACTUAL_COUNT>
+MESSAGES_FAILED=<ACTUAL_COUNT>
+MESSAGES_REMAINING=<ACTUAL_COUNT>
+LAST_CHECKPOINT=<ACTUAL_VALUE>
+```
+
+Do not fabricate these values.
+
+### Exit criteria
+
+A bounded historical import completes successfully, persists across restart, and can resume from a real checkpoint.
+
+Expand to the full approved history only after the pilot is accepted.
+
+### Deliverable
+
+`phase21_m06_historical_email_recovery.md`
+
+---
+
+# MILESTONE 21.07
+## LIVE INCOMING AND SENT EMAIL SYNCHRONIZATION
+
+### Objective
+
+Maintain real mailbox synchronization without requiring an open browser.
+
+### Dependencies
+
+- Production database verified.
+- Pilot mailbox authorized.
+- Historical import checkpoint established.
+
+### Required operations
+
+Verify:
+
+1. New incoming messages.
+2. Sent messages.
+3. Thread changes.
+4. Label changes.
+5. Read/unread changes where permitted.
+6. Message archival.
+7. Provider cursor persistence.
+8. Duplicate prevention.
+9. Token refresh.
+10. Rate-limit handling.
+11. Worker restart recovery.
+12. Synchronization failure alerts.
+
+### Worker requirements
+
+Reuse `BackgroundWorkerService`.
+
+Verify real durable processing.
+
+Do not create a second synchronization worker.
+
+### Required dashboard status
+
+```text
+MAILBOX=donations@phumulani.org
+PROVIDER=GOOGLE_WORKSPACE
+SYNC_MODE=LIVE
+LAST_SUCCESSFUL_SYNC=<ACTUAL_TIMESTAMP>
+LAST_PROVIDER_CHECK=<ACTUAL_TIMESTAMP>
+SYNC_FAILURES=<ACTUAL_COUNT>
+```
+
+### Exit criteria
+
+The pilot mailbox demonstrates successful incremental synchronization and recoverability.
+
+### Deliverable
+
+`phase21_m07_live_email_sync_verification.md`
+
+---
+
+# MILESTONE 21.08
+## LIVE ENTERPRISE EMAIL MANAGEMENT INTERFACE
+
+### Objective
+
+Make `/admin/master/email` operational against real persisted email records.
+
+### Preserve the existing interface
+
+Do not redesign the complete Email Manager.
+
+Retain the existing three-panel enterprise workspace.
+
+### Left panel
+
+Verify:
+
+- Unified Inbox.
+- Organizational Mailboxes.
+- Historical Emails.
+- New Emails.
+- Priority Inbox.
+- Sent Emails.
+- Drafts.
+- AI Intelligence.
+- Approvals.
+- Contacts.
+- Synchronization.
+- Reports.
+
+### Central panel
+
+Verify staff can:
+
+- Open real messages.
+- Read authorized conversations.
+- Search messages.
+- Filter correspondence.
+- Assign conversations.
+- Add internal notes.
+- Create follow-up tasks.
+- Link CRM contacts.
+- Request AI assistance.
+- Generate drafts.
+- Submit approvals.
+- Review approval decisions.
+
+### Right panel
+
+Display authorized context:
+
+- Sender identity.
+- Contact information.
+- Related CRM record.
+- Donor relationship.
+- Grant opportunity.
+- Corporate partnership.
+- AI classification.
+- Priority.
+- Follow-up status.
+
+### Critical requirement
+
+All operational counts and records must come from the production database.
+
+No demonstration inbox data.
+
+No invented sender profiles.
+
+No fake conversation threads.
+
+### Exit criteria
+
+Authorized staff can navigate and manage actual imported correspondence.
+
+### Deliverable
+
+`phase21_m08_live_email_manager_acceptance.md`
+
+---
+
+# MILESTONE 21.09
+## LIVE AI EMAIL INTELLIGENCE
+
+### Objective
+
+Use the existing AI gateway to process authorized real correspondence.
+
+### Preserve existing functionality
+
+- 25 email classification categories.
+- P0–P4 prioritization.
+- Nine communication tone styles.
+- Existing AI drafting.
+- Existing agent orchestration.
+- Existing CRM integration.
+
+### Required AI workflow
+
+```text
+REAL AUTHORIZED EMAIL
+          |
+          v
+   ACCESS VALIDATION
+          |
+          v
+ SAFEGUARDING SCREENING
+          |
+          v
+  PERMITTED AI CONTEXT
+          |
+          v
+   REAL MODEL REQUEST
+          |
+          v
+   OUTPUT VALIDATION
+          |
+          v
+ CLASSIFICATION / DRAFT
+          |
+          v
+     STAFF REVIEW
+```
+
+### Required evidence
+
+Record:
+
+- Actual model identifier returned by the provider.
+- Execution timestamp.
+- Agent or service responsible.
+- Execution outcome.
+- Message reference.
+- Classification result.
+- Human review requirement.
+
+Do not expose private message content in operational logs.
+
+Do not report a real AI execution if the provider was not invoked.
+
+### Safeguarding rule
+
+Confidential survivor-related communications must not enter general-purpose fundraising AI processing.
+
+Potentially restricted messages must be isolated and routed to authorized trained personnel.
+
+### Exit criteria
+
+At least one approved real mailbox message completes the authorized classification workflow.
+
+### Deliverable
+
+`phase21_m09_live_ai_email_intelligence.md`
+
+---
+
+# MILESTONE 21.10
+## REAL EMAIL-TO-FUNDRAISING CRM OPERATIONS
+
+### Objective
+
+Connect actual correspondence to existing donor, grant, and corporate relationship workflows.
+
+### Required workflow
+
+```text
+REAL EMAIL
+    |
+    v
+AUTHORIZED CLASSIFICATION
+    |
+    v
+CONTACT MATCHING
+    |
+    v
+EXISTING CRM RECORD
+    |
+    v
+RELATIONSHIP WORKFLOW
+    |
+    v
+STAFF ASSIGNMENT
+    |
+    v
+FOLLOW-UP TASK
+    |
+    v
+ENGAGEMENT HISTORY
+```
+
+### Verify
+
+- Existing contact matching.
+- Duplicate prevention.
+- Source message preservation.
+- Thread ID preservation.
+- Opportunity linking.
+- Follow-up assignment.
+- Staff ownership.
+- Audit history.
+
+### Restrictions
+
+Do not fabricate donor records.
+
+Do not infer verified donations from email content.
+
+Do not automatically create financial receipts.
+
+Do not expose restricted communications to general CRM users.
+
+### Exit criteria
+
+An approved real message can be linked to an authorized CRM record without duplication or privacy leakage.
+
+### Deliverable
+
+`phase21_m10_email_crm_live_integration.md`
+
+---
+
+# MILESTONE 21.11
+## HUMAN APPROVAL AND LIVE EMAIL DISPATCH
+
+### Objective
+
+Verify the complete communication approval chain.
+
+### Preserve the existing actions
+
+- `APPROVE`
+- `REQUEST_CHANGES`
+- `RETURN_TO_DRAFT`
+- `REJECT`
+
+### Required workflow
+
+```text
+STAFF DRAFT
+    |
+    v
+CONTENT VALIDATION
+    |
+    v
+RECIPIENT VERIFICATION
+    |
+    v
+HUMAN REVIEW
+    |
+    v
+APPROVAL
+    |
+    v
+CONTENT HASH VERIFICATION
+    |
+    v
+PROVIDER AUTHORIZATION
+    |
+    v
+AUTHORIZED LIVE DISPATCH
+    |
+    v
+SENT MESSAGE RECONCILIATION
+    |
+    v
+AUDIT AND CRM UPDATE
+```
+
+### Security requirements
+
+- Server-side approval enforcement.
+- Material-change invalidation.
+- Authorized sender identity.
+- Internal note exclusion.
+- Recipient validation.
+- Duplicate-send prevention.
+- Emergency dispatch shutdown.
+- Restricted executive permissions.
+
+### Controlled live verification
+
+Only after explicit approval, send one harmless test message from an authorized organizational identity to a designated test recipient.
+
+Verify actual provider acceptance and sent-folder reconciliation.
+
+Do not send donor solicitations during activation testing.
+
+Do not automatically enable mass sending.
+
+### Exit criteria
+
+The approved controlled test succeeds through the real provider, with a complete audit record.
+
+### Deliverable
+
+`phase21_m11_live_email_dispatch_verification.md`
+
+---
+
+# MILESTONE 21.12
+## EXPAND TO ALL FIVE ORGANIZATIONAL ADDRESSES
+
+### Objective
+
+Complete authorized organizational email coverage.
+
+### Dependency
+
+The pilot mailbox must pass the preceding required milestones.
+
+### Expansion order
+
+1. `donations@phumulani.org` — pilot mailbox.
+2. `grants@phumulani.org` — institutional correspondence.
+3. `partnerships@phumulani.org` — alias routing and send-as verification.
+4. `info@phumulani.org` — Google Group integration using the actual supported access method.
+5. `executive@phumulani.org` — separately approved restricted activation.
+
+The order may be adjusted by authorized organizational leadership.
+
+### For every identity
+
+Verify:
+
+- Actual account or routing configuration.
+- Authorized access.
+- Historical retrieval.
+- Incremental synchronization.
+- Staff permissions.
+- AI classification restrictions.
+- CRM integration where permitted.
+- Drafting.
+- Approval.
+- Sending permissions.
+- Audit logging.
+
+### Executive mailbox requirement
+
+Do not inherit general fundraising access.
+
+Apply strict executive authorization.
+
+Verify search isolation and restricted AI context.
+
+### Exit criteria
+
+Each organizational address has an evidence-based operational status.
+
+Do not claim all five are live if one remains unauthorized.
+
+### Deliverable
+
+`phase21_m12_five_mailbox_activation_register.md`
+
+---
+
+# MILESTONE 21.13
+## EMAIL SECURITY, PRIVACY AND SAFEGUARDING
+
+### Objective
+
+Preserve the security architecture specified in the Phumulani project documents.
+
+### Mandatory boundary
+
+The restricted survivor-services environment must remain separate from:
+
+- General organizational email intelligence.
+- Fundraising CRM.
+- Donor analytics.
+- Community records.
+- General AI agents.
+- Unrestricted search.
+
+### Required tests
+
+Verify:
+
+1. Unauthorized mailbox access is denied.
+2. Executive messages cannot appear in general search.
+3. Confidential messages cannot leak into fundraising AI.
+4. Internal notes cannot appear in outbound email.
+5. Unapproved drafts cannot be sent.
+6. Post-approval modifications invalidate approval.
+7. Unauthorized attachments cannot be retrieved.
+8. Email prompt injection cannot override system permissions.
+9. Restricted message metadata does not leak through reports.
+10. Audit events are generated for sensitive actions.
+
+Use isolated test fixtures for adversarial testing.
+
+Do not use real survivor records as general security-test data.
+
+### Exit criteria
+
+No critical access-control or disclosure failures remain unresolved.
+
+### Deliverable
+
+`phase21_m13_email_security_and_safeguarding.md`
+
+---
+
+# MILESTONE 21.14
+## LIVE EMAIL HEALTH, MONITORING AND RECOVERY
+
+### Objective
+
+Provide reliable operational monitoring.
+
+### Required metrics
+
+For each mailbox display:
+
+- Connection status.
+- Authorization status.
+- Last provider verification.
+- Last successful sync.
+- Historical import progress.
+- Messages imported.
+- Sync failures.
+- Token refresh failures.
+- Worker health.
+- Pending approvals.
+- Failed dispatch attempts.
+- Dead-letter jobs.
+
+### Required distinction
+
+A healthy application server does not mean Google Workspace is connected.
+
+A working AI gateway does not mean email synchronization is active.
+
+A passing regression suite does not mean historical import has succeeded.
+
+### Incident recovery
+
+Verify documented recovery for:
+
+- Expired OAuth tokens.
+- Revoked permissions.
+- Provider rate limits.
+- Worker restarts.
+- Database interruptions.
+- Partial historical imports.
+- Duplicate dispatch attempts.
+
+### Exit criteria
+
+Actual provider failures are visible and actionable.
+
+### Deliverable
+
+`phase21_m14_email_monitoring_and_recovery.md`
+
+---
+
+# MILESTONE 21.15
+## STAFF ACCEPTANCE AND OPERATIONAL HANDOVER
+
+### Objective
+
+Ensure authorized Phumulani staff can operate the real Email Manager.
+
+### Required roles
+
+**Master Administrator**
+
+- Manage approved mailbox configurations.
+- Review operational health.
+- Control access.
+- Review audit events.
+
+**Development Officer**
+
+- Manage donor correspondence.
+- Link CRM contacts.
+- Prepare approved outreach.
+- Track follow-ups.
+
+**Grants Officer**
+
+- Manage institutional emails.
+- Link grant opportunities.
+- Review grant-related deadlines.
+- Prepare responses.
+
+**Partnerships Officer**
+
+- Manage corporate correspondence.
+- Track CSR opportunities.
+- Prepare sponsorship communications.
+
+**Executive Director**
+
+- Access authorized executive correspondence.
+- Review sensitive executive approvals.
+- Monitor organizational communications.
+
+**Safeguarding Officer**
+
+- Review restricted routing.
+- Verify confidentiality.
+- Manage authorized safeguarding escalation.
+
+### Required acceptance
+
+Actual staff must confirm:
+
+- Login and permissions.
+- Inbox access.
+- Message search.
+- Email classification.
+- AI drafting.
+- Human approvals.
+- Follow-up management.
+- CRM linking.
+- Operational reporting.
+
+### Exit criteria
+
+Authorized staff acceptance is recorded.
+
+Do not fabricate signatures or approvals.
+
+### Deliverable
+
+`phase21_m15_staff_live_email_acceptance.md`
+
+---
+
+# 3. STRICT MILESTONE DEPENDENCY MATRIX
+
+| Milestone | Required prerequisite | Completion evidence |
+|---|---|---|
+| M21.01 | Repository and runtime access | Actual environment audit |
+| M21.02 | Authorized database infrastructure | Real PostgreSQL verification |
+| M21.03 | Workspace administrative visibility | Verified identity mapping |
+| M21.04 | Authorized OAuth configuration | Successful provider request |
+| M21.05 | M21.04 | Real pilot mailbox retrieval |
+| M21.06 | M21.02 + M21.05 + import approval | Real persisted historical messages |
+| M21.07 | M21.02 + M21.05 | Real incremental synchronization |
+| M21.08 | M21.06 | Staff access to real messages |
+| M21.09 | Authorized real messages and AI access | Actual AI execution |
+| M21.10 | Real messages and permitted CRM access | Verified contact linking |
+| M21.11 | OAuth send permission and human approval | Controlled real provider dispatch |
+| M21.12 | Successful pilot | Verified additional identities |
+| M21.13 | Existing security controls | Access-control evidence |
+| M21.14 | Live operational components | Real monitoring and recovery |
+| M21.15 | Authorized staff participation | Recorded acceptance |
+
+**Do not mark downstream milestones complete when their prerequisites remain blocked.**
+
+---
+
+# 4. REQUIRED TESTING
+
+Preserve the reported baseline:
+
+`276 / 276 PASSING`
+
+Run the actual available test commands.
+
+Verify:
+
+- TypeScript compilation.
+- Production build.
+- Regression tests.
+- Database integration.
+- OAuth callback security.
+- Mailbox access authorization.
+- Historical import checkpoint recovery.
+- Incremental sync.
+- AI classification.
+- CRM linking.
+- Approval enforcement.
+- Controlled outbound dispatch.
+- Safeguarding isolation.
+
+Keep isolated test data separate from production.
+
+Do not artificially increase the test count.
+
+Report separately:
+
+**AUTOMATED TESTS PASSED**
+
+**LIVE PROVIDER CHECKS PASSED**
+
+**LIVE PROVIDER CHECKS BLOCKED**
+
+**STAFF ACCEPTANCE COMPLETED**
+
+---
+
+# 5. REQUIRED PRODUCTION EVIDENCE
+
+For each completed live milestone, record:
+
+```text
+MILESTONE_ID:
+SERVICE:
+ENVIRONMENT:
+AUTHORIZED_ACCOUNT_OR_ROLE:
+EXECUTION_TIMESTAMP:
+OPERATION_PERFORMED:
+ACTUAL_RESULT:
+EVIDENCE_REFERENCE:
+SECURITY_CHECK:
+APPROVAL_REFERENCE:
+FINAL_STATUS:
+```
+
+Never include:
+
+- Passwords.
+- OAuth access tokens.
+- OAuth refresh tokens.
+- Full private email content.
+- Confidential survivor information.
+- Sensitive personal information.
+
+Provider identifiers may be redacted or hashed where appropriate.
+
+---
+
+# 6. REQUIRED FINAL PHASE 21 REPORT
+
+Generate:
+
+`phumulani_phase21_live_email_management_master_report.md`
+
+The report must include:
+
+## SECTION A — Development Summary
+
+- Actual code changes.
+- Existing components reused.
+- Defects corrected.
+- Regression results.
+
+## SECTION B — Production Infrastructure
+
+- PostgreSQL status.
+- Database migration status.
+- Persistence verification.
+- Backup and recovery status.
+
+## SECTION C — Google Workspace
+
+- Actual identity mapping.
+- OAuth authorization.
+- Connected mailbox accounts.
+- Remaining account blockers.
+
+## SECTION D — Historical Email
+
+- Actual messages discovered.
+- Actual messages imported.
+- Import checkpoints.
+- Failed imports.
+- Recovery results.
+
+## SECTION E — Continuous Synchronization
+
+- Real sync status.
+- Last successful sync.
+- Cursor persistence.
+- Worker recovery.
+
+## SECTION F — AI Email Management
+
+- Real AI classification.
+- Draft generation.
+- CRM linking.
+- Safeguarding restrictions.
+
+## SECTION G — Human Approval and Dispatch
+
+- Approval enforcement.
+- Authorized sender verification.
+- Controlled live dispatch result.
+- Sent-message reconciliation.
+
+## SECTION H — Staff Acceptance
+
+- Roles tested.
+- Operational tasks completed.
+- Outstanding sign-offs.
+
+## SECTION I — Outstanding Blockers
+
+For each blocker specify:
+
+- Exact missing requirement.
+- Responsible role.
+- Required administrator action.
+- Verification procedure.
+- Affected milestones.
+
+## SECTION J — Final Operational Classification
+
+Use:
+
+```text
+APPLICATION_IMPLEMENTATION:
+PRODUCTION_DATABASE:
+GOOGLE_WORKSPACE_OAUTH:
+PILOT_MAILBOX:
+HISTORICAL_EMAIL_IMPORT:
+INCREMENTAL_SYNCHRONIZATION:
+AI_EMAIL_CLASSIFICATION:
+EMAIL_CRM_INTEGRATION:
+HUMAN_APPROVAL:
+LIVE_EMAIL_DISPATCH:
+FIVE_MAILBOX_COVERAGE:
+SAFEGUARDING:
+STAFF_ACCEPTANCE:
+OVERALL_PRODUCTION_STATUS:
+```
+
+Each value must be supported by evidence.
+
+---
+
+# 7. FINAL PRODUCTION ACCEPTANCE CRITERIA
+
+The Enterprise AI Email Manager may be classified as fully operational only when:
+
+1. Production PostgreSQL is connected and verified.
+2. Required database migrations are complete.
+3. Google Workspace authorization is complete.
+4. Actual organizational mailbox identities are verified.
+5. At least one pilot mailbox has passed real-provider verification.
+6. Historical correspondence has been imported successfully.
+7. Incremental synchronization works.
+8. Authorized staff can read and manage real messages.
+9. AI classification processes permitted real correspondence.
+10. CRM linking works without duplicate records.
+11. Human approvals are enforced server-side.
+12. Controlled outbound sending has been separately authorized and verified.
+13. All required organizational addresses have documented operational coverage.
+14. Restricted executive communications remain isolated.
+15. Survivor-related confidential data remains protected.
+16. Monitoring and recovery are functional.
+17. Existing regression tests pass.
+18. Authorized staff acceptance is recorded.
+
+**Do not classify the entire Email Manager as `PRODUCTION_OPERATIONAL` while a required milestone remains blocked.**
+
+Partial success must be reported accurately.
+
+---
+
+# 8. FINAL GOOGLE AI STUDIO EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+EXECUTE PHASE 21 STRICTLY BY MILESTONE.
+
+DO NOT START ANOTHER GENERAL DEVELOPMENT CYCLE.
+
+DO NOT ADD UNNECESSARY FEATURES.
+
+DO NOT REBUILD THE EXISTING EMAIL MANAGER.
+
+DO NOT CREATE DEMONSTRATION MAILBOXES.
+
+DO NOT SEED FAKE ORGANIZATIONAL EMAIL.
+
+DO NOT GENERATE SYNTHETIC PRODUCTION CONTACTS.
+
+DO NOT PRESENT MOCK TESTS AS LIVE PROVIDER VERIFICATION.
+
+DO NOT CLAIM GOOGLE WORKSPACE CONNECTIVITY WITHOUT REAL OAUTH AUTHORIZATION.
+
+DO NOT CLAIM HISTORICAL EMAIL RECOVERY WITHOUT ACTUAL AUTHORIZED MESSAGE RETRIEVAL.
+
+DO NOT CLAIM EMAIL DISPATCH SUCCESS WITHOUT REAL PROVIDER ACCEPTANCE.
+
+DO NOT BYPASS HUMAN APPROVAL.
+
+DO NOT WEAKEN SAFEGUARDING RESTRICTIONS.
+
+DO NOT MODIFY UNRELATED APPLICATION MODULES.
+
+### EXECUTION PRIORITY
+
+**FIRST:** Audit the actual environment.
+
+**SECOND:** Verify and activate production PostgreSQL with authorization.
+
+**THIRD:** Confirm actual Google Workspace mailbox identities.
+
+**FOURTH:** Complete authorized Google Workspace OAuth.
+
+**FIFTH:** Connect `donations@phumulani.org` as the pilot mailbox.
+
+**SIXTH:** Retrieve and persist authorized historical email.
+
+**SEVENTH:** Activate real incremental synchronization.
+
+**EIGHTH:** Verify the existing Email Manager using real organizational correspondence.
+
+**NINTH:** Verify AI classification, CRM linking, drafting, and approval.
+
+**TENTH:** Perform controlled live sending only after separate authorization.
+
+**ELEVENTH:** Expand to the remaining organizational addresses.
+
+**TWELFTH:** Complete security, monitoring, and staff acceptance.
+
+### BLOCKER HANDLING
+
+IF A MILESTONE REQUIRES CREDENTIALS, ADMINISTRATOR CONSENT, CLOUD PROVISIONING, OR EXPLICIT RELEASE APPROVAL THAT IS NOT AVAILABLE:
+
+1. STOP THAT SPECIFIC EXTERNAL ACTION.
+2. RECORD THE EXACT BLOCKER.
+3. IDENTIFY THE RESPONSIBLE AUTHORIZED ROLE.
+4. PROVIDE THE EXACT ACTIVATION PROCEDURE.
+5. CONTINUE ONLY INDEPENDENT WORK.
+6. DO NOT SUBSTITUTE A SIMULATION.
+7. DO NOT MARK THE MILESTONE COMPLETE.
+
+### FINAL OBJECTIVE
+
+DELIVER A GENUINELY OPERATIONAL PHUMULANI ENTERPRISE AI EMAIL MANAGER:
+
+```text
+REAL GOOGLE WORKSPACE ACCOUNTS
+             |
+             v
+AUTHORIZED OAUTH CONNECTION
+             |
+             v
+REAL HISTORICAL EMAIL RECOVERY
+             |
+             v
+LIVE INCREMENTAL SYNCHRONIZATION
+             |
+             v
+PRODUCTION POSTGRESQL STORAGE
+             |
+             v
+SECURE UNIFIED EMAIL MANAGER
+             |
+             v
+REAL AI EMAIL CLASSIFICATION
+             |
+             v
+DONOR / GRANT / CSR CRM INTEGRATION
+             |
+             v
+STAFF REVIEW AND APPROVAL
+             |
+             v
+AUTHORIZED LIVE EMAIL DISPATCH
+             |
+             v
+VERIFIED COMMUNICATION HISTORY
+             |
+             v
+LIVE MONITORING AND AUDIT
+```
+
+**NO DEMONSTRATION ACCOUNTS.**
+
+**NO FABRICATED OPERATIONAL DATA.**
+
+**NO FALSE CONNECTIVITY CLAIMS.**
+
+**NO UNAUTHORIZED EXTERNAL ACTIONS.**
+
+**BEGIN PHASE 21 MILESTONE 21.01 NOW.**

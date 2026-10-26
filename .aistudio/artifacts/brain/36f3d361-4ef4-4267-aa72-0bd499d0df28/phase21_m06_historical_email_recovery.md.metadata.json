@@ -1,0 +1,5 @@
+{
+  "summary":  "Milestone 21.06 Historical Email Recovery Report documenting the paginated recovery engine, deduplication safeguards, cursor checkpoints, read-only guarantees, and dependency blocker tracking.",
+  "updatedAt":  "2026-10-26T13:20:59.715069682Z",
+  "userFacing":  true
+}

@@ -3,8 +3,8 @@
     "platform": "Phumulani AI Community Platform",
     "schema": "PostgreSQL 15+ Compatible DDL",
     "engine": "ISOLATED_EMBEDDED_DURABLE",
-    "persistedAt": "2026-10-26T13:07:25.139Z",
-    "tablesCount": 5,
+    "persistedAt": "2026-10-26T13:39:45.588Z",
+    "tablesCount": 6,
     "classification": "INTEGRATION_COMPLETE_STAGED_READY"
   },
   "tables": {
@@ -12,7 +12,7 @@
       {
         "id": "test-1",
         "value": "phumulani_durable_test",
-        "timestamp": "2026-10-26T13:07:25.137Z"
+        "timestamp": "2026-10-26T13:39:45.587Z"
       },
       {
         "id": "test-txn-1",
@@ -332,6 +332,44 @@
         "createdAt": "2026-10-26T08:09:01.246Z",
         "updatedAt": "2026-10-26T08:09:01.246Z",
         "errorMessage": "No handler registered for job type UNREGISTERED_TYPE_FOR_TEST"
+      }
+    ],
+    "audit_logs": [
+      {
+        "id": "audit-1793020902305-bg1ej",
+        "timestamp": "2026-10-26T13:21:42.305Z",
+        "agentId": "A02",
+        "action": "drafts:create",
+        "requesterRole": "staff",
+        "status": "fallback_used",
+        "modelUsed": "deterministic_template_engine"
+      },
+      {
+        "id": "audit-1793020911543-ax7c9",
+        "timestamp": "2026-10-26T13:21:51.543Z",
+        "agentId": "A02",
+        "action": "drafts:create",
+        "requesterRole": "staff",
+        "status": "blocked_safeguarding",
+        "reason": "CRITICAL SAFEGUARDING HALT: Domestic violence/crisis indicators in email. Automated drafting halted."
+      },
+      {
+        "id": "audit-1793020949185-fx9pw",
+        "timestamp": "2026-10-26T13:22:29.185Z",
+        "agentId": "FUND-AI-008",
+        "action": "task:dispatch",
+        "requesterRole": "staff",
+        "status": "blocked_policy",
+        "reason": "FAIL-CLOSED GATE INTERCEPTED: Task task-unapproved-999 is not in approved state."
+      },
+      {
+        "id": "audit-1793020987988-5be2b",
+        "timestamp": "2026-10-26T13:23:07.988Z",
+        "agentId": "FUND-AI-018",
+        "action": "safeguarding:probe_suite",
+        "requesterRole": "system_auditor",
+        "status": "allowed",
+        "reason": "Executed 38 negative-access tests (including non-keyword metadata classifications). Invariant score: 100%. Zero survivor disclosures."
       }
     ]
   }
