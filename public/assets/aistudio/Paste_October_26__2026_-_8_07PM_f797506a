@@ -1,0 +1,1200 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+# PHASE 19 — LIVE PRODUCTION DEVELOPMENT AND OPERATIONAL ACTIVATION
+## GOOGLE WORKSPACE, ENTERPRISE EMAIL MANAGEMENT, REAL DATABASE PERSISTENCE AND LIVE ORGANIZATIONAL WORKFLOWS
+
+**PROJECT:** Phumulani AI Community Platform  
+**DEVELOPER:** Ophireum Technology  
+**REPOSITORY:** OphireumTechnology/phumulani  
+**BRANCH:** main  
+**PRIMARY APPLICATION:** /admin/master  
+**ENTERPRISE EMAIL MANAGER:** /admin/master/email  
+**FUNDRAISING CRM:** /admin/master/fundraising  
+**AI AGENT REGISTRY:** /admin/master/fundraising/agents  
+
+**PREVIOUS VERIFIED DEVELOPMENT REPORT:** Phase 18  
+**REPORTED AUTOMATED TEST BASELINE:** 268/268 passing  
+**TARGET ENVIRONMENT:** LIVE PRODUCTION  
+**TARGET OPERATIONAL MODE:** PRODUCTION_ONLY  
+**DEMONSTRATION MODE:** DISABLED  
+**SYNTHETIC OPERATIONAL DATA:** PROHIBITED  
+**UNAUTHORIZED EXTERNAL ACTIONS:** PROHIBITED  
+
+---
+
+# 1. MASTER DEVELOPMENT INSTRUCTION
+
+GOOGLE AI STUDIO:
+
+BEGIN PHASE 19 OF THE PHUMULANI AI COMMUNITY PLATFORM.
+
+THIS PHASE MUST TRANSITION THE EXISTING APPLICATION FROM STAGED DEVELOPMENT TO A GENUINELY LIVE, PRODUCTION-CONNECTED ORGANIZATIONAL PLATFORM.
+
+THE ORGANIZATION DOES NOT WANT A DEMONSTRATION SYSTEM.
+
+THE ORGANIZATION DOES NOT WANT SIMULATED EMAILS.
+
+THE ORGANIZATION DOES NOT WANT FAKE DONOR RECORDS.
+
+THE ORGANIZATION DOES NOT WANT SYNTHETIC TRANSACTIONS PRESENTED AS REAL REVENUE.
+
+THE ORGANIZATION DOES NOT WANT PLACEHOLDER AI EXECUTIONS PRESENTED AS LIVE INTELLIGENCE.
+
+THE ORGANIZATION REQUIRES A FUNCTIONAL, SECURE, PERSISTENT, LIVE SYSTEM OPERATING AGAINST AUTHORIZED ORGANIZATIONAL SERVICES.
+
+IMPLEMENT THE NECESSARY PRODUCTION CONNECTIONS, CONFIGURATION, SECURITY, MONITORING AND OPERATIONAL CONTROLS.
+
+PRESERVE ALL COMPLETED DEVELOPMENT FROM PHASES 13 THROUGH 18.
+
+DO NOT REBUILD THE EMAIL MANAGER.
+
+DO NOT REBUILD THE FUNDRAISING CRM.
+
+DO NOT DUPLICATE THE 18 AI FUNDRAISING AGENTS.
+
+DO NOT RECREATE THE HUMAN APPROVAL ENGINE.
+
+DO NOT CREATE PARALLEL DATABASES OR DUPLICATE COMMUNICATION WORKFLOWS.
+
+FOCUS ON LIVE INTEGRATION AND PRODUCTION EXECUTION.
+
+**IMPORTANT AUTHORIZATION BOUNDARY:**
+
+DO NOT DEPLOY, ACCESS REAL MAILBOX CONTENT, IMPORT HISTORICAL CORRESPONDENCE, SEND EXTERNAL EMAIL, PROCESS REAL PAYMENTS, OR MODIFY LIVE ORGANIZATIONAL RECORDS WITHOUT THE REQUIRED CREDENTIALS, PERMISSIONS AND EXPLICIT AUTHORIZATION.
+
+WHERE AUTHORIZATION IS MISSING, COMPLETE THE IMPLEMENTATION AND REPORT THE EXACT ACTIVATION REQUIREMENT.
+
+DO NOT SUBSTITUTE FAKE DATA OR CLAIM THE LIVE CONNECTION SUCCEEDED.
+
+---
+
+# 2. M19.01 — ENFORCE PRODUCTION-ONLY OPERATIONAL MODE
+
+Implement or verify a single authoritative environment configuration.
+
+Required production settings:
+
+```env
+NODE_ENV=production
+PHUMULANI_ENVIRONMENT=production
+PHUMULANI_OPERATIONAL_MODE=PRODUCTION_ONLY
+
+ENABLE_DEMO_MODE=false
+ENABLE_SYNTHETIC_DATA=false
+ENABLE_FIXTURE_SEEDING=false
+ENABLE_MOCK_EMAIL=false
+ENABLE_MOCK_PAYMENTS=false
+ENABLE_MOCK_CRM=false
+ENABLE_SIMULATED_AI_RESULTS=false
+
+REQUIRE_LIVE_DATABASE=true
+REQUIRE_REAL_PROVIDER_VERIFICATION=true
+REQUIRE_HUMAN_EMAIL_APPROVAL=true
+REQUIRE_FINANCIAL_EVIDENCE=true
+
+ALLOW_JSON_PRODUCTION_FALLBACK=false
+ALLOW_SIMULATED_DISPATCH=false
+ALLOW_UNVERIFIED_REVENUE=false
+```
+
+These are the required configuration semantics. Reuse existing configuration names where available; do not introduce conflicting flags.
+
+## REQUIRED BEHAVIOR
+
+In production mode:
+
+1. Do not initialize synthetic organizational records.
+2. Do not seed fake email messages.
+3. Do not generate placeholder donor profiles.
+4. Do not create simulated donations.
+5. Do not display fake financial totals.
+6. Do not claim successful AI execution when the model call failed.
+7. Do not silently fall back to simulated integrations.
+8. Do not silently fall back from PostgreSQL to JSON persistence.
+9. Do not mark disconnected services as healthy.
+10. Do not allow external operations without valid authorization.
+
+**Production startup must fail safely when a critical dependency is unavailable.**
+
+Noncritical integrations may remain unavailable while the rest of the application operates, provided their functions are disabled and their status is accurately reported.
+
+---
+
+# 3. M19.02 — REMOVE DEMONSTRATION DATA FROM PRODUCTION OPERATIONS
+
+Audit the application for demonstration and synthetic records.
+
+Previously reported synthetic figures include:
+
+- $325,000 demonstration campaign.
+- $175,000 synthetic soft pledges.
+- $50,000 test transaction.
+
+These are not verified organizational funds.
+
+## REQUIRED ACTIONS
+
+1. Identify every synthetic record and fixture.
+2. Identify every automatic seed operation.
+3. Identify every dashboard using synthetic totals.
+4. Identify every AI service consuming demonstration records.
+5. Identify every reporting calculation incorporating fixtures.
+6. Identify every mock provider response.
+
+Prevent these records from appearing in production queries, reports, AI prompts, CRM profiles or financial totals.
+
+Do not delete existing development data blindly.
+
+Preserve development fixtures outside the production data store for automated testing.
+
+If the production database is empty, display a truthful empty state.
+
+Example:
+
+**No verified organizational donations have been recorded.**
+
+Do not replace an empty state with invented financial activity.
+
+---
+
+# 4. M19.03 — ACTIVATE PRODUCTION POSTGRESQL PERSISTENCE
+
+The application already reportedly includes:
+
+- PostgreSQL driver integration.
+- Connection pooling.
+- Transaction handling.
+- Versioned migrations.
+- Embedded JSON persistence.
+
+The production target must use PostgreSQL.
+
+## REQUIRED DEVELOPMENT
+
+Verify:
+
+- Actual PostgreSQL connection.
+- DATABASE_URL configuration.
+- TLS requirements.
+- Connection pooling.
+- Authentication.
+- Migration execution.
+- Transaction consistency.
+- Database indexes.
+- Data integrity.
+- Backup and recovery.
+
+## REQUIRED PRODUCTION RULE
+
+When:
+
+```env
+PHUMULANI_OPERATIONAL_MODE=PRODUCTION_ONLY
+```
+
+the application must not use the embedded JSON database as a substitute for unavailable PostgreSQL.
+
+If PostgreSQL is unavailable:
+
+```text
+DATABASE_STATUS=NOT_CONNECTED
+APPLICATION_READINESS=BLOCKED
+```
+
+Do not display:
+
+```text
+DATABASE_STATUS=HEALTHY
+```
+
+unless a real database connection and required checks have succeeded.
+
+## LIVE DATABASE VERIFICATION
+
+After authorization and provisioning:
+
+1. Establish a real database connection.
+2. Verify server identity and configuration.
+3. Apply approved migrations.
+4. Create a controlled authorized record.
+5. Read the record.
+6. Update the record.
+7. Verify transaction behavior.
+8. Restart the application.
+9. Confirm persistence.
+10. Verify backup and recovery.
+
+Do not claim these tests passed until performed against an actual PostgreSQL instance.
+
+---
+
+# 5. M19.04 — CONNECT THE FIVE REAL ORGANIZATIONAL EMAIL ADDRESSES
+
+The Enterprise Email Manager must support:
+
+1. info@phumulani.org
+2. donations@phumulani.org
+3. grants@phumulani.org
+4. executive@phumulani.org
+5. partnerships@phumulani.org
+
+Previous Phase 18 reporting identified these intended identity types:
+
+| Address | Reported identity |
+|---|---|
+| info@phumulani.org | Google Group |
+| donations@phumulani.org | Workspace user |
+| grants@phumulani.org | Workspace user |
+| executive@phumulani.org | Restricted Workspace user |
+| partnerships@phumulani.org | Workspace alias |
+
+Treat these mappings as configuration assumptions until confirmed by the actual Google Workspace administrator.
+
+## IMPORTANT
+
+A Google Group is not automatically a Gmail mailbox.
+
+A Gmail alias is not necessarily a separately authenticated account.
+
+Implement the connector according to the actual authorized identity configuration.
+
+Do not create five artificial OAuth connections if fewer real accounts are involved.
+
+---
+
+# 6. M19.05 — COMPLETE REAL GOOGLE WORKSPACE OAUTH INTEGRATION
+
+Implement or verify the actual Google OAuth authorization-code workflow.
+
+Required capabilities:
+
+- Google Cloud OAuth configuration.
+- Gmail API enablement.
+- Authorized redirect URIs.
+- OAuth state validation.
+- PKCE where applicable.
+- Secure token storage.
+- Token refresh.
+- Token revocation.
+- Scope validation.
+- Connection health verification.
+- Mailbox permission checks.
+
+Use only the minimum scopes needed for authorized operations.
+
+## REQUIRED CONNECTION STATES
+
+```text
+NOT_CONFIGURED
+AUTHORIZATION_REQUIRED
+AUTHORIZING
+CONNECTED
+TOKEN_REFRESH_REQUIRED
+TOKEN_EXPIRED
+ACCESS_REVOKED
+SYNCING
+DEGRADED
+ERROR
+```
+
+A mailbox may be marked `CONNECTED` only after a successful authenticated provider request.
+
+A stored mailbox configuration does not prove connectivity.
+
+A simulated token does not prove connectivity.
+
+A passing mock test does not prove connectivity.
+
+## ADMINISTRATOR ACTIVATION
+
+If Google Workspace administrator authorization is unavailable:
+
+1. Complete the integration code.
+2. Prepare the exact OAuth configuration instructions.
+3. Expose the secure authorization workflow.
+4. Display `AUTHORIZATION_REQUIRED`.
+5. Stop before accessing organizational messages.
+
+Do not invent credentials.
+
+Do not bypass Google consent requirements.
+
+---
+
+# 7. M19.06 — LIVE HISTORICAL EMAIL RECOVERY
+
+Once an organizational mailbox is authorized, support recovery of its actual historical email.
+
+## REQUIRED WORKFLOW
+
+```text
+AUTHORIZED MAILBOX
+    ↓
+PROVIDER IDENTITY VERIFICATION
+    ↓
+HISTORICAL IMPORT AUTHORIZATION
+    ↓
+MESSAGE DISCOVERY
+    ↓
+PAGINATED RETRIEVAL
+    ↓
+MESSAGE VALIDATION
+    ↓
+SECURE PERSISTENCE
+    ↓
+THREAD RECONSTRUCTION
+    ↓
+CONTACT MATCHING
+    ↓
+AI CLASSIFICATION
+    ↓
+STAFF REVIEW
+```
+
+## IMPORT REQUIREMENTS
+
+- Real provider message IDs.
+- Real RFC Message-ID values where available.
+- Original thread identifiers.
+- Original message timestamps.
+- Sender and recipient metadata.
+- Attachment metadata.
+- Import checkpoints.
+- Duplicate prevention.
+- Rate-limit handling.
+- Retry recovery.
+- Import progress.
+- Import audit logs.
+
+## CRITICAL SAFETY RULE
+
+**Historical imports must be read-only with respect to external communication.**
+
+Importing historical email must not automatically trigger:
+
+- AI auto-replies.
+- Donor outreach.
+- Grant submissions.
+- Sponsorship requests.
+- Financial verification.
+- External notifications.
+
+Imported messages may generate internal recommendations and draft tasks, subject to authorization and privacy restrictions.
+
+---
+
+# 8. M19.07 — LIVE INCREMENTAL EMAIL SYNCHRONIZATION
+
+After historical recovery, activate continuous synchronization for authorized mailboxes.
+
+Required operations:
+
+- Retrieve new messages.
+- Detect changed messages.
+- Track conversation threads.
+- Reconcile sent messages.
+- Process mailbox labels.
+- Maintain synchronization cursors.
+- Resume after interruption.
+- Detect authentication failures.
+- Handle rate limits.
+- Recover background jobs.
+
+Use the existing durable BackgroundWorkerService.
+
+Do not depend on an open browser session.
+
+## REQUIRED OPERATIONAL STATUS
+
+Display:
+
+```text
+MAILBOX: donations@phumulani.org
+CONNECTION: CONNECTED
+PROVIDER: GOOGLE_WORKSPACE
+SYNC_MODE: LIVE
+LAST_SUCCESSFUL_SYNC: <ACTUAL_TIMESTAMP>
+LAST_PROVIDER_CHECK: <ACTUAL_TIMESTAMP>
+MESSAGE_COUNT: <ACTUAL_VERIFIED_COUNT>
+SYNC_ERRORS: <ACTUAL_COUNT>
+```
+
+These values must come from actual persisted provider operations.
+
+Never invent timestamps or counts.
+
+---
+
+# 9. M19.08 — COMPLETE LIVE ENTERPRISE EMAIL OPERATIONS
+
+Preserve the existing three-panel interface at:
+
+`/admin/master/email`
+
+## LEFT PANEL
+
+Provide navigation to:
+
+- Unified Inbox.
+- Five organizational addresses.
+- Historical Email.
+- New Email.
+- Priority Inbox.
+- Sent Email.
+- Drafts.
+- Approvals.
+- Contacts.
+- AI Intelligence.
+- Synchronization.
+- Reports.
+- Administrative Controls.
+
+## CENTRAL PANEL
+
+Enable authorized staff to:
+
+1. Read real organizational messages.
+2. Search correspondence.
+3. Filter messages.
+4. Open conversation threads.
+5. Assign staff members.
+6. Add internal notes.
+7. Link CRM contacts.
+8. Create opportunities.
+9. Request AI analysis.
+10. Generate drafts.
+11. Edit drafts.
+12. Submit approvals.
+13. Review decisions.
+14. Send approved messages when authorized.
+15. Track communication history.
+
+## RIGHT PANEL
+
+Display verified contextual information:
+
+- Sender identity.
+- Contact record.
+- Donor history.
+- Grant opportunities.
+- Corporate partnerships.
+- AI classification.
+- Priority.
+- Suggested actions.
+- Follow-up status.
+- Approval status.
+
+Do not expose restricted executive or survivor information to unauthorized users.
+
+---
+
+# 10. M19.09 — USE REAL AI MODEL EXECUTION
+
+The existing AI workforce contains 18 fundraising agents.
+
+Reuse the existing workforce.
+
+Do not create a duplicate agent system.
+
+## REQUIRED PRODUCTION BEHAVIOR
+
+When an authorized staff member requests AI assistance:
+
+1. Validate user permissions.
+2. Retrieve permitted source records.
+3. Prepare the model context.
+4. Invoke the configured authorized AI model.
+5. Validate the response.
+6. Record the execution.
+7. Store the output.
+8. Present the result for staff review.
+
+## REQUIRED TELEMETRY
+
+Record:
+
+- Agent ID.
+- Task ID.
+- Model identifier.
+- Execution timestamp.
+- Execution outcome.
+- Source references.
+- Error details.
+- Human review requirement.
+
+Do not claim that a real model was invoked when a deterministic fallback was used.
+
+In production, if the required model service is unavailable, display:
+
+```text
+AI_SERVICE_UNAVAILABLE
+```
+
+Do not generate a simulated result and label it as live AI output.
+
+Do not send restricted information to an external model without the necessary authorization and data protection controls.
+
+---
+
+# 11. M19.10 — LIVE EMAIL-TO-CRM INTEGRATION
+
+Connect real authorized organizational correspondence to the existing Fundraising CRM.
+
+Required workflow:
+
+```text
+REAL INCOMING EMAIL
+    ↓
+SECURITY CLASSIFICATION
+    ↓
+CONTACT RESOLUTION
+    ↓
+CRM RELATIONSHIP MATCH
+    ↓
+FUNDING OPPORTUNITY IDENTIFICATION
+    ↓
+AI ASSISTANCE
+    ↓
+AUTHORIZED STAFF ACTION
+    ↓
+ENGAGEMENT RECORD
+```
+
+## REQUIREMENTS
+
+- Real source message references.
+- Contact deduplication.
+- Existing donor matching.
+- Institutional funder matching.
+- Corporate contact matching.
+- Opportunity creation.
+- Staff ownership.
+- Follow-up tracking.
+- Audit history.
+
+Do not invent donor relationships.
+
+Do not fabricate donor giving history.
+
+Do not create verified donations from email statements alone.
+
+---
+
+# 12. M19.11 — LIVE OUTBOUND COMMUNICATION WITH HUMAN APPROVAL
+
+The existing human approval engine must remain mandatory.
+
+Required approval actions:
+
+```text
+APPROVE
+REQUEST_CHANGES
+RETURN_TO_DRAFT
+REJECT
+```
+
+## REQUIRED DISPATCH WORKFLOW
+
+```text
+DRAFT CREATED
+    ↓
+CONTENT VALIDATION
+    ↓
+RECIPIENT VALIDATION
+    ↓
+COMMUNICATION COMPLIANCE
+    ↓
+HUMAN REVIEW
+    ↓
+APPROVAL
+    ↓
+APPROVAL INTEGRITY CHECK
+    ↓
+GOOGLE WORKSPACE AUTHORIZATION CHECK
+    ↓
+AUTHORIZED PROVIDER DISPATCH
+    ↓
+PROVIDER RESPONSE VERIFICATION
+    ↓
+SENT-FOLDER RECONCILIATION
+    ↓
+CRM ENGAGEMENT UPDATE
+```
+
+## CRITICAL CONTROLS
+
+- No unapproved sending.
+- No sending from unauthorized identities.
+- No internal note leakage.
+- No duplicate dispatch.
+- No automatic historical-email responses.
+- No unrestricted mass outreach.
+- No bypass of suppression or consent controls.
+- No unapproved changes after message approval.
+
+Live sending must remain disabled until the appropriate organizational authorization is recorded.
+
+---
+
+# 13. M19.12 — EXECUTIVE MAILBOX SECURITY
+
+The executive mailbox requires enhanced protection.
+
+For:
+
+`executive@phumulani.org`
+
+verify:
+
+- Authorized executive access.
+- Restricted search visibility.
+- Separate mailbox permissions.
+- Dual-control approval where configured.
+- Audit logging.
+- Restricted AI context.
+- Confidential attachment protection.
+
+General fundraising users must not be able to retrieve executive correspondence through:
+
+- Global search.
+- CRM linking.
+- Agent tool calls.
+- Reporting exports.
+- Direct API requests.
+
+---
+
+# 14. M19.13 — SAFEGUARDING AND CONFIDENTIAL CORRESPONDENCE
+
+Preserve the existing safeguarding controls.
+
+Apply server-side default-deny access to confidential records.
+
+Verify:
+
+- Restricted message classification.
+- Confidential message quarantine.
+- Authorized routing.
+- Search restrictions.
+- Attachment restrictions.
+- AI tool restrictions.
+- CRM exclusion.
+- Export exclusion.
+- Audit records.
+
+No confidential survivor correspondence may be included in fundraising intelligence without explicit lawful authorization and appropriate safeguards.
+
+Do not rely solely on keyword detection.
+
+---
+
+# 15. M19.14 — REAL FINANCIAL DATA ONLY
+
+The production platform must not report synthetic financial records as organizational revenue.
+
+Required controls:
+
+```text
+FINANCIAL_DATA_SOURCE=AUTHORIZED_RECORDS_ONLY
+ALLOW_SYNTHETIC_REVENUE=false
+ALLOW_UNVERIFIED_PAYMENT_CONFIRMATION=false
+```
+
+Verify:
+
+- Actual donation records.
+- Actual pledge status.
+- Real grant award evidence.
+- Real sponsorship agreements.
+- Authorized payment provider records.
+- Reconciliation evidence.
+- Program allocation records.
+
+If no live payment provider is connected:
+
+```text
+PAYMENT_PROVIDER_STATUS=NOT_CONNECTED
+```
+
+The fundraising platform may continue managing contacts, opportunities, grants and pledges according to their verified status, but it must not fabricate completed payments.
+
+---
+
+# 16. M19.15 — PRODUCTION BACKGROUND WORKERS
+
+Reuse the existing durable job queue.
+
+Verify production execution for:
+
+- Historical email imports.
+- Incremental synchronization.
+- AI classification.
+- CRM matching.
+- Follow-up reminders.
+- Approved dispatch.
+- Grant deadline monitoring.
+- Donor stewardship tasks.
+
+Required reliability:
+
+- Durable job persistence.
+- Worker lease ownership.
+- Stale lease recovery.
+- Retry limits.
+- Exponential backoff.
+- Dead-letter handling.
+- Idempotency.
+- Audit logging.
+
+Verify recovery after a real server process restart.
+
+Do not claim production durability solely from in-memory simulations.
+
+---
+
+# 17. M19.16 — PRODUCTION SECURITY AND SECRET MANAGEMENT
+
+All production credentials must remain server-side.
+
+Required controls:
+
+- Secure environment configuration.
+- Encrypted token storage.
+- Restricted secret access.
+- No credentials in frontend bundles.
+- No secrets in logs.
+- No hardcoded OAuth tokens.
+- No committed production database passwords.
+- No browser localStorage token persistence.
+- Authenticated API access.
+- Role-based authorization.
+- Secure session handling.
+
+Review the earlier browser `Buffer is not defined` fix.
+
+Ensure no Node-only database or worker modules enter the client bundle.
+
+Remove unnecessary browser polyfills when safe.
+
+Do not use browser polyfills as a substitute for correct server/client separation.
+
+---
+
+# 18. M19.17 — PRODUCTION HEALTH AND MONITORING
+
+Provide truthful production health reporting.
+
+Required components:
+
+```text
+APPLICATION
+POSTGRESQL
+GOOGLE_WORKSPACE
+MAILBOX_SYNC
+EMAIL_DISPATCH
+AI_MODEL
+BACKGROUND_WORKERS
+FUNDRAISING_CRM
+APPROVAL_ENGINE
+FINANCIAL_PROVIDER
+SECURITY_MONITORING
+```
+
+Each must report an evidence-based state such as:
+
+```text
+CONNECTED
+HEALTHY
+DEGRADED
+NOT_CONNECTED
+AUTHORIZATION_REQUIRED
+BLOCKED
+FAILED
+```
+
+Do not mark a component healthy merely because its configuration exists.
+
+Do not use synthetic health metrics.
+
+---
+
+# 19. M19.18 — LIVE SYSTEM VERIFICATION
+
+After authorized services are connected, perform actual integration verification.
+
+## DATABASE
+
+- Real connection.
+- Real migration.
+- Real transaction.
+- Real persistence.
+- Real restart recovery.
+
+## GOOGLE WORKSPACE
+
+- Real authenticated provider request.
+- Real mailbox identity confirmation.
+- Authorized historical message retrieval.
+- Real incremental synchronization.
+- Actual synchronization cursor persistence.
+
+## AI
+
+- Actual authorized model invocation.
+- Verified execution metadata.
+- Real error handling.
+
+## EMAIL DISPATCH
+
+Use a designated organizational test recipient only after explicit sending approval.
+
+Verify:
+
+- Approval enforcement.
+- Provider acceptance.
+- Sent-folder reconciliation.
+- Audit records.
+- Duplicate prevention.
+
+## FINANCIAL SERVICES
+
+Perform live financial verification only after merchant and organizational authorization.
+
+Do not initiate real charges merely to satisfy automated tests.
+
+---
+
+# 20. M19.19 — PRESERVE AUTOMATED TESTING WITHOUT DEMO OPERATIONS
+
+Previous reported baseline:
+
+**268 / 268 automated tests passing.**
+
+Preserve all existing regression tests.
+
+IMPORTANT:
+
+Production-only operation does not mean deleting isolated automated tests.
+
+Tests may continue using synthetic fixtures in an isolated testing context.
+
+However:
+
+- Tests must never seed production records.
+- Tests must never trigger real donor outreach.
+- Tests must never send unauthorized live email.
+- Tests must never charge real payment methods.
+- Tests must never expose confidential production information.
+
+Separate:
+
+1. Unit tests.
+2. Integration tests.
+3. Browser tests.
+4. Security tests.
+5. Live provider verification.
+6. Staff acceptance.
+
+Do not claim simulated tests prove live connectivity.
+
+---
+
+# 21. M19.20 — PRODUCTION DEPLOYMENT PREPARATION
+
+Prepare the existing application for authorized production deployment.
+
+Verify:
+
+- Production build.
+- Production server configuration.
+- PostgreSQL connection.
+- Worker deployment.
+- Secure HTTPS.
+- Authentication.
+- Health probes.
+- Logging.
+- Monitoring.
+- Backup.
+- Recovery.
+- Rollback.
+
+Do not overwrite an existing production deployment without authorization.
+
+Do not force-push repository changes.
+
+Do not delete local work or backups.
+
+Do not perform DNS cutover without release approval.
+
+---
+
+# 22. M19.21 — MASTER ADMINISTRATOR LIVE OPERATIONS DASHBOARD
+
+At:
+
+`/admin/master`
+
+display actual operational status.
+
+Required sections:
+
+### ORGANIZATIONAL EMAIL
+
+- Connected mailbox identities.
+- Authorization status.
+- Historical import status.
+- Synchronization health.
+- Unanswered email.
+- Pending approvals.
+
+### FUNDRAISING
+
+- Verified CRM records.
+- Active funding opportunities.
+- Grant deadlines.
+- Donor follow-ups.
+- Corporate partnerships.
+
+### AI WORKFORCE
+
+- Agent availability.
+- Actual executions.
+- Failed tasks.
+- Pending human reviews.
+
+### FINANCE
+
+- Verified donations.
+- Unverified pledges.
+- Pending reconciliation.
+- Payment provider status.
+
+### SECURITY
+
+- Unauthorized access attempts.
+- Safeguarding events.
+- Audit integrity.
+- Restricted mailbox alerts.
+
+All figures must originate from authorized persistent records.
+
+No demo dashboard statistics.
+
+---
+
+# 23. M19.22 — STAFF LIVE OPERATIONS ACCEPTANCE
+
+Prepare operational acceptance workflows for:
+
+- Master Administrator.
+- Executive Director.
+- Development Officer.
+- Grant Manager.
+- Corporate Partnerships Officer.
+- Finance Officer.
+- Safeguarding Officer.
+
+Verify that each role can perform authorized work using real organizational records.
+
+Do not automatically expose production correspondence to development personnel.
+
+Actual staff acceptance must be recorded by authorized organizational representatives.
+
+---
+
+# 24. M19.23 — REQUIRED DELIVERABLES
+
+Generate the following artifacts.
+
+## ARTIFACT 1
+
+`phumulani_phase19_live_environment_gap_register.md`
+
+Include:
+
+- Existing implementation.
+- Live integration gaps.
+- Required credentials.
+- Required administrator authorizations.
+- Files modified.
+- Remaining blockers.
+
+## ARTIFACT 2
+
+`phumulani_google_workspace_live_activation_register.md`
+
+Include:
+
+- Actual mailbox identities.
+- OAuth connection status.
+- Gmail API verification.
+- Historical import status.
+- Incremental synchronization status.
+- Outbound dispatch authorization.
+- Provider errors.
+
+## ARTIFACT 3
+
+`phumulani_production_database_activation_register.md`
+
+Include:
+
+- PostgreSQL connection status.
+- Migration execution.
+- Persistence verification.
+- Backup verification.
+- Recovery verification.
+
+## ARTIFACT 4
+
+`phumulani_live_email_operations_acceptance_register.md`
+
+Include:
+
+- Unified inbox verification.
+- Real email retrieval.
+- AI classification.
+- CRM linking.
+- Drafting.
+- Human approval.
+- Authorized sending.
+- Sent-folder reconciliation.
+- Staff acceptance.
+
+## ARTIFACT 5
+
+`phumulani_phase19_production_readiness_report.md`
+
+Include:
+
+- Actual test results.
+- Actual provider verification.
+- Actual deployment status.
+- Actual operational status.
+- Remaining blockers.
+- Required organizational actions.
+
+---
+
+# 25. FINAL EXECUTION INSTRUCTIONS
+
+GOOGLE AI STUDIO:
+
+EXECUTE PHASE 19 AS A LIVE PRODUCTION DEVELOPMENT AND ACTIVATION PHASE.
+
+DO NOT CREATE ANOTHER DEMONSTRATION PLATFORM.
+
+DO NOT POPULATE THE PRODUCTION APPLICATION WITH SYNTHETIC DATA.
+
+DO NOT USE MOCK EMAILS AS ORGANIZATIONAL CORRESPONDENCE.
+
+DO NOT USE SIMULATED PAYMENTS AS REVENUE.
+
+DO NOT DISPLAY FAKE AI RESULTS AS LIVE EXECUTIONS.
+
+DO NOT SILENTLY FALL BACK TO JSON STORAGE WHEN PRODUCTION POSTGRESQL IS REQUIRED.
+
+DO NOT CLAIM GOOGLE WORKSPACE IS CONNECTED UNTIL AN AUTHENTICATED PROVIDER REQUEST SUCCEEDS.
+
+DO NOT CLAIM HISTORICAL EMAIL RECOVERY UNTIL ACTUAL AUTHORIZED MESSAGES ARE RETRIEVED.
+
+DO NOT CLAIM LIVE EMAIL DELIVERY UNTIL AUTHORIZED PROVIDER DISPATCH IS VERIFIED.
+
+DO NOT CLAIM PRODUCTION READINESS WITHOUT THE NECESSARY EVIDENCE.
+
+PRESERVE THE EXISTING:
+
+- ENTERPRISE AI EMAIL MANAGER.
+- FIVE ORGANIZATIONAL EMAIL IDENTITIES.
+- FUNDRAISING CRM.
+- 18-AGENT AI WORKFORCE.
+- FIVE FUNDRAISING PIPELINES.
+- HUMAN APPROVAL ENGINE.
+- SAFEGUARDING CONTROLS.
+- DURABLE WORKERS.
+- POSTGRESQL ADAPTER.
+- VERSIONED MIGRATIONS.
+- 268-TEST REGRESSION BASELINE.
+
+COMPLETE ALL IMPLEMENTATION WORK THAT DOES NOT REQUIRE EXTERNAL AUTHORIZATION.
+
+FOR ANY REQUIRED CREDENTIAL, ORGANIZATIONAL CONSENT, OR PRODUCTION RELEASE APPROVAL:
+
+STOP THAT SPECIFIC EXTERNAL ACTION.
+
+RECORD THE EXACT BLOCKER.
+
+CONTINUE ALL OTHER INDEPENDENT WORK.
+
+DO NOT SUBSTITUTE A SIMULATION.
+
+## REQUIRED FINAL READINESS CLASSIFICATION
+
+Use evidence-based classifications:
+
+```text
+LIVE_DEVELOPMENT_COMPLETE
+EXTERNAL_AUTHORIZATION_REQUIRED
+LIVE_INTEGRATION_PARTIALLY_CONNECTED
+PRODUCTION_DEPLOYMENT_READY
+PRODUCTION_VERIFIED
+BLOCKED
+FAILED
+```
+
+Only report `PRODUCTION_VERIFIED` after actual authorized production deployment and end-to-end operational verification.
+
+## FINAL OBJECTIVE
+
+DELIVER A GENUINELY LIVE, PRODUCTION-CONNECTED PHUMULANI AI COMMUNITY PLATFORM WITH:
+
+REAL ORGANIZATIONAL EMAIL
+
+↓
+
+REAL HISTORICAL EMAIL RECOVERY
+
+↓
+
+REAL CONTINUOUS MAILBOX SYNCHRONIZATION
+
+↓
+
+REAL AI EMAIL CLASSIFICATION AND ASSISTANCE
+
+↓
+
+REAL CONTACT AND FUNDRAISING CRM RECORDS
+
+↓
+
+REAL STAFF COLLABORATION
+
+↓
+
+REAL HUMAN APPROVAL
+
+↓
+
+AUTHORIZED LIVE EMAIL DISPATCH
+
+↓
+
+REAL DONOR AND PARTNERSHIP ENGAGEMENT
+
+↓
+
+VERIFIED FINANCIAL AND PROGRAM REPORTING
+
+↓
+
+LIVE MASTER ADMINISTRATOR MONITORING
+
+NO DEMONSTRATION OPERATIONS.
+
+NO FABRICATED PRODUCTION DATA.
+
+NO FALSE CONNECTIVITY CLAIMS.
+
+NO UNAUTHORIZED EXTERNAL ACTIONS.
+
+**BEGIN PHASE 19 NOW.**

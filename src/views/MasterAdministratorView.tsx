@@ -10,6 +10,7 @@ import { db } from '../services/db';
 import { User, UserRole, SystemSettingItem } from '../types';
 import { ProductionHealthService, SystemVerificationProbeReport } from '../services/productionHealthService';
 import { AutomatedTestRunner, TestSuiteSummary } from '../services/automatedTestRunner';
+import { EnvironmentService } from '../services/environmentService';
 import { EmailCommandCenterView } from './EmailCommandCenterView';
 import { FundraisingCommandCenterView } from './FundraisingCommandCenterView';
 import { DevelopmentOperationsView } from './DevelopmentOperationsView';
@@ -178,7 +179,11 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
     }
   };
 
-  const totalDonationsAmount = donations.reduce((sum, d) => sum + d.amount, 0);
+  const isProductionOnly = EnvironmentService.isProductionOnly();
+  const operationalMode = EnvironmentService.getOperationalMode();
+  const verifiedProductionRevenue = EnvironmentService.calculateVerifiedProductionRevenue(donations);
+  const totalDonationsAmount = isProductionOnly ? verifiedProductionRevenue : donations.reduce((sum, d) => sum + d.amount, 0);
+  const verifiedDonationsCount = isProductionOnly ? EnvironmentService.filterProductionDonations(donations).length : donations.length;
   const pendingApprovalsCount = dbState.aiApprovalTasks.filter((t) => t.status === 'pending').length;
   const pausedAgentsCount = agents.filter((a) => a.status === 'paused').length;
 
@@ -503,7 +508,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                 <div className="space-y-2 max-w-2xl">
                   <div className="inline-flex items-center gap-2 text-xs font-semibold text-teal-200 bg-teal-900/60 px-3 py-0.5 rounded-full border border-teal-700">
                     <CheckCircle2 className="w-3.5 h-3.5 text-teal-300" />
-                    <span>PHASE 8 LIVE ENTERPRISE ACTIVATION ACTIVE</span>
+                    <span>PHASE 19 LIVE PRODUCTION ACTIVATION · MODE: {operationalMode}</span>
                   </div>
                   <h2 className="font-serif text-2xl sm:text-3xl font-bold">
                     Phumulani Master Command Dashboard
@@ -562,7 +567,11 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                     ${totalDonationsAmount.toLocaleString()}
                   </div>
                   <div className="text-[11px] text-emerald-700 font-medium">
-                    {donations.length} Transactions · Reconciled
+                    {isProductionOnly
+                      ? totalDonationsAmount === 0
+                        ? 'No verified donations recorded (fixtures segregated)'
+                        : `${verifiedDonationsCount} Verified Transactions · Reconciled`
+                      : `${donations.length} Transactions · Reconciled`}
                   </div>
                 </div>
 
@@ -1421,6 +1430,19 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                 <p className="text-xs text-slate-500 mt-0.5">
                   Real donation ledgers, campaign balances, payment reconciliation, and dual-sign-off rules.
                 </p>
+              </div>
+
+              {/* Phase 19 Financial Segregation Notice */}
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-start gap-3">
+                <ShieldCheck className="w-5 h-5 text-teal-700 shrink-0 mt-0.5" />
+                <div className="space-y-1 text-xs">
+                  <div className="font-bold text-slate-800">
+                    Phase 19 Financial Governance & Segregation Policy ({operationalMode})
+                  </div>
+                  <p className="text-slate-600 leading-relaxed">
+                    In compliance with M19.02 and M19.14, synthetic demonstration fixtures ($325,000 campaign, $175,000 soft pledges, $50,000 test transactions) are quarantined from live production revenue ledgers. Live payment provider status is currently <span className="font-semibold text-slate-700">{EnvironmentService.getPaymentProviderStatus()}</span>. Live verified net revenue reports only authenticated transactions with verified receipts.
+                  </p>
+                </div>
               </div>
 
               {/* Financial Metrics */}

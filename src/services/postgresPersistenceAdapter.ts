@@ -16,6 +16,8 @@ const { Pool } = pg;
 export interface DatabaseConnectionInfo {
   engine: 'POSTGRESQL' | 'ISOLATED_EMBEDDED_DURABLE';
   connected: boolean;
+  databaseStatus: 'HEALTHY' | 'NOT_CONNECTED' | 'DEGRADED';
+  applicationReadiness: 'READY' | 'BLOCKED';
   databaseUrlConfigured: boolean;
   host: string;
   databaseName: string;
@@ -88,6 +90,8 @@ export class PostgresPersistenceAdapter {
    * If DATABASE_URL is omitted, safely uses isolated embedded durable JSON storage.
    */
   public async initialize(): Promise<DatabaseConnectionInfo> {
+    const isProdOnly = process.env.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_ONLY';
+
     if (this.isInitialized) {
       return this.getConnectionInfo();
     }
@@ -127,7 +131,16 @@ export class PostgresPersistenceAdapter {
       }
     }
 
-    // Isolated Embedded Durable Storage Mode
+    // In PRODUCTION_ONLY mode, PostgreSQL is mandatory (no silent fallback to embedded JSON)
+    if (isProdOnly) {
+      this.connectionError = 'PHUMULANI_OPERATIONAL_MODE is PRODUCTION_ONLY but DATABASE_URL is not configured';
+      this.isInitialized = false;
+      throw new Error(
+        '[PostgresAdapter] FATAL: Production mode requires a live PostgreSQL instance (DATABASE_URL missing). Silent JSON fallback is strictly disabled in PRODUCTION_ONLY mode.'
+      );
+    }
+
+    // Isolated Embedded Durable Storage Mode (staged development and local test baseline)
     try {
       if (!fs.existsSync(this.storageDir)) {
         fs.mkdirSync(this.storageDir, { recursive: true });
@@ -156,8 +169,29 @@ export class PostgresPersistenceAdapter {
    * Returns current database connection and persistence diagnostics
    */
   public getConnectionInfo(): DatabaseConnectionInfo {
+    const isProdOnly = process.env.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_ONLY';
     const isPgConfigured = !!this.databaseUrl;
     const isPgActive = isPgConfigured && !!this.pool && !this.connectionError;
+
+    let databaseStatus: 'HEALTHY' | 'NOT_CONNECTED' | 'DEGRADED' = 'HEALTHY';
+    let applicationReadiness: 'READY' | 'BLOCKED' = 'READY';
+    let readinessClassification = 'INTEGRATION_COMPLETE_STAGED_READY';
+
+    if (isProdOnly) {
+      if (!isPgActive) {
+        databaseStatus = 'NOT_CONNECTED';
+        applicationReadiness = 'BLOCKED';
+        readinessClassification = 'BLOCKED_MISSING_PRODUCTION_DATABASE';
+      } else {
+        databaseStatus = 'HEALTHY';
+        applicationReadiness = 'READY';
+        readinessClassification = 'PRODUCTION_VERIFIED';
+      }
+    } else {
+      databaseStatus = isPgConfigured && !isPgActive ? 'DEGRADED' : 'HEALTHY';
+      applicationReadiness = 'READY';
+      readinessClassification = isPgActive ? 'PRODUCTION_VERIFIED' : 'INTEGRATION_COMPLETE_STAGED_READY';
+    }
 
     let totalRecords = 0;
     for (const rows of this.memoryStore.values()) {
@@ -181,7 +215,9 @@ export class PostgresPersistenceAdapter {
 
     return {
       engine: isPgActive ? 'POSTGRESQL' : 'ISOLATED_EMBEDDED_DURABLE',
-      connected: isPgConfigured ? isPgActive : true,
+      connected: isProdOnly ? isPgActive : (isPgConfigured ? isPgActive : true),
+      databaseStatus,
+      applicationReadiness,
       databaseUrlConfigured: isPgConfigured,
       host,
       databaseName: dbName,
@@ -195,7 +231,7 @@ export class PostgresPersistenceAdapter {
       connectionError: this.connectionError,
       transactionSupport: true,
       concurrencyLockActive: true,
-      readinessClassification: 'INTEGRATION_COMPLETE_STAGED_READY',
+      readinessClassification,
       poolDiagnostics: this.pool
         ? {
             totalCount: this.pool.totalCount,

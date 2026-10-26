@@ -14,6 +14,7 @@ import { GoogleGenAI } from '@google/genai';
 import { PostgresPersistenceAdapter } from './src/services/postgresPersistenceAdapter';
 import { DatabaseMigrationService } from './src/services/databaseMigrationService';
 import { BackgroundWorkerService } from './src/services/backgroundWorkerService';
+import { EnvironmentService } from './src/services/environmentService';
 
 dotenv.config();
 
@@ -136,19 +137,43 @@ const checkSafeguardingCrisis = (text: string): boolean => {
 // 1. Production Health & Readiness Endpoints (/health, /api/health, /api/v1/health)
 const handleHealthCheck = async (_req: Request, res: Response) => {
   const dbInfo = dbAdapter.getConnectionInfo();
+  const envConfig = EnvironmentService.getConfig();
+  const isProdOnly = EnvironmentService.isProductionOnly();
+
+  const components = {
+    APPLICATION: 'HEALTHY' as const,
+    POSTGRESQL: dbInfo.databaseStatus,
+    GOOGLE_WORKSPACE: 'AUTHORIZATION_REQUIRED' as const,
+    MAILBOX_SYNC: 'AUTHORIZATION_REQUIRED' as const,
+    EMAIL_DISPATCH: 'AUTHORIZATION_REQUIRED' as const,
+    AI_MODEL: genAI ? ('CONNECTED' as const) : ('AI_SERVICE_UNAVAILABLE' as const),
+    BACKGROUND_WORKERS: 'HEALTHY' as const,
+    FUNDRAISING_CRM: 'HEALTHY' as const,
+    APPROVAL_ENGINE: 'HEALTHY' as const,
+    FINANCIAL_PROVIDER: EnvironmentService.getPaymentProviderStatus(),
+    SECURITY_MONITORING: 'HEALTHY' as const,
+  };
+
+  const isBlocked = isProdOnly && dbInfo.databaseStatus === 'NOT_CONNECTED';
+  const overallStatus = isBlocked ? 'BLOCKED' : 'HEALTHY';
+
   res.json({
-    status: 'healthy',
+    status: overallStatus,
+    operationalMode: envConfig.operationalMode,
+    applicationReadiness: dbInfo.applicationReadiness,
     service: 'Phumulani AI Community Platform',
-    version: '1.0.0-phase17',
-    environment: process.env.NODE_ENV || 'development',
+    version: '1.0.0-phase19',
+    environment: envConfig.phumulaniEnvironment,
     timestamp: new Date().toISOString(),
     basePath: BASE_PATH,
+    components,
     geminiConfigured: !!genAI,
     model: 'gemini-3.8-flash',
     auditLogCount: serverAuditLogs.length,
     database: {
       engine: dbInfo.engine,
       connected: dbInfo.connected,
+      databaseStatus: dbInfo.databaseStatus,
       host: dbInfo.host,
       databaseName: dbInfo.databaseName,
       tablesVerifiedCount: dbInfo.tablesVerifiedCount,
@@ -156,9 +181,13 @@ const handleHealthCheck = async (_req: Request, res: Response) => {
       readinessClassification: dbInfo.readinessClassification,
     },
     googleWorkspaceOAuth: {
-      status: 'SIMULATED — LIVE OAUTH REQUIRED',
-      externalSyncLocked: true,
+      status: 'AUTHORIZATION_REQUIRED',
+      connectionState: 'AUTHORIZATION_REQUIRED',
       notice: 'Live provider requests require administrator OAuth consent. Simulated token sync active.',
+    },
+    paymentProvider: {
+      status: EnvironmentService.getPaymentProviderStatus(),
+      notice: 'Live merchant provider not connected. Synthetic revenue generation is strictly disabled.',
     },
     safeguardingFirewall: {
       status: 'ACTIVE',

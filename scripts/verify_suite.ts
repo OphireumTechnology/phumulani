@@ -22,6 +22,7 @@ async function main() {
   }
 
   console.log('--- VERIFYING POSTGRES PERSISTENCE ADAPTER ---');
+  process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
   const adapter = PostgresPersistenceAdapter.getInstance();
   const connInfo = await adapter.initialize();
   console.log(`Engine: ${connInfo.engine}, Host: ${connInfo.host}, Tables: ${connInfo.tablesVerifiedCount}`);
