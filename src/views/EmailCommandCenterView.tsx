@@ -103,12 +103,14 @@ interface EmailCommandCenterViewProps {
   currentUser: User;
   onViewChange: (view: string) => void;
   onBackToMasterAdmin?: () => void;
+  onOpenFundraisingCRM?: (subRoute?: string, donorId?: string) => void;
 }
 
 export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
   currentUser,
   onViewChange,
   onBackToMasterAdmin,
+  onOpenFundraisingCRM,
 }) => {
   const dbState = db.getState();
   const mailboxes = dbState.connectedMailboxes;
@@ -1279,6 +1281,110 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     </div>
                   </div>
                 )}
+                {/* Fundraising CRM Bridge Panel (Section 5) */}
+                {selectedThread.classification !== '01_safeguarding' && (() => {
+                  const latestMsg = selectedThread.messages[selectedThread.messages.length - 1] || selectedThread.messages[0];
+                  const senderEmail = (latestMsg?.senderEmail || '').trim().toLowerCase();
+                  const fundraisingDonors = db.getFundraisingDonors();
+                  const matchedDonor = fundraisingDonors.find(
+                    (d) => d.email.toLowerCase() === senderEmail
+                  );
+                  const linkedOpps = matchedDonor ? db.getFundraisingOpportunities().filter((o) => o.donorId === matchedDonor.id) : [];
+
+                  return (
+                    <div className="bg-teal-50/70 border-b border-teal-200 p-3 sm:p-4 text-xs">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-teal-950 flex items-center gap-1.5">
+                              <DollarSign className="w-4 h-4 text-teal-700" />
+                              Fundraising CRM & Opportunity Bridge
+                            </span>
+                            {matchedDonor ? (
+                              <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold text-[10px] border border-emerald-300">
+                                Matched Contact: {matchedDonor.givingTier}
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-semibold text-[10px] border border-amber-300">
+                                Unlinked / Prospective Supporter
+                              </span>
+                            )}
+                          </div>
+                          <div className="text-[11px] text-slate-600">
+                            {matchedDonor ? (
+                              <span>
+                                Linked to <strong>{matchedDonor.name}</strong> ({matchedDonor.category.replace(/_/g, ' ')}) · Lifetime Giving: <strong className="text-teal-900">${matchedDonor.lifetimeGiving.toLocaleString()}</strong> · Relationship Owner: <strong>{matchedDonor.relationshipOwner}</strong>
+                              </span>
+                            ) : (
+                              <span>
+                                Inbound correspondence from <span className="font-mono text-slate-800">{latestMsg?.senderEmail}</span> classified as <strong>{EMAIL_CATEGORY_METADATA[selectedThread.classification]?.label}</strong>.
+                              </span>
+                            )}
+                          </div>
+                          {linkedOpps.length > 0 && (
+                            <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                              <span className="text-[10px] font-semibold text-slate-500">Active Opportunities:</span>
+                              {linkedOpps.map((opp) => (
+                                <span key={opp.id} className="text-[10px] font-medium px-2 py-0.5 rounded bg-white border border-teal-200 text-teal-950">
+                                  {opp.title} (${opp.targetAmount.toLocaleString()} · {opp.status.replace(/_/g, ' ')})
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex flex-wrap items-center gap-2 shrink-0">
+                          {matchedDonor ? (
+                            <button
+                              onClick={() => {
+                                if (onOpenFundraisingCRM) {
+                                  onOpenFundraisingCRM('donors', matchedDonor.id);
+                                } else {
+                                  onViewChange('fundraising');
+                                }
+                              }}
+                              className="px-3 py-1.5 bg-[#104F57] hover:bg-[#0c3d43] text-white font-semibold text-xs rounded-lg shadow-xs flex items-center gap-1 cursor-pointer"
+                              title="Open this donor in the full Fundraising CRM workspace"
+                            >
+                              <span>View Profile in CRM →</span>
+                            </button>
+                          ) : (
+                            <button
+                              onClick={() => {
+                                const res = EmailEnterpriseService.ingestAndLinkFundraisingEmail(selectedThread, latestMsg);
+                                if (res.safeguardingQuarantined) {
+                                  setActionNotice({
+                                    type: 'warning',
+                                    message: 'VAWA SAFEGUARDING QUARANTINE: Ingestion into Fundraising CRM blocked due to confidential crisis indicators.',
+                                  });
+                                  return;
+                                }
+                                if (res.executiveGated) {
+                                  setActionNotice({
+                                    type: 'warning',
+                                    message: 'EXECUTIVE GATING: Executive mailbox correspondence held for Comfort Dondo review.',
+                                  });
+                                  return;
+                                }
+                                if (res.success) {
+                                  setActionNotice({
+                                    type: 'success',
+                                    message: `Successfully linked to Fundraising CRM: ${res.donorName} (${res.isNewDonor ? 'New Contact Created' : 'Existing Contact Updated'}). Opportunity: ${res.opportunityTitle || 'Linked'}.`,
+                                  });
+                                }
+                              }}
+                              className="px-3 py-1.5 bg-[#104F57] hover:bg-[#0c3d43] text-white font-semibold text-xs rounded-lg shadow-xs flex items-center gap-1 cursor-pointer"
+                              title="Ingest message, resolve sender identity, and create CRM opportunity"
+                            >
+                              <Plus className="w-3.5 h-3.5" />
+                              <span>Ingest into Fundraising CRM</span>
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
 
                 {/* Message Stream */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/30">

@@ -593,6 +593,11 @@ export class FundraisingService {
     relationshipOwner: string;
     stage: string;
     givingTier: string;
+    propensityScore?: number;
+    capacityTier?: string;
+    engagementReadiness?: string;
+    suggestedNextAction?: string;
+    verifiedFactsList?: string[];
     verifiedFacts: {
       lifetimeGivingUSD: number;
       giftCount: number;
@@ -651,6 +656,13 @@ export class FundraisingService {
         ? `Deploy Agent FUND-AI-014 Lapsed Donor Win-Back tailored re-engagement draft.`
         : `Share quarterly community impact update and confirm 2026 interest areas.`;
 
+    const factsList = [
+      `Lifetime Giving: $${verifiedLifetime.toLocaleString()} USD`,
+      `Verified Gift Count: ${verifiedConts.length || donor.giftCount} contributions`,
+      `Largest Contribution: $${largest.toLocaleString()} USD`,
+      `Consent Status: ${donor.consent.status}`,
+    ];
+
     return {
       donorId: donor.id,
       donorName: donor.name,
@@ -658,6 +670,11 @@ export class FundraisingService {
       relationshipOwner: donor.relationshipOwner,
       stage: donor.stage,
       givingTier: donor.givingTier,
+      propensityScore: affinityScore,
+      capacityTier: donor.givingTier,
+      engagementReadiness: readiness,
+      suggestedNextAction: suggestedStaffAction,
+      verifiedFactsList: factsList,
       verifiedFacts: {
         lifetimeGivingUSD: verifiedLifetime,
         giftCount: verifiedConts.length || donor.giftCount,

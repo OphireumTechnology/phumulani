@@ -90,12 +90,26 @@ export interface DonorContact {
 }
 
 export type OpportunityStatus =
+  // 15 Diagram-mandated lifecycle stages (Section 8)
   | 'IDENTIFIED'
-  | 'UNDER_REVIEW'
+  | 'QUALIFICATION_REQUIRED'
   | 'QUALIFIED'
+  | 'RESEARCH_IN_PROGRESS'
+  | 'PROPOSAL_IN_PREPARATION'
+  | 'INTERNAL_REVIEW'
+  | 'APPROVED_FOR_OUTREACH'
+  | 'SUBMITTED_OR_CONTACTED'
+  | 'ENGAGEMENT_IN_PROGRESS'
+  | 'COMMITMENT_RECORDED'
+  | 'AWARD_OR_PAYMENT_PENDING'
+  | 'VERIFICATION_IN_PROGRESS'
+  | 'VERIFIED'
+  | 'CLOSED_UNSUCCESSFUL'
+  | 'CANCELLED'
+  // Preserved backwards-compatible aliases
+  | 'UNDER_REVIEW'
   | 'CONTACT_APPROVED'
   | 'CONTACTED'
-  | 'ENGAGED'
   | 'PROPOSAL_PREPARATION'
   | 'PROPOSAL_SUBMITTED'
   | 'DECISION_PENDING'
@@ -123,9 +137,21 @@ export interface FundingOpportunity {
   aiMatchRationale: string;
   supportingEvidenceUrl?: string;
   assignedOwner: string;
-  notes: string;
   createdAt: string;
   updatedAt: string;
+  notes: string;
+  allocatedProgramId?: string;
+  allocatedProgramName?: string;
+  createdDate?: string;
+  // Section 8 operational extensions
+  stage?: OpportunityStatus;
+  leadOwner?: string;
+  deadline?: string;
+  nextAction?: string;
+  sourceEvidence?: string;
+  approvalHistory?: Array<{ status: string; approver: string; timestamp: string; notes?: string }>;
+  activityHistory?: Array<{ id: string; type: string; summary: string; timestamp: string; actor: string }>;
+  verificationStatus?: 'PENDING' | 'IN_PROGRESS' | 'VERIFIED' | 'REJECTED' | 'NOT_RECEIVED';
 }
 
 export type CampaignLifecycleStatus =
@@ -189,11 +215,14 @@ export type ApprovalStatus =
   | 'APPROVED'
   | 'AUTHORIZED_FOR_EXECUTION'
   | 'EXECUTED'
-  | 'AUDITED';
+  | 'AUDITED'
+  | 'REJECTED'
+  | 'RETURNED_TO_DRAFT';
 
 export interface OutreachMessageDraft {
   id: string;
   campaignId?: string;
+  opportunityId?: string;
   donorId: string;
   recipientEmail: string;
   recipientName: string;
@@ -209,6 +238,7 @@ export interface OutreachMessageDraft {
   reviewedBy?: string;
   reviewedAt?: string;
   changeNotes?: string;
+  rejectionReason?: string;
   approvedBy?: string;
   approvedAt?: string;
   sentAt?: string;

@@ -3,7 +3,7 @@
     "platform": "Phumulani AI Community Platform",
     "schema": "PostgreSQL 15+ Compatible DDL",
     "engine": "ISOLATED_EMBEDDED_DURABLE",
-    "persistedAt": "2026-10-26T05:58:22.286Z",
+    "persistedAt": "2026-10-26T06:49:28.512Z",
     "tablesCount": 3,
     "classification": "INTEGRATION_COMPLETE_STAGED_READY"
   },
@@ -12,7 +12,7 @@
       {
         "id": "test-1",
         "value": "phumulani_durable_test",
-        "timestamp": "2026-10-26T05:58:22.285Z"
+        "timestamp": "2026-10-26T06:49:28.511Z"
       },
       {
         "id": "test-txn-1",

@@ -56,7 +56,10 @@ import {
   LogOut,
   Play,
   FolderGit2,
+  Send,
+  Sparkles,
 } from 'lucide-react';
+import { FundraisingSubRoute } from '../types/fundraising';
 
 interface MasterAdministratorViewProps {
   currentUser: User;
@@ -70,6 +73,8 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
   initialTab = 'overview',
 }) => {
   const [activeModule, setActiveModule] = useState<string>(initialTab);
+  const [fundraisingSubRoute, setFundraisingSubRoute] = useState<FundraisingSubRoute>('command-center');
+  const [fundraisingSelectedDonorId, setFundraisingSelectedDonorId] = useState<string | null>(null);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [userRoleFilter, setUserRoleFilter] = useState<string>('all');
@@ -427,6 +432,8 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
             <FundraisingCommandCenterView
               onBackToMaster={() => setActiveModule('overview')}
               onOpenEmailCommand={() => setActiveModule('email_command_center')}
+              initialSubRoute={fundraisingSubRoute}
+              initialDonorId={fundraisingSelectedDonorId || undefined}
             />
           )}
 
@@ -438,6 +445,11 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
               currentUser={currentUser}
               onViewChange={onViewChange}
               onBackToMasterAdmin={() => setActiveModule('overview')}
+              onOpenFundraisingCRM={(subRoute, donorId) => {
+                if (subRoute) setFundraisingSubRoute(subRoute as any);
+                if (donorId) setFundraisingSelectedDonorId(donorId);
+                setActiveModule('fundraising_command_center');
+              }}
             />
           )}
 
@@ -565,6 +577,169 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                   <div className="text-[11px] text-teal-700 font-medium">
                     18 Agents Supervised · $0.00 Risk Leak
                   </div>
+                </div>
+              </div>
+
+              {/* SECTION 4: MASTER FUNDRAISING WORKFLOW OPERATIONS HUB */}
+              <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                  <div>
+                    <h3 className="font-serif font-bold text-slate-900 text-sm">
+                      Master Fundraising Workflow Operations Hub
+                    </h3>
+                    <p className="text-xs text-slate-500">
+                      Direct single-click operational access to all 15 stages of the Phumulani Fundraising Architecture.
+                    </p>
+                  </div>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-teal-50 text-teal-800 font-bold border border-teal-200 self-start sm:self-auto">
+                    DIAGRAM-DRIVEN WORKFLOW
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 pt-1">
+                  <button
+                    onClick={() => setActiveModule('email_command_center')}
+                    className="p-3 rounded-xl border border-slate-200 hover:border-teal-400 bg-slate-50/70 hover:bg-teal-50/40 text-left transition-all cursor-pointer group space-y-1"
+                  >
+                    <div className="flex items-center justify-between text-teal-800">
+                      <Mail className="w-4 h-4" />
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                    <div className="font-bold text-xs text-slate-900">Email Manager</div>
+                    <div className="text-[10px] text-slate-500">Inbound Mailboxes & Triage</div>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setFundraisingSubRoute('donors');
+                      setActiveModule('fundraising_command_center');
+                    }}
+                    className="p-3 rounded-xl border border-slate-200 hover:border-teal-400 bg-slate-50/70 hover:bg-teal-50/40 text-left transition-all cursor-pointer group space-y-1"
+                  >
+                    <div className="flex items-center justify-between text-teal-800">
+                      <Users className="w-4 h-4" />
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                    <div className="font-bold text-xs text-slate-900">Fundraising CRM</div>
+                    <div className="text-[10px] text-slate-500">Donors, Corporate & Inst.</div>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setFundraisingSubRoute('individuals');
+                      setActiveModule('fundraising_command_center');
+                    }}
+                    className="p-3 rounded-xl border border-slate-200 hover:border-teal-400 bg-slate-50/70 hover:bg-teal-50/40 text-left transition-all cursor-pointer group space-y-1"
+                  >
+                    <div className="flex items-center justify-between text-teal-800">
+                      <Sparkles className="w-4 h-4" />
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                    <div className="font-bold text-xs text-slate-900">Donor Intelligence</div>
+                    <div className="text-[10px] text-slate-500">Verified Facts vs Predictions</div>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setFundraisingSubRoute('opportunities');
+                      setActiveModule('fundraising_command_center');
+                    }}
+                    className="p-3 rounded-xl border border-slate-200 hover:border-teal-400 bg-slate-50/70 hover:bg-teal-50/40 text-left transition-all cursor-pointer group space-y-1"
+                  >
+                    <div className="flex items-center justify-between text-teal-800">
+                      <Layers className="w-4 h-4" />
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                    <div className="font-bold text-xs text-slate-900">Opportunities</div>
+                    <div className="text-[10px] text-slate-500">15 Lifecycle Stages</div>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setFundraisingSubRoute('agents');
+                      setActiveModule('fundraising_command_center');
+                    }}
+                    className="p-3 rounded-xl border border-slate-200 hover:border-teal-400 bg-slate-50/70 hover:bg-teal-50/40 text-left transition-all cursor-pointer group space-y-1"
+                  >
+                    <div className="flex items-center justify-between text-teal-800">
+                      <Bot className="w-4 h-4" />
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                    <div className="font-bold text-xs text-slate-900">AI Workforce</div>
+                    <div className="text-[10px] text-slate-500">18 Specialized Agents</div>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setFundraisingSubRoute('approvals');
+                      setActiveModule('fundraising_command_center');
+                    }}
+                    className="p-3 rounded-xl border border-slate-200 hover:border-teal-400 bg-slate-50/70 hover:bg-teal-50/40 text-left transition-all cursor-pointer group space-y-1"
+                  >
+                    <div className="flex items-center justify-between text-teal-800">
+                      <ShieldCheck className="w-4 h-4" />
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                    <div className="font-bold text-xs text-slate-900">Approval Queue</div>
+                    <div className="text-[10px] text-slate-500">Quad-Action Signoff Gate</div>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setFundraisingSubRoute('outreach');
+                      setActiveModule('fundraising_command_center');
+                    }}
+                    className="p-3 rounded-xl border border-slate-200 hover:border-teal-400 bg-slate-50/70 hover:bg-teal-50/40 text-left transition-all cursor-pointer group space-y-1"
+                  >
+                    <div className="flex items-center justify-between text-teal-800">
+                      <Send className="w-4 h-4" />
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                    <div className="font-bold text-xs text-slate-900">Outreach Dispatch</div>
+                    <div className="text-[10px] text-slate-500">CAN-SPAM Guard & Send</div>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setFundraisingSubRoute('transactions');
+                      setActiveModule('fundraising_command_center');
+                    }}
+                    className="p-3 rounded-xl border border-slate-200 hover:border-teal-400 bg-slate-50/70 hover:bg-teal-50/40 text-left transition-all cursor-pointer group space-y-1"
+                  >
+                    <div className="flex items-center justify-between text-teal-800">
+                      <DollarSign className="w-4 h-4" />
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                    <div className="font-bold text-xs text-slate-900">Reconciliation</div>
+                    <div className="text-[10px] text-slate-500">Pledges vs Verified ACH</div>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      setFundraisingSubRoute('programs');
+                      setActiveModule('fundraising_command_center');
+                    }}
+                    className="p-3 rounded-xl border border-slate-200 hover:border-teal-400 bg-slate-50/70 hover:bg-teal-50/40 text-left transition-all cursor-pointer group space-y-1"
+                  >
+                    <div className="flex items-center justify-between text-teal-800">
+                      <FileText className="w-4 h-4" />
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                    <div className="font-bold text-xs text-slate-900">Program Funding</div>
+                    <div className="text-[10px] text-slate-500">10 Category Deployments</div>
+                  </button>
+
+                  <button
+                    onClick={() => setActiveModule('production_status')}
+                    className="p-3 rounded-xl border border-slate-200 hover:border-amber-400 bg-slate-50/70 hover:bg-amber-50/40 text-left transition-all cursor-pointer group space-y-1"
+                  >
+                    <div className="flex items-center justify-between text-amber-700">
+                      <Activity className="w-4 h-4" />
+                      <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:translate-x-0.5 transition-transform" />
+                    </div>
+                    <div className="font-bold text-xs text-slate-900">Operational Blockers</div>
+                    <div className="text-[10px] text-slate-500">Production Readiness Grid</div>
+                  </button>
                 </div>
               </div>
 

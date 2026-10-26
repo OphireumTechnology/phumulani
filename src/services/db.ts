@@ -97,6 +97,7 @@ import {
   FundraisingAgentTask,
   AgentExecutionState,
   DonorEngagementActivity,
+  OpportunityStatus,
 } from '../types/fundraising';
 import {
   INITIAL_DONOR_CONTACTS,
@@ -1737,6 +1738,80 @@ class DatabaseService {
     this.saveState({ ...this.state, fundraisingOutreachDrafts: updated });
   }
 
+  public createFundingOpportunity(oppData: Partial<FundingOpportunity>): FundingOpportunity {
+    const actor = this.state.currentUser;
+    const initialStage = oppData.stage || oppData.status || 'IDENTIFIED';
+    const newOpp: FundingOpportunity = {
+      id: oppData.id || `opp-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
+      title: oppData.title || 'New Funding Opportunity',
+      donorId: oppData.donorId || 'donor-ind-001',
+      donorName: oppData.donorName || 'Authorized Donor Partner',
+      contactType: oppData.contactType || 'INDIVIDUAL',
+      category: oppData.category || 'INDIVIDUAL_MAJOR',
+      targetAmount: oppData.targetAmount || 10000,
+      expectedAmount: oppData.expectedAmount || (oppData.targetAmount ? Math.round(oppData.targetAmount * 0.75) : 7500),
+      probability: oppData.probability ?? 60,
+      expectedCloseDate: oppData.expectedCloseDate || new Date(Date.now() + 45 * 86400000).toISOString().split('T')[0],
+      status: initialStage,
+      stage: initialStage,
+      programId: oppData.programId || 'prog-housing',
+      programName: oppData.programName || 'Survivor Safe Housing Bridge Fund',
+      aiMatchScore: oppData.aiMatchScore ?? 85,
+      aiMatchRationale: oppData.aiMatchRationale || 'Mission-aligned with Phumulani survivor resilience and empowerment initiatives.',
+      assignedOwner: oppData.assignedOwner || actor.name,
+      notes: oppData.notes || 'Initiated via staff workflow.',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      deadline: oppData.deadline || oppData.expectedCloseDate,
+      nextAction: oppData.nextAction || 'Schedule qualification and discovery call.',
+      sourceEvidence: oppData.sourceEvidence || 'Staff relationship discovery and correspondence.',
+      approvalHistory: oppData.approvalHistory || [{ status: initialStage, approver: actor.name, timestamp: new Date().toISOString() }],
+      activityHistory: oppData.activityHistory || [{ id: `act-${Date.now()}`, type: 'OPPORTUNITY_CREATED', summary: `Opportunity "${oppData.title || 'New Opportunity'}" created by ${actor.name}`, timestamp: new Date().toISOString(), actor: actor.name }],
+      verificationStatus: oppData.verificationStatus || 'PENDING',
+    };
+    this.addFundraisingOpportunity(newOpp);
+    return newOpp;
+  }
+
+  public updateFundingOpportunityStage(
+    oppId: string,
+    newStage: OpportunityStatus,
+    staffActor: string,
+    notes?: string
+  ): FundingOpportunity | null {
+    const opp = this.state.fundraisingOpportunities.find((o) => o.id === oppId);
+    if (!opp) return null;
+    const nowStr = new Date().toISOString();
+    const updatedApprovalHistory = [
+      ...(opp.approvalHistory || []),
+      { status: newStage, approver: staffActor, timestamp: nowStr, notes },
+    ];
+    const updatedActivityHistory = [
+      ...(opp.activityHistory || []),
+      { id: `act-${Date.now()}`, type: 'STAGE_CHANGED', summary: `Stage transitioned from ${opp.stage || opp.status} to ${newStage}${notes ? ': ' + notes : ''}`, timestamp: nowStr, actor: staffActor },
+    ];
+    const updatedOpp: FundingOpportunity = {
+      ...opp,
+      status: newStage,
+      stage: newStage,
+      approvalHistory: updatedApprovalHistory,
+      activityHistory: updatedActivityHistory,
+      updatedAt: nowStr,
+    };
+    this.updateFundraisingOpportunity(oppId, updatedOpp);
+    return updatedOpp;
+  }
+
+  public getFundraisingOutreachDraft(draftId: string): OutreachMessageDraft | null {
+    return this.state.fundraisingOutreachDrafts.find((d) => d.id === draftId) || null;
+  }
+
+  public logDonorEngagementActivity(
+    activityData: Omit<DonorEngagementActivity, 'id' | 'timestamp'>
+  ): DonorEngagementActivity {
+    return this.addDonorEngagementActivity(activityData);
+  }
+
   public approveFundraisingOutreachDraft(draftId: string, approvedBy: string): OutreachMessageDraft | null {
     const draft = this.state.fundraisingOutreachDrafts.find((d) => d.id === draftId);
     if (!draft) return null;
@@ -1749,6 +1824,53 @@ class DatabaseService {
     const updatedList = this.state.fundraisingOutreachDrafts.map((d) => (d.id === draftId ? updatedDraft : d));
     this.saveState({ ...this.state, fundraisingOutreachDrafts: updatedList });
     this.appendAuditLog('OUTREACH_DRAFT_APPROVED', `Outreach draft "${draft.subject}" approved for dispatch by ${approvedBy}`);
+    return updatedDraft;
+  }
+
+  public rejectFundraisingOutreachDraft(draftId: string, reviewer: string, reason: string): OutreachMessageDraft | null {
+    const draft = this.state.fundraisingOutreachDrafts.find((d) => d.id === draftId);
+    if (!draft) return null;
+    const updatedDraft: OutreachMessageDraft = {
+      ...draft,
+      approvalStatus: 'REJECTED',
+      rejectionReason: reason,
+      reviewedBy: reviewer,
+      reviewedAt: new Date().toISOString(),
+    };
+    const updatedList = this.state.fundraisingOutreachDrafts.map((d) => (d.id === draftId ? updatedDraft : d));
+    this.saveState({ ...this.state, fundraisingOutreachDrafts: updatedList });
+    this.appendAuditLog('OUTREACH_DRAFT_REJECTED', `Outreach draft "${draft.subject}" rejected by ${reviewer}: ${reason}`);
+    return updatedDraft;
+  }
+
+  public requestChangesOnFundraisingDraft(draftId: string, reviewer: string, changeNotes: string): OutreachMessageDraft | null {
+    const draft = this.state.fundraisingOutreachDrafts.find((d) => d.id === draftId);
+    if (!draft) return null;
+    const updatedDraft: OutreachMessageDraft = {
+      ...draft,
+      approvalStatus: 'CHANGES_REQUESTED',
+      changeNotes,
+      reviewedBy: reviewer,
+      reviewedAt: new Date().toISOString(),
+    };
+    const updatedList = this.state.fundraisingOutreachDrafts.map((d) => (d.id === draftId ? updatedDraft : d));
+    this.saveState({ ...this.state, fundraisingOutreachDrafts: updatedList });
+    this.appendAuditLog('OUTREACH_DRAFT_CHANGES_REQUESTED', `Changes requested on draft "${draft.subject}" by ${reviewer}: ${changeNotes}`);
+    return updatedDraft;
+  }
+
+  public returnFundraisingDraftToDraft(draftId: string, reviewer: string): OutreachMessageDraft | null {
+    const draft = this.state.fundraisingOutreachDrafts.find((d) => d.id === draftId);
+    if (!draft) return null;
+    const updatedDraft: OutreachMessageDraft = {
+      ...draft,
+      approvalStatus: 'RETURNED_TO_DRAFT',
+      reviewedBy: reviewer,
+      reviewedAt: new Date().toISOString(),
+    };
+    const updatedList = this.state.fundraisingOutreachDrafts.map((d) => (d.id === draftId ? updatedDraft : d));
+    this.saveState({ ...this.state, fundraisingOutreachDrafts: updatedList });
+    this.appendAuditLog('OUTREACH_DRAFT_RETURNED_TO_DRAFT', `Draft "${draft.subject}" returned to draft state by ${reviewer}`);
     return updatedDraft;
   }
 
