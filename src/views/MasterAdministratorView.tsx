@@ -51,7 +51,22 @@ import { BoardGovernancePortalTab } from '../components/masterAdmin/BoardGoverna
 import { CommunityEngagementTab } from '../components/masterAdmin/CommunityEngagementTab';
 import { TrainingKnowledgeCenterTab } from '../components/masterAdmin/TrainingKnowledgeCenterTab';
 import { WorkflowAutomationEngineTab } from '../components/masterAdmin/WorkflowAutomationEngineTab';
+import { UnifiedOperationalSearchTab } from '../components/masterAdmin/phase34/UnifiedOperationalSearchTab';
+import { CommunityResourceDirectoryTab } from '../components/masterAdmin/phase34/CommunityResourceDirectoryTab';
+import { ServiceRequestOptimizationTab } from '../components/masterAdmin/phase34/ServiceRequestOptimizationTab';
+import { ProgramCapacityPlanningTab } from '../components/masterAdmin/phase34/ProgramCapacityPlanningTab';
+import { VolunteerSchedulingTab } from '../components/masterAdmin/phase34/VolunteerSchedulingTab';
+import { FundraisingIntelligenceTab } from '../components/masterAdmin/phase34/FundraisingIntelligenceTab';
+import { AiWorkforceEvaluationTab } from '../components/masterAdmin/phase34/AiWorkforceEvaluationTab';
+import { KnowledgeSearchTab } from '../components/masterAdmin/phase34/KnowledgeSearchTab';
+import { ExecutiveScenarioPlanningTab } from '../components/masterAdmin/phase34/ExecutiveScenarioPlanningTab';
+import { BoardGovernanceCalendarTab } from '../components/masterAdmin/phase34/BoardGovernanceCalendarTab';
+import { AdvancedReportingExportsTab } from '../components/masterAdmin/phase34/AdvancedReportingExportsTab';
+import { CommunityFeedbackIntelligenceTab } from '../components/masterAdmin/phase34/CommunityFeedbackIntelligenceTab';
+import { MobileAccessibilityAuditTab } from '../components/masterAdmin/phase34/MobileAccessibilityAuditTab';
 import {
+  Download,
+  Smartphone,
   TrendingUp,
   Building2,
   CheckSquare,
@@ -287,6 +302,19 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
     { id: 'community_engagement', label: '33 Community Engagement (M33.09)', icon: MessageSquare, badge: 'Bulletins' },
     { id: 'training_knowledge', label: '34 Training & Knowledge (M33.10)', icon: GraduationCap, badge: 'SOPs' },
     { id: 'workflow_automation', label: '35 Workflow Automation (M33.11)', icon: GitBranch, badge: 'Engine' },
+    { id: 'operational_search', label: '36 Operational Search (M34.01)', icon: Search, badge: 'P34 Search' },
+    { id: 'resource_directory', label: '37 Resource Directory (M34.02)', icon: Building2, badge: 'Public Guide' },
+    { id: 'service_requests_p34', label: '38 Service Requests (M34.03)', icon: Shield, badge: 'SLAs' },
+    { id: 'program_capacity', label: '39 Capacity & Planning (M34.04)', icon: Target, badge: 'Utilization' },
+    { id: 'volunteer_scheduling', label: '40 Volunteer Scheduling (M34.05)', icon: Users, badge: 'Clearance' },
+    { id: 'fundraising_intel', label: '41 Donor Intelligence (M34.06)', icon: TrendingUp, badge: 'Verified' },
+    { id: 'ai_evaluations', label: '42 AI Quality Matrix (M34.07)', icon: Bot, badge: '36 Evaluated' },
+    { id: 'knowledge_search', label: '43 Knowledge Search (M34.08)', icon: GraduationCap, badge: 'Citations' },
+    { id: 'executive_scenarios', label: '44 Scenario Planning (M34.09)', icon: TrendingUp, badge: 'FY27 Model' },
+    { id: 'governance_calendar', label: '45 Governance Calendar (M34.10)', icon: Calendar, badge: 'Compliance' },
+    { id: 'advanced_exports', label: '46 Controlled Exports (M34.11)', icon: Download, badge: 'Audit Log' },
+    { id: 'feedback_intelligence', label: '47 Feedback Intelligence (M34.12)', icon: MessageSquare, badge: 'Anonymous' },
+    { id: 'mobile_accessibility', label: '48 Mobile Accessibility (M34.13)', icon: Smartphone, badge: 'WCAG AA' },
     { id: 'fundraising_command_center', label: 'Fundraising & CRM', icon: DollarSign, badge: 'Active' },
     { id: 'email_command_center', label: 'Email Command Center', icon: Mail, badge: 'P0 Enterprise' },
     { id: 'ai_workforce', label: 'AI Workforce (36 Agents)', icon: Bot, badge: '36 Active' },
@@ -1220,6 +1248,97 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
           {/* ============================================================ */}
           {activeModule === 'workflow_automation' && (
             <WorkflowAutomationEngineTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 36: UNIFIED OPERATIONAL SEARCH (M34.01)                */}
+          {/* ============================================================ */}
+          {activeModule === 'operational_search' && (
+            <UnifiedOperationalSearchTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 37: COMMUNITY RESOURCE DIRECTORY (M34.02)              */}
+          {/* ============================================================ */}
+          {activeModule === 'resource_directory' && (
+            <CommunityResourceDirectoryTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 38: SERVICE REQUEST OPTIMIZATION (M34.03)              */}
+          {/* ============================================================ */}
+          {activeModule === 'service_requests_p34' && (
+            <ServiceRequestOptimizationTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 39: PROGRAM CAPACITY & PLANNING (M34.04)               */}
+          {/* ============================================================ */}
+          {activeModule === 'program_capacity' && (
+            <ProgramCapacityPlanningTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 40: VOLUNTEER SCHEDULING (M34.05)                      */}
+          {/* ============================================================ */}
+          {activeModule === 'volunteer_scheduling' && (
+            <VolunteerSchedulingTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 41: FUNDRAISING INTELLIGENCE (M34.06)                  */}
+          {/* ============================================================ */}
+          {activeModule === 'fundraising_intel' && (
+            <FundraisingIntelligenceTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 42: AI WORKFORCE QUALITY MATRIX (M34.07)               */}
+          {/* ============================================================ */}
+          {activeModule === 'ai_evaluations' && (
+            <AiWorkforceEvaluationTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 43: KNOWLEDGE SEARCH (M34.08)                          */}
+          {/* ============================================================ */}
+          {activeModule === 'knowledge_search' && (
+            <KnowledgeSearchTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 44: EXECUTIVE SCENARIO PLANNING (M34.09)               */}
+          {/* ============================================================ */}
+          {activeModule === 'executive_scenarios' && (
+            <ExecutiveScenarioPlanningTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 45: GOVERNANCE CALENDAR (M34.10)                       */}
+          {/* ============================================================ */}
+          {activeModule === 'governance_calendar' && (
+            <BoardGovernanceCalendarTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 46: ADVANCED EXPORTS (M34.11)                          */}
+          {/* ============================================================ */}
+          {activeModule === 'advanced_exports' && (
+            <AdvancedReportingExportsTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 47: FEEDBACK INTELLIGENCE (M34.12)                     */}
+          {/* ============================================================ */}
+          {activeModule === 'feedback_intelligence' && (
+            <CommunityFeedbackIntelligenceTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 48: MOBILE ACCESSIBILITY AUDIT (M34.13)                */}
+          {/* ============================================================ */}
+          {activeModule === 'mobile_accessibility' && (
+            <MobileAccessibilityAuditTab currentUser={currentUser} />
           )}
 
           {/* ============================================================ */}

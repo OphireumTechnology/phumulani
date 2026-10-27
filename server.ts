@@ -22,6 +22,7 @@ import { mealService } from './src/services/mealService';
 import { paymentProviderService } from './src/services/paymentProviderService';
 import { authSecurityService, type StaffRole } from './src/services/authSecurityService';
 import { unifiedAiWorkforceService } from './src/services/unifiedAiWorkforceService';
+import { phase34Service } from './src/services/phase34Service';
 import type { AgentDivision } from './src/types/aiWorkforce';
 import type { PermissionDomain } from './src/types/masterAdmin';
 
