@@ -25,6 +25,7 @@ import {
   VolunteerHourLog,
   VolunteerOpportunity,
 } from '../types';
+import crypto from 'crypto';
 import {
   INITIAL_AI_AGENTS,
   INITIAL_AI_APPROVALS,
@@ -504,6 +505,28 @@ class DatabaseService {
       ...this.state,
       auditLogs: [newEntry, ...this.state.auditLogs].slice(0, 200),
     });
+  }
+
+  public createAuditLog(item: Partial<AuditLogItem> & { hash?: string }): AuditLogItem {
+    const user = this.state.currentUser;
+    const entryId = item.id || `aud-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
+    const newEntry: AuditLogItem = {
+      id: entryId,
+      timestamp: item.timestamp || new Date().toISOString(),
+      actorEmail: item.actorEmail || user?.email || 'master.admin@phumulani.org',
+      actorRole: item.actorRole || user?.role || 'PLATFORM_SUPER_ADMIN',
+      action: item.action || 'GENERIC_ACTION',
+      resource: item.resource || 'Phumulani Platform',
+      details: item.details || '',
+      ipAddress: item.ipAddress || '127.0.0.1 (internal)',
+      status: item.status || 'success',
+      hash: item.hash || crypto.createHash('sha256').update(entryId + (item.details || '')).digest('hex'),
+    };
+    this.saveState({
+      ...this.state,
+      auditLogs: [newEntry, ...this.state.auditLogs].slice(0, 200),
+    });
+    return newEntry;
   }
 
   // --- Volunteers ---

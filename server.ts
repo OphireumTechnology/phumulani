@@ -21,6 +21,8 @@ import { FundingCommandService } from './src/services/fundingCommandService';
 import { mealService } from './src/services/mealService';
 import { paymentProviderService } from './src/services/paymentProviderService';
 import { authSecurityService, type StaffRole } from './src/services/authSecurityService';
+import { unifiedAiWorkforceService } from './src/services/unifiedAiWorkforceService';
+import type { AgentDivision } from './src/types/aiWorkforce';
 import type { PermissionDomain } from './src/types/masterAdmin';
 
 dotenv.config();
@@ -742,7 +744,125 @@ interface BackendFundraisingTask {
 const backendFundraisingTasks: BackendFundraisingTask[] = [];
 let emergencyShutdownActive = false;
 
-// 6. Agents Registry Endpoint
+// =============================================================================
+// PHASE 29 UNIFIED AI WORKFORCE API ENDPOINTS (36 AGENTS / 2 DIVISIONS)
+// =============================================================================
+
+// 1. Unified Workforce Registry (all 36 agents or filtered)
+app.get('/api/ai/workforce/agents', (req: Request, res: Response) => {
+  const division = req.query.division as AgentDivision | undefined;
+  const lifecycle = req.query.lifecycle as string | undefined;
+  const agents = unifiedAiWorkforceService.getAllAgents({ division, lifecycle });
+  res.json({ total: agents.length, agents });
+});
+
+// 2. Specific Agent Details
+app.get('/api/ai/workforce/agents/:id', (req: Request, res: Response) => {
+  const agent = unifiedAiWorkforceService.getAgentById(req.params.id);
+  if (!agent) {
+    return res.status(404).json({ error: `Agent ${req.params.id} not found.` });
+  }
+  res.json({ agent });
+});
+
+// 3. Workforce Summary KPIs
+app.get('/api/ai/workforce/kpis', (_req: Request, res: Response) => {
+  const kpis = unifiedAiWorkforceService.getWorkforceKPIs();
+  res.json(kpis);
+});
+
+// 4. Unified Agent Execution Gateway (enforces safeguarding, permissions, approvals)
+app.post('/api/ai/workforce/execute', async (req: Request, res: Response) => {
+  try {
+    const { agentId, taskTitle = 'General Task', inputPayload = {}, requesterRole = 'staff' } = req.body;
+    if (!agentId) {
+      return res.status(400).json({ error: 'agentId is required.' });
+    }
+    const result = await unifiedAiWorkforceService.executeAgentTask({
+      agentId,
+      taskTitle,
+      inputPayload,
+      requesterRole,
+    });
+    if (result.blockedByPolicy && result.policyReason?.includes('SAFEGUARDING')) {
+      return res.status(403).json(result);
+    }
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 5. Agent Lifecycle Management (ACTIVE, PAUSED, DISABLED)
+app.post('/api/ai/workforce/agents/:id/status', async (req: Request, res: Response) => {
+  try {
+    const { lifecycle, actorName = 'Admin' } = req.body;
+    if (!lifecycle) {
+      return res.status(400).json({ error: 'lifecycle is required.' });
+    }
+    const agent = await unifiedAiWorkforceService.setAgentLifecycle(req.params.id, lifecycle, actorName);
+    res.json({ success: true, agent });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 6. Global Emergency Kill Switch
+app.post('/api/ai/workforce/emergency-shutdown', async (req: Request, res: Response) => {
+  const { actorName = 'Executive Governance' } = req.body;
+  await unifiedAiWorkforceService.emergencyHaltAllAgents(actorName);
+  res.json({ success: true, message: 'All 36 AI workforce agents emergency halted.' });
+});
+
+// 7. Global Resume All Agents
+app.post('/api/ai/workforce/resume', async (req: Request, res: Response) => {
+  const { actorName = 'Executive Governance' } = req.body;
+  await unifiedAiWorkforceService.resumeAllAgents(actorName);
+  res.json({ success: true, message: 'All 36 AI workforce agents resumed.' });
+});
+
+// 8. Cross-Division Task Handoff
+app.post('/api/ai/workforce/handoff', async (req: Request, res: Response) => {
+  try {
+    const { sourceAgentId, targetAgentId, workflowId, initiatingUserId, initiatingUserRole, payload } = req.body;
+    const handoff = await unifiedAiWorkforceService.executeCrossDivisionHandoff({
+      sourceAgentId,
+      targetAgentId,
+      workflowId: workflowId || `wf-${Date.now()}`,
+      initiatingUserId: initiatingUserId || 'usr-system',
+      initiatingUserRole: initiatingUserRole || 'staff',
+      payload: payload || {},
+    });
+    if (handoff.status === 'BLOCKED_BY_POLICY') {
+      return res.status(403).json(handoff);
+    }
+    res.json(handoff);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 9. Human Approval Queue
+app.get('/api/ai/workforce/approvals', (_req: Request, res: Response) => {
+  const approvals = unifiedAiWorkforceService.getPendingApprovals();
+  res.json({ total: approvals.length, approvals });
+});
+
+// 10. Human Decision on Pending Agent Recommendation
+app.post('/api/ai/workforce/approvals/:id/decide', async (req: Request, res: Response) => {
+  try {
+    const { decision, reviewerRole = 'staff', notes = '' } = req.body;
+    if (!decision || (decision !== 'APPROVED' && decision !== 'REJECTED')) {
+      return res.status(400).json({ error: 'decision must be APPROVED or REJECTED.' });
+    }
+    const result = await unifiedAiWorkforceService.decideApproval(req.params.id, decision, reviewerRole, notes);
+    res.json({ success: true, approval: result });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 6. Agents Registry Endpoint (Existing Fundraising Agents Preserved)
 app.get('/api/fundraising/agents', (_req: Request, res: Response) => {
   const agents = [
     { id: 'FUND-AI-001', code: 'AGENT 01', name: 'Director AI Orchestrator', role: 'Pipeline Coordinator', category: 'Orchestration', status: 'active', model: 'gemini-3.8-flash', tools: ['PipelineOrchestrator', 'AgentRegistryEngine', 'GeminiAPI'], requiresHumanApproval: false },

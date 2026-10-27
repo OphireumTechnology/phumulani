@@ -393,6 +393,7 @@ export interface AuditLogItem {
   details: string;
   ipAddress: string;
   status: 'success' | 'flagged' | 'denied';
+  hash?: string;
 }
 
 // Enterprise Email, Fundraising Intelligence & Executive Communications Types

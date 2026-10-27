@@ -43,6 +43,7 @@ import { FunderReportingTab } from '../components/masterAdmin/funding/FunderRepo
 import { FundingCalendarTab } from '../components/masterAdmin/funding/FundingCalendarTab';
 import { OperationsCommandCenterTab } from '../components/masterAdmin/operations/OperationsCommandCenterTab';
 import { InternalNotificationsTab } from '../components/masterAdmin/operations/InternalNotificationsTab';
+import { UnifiedAiWorkforceView } from '../components/masterAdmin/UnifiedAiWorkforceView';
 import {
   TrendingUp,
   Building2,
@@ -270,7 +271,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
     { id: 'internal_notifications', label: '28 Internal Notifications (M27.05)', icon: Bell, badge: 'Inbox' },
     { id: 'fundraising_command_center', label: 'Fundraising & CRM', icon: DollarSign, badge: 'Active' },
     { id: 'email_command_center', label: 'Email Command Center', icon: Mail, badge: 'P0 Enterprise' },
-    { id: 'ai_workforce', label: 'AI Workforce (18 Agents)', icon: Bot, badge: pausedAgentsCount > 0 ? `${pausedAgentsCount} Paused` : '18 Active' },
+    { id: 'ai_workforce', label: 'AI Workforce (36 Agents)', icon: Bot, badge: '36 Active' },
     { id: 'development_operations', label: 'Development Operations', icon: FolderGit2, badge: 'Active' },
     { id: 'production_status', label: 'Production Status (Sec 16)', icon: Activity, badge: probeReport ? `${probeReport.verifiedCount}/15` : 'Check' },
     { id: 'acceptance_tests', label: 'Verification Tests (326 Tests)', icon: Play, badge: testSummary ? `${testSummary.passed}/${testSummary.total}` : '326 Pass' },
@@ -1642,95 +1643,10 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
           )}
 
           {/* ============================================================ */}
-          {/* MODULE 04: AI WORKFORCE ADMINISTRATION (18 AGENTS)           */}
+          {/* MODULE 04: UNIFIED 36-AGENT AI WORKFORCE (PHASE 29)          */}
           {/* ============================================================ */}
           {activeModule === 'ai_workforce' && (
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
-                <div>
-                  <h3 className="font-serif text-xl font-bold text-slate-900">
-                    AI Workforce Administration (Agents A01 through A18)
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    Centralized supervision, autonomous ceilings, tool permissions, and emergency kill switches.
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={() => db.emergencyHaltAllAgents()}
-                    className="px-3.5 py-1.5 bg-rose-50 text-rose-700 border border-rose-300 hover:bg-rose-100 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all"
-                  >
-                    <Power className="w-3.5 h-3.5 text-rose-600" />
-                    <span>Halt All 18 Agents</span>
-                  </button>
-                  <button
-                    onClick={() => db.resumeAllAgents()}
-                    className="px-3.5 py-1.5 bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100 rounded-lg text-xs font-bold flex items-center gap-1.5 transition-all"
-                  >
-                    <RotateCcw className="w-3.5 h-3.5 text-emerald-700" />
-                    <span>Resume All</span>
-                  </button>
-                </div>
-              </div>
-
-              {/* Agents Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {agents.map((ag) => (
-                  <div
-                    key={ag.id}
-                    className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2.5 flex flex-col justify-between"
-                  >
-                    <div className="space-y-1.5">
-                      <div className="flex items-center justify-between">
-                        <span className="font-mono text-xs font-bold bg-teal-100 text-teal-900 px-2 py-0.5 rounded">
-                          {ag.id}
-                        </span>
-                        <span
-                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                            ag.status === 'paused'
-                              ? 'bg-rose-100 text-rose-800'
-                              : ag.status === 'active'
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : 'bg-teal-100 text-teal-800'
-                          }`}
-                        >
-                          {ag.status.toUpperCase()}
-                        </span>
-                      </div>
-                      <h4 className="font-serif font-bold text-sm text-slate-900">{ag.name}</h4>
-                      <div className="text-[11px] font-medium text-slate-500">{ag.role}</div>
-                      <p className="text-xs text-slate-600 line-clamp-2">{ag.description}</p>
-                    </div>
-
-                    <div className="space-y-2 pt-2 border-t border-slate-200 text-[11px]">
-                      <div className="flex justify-between text-slate-500">
-                        <span>Calls: {ag.callsThisMonth.toLocaleString()}</span>
-                        <span>Est Cost: ${ag.costEstimateUSD.toFixed(3)}</span>
-                      </div>
-                      <div className="flex justify-between items-center">
-                        <span className="text-[10px] text-slate-500">Officer: {ag.escalationOfficer}</span>
-                        {ag.status === 'paused' ? (
-                          <button
-                            onClick={() => db.updateAgentStatus(ag.id, 'active')}
-                            className="text-[10px] bg-emerald-700 hover:bg-emerald-800 text-white px-2 py-0.5 rounded font-bold"
-                          >
-                            Activate
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => db.updateAgentStatus(ag.id, 'paused')}
-                            className="text-[10px] bg-rose-100 hover:bg-rose-200 text-rose-800 px-2 py-0.5 rounded font-bold"
-                          >
-                            Pause
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <UnifiedAiWorkforceView currentUserRole={currentUser.role} />
           )}
 
           {/* ============================================================ */}

@@ -26,6 +26,7 @@ import {
   Filter,
 } from 'lucide-react';
 import { PortalLayout } from '../components/PortalLayout';
+import { UnifiedAiWorkforceView } from '../components/masterAdmin/UnifiedAiWorkforceView';
 
 interface AIWorkforceViewProps {
   currentUser: User;
@@ -39,7 +40,7 @@ export const AIWorkforceView: React.FC<AIWorkforceViewProps> = ({
   const state = db.getState();
   const agents = state.aiAgents;
 
-  const [activeTab, setActiveTab] = useState<'registry' | 'playground' | 'evaluations' | 'policy_gateway'>('registry');
+  const [activeTab, setActiveTab] = useState<'unified_36' | 'registry' | 'playground' | 'evaluations' | 'policy_gateway'>('unified_36');
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -133,6 +134,7 @@ export const AIWorkforceView: React.FC<AIWorkforceViewProps> = ({
     {
       groupLabel: 'AI Workforce Architecture',
       items: [
+        { id: 'unified_36', label: 'Unified 36-Agent Command (P29)', icon: Bot, badge: '36' },
         { id: 'registry', label: '18-Agent Registry', icon: Bot, badge: agents.length },
         { id: 'playground', label: 'Policy Gateway Sandbox', icon: Terminal },
         { id: 'evaluations', label: 'M4 Safety Evaluations', icon: Zap },
@@ -183,6 +185,11 @@ export const AIWorkforceView: React.FC<AIWorkforceViewProps> = ({
             </div>
           </div>
         </div>
+
+      {/* TAB 0: UNIFIED 36-AGENT WORKFORCE (PHASE 29) */}
+      {activeTab === 'unified_36' && (
+        <UnifiedAiWorkforceView currentUserRole={currentUser.role} />
+      )}
 
       {/* TAB 1: 18-AGENT MASTER REGISTRY */}
       {activeTab === 'registry' && (
