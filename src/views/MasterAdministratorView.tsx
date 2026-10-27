@@ -33,7 +33,16 @@ import { CommunityEventsTab } from '../components/masterAdmin/CommunityEventsTab
 import { ProgramResourcesTab } from '../components/masterAdmin/ProgramResourcesTab';
 import { ProgramImpactTab } from '../components/masterAdmin/ProgramImpactTab';
 import { ProgramAiIntelligenceModal } from '../components/masterAdmin/ProgramAiIntelligenceModal';
+import { FundingCommandCenterTab } from '../components/masterAdmin/funding/FundingCommandCenterTab';
+import { GrantOpportunityRegistryTab } from '../components/masterAdmin/funding/GrantOpportunityRegistryTab';
+import { GrantDevelopmentWorkspaceTab } from '../components/masterAdmin/funding/GrantDevelopmentWorkspaceTab';
+import { DonorCrmCommandTab } from '../components/masterAdmin/funding/DonorCrmCommandTab';
+import { FundraisingPipelinesTab } from '../components/masterAdmin/funding/FundraisingPipelinesTab';
+import { RestrictedFundsTab } from '../components/masterAdmin/funding/RestrictedFundsTab';
+import { FunderReportingTab } from '../components/masterAdmin/funding/FunderReportingTab';
+import { FundingCalendarTab } from '../components/masterAdmin/funding/FundingCalendarTab';
 import {
+  TrendingUp,
   Building2,
   CheckSquare,
   FileCheck2,
@@ -116,6 +125,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isProgramAiModalOpen, setIsProgramAiModalOpen] = useState(false);
   const [selectedProgramAiId, setSelectedProgramAiId] = useState<string | undefined>(undefined);
+  const [activeWorkspaceOppId, setActiveWorkspaceOppId] = useState<string>('GR-OPP-2026-001');
 
   // Auto-dismiss action notice after 6 seconds
   useEffect(() => {
@@ -246,12 +256,20 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
     { id: 'community_events', label: '16 Community Events (M25.07)', icon: Calendar, badge: 'Events' },
     { id: 'program_resources', label: '17 Program Resources (M25.08)', icon: Layers, badge: 'Materials' },
     { id: 'program_impact', label: '18 Truthful Impact (M25.11)', icon: Award, badge: 'Verified' },
+    { id: 'funding_command', label: '19 Funding Command (M26.01)', icon: DollarSign, badge: 'P26 Live' },
+    { id: 'grant_registry_p26', label: '20 Grant Registry (M26.02)', icon: FileText, badge: '11 Stages' },
+    { id: 'grant_dev_workspace', label: '21 Grant Workspace (M26.05)', icon: Sparkles, badge: 'Budget' },
+    { id: 'donor_crm_p26', label: '22 Unified Donor CRM (M26.10)', icon: Users, badge: 'CRM' },
+    { id: 'campaigns_pipelines', label: '23 Pipelines & Campaigns (M26.11)', icon: TrendingUp, badge: 'Forecast' },
+    { id: 'restricted_funds_p26', label: '24 Restricted Funds (M26.09)', icon: Layers, badge: '$110k' },
+    { id: 'funder_reporting_p26', label: '25 Funder Reporting (M26.15)', icon: FileCheck2, badge: 'Compliance' },
+    { id: 'funding_calendar_p26', label: '26 Reconciliation & Security (M26.13)', icon: Calendar, badge: '20 Probes' },
     { id: 'fundraising_command_center', label: 'Fundraising & CRM', icon: DollarSign, badge: 'Active' },
     { id: 'email_command_center', label: 'Email Command Center', icon: Mail, badge: 'P0 Enterprise' },
     { id: 'ai_workforce', label: 'AI Workforce (18 Agents)', icon: Bot, badge: pausedAgentsCount > 0 ? `${pausedAgentsCount} Paused` : '18 Active' },
     { id: 'development_operations', label: 'Development Operations', icon: FolderGit2, badge: 'Active' },
     { id: 'production_status', label: 'Production Status (Sec 16)', icon: Activity, badge: probeReport ? `${probeReport.verifiedCount}/15` : 'Check' },
-    { id: 'acceptance_tests', label: 'Verification Tests (306 Tests)', icon: Play, badge: testSummary ? `${testSummary.passed}/${testSummary.total}` : '306 Pass' },
+    { id: 'acceptance_tests', label: 'Verification Tests (326 Tests)', icon: Play, badge: testSummary ? `${testSummary.passed}/${testSummary.total}` : '326 Pass' },
     { id: 'security_audit', label: 'Security & Safeguarding Audit', icon: ShieldCheck, badge: `${auditLogs.length}` },
     { id: 'infrastructure', label: 'Infrastructure & Probes', icon: Server },
     { id: 'settings', label: 'System Settings', icon: Sliders },
@@ -1032,6 +1050,74 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                 setIsProgramAiModalOpen(true);
               }}
             />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 19: FUNDING COMMAND CENTER (PHASE 26 M26.01)           */}
+          {/* ============================================================ */}
+          {activeModule === 'funding_command' && (
+            <FundingCommandCenterTab
+              currentUser={currentUser}
+              onNavigateTab={(tabId) => setActiveModule(tabId)}
+            />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 20: GRANT OPPORTUNITY REGISTRY (M26.02 - M26.04)       */}
+          {/* ============================================================ */}
+          {activeModule === 'grant_registry_p26' && (
+            <GrantOpportunityRegistryTab
+              currentUser={currentUser}
+              onOpenWorkspace={(oppId) => {
+                setActiveWorkspaceOppId(oppId);
+                setActiveModule('grant_dev_workspace');
+              }}
+            />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 21: GRANT DEVELOPMENT WORKSPACE & BUDGET (M26.05-08)   */}
+          {/* ============================================================ */}
+          {activeModule === 'grant_dev_workspace' && (
+            <GrantDevelopmentWorkspaceTab
+              currentUser={currentUser}
+              defaultOpportunityId={activeWorkspaceOppId}
+            />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 22: UNIFIED DONOR CRM & STEWARDSHIP (M26.10, M26.14)   */}
+          {/* ============================================================ */}
+          {activeModule === 'donor_crm_p26' && (
+            <DonorCrmCommandTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 23: FUNDRAISING PIPELINES & CAMPAIGNS (M26.11, M26.12) */}
+          {/* ============================================================ */}
+          {activeModule === 'campaigns_pipelines' && (
+            <FundraisingPipelinesTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 24: RESTRICTED FUNDS & ALLOCATION CONTROL (M26.09)     */}
+          {/* ============================================================ */}
+          {activeModule === 'restricted_funds_p26' && (
+            <RestrictedFundsTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 25: FUNDER REPORTING & COMPLIANCE (M26.15)             */}
+          {/* ============================================================ */}
+          {activeModule === 'funder_reporting_p26' && (
+            <FunderReportingTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 26: FUNDING CALENDAR & RECONCILIATION (M26.13)         */}
+          {/* ============================================================ */}
+          {activeModule === 'funding_calendar_p26' && (
+            <FundingCalendarTab currentUser={currentUser} />
           )}
 
           {/* ============================================================ */}

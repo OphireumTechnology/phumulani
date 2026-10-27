@@ -17,6 +17,7 @@ import { BackgroundWorkerService } from './src/services/backgroundWorkerService'
 import { EnvironmentService } from './src/services/environmentService';
 import { MasterAdminService } from './src/services/masterAdminService';
 import { CommunityProgramsService } from './src/services/communityProgramsService';
+import { FundingCommandService } from './src/services/fundingCommandService';
 import type { PermissionDomain } from './src/types/masterAdmin';
 
 dotenv.config();
@@ -1929,6 +1930,215 @@ app.post('/api/admin/programs/ai-assist', (req: Request, res: Response) => {
 // 10. Security Negative Access Suite
 app.post('/api/admin/programs/security/negative-tests', (_req: Request, res: Response) => {
   const result = commService.runCommunityNegativeAccessSuite();
+  res.json(result);
+});
+
+// =============================================================================
+// PHASE 26: GRANTS, FUNDRAISING, DONOR CRM & FUNDING COMMAND CENTER API
+// =============================================================================
+const fundingService = FundingCommandService.getInstance();
+
+// 1. Funding Command Center Summary
+app.get('/api/admin/funding/summary', (_req: Request, res: Response) => {
+  res.json(fundingService.getFundingSummary());
+});
+
+// 2. Grant Opportunities Registry & Lifecycle
+app.get('/api/admin/funding/grants', (_req: Request, res: Response) => {
+  res.json({ opportunities: fundingService.getGrantOpportunities() });
+});
+
+app.post('/api/admin/funding/grants', (req: Request, res: Response) => {
+  try {
+    const opp = fundingService.createGrantOpportunity(req.body, { role: 'DEVELOPMENT_DIRECTOR' });
+    res.status(201).json(opp);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.patch('/api/admin/funding/grants/:id/status', (req: Request, res: Response) => {
+  try {
+    const { status, notes } = req.body;
+    const updated = fundingService.updateGrantOpportunityStatus(req.params.id, status, { role: 'DEVELOPMENT_DIRECTOR' }, notes);
+    res.json(updated);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 3. Grant Eligibility Engine
+app.get('/api/admin/funding/grants/:id/eligibility', (req: Request, res: Response) => {
+  try {
+    const assessment = fundingService.evaluateEligibility(req.params.id, { name: 'Automated Ruleset' });
+    res.json(assessment);
+  } catch (err: any) {
+    res.status(404).json({ error: err.message });
+  }
+});
+
+// 4. Go / No-Go Decision Gate
+app.get('/api/admin/funding/grants/:id/go-no-go', (req: Request, res: Response) => {
+  const review = fundingService.getGoNoGoReviews().find((r) => r.opportunityId === req.params.id);
+  res.json({ review: review || null });
+});
+
+app.post('/api/admin/funding/grants/:id/go-no-go', (req: Request, res: Response) => {
+  try {
+    const actorRole = (req.headers['x-phumulani-role'] as string) || 'EXECUTIVE_DIRECTOR';
+    const actorEmail = (req.headers['x-phumulani-actor'] as string) || 'director@phumulani.org';
+    const review = fundingService.submitGoNoGoReview(
+      { ...req.body, opportunityId: req.params.id },
+      { role: actorRole, email: actorEmail, name: 'Nombuso Tembe' }
+    );
+    res.status(201).json(review);
+  } catch (err: any) {
+    res.status(403).json({ error: err.message });
+  }
+});
+
+// 5. Grant Workspace & AI Narrative Drafting
+app.get('/api/admin/funding/grants/:id/proposal', (req: Request, res: Response) => {
+  const proposal = fundingService.getProposal(req.params.id);
+  res.json({ proposal: proposal || null });
+});
+
+app.patch('/api/admin/funding/grants/:id/proposal/section', (req: Request, res: Response) => {
+  try {
+    const { sectionKey, content } = req.body;
+    const updated = fundingService.updateProposalSection(req.params.id, sectionKey, content, { name: 'Grants Officer' });
+    res.json(updated);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/funding/grants/:id/proposal/ai-draft', (req: Request, res: Response) => {
+  try {
+    const { sectionKey } = req.body;
+    const draftText = fundingService.generateAiDraftSection(req.params.id, sectionKey, { name: 'Grants Officer' });
+    res.json({ draftText, requiresHumanApproval: true });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 6. Grant Budget Builder
+app.get('/api/admin/funding/grants/:id/budget', (req: Request, res: Response) => {
+  res.json({ budget: fundingService.getBudgetSheet(req.params.id) });
+});
+
+app.post('/api/admin/funding/grants/:id/budget', (req: Request, res: Response) => {
+  try {
+    const saved = fundingService.saveBudgetSheet(req.body, { role: 'FINANCE_DIRECTOR' });
+    res.json(saved);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 7. Grant Submission Gate
+app.get('/api/admin/funding/grants/:id/submission-checklist', (req: Request, res: Response) => {
+  res.json({ checklist: fundingService.getSubmissionChecklist(req.params.id) });
+});
+
+app.post('/api/admin/funding/grants/:id/submit', (req: Request, res: Response) => {
+  try {
+    const actorRole = (req.headers['x-phumulani-role'] as string) || 'EXECUTIVE_DIRECTOR';
+    const submitted = fundingService.submitGrantProposal(req.params.id, { role: actorRole, name: 'Nombuso Tembe' });
+    res.json(submitted);
+  } catch (err: any) {
+    res.status(403).json({ error: err.message });
+  }
+});
+
+// 8. Restricted Funds & Program Allocation
+app.get('/api/admin/funding/restricted-funds', (_req: Request, res: Response) => {
+  res.json({ restrictedFunds: fundingService.getRestrictedFunds() });
+});
+
+app.post('/api/admin/funding/restricted-funds/:id/allocate', (req: Request, res: Response) => {
+  try {
+    const { programId, amount, category } = req.body;
+    const fund = fundingService.recordRestrictedAllocation(req.params.id, programId, amount, category, { role: 'FINANCE_DIRECTOR' });
+    res.json(fund);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 9. Unified Donor CRM
+app.get('/api/admin/funding/donors', (_req: Request, res: Response) => {
+  res.json({ donors: fundingService.getDonors() });
+});
+
+app.post('/api/admin/funding/donors', (req: Request, res: Response) => {
+  try {
+    const donor = fundingService.createDonor(req.body, { role: 'DEVELOPMENT_OFFICER' });
+    res.status(201).json(donor);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 10. Pipelines & Campaigns
+app.get('/api/admin/funding/pipelines', (_req: Request, res: Response) => {
+  res.json({ pipelines: fundingService.getPipelineDeals() });
+});
+
+app.patch('/api/admin/funding/pipelines/:id/stage', (req: Request, res: Response) => {
+  try {
+    const updated = fundingService.updatePipelineDealStage(req.params.id, req.body.stage, { role: 'DEVELOPMENT_OFFICER' });
+    res.json(updated);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.get('/api/admin/funding/campaigns', (_req: Request, res: Response) => {
+  res.json({ campaigns: fundingService.getCampaigns() });
+});
+
+// 11. Donation Reconciliation & Anti-Fraud
+app.get('/api/admin/funding/reconciliations', (_req: Request, res: Response) => {
+  res.json({ reconciliations: fundingService.getReconciliations() });
+});
+
+app.post('/api/admin/funding/reconciliations/:id/reconcile', (req: Request, res: Response) => {
+  try {
+    const { paymentMethod, depositRef } = req.body;
+    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Nombuso Tembe';
+    const actorRole = (req.headers['x-phumulani-role'] as string) || 'EXECUTIVE_DIRECTOR';
+    const reconciled = fundingService.reconcileDonation(req.params.id, { name: actorName, role: actorRole }, paymentMethod, depositRef);
+    res.json(reconciled);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 12. Stewardship & Staged Acknowledgments
+app.get('/api/admin/funding/stewardship', (_req: Request, res: Response) => {
+  res.json({ stewardshipActions: fundingService.getStewardshipActions() });
+});
+
+// 13. Funder Reporting & Compliance
+app.get('/api/admin/funding/reports', (_req: Request, res: Response) => {
+  res.json({ reports: fundingService.getFunderReports() });
+});
+
+app.post('/api/admin/funding/reports/:id/certify', (req: Request, res: Response) => {
+  try {
+    const actorRole = (req.headers['x-phumulani-role'] as string) || 'EXECUTIVE_DIRECTOR';
+    const certified = fundingService.certifyFunderReport(req.params.id, { role: actorRole, name: 'Nombuso Tembe' });
+    res.json(certified);
+  } catch (err: any) {
+    res.status(403).json({ error: err.message });
+  }
+});
+
+// 14. Phase 26 Security Penetration Suite
+app.post('/api/admin/funding/security/negative-tests', (_req: Request, res: Response) => {
+  const result = fundingService.runPhase26SecurityProbes();
   res.json(result);
 });
 
