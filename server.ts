@@ -15,6 +15,8 @@ import { PostgresPersistenceAdapter } from './src/services/postgresPersistenceAd
 import { DatabaseMigrationService } from './src/services/databaseMigrationService';
 import { BackgroundWorkerService } from './src/services/backgroundWorkerService';
 import { EnvironmentService } from './src/services/environmentService';
+import { MasterAdminService } from './src/services/masterAdminService';
+import type { PermissionDomain } from './src/types/masterAdmin';
 
 dotenv.config();
 
@@ -1400,9 +1402,281 @@ app.post('/api/fundraising/safeguarding-test', (req: Request, res: Response) => 
   });
 });
 
+// =============================================================================
+// PHASE 24: MASTER ADMINISTRATION & ORGANIZATIONAL OPERATIONS API
+// =============================================================================
+const masterAdmin = MasterAdminService.getInstance();
+
+// 1. Truthful Organizational Analytics
+app.get('/api/admin/analytics', (_req: Request, res: Response) => {
+  res.json(masterAdmin.getTruthfulAnalytics());
+});
+
+// 2. Staff Management & Lifecycle
+app.get('/api/admin/staff', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const auth = masterAdmin.verifySecurityAccess(actorRole, 'staff_management');
+  if (!auth.allowed) {
+    res.status(403).json({ error: auth.reason });
+    return;
+  }
+  res.json({ staff: masterAdmin.getStaffMembers() });
+});
+
+app.post('/api/admin/staff', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const result = masterAdmin.createStaffMember(req.body, actorRole);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.status(201).json(result);
+});
+
+app.patch('/api/admin/staff/:id/lifecycle', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const { status, notes } = req.body;
+  const result = masterAdmin.updateStaffLifecycle(req.params.id, status, actorRole, notes);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.json(result);
+});
+
+// 3. Departments
+app.get('/api/admin/departments', (_req: Request, res: Response) => {
+  res.json({ departments: masterAdmin.getDepartments() });
+});
+
+app.patch('/api/admin/departments/:id', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const result = masterAdmin.updateDepartment(req.params.id, req.body, actorRole);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.json(result);
+});
+
+// 4. Organizational Tasks
+app.get('/api/admin/tasks', (req: Request, res: Response) => {
+  const { departmentId, status, priority, assignedStaffId, search } = req.query as Record<string, string>;
+  const tasks = masterAdmin.getTasks({ departmentId, status: status as any, priority: priority as any, assignedStaffId, search });
+  res.json({ tasks });
+});
+
+app.post('/api/admin/tasks', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+  const result = masterAdmin.createTask(req.body, actorRole, actorName);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.status(201).json(result);
+});
+
+app.patch('/api/admin/tasks/:id/status', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+  const { status, note } = req.body;
+  const result = masterAdmin.updateTaskStatus(req.params.id, status, actorRole, actorName, note);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.json(result);
+});
+
+app.post('/api/admin/tasks/:id/comments', (req: Request, res: Response) => {
+  const { authorStaffId, authorName, authorRole, text } = req.body;
+  const result = masterAdmin.addTaskComment(req.params.id, authorStaffId, authorName, authorRole, text);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.status(201).json(result);
+});
+
+// 5. Executive Decisions
+app.get('/api/admin/decisions', (req: Request, res: Response) => {
+  const { status } = req.query as { status?: string };
+  res.json({ decisions: masterAdmin.getExecutiveDecisions(status as any), priorities: masterAdmin.getStrategicPriorities() });
+});
+
+app.post('/api/admin/decisions/:id/review', (req: Request, res: Response) => {
+  const approverRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const approverName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+  const { action, notes } = req.body;
+  const result = masterAdmin.reviewExecutiveDecision(req.params.id, action, approverRole, approverName, notes);
+  if (!result.success) {
+    res.status(403).json({ error: result.error });
+    return;
+  }
+  res.json(result);
+});
+
+// 6. Volunteers
+app.get('/api/admin/volunteers', (req: Request, res: Response) => {
+  const { stage } = req.query as { stage?: string };
+  res.json({ volunteers: masterAdmin.getVolunteers(stage as any) });
+});
+
+app.post('/api/admin/volunteers/:id/advance', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
+  const { stage, screeningDetails } = req.body;
+  const result = masterAdmin.advanceVolunteerStage(req.params.id, stage, actorRole, actorName, screeningDetails);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.json(result);
+});
+
+// 7. Grants
+app.get('/api/admin/grants', (req: Request, res: Response) => {
+  const { stage } = req.query as { stage?: string };
+  res.json({ grants: masterAdmin.getGrants(stage as any) });
+});
+
+app.post('/api/admin/grants/:id/advance', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Nadia El-Amin';
+  const { stage, awardedAmount } = req.body;
+  const result = masterAdmin.advanceGrantStage(req.params.id, stage, actorRole, actorName, awardedAmount);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.json(result);
+});
+
+// 8. Partnerships
+app.get('/api/admin/partnerships', (req: Request, res: Response) => {
+  const { stage } = req.query as { stage?: string };
+  res.json({ partnerships: masterAdmin.getPartnerships(stage as any) });
+});
+
+app.post('/api/admin/partnerships/:id/advance', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sarah Chen';
+  const { stage, agreementUpdates } = req.body;
+  const result = masterAdmin.advancePartnershipStage(req.params.id, stage, actorRole, actorName, agreementUpdates);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.json(result);
+});
+
+// 9. RBAC Matrix & Server-Side Negative Access Verification Tests
+app.get('/api/admin/rbac-matrix', (_req: Request, res: Response) => {
+  res.json({ matrix: masterAdmin.getRolePermissionMatrix() });
+});
+
+app.post('/api/admin/security/negative-access-tests', (req: Request, res: Response) => {
+  const tests = [
+    {
+      id: 'SEC-NEG-01',
+      description: 'General staff cannot modify administrator permissions or provision staff',
+      role: 'staff',
+      domain: 'staff_management' as PermissionDomain,
+      expectedAllowed: false,
+      actualAllowed: masterAdmin.verifySecurityAccess('staff', 'staff_management').allowed,
+    },
+    {
+      id: 'SEC-NEG-02',
+      description: 'Department staff cannot access unrelated restricted safeguarding records',
+      role: 'communications_officer',
+      domain: 'restricted_safeguarding' as PermissionDomain,
+      expectedAllowed: false,
+      actualAllowed: masterAdmin.verifySecurityAccess('communications_officer', 'restricted_safeguarding').allowed,
+    },
+    {
+      id: 'SEC-NEG-03',
+      description: 'Volunteers cannot access staff administration or internal CRM',
+      role: 'volunteer',
+      domain: 'staff_management' as PermissionDomain,
+      expectedAllowed: false,
+      actualAllowed: masterAdmin.verifySecurityAccess('volunteer', 'staff_management').allowed,
+    },
+    {
+      id: 'SEC-NEG-04',
+      description: 'AI agents cannot approve their own actions or executive decisions',
+      role: 'ai_agent',
+      domain: 'executive_approvals' as PermissionDomain,
+      expectedAllowed: false,
+      actualAllowed: masterAdmin.canApproveExecutiveDecisions('ai_agent'),
+    },
+    {
+      id: 'SEC-NEG-05',
+      description: 'Finance officer cannot access restricted survivor safeguarding vault',
+      role: 'finance_officer',
+      domain: 'restricted_safeguarding' as PermissionDomain,
+      expectedAllowed: false,
+      actualAllowed: masterAdmin.canAccessSafeguarding('finance_officer'),
+    },
+    {
+      id: 'SEC-NEG-06',
+      description: 'Restricted safeguarding information cannot enter general AI workflows',
+      role: 'program_manager',
+      domain: 'restricted_safeguarding' as PermissionDomain,
+      expectedAllowed: false,
+      actualAllowed: masterAdmin.canAccessSafeguarding('program_manager'),
+    },
+    {
+      id: 'SEC-NEG-07',
+      description: 'Unauthorized users cannot execute executive approvals',
+      role: 'volunteer_coordinator',
+      domain: 'executive_approvals' as PermissionDomain,
+      expectedAllowed: false,
+      actualAllowed: masterAdmin.canApproveExecutiveDecisions('volunteer_coordinator'),
+    },
+    {
+      id: 'SEC-NEG-08',
+      description: 'Suspended accounts cannot perform protected actions',
+      role: 'PLATFORM_SUPER_ADMIN',
+      domain: 'master_administration' as PermissionDomain,
+      targetStatus: 'SUSPENDED',
+      expectedAllowed: false,
+      actualAllowed: masterAdmin.verifySecurityAccess('PLATFORM_SUPER_ADMIN', 'master_administration', 'SUSPENDED').allowed,
+    },
+    {
+      id: 'SEC-NEG-09',
+      description: 'Deactivated staff accounts are blocked from system access',
+      role: 'staff',
+      domain: 'organizational_tasks' as PermissionDomain,
+      targetStatus: 'DEACTIVATED',
+      expectedAllowed: false,
+      actualAllowed: masterAdmin.verifySecurityAccess('staff', 'organizational_tasks', 'DEACTIVATED').allowed,
+    },
+    {
+      id: 'SEC-NEG-10',
+      description: 'Direct API requests cannot bypass default-deny server-side role authorization',
+      role: 'visitor',
+      domain: 'financial_information' as PermissionDomain,
+      expectedAllowed: false,
+      actualAllowed: masterAdmin.verifySecurityAccess('visitor', 'financial_information').allowed,
+    },
+  ];
+
+  const allPassed = tests.every((t) => t.actualAllowed === t.expectedAllowed);
+
+  res.json({
+    success: allPassed,
+    totalTests: tests.length,
+    passedTests: tests.filter((t) => t.actualAllowed === t.expectedAllowed).length,
+    tests,
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // -----------------------------------------------------------------------------
 // VITE SPA DEV MIDDLEWARE / STATIC SERVING
 // -----------------------------------------------------------------------------
+
 
 async function startServer() {
   // Initialize persistent database adapter (PostgreSQL or isolated durable store)

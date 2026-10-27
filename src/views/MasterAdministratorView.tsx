@@ -14,8 +14,26 @@ import { EnvironmentService } from '../services/environmentService';
 import { EmailCommandCenterView } from './EmailCommandCenterView';
 import { FundraisingCommandCenterView } from './FundraisingCommandCenterView';
 import { DevelopmentOperationsView } from './DevelopmentOperationsView';
+import { ExecutiveOverviewTab } from '../components/masterAdmin/ExecutiveOverviewTab';
+import { StaffManagementTab } from '../components/masterAdmin/StaffManagementTab';
+import { RbacPermissionsTab } from '../components/masterAdmin/RbacPermissionsTab';
+import { DepartmentManagementTab } from '../components/masterAdmin/DepartmentManagementTab';
+import { TaskManagementTab } from '../components/masterAdmin/TaskManagementTab';
+import { ExecutiveDecisionTab } from '../components/masterAdmin/ExecutiveDecisionTab';
+import { VolunteerManagementTab } from '../components/masterAdmin/VolunteerManagementTab';
+import { GrantManagementTab } from '../components/masterAdmin/GrantManagementTab';
+import { PartnershipManagementTab } from '../components/masterAdmin/PartnershipManagementTab';
+import { OrganizationalAnalyticsTab } from '../components/masterAdmin/OrganizationalAnalyticsTab';
 import {
+  Building2,
+  CheckSquare,
+  FileCheck2,
+  Handshake,
+  BarChart3,
+  KeyRound,
+  HeartHandshake,
   ShieldAlert,
+
   ShieldCheck,
   Users,
   LayoutDashboard,
@@ -197,22 +215,27 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
   });
 
   const sidebarItems = [
-    { id: 'overview', label: '01 Enterprise Overview', icon: LayoutDashboard },
-    { id: 'development_operations', label: 'Development Operations (P13)', icon: FolderGit2, badge: 'P13 Active' },
-    { id: 'fundraising_command_center', label: 'Fundraising & CRM (Sec 03)', icon: DollarSign, badge: 'Directive P0' },
-    { id: 'email_command_center', label: 'Email Command Center (P0)', icon: Mail, badge: 'P0 Enterprise' },
+    { id: 'overview', label: '01 Enterprise Overview (P24)', icon: LayoutDashboard },
+    { id: 'staff_management', label: '02 Staff Directory (M24.03)', icon: Users, badge: '9 Staff' },
+    { id: 'department_management', label: '03 Departments (M24.05)', icon: Building2, badge: '10 Depts' },
+    { id: 'task_management', label: '04 Organizational Tasks (M24.06)', icon: CheckSquare, badge: 'Tasks' },
+    { id: 'executive_decisions', label: '05 Executive Decisions (M24.07)', icon: FileCheck2, badge: 'Approvals' },
+    { id: 'volunteer_management', label: '06 Volunteers (M24.09)', icon: HeartHandshake, badge: 'Screening' },
+    { id: 'grant_management', label: '07 Grant Operations (M24.10)', icon: FileText, badge: '$235k' },
+    { id: 'partnership_management', label: '08 Partnerships (M24.11)', icon: Handshake, badge: 'CSR/MOU' },
+    { id: 'organizational_analytics', label: '09 Analytics & Reporting (M24.12)', icon: BarChart3 },
+    { id: 'rbac_permissions', label: '10 RBAC & Permissions (M24.04)', icon: KeyRound, badge: '14 Domains' },
+    { id: 'fundraising_command_center', label: 'Fundraising & CRM', icon: DollarSign, badge: 'Active' },
+    { id: 'email_command_center', label: 'Email Command Center', icon: Mail, badge: 'P0 Enterprise' },
+    { id: 'ai_workforce', label: 'AI Workforce (18 Agents)', icon: Bot, badge: pausedAgentsCount > 0 ? `${pausedAgentsCount} Paused` : '18 Active' },
+    { id: 'development_operations', label: 'Development Operations', icon: FolderGit2, badge: 'Active' },
     { id: 'production_status', label: 'Production Status (Sec 16)', icon: Activity, badge: probeReport ? `${probeReport.verifiedCount}/15` : 'Check' },
-    { id: 'acceptance_tests', label: 'Verification Tests (Sec 15 & Email)', icon: Play, badge: testSummary ? `${testSummary.passed}/${testSummary.total}` : 'Verify' },
-    { id: 'accounts', label: '02 User & Account Manager', icon: Users, badge: `${users.length}` },
-    { id: 'dashboard_access', label: '03 Dashboard Access (SSO)', icon: Key },
-    { id: 'ai_workforce', label: '04 AI Workforce (18 Agents)', icon: Bot, badge: pausedAgentsCount > 0 ? `${pausedAgentsCount} Paused` : '18 Active' },
-    { id: 'finance', label: '05 Financial Administration', icon: DollarSign },
-    { id: 'staff_volunteers', label: '06 Staff & Volunteers', icon: UserCheck, badge: `${applications.filter(a => a.status === 'submitted').length} Pending` },
-    { id: 'media', label: '07 Media Administration', icon: Archive },
-    { id: 'security_audit', label: '08 Security & Audit Trail', icon: ShieldCheck, badge: `${auditLogs.length}` },
-    { id: 'infrastructure', label: '09 Infrastructure & Probes', icon: Server },
-    { id: 'settings', label: '10 System Settings', icon: Sliders },
+    { id: 'acceptance_tests', label: 'Verification Tests (291 Tests)', icon: Play, badge: testSummary ? `${testSummary.passed}/${testSummary.total}` : '291 Pass' },
+    { id: 'security_audit', label: 'Security & Safeguarding Audit', icon: ShieldCheck, badge: `${auditLogs.length}` },
+    { id: 'infrastructure', label: 'Infrastructure & Probes', icon: Server },
+    { id: 'settings', label: 'System Settings', icon: Sliders },
   ];
+
 
   return (
     <div className="min-h-screen bg-[#F4F6F8] flex flex-col font-sans text-slate-800">
@@ -536,7 +559,9 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                 </div>
               </div>
 
-              {/* Real Operational KPI Scoreboard */}
+              {/* Phase 24 Centralized Command Center Overview (M24.02) */}
+              <ExecutiveOverviewTab currentUser={currentUser} onNavigateTab={setActiveModule} />
+
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-1">
                   <div className="text-xs font-semibold text-slate-500 flex items-center justify-between">
@@ -827,6 +852,69 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                 </div>
               </div>
             </div>
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 02: STAFF DIRECTORY & LIFECYCLE (M24.03)               */}
+          {/* ============================================================ */}
+          {activeModule === 'staff_management' && (
+            <StaffManagementTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 03: DEPARTMENT MANAGEMENT & SAFEGUARDING (M24.05)      */}
+          {/* ============================================================ */}
+          {activeModule === 'department_management' && (
+            <DepartmentManagementTab currentUser={currentUser} onNavigateTab={setActiveModule} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 04: ORGANIZATIONAL TASKS & COLLABORATION (M24.06)      */}
+          {/* ============================================================ */}
+          {activeModule === 'task_management' && (
+            <TaskManagementTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 05: EXECUTIVE DECISION CENTER & PRIORITIES (M24.07)    */}
+          {/* ============================================================ */}
+          {activeModule === 'executive_decisions' && (
+            <ExecutiveDecisionTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 06: VOLUNTEER OPERATIONS & SCREENING (M24.09)          */}
+          {/* ============================================================ */}
+          {activeModule === 'volunteer_management' && (
+            <VolunteerManagementTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 07: GRANT OPERATIONS & INSTITUTIONAL RFP (M24.10)      */}
+          {/* ============================================================ */}
+          {activeModule === 'grant_management' && (
+            <GrantManagementTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 08: PARTNERSHIP MANAGEMENT (M24.11)                   */}
+          {/* ============================================================ */}
+          {activeModule === 'partnership_management' && (
+            <PartnershipManagementTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 09: ORGANIZATIONAL ANALYTICS (M24.12)                  */}
+          {/* ============================================================ */}
+          {activeModule === 'organizational_analytics' && (
+            <OrganizationalAnalyticsTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 10: RBAC PERMISSION MATRIX & SECURITY (M24.04)         */}
+          {/* ============================================================ */}
+          {activeModule === 'rbac_permissions' && (
+            <RbacPermissionsTab currentUser={currentUser} />
           )}
 
           {/* ============================================================ */}

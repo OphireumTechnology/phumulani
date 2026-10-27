@@ -1,0 +1,1121 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+# PHASE 24 — MASTER ADMINISTRATION & ORGANIZATIONAL OPERATIONS
+## ENTERPRISE ADMINISTRATION, STAFF GOVERNANCE, AI WORKFORCE, VOLUNTEERS, GRANTS AND EXECUTIVE OVERSIGHT
+
+**PROJECT:** PHUMULANI AI COMMUNITY PLATFORM  
+**DEVELOPMENT ORGANIZATION:** OPHIREUM TECHNOLOGY  
+**REPOSITORY:** `OphireumTechnology/phumulani`  
+**PRIMARY DEVELOPMENT ROUTE:** `/admin/master`  
+**RELATED ROUTES:** `/admin/master/email`, `/admin/master/fundraising`, `/admin/master/fundraising/agents`  
+**PREVIOUS PHASE:** PHASE 23  
+**REPORTED REGRESSION BASELINE:** 276/276 TESTS PASSING  
+**REQUIRED ENVIRONMENT POLICY:** `PRODUCTION_ONLY`
+
+---
+
+# 1. MASTER EXECUTION DIRECTIVE
+
+GOOGLE AI STUDIO:
+
+BEGIN PHASE 24 DEVELOPMENT IMMEDIATELY.
+
+THE OBJECTIVE IS TO TRANSFORM THE EXISTING MASTER ADMINISTRATION ENVIRONMENT INTO A COMPLETE, SECURE, INTEGRATED ORGANIZATIONAL OPERATING SYSTEM.
+
+THIS IS AN IMPLEMENTATION PHASE.
+
+DO NOT LIMIT EXECUTION TO PLANNING, DOCUMENTATION, MOCKUPS, OR DEVELOPMENT REPORTS.
+
+INSPECT THE EXISTING SOURCE CODE BEFORE MAKING CHANGES.
+
+REUSE EXISTING SERVICES, COMPONENTS, DATA MODELS, ROUTES, PERMISSION SYSTEMS, AND AI AGENTS.
+
+DO NOT DUPLICATE FUNCTIONALITY THAT ALREADY EXISTS.
+
+DO NOT REPLACE WORKING APPLICATION MODULES UNNECESSARILY.
+
+PRESERVE ALL PREVIOUSLY COMPLETED FEATURES.
+
+## MANDATORY DEVELOPMENT PRINCIPLES
+
+1. Build actual application functionality.
+2. Implement real user interactions.
+3. Implement server-side authorization.
+4. Integrate with existing service interfaces.
+5. Preserve production-only restrictions.
+6. Maintain accurate operational status reporting.
+7. Write meaningful automated tests.
+8. Preserve safeguarding boundaries.
+9. Prevent unauthorized access to sensitive organizational information.
+10. Keep external infrastructure dependencies explicitly blocked until authorized.
+
+---
+
+# 2. EXTERNAL INFRASTRUCTURE DEFERRAL
+
+THE USER HAS TEMPORARILY DEFERRED:
+
+- PRODUCTION POSTGRESQL PROVISIONING.
+- GOOGLE WORKSPACE OAUTH AUTHORIZATION.
+- REAL ORGANIZATIONAL MAILBOX ACTIVATION.
+- PAYMENT GATEWAY ACTIVATION.
+
+DO NOT REPEAT THESE ADMINISTRATOR ACTIVATION PROCEDURES DURING PHASE 24.
+
+DO NOT BLOCK UNRELATED DEVELOPMENT.
+
+HOWEVER:
+
+DO NOT USE DEMO ACCOUNTS.
+
+DO NOT FABRICATE PRODUCTION STAFF.
+
+DO NOT FABRICATE VOLUNTEERS.
+
+DO NOT CREATE SYNTHETIC DONOR RECORDS IN PRODUCTION.
+
+DO NOT CREATE FAKE GRANTS OR DONATIONS.
+
+DO NOT GENERATE FAKE OPERATIONAL METRICS.
+
+DO NOT SILENTLY FALL BACK TO JSON FILES FOR PRODUCTION PERSISTENCE.
+
+DO NOT MARK UNCONNECTED SERVICES AS LIVE.
+
+### Required infrastructure status
+
+```text
+POSTGRESQL=NOT_CONNECTED
+GOOGLE_WORKSPACE=AUTHORIZATION_REQUIRED
+PAYMENT_GATEWAY=NOT_CONNECTED
+REAL_EMAIL_RETRIEVAL=NOT_ACTIVATED
+```
+
+Update these statuses only when actual external-service evidence justifies the change.
+
+Features requiring unavailable production persistence must fail safely, present an accurate unavailable state, and remain testable through isolated automated test infrastructure.
+
+---
+
+# 3. PHASE 24 DEVELOPMENT MILESTONES
+
+Execute the following milestones in sequence.
+
+| Milestone | Development Domain | Objective |
+|---|---|---|
+| M24.01 | Architecture Audit | Reuse existing platform services |
+| M24.02 | Master Admin Dashboard | Unified organizational command center |
+| M24.03 | Staff Management | Staff directory and lifecycle |
+| M24.04 | Role-Based Access Control | Departmental permissions and authorization |
+| M24.05 | Department Management | Organizational structure and oversight |
+| M24.06 | Task Management | Cross-departmental workflows |
+| M24.07 | Executive Decision Center | Leadership approvals and decisions |
+| M24.08 | AI Workforce Management | Coordinate existing 18 AI agents |
+| M24.09 | Volunteer Management | Volunteer lifecycle and assignments |
+| M24.10 | Grant Management | Grant opportunity and proposal operations |
+| M24.11 | Partnership Management | Corporate and community relationships |
+| M24.12 | Organizational Analytics | Truthful operational reporting |
+| M24.13 | Audit and Safeguarding | Security, privacy and compliance |
+| M24.14 | UX and Accessibility | Professional administration interface |
+| M24.15 | Integration and Testing | End-to-end validation |
+
+---
+
+# M24.01 — EXISTING ARCHITECTURE AUDIT
+
+## Objective
+
+Understand the existing implementation before developing additional features.
+
+Inspect:
+
+- Master Admin routes.
+- Existing authentication.
+- Existing staff models.
+- Existing role and permission services.
+- Existing fundraising CRM.
+- Existing email management.
+- Existing AI agent registry.
+- Existing task management.
+- Existing audit services.
+- Existing background workers.
+- Existing database schema.
+- Existing safeguarding controls.
+
+Identify:
+
+1. Existing functional components.
+2. Partially implemented components.
+3. Missing capabilities.
+4. Duplicated code.
+5. Security weaknesses.
+6. Integration requirements.
+
+### Implementation requirement
+
+Modify existing modules where practical.
+
+Create new modules only when a clear architectural need exists.
+
+### Exit criteria
+
+A verified implementation plan based on the actual repository.
+
+---
+
+# M24.02 — MASTER ADMINISTRATION COMMAND CENTER
+
+## Objective
+
+Complete the central administrative dashboard at:
+
+`/admin/master`
+
+The dashboard must provide an integrated view of organizational operations.
+
+## Required dashboard sections
+
+### A. Executive overview
+
+Display:
+
+- Organizational operational status.
+- Active departments.
+- Authorized staff counts.
+- Open organizational tasks.
+- Pending leadership decisions.
+- Volunteer management status.
+- Grant pipeline status.
+- Partnership pipeline status.
+- AI workforce status.
+- Email operations status.
+- Security and safeguarding alerts.
+
+All values must come from verified application data.
+
+### B. Priority action center
+
+Display:
+
+- Tasks requiring immediate attention.
+- Overdue assignments.
+- Pending approvals.
+- Escalated operational issues.
+- AI actions awaiting review.
+- Unresolved security alerts.
+
+### C. Department overview
+
+Display departmental workload, pending tasks, assigned staff, and operational status.
+
+### D. Infrastructure health
+
+Show actual status for:
+
+- Application server.
+- Database.
+- AI gateway.
+- Google Workspace.
+- Payment gateway.
+- Background workers.
+- Approval engine.
+- Safeguarding services.
+
+### E. Recent activity
+
+Show authorized administrative activity from real audit records.
+
+### Required user experience
+
+Implement:
+
+- Clear navigation.
+- Responsive cards.
+- Search.
+- Filters.
+- Drill-down views.
+- Accurate loading states.
+- Accurate empty states.
+- Permission-aware content.
+- Accessible controls.
+
+### Exit criteria
+
+The dashboard is operational and accurately reflects the state of connected and disconnected services.
+
+---
+
+# M24.03 — ENTERPRISE STAFF MANAGEMENT
+
+## Objective
+
+Develop a complete staff administration module.
+
+## Required functions
+
+### Staff directory
+
+Support:
+
+- Staff profile.
+- Staff identifier.
+- Department.
+- Job title.
+- Organizational role.
+- Employment or engagement status.
+- Assigned supervisor.
+- Assigned responsibilities.
+- Access level.
+- Account status.
+
+Do not populate the production directory with fabricated employees.
+
+### Staff lifecycle
+
+Implement:
+
+1. Staff invitation.
+2. Pending onboarding.
+3. Role assignment.
+4. Department assignment.
+5. Supervisor assignment.
+6. Profile update.
+7. Access review.
+8. Temporary suspension.
+9. Account deactivation.
+10. Offboarding.
+
+### Security
+
+Only authorized administrators may manage staff access.
+
+Do not allow staff to assign themselves elevated permissions.
+
+Do not permit deactivated users to retain active sessions indefinitely.
+
+Record administrative changes in the audit log.
+
+### Exit criteria
+
+Staff management workflows function through the existing authentication and persistence interfaces.
+
+---
+
+# M24.04 — ROLE-BASED ACCESS CONTROL
+
+## Objective
+
+Implement consistent authorization throughout the administrative platform.
+
+## Required role framework
+
+Inspect and preserve existing roles.
+
+Where necessary, support organizational responsibilities such as:
+
+- Master Administrator.
+- Executive Director.
+- Department Administrator.
+- Fundraising Manager.
+- Grants Officer.
+- Partnerships Coordinator.
+- Volunteer Coordinator.
+- Communications Officer.
+- Finance Officer.
+- General Staff.
+- Restricted Safeguarding Personnel.
+
+These are proposed role categories, not authorization to create or assign real staff accounts automatically.
+
+## Permission domains
+
+Support granular permissions for:
+
+- Master administration.
+- Staff management.
+- Department management.
+- Organizational tasks.
+- Executive approvals.
+- Email management.
+- Fundraising CRM.
+- Grant management.
+- Partnership management.
+- Volunteer management.
+- AI workforce.
+- Financial information.
+- Audit records.
+- Restricted safeguarding information.
+
+### Mandatory security
+
+Authorization must be enforced server-side.
+
+Do not rely only on hidden buttons or navigation items.
+
+Deny access by default.
+
+Prevent horizontal and vertical privilege escalation.
+
+### Exit criteria
+
+Every administrative action has a documented permission requirement and a server-side enforcement test.
+
+---
+
+# M24.05 — DEPARTMENT MANAGEMENT
+
+## Objective
+
+Provide a structured organizational management system.
+
+## Proposed department categories
+
+- Executive Administration.
+- Fundraising and Development.
+- Grants and Institutional Funding.
+- Corporate Partnerships.
+- Communications.
+- Volunteer Coordination.
+- Community Programs.
+- Finance and Administration.
+- Technology and AI Operations.
+- Restricted Safeguarding Services.
+
+The actual department structure must remain configurable and subject to organizational approval.
+
+## Required capabilities
+
+- Create department.
+- Edit department.
+- Assign department head.
+- Assign authorized staff.
+- Define responsibilities.
+- Configure department permissions.
+- Review departmental workload.
+- Track department tasks.
+- Track departmental approvals.
+- View department activity.
+
+### Restrictions
+
+Restricted safeguarding departments must remain logically isolated from general CRM and fundraising workflows.
+
+### Exit criteria
+
+Department structures can be managed securely and reused across the platform.
+
+---
+
+# M24.06 — ORGANIZATIONAL TASK MANAGEMENT
+
+## Objective
+
+Create a unified task-management experience for authorized staff.
+
+## Required task fields
+
+- Task title.
+- Description.
+- Department.
+- Assigned staff.
+- Priority.
+- Due date.
+- Status.
+- Related project.
+- Related CRM record.
+- Related email thread.
+- Related grant.
+- Related partnership.
+- Approval requirement.
+- Activity history.
+
+## Task workflow
+
+Support:
+
+```text
+CREATED
+   ↓
+ASSIGNED
+   ↓
+IN_PROGRESS
+   ↓
+REVIEW_REQUIRED
+   ↓
+COMPLETED
+```
+
+Also support:
+
+- ON_HOLD.
+- BLOCKED.
+- CANCELLED.
+- OVERDUE.
+
+## Required functions
+
+- Create task.
+- Assign task.
+- Reassign task.
+- Set due date.
+- Update priority.
+- Add internal comment.
+- Attach authorized reference.
+- Request review.
+- Escalate task.
+- Complete task.
+- Reopen task.
+
+### AI assistance
+
+Existing AI agents may suggest task creation or prioritization within their approved scope.
+
+AI must not create sensitive organizational obligations without the required human authorization.
+
+### Exit criteria
+
+Task management works across departments with accurate permissions and audit records.
+
+---
+
+# M24.07 — EXECUTIVE DECISION CENTER
+
+## Objective
+
+Develop a dedicated executive administration environment.
+
+## Required sections
+
+### Executive approvals
+
+- Pending decisions.
+- Approved decisions.
+- Rejected decisions.
+- Returned decisions.
+- Escalated decisions.
+
+### Organizational priorities
+
+- Strategic initiatives.
+- Major operational projects.
+- Departmental objectives.
+- Key deadlines.
+- Leadership assignments.
+
+### Decision register
+
+Each decision must include:
+
+- Decision reference.
+- Requesting department.
+- Requesting staff member.
+- Decision type.
+- Supporting documentation.
+- Required approver.
+- Approval status.
+- Decision timestamp.
+- Audit history.
+
+### Human oversight
+
+AI may summarize decision materials and identify risks.
+
+AI must not independently approve financial commitments, legal obligations, external communications, or restricted safeguarding decisions.
+
+### Exit criteria
+
+Executive decisions are reviewable, auditable, and protected by role-based permissions.
+
+---
+
+# M24.08 — AI WORKFORCE MANAGEMENT
+
+## Objective
+
+Integrate the existing AI workforce into the Master Admin command center.
+
+## Existing AI workforce
+
+Preserve the 18 existing fundraising AI agents:
+
+```text
+FUND-AI-001
+THROUGH
+FUND-AI-018
+```
+
+Preserve the existing five orchestration pipelines.
+
+Do not create duplicate agents.
+
+## Required AI workforce dashboard
+
+Display:
+
+- Registered agents.
+- Agent purpose.
+- Assigned workflow.
+- Current operational status.
+- Last execution.
+- Successful executions.
+- Failed executions.
+- Pending approvals.
+- Security restrictions.
+- Human supervisor.
+- Integration dependencies.
+
+Only display metrics supported by actual execution records.
+
+## Required controls
+
+- View agent details.
+- View agent permissions.
+- View execution history.
+- Inspect failed executions.
+- Review pending actions.
+- Pause eligible workflows.
+- Resume authorized workflows.
+- Escalate failures.
+- Review AI-generated recommendations.
+
+## Security
+
+Do not allow an AI agent to grant itself additional permissions.
+
+Do not allow agents to bypass human approval.
+
+Do not expose restricted information to general-purpose agents.
+
+Do not fabricate execution history.
+
+### Exit criteria
+
+The existing AI workforce is visible and manageable through authorized administrative interfaces.
+
+---
+
+# M24.09 — VOLUNTEER MANAGEMENT
+
+## Objective
+
+Develop a complete volunteer administration module.
+
+## Required volunteer lifecycle
+
+```text
+APPLICATION
+    ↓
+REVIEW
+    ↓
+SCREENING
+    ↓
+APPROVAL
+    ↓
+ONBOARDING
+    ↓
+ASSIGNMENT
+    ↓
+ACTIVE ENGAGEMENT
+    ↓
+COMPLETION / OFFBOARDING
+```
+
+## Required capabilities
+
+- Volunteer application review.
+- Volunteer profile management.
+- Skills and interests.
+- Availability.
+- Assignment preferences.
+- Department placement.
+- Orientation status.
+- Required screening status.
+- Training status.
+- Volunteer assignments.
+- Volunteer schedule.
+- Engagement history.
+- Supervisor feedback.
+- Offboarding.
+
+### Important safeguards
+
+Do not treat a volunteer as screened or approved without actual authorized verification.
+
+Do not automatically grant access to restricted survivor services.
+
+Sensitive screening information must have additional access restrictions.
+
+### Exit criteria
+
+The volunteer lifecycle is implemented with appropriate permissions and truthful status tracking.
+
+---
+
+# M24.10 — GRANT MANAGEMENT OPERATIONS
+
+## Objective
+
+Strengthen institutional fundraising and grant administration.
+
+## Required grant pipeline
+
+```text
+OPPORTUNITY_IDENTIFIED
+        ↓
+ELIGIBILITY_REVIEW
+        ↓
+RESEARCH
+        ↓
+PROPOSAL_DRAFT
+        ↓
+INTERNAL_REVIEW
+        ↓
+EXECUTIVE_APPROVAL
+        ↓
+SUBMISSION_READY
+        ↓
+SUBMITTED
+        ↓
+FUNDER_DECISION
+        ↓
+AWARDED / DECLINED
+```
+
+## Required capabilities
+
+- Grant opportunity record.
+- Funder organization.
+- Eligibility requirements.
+- Funding amount.
+- Application deadline.
+- Proposal owner.
+- Supporting documents.
+- Budget requirements.
+- Submission checklist.
+- Internal approval.
+- Submission status.
+- Award status.
+- Reporting obligations.
+
+### AI assistance
+
+Existing AI agents may assist with:
+
+- Opportunity research.
+- Eligibility analysis.
+- Proposal drafting.
+- Document summarization.
+- Deadline identification.
+- Checklist preparation.
+
+### Restrictions
+
+Do not invent grant awards.
+
+Do not invent funding commitments.
+
+Do not claim a proposal was submitted unless an authorized submission occurred.
+
+### Exit criteria
+
+Grant workflows are integrated with the existing fundraising CRM and approval services.
+
+---
+
+# M24.11 — PARTNERSHIP MANAGEMENT
+
+## Objective
+
+Develop organizational partnership coordination.
+
+## Partnership categories
+
+- Corporate sponsors.
+- Community organizations.
+- Foundations.
+- Institutional partners.
+- Service providers.
+- Educational institutions.
+- Volunteer partners.
+
+## Required capabilities
+
+- Partnership profile.
+- Organization details.
+- Relationship owner.
+- Partnership category.
+- Engagement history.
+- Opportunity status.
+- Related correspondence.
+- Related tasks.
+- Meeting records.
+- Proposal documents.
+- Approval requirements.
+- Agreement status.
+- Renewal dates.
+
+### Required workflow
+
+```text
+IDENTIFIED
+    ↓
+QUALIFIED
+    ↓
+OUTREACH_PREPARED
+    ↓
+ENGAGEMENT
+    ↓
+PROPOSAL_REVIEW
+    ↓
+NEGOTIATION
+    ↓
+APPROVAL
+    ↓
+ACTIVE_PARTNERSHIP
+```
+
+### Restrictions
+
+Do not fabricate partnership agreements.
+
+Do not create financial commitments automatically.
+
+Do not represent an organization as an active partner without verified evidence.
+
+### Exit criteria
+
+Partnership workflows are implemented and linked to existing CRM services.
+
+---
+
+# M24.12 — ORGANIZATIONAL ANALYTICS
+
+## Objective
+
+Provide truthful organization-wide reporting.
+
+## Required dashboard categories
+
+### Administration
+
+- Active staff.
+- Pending onboarding.
+- Department workloads.
+- Open tasks.
+- Overdue tasks.
+- Pending approvals.
+
+### Fundraising
+
+- Verified donor relationships.
+- Verified opportunities.
+- Grant pipeline.
+- Partnership pipeline.
+
+### Volunteers
+
+- Submitted applications.
+- Pending reviews.
+- Approved volunteers.
+- Active assignments.
+
+### AI operations
+
+- Actual agent executions.
+- Failed workflows.
+- Pending human approvals.
+- Agent availability.
+
+### Security
+
+- Authorization failures.
+- Restricted access attempts.
+- Pending access reviews.
+- Safeguarding alerts.
+
+### Data integrity
+
+Do not invent operational metrics.
+
+Do not show test fixtures as organizational activity.
+
+Do not convert unavailable metrics into fabricated zeros.
+
+When production persistence is unavailable, display an explicit unavailable state.
+
+### Exit criteria
+
+Analytics calculations are verified and accurately distinguish available, unavailable, and zero-valued metrics.
+
+---
+
+# M24.13 — SECURITY, AUDIT AND SAFEGUARDING
+
+## Objective
+
+Apply consistent security controls across all new administrative modules.
+
+## Required safeguards
+
+1. Role-based authorization.
+2. Department-based access.
+3. Restricted safeguarding isolation.
+4. Secure session management.
+5. Administrative audit trails.
+6. Approval enforcement.
+7. Sensitive-data minimization.
+8. Secure attachment access.
+9. AI action restrictions.
+10. Prevention of privilege escalation.
+
+## Required negative-access tests
+
+Verify:
+
+- General staff cannot modify administrator permissions.
+- Department staff cannot access unrelated restricted records.
+- Volunteers cannot access staff administration.
+- AI agents cannot approve their own actions.
+- Unapproved financial commitments remain blocked.
+- Restricted safeguarding information cannot enter general AI workflows.
+- Unauthorized users cannot retrieve executive decisions.
+- Sensitive information is excluded from logs.
+- Suspended accounts cannot continue performing protected actions.
+- Direct API requests cannot bypass UI permissions.
+
+### Exit criteria
+
+All existing safeguarding tests remain passing, and the new modules have meaningful negative-access coverage.
+
+---
+
+# M24.14 — PROFESSIONAL USER EXPERIENCE AND ACCESSIBILITY
+
+## Objective
+
+Create a consistent administrative experience across the platform.
+
+## Required improvements
+
+- Unified navigation.
+- Department-aware menus.
+- Responsive dashboards.
+- Accessible forms.
+- Clear validation.
+- Keyboard navigation.
+- Loading indicators.
+- Error recovery.
+- Accurate empty states.
+- Permission-aware controls.
+- Confirmation for destructive actions.
+- Consistent visual hierarchy.
+
+## Design principle
+
+Reuse the existing Phumulani design system.
+
+Do not introduce unrelated styling or a second administration interface.
+
+### Exit criteria
+
+All newly developed administrative modules use a consistent, accessible, responsive design.
+
+---
+
+# M24.15 — INTEGRATION, REGRESSION AND ACCEPTANCE TESTING
+
+## Objective
+
+Verify the Phase 24 implementation without relying on unavailable production infrastructure.
+
+## Required verification
+
+Run:
+
+```bash
+npx tsc --noEmit
+```
+
+Run the existing production build command.
+
+Run:
+
+```bash
+npx tsx scripts/verify_suite.ts
+```
+
+## Required testing domains
+
+- Master Admin dashboard.
+- Staff lifecycle.
+- Role-based authorization.
+- Department management.
+- Organizational tasks.
+- Executive approvals.
+- AI workforce controls.
+- Volunteer lifecycle.
+- Grant pipeline.
+- Partnership pipeline.
+- Operational analytics.
+- Audit logging.
+- Safeguarding isolation.
+- Cross-module navigation.
+- Unavailable-infrastructure behavior.
+
+## Test integrity
+
+Preserve all 276 previously reported regression tests.
+
+Add meaningful new tests for newly implemented behavior.
+
+Do not claim production persistence was verified using only isolated fixtures.
+
+Do not mark an external integration live based on a unit test.
+
+### Exit criteria
+
+- TypeScript validation passes.
+- Production build passes.
+- Existing regression suite passes.
+- New functionality has relevant tests.
+- Security checks pass.
+- External infrastructure statuses remain truthful.
+
+---
+
+# 4. REQUIRED DEVELOPMENT IMPLEMENTATION STANDARD
+
+For every milestone:
+
+1. Inspect existing code.
+2. Identify reusable components.
+3. Implement missing functionality.
+4. Add server-side validation.
+5. Add authorization enforcement.
+6. Connect existing internal services.
+7. Implement user interface.
+8. Add automated tests.
+9. Run regression checks.
+10. Record actual results.
+
+Do not mark a milestone complete because a design document was written.
+
+Do not create placeholder buttons and describe them as functional.
+
+Do not fabricate successful backend operations.
+
+When an action requires unavailable persistence, fail closed with a clear user-facing message.
+
+---
+
+# 5. REQUIRED DELIVERABLES
+
+Generate the following evidence-based reports:
+
+1. `phase24_master_administration_development_report.md`
+2. `phase24_staff_roles_and_departments_report.md`
+3. `phase24_executive_and_task_management_report.md`
+4. `phase24_ai_workforce_integration_report.md`
+5. `phase24_volunteer_management_report.md`
+6. `phase24_grants_and_partnerships_report.md`
+7. `phase24_security_and_regression_report.md`
+
+Each report must include:
+
+```text
+MILESTONE_ID:
+IMPLEMENTATION_STATUS:
+FILES_CREATED:
+FILES_MODIFIED:
+FUNCTIONALITY_IMPLEMENTED:
+SERVER_SIDE_CONTROLS:
+TESTS_ADDED:
+TESTS_EXECUTED:
+TEST_RESULTS:
+KNOWN_LIMITATIONS:
+EXTERNAL_DEPENDENCIES:
+```
+
+Documentation is evidence of work, not a substitute for implementation.
+
+---
+
+# 6. FINAL PHASE 24 ACCEPTANCE CRITERIA
+
+Phase 24 is implementation-complete only when:
+
+1. Master Admin navigation is operational.
+2. The dashboard uses truthful data sources.
+3. Staff management is implemented.
+4. Department management is implemented.
+5. Server-side permissions are enforced.
+6. Organizational tasks are functional.
+7. Executive approval workflows are implemented.
+8. The existing AI workforce is integrated.
+9. Volunteer management is implemented.
+10. Grant management is implemented.
+11. Partnership management is implemented.
+12. Analytics accurately reflect available data.
+13. Security and safeguarding tests pass.
+14. Existing application functionality is preserved.
+15. All relevant regression tests pass.
+
+Do not require live PostgreSQL or Gmail authorization to mark isolated application implementation complete.
+
+However, do not mark production workflows operational until their required external dependencies are connected and verified.
+
+---
+
+# 7. FINAL EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+**EXECUTE PHASE 24 NOW.**
+
+BUILD THE MASTER ADMINISTRATION AND ORGANIZATIONAL OPERATIONS SYSTEM.
+
+DO NOT STOP AT DOCUMENTATION.
+
+DO NOT REPEAT THE PHASE 22 DATABASE AND GOOGLE WORKSPACE ACTIVATION REQUESTS.
+
+DO NOT CREATE DUPLICATE APPLICATIONS.
+
+DO NOT CREATE DUPLICATE AI AGENTS.
+
+DO NOT INTRODUCE FAKE PRODUCTION DATA.
+
+DO NOT ENABLE INSECURE PERSISTENCE FALLBACKS.
+
+DO NOT CLAIM DISCONNECTED SERVICES ARE LIVE.
+
+FOCUS ON:
+
+- MASTER ADMINISTRATION.
+- STAFF GOVERNANCE.
+- ROLE-BASED ACCESS CONTROL.
+- DEPARTMENT MANAGEMENT.
+- ORGANIZATIONAL TASKS.
+- EXECUTIVE APPROVALS.
+- EXISTING AI WORKFORCE.
+- VOLUNTEER OPERATIONS.
+- GRANT MANAGEMENT.
+- PARTNERSHIP MANAGEMENT.
+- ORGANIZATIONAL ANALYTICS.
+- SECURITY AND SAFEGUARDING.
+- ACCESSIBILITY.
+- AUTOMATED TESTING.
+
+PRESERVE THE EXISTING ENTERPRISE EMAIL MANAGER.
+
+PRESERVE THE FUNDRAISING CRM.
+
+PRESERVE THE EXISTING 18 AI AGENTS.
+
+PRESERVE HUMAN APPROVAL REQUIREMENTS.
+
+PRESERVE RESTRICTED SAFEGUARDING DATA BOUNDARIES.
+
+## FINAL TARGET
+
+**DELIVER AN INTEGRATED MASTER ADMINISTRATION ENVIRONMENT THAT SUPPORTS PHUMULANI'S STAFF, DEPARTMENTS, EXECUTIVE LEADERSHIP, VOLUNTEERS, GRANTS, PARTNERSHIPS, AND AI OPERATIONS THROUGH ONE SECURE ORGANIZATIONAL MANAGEMENT SYSTEM.**
+
+**BEGIN MILESTONE M24.01 IMMEDIATELY.**

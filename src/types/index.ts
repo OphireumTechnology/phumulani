@@ -398,3 +398,5 @@ export interface AuditLogItem {
 // Enterprise Email, Fundraising Intelligence & Executive Communications Types
 export * from './emailEnterprise';
 export * from './fundraising';
+export * from './masterAdmin';
+
