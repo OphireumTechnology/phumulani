@@ -135,7 +135,8 @@ export type ExecutiveDecisionType =
   | 'POLICY_CHANGE'
   | 'GRANT_SUBMISSION'
   | 'PARTNERSHIP_AGREEMENT'
-  | 'SAFEGUARDING_EXCEPTION';
+  | 'SAFEGUARDING_EXCEPTION'
+  | 'PROGRAM_LAUNCH';
 
 export type ExecutiveDecisionStatus =
   | 'PENDING'

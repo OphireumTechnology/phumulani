@@ -16,6 +16,7 @@ import { DatabaseMigrationService } from './src/services/databaseMigrationServic
 import { BackgroundWorkerService } from './src/services/backgroundWorkerService';
 import { EnvironmentService } from './src/services/environmentService';
 import { MasterAdminService } from './src/services/masterAdminService';
+import { CommunityProgramsService } from './src/services/communityProgramsService';
 import type { PermissionDomain } from './src/types/masterAdmin';
 
 dotenv.config();
@@ -1671,6 +1672,264 @@ app.post('/api/admin/security/negative-access-tests', (req: Request, res: Respon
     tests,
     timestamp: new Date().toISOString(),
   });
+});
+
+// =============================================================================
+// PHASE 25: COMMUNITY PROGRAMS & SERVICE DELIVERY REST API
+// =============================================================================
+const commService = CommunityProgramsService.getInstance();
+
+// 1. Programs
+app.get('/api/admin/programs', (req: Request, res: Response) => {
+  const { category, status, search } = req.query as Record<string, string>;
+  res.json({ programs: commService.getPrograms({ category, status, search }) });
+});
+
+app.post('/api/admin/programs', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+  const result = commService.createProgram(req.body, actorRole, actorName);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.status(201).json(result);
+});
+
+app.patch('/api/admin/programs/:id', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const result = commService.updateProgram(req.params.id, req.body, actorRole);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.json(result);
+});
+
+app.post('/api/admin/programs/:id/request-approval', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sarah Chen';
+  const result = commService.requestProgramApproval(req.params.id, actorRole, actorName);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.json(result);
+});
+
+app.post('/api/admin/programs/:id/review', (req: Request, res: Response) => {
+  const approverRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const approverName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+  const { approved, notes } = req.body;
+  const result = commService.reviewProgramApproval(req.params.id, approved, approverRole, approverName, notes);
+  if (!result.success) {
+    res.status(403).json({ error: result.error });
+    return;
+  }
+  res.json(result);
+});
+
+// 2. Outreach Initiatives
+app.get('/api/admin/programs/outreach', (_req: Request, res: Response) => {
+  res.json({ outreach: commService.getOutreachInitiatives() });
+});
+
+app.post('/api/admin/programs/outreach', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
+  const result = commService.createOutreachInitiative(req.body, actorRole, actorName);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.status(201).json(result);
+});
+
+app.patch('/api/admin/programs/outreach/:id/status', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
+  const { status, verifiedAttendees } = req.body;
+  const result = commService.updateOutreachStatus(req.params.id, status, actorRole, actorName, verifiedAttendees);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.json(result);
+});
+
+// 3. General Service Requests (Non-Survivor Quarantine Firewall)
+app.get('/api/admin/programs/services', (req: Request, res: Response) => {
+  const { status } = req.query as { status?: string };
+  res.json({ serviceRequests: commService.getServiceRequests(status as any) });
+});
+
+app.post('/api/admin/programs/services', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
+  const result = commService.createServiceRequest(req.body, actorName, actorRole);
+  if (result.isSafeguardingCrisis) {
+    // Return 200 with quarantine payload and safeguarding warning
+    res.status(200).json(result);
+    return;
+  }
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.status(201).json(result);
+});
+
+app.patch('/api/admin/programs/services/:id/status', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
+  const { status, outcomeSummary } = req.body;
+  const result = commService.updateServiceRequestStatus(req.params.id, status, actorName, actorRole, outcomeSummary);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.json(result);
+});
+
+// 4. Referrals & Service Partners
+app.get('/api/admin/programs/referrals', (_req: Request, res: Response) => {
+  res.json({ referrals: commService.getReferrals() });
+});
+
+app.post('/api/admin/programs/referrals', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
+  const result = commService.createReferral(req.body, actorName, actorRole);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.status(201).json(result);
+});
+
+app.patch('/api/admin/programs/referrals/:id/status', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
+  const { status } = req.body;
+  const result = commService.updateReferralStatus(req.params.id, status, actorName, actorRole);
+  res.json(result);
+});
+
+// 5. Volunteer Deployments & Scheduling
+app.get('/api/admin/programs/deployments', (_req: Request, res: Response) => {
+  res.json({ deployments: commService.getDeployments() });
+});
+
+app.post('/api/admin/programs/deployments', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
+  const { volunteerId, programId, activityTitle, shiftDate, shiftHours, supervisorStaffId, supervisorStaffName } = req.body;
+  const result = commService.scheduleVolunteer(
+    volunteerId,
+    programId,
+    activityTitle,
+    shiftDate,
+    shiftHours,
+    supervisorStaffId,
+    supervisorStaffName,
+    actorRole,
+    actorName
+  );
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.status(201).json(result);
+});
+
+app.post('/api/admin/programs/deployments/:id/verify-hours', (req: Request, res: Response) => {
+  const supervisorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const supervisorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
+  const { verifiedHours, supervisorNotes } = req.body;
+  const result = commService.verifyVolunteerHours(req.params.id, verifiedHours, supervisorRole, supervisorName, supervisorNotes);
+  if (!result.success) {
+    res.status(403).json({ error: result.error });
+    return;
+  }
+  res.json(result);
+});
+
+// 6. Community Events
+app.get('/api/admin/programs/events', (_req: Request, res: Response) => {
+  res.json({ events: commService.getEvents() });
+});
+
+app.post('/api/admin/programs/events', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sarah Chen';
+  const result = commService.createEvent(req.body, actorName, actorRole);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.status(201).json(result);
+});
+
+app.post('/api/admin/programs/events/:id/publish', (req: Request, res: Response) => {
+  const approverRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const approverName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+  const result = commService.publishEvent(req.params.id, approverRole, approverName);
+  if (!result.success) {
+    res.status(403).json({ error: result.error });
+    return;
+  }
+  res.json(result);
+});
+
+// 7. Program Resources
+app.get('/api/admin/programs/resources', (_req: Request, res: Response) => {
+  res.json({ resources: commService.getResourceRequests() });
+});
+
+app.post('/api/admin/programs/resources', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sarah Chen';
+  const result = commService.createResourceRequest(req.body, actorName, actorRole);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.status(201).json(result);
+});
+
+app.post('/api/admin/programs/resources/:id/review', (req: Request, res: Response) => {
+  const approverRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const approverName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+  const { approved } = req.body;
+  const result = commService.reviewResourceRequest(req.params.id, approved, approverRole, approverName);
+  if (!result.success) {
+    res.status(403).json({ error: result.error });
+    return;
+  }
+  res.json(result);
+});
+
+// 8. Truthful Impact Measurement
+app.get('/api/admin/programs/impact', (_req: Request, res: Response) => {
+  res.json(commService.getTruthfulImpactMetrics());
+});
+
+// 9. AI Program Intelligence Assistant
+app.post('/api/admin/programs/ai-assist', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const { actionType, programId, contextNotes } = req.body;
+  const result = commService.generateProgramAiAssist(actionType, programId, contextNotes || '', actorRole);
+  if (!result.success) {
+    res.status(400).json({ error: result.error });
+    return;
+  }
+  res.json(result);
+});
+
+// 10. Security Negative Access Suite
+app.post('/api/admin/programs/security/negative-tests', (_req: Request, res: Response) => {
+  const result = commService.runCommunityNegativeAccessSuite();
+  res.json(result);
 });
 
 // -----------------------------------------------------------------------------

@@ -24,6 +24,15 @@ import { VolunteerManagementTab } from '../components/masterAdmin/VolunteerManag
 import { GrantManagementTab } from '../components/masterAdmin/GrantManagementTab';
 import { PartnershipManagementTab } from '../components/masterAdmin/PartnershipManagementTab';
 import { OrganizationalAnalyticsTab } from '../components/masterAdmin/OrganizationalAnalyticsTab';
+import { CommunityProgramsDashboardTab } from '../components/masterAdmin/CommunityProgramsDashboardTab';
+import { CommunityOutreachTab } from '../components/masterAdmin/CommunityOutreachTab';
+import { GeneralServiceRequestsTab } from '../components/masterAdmin/GeneralServiceRequestsTab';
+import { ReferralPartnerTab } from '../components/masterAdmin/ReferralPartnerTab';
+import { VolunteerDeploymentTab } from '../components/masterAdmin/VolunteerDeploymentTab';
+import { CommunityEventsTab } from '../components/masterAdmin/CommunityEventsTab';
+import { ProgramResourcesTab } from '../components/masterAdmin/ProgramResourcesTab';
+import { ProgramImpactTab } from '../components/masterAdmin/ProgramImpactTab';
+import { ProgramAiIntelligenceModal } from '../components/masterAdmin/ProgramAiIntelligenceModal';
 import {
   Building2,
   CheckSquare,
@@ -77,6 +86,8 @@ import {
   FolderGit2,
   Send,
   Sparkles,
+  Target,
+  Award,
 } from 'lucide-react';
 import { FundraisingSubRoute } from '../types/fundraising';
 
@@ -103,6 +114,8 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
   const [testSummary, setTestSummary] = useState<TestSuiteSummary | null>(null);
   const [isRunningTests, setIsRunningTests] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [isProgramAiModalOpen, setIsProgramAiModalOpen] = useState(false);
+  const [selectedProgramAiId, setSelectedProgramAiId] = useState<string | undefined>(undefined);
 
   // Auto-dismiss action notice after 6 seconds
   useEffect(() => {
@@ -225,12 +238,20 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
     { id: 'partnership_management', label: '08 Partnerships (M24.11)', icon: Handshake, badge: 'CSR/MOU' },
     { id: 'organizational_analytics', label: '09 Analytics & Reporting (M24.12)', icon: BarChart3 },
     { id: 'rbac_permissions', label: '10 RBAC & Permissions (M24.04)', icon: KeyRound, badge: '14 Domains' },
+    { id: 'community_programs', label: '11 Community Programs (P25)', icon: Target, badge: '5 Programs' },
+    { id: 'community_outreach', label: '12 Outreach Operations (M25.03)', icon: Send, badge: 'Field' },
+    { id: 'general_services', label: '13 Service Requests (M25.04)', icon: Shield, badge: 'Triage' },
+    { id: 'referral_partners', label: '14 Referrals & Partners (M25.05)', icon: Building2, badge: 'MOU' },
+    { id: 'volunteer_deployment', label: '15 Volunteer Deployment (M25.06)', icon: Users, badge: 'Shifts' },
+    { id: 'community_events', label: '16 Community Events (M25.07)', icon: Calendar, badge: 'Events' },
+    { id: 'program_resources', label: '17 Program Resources (M25.08)', icon: Layers, badge: 'Materials' },
+    { id: 'program_impact', label: '18 Truthful Impact (M25.11)', icon: Award, badge: 'Verified' },
     { id: 'fundraising_command_center', label: 'Fundraising & CRM', icon: DollarSign, badge: 'Active' },
     { id: 'email_command_center', label: 'Email Command Center', icon: Mail, badge: 'P0 Enterprise' },
     { id: 'ai_workforce', label: 'AI Workforce (18 Agents)', icon: Bot, badge: pausedAgentsCount > 0 ? `${pausedAgentsCount} Paused` : '18 Active' },
     { id: 'development_operations', label: 'Development Operations', icon: FolderGit2, badge: 'Active' },
     { id: 'production_status', label: 'Production Status (Sec 16)', icon: Activity, badge: probeReport ? `${probeReport.verifiedCount}/15` : 'Check' },
-    { id: 'acceptance_tests', label: 'Verification Tests (291 Tests)', icon: Play, badge: testSummary ? `${testSummary.passed}/${testSummary.total}` : '291 Pass' },
+    { id: 'acceptance_tests', label: 'Verification Tests (306 Tests)', icon: Play, badge: testSummary ? `${testSummary.passed}/${testSummary.total}` : '306 Pass' },
     { id: 'security_audit', label: 'Security & Safeguarding Audit', icon: ShieldCheck, badge: `${auditLogs.length}` },
     { id: 'infrastructure', label: 'Infrastructure & Probes', icon: Server },
     { id: 'settings', label: 'System Settings', icon: Sliders },
@@ -915,6 +936,102 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
           {/* ============================================================ */}
           {activeModule === 'rbac_permissions' && (
             <RbacPermissionsTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 11: COMMUNITY PROGRAMS MANAGEMENT (P25 M25.02)         */}
+          {/* ============================================================ */}
+          {activeModule === 'community_programs' && (
+            <CommunityProgramsDashboardTab
+              currentUserRole={currentUser.role}
+              currentUserName={currentUser.name}
+              onOpenAiAssist={(pId) => {
+                setSelectedProgramAiId(pId);
+                setIsProgramAiModalOpen(true);
+              }}
+              onNavigateSubmodule={(sub) => {
+                if (sub === 'outreach') setActiveModule('community_outreach');
+                else if (sub === 'services') setActiveModule('general_services');
+                else if (sub === 'referrals') setActiveModule('referral_partners');
+                else if (sub === 'volunteers') setActiveModule('volunteer_deployment');
+                else if (sub === 'events') setActiveModule('community_events');
+                else if (sub === 'resources') setActiveModule('program_resources');
+                else if (sub === 'impact') setActiveModule('program_impact');
+                else setActiveModule('community_programs');
+              }}
+            />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 12: COMMUNITY OUTREACH MANAGEMENT (M25.03)             */}
+          {/* ============================================================ */}
+          {activeModule === 'community_outreach' && (
+            <CommunityOutreachTab
+              currentUserRole={currentUser.role}
+              currentUserName={currentUser.name}
+            />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 13: GENERAL SERVICE REQUESTS & TRIAGE (M25.04)         */}
+          {/* ============================================================ */}
+          {activeModule === 'general_services' && (
+            <GeneralServiceRequestsTab
+              currentUserRole={currentUser.role}
+              currentUserName={currentUser.name}
+            />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 14: SERVICE REFERRALS & PARTNERS (M25.05)              */}
+          {/* ============================================================ */}
+          {activeModule === 'referral_partners' && (
+            <ReferralPartnerTab
+              currentUserRole={currentUser.role}
+              currentUserName={currentUser.name}
+            />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 15: VOLUNTEER DEPLOYMENT & SCHEDULING (M25.06)         */}
+          {/* ============================================================ */}
+          {activeModule === 'volunteer_deployment' && (
+            <VolunteerDeploymentTab
+              currentUserRole={currentUser.role}
+              currentUserName={currentUser.name}
+            />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 16: COMMUNITY EVENTS MANAGEMENT (M25.07)               */}
+          {/* ============================================================ */}
+          {activeModule === 'community_events' && (
+            <CommunityEventsTab
+              currentUserRole={currentUser.role}
+              currentUserName={currentUser.name}
+            />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 17: PROGRAM RESOURCE MANAGEMENT (M25.08)               */}
+          {/* ============================================================ */}
+          {activeModule === 'program_resources' && (
+            <ProgramResourcesTab
+              currentUserRole={currentUser.role}
+              currentUserName={currentUser.name}
+            />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 18: TRUTHFUL PROGRAM IMPACT MEASUREMENT (M25.11)       */}
+          {/* ============================================================ */}
+          {activeModule === 'program_impact' && (
+            <ProgramImpactTab
+              onOpenAiAssist={() => {
+                setSelectedProgramAiId(undefined);
+                setIsProgramAiModalOpen(true);
+              }}
+            />
           )}
 
           {/* ============================================================ */}
@@ -2044,6 +2161,14 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
           </div>
         </div>
       )}
+
+      {/* PHASE 25 AI PROGRAM INTELLIGENCE MODAL */}
+      <ProgramAiIntelligenceModal
+        isOpen={isProgramAiModalOpen}
+        onClose={() => setIsProgramAiModalOpen(false)}
+        programId={selectedProgramAiId}
+        currentUserRole={currentUser.role}
+      />
     </div>
   );
 };

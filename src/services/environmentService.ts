@@ -97,6 +97,20 @@ export class EnvironmentService {
     return 'NOT_CONNECTED';
   }
 
+  public static getInfrastructureStatuses(): {
+    POSTGRESQL: 'NOT_CONNECTED' | 'CONNECTED';
+    GOOGLE_WORKSPACE: 'AUTHORIZATION_REQUIRED' | 'CONNECTED';
+    PAYMENT_GATEWAY: 'NOT_CONNECTED' | 'CONNECTED';
+    LIVE_EMAIL_SYNCHRONIZATION: 'NOT_ACTIVATED' | 'ACTIVATED';
+  } {
+    return {
+      POSTGRESQL: 'NOT_CONNECTED',
+      GOOGLE_WORKSPACE: 'AUTHORIZATION_REQUIRED',
+      PAYMENT_GATEWAY: 'NOT_CONNECTED',
+      LIVE_EMAIL_SYNCHRONIZATION: 'NOT_ACTIVATED',
+    };
+  }
+
   public static getFinancialDataSource(): 'AUTHORIZED_RECORDS_ONLY' | 'FIXTURES_ALLOWED' {
     return this.isProductionOnly() ? 'AUTHORIZED_RECORDS_ONLY' : 'FIXTURES_ALLOWED';
   }

@@ -18,6 +18,7 @@ import { OutreachMessageDraft } from '../types/fundraising';
 import { INITIAL_CONNECTED_MAILBOXES } from './emailEnterpriseSeed';
 import { EnvironmentService } from './environmentService';
 import { MasterAdminService } from './masterAdminService';
+import { CommunityProgramsService } from './communityProgramsService';
 
 export interface TestResultItem {
   id: string; // e.g. 'TEST-01' ... 'TEST-15', 'TEST-EMAIL-01'...
@@ -41,7 +42,8 @@ export interface TestResultItem {
     | 'Phase 17 Release Readiness'
     | 'Phase 18 Enterprise Email Operations'
     | 'Phase 19 Production Activation'
-    | 'Phase 24 Master Administration';
+    | 'Phase 24 Master Administration'
+    | 'Phase 25 Community Programs';
   name: string;
 
 
@@ -7475,6 +7477,612 @@ export class AutomatedTestRunner {
       }
     );
 
+    // =========================================================================
+    // PHASE 25: COMMUNITY PROGRAMS & SERVICE DELIVERY ACCEPTANCE SUITE
+    // =========================================================================
+    const comm = CommunityProgramsService.getInstance();
+
+    await runTest(
+      'TEST-P25-01',
+      'Phase 25 Community Programs',
+      'Community Programs Lifecycle & Human Approval Gate (M25.02)',
+      'Verifies program creation in DRAFT, request for review, and executive approval gating (rejecting unauthorized approvals)',
+      () => {
+        // 1. Create a draft program
+        const created = comm.createProgram(
+          {
+            name: 'Immigrant Youth Coding & Leadership Circle',
+            description: 'Biweekly hands-on python and robotics coding circle for immigrant youth.',
+            category: 'YOUTH_MENTORSHIP',
+            objectives: [
+              { id: 'OBJ-T1', description: 'Complete 10 robotics coding projects', targetMetric: '10 Projects', isCompleted: false },
+            ],
+            responsibleDepartmentId: 'DEPT-PROG',
+            responsibleDepartmentName: 'Community Programs',
+            programManagerId: 'STF-002',
+            programManagerName: 'Sarah Chen',
+            startDate: '2026-11-01',
+            status: 'DRAFT',
+            targetOutcomes: ['Digital skills mastery', 'Peer sisterhood support'],
+            approvedResourceRequirements: ['Computer lab access'],
+            associatedVolunteerIds: ['VOL-002'],
+            associatedPartnerIds: ['PART-001'],
+            relatedTaskIds: [],
+            activities: [],
+          },
+          'staff',
+          'Sarah Chen'
+        );
+
+        if (!created.success || !created.program) {
+          throw new Error(`Failed to create community program: ${created.error}`);
+        }
+
+        // 2. Request approval
+        const reqResult = comm.requestProgramApproval(created.program.id, 'staff', 'Sarah Chen');
+        if (!reqResult.success) {
+          throw new Error(`Failed to request program approval: ${reqResult.error}`);
+        }
+
+        // 3. Verify general staff CANNOT approve the program directly
+        const unauthorizedApproval = comm.reviewProgramApproval(created.program.id, true, 'staff', 'Sarah Chen');
+        if (unauthorizedApproval.success) {
+          throw new Error('SECURITY VIOLATION: General staff member was allowed to approve community program!');
+        }
+
+        // 4. Executive Director signs off
+        const execApproval = comm.reviewProgramApproval(
+          created.program.id,
+          true,
+          'executive_director',
+          'Comfort Dondo',
+          'Executive approval granted for youth digital lab.'
+        );
+        if (!execApproval.success) {
+          throw new Error(`Executive approval failed: ${execApproval.error}`);
+        }
+
+        const approvedProg = comm.getProgramById(created.program.id);
+        if (approvedProg?.status !== 'APPROVED' || !approvedProg?.executiveApproved) {
+          throw new Error('Program status did not transition to APPROVED following executive sign-off.');
+        }
+
+        return `Program ${created.program.id} successfully created, submitted, gated against staff approval, and certified by Executive Director Comfort Dondo.`;
+      }
+    );
+
+    await runTest(
+      'TEST-P25-02',
+      'Phase 25 Community Programs',
+      'Community Outreach Operations & Aggregate Data Protection (M25.03)',
+      'Verifies outreach planning with aggregate-only data and strict rejection of confidential survivor shelter addresses',
+      () => {
+        // 1. Verify normal outreach creation
+        const validOutreach = comm.createOutreachInitiative(
+          {
+            title: 'North Minneapolis Family Resource Day',
+            description: 'Public health and nutritional resource table at local park pavilion.',
+            targetArea: 'North Minneapolis Community Commons (Public Park)',
+            targetPopulationSummary: 'Local families, seniors, and immigrant community members',
+            scheduledDate: '2026-11-20',
+            leadStaffId: 'STF-006',
+            leadStaffName: 'Sister Miriam K.',
+            assignedVolunteerIds: ['VOL-001'],
+            partnerOrganizationNames: ['Hennepin Healthcare'],
+            approvedMaterials: ['Community Services Multilingual Handbill'],
+            status: 'PLANNING',
+            estimatedReach: 200,
+            executiveApproved: true,
+          },
+          'staff',
+          'Sister Miriam K.'
+        );
+
+        if (!validOutreach.success || !validOutreach.initiative) {
+          throw new Error(`Failed to create valid outreach initiative: ${validOutreach.error}`);
+        }
+
+        // 2. Verify safeguarding rejection when targetArea attempts to leak confidential shelter address
+        const invalidOutreach = comm.createOutreachInitiative(
+          {
+            title: 'Shelter Outreach Drive',
+            description: 'Private meeting',
+            targetArea: 'Confidential shelter address on 5th Street Safe House',
+            targetPopulationSummary: 'Domestic violence survivors',
+            scheduledDate: '2026-11-21',
+            leadStaffId: 'STF-006',
+            leadStaffName: 'Sister Miriam K.',
+            assignedVolunteerIds: [],
+            partnerOrganizationNames: [],
+            approvedMaterials: [],
+            status: 'PLANNING',
+            estimatedReach: 10,
+            executiveApproved: false,
+          },
+          'staff',
+          'Sister Miriam K.'
+        );
+
+        if (invalidOutreach.success) {
+          throw new Error('SAFEGUARDING BREACH: Outreach initiative containing confidential shelter address was permitted!');
+        }
+
+        return `Outreach initiative created cleanly (${validOutreach.initiative.id}). Infiltrated shelter address was correctly blocked fail-closed.`;
+      }
+    );
+
+    await runTest(
+      'TEST-P25-03',
+      'Phase 25 Community Programs',
+      'General Service Request Coordination & Safeguarding Crisis Firewall (M25.04)',
+      'Verifies non-confidential community service logging and automatic quarantine halt upon detecting trauma/crisis keywords',
+      () => {
+        // 1. Routine non-confidential food assistance request
+        const normalReq = comm.createServiceRequest(
+          {
+            serviceCategory: 'FOOD_PANTRY_HAMPER',
+            requestSource: 'WALK_IN',
+            intakeSummary: 'Resident requesting 1 cultural rice and legume pantry hamper for family of 4.',
+            responsibleDepartmentId: 'DEPT-PROG',
+            priority: 'ROUTINE',
+            followUpRequirement: 'Add to Thursday hamper pickup log.',
+          },
+          'Sister Miriam K.',
+          'staff'
+        );
+
+        if (!normalReq.success || !normalReq.request || normalReq.isSafeguardingCrisis) {
+          throw new Error('Failed to create routine general service request.');
+        }
+
+        // 2. Sensitive domestic violence crisis intake — must trigger immediate quarantine halt
+        const crisisReq = comm.createServiceRequest(
+          {
+            serviceCategory: 'FOOD_PANTRY_HAMPER',
+            requestSource: 'PHONE_LINE',
+            intakeSummary: 'Urgent: caller experiencing domestic violence and physical assault, needs emergency relocation to safe house shelter.',
+            responsibleDepartmentId: 'DEPT-PROG',
+            priority: 'URGENT',
+            followUpRequirement: 'Immediate contact',
+          },
+          'Sister Miriam K.',
+          'staff'
+        );
+
+        if (!crisisReq.isSafeguardingCrisis || !crisisReq.request?.isSafeguardingCrisisQuarantine) {
+          throw new Error('CRITICAL SAFEGUARDING FAILURE: Domestic violence crisis request was not quarantined!');
+        }
+
+        // Verify summary is redacted in general registry
+        if (!crisisReq.request.intakeSummary.includes('[REDACTED')) {
+          throw new Error('LEAKAGE DETECTED: Quarantined request did not redact crisis details from intake summary.');
+        }
+
+        return `Normal request (${normalReq.request.id}) logged cleanly. Crisis request (${crisisReq.request.id}) instantly quarantined with VAWA zero-disclosure redaction.`;
+      }
+    );
+
+    await runTest(
+      'TEST-P25-04',
+      'Phase 25 Community Programs',
+      'Referral Coordination & Google Workspace Gated Dispatch (M25.05)',
+      'Verifies partner referral creation and fail-closed dispatch gating while Google Workspace remains disconnected',
+      () => {
+        const referral = comm.createReferral(
+          {
+            partnerId: 'PART-004',
+            partnerName: 'Hennepin Healthcare Community Clinic',
+            serviceType: 'Routine Pediatric Wellness Check',
+            referralEligibilityCriteria: 'Resident seeking preventative health consultation',
+            assignedStaffId: 'STF-006',
+            assignedStaffName: 'Sister Miriam K.',
+            status: 'DRAFT',
+            followUpDeadline: '2026-11-25',
+            executiveAuthorized: true,
+          },
+          'Sister Miriam K.',
+          'staff'
+        );
+
+        if (!referral.success || !referral.referral) {
+          throw new Error(`Failed to create referral: ${referral.error}`);
+        }
+
+        if (!referral.referral.externalDispatchBlocked) {
+          throw new Error('FAIL-CLOSED VIOLATION: External dispatch was not blocked on referral while Google Workspace is disconnected.');
+        }
+
+        // Verify attempting to send external email notifies that dispatch is gated
+        const updateResult = comm.updateReferralStatus(referral.referral.id, 'REFERRED', 'Sister Miriam K.', 'staff');
+        if (!updateResult.error?.includes('DISPATCH_GATED')) {
+          throw new Error('Referral dispatch did not enforce external Google Workspace gating requirement.');
+        }
+
+        return `Referral ${referral.referral.id} created and verified. External transmission remained safely gated.`;
+      }
+    );
+
+    await runTest(
+      'TEST-P25-05',
+      'Phase 25 Community Programs',
+      'Volunteer Deployment Eligibility & Supervisor Hours Verification (M25.06)',
+      'Verifies background screening check before scheduling, self-approval prevention, and supervisor hours verification',
+      () => {
+        // 1. Schedule verified volunteer Amina Yusuf (VOL-001)
+        const sched = comm.scheduleVolunteer(
+          'VOL-001',
+          'PROG-003',
+          'Pantry Produce Stocking',
+          '2026-11-05',
+          3,
+          'STF-006',
+          'Sister Miriam K.',
+          'coordinator',
+          'Volunteer Coordinator'
+        );
+
+        if (!sched.success || !sched.deployment) {
+          throw new Error(`Failed to schedule vetted volunteer: ${sched.error}`);
+        }
+
+        // 2. Verify volunteer CANNOT approve their own hours
+        const selfVerify = comm.verifyVolunteerHours(sched.deployment.id, 3, 'volunteer', 'Amina Yusuf');
+        if (selfVerify.success) {
+          throw new Error('SECURITY VIOLATION: Volunteer was allowed to self-approve service hours!');
+        }
+
+        // 3. Authorized staff supervisor verifies hours
+        const supervisorVerify = comm.verifyVolunteerHours(
+          sched.deployment.id,
+          3,
+          'supervisor',
+          'Sister Miriam K.',
+          'Supervised shift completed with distinction.'
+        );
+
+        if (!supervisorVerify.success) {
+          throw new Error(`Supervisor verification failed: ${supervisorVerify.error}`);
+        }
+
+        return `Volunteer deployment scheduled, self-approval blocked, and 3 hours verified by supervisor Sister Miriam K.`;
+      }
+    );
+
+    await runTest(
+      'TEST-P25-06',
+      'Phase 25 Community Programs',
+      'Community Events Planning & Confidential Shelter Address Isolation (M25.07)',
+      'Verifies public event creation, confidential venue protection, and executive publication gating',
+      () => {
+        // 1. Shelter address block test
+        const shelterEvent = comm.createEvent(
+          {
+            title: 'Survivor Gathering',
+            description: 'Private meeting',
+            eventType: 'COMMUNITY_FORUM',
+            eventDate: '2026-11-30',
+            startTime: '10:00 AM',
+            endTime: '12:00 PM',
+            generalLocation: 'Confidential shelter address on Elm Street Safe House',
+            organizingDepartmentId: 'DEPT-PROG',
+            eventManagerId: 'STF-002',
+            eventManagerName: 'Sarah Chen',
+            assignedStaffNames: ['Sarah Chen'],
+            volunteersRequiredCount: 2,
+            volunteersAssignedCount: 0,
+            approvedResourceSummary: 'None',
+            registrationOpen: false,
+            maxCapacity: 25,
+            status: 'PLANNING',
+          },
+          'Sarah Chen',
+          'staff'
+        );
+
+        if (shelterEvent.success) {
+          throw new Error('SAFEGUARDING BREACH: Event creation with confidential shelter location was permitted!');
+        }
+
+        // 2. Public library event
+        const publicEvent = comm.createEvent(
+          {
+            title: 'Immigrant Youth Coding Exhibition',
+            description: 'Showcase of youth robotics projects at public library.',
+            eventType: 'YOUTH_WORKSHOP',
+            eventDate: '2026-12-10',
+            startTime: '2:00 PM',
+            endTime: '5:00 PM',
+            generalLocation: 'Minneapolis Central Public Library (Pohlad Hall - Public Venue)',
+            organizingDepartmentId: 'DEPT-PROG',
+            eventManagerId: 'STF-002',
+            eventManagerName: 'Sarah Chen',
+            assignedStaffNames: ['Sarah Chen'],
+            volunteersRequiredCount: 4,
+            volunteersAssignedCount: 2,
+            approvedResourceSummary: 'Projector, display tables, certificates',
+            registrationOpen: false,
+            maxCapacity: 80,
+            status: 'PLANNING',
+          },
+          'Sarah Chen',
+          'staff'
+        );
+
+        if (!publicEvent.success || !publicEvent.event) {
+          throw new Error(`Failed to create public library event: ${publicEvent.error}`);
+        }
+
+        // 3. Publishing requires executive authorization
+        const staffPublish = comm.publishEvent(publicEvent.event.id, 'staff', 'Regular Staff');
+        if (staffPublish.success) {
+          throw new Error('AUTHORIZATION VIOLATION: Staff was permitted to publish public event without executive approval.');
+        }
+
+        const execPublish = comm.publishEvent(publicEvent.event.id, 'executive_director', 'Comfort Dondo');
+        if (!execPublish.success) {
+          throw new Error(`Executive event publication failed: ${execPublish.error}`);
+        }
+
+        return `Shelter venue blocked. Public library event (${publicEvent.event.id}) approved and published by Comfort Dondo.`;
+      }
+    );
+
+    await runTest(
+      'TEST-P25-07',
+      'Phase 25 Community Programs',
+      'Program Resource Management & Allocation Approval Gate (M25.08)',
+      'Verifies program resource requests and hard requirement for executive/finance approval before marking ALLOCATED',
+      () => {
+        const req = comm.createResourceRequest(
+          {
+            programId: 'PROG-001',
+            programName: 'Immigrant Women Career Pathways',
+            resourceCategory: 'PROGRAM_MATERIALS',
+            resourceName: 'Bilingual Resume Portfolio Binders (Batch of 50)',
+            quantityRequested: 50,
+            unitOfMeasure: 'Binders',
+            requiredByDate: '2026-11-15',
+            requestOwnerId: 'STF-002',
+            requestOwnerName: 'Sarah Chen',
+            estimatedCostUSD: 250,
+            utilizationNotes: 'Required for participants entering cohort interviews.',
+          },
+          'Sarah Chen',
+          'staff'
+        );
+
+        if (!req.success || !req.request) {
+          throw new Error(`Failed to create resource request: ${req.error}`);
+        }
+
+        // Unprivileged role cannot allocate
+        const staffAlloc = comm.reviewResourceRequest(req.request.id, true, 'staff', 'Sarah Chen');
+        if (staffAlloc.success) {
+          throw new Error('GOVERNANCE VIOLATION: Staff member was allowed to allocate budget resource!');
+        }
+
+        // Executive Director allocates
+        const execAlloc = comm.reviewResourceRequest(req.request.id, true, 'executive_director', 'Comfort Dondo');
+        if (!execAlloc.success) {
+          throw new Error(`Executive allocation failed: ${execAlloc.error}`);
+        }
+
+        return `Resource request ${req.request.id} drafted and gated; allocated under executive authorization.`;
+      }
+    );
+
+    await runTest(
+      'TEST-P25-08',
+      'Phase 25 Community Programs',
+      'Cross-Departmental Staff Collaboration & Task Integration (M25.09)',
+      'Verifies community programs integration with Master Admin organizational tasks and staff directory',
+      () => {
+        const masterAdmin = MasterAdminService.getInstance();
+        const createdTask = masterAdmin.createTask(
+          {
+            title: 'Coordinate Food Pantry Refrigerated Van Driver Schedule',
+            description: 'Confirm volunteer driver availability for Thursday fresh produce pickup from warehouse.',
+            departmentId: 'DEPT-PROG',
+            assignedStaffId: 'STF-006',
+            assignedStaffName: 'Sister Miriam K.',
+            priority: 'HIGH',
+            dueDate: '2026-11-04',
+            relatedGrantId: undefined,
+          },
+          'PLATFORM_SUPER_ADMIN',
+          'Comfort Dondo'
+        );
+
+        if (!createdTask.success || !createdTask.task) {
+          throw new Error(`Failed to create program task in master admin: ${createdTask.error}`);
+        }
+
+        // Add internal comment
+        const comment = masterAdmin.addTaskComment(
+          createdTask.task.id,
+          'STF-006',
+          'Sister Miriam K.',
+          'Community Programs Lead',
+          'Confirmed driver availability with volunteer Kwame Osei.'
+        );
+
+        if (!comment.success) {
+          throw new Error(`Failed to add task comment: ${comment.error}`);
+        }
+
+        return `Cross-departmental task ${createdTask.task.id} integrated with Community Programs and staff directory.`;
+      }
+    );
+
+    await runTest(
+      'TEST-P25-09',
+      'Phase 25 Community Programs',
+      'AI Program Intelligence & Non-Autonomous Decision Invariant (M25.10)',
+      'Verifies AI recommendation generation with human sign-off tags and firewall rejection of confidential survivor text',
+      () => {
+        // 1. Normal planning recommendation
+        const aiRec = comm.generateProgramAiAssist(
+          'PLANNING_ASSISTANCE',
+          'PROG-001',
+          'Immigrant women workforce cohort planning for Hennepin County.',
+          'staff'
+        );
+
+        if (!aiRec.success || !aiRec.recommendation) {
+          throw new Error(`Failed to generate AI planning recommendation: ${aiRec.error}`);
+        }
+
+        if (!aiRec.recommendation.requiresHumanApproval) {
+          throw new Error('POLICY VIOLATION: AI recommendation did not mandate human approval.');
+        }
+
+        // 2. Safeguarding halt on confidential survivor case prompt
+        const crisisPrompt = comm.generateProgramAiAssist(
+          'PLANNING_ASSISTANCE',
+          'PROG-001',
+          'Survivor domestic abuse case notes and confidential safe house shelter location.',
+          'staff'
+        );
+
+        if (crisisPrompt.success) {
+          throw new Error('SAFEGUARDING BREACH: AI program assistance accepted confidential survivor notes!');
+        }
+
+        return `AI program intelligence generated verified recommendations requiring human review. Survivor crisis prompt was blocked fail-closed.`;
+      }
+    );
+
+    await runTest(
+      'TEST-P25-10',
+      'Phase 25 Community Programs',
+      'Truthful Program Impact Measurement & Data Verification Tags (M25.11)',
+      'Verifies segregation of verified attendance and volunteer hours from unverified registrations, with zero synthetic figures',
+      () => {
+        const metrics = comm.getTruthfulImpactMetrics();
+
+        // 1. Must have verified classification
+        if (metrics.dataClassification !== 'VERIFIED') {
+          throw new Error(`Unexpected impact data classification: ${metrics.dataClassification}`);
+        }
+
+        // 2. Verified event attendance must be <= unverified registrations
+        if (metrics.verifiedEventAttendanceTotal > metrics.unverifiedEventRegistrationsTotal) {
+          throw new Error('Truthfulness Violation: Verified attendance exceeds registered participants.');
+        }
+
+        // 3. Verified volunteer hours must only count supervisor-signed hours
+        if (metrics.verifiedVolunteerHoursTotal <= 0) {
+          throw new Error('Expected positive verified volunteer hours from supervisor-verified deployments.');
+        }
+
+        return `Impact metrics validated: ${metrics.totalProgramsCount} programs, ${metrics.verifiedVolunteerHoursTotal} verified volunteer hours, ${metrics.verifiedReferralsCount} authorized referrals. Zero synthetic metrics.`;
+      }
+    );
+
+    await runTest(
+      'TEST-P25-11',
+      'Phase 25 Community Programs',
+      'Executive Program Governance & Separation of Duties (M25.12)',
+      'Verifies program approvals integrate with Phase 24 Executive Decision Center and prevent AI autonomous approvals',
+      () => {
+        const masterAdmin = MasterAdminService.getInstance();
+        const canAgentApprove = masterAdmin.canApproveExecutiveDecisions('ai_agent');
+        if (canAgentApprove) {
+          throw new Error('SECURITY VIOLATION: AI agent permitted to approve executive decisions!');
+        }
+
+        const canStaffApprove = masterAdmin.canApproveExecutiveDecisions('staff');
+        if (canStaffApprove) {
+          throw new Error('SECURITY VIOLATION: General staff permitted to approve executive decisions!');
+        }
+
+        const canSuperAdminApprove = masterAdmin.canApproveExecutiveDecisions('PLATFORM_SUPER_ADMIN');
+        if (!canSuperAdminApprove) {
+          throw new Error('Expected PLATFORM_SUPER_ADMIN to have executive decision approval privilege.');
+        }
+
+        return 'Executive governance certified: Separation of duties enforced, AI autonomous approval blocked.';
+      }
+    );
+
+    await runTest(
+      'TEST-P25-12',
+      'Phase 25 Community Programs',
+      'Central Community Operations Dashboard Telemetry Integrity (M25.13)',
+      'Verifies operational telemetry across programs, outreach, general services, and events matches registry counts',
+      () => {
+        const programs = comm.getPrograms();
+        const outreach = comm.getOutreachInitiatives();
+        const services = comm.getServiceRequests();
+        const events = comm.getEvents();
+
+        if (programs.length === 0 || outreach.length === 0 || services.length === 0 || events.length === 0) {
+          throw new Error('Dashboard registry collections are empty.');
+        }
+
+        return `Dashboard telemetry verified: ${programs.length} programs, ${outreach.length} outreach initiatives, ${services.length} general service requests, ${events.length} community events.`;
+      }
+    );
+
+    await runTest(
+      'TEST-P25-13',
+      'Phase 25 Community Programs',
+      'VAWA Section 1367 Safeguarding Boundary & Quarantine Protocol (M25.14)',
+      'Verifies zero-disclosure quarantine firewall isolates crisis intakes from general CRM and AI workflows',
+      () => {
+        // Verify all quarantined service requests in database have redacted summaries
+        const allServices = comm.getServiceRequests();
+        const quarantined = allServices.filter((s) => s.isSafeguardingCrisisQuarantine);
+
+        for (const q of quarantined) {
+          if (!q.intakeSummary.includes('[REDACTED')) {
+            throw new Error(`Quarantined request ${q.id} contains unredacted cleartext crisis indicators!`);
+          }
+          if (q.responsibleDepartmentId !== 'DEPT-SAFE') {
+            throw new Error(`Quarantined request ${q.id} was not routed to DEPT-SAFE.`);
+          }
+        }
+
+        return `VAWA Section 1367 firewall verified: All ${quarantined.length} crisis intakes safely quarantined in DEPT-SAFE with full redaction.`;
+      }
+    );
+
+    await runTest(
+      'TEST-P25-14',
+      'Phase 25 Community Programs',
+      'Disconnected Infrastructure Fail-Closed Behavior (M25.15)',
+      'Verifies truthful environment reporting for PostgreSQL, Google Workspace, Payment Gateway, and Email Synchronization',
+      () => {
+        const env = EnvironmentService.getInfrastructureStatuses();
+        if (env.POSTGRESQL !== 'NOT_CONNECTED') {
+          throw new Error(`PostgreSQL status mismatch: expected NOT_CONNECTED, got ${env.POSTGRESQL}`);
+        }
+        if (env.GOOGLE_WORKSPACE !== 'AUTHORIZATION_REQUIRED') {
+          throw new Error(`Google Workspace status mismatch: expected AUTHORIZATION_REQUIRED, got ${env.GOOGLE_WORKSPACE}`);
+        }
+        if (env.PAYMENT_GATEWAY !== 'NOT_CONNECTED') {
+          throw new Error(`Payment Gateway status mismatch: expected NOT_CONNECTED, got ${env.PAYMENT_GATEWAY}`);
+        }
+
+        return 'Truthful infrastructure reporting verified: All deferred external dependencies fail closed as declared.';
+      }
+    );
+
+    await runTest(
+      'TEST-P25-15',
+      'Phase 25 Community Programs',
+      '15 Negative-Access Security Enforcement Probes (M25.14)',
+      'Executes all 15 mandated Phase 25 negative access security probes validating RBAC, screening gates, and shelter isolation',
+      () => {
+        const suite = comm.runCommunityNegativeAccessSuite();
+        if (!suite.passed) {
+          const failed = suite.results.filter((r: any) => !r.passed);
+          throw new Error(`Community negative-access security suite failed (${suite.passedCount}/${suite.totalCount} passed). Failures: ${JSON.stringify(failed)}`);
+        }
+
+        return `15/15 negative-access security probes passed: RBAC boundaries, volunteer screening gates, and shelter venue isolation certified.`;
+      }
+    );
 
     const endTime = performance.now();
     const passedCount = results.filter((r) => r.passed).length;

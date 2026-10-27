@@ -550,6 +550,32 @@ export class MasterAdminService {
     return [...this.strategicPriorities];
   }
 
+  public createExecutiveDecision(
+    data: Omit<ExecutiveDecisionRecord, 'id' | 'reference' | 'status' | 'createdAt' | 'auditHistory'>,
+    actorRole: string,
+    actorName: string
+  ): { success: boolean; decision?: ExecutiveDecisionRecord; error?: string } {
+    const nextNum = this.executiveDecisions.length + 1;
+    const reference = `DEC-2026-${String(nextNum).padStart(3, '0')}`;
+    const newDecision: ExecutiveDecisionRecord = {
+      ...data,
+      id: `dec-${Date.now()}`,
+      reference,
+      status: 'PENDING',
+      createdAt: new Date().toISOString(),
+      auditHistory: [
+        {
+          timestamp: new Date().toISOString(),
+          actor: actorName,
+          action: `Decision ${reference} submitted for executive review.`,
+        },
+      ],
+    };
+    this.executiveDecisions.unshift(newDecision);
+    this.logAudit(actorRole, 'EXECUTIVE_DECISION_SUBMITTED', reference, `Submitted decision request: ${newDecision.title}`);
+    return { success: true, decision: newDecision };
+  }
+
   public reviewExecutiveDecision(
     decisionId: string,
     action: 'APPROVED' | 'REJECTED' | 'RETURNED' | 'ESCALATED',
@@ -650,6 +676,10 @@ export class MasterAdminService {
       return this.volunteers.filter((v) => v.stage === stage);
     }
     return [...this.volunteers];
+  }
+
+  public getVolunteerById(volunteerId: string): EnterpriseVolunteerProfile | undefined {
+    return this.volunteers.find((v) => v.id === volunteerId);
   }
 
   public advanceVolunteerStage(
