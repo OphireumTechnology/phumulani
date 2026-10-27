@@ -10,12 +10,13 @@ export default defineConfig(() => {
     define: {
       global: 'globalThis',
     },
-    optimizeDeps: {
-      exclude: ['pg'],
-    },
     resolve: {
       alias: {
         '@': path.resolve(import.meta.dirname, '.'),
+        'pg': path.resolve(import.meta.dirname, 'src/db/pgStub.ts'),
+        'path': path.resolve(import.meta.dirname, 'src/db/pathStub.ts'),
+        'fs': path.resolve(import.meta.dirname, 'src/db/fsStub.ts'),
+        'crypto': path.resolve(import.meta.dirname, 'src/db/cryptoStub.ts'),
       },
     },
     server: {

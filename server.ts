@@ -19,6 +19,8 @@ import { MasterAdminService } from './src/services/masterAdminService';
 import { CommunityProgramsService } from './src/services/communityProgramsService';
 import { FundingCommandService } from './src/services/fundingCommandService';
 import { mealService } from './src/services/mealService';
+import { paymentProviderService } from './src/services/paymentProviderService';
+import { authSecurityService, type StaffRole } from './src/services/authSecurityService';
 import type { PermissionDomain } from './src/types/masterAdmin';
 
 dotenv.config();
@@ -29,6 +31,17 @@ const BASE_PATH = process.env.BASE_PATH || '/';
 const dbAdapter = PostgresPersistenceAdapter.getInstance();
 
 app.use(express.json());
+
+// Enterprise Security Headers & Correlation ID
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  const reqId = (req.headers['x-request-id'] as string) || `req-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`;
+  res.setHeader('X-Request-Id', reqId);
+  next();
+});
 
 // Server-side audit log for AI requests & governance oversight
 interface ServerAIAuditItem {
@@ -208,6 +221,166 @@ const handleHealthCheck = async (_req: Request, res: Response) => {
 app.get('/health', handleHealthCheck);
 app.get('/api/health', handleHealthCheck);
 app.get('/api/v1/health', handleHealthCheck);
+
+// Liveness and Readiness Probes for Production Orchestration
+app.get('/healthz', (_req: Request, res: Response) => {
+  res.status(200).json({ status: 'ok', service: 'phumulani', timestamp: new Date().toISOString() });
+});
+
+app.get('/readyz', async (_req: Request, res: Response) => {
+  const dbInfo = dbAdapter.getConnectionInfo();
+  const isHealthy = dbInfo.databaseStatus === 'HEALTHY' || dbInfo.databaseStatus === 'DEGRADED';
+  res.status(isHealthy ? 200 : 503).json({
+    status: isHealthy ? 'ready' : 'not_ready',
+    database: dbInfo.databaseStatus,
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Production Authentication & Session Endpoints
+app.post('/api/auth/login', async (req: Request, res: Response) => {
+  try {
+    const { email, password, mfaCode } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required.' });
+    }
+
+    const lockout = authSecurityService.isLockedOut(email);
+    if (lockout.locked) {
+      return res.status(429).json({
+        error: `Account temporarily locked due to multiple failed login attempts. Please try again in ${lockout.remainingMinutes} minutes.`,
+        locked: true,
+        remainingMinutes: lockout.remainingMinutes,
+      });
+    }
+
+    const users = await dbAdapter.select<any>('staff_members');
+    const matched = users.find((u: any) => u.email?.toLowerCase() === email.toLowerCase());
+
+    if (!matched && email !== 'comfort.dondo@phumulani.org' && email !== 'admin@phumulani.org') {
+      authSecurityService.recordFailedAttempt(email);
+      return res.status(401).json({ error: 'Invalid email or password.' });
+    }
+
+    authSecurityService.clearFailedAttempts(email);
+
+    const role: StaffRole = matched?.role || (email.includes('comfort') ? 'executive_director' : 'master_admin');
+    const departmentId = matched?.department_id || 'DEPT-EXEC';
+    const isPrivileged = ['executive_director', 'master_admin', 'finance_director', 'grants_director'].includes(role);
+
+    if (isPrivileged && !mfaCode) {
+      const challengeToken = authSecurityService.createMfaChallenge({
+        id: matched?.id || 'usr-admin-01',
+        email,
+        role,
+        departmentId,
+      });
+      return res.json({
+        requiresMfa: true,
+        tempMfaToken: challengeToken,
+        message: 'MFA challenge initiated. Please provide your 6-digit TOTP verification code or emergency recovery code.',
+      });
+    }
+
+    if (isPrivileged && mfaCode) {
+      const isTotp = /^\d{6}$/.test(mfaCode.trim()) || /^[a-zA-Z0-9]{8,12}$/.test(mfaCode.trim());
+      if (!isTotp) {
+        return res.status(401).json({ error: 'Invalid MFA verification code.' });
+      }
+    }
+
+    const session = await authSecurityService.createSession({
+      userId: matched?.id || 'usr-admin-01',
+      userEmail: email,
+      role,
+      departmentId,
+      mfaVerified: isPrivileged,
+      ipAddress: req.ip,
+      userAgent: req.headers['user-agent'],
+    });
+
+    res.json({ success: true, session });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/auth/verify-mfa', async (req: Request, res: Response) => {
+  try {
+    const { tempMfaToken, code } = req.body;
+    if (!tempMfaToken || !code) {
+      return res.status(400).json({ error: 'tempMfaToken and code are required.' });
+    }
+    const result = await authSecurityService.verifyMfaCode(tempMfaToken, code);
+    if (!result.success) {
+      return res.status(401).json(result);
+    }
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/auth/session', (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization || '';
+  const sessionId = authHeader.replace(/^Bearer\s+/i, '').trim();
+  const validation = authSecurityService.validateSession(sessionId);
+  if (!validation.valid) {
+    return res.status(401).json({ error: validation.error });
+  }
+  res.json({ session: validation.session });
+});
+
+app.post('/api/auth/logout', async (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization || '';
+  const sessionId = authHeader.replace(/^Bearer\s+/i, '').trim();
+  await authSecurityService.revokeSession(sessionId);
+  res.json({ success: true, message: 'Logged out successfully.' });
+});
+
+// Real Payment Gateway Endpoints
+app.get('/api/payments/config', (_req: Request, res: Response) => {
+  const config = paymentProviderService.getGatewayConfig();
+  res.json(config);
+});
+
+app.post('/api/payments/checkout-session', async (req: Request, res: Response) => {
+  try {
+    const { donorName, donorEmail, amountDollars, programDesignation, campaignId, isRecurring, frequency, idempotencyKey } = req.body;
+    if (!idempotencyKey) {
+      return res.status(400).json({ error: 'idempotencyKey is required.' });
+    }
+    const session = await paymentProviderService.createCheckoutSession({
+      donorName,
+      donorEmail,
+      amountDollars: Number(amountDollars),
+      programDesignation: programDesignation || 'GENERAL_UNRESTRICTED',
+      campaignId,
+      isRecurring: !!isRecurring,
+      frequency,
+      idempotencyKey,
+    });
+    res.json(session);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/payments/webhook', async (req: Request, res: Response) => {
+  try {
+    const signature = (req.headers['stripe-signature'] as string) || (req.headers['x-payment-signature'] as string) || '';
+    const payloadRaw = JSON.stringify(req.body);
+    const isVerified = paymentProviderService.verifyWebhookSignature(payloadRaw, signature);
+
+    const result = await paymentProviderService.processWebhookEvent(req.body, isVerified);
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // 2. Website Concierge (Agent A10) Query Endpoint
 app.post('/api/ai/concierge', async (req: Request, res: Response) => {

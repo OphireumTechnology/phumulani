@@ -8,6 +8,7 @@ import { PostgresPersistenceAdapter } from '../src/services/postgresPersistenceA
 import { db } from '../src/services/db';
 
 async function main() {
+  process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
   console.log('--- STARTING PHUMULANI TEST VERIFICATION SUITE ---');
   const summary = await AutomatedTestRunner.runAllTests();
   console.log(`TOTAL TESTS: ${summary.total}`);

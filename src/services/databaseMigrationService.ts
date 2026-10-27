@@ -165,6 +165,120 @@ export class DatabaseMigrationService {
           `);
         },
       },
+      {
+        version: '20261027_007',
+        name: 'master_administration_and_programs_schema',
+        description: 'Creates staff, departments, tasks, executive decisions, and community programs tables.',
+        up: async (adapter) => {
+          await adapter.query(`
+            CREATE TABLE IF NOT EXISTS staff_members (
+              id TEXT PRIMARY KEY,
+              full_name TEXT NOT NULL,
+              email TEXT UNIQUE NOT NULL,
+              role TEXT NOT NULL,
+              department_id TEXT NOT NULL,
+              is_active BOOLEAN NOT NULL DEFAULT true,
+              mfa_enforced BOOLEAN NOT NULL DEFAULT true,
+              created_at TEXT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS community_programs (
+              id TEXT PRIMARY KEY,
+              code TEXT UNIQUE NOT NULL,
+              name TEXT NOT NULL,
+              department_id TEXT NOT NULL,
+              lifecycle_stage TEXT NOT NULL DEFAULT 'ACTIVE',
+              is_active BOOLEAN NOT NULL DEFAULT true,
+              created_at TEXT NOT NULL
+            );
+          `);
+        },
+      },
+      {
+        version: '20261027_008',
+        name: 'funding_and_meal_impact_schema',
+        description: 'Creates restricted funds, grant budgets, and MEAL impact indicator registries.',
+        up: async (adapter) => {
+          await adapter.query(`
+            CREATE TABLE IF NOT EXISTS restricted_funds (
+              id TEXT PRIMARY KEY,
+              name TEXT NOT NULL,
+              program_designation TEXT NOT NULL,
+              total_allocated NUMERIC NOT NULL DEFAULT 0,
+              total_expended NUMERIC NOT NULL DEFAULT 0,
+              compliance_status TEXT NOT NULL DEFAULT 'COMPLIANT',
+              created_at TEXT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS meal_indicators (
+              id TEXT PRIMARY KEY,
+              program_id TEXT NOT NULL,
+              name TEXT NOT NULL,
+              baseline_target NUMERIC NOT NULL,
+              verified_actual NUMERIC NOT NULL DEFAULT 0,
+              verification_stage TEXT NOT NULL DEFAULT 'VERIFIED_FINAL',
+              created_at TEXT NOT NULL
+            );
+          `);
+        },
+      },
+      {
+        version: '20261027_009',
+        name: 'operations_workflow_and_incident_schema',
+        description: 'Creates operational workflows, approvals, internal notifications, and incidents.',
+        up: async (adapter) => {
+          await adapter.query(`
+            CREATE TABLE IF NOT EXISTS operational_workflows (
+              id TEXT PRIMARY KEY,
+              title TEXT NOT NULL,
+              department_id TEXT NOT NULL,
+              status TEXT NOT NULL DEFAULT 'CREATED',
+              assigned_to TEXT NOT NULL,
+              created_at TEXT NOT NULL,
+              updated_at TEXT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS operational_approvals (
+              id TEXT PRIMARY KEY,
+              workflow_id TEXT NOT NULL,
+              decision TEXT NOT NULL DEFAULT 'PENDING',
+              reviewer_role TEXT NOT NULL,
+              decided_at TEXT
+            );
+          `);
+        },
+      },
+      {
+        version: '20261027_010',
+        name: 'payment_gateways_and_webhooks_schema',
+        description: 'Creates payment sessions, verified donations, and webhook idempotency registries.',
+        up: async (adapter) => {
+          await adapter.query(`
+            CREATE TABLE IF NOT EXISTS payment_sessions (
+              id TEXT PRIMARY KEY,
+              donor_email TEXT NOT NULL,
+              donor_name TEXT NOT NULL,
+              amount_cents INT NOT NULL,
+              program_designation TEXT NOT NULL,
+              campaign_id TEXT NOT NULL,
+              status TEXT NOT NULL DEFAULT 'PENDING_PAYMENT',
+              idempotency_key TEXT UNIQUE NOT NULL,
+              created_at TEXT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS donations_verified (
+              id TEXT PRIMARY KEY,
+              payment_intent_id TEXT UNIQUE NOT NULL,
+              donor_name TEXT NOT NULL,
+              donor_email TEXT NOT NULL,
+              amount NUMERIC NOT NULL,
+              currency TEXT NOT NULL DEFAULT 'usd',
+              program_designation TEXT NOT NULL,
+              campaign_id TEXT NOT NULL,
+              receipt_number TEXT UNIQUE NOT NULL,
+              verified_at TEXT NOT NULL,
+              is_synthetic BOOLEAN NOT NULL DEFAULT false,
+              payment_status TEXT NOT NULL DEFAULT 'succeeded'
+            );
+          `);
+        },
+      },
     ];
   }
 

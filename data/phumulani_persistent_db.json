@@ -3,8 +3,8 @@
     "platform": "Phumulani AI Community Platform",
     "schema": "PostgreSQL 15+ Compatible DDL",
     "engine": "ISOLATED_EMBEDDED_DURABLE",
-    "persistedAt": "2026-10-27T11:05:29.773Z",
-    "tablesCount": 6,
+    "persistedAt": "2026-10-27T12:03:06.257Z",
+    "tablesCount": 7,
     "classification": "INTEGRATION_COMPLETE_STAGED_READY"
   },
   "tables": {
@@ -12,7 +12,7 @@
       {
         "id": "test-1",
         "value": "phumulani_durable_test",
-        "timestamp": "2026-10-27T11:05:29.772Z"
+        "timestamp": "2026-10-27T12:03:06.256Z"
       },
       {
         "id": "test-txn-1",
@@ -275,6 +275,46 @@
         "executionTimeMs": 1,
         "status": "SUCCESS",
         "appliedBy": "Automated Test Suite"
+      },
+      {
+        "id": "mig-20261027_007",
+        "version": "20261027_007",
+        "name": "master_administration_and_programs_schema",
+        "appliedAt": "2026-10-27T11:55:09.137Z",
+        "checksum": "e87849eef6af54e78200b356f4876cc41a8238294d7277d52892399194ff9924",
+        "executionTimeMs": 3,
+        "status": "SUCCESS",
+        "appliedBy": "Server Bootstrapper"
+      },
+      {
+        "id": "mig-20261027_008",
+        "version": "20261027_008",
+        "name": "funding_and_meal_impact_schema",
+        "appliedAt": "2026-10-27T11:55:09.138Z",
+        "checksum": "ca2b1c8a95883ed2491ad5dd1f20d1064163abf4b1286091ae388d3b06d52342",
+        "executionTimeMs": 1,
+        "status": "SUCCESS",
+        "appliedBy": "Server Bootstrapper"
+      },
+      {
+        "id": "mig-20261027_009",
+        "version": "20261027_009",
+        "name": "operations_workflow_and_incident_schema",
+        "appliedAt": "2026-10-27T11:55:09.140Z",
+        "checksum": "786013ba9e301496b1f53787d95f9843a8475b0161c1ef49d99803db10c0b32c",
+        "executionTimeMs": 1,
+        "status": "SUCCESS",
+        "appliedBy": "Server Bootstrapper"
+      },
+      {
+        "id": "mig-20261027_010",
+        "version": "20261027_010",
+        "name": "payment_gateways_and_webhooks_schema",
+        "appliedAt": "2026-10-27T11:55:09.142Z",
+        "checksum": "4ccbba1728a076bcbd4356a194c3ef1329bc3d91ebcaa6422dfdc3020f012ecb",
+        "executionTimeMs": 2,
+        "status": "SUCCESS",
+        "appliedBy": "Server Bootstrapper"
       }
     ],
     "background_jobs": [
@@ -370,6 +410,386 @@
         "requesterRole": "system_auditor",
         "status": "allowed",
         "reason": "Executed 38 negative-access tests (including non-keyword metadata classifications). Invariant score: 100%. Zero survivor disclosures."
+      },
+      {
+        "id": "p28-persist-1793101610209",
+        "timestamp": "2026-10-27T11:46:50.209Z",
+        "actor_role": "system_verification",
+        "action": "test:persistence_durability",
+        "details": "Phase 28 durable restart persistence validation",
+        "signature": "sig-p28-02"
+      },
+      {
+        "id": "p28-txn-1793101610211",
+        "timestamp": "2026-10-27T11:46:50.211Z",
+        "actor_role": "system_verification",
+        "action": "test:transaction_commit",
+        "details": "Phase 28 ACID transaction verification",
+        "signature": "sig-p28-03"
+      },
+      {
+        "id": "audit-sess-1793101610325-twde",
+        "timestamp": "2026-10-27T11:46:50.325Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user test.staff@phumulani.org (Role: staff, MFA: false).",
+        "signature": "e4027f1d3653350334f112fef7688553479d5660330a633fd23047aef35b8d93"
+      },
+      {
+        "id": "audit-sess-1793101610326-lu9w",
+        "timestamp": "2026-10-27T11:46:50.326Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "589daa66af47d47057a0541e211d8f61beeba7259776ffc1c52edc1f588fbfa5"
+      },
+      {
+        "id": "audit-sess-1793101610326-mefr",
+        "timestamp": "2026-10-27T11:46:50.326Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "9ed6416491ea58caf87da94b21996e862acb9a2b787c5298ecc110dcb68166d8"
+      },
+      {
+        "id": "audit-sess-rev-1793101610327",
+        "timestamp": "2026-10-27T11:46:50.327Z",
+        "actor_role": "staff",
+        "action": "auth:session_revoked",
+        "details": "Revoked session 154ef827... for user revoke.staff@phumulani.org.",
+        "signature": "5ed2d9eab850af0988d0ea1085eb347c12b1ccfbfdcdc3033ce80dfb9a76817e"
+      },
+      {
+        "id": "audit-sess-1793101610327-xhb9",
+        "timestamp": "2026-10-27T11:46:50.327Z",
+        "actor_role": "executive_director",
+        "action": "auth:session_created",
+        "details": "Created session for user comfort.dondo@phumulani.org (Role: executive_director, MFA: true).",
+        "signature": "104398c64daee3a98c3d5b718d159ea0acdb65d6dc885277552bcf137eb5b7bf"
+      },
+      {
+        "id": "ai-audit-p28-1793101610328",
+        "timestamp": "2026-10-27T11:46:50.328Z",
+        "actor_role": "ai_agent_runner",
+        "action": "ai:execute_task",
+        "details": "Executed task for FUND-AI-001 with human approval gate intact.",
+        "signature": "3db29082182575135cad15cbdec8c656eda2c077debc07e6f909e851ae1a38b2"
+      },
+      {
+        "id": "audit-pay-1793101610330",
+        "timestamp": "2026-10-27T11:46:50.330Z",
+        "actor_role": "payment_webhook_system",
+        "action": "donation:reconcile_verified",
+        "details": "Reconciled payment pi_p28_1793101610329 for $50. Issued receipt PHUM-2026-28452.",
+        "signature": "3533c849e4494ed63b7df283e678ec9af7fa7c98a83ebea174de7b22f628a586"
+      },
+      {
+        "id": "p28-conc-1793101610331-0",
+        "timestamp": "2026-10-27T11:46:50.331Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 0",
+        "signature": "sig-conc-0"
+      },
+      {
+        "id": "p28-conc-1793101610331-1",
+        "timestamp": "2026-10-27T11:46:50.331Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 1",
+        "signature": "sig-conc-1"
+      },
+      {
+        "id": "p28-conc-1793101610331-2",
+        "timestamp": "2026-10-27T11:46:50.331Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 2",
+        "signature": "sig-conc-2"
+      },
+      {
+        "id": "p28-conc-1793101610331-3",
+        "timestamp": "2026-10-27T11:46:50.331Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 3",
+        "signature": "sig-conc-3"
+      },
+      {
+        "id": "p28-conc-1793101610331-4",
+        "timestamp": "2026-10-27T11:46:50.331Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 4",
+        "signature": "sig-conc-4"
+      },
+      {
+        "id": "p28-persist-1793102307687",
+        "timestamp": "2026-10-27T11:58:27.688Z",
+        "actor_role": "system_verification",
+        "action": "test:persistence_durability",
+        "details": "Phase 28 durable restart persistence validation",
+        "signature": "sig-p28-02"
+      },
+      {
+        "id": "p28-txn-1793102307689",
+        "timestamp": "2026-10-27T11:58:27.689Z",
+        "actor_role": "system_verification",
+        "action": "test:transaction_commit",
+        "details": "Phase 28 ACID transaction verification",
+        "signature": "sig-p28-03"
+      },
+      {
+        "id": "audit-sess-1793102307821-c0n2",
+        "timestamp": "2026-10-27T11:58:27.821Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user test.staff@phumulani.org (Role: staff, MFA: false).",
+        "signature": "2a85d86ee57e936319716b65a8780f41a99035b6b43d5d84821397047d001820"
+      },
+      {
+        "id": "audit-sess-1793102307822-1rnr",
+        "timestamp": "2026-10-27T11:58:27.822Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "4b7c60c541532b2091b0f37bf256804fc454ef81b2182e8063fd10ca4a81ada0"
+      },
+      {
+        "id": "audit-sess-1793102307823-mjr5",
+        "timestamp": "2026-10-27T11:58:27.823Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "413291f1f22220b87aa10482f9352218773043c9f4ee6f58377308f8d0a19355"
+      },
+      {
+        "id": "audit-sess-rev-1793102307823",
+        "timestamp": "2026-10-27T11:58:27.823Z",
+        "actor_role": "staff",
+        "action": "auth:session_revoked",
+        "details": "Revoked session 80bc1b28... for user revoke.staff@phumulani.org.",
+        "signature": "df3c57112597ea6e5287020f00d2774ec5dc8c11846991bf9c313f3e8f0165db"
+      },
+      {
+        "id": "audit-sess-1793102307824-h6g8",
+        "timestamp": "2026-10-27T11:58:27.824Z",
+        "actor_role": "executive_director",
+        "action": "auth:session_created",
+        "details": "Created session for user comfort.dondo@phumulani.org (Role: executive_director, MFA: true).",
+        "signature": "b95e788ec311c6654e3e5cb21388a3511ec2354e6e51e72680f0aefdd9e408d2"
+      },
+      {
+        "id": "ai-audit-p28-1793102307825",
+        "timestamp": "2026-10-27T11:58:27.825Z",
+        "actor_role": "ai_agent_runner",
+        "action": "ai:execute_task",
+        "details": "Executed task for FUND-AI-001 with human approval gate intact.",
+        "signature": "efc514f2018a55e79e78fd62d1bf69858d7bcdad7f2f80733c293aced1474ae3"
+      },
+      {
+        "id": "audit-pay-1793102307827",
+        "timestamp": "2026-10-27T11:58:27.827Z",
+        "actor_role": "payment_webhook_system",
+        "action": "donation:reconcile_verified",
+        "details": "Reconciled payment pi_p28_1793102307826 for $50. Issued receipt PHUM-2026-99621.",
+        "signature": "740ec789b63837d95347c168fa4889cf5eaae27562e13ecb2a70c495d23ccd76"
+      },
+      {
+        "id": "p28-conc-1793102307829-0",
+        "timestamp": "2026-10-27T11:58:27.829Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 0",
+        "signature": "sig-conc-0"
+      },
+      {
+        "id": "p28-conc-1793102307829-1",
+        "timestamp": "2026-10-27T11:58:27.829Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 1",
+        "signature": "sig-conc-1"
+      },
+      {
+        "id": "p28-conc-1793102307829-2",
+        "timestamp": "2026-10-27T11:58:27.829Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 2",
+        "signature": "sig-conc-2"
+      },
+      {
+        "id": "p28-conc-1793102307829-3",
+        "timestamp": "2026-10-27T11:58:27.829Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 3",
+        "signature": "sig-conc-3"
+      },
+      {
+        "id": "p28-conc-1793102307829-4",
+        "timestamp": "2026-10-27T11:58:27.829Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 4",
+        "signature": "sig-conc-4"
+      },
+      {
+        "id": "p28-persist-1793102586129",
+        "timestamp": "2026-10-27T12:03:06.129Z",
+        "actor_role": "system_verification",
+        "action": "test:persistence_durability",
+        "details": "Phase 28 durable restart persistence validation",
+        "signature": "sig-p28-02"
+      },
+      {
+        "id": "p28-txn-1793102586131",
+        "timestamp": "2026-10-27T12:03:06.131Z",
+        "actor_role": "system_verification",
+        "action": "test:transaction_commit",
+        "details": "Phase 28 ACID transaction verification",
+        "signature": "sig-p28-03"
+      },
+      {
+        "id": "audit-sess-1793102586246-suha",
+        "timestamp": "2026-10-27T12:03:06.246Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user test.staff@phumulani.org (Role: staff, MFA: false).",
+        "signature": "5b3967afe631eb5813c2993ef3dfca1e494bd425cec04b628baececa06cc0a64"
+      },
+      {
+        "id": "audit-sess-1793102586247-t6yu",
+        "timestamp": "2026-10-27T12:03:06.247Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "0ddf70eefc2c9afb55d2b51af2304fceb6550853e1c4ce98bc1ba1dde48a7fe9"
+      },
+      {
+        "id": "audit-sess-1793102586247-c7rg",
+        "timestamp": "2026-10-27T12:03:06.247Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "6a63b34d3a22dad012c28a6ba6f033dfe1e00d4c00b996b9dcf078387f456ed8"
+      },
+      {
+        "id": "audit-sess-rev-1793102586247",
+        "timestamp": "2026-10-27T12:03:06.247Z",
+        "actor_role": "staff",
+        "action": "auth:session_revoked",
+        "details": "Revoked session dc0e09bf... for user revoke.staff@phumulani.org.",
+        "signature": "5484908ddf9d6470a99dbed09a3ec484a4712b22a39a808878c09514a661b4e5"
+      },
+      {
+        "id": "audit-sess-1793102586249-6gkg",
+        "timestamp": "2026-10-27T12:03:06.249Z",
+        "actor_role": "executive_director",
+        "action": "auth:session_created",
+        "details": "Created session for user comfort.dondo@phumulani.org (Role: executive_director, MFA: true).",
+        "signature": "4c2692f1506aac89c4341f61cc9688ba887eccb8e3c7c29dfaf8defcf9a12aa3"
+      },
+      {
+        "id": "ai-audit-p28-1793102586249",
+        "timestamp": "2026-10-27T12:03:06.249Z",
+        "actor_role": "ai_agent_runner",
+        "action": "ai:execute_task",
+        "details": "Executed task for FUND-AI-001 with human approval gate intact.",
+        "signature": "5a837fcb0a9d9f08990169d6a10f5544d1cd045cc1efe9c26c1c16163fbb6d5a"
+      },
+      {
+        "id": "audit-pay-1793102586251",
+        "timestamp": "2026-10-27T12:03:06.251Z",
+        "actor_role": "payment_webhook_system",
+        "action": "donation:reconcile_verified",
+        "details": "Reconciled payment pi_p28_1793102586251 for $50. Issued receipt PHUM-2026-33835.",
+        "signature": "ec72c4a6244b9fbbec8d2874089106d47e200beeae01b70107bee759bfa8e38e"
+      },
+      {
+        "id": "p28-conc-1793102586253-0",
+        "timestamp": "2026-10-27T12:03:06.253Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 0",
+        "signature": "sig-conc-0"
+      },
+      {
+        "id": "p28-conc-1793102586253-1",
+        "timestamp": "2026-10-27T12:03:06.253Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 1",
+        "signature": "sig-conc-1"
+      },
+      {
+        "id": "p28-conc-1793102586253-2",
+        "timestamp": "2026-10-27T12:03:06.253Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 2",
+        "signature": "sig-conc-2"
+      },
+      {
+        "id": "p28-conc-1793102586253-3",
+        "timestamp": "2026-10-27T12:03:06.253Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 3",
+        "signature": "sig-conc-3"
+      },
+      {
+        "id": "p28-conc-1793102586253-4",
+        "timestamp": "2026-10-27T12:03:06.253Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 4",
+        "signature": "sig-conc-4"
+      }
+    ],
+    "donations_verified": [
+      {
+        "id": "don-1793101610330-3cb5b5",
+        "payment_intent_id": "pi_p28_1793101610329",
+        "donor_name": "P28 Verified Donor",
+        "donor_email": "donor.p28@community.org",
+        "amount": 50,
+        "currency": "usd",
+        "program_designation": "PROG-001",
+        "campaign_id": "general",
+        "receipt_number": "PHUM-2026-28452",
+        "verified_at": "2026-10-27T11:46:50.330Z",
+        "is_synthetic": false,
+        "payment_status": "succeeded"
+      },
+      {
+        "id": "don-1793102307826-1d8690",
+        "payment_intent_id": "pi_p28_1793102307826",
+        "donor_name": "P28 Verified Donor",
+        "donor_email": "donor.p28@community.org",
+        "amount": 50,
+        "currency": "usd",
+        "program_designation": "PROG-001",
+        "campaign_id": "general",
+        "receipt_number": "PHUM-2026-99621",
+        "verified_at": "2026-10-27T11:58:27.827Z",
+        "is_synthetic": false,
+        "payment_status": "succeeded"
+      },
+      {
+        "id": "don-1793102586251-a21256",
+        "payment_intent_id": "pi_p28_1793102586251",
+        "donor_name": "P28 Verified Donor",
+        "donor_email": "donor.p28@community.org",
+        "amount": 50,
+        "currency": "usd",
+        "program_designation": "PROG-001",
+        "campaign_id": "general",
+        "receipt_number": "PHUM-2026-33835",
+        "verified_at": "2026-10-27T12:03:06.251Z",
+        "is_synthetic": false,
+        "payment_status": "succeeded"
       }
     ]
   }

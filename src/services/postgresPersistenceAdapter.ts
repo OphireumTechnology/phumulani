@@ -61,7 +61,7 @@ export interface PersistentBackgroundJob {
 export class PostgresPersistenceAdapter {
   private static instance: PostgresPersistenceAdapter;
   private databaseUrl: string | undefined;
-  private pool: pg.Pool | null = null;
+  private pool: any = null;
   private storageDir: string;
   private storageFilePath: string;
   private memoryStore: Map<string, TableRowRecord[]> = new Map();
@@ -71,8 +71,15 @@ export class PostgresPersistenceAdapter {
   private inTransaction = false;
 
   private constructor() {
-    this.databaseUrl = process.env.DATABASE_URL?.trim();
-    this.storageDir = path.resolve(process.cwd(), 'data');
+    if (typeof window !== 'undefined') {
+      this.databaseUrl = undefined;
+      this.storageDir = '/data';
+      this.storageFilePath = '/data/phumulani_persistent_db.json';
+      return;
+    }
+    this.databaseUrl = typeof process !== 'undefined' ? process.env?.DATABASE_URL?.trim() : undefined;
+    const cwd = typeof process !== 'undefined' && typeof process.cwd === 'function' ? process.cwd() : '';
+    this.storageDir = cwd ? path.resolve(cwd, 'data') : '/data';
     this.storageFilePath = path.resolve(this.storageDir, 'phumulani_persistent_db.json');
   }
 
@@ -90,6 +97,11 @@ export class PostgresPersistenceAdapter {
    * If DATABASE_URL is omitted, safely uses isolated embedded durable JSON storage.
    */
   public async initialize(): Promise<DatabaseConnectionInfo> {
+    if (typeof window !== 'undefined') {
+      this.isInitialized = true;
+      return this.getConnectionInfo();
+    }
+
     const isProdOnly = process.env.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_ONLY';
 
     if (this.isInitialized) {
@@ -408,6 +420,9 @@ export class PostgresPersistenceAdapter {
    * Executes atomic file flush using write-to-temp and rename pattern to prevent corruption
    */
   public async flushToDurableStorage(): Promise<void> {
+    if (typeof window !== 'undefined') {
+      return;
+    }
     try {
       if (!fs.existsSync(this.storageDir)) {
         fs.mkdirSync(this.storageDir, { recursive: true });
