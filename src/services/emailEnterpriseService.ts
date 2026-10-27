@@ -37,6 +37,9 @@ import {
   OutboundEmailAuthorization,
   ConversationStatus,
   SyncAuditLogItem,
+  EmailAIRewriteAction,
+  EmailTemplate,
+  EMAIL_TEMPLATES,
 } from '../types/emailEnterprise';
 import {
   DonorContact,
@@ -390,6 +393,62 @@ export class EmailEnterpriseService {
     };
 
     return draft;
+  }
+
+  /**
+   * 4b. AI Email Rewrite Engine (Shorten, Expand, Formal, Warm, Executive, Clarity)
+   */
+  public static rewriteDraft(bodyText: string, action: EmailAIRewriteAction): string {
+    const lines = bodyText.split('\n').filter(Boolean);
+    const greeting = lines[0]?.startsWith('Dear') || lines[0]?.startsWith('Hello') ? lines[0] : 'Dear Valued Partner,';
+    const signoff = lines[lines.length - 1]?.startsWith('With') || lines[lines.length - 1]?.startsWith('Sincerely') || lines[lines.length - 1]?.startsWith('Warm')
+      ? lines.slice(-3).join('\n')
+      : 'Sincerely,\n\nComfort Dondo\nExecutive Director, Phumulani';
+
+    switch (action) {
+      case 'shorten': {
+        const coreContent = lines.slice(1, -2).join(' ').slice(0, 320);
+        return `${greeting}\n\nThank you for connecting with Phumulani. In brief:\n• ${coreContent.trim() || 'Our team has reviewed your note and confirmed receipt.'}\n• We are finalizing next steps and will coordinate directly with you.\n\nPlease let us know if you require any immediate information.\n\n${signoff}`;
+      }
+      case 'expand': {
+        const existing = lines.slice(1, -2).join('\n\n');
+        return `${greeting}\n\n${existing}\n\nAs background, Phumulani (Minnesota African Women Against Violence) is a 501(c)(3) nonprofit dedicated to providing culturally grounded healing circles, emergency housing assistance, and economic mobility pathways for immigrant women and children rebuilding their lives in dignity.\n\nOur programs currently support over 380 active community members with verified positive outcomes across safe shelter stabilization, job placement, and trauma recovery.\n\nWe look forward to advancing our shared commitment and remain available for any further questions or consultation.\n\n${signoff}`;
+      }
+      case 'formal': {
+        const existing = lines.slice(1, -2).join('\n\n');
+        return `${greeting}\n\nWe acknowledge receipt of your correspondence and appreciate your engagement with Phumulani.\n\n${existing}\n\nAll organizational actions and communications adhere strictly to Minnesota 501(c)(3) nonprofit governance standards and our verified institutional policies. Our executive leadership and finance administration will ensure that all deliverables and agreements are formally documented.\n\nRespectfully submitted,\n\nComfort Dondo\nExecutive Director & Founder, Phumulani\nhttps://phumulani.org`;
+      }
+      case 'warm': {
+        const existing = lines.slice(1, -2).join('\n\n');
+        return `Hello and warm sisterhood greetings,\n\nThank you so much for reaching out to Phumulani! Our doors, healing circles, and hearts are always open to community partners and friends.\n\n${existing}\n\nWe deeply value your warmth, dedication, and solidarity with our families. Together, we are creating a community where every woman and child lives free from violence and full of hope.\n\nWith our deepest love and gratitude,\n\nComfort Dondo & the Phumulani Sisterhood`;
+      }
+      case 'executive': {
+        const core = lines.slice(1, -2).join(' ').slice(0, 240);
+        return `${greeting}\n\nThank you for your timely communication to the Executive Office of Phumulani.\n\nKey Update & Decision:\n• ${core.trim() || 'Strategic priorities and resource allocation confirmed.'}\n• Executive scheduling and formal authorization are approved.\n\nOur team will handle execution and follow up with documentation within 24 hours.\n\nRegards,\n\nComfort Dondo\nExecutive Director, Phumulani`;
+      }
+      case 'clarity': {
+        const existing = lines.slice(1, -2).join('\n\n');
+        return `${greeting}\n\nThank you for reaching out to Phumulani. To ensure complete clarity regarding our communication:\n\n${existing}\n\nNext Action Items:\n1. Confirmation of agreed terms and scheduling.\n2. Dispatch of supporting documentation.\n\nPlease let us know if any points require further clarification.\n\n${signoff}`;
+      }
+      default:
+        return bodyText;
+    }
+  }
+
+  /**
+   * 4c. Template Token Interpolation Engine
+   */
+  public static interpolateTemplate(template: EmailTemplate, variables: Record<string, string>): { subject: string; body: string } {
+    let subject = template.subjectTemplate;
+    let body = template.bodyTemplate;
+
+    for (const [key, value] of Object.entries(variables)) {
+      const token = key.startsWith('{{') ? key : `{{${key}}}`;
+      subject = subject.split(token).join(value || '');
+      body = body.split(token).join(value || '');
+    }
+
+    return { subject, body };
   }
 
   /**

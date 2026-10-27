@@ -7,7 +7,7 @@
  * AI drafting with human approvals, fundraising intelligence, grants, sponsorships & executive briefing.
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { db } from '../services/db';
 import { User } from '../types';
 import {
@@ -26,6 +26,12 @@ import {
   MailboxSyncCheckpoint,
   EmailConflictRecord,
   SyncAuditLogItem,
+  EmailTemplate,
+  EMAIL_TEMPLATES,
+  EMAIL_STAFF_MEMBERS,
+  EmailAIRewriteAction,
+  ConversationStatus,
+  FollowUpTask,
 } from '../types/emailEnterprise';
 import { EmailEnterpriseService } from '../services/emailEnterpriseService';
 import {
@@ -79,25 +85,47 @@ import {
   Pause,
   RotateCcw,
   FileCheck,
+  Tag,
+  Users,
+  CheckSquare,
+  MessageSquareText,
+  Shield,
+  FileCode,
+  CornerUpLeft,
+  Reply,
+  ReplyAll,
+  Forward,
+  Wrench,
+  ArrowRight,
+  UserPlus,
 } from 'lucide-react';
 
 export type EmailCommandCenterTab =
   | 'all_mailboxes'
-  | 'historical'
-  | 'new_emails'
   | 'priority'
+  | 'mailboxes'
+  | 'historical'
+  | 'sent'
+  | 'drafts'
+  | 'scheduled'
+  | 'assigned_to_me'
+  | 'team_inbox'
+  | 'follow_up_tasks'
+  | 'ai_intelligence'
+  | 'approvals'
+  | 'crm_connections'
+  | 'analytics'
+  | 'synchronization'
+  | 'settings'
+  | 'new_emails'
   | 'donors'
   | 'grants'
   | 'corporate'
   | 'executive'
-  | 'sent'
   | 'archived'
-  | 'synchronization'
-  | 'approvals'
   | 'autoresponders'
   | 'fundraising'
-  | 'partnerships'
-  | 'analytics';
+  | 'partnerships';
 
 interface EmailCommandCenterViewProps {
   currentUser: User;
@@ -161,6 +189,9 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
   // Action Notice Banner
   const [actionNotice, setActionNotice] = useState<{ type: 'success' | 'warning' | 'info'; message: string } | null>(null);
 
+  // Quick filter pills
+  const [quickFilter, setQuickFilter] = useState<'all' | 'p0' | 'needs_reply' | 'awaiting_approval' | 'donors' | 'unassigned'>('all');
+
   // Draft editing state
   const [isEditingDraft, setIsEditingDraft] = useState(false);
   const [draftEditContent, setDraftEditContent] = useState('');
@@ -170,6 +201,26 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
   const [reclassifyingThreadId, setReclassifyingThreadId] = useState<string | null>(null);
   const [newCategoryTarget, setNewCategoryTarget] = useState<EmailClassificationCategory>('23_general_inquiries');
   const [reclassifyReason, setReclassifyReason] = useState<string>('');
+
+  // Internal Notes State
+  const [newInternalNote, setNewInternalNote] = useState<string>('');
+
+  // Follow-Up Task Modal State
+  const [isNewTaskModalOpen, setIsNewTaskModalOpen] = useState(false);
+  const [newTaskTitle, setNewTaskTitle] = useState('');
+  const [newTaskDueDate, setNewTaskDueDate] = useState('');
+  const [newTaskAssignee, setNewTaskAssignee] = useState(currentUser.name || 'Comfort Dondo');
+  const [newTaskPriority, setNewTaskPriority] = useState<'urgent' | 'high' | 'normal'>('high');
+  const [newTaskType, setNewTaskType] = useState<FollowUpTask['taskType']>('email_reply');
+  const [taskStatusFilter, setTaskStatusFilter] = useState<'all' | 'pending' | 'completed'>('all');
+
+  // Template Picker Modal State
+  const [isTemplateModalOpen, setIsTemplateModalOpen] = useState(false);
+  const [targetTemplateInsert, setTargetTemplateInsert] = useState<'compose' | 'draft'>('compose');
+  const [selectedTemplateCategory, setSelectedTemplateCategory] = useState<string>('all');
+
+  // Settings Active Section
+  const [settingsActiveSection, setSettingsActiveSection] = useState<'autoresponders' | 'templates' | 'signatures'>('autoresponders');
 
   // Selected Thread
   const selectedThread = threads.find((t) => t.id === selectedThreadId) || threads[0];
@@ -199,6 +250,16 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
           return false;
         }
 
+        // Quick filter pill check
+        if (quickFilter === 'p0' && t.priority !== 'P0') return false;
+        if (quickFilter === 'needs_reply') {
+          const lastMsg = t.messages[t.messages.length - 1];
+          if (!lastMsg || lastMsg.direction !== 'inbound' || t.status === 'resolved') return false;
+        }
+        if (quickFilter === 'awaiting_approval' && t.draft?.status !== 'pending_approval') return false;
+        if (quickFilter === 'donors' && t.crmLink?.entityType !== 'donor' && !t.classification.includes('donor')) return false;
+        if (quickFilter === 'unassigned' && t.assignedStaffName && t.assignedStaffName !== 'Unassigned') return false;
+
         switch (activeTab) {
           case 'historical': {
             const isHist = t.isHistorical || t.messages.some((m) => m.isHistorical);
@@ -211,7 +272,23 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
           case 'new_emails':
             return !t.isHistorical && (t.status === 'new' || t.status === 'triage_ready' || t.isRead === false);
           case 'priority':
+            return t.priority === 'P0' || t.priority === 'P1';
+          case 'mailboxes':
             return true;
+          case 'sent':
+            return t.folder === 'SENT' || t.messages.some((m) => m.direction === 'outbound');
+          case 'drafts':
+            return Boolean(t.draft);
+          case 'scheduled':
+            return Boolean(t.draft && t.draft.status === 'approved');
+          case 'assigned_to_me':
+            return t.assignedStaffId === currentUser.id || t.assignedStaffName === currentUser.name;
+          case 'team_inbox':
+            return true;
+          case 'approvals':
+            return Boolean(t.draft && t.draft.status === 'pending_approval');
+          case 'crm_connections':
+            return Boolean(t.crmLink || t.classification.includes('donor') || t.classification.includes('grant') || t.classification.includes('corporate') || t.classification.includes('partnership'));
           case 'donors':
             return (
               t.crmLink?.entityType === 'donor' ||
@@ -240,12 +317,9 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               t.classification.includes('legal') ||
               t.classification.includes('executive')
             );
-          case 'sent':
-            return t.folder === 'SENT' || t.messages.some((m) => m.direction === 'outbound');
           case 'archived':
             return t.isArchived || t.folder === 'ARCHIVE';
-          case 'approvals':
-            return t.draft && t.draft.status === 'pending_approval';
+          case 'all_mailboxes':
           default:
             return t.folder !== 'ARCHIVE' && !t.isArchived;
         }
@@ -264,6 +338,9 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
     priorityFilter,
     categoryFilter,
     searchQuery,
+    quickFilter,
+    currentUser.id,
+    currentUser.name,
     historicalStartDate,
     historicalEndDate,
   ]);
@@ -514,6 +591,183 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
     setReclassifyingThreadId(null);
     setReclassifyReason('');
     setTimeout(() => setActionNotice(null), 5000);
+  };
+
+  // Keyboard Shortcuts Listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement)?.tagName)) {
+        return;
+      }
+      if (e.key === 'j') {
+        const idx = filteredThreads.findIndex((t) => t.id === selectedThreadId);
+        if (idx >= 0 && idx < filteredThreads.length - 1) {
+          setSelectedThreadId(filteredThreads[idx + 1].id);
+        }
+      } else if (e.key === 'k') {
+        const idx = filteredThreads.findIndex((t) => t.id === selectedThreadId);
+        if (idx > 0) {
+          setSelectedThreadId(filteredThreads[idx - 1].id);
+        }
+      } else if (e.key === 'c') {
+        setIsComposeOpen(true);
+      } else if (e.key === 'Escape') {
+        setIsComposeOpen(false);
+        setIsTemplateModalOpen(false);
+        setIsNewTaskModalOpen(false);
+        setIsConflictsModalOpen(false);
+        setIsImportModalOpen(false);
+        setIsAuditLogsModalOpen(false);
+        setReclassifyingThreadId(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [filteredThreads, selectedThreadId]);
+
+  // Handle AI Rewrite
+  const handleAIRewrite = (action: EmailAIRewriteAction) => {
+    if (!selectedThread?.draft) return;
+    const currentText = isEditingDraft ? draftEditContent : selectedThread.draft.proposedBody;
+    const rewritten = EmailEnterpriseService.rewriteDraft(currentText, action);
+    if (isEditingDraft) {
+      setDraftEditContent(rewritten);
+    } else {
+      db.saveEmailDraft(selectedThread.id, {
+        ...selectedThread.draft,
+        proposedBody: rewritten,
+        status: 'pending_approval',
+      });
+    }
+    setActionNotice({
+      type: 'success',
+      message: `Draft successfully rewritten using [${action.toUpperCase()}] tone transformation.`,
+    });
+    setTimeout(() => setActionNotice(null), 4000);
+  };
+
+  // Handle Template Insertion
+  const handleInsertTemplate = (template: EmailTemplate) => {
+    const variables: Record<string, string> = {
+      recipient_name: selectedThread?.messages[0]?.senderName || composeRecipient || 'Valued Partner',
+      donation_amount: '$500.00',
+      campaign_name: 'Survivor Safe Housing Bridge Fund',
+      donation_date: new Date().toLocaleDateString(),
+      receipt_number: `RCP-2026-${Math.floor(100 + Math.random() * 900)}`,
+      grant_title: 'Minnesota Immigrant Empowerment Initiative',
+      program_name: 'Survivor Healing & Transitional Empowerment',
+      grant_amount: '$75,000',
+      grant_duration: '24 Months',
+      application_id: `APP-2026-${Math.floor(100 + Math.random() * 900)}`,
+      company_name: 'Corporate Partner',
+      tier_amount_1: '$25,000',
+      tier_amount_2: '$10,000',
+      volunteer_role: 'Sisterhood Healing Circle Mentor',
+      orientation_date: 'Saturday, November 7, 2026',
+      orientation_time: '10:00 AM CST',
+      program_schedule: 'Tuesdays & Thursdays, 6:00 PM - 8:00 PM',
+      topic_inquiry: 'Culturally Centered Domestic Violence Prevention',
+      deadline: 'Tomorrow at 5:00 PM CST',
+      meeting_date: 'November 15, 2026',
+      meeting_time: '6:30 PM CST',
+      subject_matter: 'Strategic Community Resilience Alliances',
+      inquiry_topic: 'Community Programs and Healing Support',
+      proposed_dates: 'Tuesday, Nov 3 at 2:00 PM or Thursday, Nov 5 at 10:00 AM',
+    };
+
+    const { subject, body } = EmailEnterpriseService.interpolateTemplate(template, variables);
+
+    if (targetTemplateInsert === 'compose') {
+      setComposeSubject(subject);
+      setComposeBody(body);
+      setIsComposeOpen(true);
+    } else if (selectedThread?.draft) {
+      if (isEditingDraft) {
+        setDraftEditContent(body);
+      } else {
+        db.saveEmailDraft(selectedThread.id, {
+          ...selectedThread.draft,
+          suggestedSubject: subject,
+          proposedBody: body,
+          toneStyle: template.suggestedTone,
+          status: 'pending_approval',
+        });
+      }
+    }
+    setIsTemplateModalOpen(false);
+    setActionNotice({
+      type: 'success',
+      message: `Template [${template.name}] inserted with populated variables.`,
+    });
+    setTimeout(() => setActionNotice(null), 4000);
+  };
+
+  // Handle Add Internal Note
+  const handleAddInternalNote = (threadId: string) => {
+    if (!newInternalNote.trim()) return;
+    db.addThreadInternalNote(threadId, newInternalNote.trim(), currentUser.name);
+    setNewInternalNote('');
+    setActionNotice({
+      type: 'success',
+      message: 'Private internal staff note appended. Strictly isolated from external messages.',
+    });
+    setTimeout(() => setActionNotice(null), 4000);
+  };
+
+  // Handle Create Follow-Up Task
+  const handleCreateFollowUpTask = () => {
+    if (!newTaskTitle.trim()) {
+      setActionNotice({ type: 'warning', message: 'Please provide a task title.' });
+      return;
+    }
+    db.createFollowUpTask({
+      relatedThreadId: selectedThread?.id,
+      relatedEntityName: selectedThread?.threadSubject || 'General Communication',
+      taskType: newTaskType,
+      assignedTo: newTaskAssignee,
+      title: newTaskTitle.trim(),
+      dueDate: newTaskDueDate || new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0],
+      priority: newTaskPriority,
+      status: 'pending',
+      aiGeneratedBy: 'A02 Email Manager',
+    });
+    setIsNewTaskModalOpen(false);
+    setNewTaskTitle('');
+    setActionNotice({
+      type: 'success',
+      message: `Follow-up task created and assigned to ${newTaskAssignee}.`,
+    });
+    setTimeout(() => setActionNotice(null), 4000);
+  };
+
+  // Handle Reassign Staff
+  const handleAssignStaff = (threadId: string, staffId: string, staffName: string) => {
+    db.assignEmailThread(threadId, staffId, staffName);
+    setActionNotice({
+      type: 'info',
+      message: `Thread assigned to ${staffName}. Notification recorded in audit log.`,
+    });
+    setTimeout(() => setActionNotice(null), 4000);
+  };
+
+  // Handle Quick Reply
+  const handleReplyToThread = (thread: EnterpriseEmailThread, replyAll: boolean = false) => {
+    const lastMsg = thread.messages[thread.messages.length - 1];
+    setComposeMailbox(thread.mailboxEmail);
+    setComposeRecipient(lastMsg ? lastMsg.senderEmail : thread.participantEmails[0] || '');
+    setComposeSubject(thread.threadSubject.startsWith('Re:') ? thread.threadSubject : `Re: ${thread.threadSubject}`);
+    setComposeBody('');
+    setIsComposeOpen(true);
+  };
+
+  // Handle Forward
+  const handleForwardThread = (thread: EnterpriseEmailThread) => {
+    const lastMsg = thread.messages[thread.messages.length - 1];
+    setComposeMailbox(thread.mailboxEmail);
+    setComposeRecipient('');
+    setComposeSubject(thread.threadSubject.startsWith('Fwd:') ? thread.threadSubject : `Fwd: ${thread.threadSubject}`);
+    setComposeBody(`\n\n---------- Forwarded message ---------\nFrom: ${lastMsg?.senderName} <${lastMsg?.senderEmail}>\nDate: ${new Date(lastMsg?.receivedAt || '').toLocaleString()}\nSubject: ${thread.threadSubject}\n\n${lastMsg?.bodyText}`);
+    setIsComposeOpen(true);
   };
 
   // Handle Compose Send
@@ -1048,25 +1302,211 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         </div>
       </div>
 
-      {/* 4. MAIN WORKSPACE PANELS */}
-      <div className="flex-1 overflow-hidden p-4">
-        {/* ========================================================================= */}
-        {/* UNIFIED EMAIL READER (Applies to all 10 Mail Views) */}
-        {/* ========================================================================= */}
+      {/* 4. MAIN WORKSPACE 3-PANEL CONTAINER (Milestone 23.01) */}
+      <div className="flex-1 overflow-hidden p-4 flex flex-col md:flex-row gap-4">
+        {/* PANEL 1: LEFT NAVIGATION SIDEBAR (16 Working Sections with Unread Badges) */}
+        <aside className="w-full md:w-56 xl:w-64 bg-white border border-slate-200 rounded-2xl flex flex-col shadow-xs overflow-hidden shrink-0">
+          <div className="p-3 border-b border-slate-100 bg-slate-50/70">
+            <div className="flex items-center justify-between text-xs mb-1.5">
+              <span className="font-bold text-slate-800 flex items-center gap-1.5">
+                <Layers className="w-3.5 h-3.5 text-teal-800" />
+                <span>Mail Workspace</span>
+              </span>
+              <span className="text-[10px] font-mono bg-teal-50 text-teal-900 border border-teal-200 px-1.5 py-0.2 rounded font-semibold">
+                16 Sections
+              </span>
+            </div>
+            {/* Quick Mailbox Switcher Dropdown */}
+            <select
+              value={selectedMailboxId}
+              onChange={(e) => {
+                setSelectedMailboxId(e.target.value);
+                if (activeTab === 'mailboxes') {
+                  setActiveTab('all_mailboxes');
+                }
+              }}
+              className="w-full bg-white border border-slate-200 rounded-lg p-1.5 text-[11px] font-medium text-slate-700 cursor-pointer"
+            >
+              <option value="all">All 5 Mailboxes</option>
+              {mailboxes.map((mbx) => (
+                <option key={mbx.id} value={mbx.id}>
+                  {mbx.email}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex-1 overflow-y-auto p-2 space-y-3 divide-y divide-slate-100">
+            {/* Section 1: Inboxes & Correspondence */}
+            <div className="space-y-0.5">
+              <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
+                Inboxes & Messages
+              </div>
+              {[
+                { id: 'all_mailboxes', label: 'Unified Inbox', icon: Inbox, count: threads.filter((t) => !t.isArchived).length, color: 'text-teal-800' },
+                { id: 'priority', label: 'Priority Inbox', icon: ShieldAlert, count: threads.filter((t) => t.priority === 'P0' || t.priority === 'P1').length, badgeText: 'P0/P1', color: 'text-rose-600' },
+                { id: 'mailboxes', label: 'Org Mailboxes', icon: Mail, count: mailboxes.length, color: 'text-teal-700' },
+                { id: 'historical', label: 'Historical Emails', icon: History, count: threads.filter((t) => t.isHistorical || t.messages.some((m) => m.isHistorical)).length, color: 'text-indigo-600' },
+                { id: 'sent', label: 'Sent Emails', icon: Send, count: threads.filter((t) => t.folder === 'SENT' || t.messages.some((m) => m.direction === 'outbound')).length, color: 'text-slate-600' },
+                { id: 'drafts', label: 'Drafts', icon: FileText, count: threads.filter((t) => Boolean(t.draft)).length, color: 'text-amber-600' },
+                { id: 'scheduled', label: 'Scheduled Comms', icon: Clock, count: threads.filter((t) => Boolean(t.draft && t.draft.status === 'approved')).length, color: 'text-purple-600' },
+              ].map((item) => {
+                const Icon = item.icon;
+                const isActive = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id as EmailCommandCenterTab)}
+                    className={`w-full px-2.5 py-1.5 rounded-xl flex items-center justify-between text-xs font-semibold transition-colors cursor-pointer ${
+                      isActive ? 'bg-[#104F57] text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 truncate">
+                      <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white' : item.color}`} />
+                      <span className="truncate">{item.label}</span>
+                    </div>
+                    <span
+                      className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
+                        isActive ? 'bg-teal-900/90 text-teal-100' : 'bg-slate-100 text-slate-600'
+                      }`}
+                    >
+                      {item.badgeText || item.count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Section 2: Staff Collaboration */}
+            <div className="space-y-0.5 pt-2">
+              <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
+                Staff Collaboration
+              </div>
+              {[
+                { id: 'assigned_to_me', label: 'Assigned to Me', icon: UserIcon, count: threads.filter((t) => t.assignedStaffId === currentUser.id || t.assignedStaffName === currentUser.name).length, color: 'text-blue-600' },
+                { id: 'team_inbox', label: 'Team Inbox', icon: Users, count: threads.length, color: 'text-slate-700' },
+                { id: 'follow_up_tasks', label: 'Follow-Up Tasks', icon: CheckSquare, count: followUps.filter((f) => f.status === 'pending').length, color: 'text-emerald-600' },
+              ].map((item) => {
+                const Icon = item.icon;
+                const isActive = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id as EmailCommandCenterTab)}
+                    className={`w-full px-2.5 py-1.5 rounded-xl flex items-center justify-between text-xs font-semibold transition-colors cursor-pointer ${
+                      isActive ? 'bg-[#104F57] text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 truncate">
+                      <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white' : item.color}`} />
+                      <span className="truncate">{item.label}</span>
+                    </div>
+                    <span
+                      className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
+                        isActive ? 'bg-teal-900/90 text-teal-100' : 'bg-slate-100 text-slate-600'
+                      }`}
+                    >
+                      {item.count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Section 3: Intelligence & CRM */}
+            <div className="space-y-0.5 pt-2">
+              <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
+                Intelligence & CRM
+              </div>
+              {[
+                { id: 'ai_intelligence', label: 'AI Intelligence', icon: Sparkles, count: '25 Cats', color: 'text-teal-600' },
+                { id: 'approvals', label: 'Approval Queue', icon: FileCheck, count: threads.filter((t) => t.draft?.status === 'pending_approval').length, color: 'text-amber-600' },
+                { id: 'crm_connections', label: 'CRM Connections', icon: DollarSign, count: threads.filter((t) => Boolean(t.crmLink)).length, color: 'text-emerald-600' },
+                { id: 'analytics', label: 'Email Analytics', icon: BarChart2, count: '99.4%', color: 'text-indigo-600' },
+              ].map((item) => {
+                const Icon = item.icon;
+                const isActive = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id as EmailCommandCenterTab)}
+                    className={`w-full px-2.5 py-1.5 rounded-xl flex items-center justify-between text-xs font-semibold transition-colors cursor-pointer ${
+                      isActive ? 'bg-[#104F57] text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 truncate">
+                      <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white' : item.color}`} />
+                      <span className="truncate">{item.label}</span>
+                    </div>
+                    <span
+                      className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
+                        isActive ? 'bg-teal-900/90 text-teal-100' : 'bg-slate-100 text-slate-600'
+                      }`}
+                    >
+                      {item.count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Section 4: System & Ops */}
+            <div className="space-y-0.5 pt-2">
+              <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
+                System & Settings
+              </div>
+              {[
+                { id: 'synchronization', label: 'Synchronization', icon: Activity, count: `${mailboxes.length} Mbx`, color: 'text-teal-700' },
+                { id: 'settings', label: 'Settings & Templates', icon: Settings, count: '12 Tmpl', color: 'text-slate-600' },
+              ].map((item) => {
+                const Icon = item.icon;
+                const isActive = activeTab === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id as EmailCommandCenterTab)}
+                    className={`w-full px-2.5 py-1.5 rounded-xl flex items-center justify-between text-xs font-semibold transition-colors cursor-pointer ${
+                      isActive ? 'bg-[#104F57] text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 truncate">
+                      <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white' : item.color}`} />
+                      <span className="truncate">{item.label}</span>
+                    </div>
+                    <span
+                      className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
+                        isActive ? 'bg-teal-900/90 text-teal-100' : 'bg-slate-100 text-slate-600'
+                      }`}
+                    >
+                      {item.count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </aside>
+
+        {/* WORKSPACE CONTENT: PANELS 2 & 3 */}
         {(activeTab === 'all_mailboxes' ||
           activeTab === 'historical' ||
           activeTab === 'new_emails' ||
           activeTab === 'priority' ||
+          activeTab === 'mailboxes' ||
+          activeTab === 'drafts' ||
+          activeTab === 'scheduled' ||
+          activeTab === 'assigned_to_me' ||
+          activeTab === 'team_inbox' ||
           activeTab === 'donors' ||
           activeTab === 'grants' ||
           activeTab === 'corporate' ||
           activeTab === 'executive' ||
           activeTab === 'sent' ||
           activeTab === 'archived') && (
-          <div className="h-full flex flex-col lg:flex-row gap-4">
-            {/* Left Thread List (Panel A) */}
+          <div className="flex-1 flex flex-col lg:flex-row gap-4 overflow-hidden">
+            {/* Center Thread List (Panel 2) */}
             <div className="w-full lg:w-96 bg-white border border-slate-200 rounded-2xl flex flex-col shadow-xs overflow-hidden shrink-0">
-              {/* Filter / Search Bar */}
+              {/* Filter / Search Bar with Quick Filter Pills */}
               <div className="p-3 border-b border-slate-200 space-y-2 bg-slate-50/50">
                 <div className="relative">
                   <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
@@ -1077,6 +1517,30 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-xl focus:outline-hidden focus:border-teal-700"
                   />
+                </div>
+
+                {/* Quick Filter Pills (Milestone 23.02) */}
+                <div className="flex items-center gap-1 overflow-x-auto pb-0.5 text-[10px] scrollbar-none">
+                  {[
+                    { id: 'all', label: 'All' },
+                    { id: 'p0', label: 'P0 Emergency' },
+                    { id: 'needs_reply', label: 'Needs Reply' },
+                    { id: 'awaiting_approval', label: 'Awaiting Approval' },
+                    { id: 'donors', label: 'Donors' },
+                    { id: 'unassigned', label: 'Unassigned' },
+                  ].map((pill) => (
+                    <button
+                      key={pill.id}
+                      onClick={() => setQuickFilter(pill.id as any)}
+                      className={`px-2 py-0.5 rounded-full font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+                        quickFilter === pill.id
+                          ? 'bg-[#104F57] text-white shadow-2xs'
+                          : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
+                      }`}
+                    >
+                      {pill.label}
+                    </button>
+                  ))}
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -1255,6 +1719,68 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                           <option value="SPAM">Folder: Spam</option>
                           <option value="DRAFTS">Folder: Drafts</option>
                         </select>
+                      </div>
+
+                      {/* Staff Assignment Selector (Milestone 23.05) */}
+                      <div className="flex items-center gap-1 text-xs">
+                        <UserPlus className="w-3.5 h-3.5 text-slate-400" />
+                        <select
+                          value={selectedThread.assignedStaffName || 'Unassigned'}
+                          onChange={(e) => {
+                            const staff = EMAIL_STAFF_MEMBERS.find((s) => s.name === e.target.value);
+                            if (staff) {
+                              handleAssignStaff(selectedThread.id, staff.id, staff.name);
+                            }
+                          }}
+                          className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-semibold text-slate-700 cursor-pointer shadow-2xs"
+                          title="Assign thread to team member"
+                        >
+                          <option value="Unassigned">Assign: Unassigned</option>
+                          {EMAIL_STAFF_MEMBERS.map((st) => (
+                            <option key={st.id} value={st.name}>
+                              Assign: {st.name}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+
+                      {/* Quick Communication Actions (Reply, Reply All, Forward, Add Task) */}
+                      <div className="flex items-center gap-1">
+                        <button
+                          onClick={() => handleReplyToThread(selectedThread)}
+                          className="p-1.5 text-slate-700 hover:text-teal-900 border border-slate-200 hover:bg-slate-50 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs"
+                          title="Reply to sender"
+                        >
+                          <Reply className="w-3.5 h-3.5 text-teal-800" />
+                          <span className="hidden sm:inline">Reply</span>
+                        </button>
+                        <button
+                          onClick={() => handleReplyToThread(selectedThread, true)}
+                          className="p-1.5 text-slate-700 hover:text-teal-900 border border-slate-200 hover:bg-slate-50 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs"
+                          title="Reply all"
+                        >
+                          <ReplyAll className="w-3.5 h-3.5 text-slate-600" />
+                          <span className="hidden sm:inline">All</span>
+                        </button>
+                        <button
+                          onClick={() => handleForwardThread(selectedThread)}
+                          className="p-1.5 text-slate-700 hover:text-teal-900 border border-slate-200 hover:bg-slate-50 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs"
+                          title="Forward thread"
+                        >
+                          <Forward className="w-3.5 h-3.5 text-slate-600" />
+                          <span className="hidden sm:inline">Fwd</span>
+                        </button>
+                        <button
+                          onClick={() => {
+                            setNewTaskTitle(`Follow up with ${selectedThread.messages[0]?.senderName || 'contact'} re: ${selectedThread.threadSubject}`);
+                            setIsNewTaskModalOpen(true);
+                          }}
+                          className="p-1.5 text-teal-900 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
+                          title="Create linked follow-up task"
+                        >
+                          <CheckSquare className="w-3.5 h-3.5 text-teal-700" />
+                          <span className="hidden sm:inline">Task</span>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -1478,6 +2004,68 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   })}
                 </div>
 
+                {/* Staff Private Collaboration: Internal Notes Box (Milestone 23.05) */}
+                <div className="border-t border-amber-200/80 bg-amber-50/50 p-3.5 space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <Lock className="w-4 h-4 text-amber-700" />
+                      <span className="text-xs font-bold text-amber-950 uppercase tracking-wide">
+                        Private Internal Staff Notes
+                      </span>
+                      <span className="text-[10px] font-mono font-semibold bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-full">
+                        Internal Only · Never Dispatched Externally
+                      </span>
+                    </div>
+                    <span className="text-[10px] text-amber-800 font-mono font-semibold">
+                      {selectedThread.internalNotes?.length || 0} Notes
+                    </span>
+                  </div>
+
+                  {/* List of Existing Notes */}
+                  {selectedThread.internalNotes && selectedThread.internalNotes.length > 0 && (
+                    <div className="space-y-1.5 max-h-36 overflow-y-auto">
+                      {selectedThread.internalNotes.map((note) => (
+                        <div
+                          key={note.id}
+                          className="bg-white border border-amber-200 rounded-xl p-2.5 text-xs shadow-2xs"
+                        >
+                          <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 mb-1">
+                            <span className="font-bold text-slate-900">{note.authorName}</span>
+                            <span>{new Date(note.createdAt).toLocaleString()}</span>
+                          </div>
+                          <p className="text-slate-800 font-sans leading-relaxed whitespace-pre-wrap">
+                            {note.text}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Add New Note Input */}
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      placeholder="Add confidential internal note for team members..."
+                      value={newInternalNote}
+                      onChange={(e) => setNewInternalNote(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleAddInternalNote(selectedThread.id);
+                        }
+                      }}
+                      className="flex-1 bg-white border border-amber-300 rounded-xl px-3 py-1.5 text-xs text-slate-800 placeholder:text-amber-800/50 focus:outline-hidden focus:border-amber-600"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleAddInternalNote(selectedThread.id)}
+                      className="px-3 py-1.5 bg-amber-700 hover:bg-amber-800 text-white rounded-xl text-xs font-bold transition-all shadow-2xs shrink-0 cursor-pointer"
+                    >
+                      Add Note
+                    </button>
+                  </div>
+                </div>
+
                 {/* AI RESPONSE ENGINE & APPROVAL BAR (Panel C & D) */}
                 {selectedThread.classification !== '01_safeguarding' && (
                   <div className="border-t border-slate-200 bg-white p-4 space-y-3">
@@ -1528,6 +2116,47 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         </button>
                       </div>
                     </div>
+
+                    {/* AI Rewrite Actions Toolbar (Milestone 23.04) */}
+                    {selectedThread.draft && (
+                      <div className="flex flex-wrap items-center justify-between gap-2 p-2 bg-teal-50/70 border border-teal-200/80 rounded-xl">
+                        <div className="flex items-center gap-1.5 text-xs">
+                          <Sparkles className="w-3.5 h-3.5 text-teal-800" />
+                          <span className="font-bold text-teal-950 text-[11px]">AI Rewrite:</span>
+                          <div className="flex items-center gap-1 flex-wrap">
+                            {[
+                              { action: 'shorten', label: 'Shorten' },
+                              { action: 'expand', label: 'Expand' },
+                              { action: 'formal', label: 'Formal' },
+                              { action: 'warm', label: 'Warm Sisterhood' },
+                              { action: 'executive', label: 'Executive' },
+                              { action: 'clarity', label: 'Fix Clarity' },
+                            ].map((btn) => (
+                              <button
+                                key={btn.action}
+                                type="button"
+                                onClick={() => handleAIRewrite(btn.action as EmailAIRewriteAction)}
+                                className="px-2 py-0.5 rounded-lg bg-white border border-teal-200 text-teal-900 hover:bg-teal-100 text-[10px] font-semibold transition-colors cursor-pointer shadow-2xs"
+                              >
+                                {btn.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setTargetTemplateInsert('draft');
+                            setIsTemplateModalOpen(true);
+                          }}
+                          className="px-2.5 py-1 bg-white border border-indigo-200 hover:bg-indigo-50 text-indigo-900 rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
+                        >
+                          <FileText className="w-3 h-3 text-indigo-600" />
+                          <span>Insert Template...</span>
+                        </button>
+                      </div>
+                    )}
 
                     {/* Active Draft Box */}
                     {selectedThread.draft && (
@@ -2191,91 +2820,180 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         )}
 
         {/* ========================================================================= */}
-        {/* TAB 3: AI DRAFTS & APPROVAL QUEUE */}
+        {/* TAB 3: AI DRAFTS & APPROVAL QUEUE (Milestone 23.06) */}
         {/* ========================================================================= */}
         {activeTab === 'approvals' && (
-          <div className="h-full bg-white border border-slate-200 rounded-2xl p-4 shadow-xs overflow-y-auto space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div className="flex-1 h-full bg-white border border-slate-200 rounded-2xl p-5 shadow-xs overflow-y-auto space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
               <div>
-                <h3 className="text-sm font-bold text-slate-900">AI Response Drafts & Human Approval Queue</h3>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-mono text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full uppercase">
+                    Mandatory Human Review Gate
+                  </span>
+                  <span className="text-[10px] font-bold bg-teal-100 text-teal-800 border border-teal-300 px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3 text-teal-600" />
+                    Zero Autonomous External Sending
+                  </span>
+                </div>
+                <h3 className="text-sm font-bold text-slate-900">
+                  AI Response Drafts & Human Approval Queue
+                </h3>
                 <p className="text-xs text-slate-500">
-                  Every AI-generated outbound response requires explicit review, editing, and sign-off by authorized staff.
+                  Quad-action protocol: Approve, Request Changes, Return to Draft, or Reject. Full cryptographic content binding prevents post-approval tampering.
                 </p>
               </div>
-              <span className="text-xs font-mono font-bold bg-amber-100 text-amber-900 border border-amber-300 px-2.5 py-0.5 rounded-full">
-                Zero Autonomous External Sending
-              </span>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-mono font-bold bg-slate-100 text-slate-700 px-2.5 py-1 rounded-xl">
+                  {threads.filter((t) => t.draft && t.draft.status === 'pending_approval').length} Pending Approval
+                </span>
+                <span className="text-xs font-mono font-bold bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-xl">
+                  {threads.filter((t) => t.draft && t.draft.status === 'approved').length} Ready to Dispatch
+                </span>
+              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {threads
-                .filter((t) => t.draft)
-                .map((thread) => {
-                  const draft = thread.draft!;
-                  return (
-                    <div
-                      key={thread.id}
-                      className="border border-slate-200 rounded-xl p-4 bg-[#F8FAFB] flex flex-col justify-between space-y-3"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between text-xs mb-1">
-                          <span className="font-bold text-slate-900">{thread.threadSubject}</span>
-                          <span
-                            className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
-                              draft.status === 'approved'
-                                ? 'bg-emerald-100 text-emerald-800'
-                                : draft.status === 'sent'
-                                ? 'bg-blue-100 text-blue-800'
-                                : 'bg-amber-100 text-amber-800'
-                            }`}
+            {threads.filter((t) => Boolean(t.draft)).length === 0 ? (
+              <div className="p-12 text-center text-slate-400">
+                <FileCheck className="w-12 h-12 mx-auto mb-2 opacity-40 text-teal-700" />
+                <p className="font-semibold text-slate-700">No email drafts currently in workspace.</p>
+                <p className="text-xs text-slate-500 mt-1">Select an incoming email to generate an AI draft response.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+                {threads
+                  .filter((t) => t.draft)
+                  .map((thread) => {
+                    const draft = thread.draft!;
+                    return (
+                      <div
+                        key={thread.id}
+                        className="border border-slate-200 rounded-2xl p-4 bg-[#F8FAFB] flex flex-col justify-between space-y-3 shadow-2xs hover:border-slate-300 transition-all"
+                      >
+                        <div>
+                          <div className="flex items-center justify-between text-xs mb-1.5">
+                            <div className="flex items-center gap-2">
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
+                                draft.status === 'approved'
+                                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                                  : draft.status === 'sent'
+                                  ? 'bg-blue-100 text-blue-800'
+                                  : draft.status === 'changes_requested'
+                                  ? 'bg-orange-100 text-orange-800 border border-orange-300'
+                                  : draft.status === 'returned_to_draft'
+                                  ? 'bg-slate-200 text-slate-700'
+                                  : 'bg-amber-100 text-amber-800 border border-amber-300'
+                              }`}>
+                                {draft.status.replace('_', ' ')}
+                              </span>
+                              <span className="font-mono text-[10px] text-slate-500">
+                                v{draft.version || 1}
+                              </span>
+                            </div>
+                            <span className="text-[11px] font-mono text-slate-400">
+                              Confidence: <strong className="text-teal-900">{draft.confidenceScore}%</strong>
+                            </span>
+                          </div>
+
+                          <h4 className="font-bold text-sm text-slate-900 mb-0.5">
+                            {thread.threadSubject}
+                          </h4>
+
+                          <div className="text-[11px] text-slate-500 font-mono mb-2">
+                            To: <strong className="text-slate-800">{draft.recipientEmail}</strong> · Mailbox: <strong className="text-slate-800">{thread.mailboxEmail}</strong> · Tone: <span className="capitalize">{draft.toneStyle.replace('_', ' ')}</span>
+                          </div>
+
+                          {/* Grounding Summary */}
+                          <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-2.5 text-[11px] text-emerald-950 mb-2 flex items-start gap-1.5">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                            <span><strong>Context Grounding:</strong> {draft.verifiedContextSummary}</span>
+                          </div>
+
+                          {/* Proposed Body */}
+                          <div className="text-xs bg-white border border-slate-200 p-3 rounded-xl text-slate-800 whitespace-pre-wrap max-h-48 overflow-y-auto font-sans leading-relaxed">
+                            {draft.proposedBody}
+                          </div>
+                        </div>
+
+                        {/* Quad Action Review Bar */}
+                        <div className="border-t border-slate-200 pt-3 flex flex-wrap items-center justify-between gap-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedThreadId(thread.id);
+                              setActiveTab('all_mailboxes');
+                            }}
+                            className="text-xs text-teal-800 hover:text-teal-950 font-semibold underline cursor-pointer"
                           >
-                            {draft.status.replace('_', ' ')}
-                          </span>
-                        </div>
-                        <div className="text-[11px] text-slate-500 font-mono">
-                          Recipient: {draft.recipientEmail} · Tone: {draft.toneStyle}
-                        </div>
-                        <div className="mt-2 text-xs bg-white border border-slate-200 p-3 rounded-lg text-slate-800 whitespace-pre-wrap max-h-36 overflow-y-auto">
-                          {draft.proposedBody}
-                        </div>
-                      </div>
+                            View in Thread Workspace →
+                          </button>
 
-                      <div className="border-t border-slate-200 pt-2 flex items-center justify-between text-xs">
-                        <div className="text-[11px] text-slate-500">
-                          Confidence: <span className="font-bold text-teal-800">{draft.confidenceScore}%</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          {draft.status === 'pending_approval' && (
-                            <>
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            {draft.status === 'pending_approval' && (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() => handleApproveDraft(thread.id)}
+                                  className="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
+                                  title="Approve draft for outbound dispatch"
+                                >
+                                  <ThumbsUp className="w-3 h-3" />
+                                  <span>Approve</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleRequestChanges(thread.id)}
+                                  className="px-2 py-1 bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-300 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                                  title="Request staff changes"
+                                >
+                                  <RotateCcw className="w-3 h-3" />
+                                  <span>Changes</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleReturnToDraft(thread.id)}
+                                  className="px-2 py-1 bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                                  title="Return to initial drafting state"
+                                >
+                                  <FileCheck className="w-3 h-3" />
+                                  <span>Return</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleRejectDraft(thread.id)}
+                                  className="px-2 py-1 text-rose-700 hover:bg-rose-50 border border-rose-200 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                                  title="Reject proposed draft"
+                                >
+                                  <ThumbsDown className="w-3 h-3" />
+                                  <span>Reject</span>
+                                </button>
+                              </>
+                            )}
+
+                            {draft.status === 'approved' && (
                               <button
-                                onClick={() => handleApproveDraft(thread.id)}
-                                className="px-3 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold cursor-pointer"
+                                type="button"
+                                onClick={() => handleSendApprovedEmail(thread.id)}
+                                className="px-3 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
                               >
-                                Approve
+                                <Send className="w-3.5 h-3.5" />
+                                <span>Send Approved Email</span>
                               </button>
-                              <button
-                                onClick={() => handleRejectDraft(thread.id)}
-                                className="px-2 py-1 text-rose-700 border border-rose-200 rounded-lg text-xs font-medium cursor-pointer"
-                              >
-                                Reject
-                              </button>
-                            </>
-                          )}
-                          {draft.status === 'approved' && (
-                            <button
-                              onClick={() => handleSendApprovedEmail(thread.id)}
-                              className="px-3 py-1 bg-[#104F57] hover:bg-teal-900 text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer"
-                            >
-                              <Send className="w-3 h-3" />
-                              <span>Send Now</span>
-                            </button>
-                          )}
+                            )}
+
+                            {draft.status === 'sent' && (
+                              <span className="text-xs font-bold text-emerald-800 flex items-center gap-1">
+                                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                                <span>Dispatched to Recipient</span>
+                              </span>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })}
-            </div>
+                    );
+                  })}
+              </div>
+            )}
           </div>
         )}
 
@@ -2816,6 +3534,653 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             </div>
           </div>
         )}
+
+        {/* ========================================================================= */}
+        {/* TAB 9: FOLLOW-UP TASK MANAGEMENT (Milestone 23.08) */}
+        {/* ========================================================================= */}
+        {activeTab === 'follow_up_tasks' && (
+          <div className="flex-1 h-full bg-white border border-slate-200 rounded-2xl p-5 shadow-xs overflow-y-auto space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-mono text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 px-2 py-0.5 rounded-full uppercase">
+                    Milestone 23.08
+                  </span>
+                  <span className="text-[10px] font-bold bg-teal-100 text-teal-800 border border-teal-300 px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <CheckSquare className="w-3 h-3 text-teal-600" />
+                    Bi-directional Thread & CRM Linking
+                  </span>
+                </div>
+                <h3 className="text-sm font-bold text-slate-900">
+                  Staff Follow-Up Task Management
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Actionable commitments generated by AI email intelligence (A02) and staff review. Linked directly to constituents and source correspondence.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {/* Status Filter Pills */}
+                <div className="flex items-center bg-slate-100 p-0.5 rounded-xl text-xs font-semibold">
+                  {(['all', 'pending', 'completed'] as const).map((filter) => (
+                    <button
+                      key={filter}
+                      type="button"
+                      onClick={() => setTaskStatusFilter(filter)}
+                      className={`px-3 py-1 rounded-lg capitalize transition-colors cursor-pointer ${
+                        taskStatusFilter === filter
+                          ? 'bg-[#104F57] text-white shadow-2xs'
+                          : 'text-slate-600 hover:text-slate-900'
+                      }`}
+                    >
+                      {filter}
+                    </button>
+                  ))}
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setNewTaskTitle('');
+                    setIsNewTaskModalOpen(true);
+                  }}
+                  className="px-3.5 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  <span>New Follow-Up Task</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Tasks List */}
+            {followUps.filter((task) => {
+              if (taskStatusFilter === 'pending') return task.status === 'pending';
+              if (taskStatusFilter === 'completed') return task.status === 'completed';
+              return true;
+            }).length === 0 ? (
+              <div className="p-12 text-center text-slate-400">
+                <CheckSquare className="w-12 h-12 mx-auto mb-2 opacity-40 text-emerald-600" />
+                <p className="font-semibold text-slate-700">No follow-up tasks match the active filter.</p>
+                <p className="text-xs text-slate-500 mt-1">All action items are up to date and completed.</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {followUps
+                  .filter((task) => {
+                    if (taskStatusFilter === 'pending') return task.status === 'pending';
+                    if (taskStatusFilter === 'completed') return task.status === 'completed';
+                    return true;
+                  })
+                  .map((task) => (
+                    <div
+                      key={task.id}
+                      className={`border rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all ${
+                        task.status === 'completed'
+                          ? 'bg-slate-50/70 border-slate-200 opacity-75'
+                          : 'bg-white border-slate-200 shadow-2xs hover:border-slate-300'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <input
+                          type="checkbox"
+                          checked={task.status === 'completed'}
+                          onChange={() => db.toggleFollowUpTask(task.id)}
+                          className="mt-1 w-4 h-4 rounded text-teal-800 focus:ring-teal-700 cursor-pointer"
+                        />
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span
+                              className={`text-xs font-bold ${
+                                task.status === 'completed' ? 'line-through text-slate-400' : 'text-slate-900'
+                              }`}
+                            >
+                              {task.title}
+                            </span>
+                            <span
+                              className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border ${
+                                task.priority === 'urgent'
+                                  ? 'bg-rose-100 text-rose-800 border-rose-300'
+                                  : task.priority === 'high'
+                                  ? 'bg-amber-100 text-amber-800 border-amber-300'
+                                  : 'bg-blue-100 text-blue-800 border-blue-300'
+                              }`}
+                            >
+                              {task.priority}
+                            </span>
+                            <span className="text-[10px] font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded">
+                              {task.taskType.replace('_', ' ')}
+                            </span>
+                          </div>
+
+                          <div className="text-[11px] text-slate-500 flex items-center gap-3 flex-wrap">
+                            <span>
+                              Assigned to: <strong className="text-slate-800">{task.assignedTo}</strong>
+                            </span>
+                            <span>·</span>
+                            <span>
+                              Target Entity: <strong className="text-teal-900">{task.relatedEntityName}</strong>
+                            </span>
+                            <span>·</span>
+                            <span>
+                              Due Date: <strong className="font-mono text-slate-700">{task.dueDate}</strong>
+                            </span>
+                          </div>
+
+                          {task.aiGeneratedBy && (
+                            <div className="text-[10px] text-teal-800 flex items-center gap-1 font-mono">
+                              <Sparkles className="w-3 h-3 text-teal-600" />
+                              <span>Generated by {task.aiGeneratedBy}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2 shrink-0">
+                        {task.relatedThreadId && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedThreadId(task.relatedThreadId!);
+                              setActiveTab('all_mailboxes');
+                            }}
+                            className="px-2.5 py-1 text-xs text-teal-800 hover:text-teal-950 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg font-semibold cursor-pointer"
+                          >
+                            Open Thread →
+                          </button>
+                        )}
+                        <button
+                          type="button"
+                          onClick={() => db.toggleFollowUpTask(task.id)}
+                          className={`px-3 py-1 text-xs font-bold rounded-lg cursor-pointer ${
+                            task.status === 'completed'
+                              ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                              : 'bg-emerald-700 text-white hover:bg-emerald-800'
+                          }`}
+                        >
+                          {task.status === 'completed' ? 'Reopen' : 'Mark Complete'}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* TAB 10: AI EMAIL INTELLIGENCE CENTER (Milestone 23.03) */}
+        {/* ========================================================================= */}
+        {activeTab === 'ai_intelligence' && (
+          <div className="flex-1 h-full bg-white border border-slate-200 rounded-2xl p-5 shadow-xs overflow-y-auto space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-mono text-[10px] font-bold bg-teal-100 text-teal-900 border border-teal-300 px-2 py-0.5 rounded-full uppercase">
+                    Milestone 23.03
+                  </span>
+                  <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-emerald-600" />
+                    25 Validated Categories · Multi-Entity Extraction
+                  </span>
+                </div>
+                <h3 className="text-sm font-bold text-slate-900">
+                  Phumulani AI Email Intelligence Engine
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Production classification, dynamic P0–P4 SLA priority mapping, entity extraction (donors, amounts, grants, deadlines), and safeguarding isolation boundaries.
+                </p>
+              </div>
+
+              <span className="text-xs font-mono font-bold bg-slate-100 text-slate-700 px-3 py-1.5 rounded-xl border border-slate-200">
+                Classification Confidence: 94.6% Avg
+              </span>
+            </div>
+
+            {/* 4 Feature Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+              <div className="p-3.5 bg-teal-50/70 border border-teal-200 rounded-xl space-y-1">
+                <span className="text-[11px] font-bold text-teal-900 block">25 Operational Categories</span>
+                <p className="text-slate-600 text-[11px] leading-relaxed">
+                  Deterministic keyword matching combined with Gemini 2.5 Flash semantic classification.
+                </p>
+              </div>
+
+              <div className="p-3.5 bg-rose-50/70 border border-rose-200 rounded-xl space-y-1">
+                <span className="text-[11px] font-bold text-rose-900 block">Safeguarding Boundary Active</span>
+                <p className="text-slate-600 text-[11px] leading-relaxed">
+                  Category 01 strictly isolated from general AI drafts; routed to Sister Miriam K.
+                </p>
+              </div>
+
+              <div className="p-3.5 bg-amber-50/70 border border-amber-200 rounded-xl space-y-1">
+                <span className="text-[11px] font-bold text-amber-900 block">P0–P4 Strict SLA Framework</span>
+                <p className="text-slate-600 text-[11px] leading-relaxed">
+                  Automatic countdown deadlines: P0 (&lt;1h), P1 (&lt;4h), P2 (&lt;24h), P3 (&lt;48h), P4 (&lt;72h).
+                </p>
+              </div>
+
+              <div className="p-3.5 bg-indigo-50/70 border border-indigo-200 rounded-xl space-y-1">
+                <span className="text-[11px] font-bold text-indigo-900 block">Constituent Entity Extraction</span>
+                <p className="text-slate-600 text-[11px] leading-relaxed">
+                  Extracts donor identity, gift amounts, grant application IDs, deadlines, and CSR opportunities.
+                </p>
+              </div>
+            </div>
+
+            {/* 25 Categories Matrix Table */}
+            <div className="border border-slate-200 rounded-2xl overflow-hidden shadow-2xs">
+              <div className="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
+                <span className="text-xs font-bold text-slate-800">
+                  Comprehensive 25-Category Operational Routing Register
+                </span>
+                <span className="text-[10px] font-mono text-slate-500">
+                  All 25 Categories Grounded
+                </span>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-100/70 text-slate-500 uppercase font-mono text-[10px]">
+                    <tr>
+                      <th className="p-2.5">Code</th>
+                      <th className="p-2.5">Category Label</th>
+                      <th className="p-2.5">Department & Lead</th>
+                      <th className="p-2.5">Default Priority</th>
+                      <th className="p-2.5">SLA Target</th>
+                      <th className="p-2.5">Safeguarding</th>
+                      <th className="p-2.5">Active Volume</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {Object.entries(EMAIL_CATEGORY_METADATA).map(([catKey, meta]) => {
+                      const count = threads.filter((t) => t.classification === catKey).length;
+                      const priorityCfg = PRIORITY_CONFIG[meta.defaultPriority];
+                      return (
+                        <tr key={catKey} className="hover:bg-slate-50/50 transition-colors">
+                          <td className="p-2.5 font-mono font-bold text-slate-900">{meta.code}</td>
+                          <td className="p-2.5 font-semibold text-slate-800">{meta.label}</td>
+                          <td className="p-2.5 text-slate-600">{meta.department}</td>
+                          <td className="p-2.5">
+                            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${priorityCfg.badgeColor}`}>
+                              {priorityCfg.label}
+                            </span>
+                          </td>
+                          <td className="p-2.5 font-mono text-slate-600">{priorityCfg.slaHours} hours</td>
+                          <td className="p-2.5">
+                            {meta.isSafeguardingBoundary ? (
+                              <span className="px-2 py-0.5 bg-rose-100 text-rose-800 border border-rose-300 font-bold text-[10px] rounded-full">
+                                QUARANTINED
+                              </span>
+                            ) : (
+                              <span className="text-slate-400 font-mono text-[11px]">—</span>
+                            )}
+                          </td>
+                          <td className="p-2.5 font-mono font-bold text-teal-800">{count} Threads</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* TAB 11: CRM CONNECTIONS & CONSTITUENT BRIDGE (Milestone 23.07) */}
+        {/* ========================================================================= */}
+        {activeTab === 'crm_connections' && (
+          <div className="flex-1 h-full bg-white border border-slate-200 rounded-2xl p-5 shadow-xs overflow-y-auto space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-mono text-[10px] font-bold bg-teal-100 text-teal-900 border border-teal-300 px-2 py-0.5 rounded-full uppercase">
+                    Milestone 23.07
+                  </span>
+                  <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <DollarSign className="w-3 h-3 text-emerald-600" />
+                    Bi-directional Relationship Intelligence
+                  </span>
+                </div>
+                <h3 className="text-sm font-bold text-slate-900">
+                  Email-to-CRM Constituent Bridge
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Connect incoming and historical correspondence to Major Donors, Foundation Grants, Corporate CSR partners, and Community Volunteers without data duplication.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (onOpenFundraisingCRM) onOpenFundraisingCRM('overview');
+                  else onViewChange('fundraising');
+                }}
+                className="px-3.5 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+              >
+                <span>Launch Full Fundraising CRM →</span>
+              </button>
+            </div>
+
+            {/* Metric Summary */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                <span className="text-slate-500 text-[11px] block">Active Linked Donors</span>
+                <span className="text-lg font-bold text-slate-900">{donors.length} Profiles</span>
+              </div>
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                <span className="text-slate-500 text-[11px] block">Major Gifts Pipeline</span>
+                <span className="text-lg font-bold text-teal-900">${(pipeline.reduce((s, p) => s + p.estimatedAmount, 0) / 1000).toFixed(0)}k</span>
+              </div>
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                <span className="text-slate-500 text-[11px] block">Active Grants</span>
+                <span className="text-lg font-bold text-indigo-900">{grants.length} Opportunities</span>
+              </div>
+              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                <span className="text-slate-500 text-[11px] block">Corporate Partnerships</span>
+                <span className="text-lg font-bold text-teal-900">{partnerships.length} Corporate</span>
+              </div>
+            </div>
+
+            {/* Linked Threads List */}
+            <div className="space-y-3">
+              <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+                Linked Email Conversations Across Donors & Partners
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {threads
+                  .filter((t) => t.crmLink || t.classification.includes('donor') || t.classification.includes('grant') || t.classification.includes('corporate'))
+                  .map((t) => (
+                    <div
+                      key={t.id}
+                      className="border border-slate-200 rounded-2xl p-4 bg-slate-50/50 hover:bg-white hover:shadow-2xs transition-all space-y-2 text-xs"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-slate-900 truncate">{t.threadSubject}</span>
+                        <span className="font-mono text-[10px] text-slate-400">
+                          {new Date(t.lastMessageAt).toLocaleDateString()}
+                        </span>
+                      </div>
+
+                      <div className="text-[11px] text-slate-500">
+                        Constituent: <strong className="text-slate-800">{t.participantEmails[0]}</strong>
+                      </div>
+
+                      {t.crmLink && (
+                        <div className="p-2 rounded-xl bg-teal-50 border border-teal-200 text-teal-950 flex items-center justify-between text-[11px]">
+                          <span>
+                            Linked CRM: <strong>{t.crmLink.entityName}</strong> ({t.crmLink.entityType})
+                          </span>
+                          <span className="text-[10px] font-bold text-teal-800">Verified</span>
+                        </div>
+                      )}
+
+                      <div className="flex items-center justify-between pt-1">
+                        <span className="font-mono text-[10px] text-slate-500">
+                          Mailbox: {t.mailboxEmail}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedThreadId(t.id);
+                            setActiveTab('all_mailboxes');
+                          }}
+                          className="text-teal-800 hover:text-teal-950 font-bold underline cursor-pointer"
+                        >
+                          View Thread →
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* TAB 12: SETTINGS & APPROVED TEMPLATES (Milestone 23.09) */}
+        {/* ========================================================================= */}
+        {activeTab === 'settings' && (
+          <div className="flex-1 h-full bg-white border border-slate-200 rounded-2xl p-5 shadow-xs overflow-y-auto space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-mono text-[10px] font-bold bg-teal-100 text-teal-900 border border-teal-300 px-2 py-0.5 rounded-full uppercase">
+                    Settings & Security
+                  </span>
+                  <span className="text-[10px] font-bold bg-indigo-100 text-indigo-800 border border-indigo-300 px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <FileText className="w-3 h-3 text-indigo-600" />
+                    12 Approved Templates · AR01–AR10 Rules · Signatures
+                  </span>
+                </div>
+                <h3 className="text-sm font-bold text-slate-900">
+                  Email Operations Configuration & Templates
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Approved organizational communication templates with token interpolation, deterministic auto-responder rules, and authorized officer signatures.
+                </p>
+              </div>
+
+              {/* Sub-Section Switcher */}
+              <div className="flex items-center bg-slate-100 p-0.5 rounded-xl text-xs font-semibold">
+                <button
+                  type="button"
+                  onClick={() => setSettingsActiveSection('templates')}
+                  className={`px-3 py-1 rounded-lg transition-colors cursor-pointer ${
+                    settingsActiveSection === 'templates'
+                      ? 'bg-[#104F57] text-white shadow-2xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  12 Templates
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSettingsActiveSection('autoresponders')}
+                  className={`px-3 py-1 rounded-lg transition-colors cursor-pointer ${
+                    settingsActiveSection === 'autoresponders'
+                      ? 'bg-[#104F57] text-white shadow-2xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Auto-Responders
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSettingsActiveSection('signatures')}
+                  className={`px-3 py-1 rounded-lg transition-colors cursor-pointer ${
+                    settingsActiveSection === 'signatures'
+                      ? 'bg-[#104F57] text-white shadow-2xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Signatures & RBAC
+                </button>
+              </div>
+            </div>
+
+            {/* Sub-Section 1: 12 Approved Templates */}
+            {settingsActiveSection === 'templates' && (
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+                    12 Pre-Approved Operational Email Templates with Dynamic Variable Tokens
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setTargetTemplateInsert('compose');
+                      setIsTemplateModalOpen(true);
+                    }}
+                    className="px-3 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border border-indigo-200 rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer"
+                  >
+                    <Plus className="w-3 h-3" />
+                    <span>Browse & Insert Template</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
+                  {EMAIL_TEMPLATES.map((tmpl) => (
+                    <div
+                      key={tmpl.id}
+                      className="border border-slate-200 rounded-2xl p-4 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition-all flex flex-col justify-between space-y-2 text-xs"
+                    >
+                      <div>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-bold text-slate-900 text-xs">{tmpl.name}</span>
+                          <span className="text-[10px] font-mono font-bold bg-indigo-100 text-indigo-800 px-1.5 py-0.2 rounded">
+                            {tmpl.category}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-500 mb-2">{tmpl.description}</p>
+                        <div className="text-[11px] font-semibold text-slate-700 bg-white p-2 rounded-lg border border-slate-200 mb-2">
+                          <span className="text-slate-400 font-normal">Subject:</span> {tmpl.subjectTemplate || tmpl.subject}
+                        </div>
+                        <div className="flex flex-wrap gap-1 text-[10px] font-mono text-teal-800">
+                          {tmpl.variables.map((v) => (
+                            <span key={v} className="bg-teal-50 border border-teal-200 px-1.5 py-0.2 rounded">
+                              {`{{${v}}}`}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between">
+                        <span className="text-[10px] text-slate-500 font-mono">
+                          Tone: <strong className="capitalize">{tmpl.suggestedTone.replace('_', ' ')}</strong>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => handleInsertTemplate(tmpl)}
+                          className="px-2.5 py-1 bg-[#104F57] hover:bg-teal-900 text-white rounded-lg text-[11px] font-bold cursor-pointer"
+                        >
+                          Use Template
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Sub-Section 2: Auto-Responders */}
+            {settingsActiveSection === 'autoresponders' && (
+              <div className="space-y-4">
+                <div className="bg-rose-50/70 border border-rose-200 rounded-xl p-3 text-xs text-rose-950 flex items-start gap-2">
+                  <ShieldCheck className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                  <span>
+                    <strong>Strict Safeguarding Rule:</strong> Auto-responders are strictly disabled for crisis correspondence, survivor referrals, and restricted executive mail per non-disclosure mandates.
+                  </span>
+                </div>
+
+                <div className="space-y-3">
+                  {autoRules.map((rule) => (
+                    <div
+                      key={rule.id}
+                      className="border border-slate-200 rounded-xl p-3.5 bg-slate-50/50 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs"
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-mono font-bold text-xs px-2 py-0.5 rounded bg-[#104F57] text-white">
+                            {rule.code}
+                          </span>
+                          <span className="font-bold text-slate-900">{rule.name}</span>
+                          <span className="text-slate-400 font-mono text-[11px]">({rule.mailbox})</span>
+                        </div>
+                        <p className="text-slate-600 text-[11px]">{rule.trigger}</p>
+                        <div className="text-[11px] text-slate-700 font-mono bg-white p-2 rounded border border-slate-200">
+                          &quot;{rule.approvedTemplate}&quot;
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-3 shrink-0">
+                        <span className="font-mono text-slate-500 text-[11px]">
+                          Sent: {rule.totalTriggeredCount}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => db.toggleAutoResponderRule(rule.id, !rule.enabled)}
+                          className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                            rule.enabled
+                              ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                              : 'bg-slate-200 text-slate-600'
+                          }`}
+                        >
+                          {rule.enabled ? 'ACTIVE' : 'DISABLED'}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Sub-Section 3: Signatures & RBAC */}
+            {settingsActiveSection === 'signatures' && (
+              <div className="space-y-4 text-xs">
+                <span className="text-xs font-bold text-slate-800 uppercase tracking-wide block">
+                  Authorized Organizational Signers & Legal Headers
+                </span>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    {
+                      name: 'Comfort Dondo',
+                      title: 'Executive Director & Founder',
+                      org: 'Phumulani AI Community Platform',
+                      email: 'comfort@phumulani.org',
+                      phone: '(612) 555-0199',
+                      badge: 'Executive Authorization',
+                    },
+                    {
+                      name: 'Sister Miriam K.',
+                      title: 'Director of Safe Transitional Care & Safeguarding Lead',
+                      org: 'Phumulani Healing Sisterhood',
+                      email: 'miriam@phumulani.org',
+                      phone: '(612) 555-0198',
+                      badge: 'Confidential Safeguarding',
+                    },
+                    {
+                      name: 'Dr. Elena Rostova',
+                      title: 'Board Secretary & Governance Officer',
+                      org: 'Phumulani Board of Directors',
+                      email: 'elena@phumulani.org',
+                      phone: '(612) 555-0197',
+                      badge: 'Governance & Grants',
+                    },
+                    {
+                      name: 'David Mwangi, CPA',
+                      title: 'Chief Financial Officer & Compliance Director',
+                      org: 'Phumulani Financial Stewardship',
+                      email: 'david@phumulani.org',
+                      phone: '(612) 555-0196',
+                      badge: 'Finance & Compliance',
+                    },
+                  ].map((sig) => (
+                    <div
+                      key={sig.name}
+                      className="border border-slate-200 rounded-2xl p-4 bg-slate-50/50 space-y-2 text-xs"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-slate-900 text-sm">{sig.name}</span>
+                        <span className="text-[10px] font-mono font-bold bg-teal-100 text-teal-800 px-2 py-0.5 rounded-full">
+                          {sig.badge}
+                        </span>
+                      </div>
+                      <p className="text-slate-600 font-semibold">{sig.title}</p>
+                      <p className="text-slate-500">{sig.org}</p>
+                      <div className="text-[11px] font-mono text-slate-600 pt-1 border-t border-slate-200">
+                        {sig.email} · {sig.phone}
+                      </div>
+                      <div className="text-[10px] text-slate-400 italic">
+                        Phumulani 501(c)(3) Nonprofit · Minneapolis, MN · EIN: 88-1234567
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* 5. NEW EMAIL COMPOSER MODAL */}
@@ -3260,6 +4625,236 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 className="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-semibold cursor-pointer"
               >
                 Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 10. TEMPLATE PICKER MODAL (Milestone 23.09) */}
+      {isTemplateModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-3xl overflow-hidden animate-fadeIn text-xs space-y-4 p-5 flex flex-col max-h-[90vh]">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2">
+                <FileText className="w-5 h-5 text-indigo-700" />
+                <div>
+                  <h3 className="font-bold text-sm text-slate-900">
+                    Approved Organizational Email Templates
+                  </h3>
+                  <p className="text-[11px] text-slate-500">
+                    Insert pre-approved correspondence with automatic constituent token interpolation.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsTemplateModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 cursor-pointer"
+              >
+                <XCircle className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Category Filter Pills */}
+            <div className="flex items-center gap-1 overflow-x-auto pb-1 text-[11px] scrollbar-none">
+              {['all', 'donations', 'grants', 'partnerships', 'volunteers', 'safeguarding', 'media', 'general'].map((cat) => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => setSelectedTemplateCategory(cat)}
+                  className={`px-2.5 py-1 rounded-full font-semibold capitalize whitespace-nowrap transition-colors cursor-pointer ${
+                    selectedTemplateCategory === cat
+                      ? 'bg-[#104F57] text-white shadow-2xs'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+
+            {/* Template Cards Grid */}
+            <div className="flex-1 overflow-y-auto space-y-3 pr-1">
+              {EMAIL_TEMPLATES
+                .filter((tmpl) => selectedTemplateCategory === 'all' || tmpl.category === selectedTemplateCategory)
+                .map((tmpl) => (
+                  <div
+                    key={tmpl.id}
+                    className="border border-slate-200 rounded-xl p-3.5 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition-all space-y-2"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-slate-900 text-xs">{tmpl.name}</span>
+                        <span className="text-[10px] font-mono font-bold bg-indigo-100 text-indigo-800 px-1.5 py-0.2 rounded">
+                          {tmpl.category}
+                        </span>
+                      </div>
+                      <span className="text-[10px] text-slate-400 font-mono">
+                        Tone: <strong className="capitalize">{tmpl.suggestedTone.replace('_', ' ')}</strong>
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] text-slate-500">{tmpl.description}</p>
+
+                    <div className="text-[11px] font-semibold text-slate-800 bg-white p-2 rounded-lg border border-slate-200">
+                      <span className="text-slate-400 font-normal">Subject:</span> {tmpl.subjectTemplate || tmpl.subject}
+                    </div>
+
+                    <div className="flex items-center justify-between pt-1">
+                      <div className="flex flex-wrap gap-1 text-[10px] font-mono text-teal-800">
+                        {tmpl.variables.slice(0, 4).map((v) => (
+                          <span key={v} className="bg-teal-50 border border-teal-200 px-1.5 py-0.2 rounded">
+                            {`{{${v}}}`}
+                          </span>
+                        ))}
+                        {tmpl.variables.length > 4 && (
+                          <span className="text-slate-400">+{tmpl.variables.length - 4} more</span>
+                        )}
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => handleInsertTemplate(tmpl)}
+                        className="px-3 py-1 bg-[#104F57] hover:bg-teal-900 text-white rounded-lg text-xs font-bold cursor-pointer shadow-2xs"
+                      >
+                        Insert into {targetTemplateInsert === 'compose' ? 'Composer' : 'Draft'}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+            </div>
+
+            <div className="flex justify-end pt-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setIsTemplateModalOpen(false)}
+                className="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-semibold cursor-pointer"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 11. NEW FOLLOW-UP TASK MODAL (Milestone 23.08) */}
+      {isNewTaskModalOpen && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md overflow-hidden animate-fadeIn text-xs space-y-4 p-5">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="flex items-center gap-2">
+                <CheckSquare className="w-5 h-5 text-teal-800" />
+                <div>
+                  <h3 className="font-bold text-sm text-slate-900">
+                    Create Follow-Up Task
+                  </h3>
+                  <p className="text-[11px] text-slate-500">
+                    Assign an operational commitment linked to this correspondence
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsNewTaskModalOpen(false)}
+                className="text-slate-400 hover:text-slate-600 cursor-pointer"
+              >
+                <XCircle className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">Task Title / Action:</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Confirm oral testimony time with Committee Secretary"
+                  value={newTaskTitle}
+                  onChange={(e) => setNewTaskTitle(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs font-semibold focus:outline-hidden focus:border-teal-700"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Assign to Staff:</label>
+                  <select
+                    value={newTaskAssignee}
+                    onChange={(e) => setNewTaskAssignee(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs font-medium cursor-pointer"
+                  >
+                    {EMAIL_STAFF_MEMBERS.map((st) => (
+                      <option key={st.id} value={st.name}>
+                        {st.name} ({st.role})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Due Date:</label>
+                  <input
+                    type="date"
+                    value={newTaskDueDate}
+                    onChange={(e) => setNewTaskDueDate(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Priority Level:</label>
+                  <select
+                    value={newTaskPriority}
+                    onChange={(e) => setNewTaskPriority(e.target.value as any)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs font-semibold cursor-pointer"
+                  >
+                    <option value="urgent">Urgent (P0/P1 SLA)</option>
+                    <option value="high">High (&lt;24h)</option>
+                    <option value="normal">Normal (&lt;48h)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block font-bold text-slate-700 mb-1">Task Category:</label>
+                  <select
+                    value={newTaskType}
+                    onChange={(e) => setNewTaskType(e.target.value as any)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs font-semibold cursor-pointer"
+                  >
+                    <option value="email_reply">Email Reply</option>
+                    <option value="crm_update">CRM Contact Update</option>
+                    <option value="calendar_booking">Calendar Booking</option>
+                    <option value="grant_deadline">Grant Deadline</option>
+                    <option value="safeguarding_review">Safeguarding Review</option>
+                  </select>
+                </div>
+              </div>
+
+              {selectedThread && (
+                <div className="p-2.5 rounded-xl bg-teal-50 border border-teal-200 text-teal-950 text-[11px]">
+                  <strong>Linked to Thread:</strong> {selectedThread.threadSubject} ({selectedThread.mailboxEmail})
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setIsNewTaskModalOpen(false)}
+                className="px-3 py-1.5 border border-slate-200 rounded-xl hover:bg-slate-100 font-semibold cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={handleCreateFollowUpTask}
+                className="px-4 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+              >
+                <CheckSquare className="w-3.5 h-3.5" />
+                <span>Create Task</span>
               </button>
             </div>
           </div>

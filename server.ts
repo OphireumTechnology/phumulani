@@ -162,7 +162,7 @@ const handleHealthCheck = async (_req: Request, res: Response) => {
     operationalMode: envConfig.operationalMode,
     applicationReadiness: dbInfo.applicationReadiness,
     service: 'Phumulani AI Community Platform',
-    version: '1.0.0-phase22',
+    version: '1.0.0-phase23',
     environment: envConfig.phumulaniEnvironment,
     timestamp: new Date().toISOString(),
     basePath: BASE_PATH,

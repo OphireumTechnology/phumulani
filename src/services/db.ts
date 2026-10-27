@@ -63,6 +63,7 @@ import {
   EmailConflictRecord,
   SyncAuditLogItem,
   EmailFolder,
+  ConversationStatus,
 } from '../types/emailEnterprise';
 import {
   INITIAL_CONNECTED_MAILBOXES,
@@ -1443,6 +1444,49 @@ class DatabaseService {
     );
     this.saveState({ ...this.state, enterpriseEmailThreads: updated });
     this.appendAuditLog('EMAIL_THREAD_ASSIGNED', `Thread ${threadId} assigned to ${staffName} by ${actor.name}`);
+  }
+
+  public addThreadInternalNote(threadId: string, text: string, authorName?: string): void {
+    const actor = this.state.currentUser;
+    const noteAuthor = authorName || actor.name;
+    const thread = this.state.enterpriseEmailThreads.find((t) => t.id === threadId);
+    if (!thread) return;
+
+    const newNote = {
+      id: `note-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
+      authorName: noteAuthor,
+      text: text.trim(),
+      createdAt: new Date().toISOString(),
+    };
+
+    const updated = this.state.enterpriseEmailThreads.map((t) =>
+      t.id === threadId
+        ? {
+            ...t,
+            internalNotes: [...(t.internalNotes || []), newNote],
+          }
+        : t
+    );
+    this.saveState({ ...this.state, enterpriseEmailThreads: updated });
+    this.appendAuditLog(
+      'EMAIL_THREAD_INTERNAL_NOTE_ADDED',
+      `Internal staff note added to thread "${thread.threadSubject}" by ${noteAuthor}`
+    );
+  }
+
+  public updateThreadStatus(threadId: string, status: ConversationStatus): void {
+    const actor = this.state.currentUser;
+    const thread = this.state.enterpriseEmailThreads.find((t) => t.id === threadId);
+    if (!thread) return;
+
+    const updated = this.state.enterpriseEmailThreads.map((t) =>
+      t.id === threadId ? { ...t, status } : t
+    );
+    this.saveState({ ...this.state, enterpriseEmailThreads: updated });
+    this.appendAuditLog(
+      'EMAIL_THREAD_STATUS_UPDATED',
+      `Thread "${thread.threadSubject}" status updated to [${status}] by ${actor.name}`
+    );
   }
 
   public saveEmailDraft(threadId: string, draft: EmailDraft): void {
