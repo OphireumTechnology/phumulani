@@ -399,4 +399,5 @@ export interface AuditLogItem {
 export * from './emailEnterprise';
 export * from './fundraising';
 export * from './masterAdmin';
+export * from './operations';
 

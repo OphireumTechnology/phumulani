@@ -166,6 +166,22 @@ export default function App() {
             onViewChange={setActiveView}
           />
         )}
+
+        {activeView === 'operations' && (
+          <MasterAdministratorView
+            currentUser={dbState.currentUser}
+            onViewChange={setActiveView}
+            initialTab="operations_command"
+          />
+        )}
+
+        {activeView === 'notifications' && (
+          <MasterAdministratorView
+            currentUser={dbState.currentUser}
+            onViewChange={setActiveView}
+            initialTab="internal_notifications"
+          />
+        )}
       </main>
 
       {/* 4. INTERACTIVE WEBSITE CONCIERGE (AGENT A10) */}

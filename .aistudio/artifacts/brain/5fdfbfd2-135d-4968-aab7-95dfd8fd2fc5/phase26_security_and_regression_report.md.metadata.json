@@ -1,0 +1,5 @@
+{
+  "summary":  "Phase 26 Security, Privacy, Safeguarding & Regression Report documenting M26.14 and M26.15 implementation, all 15 negative-access penetration probes (SEC-MEAL-01 through SEC-MEAL-15), VAWA Section 1367 zero-disclosure firewall, and preservation of all 341 tests.",
+  "updatedAt":  "2026-10-27T08:51:25.966028699Z",
+  "userFacing":  true
+}

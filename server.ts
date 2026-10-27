@@ -18,6 +18,7 @@ import { EnvironmentService } from './src/services/environmentService';
 import { MasterAdminService } from './src/services/masterAdminService';
 import { CommunityProgramsService } from './src/services/communityProgramsService';
 import { FundingCommandService } from './src/services/fundingCommandService';
+import { mealService } from './src/services/mealService';
 import type { PermissionDomain } from './src/types/masterAdmin';
 
 dotenv.config();
@@ -2139,6 +2140,244 @@ app.post('/api/admin/funding/reports/:id/certify', (req: Request, res: Response)
 // 14. Phase 26 Security Penetration Suite
 app.post('/api/admin/funding/security/negative-tests', (_req: Request, res: Response) => {
   const result = fundingService.runPhase26SecurityProbes();
+  res.json(result);
+});
+
+// =============================================================================
+// PHASE 26 MEAL (MONITORING, EVALUATION, ACCOUNTABILITY & LEARNING) ROUTES
+// =============================================================================
+
+// M26.02: MEAL Summary
+app.get('/api/admin/meal/summary', (_req: Request, res: Response) => {
+  res.json(mealService.getMealSummary());
+});
+
+// M26.03: Indicators
+app.get('/api/admin/meal/indicators', (req: Request, res: Response) => {
+  const programId = req.query.programId as string | undefined;
+  res.json({ indicators: mealService.getIndicators(programId) });
+});
+
+app.post('/api/admin/meal/indicators', (req: Request, res: Response) => {
+  try {
+    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
+    const actorName = (req.headers['x-phumulani-actor'] as string) || 'MEAL Staff';
+    const indicator = mealService.createIndicator(req.body, { role: actorRole, name: actorName });
+    res.status(201).json(indicator);
+  } catch (err: any) {
+    res.status(403).json({ error: err.message });
+  }
+});
+
+// M26.04: Outputs
+app.get('/api/admin/meal/outputs', (req: Request, res: Response) => {
+  const programId = req.query.programId as string | undefined;
+  res.json({ outputs: mealService.getOutputs(programId) });
+});
+
+app.post('/api/admin/meal/outputs', (req: Request, res: Response) => {
+  try {
+    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
+    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Staff Reporter';
+    const output = mealService.recordOutput(req.body, { role: actorRole, name: actorName });
+    res.status(201).json(output);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/meal/outputs/:id/verify', (req: Request, res: Response) => {
+  try {
+    const actorRole = (req.headers['x-phumulani-role'] as string) || 'PROGRAM_MANAGER';
+    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+    const { verified, correctionNotes } = req.body;
+    const output = mealService.verifyOutput(req.params.id, Boolean(verified), correctionNotes, { role: actorRole, name: actorName });
+    res.json(output);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// M26.05: Outcome Evaluations
+app.get('/api/admin/meal/evaluations', (req: Request, res: Response) => {
+  const programId = req.query.programId as string | undefined;
+  res.json({ evaluations: mealService.getOutcomeEvaluations(programId) });
+});
+
+app.post('/api/admin/meal/evaluations', (req: Request, res: Response) => {
+  try {
+    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
+    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sarah Chen';
+    const evaluation = mealService.createOutcomeEvaluation(req.body, { role: actorRole, name: actorName });
+    res.status(201).json(evaluation);
+  } catch (err: any) {
+    res.status(403).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/meal/evaluations/:id/approve', (req: Request, res: Response) => {
+  try {
+    const actorRole = (req.headers['x-phumulani-role'] as string) || 'EXECUTIVE_DIRECTOR';
+    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+    const evaluation = mealService.approveOutcomeEvaluation(req.params.id, req.body.comments || 'Approved by Executive Director', {
+      role: actorRole,
+      name: actorName,
+    });
+    res.json(evaluation);
+  } catch (err: any) {
+    res.status(403).json({ error: err.message });
+  }
+});
+
+// M26.06: Evidence Records
+app.get('/api/admin/meal/evidence', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
+  const dept = (req.headers['x-phumulani-dept'] as string) || 'DEPT-PROG';
+  res.json({ evidence: mealService.getEvidenceRecords({ role: actorRole, departmentId: dept }) });
+});
+
+app.post('/api/admin/meal/evidence', (req: Request, res: Response) => {
+  try {
+    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
+    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sarah Chen';
+    const record = mealService.addEvidenceRecord(req.body, { role: actorRole, name: actorName });
+    res.status(201).json(record);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// M26.07: Community Feedback
+app.get('/api/admin/meal/feedback', (req: Request, res: Response) => {
+  const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
+  const dept = (req.headers['x-phumulani-dept'] as string) || 'DEPT-PROG';
+  res.json({ feedback: mealService.getCommunityFeedback({ role: actorRole, departmentId: dept }) });
+});
+
+app.post('/api/admin/meal/feedback', (req: Request, res: Response) => {
+  try {
+    const { feedbackType, submissionChannel, content, programId } = req.body;
+    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
+    const record = mealService.submitCommunityFeedback(feedbackType, submissionChannel, content, programId, { role: actorRole });
+    res.status(201).json(record);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// M26.08: Grant Deliverables
+app.get('/api/admin/meal/grant-deliverables', (_req: Request, res: Response) => {
+  res.json({ deliverables: mealService.getGrantDeliverables() });
+});
+
+app.patch('/api/admin/meal/grant-deliverables/:id', (req: Request, res: Response) => {
+  try {
+    const { verifiedCount, status, complianceNotes } = req.body;
+    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
+    const updated = mealService.updateGrantDeliverableProgress(req.params.id, Number(verifiedCount), status, complianceNotes, {
+      role: actorRole,
+    });
+    res.json(updated);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// M26.09: Volunteer Impact Analytics
+app.get('/api/admin/meal/volunteers', (_req: Request, res: Response) => {
+  res.json({ volunteerAnalytics: mealService.getVolunteerAnalytics() });
+});
+
+// M26.10: Program Risks
+app.get('/api/admin/meal/risks', (req: Request, res: Response) => {
+  const programId = req.query.programId as string | undefined;
+  res.json({ risks: mealService.getProgramRisks(programId) });
+});
+
+app.post('/api/admin/meal/risks', (req: Request, res: Response) => {
+  try {
+    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
+    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Staff Reporter';
+    const risk = mealService.createProgramRisk(req.body, { role: actorRole, name: actorName });
+    res.status(201).json(risk);
+  } catch (err: any) {
+    res.status(403).json({ error: err.message });
+  }
+});
+
+app.patch('/api/admin/meal/risks/:id/status', (req: Request, res: Response) => {
+  try {
+    const { status, note } = req.body;
+    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
+    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Staff Member';
+    const updated = mealService.updateProgramRiskStatus(req.params.id, status, note || 'Status update', {
+      role: actorRole,
+      name: actorName,
+    });
+    res.json(updated);
+  } catch (err: any) {
+    res.status(403).json({ error: err.message });
+  }
+});
+
+// M26.11: AI Impact Narrative Drafting
+app.post('/api/admin/meal/ai-narrative', (req: Request, res: Response) => {
+  const { reportType, programId } = req.body;
+  const draft = mealService.draftAiImpactNarrative(reportType || 'ORGANIZATIONAL_IMPACT', programId);
+  res.json(draft);
+});
+
+// M26.12 & M26.13: Reports & Governance
+app.get('/api/admin/meal/reports', (_req: Request, res: Response) => {
+  res.json({ reports: mealService.getMealReports() });
+});
+
+app.post('/api/admin/meal/reports', (req: Request, res: Response) => {
+  try {
+    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
+    const actorName = (req.headers['x-phumulani-actor'] as string) || 'MEAL Officer';
+    const report = mealService.createMealReport(req.body, { role: actorRole, name: actorName });
+    res.status(201).json(report);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/meal/reports/:id/approve', (req: Request, res: Response) => {
+  try {
+    const actorRole = (req.headers['x-phumulani-role'] as string) || 'EXECUTIVE_DIRECTOR';
+    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+    const approved = mealService.executiveApproveReport(req.params.id, { role: actorRole, name: actorName });
+    res.json(approved);
+  } catch (err: any) {
+    res.status(403).json({ error: err.message });
+  }
+});
+
+app.get('/api/admin/meal/reports/:id/export/html', (req: Request, res: Response) => {
+  try {
+    const html = mealService.exportReportAsHtml(req.params.id);
+    res.setHeader('Content-Type', 'text/html');
+    res.send(html);
+  } catch (err: any) {
+    res.status(404).send(`Report error: ${err.message}`);
+  }
+});
+
+app.get('/api/admin/meal/reports/:id/export/csv', (req: Request, res: Response) => {
+  try {
+    const csv = mealService.exportReportAsCsv(req.params.id);
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', `attachment; filename="${req.params.id}.csv"`);
+    res.send(csv);
+  } catch (err: any) {
+    res.status(404).json({ error: err.message });
+  }
+});
+
+// M26.14 & M26.15: Negative-Access Security Probes
+app.post('/api/admin/meal/security/negative-tests', (_req: Request, res: Response) => {
+  const result = mealService.runPhase26MealSecurityProbes();
   res.json(result);
 });
 

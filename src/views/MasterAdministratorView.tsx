@@ -41,6 +41,8 @@ import { FundraisingPipelinesTab } from '../components/masterAdmin/funding/Fundr
 import { RestrictedFundsTab } from '../components/masterAdmin/funding/RestrictedFundsTab';
 import { FunderReportingTab } from '../components/masterAdmin/funding/FunderReportingTab';
 import { FundingCalendarTab } from '../components/masterAdmin/funding/FundingCalendarTab';
+import { OperationsCommandCenterTab } from '../components/masterAdmin/operations/OperationsCommandCenterTab';
+import { InternalNotificationsTab } from '../components/masterAdmin/operations/InternalNotificationsTab';
 import {
   TrendingUp,
   Building2,
@@ -264,6 +266,8 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
     { id: 'restricted_funds_p26', label: '24 Restricted Funds (M26.09)', icon: Layers, badge: '$110k' },
     { id: 'funder_reporting_p26', label: '25 Funder Reporting (M26.15)', icon: FileCheck2, badge: 'Compliance' },
     { id: 'funding_calendar_p26', label: '26 Reconciliation & Security (M26.13)', icon: Calendar, badge: '20 Probes' },
+    { id: 'operations_command', label: '27 Unified Operations (M27.02)', icon: Layers, badge: 'P27 Live' },
+    { id: 'internal_notifications', label: '28 Internal Notifications (M27.05)', icon: Bell, badge: 'Inbox' },
     { id: 'fundraising_command_center', label: 'Fundraising & CRM', icon: DollarSign, badge: 'Active' },
     { id: 'email_command_center', label: 'Email Command Center', icon: Mail, badge: 'P0 Enterprise' },
     { id: 'ai_workforce', label: 'AI Workforce (18 Agents)', icon: Bot, badge: pausedAgentsCount > 0 ? `${pausedAgentsCount} Paused` : '18 Active' },
@@ -1118,6 +1122,26 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
           {/* ============================================================ */}
           {activeModule === 'funding_calendar_p26' && (
             <FundingCalendarTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 27: UNIFIED OPERATIONS COMMAND CENTER (M27.02)         */}
+          {/* ============================================================ */}
+          {activeModule === 'operations_command' && (
+            <OperationsCommandCenterTab
+              currentUser={currentUser}
+              onNavigateToNotifications={() => setActiveModule('internal_notifications')}
+            />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 28: INTERNAL NOTIFICATION CENTER (M27.05)              */}
+          {/* ============================================================ */}
+          {activeModule === 'internal_notifications' && (
+            <InternalNotificationsTab
+              currentUser={currentUser}
+              onNavigateToRecord={() => setActiveModule('operations_command')}
+            />
           )}
 
           {/* ============================================================ */}

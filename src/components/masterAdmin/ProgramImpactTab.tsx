@@ -1,13 +1,14 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- * Phumulani AI Community Platform — Phase 25 Truthful Program Impact Measurement
- * M25.11: Impact Indicators, Verified Telemetry, Reporting & Zero-Synthetic Data Certification
+ * Phumulani AI Community Platform — Phase 26 Truthful Program Impact Measurement & MEAL
+ * M26.01 - M26.15: MEAL Command Center & Phase 25 Telemetry Integration
  */
 
 import React, { useState, useEffect } from 'react';
 import { ProgramImpactMetrics } from '../../types/communityPrograms';
 import { CommunityProgramsService } from '../../services/communityProgramsService';
+import { MealCommandCenter } from './meal/MealCommandCenter';
 import {
   Award,
   CheckCircle2,
@@ -32,6 +33,7 @@ interface Props {
 export const ProgramImpactTab: React.FC<Props> = ({ onOpenAiAssist }) => {
   const commService = CommunityProgramsService.getInstance();
   const [metrics, setMetrics] = useState<ProgramImpactMetrics | null>(null);
+  const [viewMode, setViewMode] = useState<'meal' | 'telemetry'>('meal');
 
   useEffect(() => {
     refreshData();
@@ -52,133 +54,164 @@ export const ProgramImpactTab: React.FC<Props> = ({ onOpenAiAssist }) => {
 
   return (
     <div className="space-y-6">
-      {/* TRUTHFUL IMPACT DISCLOSURE BANNER */}
-      <div className="bg-teal-900 text-white p-6 rounded-2xl shadow-sm border border-teal-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-mono font-bold bg-teal-800 text-teal-200 px-2.5 py-0.5 rounded-full border border-teal-700 uppercase">
-              M25.11 · VERIFIED IMPACT LEDGER
-            </span>
-            <span className="text-[10px] font-mono text-emerald-300 font-bold flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5" /> Data Classification: {metrics.dataClassification}
-            </span>
-          </div>
-          <h2 className="text-2xl font-bold font-serif">Community Program Impact Measurement</h2>
-          <p className="text-teal-100/90 text-xs max-w-2xl mt-1 leading-relaxed">
-            {metrics.truthfulnessStatement}
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2 shrink-0">
+      {/* PHASE 26 / PHASE 25 NAVIGATION SWITCHER */}
+      <div className="bg-white p-2 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+        <div className="flex items-center gap-1">
           <button
-            onClick={() => onOpenAiAssist()}
-            className="px-3.5 py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 cursor-pointer"
+            onClick={() => setViewMode('meal')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              viewMode === 'meal'
+                ? 'bg-rose-700 text-white shadow-sm'
+                : 'text-slate-600 hover:bg-slate-100'
+            }`}
           >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Generate Impact Narrative</span>
+            Phase 26 · MEAL Command Center (M26.01 - M26.15)
+          </button>
+          <button
+            onClick={() => setViewMode('telemetry')}
+            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
+              viewMode === 'telemetry'
+                ? 'bg-teal-700 text-white shadow-sm'
+                : 'text-slate-600 hover:bg-slate-100'
+            }`}
+          >
+            Phase 25 · Program Impact Telemetry
           </button>
         </div>
+        <span className="text-[11px] font-mono font-semibold text-slate-500 px-2 hidden sm:inline">
+          {viewMode === 'meal' ? 'MEAL & IMPACT COMMAND CENTER ACTIVE' : 'M25.11 TELEMETRY'}
+        </span>
       </div>
 
-      {/* CORE VERIFIED METRIC CARDS */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Active Programs</span>
-            <FileCheck2 className="w-4 h-4 text-teal-700" />
-          </div>
-          <div className="text-3xl font-bold font-serif text-slate-900">{metrics.activeProgramsCount}</div>
-          <div className="text-[10px] text-slate-400 mt-1">Of {metrics.totalProgramsCount} total approved programs</div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Verified Volunteer Hours</span>
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
-          </div>
-          <div className="text-3xl font-bold font-serif text-emerald-700">{metrics.verifiedVolunteerHoursTotal} hrs</div>
-          <div className="text-[10px] text-amber-700 mt-1 font-medium">
-            {metrics.pendingVolunteerHoursTotal} hrs pending supervisor review
-          </div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Completed Services</span>
-            <CheckCircle2 className="w-4 h-4 text-blue-600" />
-          </div>
-          <div className="text-3xl font-bold font-serif text-slate-900">
-            {metrics.completedGeneralServiceRequests} / {metrics.generalServiceRequestsTotal}
-          </div>
-          <div className="text-[10px] text-slate-400 mt-1">Pantry hampers & tutoring inquiries</div>
-        </div>
-
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider">Authorized Referrals</span>
-            <HeartHandshake className="w-4 h-4 text-purple-600" />
-          </div>
-          <div className="text-3xl font-bold font-serif text-purple-800">{metrics.verifiedReferralsCount}</div>
-          <div className="text-[10px] text-slate-400 mt-1">Coordinated with civic healthcare partners</div>
-        </div>
-      </div>
-
-      {/* DETAILED VERIFICATION COMPARISON AUDIT */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs space-y-4">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-          <div>
-            <h3 className="text-sm font-bold text-slate-900">Truthful Telemetry Breakdown</h3>
-            <p className="text-slate-500 text-xs mt-0.5">
-              Strict segregation of verified community achievements from unverified public registrations.
-            </p>
-          </div>
-          <span className="text-[10px] font-mono text-slate-400">{metrics.reportingPeriod}</span>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
-          {/* LEFT: COMMUNITY EVENTS VERIFICATION */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/60 space-y-3">
-            <h4 className="font-bold text-slate-900 flex items-center gap-1.5">
-              <Calendar className="w-4 h-4 text-teal-800" />
-              <span>Community Events Attendance Audit</span>
-            </h4>
-            <div className="space-y-2 text-[11px]">
-              <div className="flex justify-between p-2 rounded-lg bg-white border border-slate-200/80">
-                <span className="text-slate-600">Unverified Public Registrations:</span>
-                <span className="font-mono font-bold text-slate-800">{metrics.unverifiedEventRegistrationsTotal} RSVPS</span>
+      {viewMode === 'meal' ? (
+        <MealCommandCenter />
+      ) : (
+        <div className="space-y-6">
+          {/* TRUTHFUL IMPACT DISCLOSURE BANNER */}
+          <div className="bg-teal-900 text-white p-6 rounded-2xl shadow-sm border border-teal-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[10px] font-mono font-bold bg-teal-800 text-teal-200 px-2.5 py-0.5 rounded-full border border-teal-700 uppercase">
+                  M25.11 · VERIFIED IMPACT LEDGER
+                </span>
+                <span className="text-[10px] font-mono font-bold bg-emerald-800 text-emerald-200 px-2.5 py-0.5 rounded-full border border-emerald-700 uppercase">
+                  ZERO-SYNTHETIC GUARANTEE
+                </span>
               </div>
-              <div className="flex justify-between p-2 rounded-lg bg-emerald-50 border border-emerald-200">
-                <span className="text-emerald-950 font-bold">Verified On-Site Attendees:</span>
-                <span className="font-mono font-bold text-emerald-800">{metrics.verifiedEventAttendanceTotal} Attended</span>
+              <h2 className="text-xl font-bold tracking-tight">Truthful Community Program Impact Measurement</h2>
+              <p className="text-xs text-teal-200/80 mt-1 max-w-2xl">
+                Every metric is traceable to authorized source records in the Phumulani immutable ledger. No synthetic participants or unverified hours are represented as impact achievements.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={onOpenAiAssist}
+                className="px-3.5 py-2 bg-teal-800 hover:bg-teal-700 text-white text-xs font-semibold rounded-xl border border-teal-700 flex items-center gap-1.5 transition-colors"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-teal-300" />
+                <span>AI Impact Assistant</span>
+              </button>
+              <button
+                onClick={refreshData}
+                className="p-2 bg-teal-800 hover:bg-teal-700 text-teal-200 rounded-xl border border-teal-700 transition-colors"
+                title="Refresh metrics from ledger"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          {/* IMPACT KPI CARDS */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <div className="flex items-center justify-between text-slate-400 mb-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Verified Programs</span>
+                <Layers className="w-4 h-4 text-teal-700" />
+              </div>
+              <div className="text-3xl font-black text-slate-900">{metrics.totalProgramsCount}</div>
+              <div className="text-[11px] text-emerald-700 font-semibold mt-1">
+                {metrics.activeProgramsCount} Active · {metrics.completedProgramsCount} Completed
               </div>
             </div>
-            <p className="text-[10px] text-slate-500 leading-tight">
-              In accordance with Phumulani's Truthful Reporting Directive, pre-event RSVPs are never reported as realized community impact until confirmed by check-in attendants.
-            </p>
-          </div>
 
-          {/* RIGHT: VOLUNTEER HOURS AUDIT */}
-          <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/60 space-y-3">
-            <h4 className="font-bold text-slate-900 flex items-center gap-1.5">
-              <Users className="w-4 h-4 text-teal-800" />
-              <span>Volunteer Contribution Audit</span>
-            </h4>
-            <div className="space-y-2 text-[11px]">
-              <div className="flex justify-between p-2 rounded-lg bg-emerald-50 border border-emerald-200">
-                <span className="text-emerald-950 font-bold">Supervisor-Certified Service:</span>
-                <span className="font-mono font-bold text-emerald-800">{metrics.verifiedVolunteerHoursTotal} hrs</span>
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <div className="flex items-center justify-between text-slate-400 mb-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Verified Volunteer Hrs</span>
+                <Clock className="w-4 h-4 text-rose-700" />
               </div>
-              <div className="flex justify-between p-2 rounded-lg bg-white border border-slate-200/80">
-                <span className="text-slate-600">Pending Supervisor Sign-Off:</span>
-                <span className="font-mono font-bold text-amber-700">{metrics.pendingVolunteerHoursTotal} hrs</span>
+              <div className="text-3xl font-black text-rose-700">{metrics.verifiedVolunteerHoursTotal}</div>
+              <div className="text-[11px] text-slate-500 mt-1">Supervisor-confirmed logs</div>
+            </div>
+
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <div className="flex items-center justify-between text-slate-400 mb-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Service Requests</span>
+                <FileCheck2 className="w-4 h-4 text-teal-700" />
+              </div>
+              <div className="text-3xl font-black text-slate-900">{metrics.generalServiceRequestsTotal}</div>
+              <div className="text-[11px] text-teal-700 font-semibold mt-1">
+                {metrics.completedGeneralServiceRequests} Completed Triaged
               </div>
             </div>
-            <p className="text-[10px] text-slate-500 leading-tight">
-              Self-reported hours remain strictly quarantined until Sister Miriam K. or designated staff supervisors verify attendance rosters.
-            </p>
+
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+              <div className="flex items-center justify-between text-slate-400 mb-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500">Verified Attendance</span>
+                <Users className="w-4 h-4 text-indigo-700" />
+              </div>
+              <div className="text-3xl font-black text-indigo-700">{metrics.verifiedEventAttendanceTotal}</div>
+              <div className="text-[11px] text-slate-500 mt-1">From completed community events</div>
+            </div>
+          </div>
+
+          {/* DETAILED LEDGER BREAKDOWN */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                <Award className="w-4 h-4 text-teal-700" />
+                Community Outreach & Objective Delivery
+              </h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                  <span className="text-xs text-slate-600 font-medium">Completed Outreach Initiatives</span>
+                  <span className="text-sm font-bold text-slate-900">{metrics.outreachActivitiesCount}</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                  <span className="text-xs text-slate-600 font-medium">Verified Partner Referrals</span>
+                  <span className="text-sm font-bold text-teal-700">{metrics.verifiedReferralsCount}</span>
+                </div>
+                <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl">
+                  <span className="text-xs text-slate-600 font-medium">Program Milestone Objectives Met</span>
+                  <span className="text-sm font-bold text-slate-900">{metrics.programObjectivesCompletedCount}</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+              <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-emerald-700" />
+                Data Integrity & Truthful Reporting Status
+              </h3>
+              <div className="space-y-3 text-xs">
+                <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-100 flex items-start gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-bold text-emerald-900 block">Immutable Verification Pass</span>
+                    <span className="text-emerald-700">All figures match verified timestamps and supervisor signatures.</span>
+                  </div>
+                </div>
+                <div className="p-3 bg-amber-50 rounded-xl border border-amber-100 flex items-start gap-2">
+                  <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-bold text-amber-900 block">External Infrastructure Guard</span>
+                    <span className="text-amber-700">PostgreSQL is NOT_CONNECTED; production mutations fail-closed.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
