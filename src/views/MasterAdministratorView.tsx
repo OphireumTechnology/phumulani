@@ -44,6 +44,13 @@ import { FundingCalendarTab } from '../components/masterAdmin/funding/FundingCal
 import { OperationsCommandCenterTab } from '../components/masterAdmin/operations/OperationsCommandCenterTab';
 import { InternalNotificationsTab } from '../components/masterAdmin/operations/InternalNotificationsTab';
 import { UnifiedAiWorkforceView } from '../components/masterAdmin/UnifiedAiWorkforceView';
+import { ContentManagementTab } from '../components/masterAdmin/ContentManagementTab';
+import { UnifiedCommunityOperationsCenter } from '../components/masterAdmin/operations/UnifiedCommunityOperationsCenter';
+import { ExecutiveIntelligenceDashboard } from '../components/masterAdmin/ExecutiveIntelligenceDashboard';
+import { BoardGovernancePortalTab } from '../components/masterAdmin/BoardGovernancePortalTab';
+import { CommunityEngagementTab } from '../components/masterAdmin/CommunityEngagementTab';
+import { TrainingKnowledgeCenterTab } from '../components/masterAdmin/TrainingKnowledgeCenterTab';
+import { WorkflowAutomationEngineTab } from '../components/masterAdmin/WorkflowAutomationEngineTab';
 import {
   TrendingUp,
   Building2,
@@ -100,6 +107,10 @@ import {
   Sparkles,
   Target,
   Award,
+  GraduationCap,
+  GitBranch,
+  MessageSquare,
+  Vote,
 } from 'lucide-react';
 import { FundraisingSubRoute } from '../types/fundraising';
 
@@ -269,6 +280,13 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
     { id: 'funding_calendar_p26', label: '26 Reconciliation & Security (M26.13)', icon: Calendar, badge: '20 Probes' },
     { id: 'operations_command', label: '27 Unified Operations (M27.02)', icon: Layers, badge: 'P27 Live' },
     { id: 'internal_notifications', label: '28 Internal Notifications (M27.05)', icon: Bell, badge: 'Inbox' },
+    { id: 'content_management', label: '29 CMS & Content (M30.03)', icon: Globe, badge: '15 Pages' },
+    { id: 'community_operations_center', label: '30 Community Operations (M33.01)', icon: Layers, badge: 'P33 Hub' },
+    { id: 'executive_intelligence', label: '31 Executive Intelligence (M33.07)', icon: TrendingUp, badge: 'Live KPIs' },
+    { id: 'board_governance', label: '32 Board Governance (M33.08)', icon: Vote, badge: 'Packets' },
+    { id: 'community_engagement', label: '33 Community Engagement (M33.09)', icon: MessageSquare, badge: 'Bulletins' },
+    { id: 'training_knowledge', label: '34 Training & Knowledge (M33.10)', icon: GraduationCap, badge: 'SOPs' },
+    { id: 'workflow_automation', label: '35 Workflow Automation (M33.11)', icon: GitBranch, badge: 'Engine' },
     { id: 'fundraising_command_center', label: 'Fundraising & CRM', icon: DollarSign, badge: 'Active' },
     { id: 'email_command_center', label: 'Email Command Center', icon: Mail, badge: 'P0 Enterprise' },
     { id: 'ai_workforce', label: 'AI Workforce (36 Agents)', icon: Bot, badge: '36 Active' },
@@ -1143,6 +1161,65 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
               currentUser={currentUser}
               onNavigateToRecord={() => setActiveModule('operations_command')}
             />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 29: CONTENT MANAGEMENT SYSTEM & PAGES (M30.03)        */}
+          {/* ============================================================ */}
+          {activeModule === 'content_management' && (
+            <ContentManagementTab
+              currentUser={currentUser}
+              onOpenMediaRegistry={() => setActiveModule('media')}
+            />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 30: UNIFIED COMMUNITY OPERATIONS CENTER (M33.01)       */}
+          {/* ============================================================ */}
+          {activeModule === 'community_operations_center' && (
+            <UnifiedCommunityOperationsCenter
+              currentUser={currentUser}
+              onOpenSourceRecord={(ref) => {
+                if (ref.startsWith('SRV-')) setActiveModule('general_services');
+                else if (ref.startsWith('PROG-')) setActiveModule('community_programs');
+                else if (ref.startsWith('VOL-')) setActiveModule('volunteer_deployment');
+              }}
+            />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 31: EXECUTIVE INTELLIGENCE DASHBOARD (M33.07)          */}
+          {/* ============================================================ */}
+          {activeModule === 'executive_intelligence' && (
+            <ExecutiveIntelligenceDashboard />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 32: BOARD GOVERNANCE PORTAL (M33.08)                   */}
+          {/* ============================================================ */}
+          {activeModule === 'board_governance' && (
+            <BoardGovernancePortalTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 33: COMMUNITY ENGAGEMENT HUB (M33.09)                  */}
+          {/* ============================================================ */}
+          {activeModule === 'community_engagement' && (
+            <CommunityEngagementTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 34: TRAINING & KNOWLEDGE CENTER (M33.10)               */}
+          {/* ============================================================ */}
+          {activeModule === 'training_knowledge' && (
+            <TrainingKnowledgeCenterTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 35: WORKFLOW AUTOMATION ENGINE (M33.11)                */}
+          {/* ============================================================ */}
+          {activeModule === 'workflow_automation' && (
+            <WorkflowAutomationEngineTab currentUser={currentUser} />
           )}
 
           {/* ============================================================ */}

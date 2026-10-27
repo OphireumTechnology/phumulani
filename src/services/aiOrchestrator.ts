@@ -167,7 +167,7 @@ class AIOrchestratorService {
 - Bilingual Youth Mentor & Tutor (academic and college guidance for immigrant students)
 - Job Readiness & Resume Coach (mock interviews and workforce prep)
 - Community Food & Emergency Supply Distribution (St. Paul depot)
-- Tax & Financial Coaching Assistant
+- Financial Literacy & Budgeting Coach (basic budgeting and savings workshops)
 
 You can view details and submit an application on our "Get Involved" page. Applications receive an instant tracking ID and are reviewed by our Community Lead, Amina Yusuf.`;
     }

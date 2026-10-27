@@ -39,6 +39,7 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
   const campaigns = state.campaigns;
 
   const [activeTab, setActiveTab] = useState<'overview' | 'history' | 'sponsorships' | 'tax_statement'>('overview');
+  const [sponsorshipFeedback, setSponsorshipFeedback] = useState<string | null>(null);
 
   // Filter donations for current user if donor, or show all in demo
   const userDonations = donations;
@@ -327,6 +328,13 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
             </p>
           </div>
 
+          {sponsorshipFeedback && (
+            <div className="p-4 bg-purple-50 border border-purple-200 rounded-xl text-xs font-semibold text-[#633C69] flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-[#633C69] flex-shrink-0" />
+              <span>{sponsorshipFeedback}</span>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
             {sponsorshipTiers.map((tier) => (
               <div
@@ -354,7 +362,8 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
 
                 <button
                   onClick={() => {
-                    alert(`Thank you for your interest in the ${tier.name}! Our Executive Director, Comfort Dondo, and Development Team will connect with you.`);
+                    setSponsorshipFeedback(`Thank you for inquiring about the ${tier.name}! Executive Director Comfort Dondo and our Development Team will contact you within 24 business hours.`);
+                    setTimeout(() => setSponsorshipFeedback(null), 7000);
                   }}
                   className="w-full py-2.5 bg-[#633C69] hover:bg-[#4f2f54] text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
                 >

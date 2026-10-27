@@ -369,6 +369,22 @@ export class PostgresPersistenceAdapter {
   }
 
   /**
+   * Update a table row by ID and persist atomically
+   */
+  public async update<T extends TableRowRecord>(table: string, id: string, updates: Partial<T>): Promise<T | null> {
+    await this.ensureInitialized();
+    return this.enqueueWrite(async () => {
+      const records = (this.memoryStore.get(table) || []) as T[];
+      const idx = records.findIndex((r) => r.id === id);
+      if (idx === -1) return null;
+      records[idx] = { ...records[idx], ...updates };
+      this.memoryStore.set(table, records);
+      await this.flushToDurableStorage();
+      return records[idx];
+    });
+  }
+
+  /**
    * Bulk save table rows and persist atomically to disk
    */
   public async saveTable<T extends TableRowRecord>(table: string, records: T[]): Promise<void> {

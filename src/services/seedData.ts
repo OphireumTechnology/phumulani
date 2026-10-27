@@ -200,6 +200,18 @@ export const INITIAL_USERS: User[] = [
     createdAt: '2026-04-05T12:00:00Z',
     lastLoginAt: '2026-10-22T19:15:00Z',
   },
+  {
+    id: 'u-vol-applicant',
+    name: 'Sarah Ochieng',
+    email: 'sarah.ochieng@example.com',
+    role: 'VOLUNTEER_APPLICANT',
+    title: 'Prospective Youth Mentor Applicant',
+    mfaEnabled: false,
+    permissions: ['volunteer:applicant'],
+    status: 'pending_activation',
+    createdAt: '2026-10-25T10:00:00Z',
+    lastLoginAt: '2026-10-27T08:00:00Z',
+  },
   // Phase 13 Development Transparency & Client Collaboration Roles
   {
     id: 'u-client-admin',

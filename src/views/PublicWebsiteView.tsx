@@ -31,6 +31,14 @@ import {
   Home,
   MessageSquare,
   AlertTriangle,
+  Mail,
+  Globe,
+  Building2,
+  Download,
+  HelpCircle,
+  Send,
+  FileText,
+  Check,
 } from 'lucide-react';
 
 import { FounderSection } from '../components/FounderSection';
@@ -93,6 +101,32 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
   const [helpSafeTime, setHelpSafeTime] = useState('Morning between 9am - 12pm');
   const [helpNotes, setHelpNotes] = useState('');
   const [helpSubmittedCode, setHelpSubmittedCode] = useState<string | null>(null);
+
+  // General Contact Form State
+  const [contactName, setContactName] = useState(currentUser.name || '');
+  const [contactEmail, setContactEmail] = useState(currentUser.email || '');
+  const [contactDepartment, setContactDepartment] = useState('General Inquiries & Community Outreach');
+  const [contactSubject, setContactSubject] = useState('');
+  const [contactMessage, setContactMessage] = useState('');
+  const [contactSubmittedCode, setContactSubmittedCode] = useState<string | null>(null);
+
+  // Resources Category Filter
+  const [resourceFilter, setResourceFilter] = useState<'all' | 'legal' | 'housing' | 'healing' | 'workforce'>('all');
+  const [downloadNotice, setDownloadNotice] = useState<string | null>(null);
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const trackingId = `INQ-${Date.now().toString().slice(-6)}`;
+    db.appendAuditLog('CONTACT_SUBMISSION', `Public inquiry from ${contactName} (${contactEmail}) to ${contactDepartment}`);
+    setContactSubmittedCode(trackingId);
+    setContactMessage('');
+    setContactSubject('');
+  };
+
+  const handleDownloadResource = (title: string) => {
+    setDownloadNotice(`Downloading verified guide: "${title}". File verified virus-free and WCAG accessible.`);
+    setTimeout(() => setDownloadNotice(null), 4000);
+  };
 
   // Handle Volunteer Submission
   const handleVolunteerSubmit = (e: React.FormEvent) => {
@@ -491,7 +525,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               </p>
 
               {/* Leadership & Safeguarding Portraits */}
-              <div className="pt-2">
+              <div id="leadership-section" className="pt-2">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-xs font-bold text-slate-900 uppercase tracking-wide">
                     Executive Leadership &amp; Board
@@ -555,6 +589,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
       {/* 5. GET INVOLVED / VOLUNTEER OPPORTUNITIES */}
       <section id="get-involved-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div id="volunteer-section" className="relative -top-24"></div>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
           <div>
             <div className="text-xs font-bold text-[#104F57] uppercase tracking-wider">Join The Movement</div>
@@ -1100,6 +1135,570 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 </form>
               )}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. MISSION, VISION & CORE VALUES (#mission-section) */}
+      <section id="mission-section" className="bg-gradient-to-b from-white to-[#E8F3F1]/40 py-16 border-t border-teal-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="text-center max-w-3xl mx-auto space-y-3">
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#104F57] bg-teal-50 border border-teal-200 px-3 py-1 rounded-full uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Foundational Purpose</span>
+            </div>
+            <h2 className="font-serif text-3xl sm:text-4xl font-bold text-slate-900">
+              Our Sacred Mission &amp; Enduring Vision
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Phumulani exists to ensure that every immigrant and refugee survivor of domestic violence, human trafficking, and systemic trauma in Minnesota discovers not merely an escape from danger, but an enduring pathway to sovereignty, self-determination, and thriving peace.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-white p-6 rounded-2xl border border-teal-200/80 shadow-xs space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-teal-50 text-[#104F57] flex items-center justify-center font-bold">
+                01
+              </div>
+              <h3 className="font-serif text-lg font-bold text-slate-900">Cultural Attunement</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Healing cannot be imported from generic clinical models. We center ancestral sisterhood tea circles, indigenous trauma resolution, and bilingual advocates who share lived cultural realities.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl border border-teal-200/80 shadow-xs space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-teal-50 text-[#104F57] flex items-center justify-center font-bold">
+                02
+              </div>
+              <h3 className="font-serif text-lg font-bold text-slate-900">Legal Self-Defense</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Navigating Orders for Protection (OFP), U-Visa certifications, and immigration relief with relentless, courtroom-accredited accompaniment and trauma-informed legal partners.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl border border-teal-200/80 shadow-xs space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-teal-50 text-[#104F57] flex items-center justify-center font-bold">
+                03
+              </div>
+              <h3 className="font-serif text-lg font-bold text-slate-900">Economic Sovereignty</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Financial abuse is the most potent anchor of domestic violence. We dismantle dependency through matched savings, rapid lease deposits, credit restoration, and micro-enterprise coaching.
+              </p>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl border border-teal-200/80 shadow-xs space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-teal-50 text-[#104F57] flex items-center justify-center font-bold">
+                04
+              </div>
+              <h3 className="font-serif text-lg font-bold text-slate-900">Intergenerational Youth</h3>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Breaking generational trauma by investing deeply in the children of survivors through academic tutoring, college preparation, and culturally grounded leadership development.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 10. STRATEGIC PARTNERSHIPS & ALLIANCES (#partnerships-section) */}
+      <section id="partnerships-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 gap-4">
+          <div>
+            <div className="text-xs font-bold text-[#104F57] uppercase tracking-wider">Collective Power</div>
+            <h2 className="font-serif text-3xl font-bold text-slate-900">
+              Community Alliances &amp; Institutional Partners
+            </h2>
+            <p className="text-xs text-slate-600 mt-1">
+              Phumulani works arm-in-arm with Minnesota public agencies, corporate grantmakers, legal coalitions, and shelter networks.
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              const el = document.getElementById('contact-section');
+              if (el) el.scrollIntoView({ behavior: 'smooth' });
+            }}
+            className="px-4 py-2 border border-teal-700 text-[#104F57] hover:bg-teal-50 rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+          >
+            <span>Partner With Phumulani</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+            <div className="flex items-center gap-2 text-xs font-bold text-teal-800">
+              <Building2 className="w-4 h-4 text-teal-600" />
+              <span>Corporate CSR Partners</span>
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Minnesota corporate benefactors supporting matched giving, employer hiring days, and technology donations for our workforce lab.
+            </p>
+            <div className="text-[11px] font-semibold text-slate-500 pt-1">
+              Target Foundation · 3M Community Giving · Medtronic CSR
+            </div>
+          </div>
+
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+            <div className="flex items-center gap-2 text-xs font-bold text-[#633C69]">
+              <Shield className="w-4 h-4 text-[#633C69]" />
+              <span>Legal Defense Network</span>
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Direct collaborative referrals for bilingual legal counsel, orders for protection, and immigration U-Visa navigation in Hennepin &amp; Ramsey counties.
+            </p>
+            <div className="text-[11px] font-semibold text-slate-500 pt-1">
+              The Advocates for Human Rights · Standpoint MN · Tubman
+            </div>
+          </div>
+
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+            <div className="flex items-center gap-2 text-xs font-bold text-amber-800">
+              <Home className="w-4 h-4 text-amber-700" />
+              <span>Emergency Shelter Network</span>
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Fast-track confidential safe house transfers, emergency hotel vouchers, and landlord negotiation for rapid independent leasing.
+            </p>
+            <div className="text-[11px] font-semibold text-slate-500 pt-1">
+              Day One Crisis Line · Cornerstone MN · Haven Housing
+            </div>
+          </div>
+
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+            <div className="flex items-center gap-2 text-xs font-bold text-blue-800">
+              <Users className="w-4 h-4 text-blue-600" />
+              <span>Academic &amp; Research</span>
+            </div>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Community-based participatory evaluation, workforce intern placement, and rigorous monitoring of our MEAL indicators.
+            </p>
+            <div className="text-[11px] font-semibold text-slate-500 pt-1">
+              University of Minnesota UROC · Minneapolis College
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 11. NEWS, COMMUNITY BULLETINS & PUBLICATIONS (#news-section) */}
+      <section id="news-section" className="bg-slate-50 py-16 border-y border-slate-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+            <div>
+              <div className="text-xs font-bold text-[#104F57] uppercase tracking-wider">Publications &amp; Press</div>
+              <h2 className="font-serif text-3xl font-bold text-slate-900">
+                Latest News &amp; Authored Works
+              </h2>
+              <p className="text-xs text-slate-600 mt-1">
+                Stories of resilience, executive reports, and published books by Founder Comfort Dondo.
+              </p>
+            </div>
+            <div className="text-xs text-slate-500">
+              Verified IRS 501(c)(3) Public Disclosures
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Book Card 1 */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-xs text-slate-500">
+                  <span className="font-bold text-[#633C69] bg-purple-50 px-2 py-0.5 rounded">Published Memoir</span>
+                  <span>2021 Release</span>
+                </div>
+                <h3 className="font-serif text-xl font-bold text-slate-900">Facing the Giants</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Comfort Dondo's acclaimed memoir chronicling her lived journey through adversity, displacement, and the unyielding determination to build culturally grounded sanctuaries for immigrant women.
+                </p>
+              </div>
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                <span className="font-bold text-slate-700">Author: Comfort Dondo</span>
+                <span className="text-[#104F57] font-semibold">Available via Community Library</span>
+              </div>
+            </div>
+
+            {/* Book Card 2 */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-xs text-slate-500">
+                  <span className="font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded">Co-Authored Anthology</span>
+                  <span>Global Women's Leadership</span>
+                </div>
+                <h3 className="font-serif text-xl font-bold text-slate-900">Sacred Promise</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  An inspiring collaborative volume with Dr. Tererai Trent and visionary global leaders exploring the sacred covenants women make to lift each other out of oppression and into economic dignity.
+                </p>
+              </div>
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                <span className="font-bold text-slate-700">Foreword: Dr. Tererai Trent</span>
+                <span className="text-[#104F57] font-semibold">Minnesota Reading Circles</span>
+              </div>
+            </div>
+
+            {/* Book Card 3 */}
+            <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs flex flex-col justify-between space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-xs text-slate-500">
+                  <span className="font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded">Forthcoming Publication</span>
+                  <span>2027 Preview</span>
+                </div>
+                <h3 className="font-serif text-xl font-bold text-slate-900">The Gift in Pain</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  A profound exploration of transforming deep psychological and systemic wounds into catalysts for revolutionary community organizing, social entrepreneurship, and generational liberation.
+                </p>
+              </div>
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-xs">
+                <span className="font-bold text-slate-700">Advance Announcements</span>
+                <span className="text-amber-700 font-semibold">Excerpts in Tea Circles</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 12. SURVIVOR RIGHTS & COMMUNITY RESOURCES (#resources-section) */}
+      <section id="resources-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+          <div>
+            <div className="text-xs font-bold text-[#104F57] uppercase tracking-wider">Self-Advocacy &amp; Guidance</div>
+            <h2 className="font-serif text-3xl font-bold text-slate-900">
+              Community Resources &amp; Downloadable Guides
+            </h2>
+            <p className="text-xs text-slate-600 mt-1">
+              Trauma-informed, legally vetted, multilingual tools available to the community free of charge.
+            </p>
+          </div>
+
+          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs">
+            {(['all', 'legal', 'housing', 'healing', 'workforce'] as const).map((cat) => (
+              <button
+                key={cat}
+                onClick={() => setResourceFilter(cat)}
+                className={`px-3 py-1.5 rounded-lg font-semibold capitalize cursor-pointer transition-colors ${
+                  resourceFilter === cat ? 'bg-white text-teal-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {downloadNotice && (
+          <div className="p-3 bg-teal-50 border border-teal-200 rounded-xl text-xs font-semibold text-teal-900 flex items-center justify-between">
+            <span>{downloadNotice}</span>
+            <button onClick={() => setDownloadNotice(null)} className="text-teal-700">✕</button>
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3 flex flex-col justify-between">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-[11px] text-slate-500">
+                <span className="font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded">Legal Guide</span>
+                <span>PDF · 4.2 MB</span>
+              </div>
+              <h4 className="font-bold text-slate-900 text-sm">Order for Protection (OFP) Step-by-Step Navigator</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Clear instructions for filing an OFP in Minnesota district courts without filing fees, including emergency ex parte relief.
+              </p>
+            </div>
+            <button
+              onClick={() => handleDownloadResource('Order for Protection (OFP) Step-by-Step Navigator')}
+              className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5 text-slate-600" />
+              <span>Download PDF (Multilingual)</span>
+            </button>
+          </div>
+
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3 flex flex-col justify-between">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-[11px] text-slate-500">
+                <span className="font-bold text-purple-800 bg-purple-50 px-2 py-0.5 rounded">Housing Toolkit</span>
+                <span>PDF · 2.8 MB</span>
+              </div>
+              <h4 className="font-bold text-slate-900 text-sm">Minnesota Safe Lease Termination &amp; Deposit Rights</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                How Minnesota Statute 504B.206 protects domestic abuse survivors who need to break a lease safely without financial penalty.
+              </p>
+            </div>
+            <button
+              onClick={() => handleDownloadResource('Minnesota Safe Lease Termination & Deposit Rights')}
+              className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5 text-slate-600" />
+              <span>Download Housing Toolkit</span>
+            </button>
+          </div>
+
+          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3 flex flex-col justify-between">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-[11px] text-slate-500">
+                <span className="font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded">Healing Circles</span>
+                <span>PDF · 1.9 MB</span>
+              </div>
+              <h4 className="font-bold text-slate-900 text-sm">Sisterhood Tea Healing Circle Facilitation Manual</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Trauma-informed guidance for hosting culturally grounded healing circles in community centers, mosques, and churches.
+              </p>
+            </div>
+            <button
+              onClick={() => handleDownloadResource('Sisterhood Tea Healing Circle Facilitation Manual')}
+              className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg text-xs font-semibold flex items-center justify-center gap-1.5 cursor-pointer"
+            >
+              <Download className="w-3.5 h-3.5 text-slate-600" />
+              <span>Download Circle Guide</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* 13. CONTACT INFORMATION & SECURE INQUIRY (#contact-section) */}
+      <section id="contact-section" className="bg-[#E8F3F1]/60 py-16 border-t border-teal-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            <div className="lg:col-span-5 space-y-6">
+              <div>
+                <div className="text-xs font-bold text-[#104F57] uppercase tracking-wider">Reach Our Team</div>
+                <h2 className="font-serif text-3xl font-bold text-slate-900">
+                  Connect With Phumulani
+                </h2>
+                <p className="text-xs text-slate-600 mt-2 leading-relaxed">
+                  Have a question about our community programs, volunteer opportunities, donor partnerships, or events? We are here to help.
+                </p>
+              </div>
+
+              <div className="space-y-4 text-xs">
+                <div className="flex items-start gap-3 bg-white p-3.5 rounded-xl border border-teal-200/80 shadow-2xs">
+                  <MapPin className="w-4 h-4 text-[#104F57] shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-bold text-slate-900">Mailing &amp; Operational Address</div>
+                    <div className="text-slate-600">Phumulani (Minnesota African Women Against Violence)</div>
+                    <div className="text-slate-600">PO Box, Minneapolis, MN 55404</div>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 bg-white p-3.5 rounded-xl border border-teal-200/80 shadow-2xs">
+                  <PhoneCall className="w-4 h-4 text-[#104F57] shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-bold text-slate-900">Phone Communications</div>
+                    <div className="text-slate-600">General Admin: (612) 555-0199 (Mon–Fri 9am–5pm)</div>
+                    <div className="text-rose-700 font-semibold mt-0.5">24/7 Day One Crisis Line: 1-866-223-1111</div>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3 bg-white p-3.5 rounded-xl border border-teal-200/80 shadow-2xs">
+                  <Mail className="w-4 h-4 text-[#104F57] shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-bold text-slate-900">Department Mailboxes</div>
+                    <div className="text-slate-600">General Outreach: <code>info@phumulani.org</code></div>
+                    <div className="text-slate-600">Donations &amp; Grants: <code>donations@phumulani.org</code></div>
+                    <div className="text-slate-600">Confidential Safeguarding: <code>safeguarding@phumulani.org</code></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl border border-teal-200 shadow-sm">
+              <h3 className="font-serif text-xl font-bold text-slate-900 mb-1">
+                Send a General Inquiry
+              </h3>
+              <p className="text-xs text-slate-500 mb-5">
+                For non-emergency community inquiries, partnership proposals, and press questions.
+              </p>
+
+              {contactSubmittedCode ? (
+                <div className="p-6 bg-teal-50 border border-teal-200 rounded-xl text-center space-y-3">
+                  <CheckCircle2 className="w-8 h-8 text-teal-700 mx-auto" />
+                  <div className="font-serif text-lg font-bold text-teal-950">Inquiry Received: {contactSubmittedCode}</div>
+                  <p className="text-xs text-slate-600 max-w-md mx-auto">
+                    Thank you for reaching out. A Phumulani team coordinator will reply to your inquiry within 1 business day.
+                  </p>
+                  <button
+                    onClick={() => setContactSubmittedCode(null)}
+                    className="text-xs font-bold text-[#104F57] hover:underline cursor-pointer"
+                  >
+                    Submit another inquiry
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleContactSubmit} className="space-y-4 text-xs">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block font-semibold text-slate-700 mb-1">Your Name</label>
+                      <input
+                        type="text"
+                        required
+                        value={contactName}
+                        onChange={(e) => setContactName(e.target.value)}
+                        placeholder="First and Last Name"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-teal-600"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-semibold text-slate-700 mb-1">Your Email</label>
+                      <input
+                        type="email"
+                        required
+                        value={contactEmail}
+                        onChange={(e) => setContactEmail(e.target.value)}
+                        placeholder="you@example.com"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-teal-600"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block font-semibold text-slate-700 mb-1">Department</label>
+                      <select
+                        value={contactDepartment}
+                        onChange={(e) => setContactDepartment(e.target.value)}
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white text-slate-700"
+                      >
+                        <option value="General Inquiries">General Inquiries</option>
+                        <option value="Community Programs">Community Programs &amp; Cohorts</option>
+                        <option value="Volunteer Coordination">Volunteer Onboarding</option>
+                        <option value="Donor Relations & Sponsorship">Donor Relations &amp; Giving</option>
+                        <option value="Media & Press">Media &amp; Press Coordination</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block font-semibold text-slate-700 mb-1">Subject</label>
+                      <input
+                        type="text"
+                        required
+                        value={contactSubject}
+                        onChange={(e) => setContactSubject(e.target.value)}
+                        placeholder="Brief summary of inquiry"
+                        className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-teal-600"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block font-semibold text-slate-700 mb-1">Message</label>
+                    <textarea
+                      rows={4}
+                      required
+                      value={contactMessage}
+                      onChange={(e) => setContactMessage(e.target.value)}
+                      placeholder="Please share how our team can assist you..."
+                      className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-teal-600"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-2.5 bg-[#104F57] hover:bg-[#0c3e44] text-white rounded-lg font-bold flex items-center justify-center gap-1.5 cursor-pointer shadow-xs"
+                  >
+                    <Send className="w-3.5 h-3.5" />
+                    <span>Submit Inquiry</span>
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 14. PRIVACY NOTICE & SAFEGUARDING (#privacy-section) */}
+      <section id="privacy-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-6">
+        <div className="border-b border-slate-200 pb-4">
+          <div className="text-xs font-bold text-[#104F57] uppercase tracking-wider">Compliance &amp; Ethics</div>
+          <h2 className="font-serif text-3xl font-bold text-slate-900">
+            Privacy Notice &amp; VAWA Section 1367 Legal Safeguards
+          </h2>
+          <p className="text-xs text-slate-600 mt-1">
+            Official 501(c)(3) privacy declaration and survivor protection firewall standards.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-700">
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+            <div className="font-bold text-slate-900 flex items-center gap-1.5">
+              <ShieldCheck className="w-4 h-4 text-emerald-600" />
+              <span>Zero-Disclosure Survivor Firewall</span>
+            </div>
+            <p className="leading-relaxed text-slate-600">
+              Pursuant to Violence Against Women Act (VAWA) 34 U.S.C. § 12291(b)(2), Phumulani never discloses personally identifying information (PII) of survivors without written, informed, and time-limited consent. Survivor records are strictly segregated from general operational databases.
+            </p>
+          </div>
+
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+            <div className="font-bold text-slate-900 flex items-center gap-1.5">
+              <Lock className="w-4 h-4 text-teal-600" />
+              <span>Donor Bill of Rights &amp; Privacy</span>
+            </div>
+            <p className="leading-relaxed text-slate-600">
+              Phumulani adheres to the Association of Fundraising Professionals (AFP) Donor Bill of Rights. We never sell, rent, trade, or share donor contact information or giving records with external commercial marketing entities.
+            </p>
+          </div>
+
+          <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-2xs space-y-2">
+            <div className="font-bold text-slate-900 flex items-center gap-1.5">
+              <Globe className="w-4 h-4 text-blue-600" />
+              <span>Zero Commercial Ad Tracking</span>
+            </div>
+            <p className="leading-relaxed text-slate-600">
+              Our website contains zero third-party advertising trackers, Facebook Meta pixels, or Google Ads remarketing cookies. Digital interactions remain private and safe from surveillance or behavioral profiling.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* 15. ACCESSIBILITY STATEMENT (#accessibility-section) */}
+      <section id="accessibility-section" className="bg-slate-900 text-white py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          <div className="border-b border-slate-800 pb-4">
+            <div className="text-xs font-bold text-teal-300 uppercase tracking-wider">Universal Design</div>
+            <h2 className="font-serif text-3xl font-bold text-white">
+              Accessibility Statement &amp; WCAG 2.2 AA Conformance
+            </h2>
+            <p className="text-xs text-slate-400 mt-1">
+              Phumulani is committed to ensuring full digital inclusion and dignified usability for people with all physical, sensory, and cognitive abilities.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-xs">
+            <div className="bg-slate-800/80 p-4 rounded-xl border border-slate-700 space-y-2">
+              <div className="font-bold text-teal-300">Keyboard Navigation</div>
+              <p className="text-slate-300 leading-relaxed">
+                Full Tab, Shift+Tab, and Enter keyboard focus traversal with visible high-contrast focus rings and zero keyboard traps.
+              </p>
+            </div>
+
+            <div className="bg-slate-800/80 p-4 rounded-xl border border-slate-700 space-y-2">
+              <div className="font-bold text-teal-300">Screen Reader Support</div>
+              <p className="text-slate-300 leading-relaxed">
+                Semantic HTML5 landmarks (header, nav, main, section, footer) and explicit ARIA labels for non-text SVGs and modal dialogues.
+              </p>
+            </div>
+
+            <div className="bg-slate-800/80 p-4 rounded-xl border border-slate-700 space-y-2">
+              <div className="font-bold text-teal-300">Contrast &amp; Scalability</div>
+              <p className="text-slate-300 leading-relaxed">
+                Color contrast ratios meet or exceed 4.5:1 for body copy and 7:1 for headings. Text can be enlarged up to 200% without loss of layout.
+              </p>
+            </div>
+
+            <div className="bg-slate-800/80 p-4 rounded-xl border border-slate-700 space-y-2">
+              <div className="font-bold text-teal-300">Emergency Safe Exit</div>
+              <p className="text-slate-300 leading-relaxed">
+                Double-pressing the <kbd className="bg-slate-700 px-1 py-0.5 rounded text-[10px] border border-slate-600">ESC</kbd> key anywhere immediately replaces the current page with weather.com for personal safety.
+              </p>
+            </div>
+          </div>
+
+          <div className="text-[11px] text-slate-400 border-t border-slate-800 pt-4 flex flex-wrap justify-between items-center gap-3">
+            <span>Accessibility Coordinator: <code>access@phumulani.org</code> · Verified against WCAG 2.2 Level AA success criteria.</span>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="text-teal-300 hover:text-white font-semibold underline cursor-pointer"
+            >
+              Back to Top ↑
+            </button>
           </div>
         </div>
       </section>

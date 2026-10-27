@@ -4,6 +4,18 @@
  * Phumulani AI Community Platform Type Definitions
  */
 
+export type CanonicalRoleFamily =
+  | 'PUBLIC_VISITOR'
+  | 'COMMUNITY_MEMBER'
+  | 'VOLUNTEER_APPLICANT'
+  | 'APPROVED_VOLUNTEER'
+  | 'DONOR'
+  | 'STAFF'
+  | 'DEPARTMENT_MANAGER'
+  | 'EXECUTIVE'
+  | 'BOARD_MEMBER'
+  | 'MASTER_ADMIN';
+
 export type UserRole =
   | 'visitor'
   | 'volunteer'
@@ -22,6 +34,8 @@ export type UserRole =
   | 'program_manager'
   | 'community_advocate'
   | 'community_member'
+  // Canonical Phase 30 Role Families
+  | CanonicalRoleFamily
   // Phase 13 Development Transparency Roles
   | 'DEVELOPMENT_ADMIN'
   | 'DEVELOPER'
@@ -29,7 +43,54 @@ export type UserRole =
   | 'CLIENT_PROJECT_VIEWER'
   | 'CLIENT_APPROVER';
 
+export function mapToCanonicalRole(role: string): CanonicalRoleFamily {
+  switch (role) {
+    case 'visitor':
+    case 'PUBLIC_VISITOR':
+      return 'PUBLIC_VISITOR';
+    case 'community_member':
+    case 'community_advocate':
+    case 'COMMUNITY_MEMBER':
+      return 'COMMUNITY_MEMBER';
+    case 'volunteer_applicant':
+    case 'VOLUNTEER_APPLICANT':
+      return 'VOLUNTEER_APPLICANT';
+    case 'volunteer':
+    case 'APPROVED_VOLUNTEER':
+      return 'APPROVED_VOLUNTEER';
+    case 'donor':
+    case 'sponsor':
+    case 'DONOR':
+      return 'DONOR';
+    case 'staff':
+    case 'communications_officer':
+    case 'STAFF':
+      return 'STAFF';
+    case 'program_manager':
+    case 'volunteer_coordinator':
+    case 'finance_officer':
+    case 'DEPARTMENT_MANAGER':
+      return 'DEPARTMENT_MANAGER';
+    case 'executive_director':
+    case 'governance_officer':
+    case 'EXECUTIVE':
+      return 'EXECUTIVE';
+    case 'board_member':
+    case 'BOARD_MEMBER':
+      return 'BOARD_MEMBER';
+    case 'super_admin':
+    case 'PLATFORM_SUPER_ADMIN':
+    case 'master_admin':
+    case 'MASTER_ADMIN':
+    case 'DEVELOPMENT_ADMIN':
+      return 'MASTER_ADMIN';
+    default:
+      return 'PUBLIC_VISITOR';
+  }
+}
+
 export * from './developmentOps';
+export * from './phase33';
 
 export interface User {
   id: string;

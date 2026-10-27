@@ -3,8 +3,8 @@
     "platform": "Phumulani AI Community Platform",
     "schema": "PostgreSQL 15+ Compatible DDL",
     "engine": "ISOLATED_EMBEDDED_DURABLE",
-    "persistedAt": "2026-10-27T13:05:49.351Z",
-    "tablesCount": 7,
+    "persistedAt": "2026-10-27T14:34:24.461Z",
+    "tablesCount": 9,
     "classification": "INTEGRATION_COMPLETE_STAGED_READY"
   },
   "tables": {
@@ -12,7 +12,7 @@
       {
         "id": "test-1",
         "value": "phumulani_durable_test",
-        "timestamp": "2026-10-27T13:05:49.350Z"
+        "timestamp": "2026-10-27T14:34:24.458Z"
       },
       {
         "id": "test-txn-1",
@@ -1634,6 +1634,953 @@
         "action": "handoff:cross_division_executed",
         "details": "Handoff handoff-1793106349348: FUND-AI-003 -> ORG-AI-001. Workflow: wf-1793106349348.",
         "signature": "376c3b18b0bea5771985294692a4c67b49fc7515c22f6b05482f919a72a58043"
+      },
+      {
+        "id": "p28-persist-1793107839356",
+        "timestamp": "2026-10-27T13:30:39.356Z",
+        "actor_role": "system_verification",
+        "action": "test:persistence_durability",
+        "details": "Phase 28 durable restart persistence validation",
+        "signature": "sig-p28-02"
+      },
+      {
+        "id": "p28-txn-1793107839363",
+        "timestamp": "2026-10-27T13:30:39.363Z",
+        "actor_role": "system_verification",
+        "action": "test:transaction_commit",
+        "details": "Phase 28 ACID transaction verification",
+        "signature": "sig-p28-03"
+      },
+      {
+        "id": "audit-sess-1793107839498-tyye",
+        "timestamp": "2026-10-27T13:30:39.498Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user test.staff@phumulani.org (Role: staff, MFA: false).",
+        "signature": "1116404332367814c8ef94b43ae03b94d6dfee6568be886ddf3a286e80889745"
+      },
+      {
+        "id": "audit-sess-1793107839499-qw3r",
+        "timestamp": "2026-10-27T13:30:39.499Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "111e2719d0f68c0409611fa5219cca7b280346a69d429f82a482c5442a7de8a7"
+      },
+      {
+        "id": "audit-sess-1793107839500-169h",
+        "timestamp": "2026-10-27T13:30:39.500Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "916e7a7dab1c461c212e7d0f3ea671f2ff10d440a57cbfbf8f2d15cd08bc7014"
+      },
+      {
+        "id": "audit-sess-rev-1793107839500",
+        "timestamp": "2026-10-27T13:30:39.500Z",
+        "actor_role": "staff",
+        "action": "auth:session_revoked",
+        "details": "Revoked session d7e560ca... for user revoke.staff@phumulani.org.",
+        "signature": "2ff93675e740ce4b588b37dfde8bb6a95eb22e94d9f232052ecc8ab199983cd7"
+      },
+      {
+        "id": "audit-sess-1793107839501-r9pq",
+        "timestamp": "2026-10-27T13:30:39.501Z",
+        "actor_role": "executive_director",
+        "action": "auth:session_created",
+        "details": "Created session for user comfort.dondo@phumulani.org (Role: executive_director, MFA: true).",
+        "signature": "81bdfa2b9fec9f0d0ddd90d043b0a781fad7421c3eef6273036188b8ee64680e"
+      },
+      {
+        "id": "ai-audit-p28-1793107839502",
+        "timestamp": "2026-10-27T13:30:39.502Z",
+        "actor_role": "ai_agent_runner",
+        "action": "ai:execute_task",
+        "details": "Executed task for FUND-AI-001 with human approval gate intact.",
+        "signature": "0b00512a79f1883e6df6c412fb52ea49b48c5b6931f5457b02cafe6b9ba74b96"
+      },
+      {
+        "id": "audit-pay-1793107839504",
+        "timestamp": "2026-10-27T13:30:39.504Z",
+        "actor_role": "payment_webhook_system",
+        "action": "donation:reconcile_verified",
+        "details": "Reconciled payment pi_p28_1793107839504 for $50. Issued receipt PHUM-2026-99035.",
+        "signature": "fe589591788d52ea15ccd0a945e02f2cf88b0a9b93a62cde8850ead32da8b8e9"
+      },
+      {
+        "id": "p28-conc-1793107839515-0",
+        "timestamp": "2026-10-27T13:30:39.515Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 0",
+        "signature": "sig-conc-0"
+      },
+      {
+        "id": "p28-conc-1793107839515-1",
+        "timestamp": "2026-10-27T13:30:39.515Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 1",
+        "signature": "sig-conc-1"
+      },
+      {
+        "id": "p28-conc-1793107839515-2",
+        "timestamp": "2026-10-27T13:30:39.515Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 2",
+        "signature": "sig-conc-2"
+      },
+      {
+        "id": "p28-conc-1793107839515-3",
+        "timestamp": "2026-10-27T13:30:39.515Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 3",
+        "signature": "sig-conc-3"
+      },
+      {
+        "id": "p28-conc-1793107839515-4",
+        "timestamp": "2026-10-27T13:30:39.515Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 4",
+        "signature": "sig-conc-4"
+      },
+      {
+        "id": "audit-handoff-1793107839527",
+        "timestamp": "2026-10-27T13:30:39.527Z",
+        "actor_role": "staff",
+        "action": "handoff:cross_division_executed",
+        "details": "Handoff handoff-1793107839527: ORG-AI-011 -> FUND-AI-007. Workflow: wf-1793107839525.",
+        "signature": "6bc6bb4ced33574f679e99d310e3e0cd61a5ebc9a9f7c990abae04a64ea7044f"
+      },
+      {
+        "id": "audit-killswitch-1793107839534",
+        "timestamp": "2026-10-27T13:30:39.534Z",
+        "actor_role": "master_admin",
+        "action": "workforce:emergency_halt_all",
+        "details": "CRITICAL: Global emergency kill switch activated by Admin safety inspection drill. All 36 agents paused.",
+        "signature": "7e1cdd0e89634d8a307b8677795f432dfa8e03fbdb8503f4bbcc57748aa12e70"
+      },
+      {
+        "id": "audit-resume-1793107839536",
+        "timestamp": "2026-10-27T13:30:39.536Z",
+        "actor_role": "master_admin",
+        "action": "workforce:resume_all",
+        "details": "Global emergency halt deactivated by Executive Governance. All 36 agents resumed.",
+        "signature": "5c4f993600b208d8ed4800051db0b4245055004a098be1777332e86b718577e0"
+      },
+      {
+        "id": "audit-appr-1793107839539",
+        "timestamp": "2026-10-27T13:30:39.539Z",
+        "actor_role": "Supervising Director",
+        "action": "agent_approval:approved",
+        "details": "Reviewed agent recommendation appr-p29-1793107839537 by Fundraising Orchestrator: approved. Notes: Approved following executive committee review.",
+        "signature": "9a8beb0e3f6158e7fbfe19e79c32e7b89be9baa9311d5877487020809d7030b5"
+      },
+      {
+        "id": "audit-handoff-1793107839541",
+        "timestamp": "2026-10-27T13:30:39.541Z",
+        "actor_role": "fundraising_director",
+        "action": "handoff:cross_division_executed",
+        "details": "Handoff handoff-1793107839541: FUND-AI-003 -> ORG-AI-001. Workflow: wf-1793107839541.",
+        "signature": "0da665c757e3a419b8d2277d9306c101ba89aec146643069efb96b80080993f4"
+      },
+      {
+        "id": "p28-persist-1793108071769",
+        "timestamp": "2026-10-27T13:34:31.769Z",
+        "actor_role": "system_verification",
+        "action": "test:persistence_durability",
+        "details": "Phase 28 durable restart persistence validation",
+        "signature": "sig-p28-02"
+      },
+      {
+        "id": "p28-txn-1793108071771",
+        "timestamp": "2026-10-27T13:34:31.771Z",
+        "actor_role": "system_verification",
+        "action": "test:transaction_commit",
+        "details": "Phase 28 ACID transaction verification",
+        "signature": "sig-p28-03"
+      },
+      {
+        "id": "audit-sess-1793108071880-vxw0",
+        "timestamp": "2026-10-27T13:34:31.880Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user test.staff@phumulani.org (Role: staff, MFA: false).",
+        "signature": "de8aab0974ba19a8c3065bccdcc7fbcbf0787905fdc89820b9f6c7e442b18429"
+      },
+      {
+        "id": "audit-sess-1793108071881-xkkt",
+        "timestamp": "2026-10-27T13:34:31.881Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "32959f5d7be00cf191c8b47f513d3a74c4e13d2139b2d8512a59ff8ad7e24562"
+      },
+      {
+        "id": "audit-sess-1793108071882-mwgo",
+        "timestamp": "2026-10-27T13:34:31.882Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "f89b21e2ef857a5fe2ada8c6d76984a6caa34eb9757a006aeea6caf8b1e4f3e4"
+      },
+      {
+        "id": "audit-sess-rev-1793108071882",
+        "timestamp": "2026-10-27T13:34:31.882Z",
+        "actor_role": "staff",
+        "action": "auth:session_revoked",
+        "details": "Revoked session a2750457... for user revoke.staff@phumulani.org.",
+        "signature": "0125d88f6c77f316948fd1f6a842fc236922eabaf624df4ed9ec99deafb79bf6"
+      },
+      {
+        "id": "audit-sess-1793108071883-2p79",
+        "timestamp": "2026-10-27T13:34:31.883Z",
+        "actor_role": "executive_director",
+        "action": "auth:session_created",
+        "details": "Created session for user comfort.dondo@phumulani.org (Role: executive_director, MFA: true).",
+        "signature": "8ef36222bc12dd572e2513cbb028f9eab1fc44d741124594723a93a54d49d0e2"
+      },
+      {
+        "id": "ai-audit-p28-1793108071884",
+        "timestamp": "2026-10-27T13:34:31.884Z",
+        "actor_role": "ai_agent_runner",
+        "action": "ai:execute_task",
+        "details": "Executed task for FUND-AI-001 with human approval gate intact.",
+        "signature": "94d65e59c2ee0053aa6e5e5edc1d4529dc163f662ab76b3ab5bc151686ab90ff"
+      },
+      {
+        "id": "audit-pay-1793108071886",
+        "timestamp": "2026-10-27T13:34:31.886Z",
+        "actor_role": "payment_webhook_system",
+        "action": "donation:reconcile_verified",
+        "details": "Reconciled payment pi_p28_1793108071885 for $50. Issued receipt PHUM-2026-20686.",
+        "signature": "40b10b664efb76695e1ab9efb0435f4dee0d38f49c2fcb29bb8aa59d5e72688a"
+      },
+      {
+        "id": "p28-conc-1793108071888-0",
+        "timestamp": "2026-10-27T13:34:31.888Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 0",
+        "signature": "sig-conc-0"
+      },
+      {
+        "id": "p28-conc-1793108071888-1",
+        "timestamp": "2026-10-27T13:34:31.888Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 1",
+        "signature": "sig-conc-1"
+      },
+      {
+        "id": "p28-conc-1793108071888-2",
+        "timestamp": "2026-10-27T13:34:31.888Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 2",
+        "signature": "sig-conc-2"
+      },
+      {
+        "id": "p28-conc-1793108071888-3",
+        "timestamp": "2026-10-27T13:34:31.888Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 3",
+        "signature": "sig-conc-3"
+      },
+      {
+        "id": "p28-conc-1793108071888-4",
+        "timestamp": "2026-10-27T13:34:31.888Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 4",
+        "signature": "sig-conc-4"
+      },
+      {
+        "id": "audit-handoff-1793108071892",
+        "timestamp": "2026-10-27T13:34:31.892Z",
+        "actor_role": "staff",
+        "action": "handoff:cross_division_executed",
+        "details": "Handoff handoff-1793108071892: ORG-AI-011 -> FUND-AI-007. Workflow: wf-1793108071891.",
+        "signature": "f95343fbde83016dff2dd6c5c21bb473a28a4e56d4a9295dc6fe761131b1f5cf"
+      },
+      {
+        "id": "audit-killswitch-1793108071893",
+        "timestamp": "2026-10-27T13:34:31.893Z",
+        "actor_role": "master_admin",
+        "action": "workforce:emergency_halt_all",
+        "details": "CRITICAL: Global emergency kill switch activated by Admin safety inspection drill. All 36 agents paused.",
+        "signature": "13893cb683aa86f1bf21ae1502876d2bbbf06f48379a21aad2da713a3828ca54"
+      },
+      {
+        "id": "audit-resume-1793108071894",
+        "timestamp": "2026-10-27T13:34:31.894Z",
+        "actor_role": "master_admin",
+        "action": "workforce:resume_all",
+        "details": "Global emergency halt deactivated by Executive Governance. All 36 agents resumed.",
+        "signature": "d7fa6267cf52cf5cb8120511be99da05e54064c5f311c7f2cfe311144860edfd"
+      },
+      {
+        "id": "audit-appr-1793108071895",
+        "timestamp": "2026-10-27T13:34:31.895Z",
+        "actor_role": "Supervising Director",
+        "action": "agent_approval:approved",
+        "details": "Reviewed agent recommendation appr-p29-1793108071894 by Fundraising Orchestrator: approved. Notes: Approved following executive committee review.",
+        "signature": "d888cc8496b9e0d303e6b0475d8c2bf206073deedc7c829f7022f05482de85fe"
+      },
+      {
+        "id": "audit-handoff-1793108071896",
+        "timestamp": "2026-10-27T13:34:31.896Z",
+        "actor_role": "fundraising_director",
+        "action": "handoff:cross_division_executed",
+        "details": "Handoff handoff-1793108071896: FUND-AI-003 -> ORG-AI-001. Workflow: wf-1793108071896.",
+        "signature": "0944bf1a25f197a5f939e88ddd0eefc92e6e8da621158917be8c5457740bc00e"
+      },
+      {
+        "id": "audit-recov-1793108071933",
+        "action": "auth:password_recovery_requested",
+        "email": "fatima.test.1793108071897@example.org",
+        "timestamp": "2026-10-27T13:34:31.933Z",
+        "tokenHash": "9c716dcdc1df46f3d1caa0fafc1b644b05d1bf299f6882d396be00f1fbf9c25f"
+      },
+      {
+        "id": "p28-persist-1793108196935",
+        "timestamp": "2026-10-27T13:36:36.935Z",
+        "actor_role": "system_verification",
+        "action": "test:persistence_durability",
+        "details": "Phase 28 durable restart persistence validation",
+        "signature": "sig-p28-02"
+      },
+      {
+        "id": "p28-txn-1793108196938",
+        "timestamp": "2026-10-27T13:36:36.938Z",
+        "actor_role": "system_verification",
+        "action": "test:transaction_commit",
+        "details": "Phase 28 ACID transaction verification",
+        "signature": "sig-p28-03"
+      },
+      {
+        "id": "audit-sess-1793108197055-3wgt",
+        "timestamp": "2026-10-27T13:36:37.055Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user test.staff@phumulani.org (Role: staff, MFA: false).",
+        "signature": "de74677e5cab721ec2f5c2f2b97955a3072f7d89e86932002e51c9a3df309f79"
+      },
+      {
+        "id": "audit-sess-1793108197056-n4fw",
+        "timestamp": "2026-10-27T13:36:37.056Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "154144255c09b3d7cc61a97632496c501a2e5e701c605458fadba88e836173a1"
+      },
+      {
+        "id": "audit-sess-1793108197057-0xtn",
+        "timestamp": "2026-10-27T13:36:37.057Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "cf10800a5c50e1e70afdaf258ffeda042bc031b7afa014565c7ccbbea1a1e99b"
+      },
+      {
+        "id": "audit-sess-rev-1793108197057",
+        "timestamp": "2026-10-27T13:36:37.057Z",
+        "actor_role": "staff",
+        "action": "auth:session_revoked",
+        "details": "Revoked session 2f14394d... for user revoke.staff@phumulani.org.",
+        "signature": "9afff7a65a8f601ecf43eec0ee69e1ae270b2013f0ba86ee9944cfa9741b5785"
+      },
+      {
+        "id": "audit-sess-1793108197058-vnnu",
+        "timestamp": "2026-10-27T13:36:37.058Z",
+        "actor_role": "executive_director",
+        "action": "auth:session_created",
+        "details": "Created session for user comfort.dondo@phumulani.org (Role: executive_director, MFA: true).",
+        "signature": "e1f1ec6b3b87ec244cd8df86ae081170159bc45e92937eb467fd38de8b7ee75a"
+      },
+      {
+        "id": "ai-audit-p28-1793108197059",
+        "timestamp": "2026-10-27T13:36:37.059Z",
+        "actor_role": "ai_agent_runner",
+        "action": "ai:execute_task",
+        "details": "Executed task for FUND-AI-001 with human approval gate intact.",
+        "signature": "a3f0bd407e514766924f9d46a97229f3fbf3d03319d5b6496a90473cccc83190"
+      },
+      {
+        "id": "audit-pay-1793108197062",
+        "timestamp": "2026-10-27T13:36:37.062Z",
+        "actor_role": "payment_webhook_system",
+        "action": "donation:reconcile_verified",
+        "details": "Reconciled payment pi_p28_1793108197061 for $50. Issued receipt PHUM-2026-16894.",
+        "signature": "062c6c2f1df879e2e89a92001945b3608668f200601d3d05be91256af0e33cbb"
+      },
+      {
+        "id": "p28-conc-1793108197064-0",
+        "timestamp": "2026-10-27T13:36:37.064Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 0",
+        "signature": "sig-conc-0"
+      },
+      {
+        "id": "p28-conc-1793108197064-1",
+        "timestamp": "2026-10-27T13:36:37.064Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 1",
+        "signature": "sig-conc-1"
+      },
+      {
+        "id": "p28-conc-1793108197064-2",
+        "timestamp": "2026-10-27T13:36:37.064Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 2",
+        "signature": "sig-conc-2"
+      },
+      {
+        "id": "p28-conc-1793108197064-3",
+        "timestamp": "2026-10-27T13:36:37.064Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 3",
+        "signature": "sig-conc-3"
+      },
+      {
+        "id": "p28-conc-1793108197064-4",
+        "timestamp": "2026-10-27T13:36:37.064Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 4",
+        "signature": "sig-conc-4"
+      },
+      {
+        "id": "audit-handoff-1793108197069",
+        "timestamp": "2026-10-27T13:36:37.069Z",
+        "actor_role": "staff",
+        "action": "handoff:cross_division_executed",
+        "details": "Handoff handoff-1793108197069: ORG-AI-011 -> FUND-AI-007. Workflow: wf-1793108197069.",
+        "signature": "60f9a8580f6af7626ff6c48329b82a238c0d750c4cfd229d813e575c5dbc6557"
+      },
+      {
+        "id": "audit-killswitch-1793108197072",
+        "timestamp": "2026-10-27T13:36:37.072Z",
+        "actor_role": "master_admin",
+        "action": "workforce:emergency_halt_all",
+        "details": "CRITICAL: Global emergency kill switch activated by Admin safety inspection drill. All 36 agents paused.",
+        "signature": "3fee5cbc6b5fe8ae86ec86aae16c3c5e00b14f4f71ba24367e8d2c24965b6928"
+      },
+      {
+        "id": "audit-resume-1793108197073",
+        "timestamp": "2026-10-27T13:36:37.073Z",
+        "actor_role": "master_admin",
+        "action": "workforce:resume_all",
+        "details": "Global emergency halt deactivated by Executive Governance. All 36 agents resumed.",
+        "signature": "ad849f8dfee7ada25d1f5a6c43a654fe572f8d5702d9ac9283aa8f35dac18322"
+      },
+      {
+        "id": "audit-appr-1793108197075",
+        "timestamp": "2026-10-27T13:36:37.075Z",
+        "actor_role": "Supervising Director",
+        "action": "agent_approval:approved",
+        "details": "Reviewed agent recommendation appr-p29-1793108197074 by Fundraising Orchestrator: approved. Notes: Approved following executive committee review.",
+        "signature": "3951b8bea50f39808911176102f7f1e503723a14179e468144a7433730d6aa03"
+      },
+      {
+        "id": "audit-handoff-1793108197077",
+        "timestamp": "2026-10-27T13:36:37.077Z",
+        "actor_role": "fundraising_director",
+        "action": "handoff:cross_division_executed",
+        "details": "Handoff handoff-1793108197077: FUND-AI-003 -> ORG-AI-001. Workflow: wf-1793108197077.",
+        "signature": "bea91ab9748bf7ae4c54f4c332347f00ceb86f928c37084f18cf06fa295882e0"
+      },
+      {
+        "id": "audit-recov-1793108197114",
+        "action": "auth:password_recovery_requested",
+        "email": "fatima.test.1793108197078@example.org",
+        "timestamp": "2026-10-27T13:36:37.114Z",
+        "tokenHash": "53791a5e6d9ae9a8b81817481c215ad8124f42550fa27137782523e996162f61"
+      },
+      {
+        "id": "p28-persist-1793108843226",
+        "timestamp": "2026-10-27T13:47:23.226Z",
+        "actor_role": "system_verification",
+        "action": "test:persistence_durability",
+        "details": "Phase 28 durable restart persistence validation",
+        "signature": "sig-p28-02"
+      },
+      {
+        "id": "p28-txn-1793108843229",
+        "timestamp": "2026-10-27T13:47:23.229Z",
+        "actor_role": "system_verification",
+        "action": "test:transaction_commit",
+        "details": "Phase 28 ACID transaction verification",
+        "signature": "sig-p28-03"
+      },
+      {
+        "id": "audit-sess-1793108843337-x41g",
+        "timestamp": "2026-10-27T13:47:23.337Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user test.staff@phumulani.org (Role: staff, MFA: false).",
+        "signature": "7121f0ee913ae08f663d83ec2bfd2c5a1034fa882a91ecb0b57e5973de497ef5"
+      },
+      {
+        "id": "audit-sess-1793108843338-dv9z",
+        "timestamp": "2026-10-27T13:47:23.338Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "53fcb3f0b3d2f9e300b12abd37a0262b28a957606e67909fd5c0deff1984e815"
+      },
+      {
+        "id": "audit-sess-1793108843339-qpvb",
+        "timestamp": "2026-10-27T13:47:23.339Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "de6f593551b85e7ce60d8e4c3deefe3d08f949f36598b0c8ff8cd2f4948a4469"
+      },
+      {
+        "id": "audit-sess-rev-1793108843339",
+        "timestamp": "2026-10-27T13:47:23.339Z",
+        "actor_role": "staff",
+        "action": "auth:session_revoked",
+        "details": "Revoked session 49e5ad30... for user revoke.staff@phumulani.org.",
+        "signature": "115de25d26fda97c21b91e342a7452964cd6c51cbf37a53767d66d49b57d4509"
+      },
+      {
+        "id": "audit-sess-1793108843341-rcgf",
+        "timestamp": "2026-10-27T13:47:23.341Z",
+        "actor_role": "executive_director",
+        "action": "auth:session_created",
+        "details": "Created session for user comfort.dondo@phumulani.org (Role: executive_director, MFA: true).",
+        "signature": "f6e129a31114322019b6fa621b739cc4c461ad9cf0989d0863f944cf86772e9c"
+      },
+      {
+        "id": "ai-audit-p28-1793108843342",
+        "timestamp": "2026-10-27T13:47:23.342Z",
+        "actor_role": "ai_agent_runner",
+        "action": "ai:execute_task",
+        "details": "Executed task for FUND-AI-001 with human approval gate intact.",
+        "signature": "b936ea29133b64d80f2ebf7c2d88e4f010bb329de3b4cf566e70f445ac93d339"
+      },
+      {
+        "id": "audit-pay-1793108843344",
+        "timestamp": "2026-10-27T13:47:23.344Z",
+        "actor_role": "payment_webhook_system",
+        "action": "donation:reconcile_verified",
+        "details": "Reconciled payment pi_p28_1793108843343 for $50. Issued receipt PHUM-2026-39354.",
+        "signature": "3a4341553a005523b890a96c7f9abf3132252c184522b113041565b1b399fa0b"
+      },
+      {
+        "id": "p28-conc-1793108843346-0",
+        "timestamp": "2026-10-27T13:47:23.346Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 0",
+        "signature": "sig-conc-0"
+      },
+      {
+        "id": "p28-conc-1793108843346-1",
+        "timestamp": "2026-10-27T13:47:23.346Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 1",
+        "signature": "sig-conc-1"
+      },
+      {
+        "id": "p28-conc-1793108843346-2",
+        "timestamp": "2026-10-27T13:47:23.346Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 2",
+        "signature": "sig-conc-2"
+      },
+      {
+        "id": "p28-conc-1793108843346-3",
+        "timestamp": "2026-10-27T13:47:23.346Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 3",
+        "signature": "sig-conc-3"
+      },
+      {
+        "id": "p28-conc-1793108843346-4",
+        "timestamp": "2026-10-27T13:47:23.346Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 4",
+        "signature": "sig-conc-4"
+      },
+      {
+        "id": "audit-handoff-1793108843351",
+        "timestamp": "2026-10-27T13:47:23.351Z",
+        "actor_role": "staff",
+        "action": "handoff:cross_division_executed",
+        "details": "Handoff handoff-1793108843351: ORG-AI-011 -> FUND-AI-007. Workflow: wf-1793108843351.",
+        "signature": "1ce005d3c770a90e6a4a28f9beafb24c586f467efdcf49a8539f75c33a3439f7"
+      },
+      {
+        "id": "audit-killswitch-1793108843353",
+        "timestamp": "2026-10-27T13:47:23.353Z",
+        "actor_role": "master_admin",
+        "action": "workforce:emergency_halt_all",
+        "details": "CRITICAL: Global emergency kill switch activated by Admin safety inspection drill. All 36 agents paused.",
+        "signature": "a09e81f6851aa6329e28f05770baea6a39ee18c08608c0985ec3ee17cdccfee5"
+      },
+      {
+        "id": "audit-resume-1793108843358",
+        "timestamp": "2026-10-27T13:47:23.358Z",
+        "actor_role": "master_admin",
+        "action": "workforce:resume_all",
+        "details": "Global emergency halt deactivated by Executive Governance. All 36 agents resumed.",
+        "signature": "18968ad408fd3de6be7735cefda2687f153107faf83205f22b8b76c4c10b68ef"
+      },
+      {
+        "id": "audit-appr-1793108843359",
+        "timestamp": "2026-10-27T13:47:23.359Z",
+        "actor_role": "Supervising Director",
+        "action": "agent_approval:approved",
+        "details": "Reviewed agent recommendation appr-p29-1793108843358 by Fundraising Orchestrator: approved. Notes: Approved following executive committee review.",
+        "signature": "fc4b644cab38ac36f775ce580cfe831d69299573a0f0c1f362aa63795ac4e47d"
+      },
+      {
+        "id": "audit-handoff-1793108843361",
+        "timestamp": "2026-10-27T13:47:23.361Z",
+        "actor_role": "fundraising_director",
+        "action": "handoff:cross_division_executed",
+        "details": "Handoff handoff-1793108843361: FUND-AI-003 -> ORG-AI-001. Workflow: wf-1793108843361.",
+        "signature": "c65bc5528cef978e262df56e624d7684214c43e01751ea10da3ddabf13e13723"
+      },
+      {
+        "id": "audit-recov-1793108843398",
+        "action": "auth:password_recovery_requested",
+        "email": "fatima.test.1793108843362@example.org",
+        "timestamp": "2026-10-27T13:47:23.398Z",
+        "tokenHash": "ea58233754fc8414256c550753845790d7e43e2ca77e593be45078a9fae4b11d"
+      },
+      {
+        "id": "p28-persist-1793109383504",
+        "timestamp": "2026-10-27T13:56:23.504Z",
+        "actor_role": "system_verification",
+        "action": "test:persistence_durability",
+        "details": "Phase 28 durable restart persistence validation",
+        "signature": "sig-p28-02"
+      },
+      {
+        "id": "p28-txn-1793109383508",
+        "timestamp": "2026-10-27T13:56:23.508Z",
+        "actor_role": "system_verification",
+        "action": "test:transaction_commit",
+        "details": "Phase 28 ACID transaction verification",
+        "signature": "sig-p28-03"
+      },
+      {
+        "id": "audit-sess-1793109383645-dq51",
+        "timestamp": "2026-10-27T13:56:23.645Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user test.staff@phumulani.org (Role: staff, MFA: false).",
+        "signature": "f0c31720a121e7e043953d72387e9147aa311681ec87faa3782e0cd6368b8f9b"
+      },
+      {
+        "id": "audit-sess-1793109383646-fgqv",
+        "timestamp": "2026-10-27T13:56:23.646Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "77d6b937d563cba5f8298aedf6c5b81152de6d9d6aba55f66f432fed0c50fd0b"
+      },
+      {
+        "id": "audit-sess-1793109383647-gf95",
+        "timestamp": "2026-10-27T13:56:23.647Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "1d4e3758d15dd94eb8f4b4b6306ca23c0ccf22f40936f3af466806a830ea4e4b"
+      },
+      {
+        "id": "audit-sess-rev-1793109383647",
+        "timestamp": "2026-10-27T13:56:23.647Z",
+        "actor_role": "staff",
+        "action": "auth:session_revoked",
+        "details": "Revoked session 7357b52d... for user revoke.staff@phumulani.org.",
+        "signature": "3b4a5c53f5db4697ee91a859cc7cfaeb07fd5df96074617644e423bdfd168424"
+      },
+      {
+        "id": "audit-sess-1793109383649-8for",
+        "timestamp": "2026-10-27T13:56:23.649Z",
+        "actor_role": "executive_director",
+        "action": "auth:session_created",
+        "details": "Created session for user comfort.dondo@phumulani.org (Role: executive_director, MFA: true).",
+        "signature": "e09b3654b6a297468777f4b5793aff82dba5372d6caa569d44b391649ebacab2"
+      },
+      {
+        "id": "ai-audit-p28-1793109383650",
+        "timestamp": "2026-10-27T13:56:23.650Z",
+        "actor_role": "ai_agent_runner",
+        "action": "ai:execute_task",
+        "details": "Executed task for FUND-AI-001 with human approval gate intact.",
+        "signature": "d1a3a959375d5d80e7df38ec145293daa858562d777ed25c2a8617c91e73aaaa"
+      },
+      {
+        "id": "audit-pay-1793109383653",
+        "timestamp": "2026-10-27T13:56:23.653Z",
+        "actor_role": "payment_webhook_system",
+        "action": "donation:reconcile_verified",
+        "details": "Reconciled payment pi_p28_1793109383652 for $50. Issued receipt PHUM-2026-75199.",
+        "signature": "63c606df38309e811e5a8efd5ca2b11bb0fc1266b8c6d9065b666e0e0ae3ffd0"
+      },
+      {
+        "id": "p28-conc-1793109383655-0",
+        "timestamp": "2026-10-27T13:56:23.655Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 0",
+        "signature": "sig-conc-0"
+      },
+      {
+        "id": "p28-conc-1793109383655-1",
+        "timestamp": "2026-10-27T13:56:23.655Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 1",
+        "signature": "sig-conc-1"
+      },
+      {
+        "id": "p28-conc-1793109383655-2",
+        "timestamp": "2026-10-27T13:56:23.655Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 2",
+        "signature": "sig-conc-2"
+      },
+      {
+        "id": "p28-conc-1793109383655-3",
+        "timestamp": "2026-10-27T13:56:23.655Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 3",
+        "signature": "sig-conc-3"
+      },
+      {
+        "id": "p28-conc-1793109383655-4",
+        "timestamp": "2026-10-27T13:56:23.655Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 4",
+        "signature": "sig-conc-4"
+      },
+      {
+        "id": "audit-handoff-1793109383661",
+        "timestamp": "2026-10-27T13:56:23.661Z",
+        "actor_role": "staff",
+        "action": "handoff:cross_division_executed",
+        "details": "Handoff handoff-1793109383661: ORG-AI-011 -> FUND-AI-007. Workflow: wf-1793109383661.",
+        "signature": "6bb0b2aa86b539e9a57f0985c39b2eb0fd3b4aef96c98385417054e7221984cb"
+      },
+      {
+        "id": "audit-killswitch-1793109383663",
+        "timestamp": "2026-10-27T13:56:23.663Z",
+        "actor_role": "master_admin",
+        "action": "workforce:emergency_halt_all",
+        "details": "CRITICAL: Global emergency kill switch activated by Admin safety inspection drill. All 36 agents paused.",
+        "signature": "c0a9490f621d3f58d1644e7c12197f0d174d52d320d53057c29b678a96612e44"
+      },
+      {
+        "id": "audit-resume-1793109383665",
+        "timestamp": "2026-10-27T13:56:23.665Z",
+        "actor_role": "master_admin",
+        "action": "workforce:resume_all",
+        "details": "Global emergency halt deactivated by Executive Governance. All 36 agents resumed.",
+        "signature": "cfa090116f53864db5a59b748d077ce863d9bbefcde51e717da1c2290d83b37c"
+      },
+      {
+        "id": "audit-appr-1793109383676",
+        "timestamp": "2026-10-27T13:56:23.676Z",
+        "actor_role": "Supervising Director",
+        "action": "agent_approval:approved",
+        "details": "Reviewed agent recommendation appr-p29-1793109383665 by Fundraising Orchestrator: approved. Notes: Approved following executive committee review.",
+        "signature": "d654fd54a569c36174eece581148cfdff011418c3dc6ed41eb3c95ebb9dccf2b"
+      },
+      {
+        "id": "audit-handoff-1793109383678",
+        "timestamp": "2026-10-27T13:56:23.678Z",
+        "actor_role": "fundraising_director",
+        "action": "handoff:cross_division_executed",
+        "details": "Handoff handoff-1793109383678: FUND-AI-003 -> ORG-AI-001. Workflow: wf-1793109383678.",
+        "signature": "e8ba7b5191833fd776220357c5df49287db0ac1b21c285b14ded9517071984b7"
+      },
+      {
+        "id": "audit-recov-1793109383741",
+        "action": "auth:password_recovery_requested",
+        "email": "fatima.test.1793109383679@example.org",
+        "timestamp": "2026-10-27T13:56:23.741Z",
+        "tokenHash": "3296518edebabb3a1fad82b1bd5bf047d191a701ebe78c50a77548fd0cab6255"
+      },
+      {
+        "id": "p28-persist-1793111664252",
+        "timestamp": "2026-10-27T14:34:24.252Z",
+        "actor_role": "system_verification",
+        "action": "test:persistence_durability",
+        "details": "Phase 28 durable restart persistence validation",
+        "signature": "sig-p28-02"
+      },
+      {
+        "id": "p28-txn-1793111664254",
+        "timestamp": "2026-10-27T14:34:24.254Z",
+        "actor_role": "system_verification",
+        "action": "test:transaction_commit",
+        "details": "Phase 28 ACID transaction verification",
+        "signature": "sig-p28-03"
+      },
+      {
+        "id": "audit-sess-1793111664377-2vo5",
+        "timestamp": "2026-10-27T14:34:24.377Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user test.staff@phumulani.org (Role: staff, MFA: false).",
+        "signature": "a896ca76d273348b4f474eb4c3593093825fc09f4c66270a78a8b7d93c4fbf1c"
+      },
+      {
+        "id": "audit-sess-1793111664379-n4iv",
+        "timestamp": "2026-10-27T14:34:24.379Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "728fe90f185190813b96c124d95c39278f7f05fa1ffab137bb7ee37d5445758b"
+      },
+      {
+        "id": "audit-sess-1793111664379-9vvh",
+        "timestamp": "2026-10-27T14:34:24.379Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "bbfb7d2ca3aca1d15ca8620fad924e512db93348fbd28ebb540238021efed046"
+      },
+      {
+        "id": "audit-sess-rev-1793111664380",
+        "timestamp": "2026-10-27T14:34:24.380Z",
+        "actor_role": "staff",
+        "action": "auth:session_revoked",
+        "details": "Revoked session d707f04b... for user revoke.staff@phumulani.org.",
+        "signature": "00269281627f9a615cf07ec118dead9c7ff515120d2de03380696b58c2329bc7"
+      },
+      {
+        "id": "audit-sess-1793111664383-9dkh",
+        "timestamp": "2026-10-27T14:34:24.383Z",
+        "actor_role": "executive_director",
+        "action": "auth:session_created",
+        "details": "Created session for user comfort.dondo@phumulani.org (Role: executive_director, MFA: true).",
+        "signature": "2f5e8bb8fb7fe0d9216fe24acea095849e78333a62ff55238530842efb9b871d"
+      },
+      {
+        "id": "ai-audit-p28-1793111664385",
+        "timestamp": "2026-10-27T14:34:24.385Z",
+        "actor_role": "ai_agent_runner",
+        "action": "ai:execute_task",
+        "details": "Executed task for FUND-AI-001 with human approval gate intact.",
+        "signature": "9bf525191b0a90af78a5a55034202d69e228df7e01652f4e9ea459bbf9fcf875"
+      },
+      {
+        "id": "audit-pay-1793111664388",
+        "timestamp": "2026-10-27T14:34:24.388Z",
+        "actor_role": "payment_webhook_system",
+        "action": "donation:reconcile_verified",
+        "details": "Reconciled payment pi_p28_1793111664387 for $50. Issued receipt PHUM-2026-33052.",
+        "signature": "ed596109f2a182c4c621b2ac834715b72ac72720909876b9869424b5968ff1d0"
+      },
+      {
+        "id": "p28-conc-1793111664390-0",
+        "timestamp": "2026-10-27T14:34:24.390Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 0",
+        "signature": "sig-conc-0"
+      },
+      {
+        "id": "p28-conc-1793111664390-1",
+        "timestamp": "2026-10-27T14:34:24.390Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 1",
+        "signature": "sig-conc-1"
+      },
+      {
+        "id": "p28-conc-1793111664390-2",
+        "timestamp": "2026-10-27T14:34:24.390Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 2",
+        "signature": "sig-conc-2"
+      },
+      {
+        "id": "p28-conc-1793111664390-3",
+        "timestamp": "2026-10-27T14:34:24.390Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 3",
+        "signature": "sig-conc-3"
+      },
+      {
+        "id": "p28-conc-1793111664390-4",
+        "timestamp": "2026-10-27T14:34:24.390Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 4",
+        "signature": "sig-conc-4"
+      },
+      {
+        "id": "audit-handoff-1793111664394",
+        "timestamp": "2026-10-27T14:34:24.394Z",
+        "actor_role": "staff",
+        "action": "handoff:cross_division_executed",
+        "details": "Handoff handoff-1793111664394: ORG-AI-011 -> FUND-AI-007. Workflow: wf-1793111664394.",
+        "signature": "c2d19d424e58bb22900cab8f33f80b06c806c9f11a3c366d6cac3d0f22e6d129"
+      },
+      {
+        "id": "audit-killswitch-1793111664395",
+        "timestamp": "2026-10-27T14:34:24.396Z",
+        "actor_role": "master_admin",
+        "action": "workforce:emergency_halt_all",
+        "details": "CRITICAL: Global emergency kill switch activated by Admin safety inspection drill. All 36 agents paused.",
+        "signature": "42d8dd7b139a75dea68fd4bbe9253cbcfb5bc40ff38e87680391942f36eeb942"
+      },
+      {
+        "id": "audit-resume-1793111664396",
+        "timestamp": "2026-10-27T14:34:24.396Z",
+        "actor_role": "master_admin",
+        "action": "workforce:resume_all",
+        "details": "Global emergency halt deactivated by Executive Governance. All 36 agents resumed.",
+        "signature": "185019d96978acb87882e4b49c52980a7d32874e2a03c869db580cc991cb8b60"
+      },
+      {
+        "id": "audit-appr-1793111664397",
+        "timestamp": "2026-10-27T14:34:24.397Z",
+        "actor_role": "Supervising Director",
+        "action": "agent_approval:approved",
+        "details": "Reviewed agent recommendation appr-p29-1793111664396 by Fundraising Orchestrator: approved. Notes: Approved following executive committee review.",
+        "signature": "6dbe831908639f2144d570bf29d3bfc16e4eed7fb7644d70f4a3462371f457ce"
+      },
+      {
+        "id": "audit-handoff-1793111664399",
+        "timestamp": "2026-10-27T14:34:24.399Z",
+        "actor_role": "fundraising_director",
+        "action": "handoff:cross_division_executed",
+        "details": "Handoff handoff-1793111664399: FUND-AI-003 -> ORG-AI-001. Workflow: wf-1793111664399.",
+        "signature": "ab3661f266d4012b6f7612e8d6705ef7a8bbbf468914837c8441371843345983"
+      },
+      {
+        "id": "audit-recov-1793111664438",
+        "action": "auth:password_recovery_requested",
+        "email": "fatima.test.1793111664400@example.org",
+        "timestamp": "2026-10-27T14:34:24.438Z",
+        "tokenHash": "908c2d0e0e7d808d6f9419ccff7bb8089f8b23bf6e7f972af2442c63f217efa4"
       }
     ],
     "donations_verified": [
@@ -1762,6 +2709,168 @@
         "verified_at": "2026-10-27T13:05:49.333Z",
         "is_synthetic": false,
         "payment_status": "succeeded"
+      },
+      {
+        "id": "don-1793107839504-06da18",
+        "payment_intent_id": "pi_p28_1793107839504",
+        "donor_name": "P28 Verified Donor",
+        "donor_email": "donor.p28@community.org",
+        "amount": 50,
+        "currency": "usd",
+        "program_designation": "PROG-001",
+        "campaign_id": "general",
+        "receipt_number": "PHUM-2026-99035",
+        "verified_at": "2026-10-27T13:30:39.504Z",
+        "is_synthetic": false,
+        "payment_status": "succeeded"
+      },
+      {
+        "id": "don-1793108071886-6a6b47",
+        "payment_intent_id": "pi_p28_1793108071885",
+        "donor_name": "P28 Verified Donor",
+        "donor_email": "donor.p28@community.org",
+        "amount": 50,
+        "currency": "usd",
+        "program_designation": "PROG-001",
+        "campaign_id": "general",
+        "receipt_number": "PHUM-2026-20686",
+        "verified_at": "2026-10-27T13:34:31.886Z",
+        "is_synthetic": false,
+        "payment_status": "succeeded"
+      },
+      {
+        "id": "don-1793108197061-1f8fd7",
+        "payment_intent_id": "pi_p28_1793108197061",
+        "donor_name": "P28 Verified Donor",
+        "donor_email": "donor.p28@community.org",
+        "amount": 50,
+        "currency": "usd",
+        "program_designation": "PROG-001",
+        "campaign_id": "general",
+        "receipt_number": "PHUM-2026-16894",
+        "verified_at": "2026-10-27T13:36:37.061Z",
+        "is_synthetic": false,
+        "payment_status": "succeeded"
+      },
+      {
+        "id": "don-1793108843343-993e25",
+        "payment_intent_id": "pi_p28_1793108843343",
+        "donor_name": "P28 Verified Donor",
+        "donor_email": "donor.p28@community.org",
+        "amount": 50,
+        "currency": "usd",
+        "program_designation": "PROG-001",
+        "campaign_id": "general",
+        "receipt_number": "PHUM-2026-39354",
+        "verified_at": "2026-10-27T13:47:23.343Z",
+        "is_synthetic": false,
+        "payment_status": "succeeded"
+      },
+      {
+        "id": "don-1793109383652-495ad4",
+        "payment_intent_id": "pi_p28_1793109383652",
+        "donor_name": "P28 Verified Donor",
+        "donor_email": "donor.p28@community.org",
+        "amount": 50,
+        "currency": "usd",
+        "program_designation": "PROG-001",
+        "campaign_id": "general",
+        "receipt_number": "PHUM-2026-75199",
+        "verified_at": "2026-10-27T13:56:23.652Z",
+        "is_synthetic": false,
+        "payment_status": "succeeded"
+      },
+      {
+        "id": "don-1793111664387-d861f0",
+        "payment_intent_id": "pi_p28_1793111664387",
+        "donor_name": "P28 Verified Donor",
+        "donor_email": "donor.p28@community.org",
+        "amount": 50,
+        "currency": "usd",
+        "program_designation": "PROG-001",
+        "campaign_id": "general",
+        "receipt_number": "PHUM-2026-33052",
+        "verified_at": "2026-10-27T14:34:24.387Z",
+        "is_synthetic": false,
+        "payment_status": "succeeded"
+      }
+    ],
+    "p30_verification": [
+      {
+        "id": "p30-rec-1",
+        "status": "COMMITTED_P30"
+      }
+    ],
+    "staff_members": [
+      {
+        "id": "usr-mem-1793108071898-9r1n",
+        "name": "Fatima Al-Mansoor",
+        "email": "fatima.test.1793108071897@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phone": "",
+        "passwordHash": "9e966e651430d39727cd09fd9a7311e57d61b811a1f1fda90736460a40ad92f687ea1d9a657274d64a9fee9287b4d019270cbe356fe1457496b5d4cc08a68a14",
+        "passwordSalt": "fbe9eafe331b6e4234ac0aa8f4008120d67f75caa6609692581455f6606dbfc1",
+        "status": "active",
+        "mfaEnabled": false,
+        "departmentId": "DEPT-COMM",
+        "createdAt": "2026-10-27T13:34:31.932Z",
+        "updatedAt": "2026-10-27T13:34:31.932Z"
+      },
+      {
+        "id": "usr-mem-1793108197078-591z",
+        "name": "Fatima Al-Mansoor",
+        "email": "fatima.test.1793108197078@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phone": "",
+        "passwordHash": "caa0935c6a3ad8176ae8f0927878b8ffdbabc7a6e288dae8f1bd5d0120d0eb331823e9b85b948405655ccc3f63c172ac673532241694fa18990c25ee05e5dbf7",
+        "passwordSalt": "ee199cbd439b1e73dbde7ee97d85fec020c707da9efeaf4d4f6cdd7c84892234",
+        "status": "active",
+        "mfaEnabled": false,
+        "departmentId": "DEPT-COMM",
+        "createdAt": "2026-10-27T13:36:37.113Z",
+        "updatedAt": "2026-10-27T13:36:37.113Z"
+      },
+      {
+        "id": "usr-mem-1793108843362-44ny",
+        "name": "Fatima Al-Mansoor",
+        "email": "fatima.test.1793108843362@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phone": "",
+        "passwordHash": "cc6b35478525156c780f57ac8e91750210cdc442d716962945a6b5d16ea1c6bef57a208597ad7978babfc6df7056a611b7d41d22a2af69a79f05b2df4c93ba96",
+        "passwordSalt": "043796e3690352bd6f8577b3a0692179a064310213222da25823730894de38d7",
+        "status": "active",
+        "mfaEnabled": false,
+        "departmentId": "DEPT-COMM",
+        "createdAt": "2026-10-27T13:47:23.396Z",
+        "updatedAt": "2026-10-27T13:47:23.396Z"
+      },
+      {
+        "id": "usr-mem-1793109383687-ey7k",
+        "name": "Fatima Al-Mansoor",
+        "email": "fatima.test.1793109383679@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phone": "",
+        "passwordHash": "77f1656f7c602de61ce94a85e0325eccfa2a2a3f074d86bf9267b52fe6a781ae76b9fd2ae0c187f590883b8ce908fadc0ba50aac2e3f45678752d1ce8503fd2a",
+        "passwordSalt": "4c907fc790d50693e2bb4bfe1411ccd12c5420d53030e228c3e12865938c92ea",
+        "status": "active",
+        "mfaEnabled": false,
+        "departmentId": "DEPT-COMM",
+        "createdAt": "2026-10-27T13:56:23.740Z",
+        "updatedAt": "2026-10-27T13:56:23.740Z"
+      },
+      {
+        "id": "usr-mem-1793111664401-ez6h",
+        "name": "Fatima Al-Mansoor",
+        "email": "fatima.test.1793111664400@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phone": "",
+        "passwordHash": "fb88cee5633e0929e200157b02b6c7be0507f67c5de0dbd179ccd1a12ffeb623deb1a502ab512f3145f6402527be2cfe7a8767b9b5f44eab41f79714b65dd4b4",
+        "passwordSalt": "ba0a20bd7d715d45edf9aa976bf294c793a431a0dd1f4db2719b7ef9f989c0eb",
+        "status": "active",
+        "mfaEnabled": false,
+        "departmentId": "DEPT-COMM",
+        "createdAt": "2026-10-27T14:34:24.437Z",
+        "updatedAt": "2026-10-27T14:34:24.437Z"
       }
     ]
   }

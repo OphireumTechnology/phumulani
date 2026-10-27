@@ -489,14 +489,24 @@ class DatabaseService {
     });
   }
 
-  public logAudit(entry: { actorId: string; actorName: string; actorRole: string; action: string; resource: string; details: string }): void {
+  public logAudit(entry: {
+    actorId?: string;
+    actorName?: string;
+    actorRole?: string;
+    action: string;
+    resource?: string;
+    details: string;
+    actor?: string;
+    classification?: string;
+  }): void {
+    const actorEmail = entry.actorName || entry.actor || 'system';
     const newEntry: AuditLogItem = {
       id: `aud-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
       timestamp: new Date().toISOString(),
-      actorEmail: entry.actorName,
-      actorRole: entry.actorRole,
+      actorEmail,
+      actorRole: entry.actorRole || 'staff',
       action: entry.action,
-      resource: entry.resource,
+      resource: entry.resource || 'operations',
       details: entry.details,
       ipAddress: '127.0.0.1 (internal)',
       status: 'success',
