@@ -444,6 +444,30 @@ export class PostgresPersistenceAdapter {
         fs.mkdirSync(this.storageDir, { recursive: true });
       }
 
+      // Merge disk records to prevent multi-process write stomping
+      if (fs.existsSync(this.storageFilePath)) {
+        try {
+          const diskRaw = fs.readFileSync(this.storageFilePath, 'utf-8');
+          const diskParsed = JSON.parse(diskRaw);
+          if (diskParsed.tables && typeof diskParsed.tables === 'object') {
+            for (const [table, diskRows] of Object.entries(diskParsed.tables)) {
+              if (Array.isArray(diskRows)) {
+                const memRows = this.memoryStore.get(table) || [];
+                const memMap = new Map(memRows.map((r) => [r.id, r]));
+                for (const dRow of diskRows as TableRowRecord[]) {
+                  if (dRow && dRow.id && !memMap.has(dRow.id)) {
+                    memRows.push(dRow);
+                  }
+                }
+                this.memoryStore.set(table, memRows);
+              }
+            }
+          }
+        } catch {
+          // If disk file is temporarily locked or incomplete, proceed with current memory snapshot
+        }
+      }
+
       const snapshot = {
         metadata: {
           platform: 'Phumulani AI Community Platform',

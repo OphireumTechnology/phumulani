@@ -26,6 +26,8 @@ import { phase34Service } from './src/services/phase34Service';
 import { phase36Service } from './src/services/phase36Service';
 import { phase37Service } from './src/services/phase37Service';
 import { phase38Service } from './src/services/phase38Service';
+import { phase39Service } from './src/services/phase39Service';
+import { serverVerificationService } from './src/server/serverVerificationService';
 import type { AgentDivision } from './src/types/aiWorkforce';
 import type { PermissionDomain } from './src/types/masterAdmin';
 
@@ -2915,6 +2917,74 @@ app.get('/api/v1/phase38/ai-safeguarding', (_req: Request, res: Response) => {
 // M38.15: Phase 38 Final Acceptance Assessment
 app.get('/api/v1/phase38/acceptance', (_req: Request, res: Response) => {
   res.json(phase38Service.getFinalAcceptanceAssessment());
+});
+
+// =============================================================================
+// PHASE 39: RUNTIME SEPARATION, PLAYWRIGHT JOURNEYS, CONCURRENCY & FINANCIAL EVIDENCE
+// =============================================================================
+
+// M39.02 & M39.09: Server Verification Endpoints (Process Restart & Concurrency)
+app.post('/api/v1/verification/persistence-restart', async (_req: Request, res: Response) => {
+  try {
+    const result = await serverVerificationService.executeServerProcessRestartVerification();
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || 'Verification execution failed' });
+  }
+});
+
+app.post('/api/v1/verification/persistence-concurrency', async (_req: Request, res: Response) => {
+  try {
+    const result = await serverVerificationService.executeMultiProcessConcurrencyTest();
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ error: err?.message || 'Concurrency test execution failed' });
+  }
+});
+
+// M39.01: Repository & Baseline Reconciliation
+app.get('/api/v1/phase39/baseline', (_req: Request, res: Response) => {
+  res.json(phase39Service.getBaselineReconciliation());
+});
+
+// M39.02 & M39.03: Browser and Node.js Runtime Separation Audit
+app.get('/api/v1/phase39/runtime-separation', (_req: Request, res: Response) => {
+  res.json(phase39Service.getRuntimeSeparationAudit());
+});
+
+// M39.04 - M39.08: Playwright Journey Suites & Sandbox Status
+app.get('/api/v1/phase39/playwright', (_req: Request, res: Response) => {
+  res.json({ journeys: phase39Service.getPlaywrightJourneys() });
+});
+
+// M39.09: Multi-Process Storage Concurrency Status
+app.get('/api/v1/phase39/concurrency', async (_req: Request, res: Response) => {
+  res.json(await phase39Service.getPersistenceConcurrencyStatus());
+});
+
+// M39.10: Financial Evidence Ledger ($390k Settled vs Bank Reconciled)
+app.get('/api/v1/phase39/financial-evidence', (_req: Request, res: Response) => {
+  res.json({ ledger: phase39Service.getFinancialEvidenceLedger() });
+});
+
+// M39.11: Multilingual QA Review Packets (7 Languages)
+app.get('/api/v1/phase39/multilingual-qa', (_req: Request, res: Response) => {
+  res.json({ packets: phase39Service.getMultilingualQAPackets() });
+});
+
+// M39.12: Real-Browser Accessibility Verification
+app.get('/api/v1/phase39/accessibility', (_req: Request, res: Response) => {
+  res.json(phase39Service.getAccessibilityAudit());
+});
+
+// M39.13: AI Workforce Preservation & Fail-Closed Safeguarding
+app.get('/api/v1/phase39/ai-safeguarding', (_req: Request, res: Response) => {
+  res.json(phase39Service.verifyAiWorkforceAndSafeguarding());
+});
+
+// M39.15: Final Acceptance Assessment
+app.get('/api/v1/phase39/acceptance', (_req: Request, res: Response) => {
+  res.json(phase39Service.getFinalAcceptanceAssessment());
 });
 
 
