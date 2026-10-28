@@ -63,7 +63,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
   const events = state.events;
 
   // Selected program for modal
-  const [selectedProgram, setSelectedProgram] = useState<Program | null>(programs[0]);
+  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
 
   // Volunteer Application Modal
   const [selectedOpportunity, setSelectedOpportunity] = useState<VolunteerOpportunity | null>(null);
@@ -1705,7 +1705,14 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
       {/* MODAL: Program Details & Direct Inquiry */}
       {selectedProgram && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedProgram(null);
+          }}
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-2xl w-full border border-slate-200 shadow-2xl p-6 sm:p-8 space-y-5 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-start border-b border-slate-100 pb-4">
               <div>
@@ -1764,7 +1771,14 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
       {/* MODAL: Volunteer Application Form */}
       {selectedOpportunity && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedOpportunity(null);
+          }}
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-lg w-full border border-slate-200 shadow-2xl p-6 sm:p-8 space-y-5 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-start border-b border-slate-100 pb-3">
               <div>
@@ -1908,7 +1922,14 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
       {/* MODAL: Event RSVP */}
       {selectedEvent && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedEvent(null);
+          }}
+          className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-md w-full border border-slate-200 shadow-2xl p-6 space-y-4">
             <div className="flex justify-between items-start border-b border-slate-100 pb-3">
               <div>

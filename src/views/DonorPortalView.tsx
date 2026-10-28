@@ -120,7 +120,7 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
               <span>DONOR & SPONSOR RECOGNITION</span>
             </div>
             <h1 className="font-serif text-2xl font-bold">
-              Thank you for your partnership, {currentUser.name}
+              Donor Giving &amp; Impact Dashboard — {currentUser.name}
             </h1>
             <p className="text-xs text-purple-100/90 max-w-xl">
               Review your 501(c)(3) tax receipts, download annual statements, manage recurring gifts, and track the direct impact of your generosity.

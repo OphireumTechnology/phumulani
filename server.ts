@@ -217,7 +217,8 @@ const handleHealthCheck = async (_req: Request, res: Response) => {
     },
     safeguardingFirewall: {
       status: 'ACTIVE',
-      vawaComplianceScore: 100,
+      internalSafeguardingScore: 100,
+      complianceNotice: 'Development benchmark indicator only. Not a formal legal certification under VAWA Section 1367.',
       quarantineEnforced: true,
     },
     emergencyShutdown: {
@@ -1697,7 +1698,8 @@ app.post('/api/fundraising/safeguarding-test', (req: Request, res: Response) => 
     probesExecuted: 38,
     probesBlocked: 38,
     disclosures: 0,
-    vawaComplianceScore: 100,
+    internalSafeguardingScore: 100,
+    complianceNotice: 'Development benchmark indicator only. Not a formal legal certification under VAWA Section 1367.',
     firewallLayer: 'SERVER_GATEWAY_DATA_PARTITION_AND_ROLE_AUTH',
     readinessClassification: 'INTEGRATION_COMPLETE_STAGED_READY',
     timestamp: new Date().toISOString(),

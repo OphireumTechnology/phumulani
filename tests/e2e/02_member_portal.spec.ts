@@ -10,11 +10,9 @@ test.describe('M38.04 — Community Member Portal Journeys', () => {
     await page.goto('/');
 
     // Switch role to community_member via RoleSwitcherBar
-    const memberRoleBtn = page.locator('button:has-text("Community Member"), button:has-text("Member")').first();
-    if (await memberRoleBtn.isVisible()) {
-      await memberRoleBtn.click();
-      await page.waitForTimeout(300);
-    }
+    const memberRoleBtn = page.locator('button:has-text("Community Member")').first();
+    await expect(memberRoleBtn).toBeVisible();
+    await memberRoleBtn.click();
 
     // Verify member portal layout or greeting
     const portalHeading = page.locator('h1, h2').filter({ hasText: /Community|Member|Portal|Self-Service/i });
@@ -24,39 +22,38 @@ test.describe('M38.04 — Community Member Portal Journeys', () => {
   test('service request creation and status tracking displays correctly', async ({ page }) => {
     await page.goto('/');
 
-    // Switch to member
-    const memberBtn = page.locator('button:has-text("Member")').first();
-    if (await memberBtn.isVisible()) await memberBtn.click();
+    const memberBtn = page.locator('button:has-text("Community Member")').first();
+    await memberBtn.click();
 
-    // Check service request tab / button
-    const serviceTab = page.locator('button:has-text("Service Requests"), button:has-text("Requests")').first();
-    if (await serviceTab.isVisible()) {
-      await serviceTab.click();
-      await page.waitForTimeout(300);
-    }
+    // Check service request tab
+    const serviceTab = page.locator('button:has-text("Service Requests")').first();
+    await expect(serviceTab).toBeVisible();
+    await serviceTab.click();
+
+    await expect(page.locator('h1, h2, h3').filter({ hasText: /Service Request|Requests/i }).first()).toBeVisible();
   });
 
   test('resource referrals and notification mark-as-read', async ({ page }) => {
     await page.goto('/');
-    const memberBtn = page.locator('button:has-text("Member")').first();
-    if (await memberBtn.isVisible()) await memberBtn.click();
+    const memberBtn = page.locator('button:has-text("Community Member")').first();
+    await memberBtn.click();
 
     const referralTab = page.locator('button:has-text("Referrals")').first();
-    if (await referralTab.isVisible()) {
-      await referralTab.click();
-      await page.waitForTimeout(300);
-    }
+    await expect(referralTab).toBeVisible();
+    await referralTab.click();
+
+    await expect(page.locator('body')).toBeVisible();
   });
 
   test('profile and communication preferences update', async ({ page }) => {
     await page.goto('/');
-    const memberBtn = page.locator('button:has-text("Member")').first();
-    if (await memberBtn.isVisible()) await memberBtn.click();
+    const memberBtn = page.locator('button:has-text("Community Member")').first();
+    await memberBtn.click();
 
     const profileTab = page.locator('button:has-text("Profile"), button:has-text("Preferences")').first();
-    if (await profileTab.isVisible()) {
-      await profileTab.click();
-      await page.waitForTimeout(300);
-    }
+    await expect(profileTab).toBeVisible();
+    await profileTab.click();
+
+    await expect(page.locator('body')).toBeVisible();
   });
 });

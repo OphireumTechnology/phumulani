@@ -277,7 +277,9 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
         { id: 'overview', label: 'My Dashboard', icon: Users },
         { id: 'member_profile', label: 'Member Profile', icon: UserCheck },
         { id: 'service_requests', label: 'General Service Requests', icon: LifeBuoy, badge: memberServiceRequests.length },
+        { id: 'resource_referrals', label: 'Resource Referrals', icon: Compass },
         { id: 'programs', label: 'Program Enrollments', icon: BookOpen, badge: enrolledProgramIds.length },
+        { id: 'comm_preferences', label: 'Communication Preferences', icon: Settings },
         { id: 'privacy_consent', label: 'Consent & Data Rights', icon: Shield },
       ],
     },
@@ -309,10 +311,10 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
           <div className="space-y-1.5">
             <div className="inline-flex items-center gap-2 text-xs font-semibold text-teal-200 bg-teal-900/60 px-3 py-0.5 rounded-full border border-teal-700">
               <Users className="w-3.5 h-3.5 text-teal-300" />
-              <span>VOLUNTEER PORTAL</span>
+              <span>COMMUNITY &amp; VOLUNTEER PORTAL</span>
             </div>
             <h1 className="font-serif text-2xl font-bold">
-              Welcome back, {currentUser.name}
+              Community Member &amp; Volunteer Self-Service Portal — Welcome back, {currentUser.name}
             </h1>
             <p className="text-xs text-teal-100/90 max-w-xl">
               Track your volunteer applications, verify service hours, complete safeguarding credentials, and support immigrant families across Minnesota.

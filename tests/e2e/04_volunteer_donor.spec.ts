@@ -10,10 +10,8 @@ test.describe('M38.06 — Volunteer & Donor Portals', () => {
     await page.goto('/');
 
     const volBtn = page.locator('button:has-text("Volunteer")').first();
-    if (await volBtn.isVisible()) {
-      await volBtn.click();
-      await page.waitForTimeout(300);
-    }
+    await expect(volBtn).toBeVisible();
+    await volBtn.click();
 
     const volunteerHeading = page.locator('h1, h2, h3').filter({ hasText: /Volunteer|Opportunity|Shifts|Hours/i });
     await expect(volunteerHeading.first()).toBeVisible();
@@ -22,11 +20,9 @@ test.describe('M38.06 — Volunteer & Donor Portals', () => {
   test('donor portal displays contribution history with segregated pledges', async ({ page }) => {
     await page.goto('/');
 
-    const donorBtn = page.locator('button:has-text("Donor"), button:has-text("Give")').first();
-    if (await donorBtn.isVisible()) {
-      await donorBtn.click();
-      await page.waitForTimeout(300);
-    }
+    const donorBtn = page.locator('button:has-text("Donor")').first();
+    await expect(donorBtn).toBeVisible();
+    await donorBtn.click();
 
     // Verify donor dashboard elements
     const donorSection = page.locator('h1, h2, h3').filter({ hasText: /Donor|Giving|Contributions|Impact/i });

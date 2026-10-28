@@ -11,25 +11,30 @@ export default defineConfig({
   expect: {
     timeout: 5000,
   },
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  retries: process.env.CI ? 1 : 0,
+  workers: process.env.CI ? 1 : 2,
   reporter: [
     ['list'],
     ['json', { outputFile: 'test-results/playwright-results.json' }],
   ],
   use: {
     baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3000',
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    bypassCSP: true,
+    bypassCSP: false,
   },
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: {
+        ...devices['Desktop Chrome'],
+        launchOptions: {
+          args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+        },
+      },
     },
     {
       name: 'firefox',
@@ -41,13 +46,18 @@ export default defineConfig({
     },
     {
       name: 'Mobile Chrome',
-      use: { ...devices['Pixel 5'] },
+      use: {
+        ...devices['Pixel 5'],
+        launchOptions: {
+          args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+        },
+      },
     },
   ],
   webServer: {
     command: 'npm run dev',
     url: 'http://localhost:3000',
-    reuseExistingServer: true,
+    reuseExistingServer: !process.env.CI,
     timeout: 120000,
   },
 });

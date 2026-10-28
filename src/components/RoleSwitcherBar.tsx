@@ -170,6 +170,66 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
         </button>
 
         <button
+          onClick={() => onViewChange('public')}
+          className={`flex items-center gap-1 px-2 py-0.5 rounded transition-colors text-[11px] font-semibold ${
+            activeView === 'public'
+              ? 'bg-slate-200 text-slate-950 border border-white'
+              : 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700'
+          }`}
+          title="Public Website"
+        >
+          <span>Public Website</span>
+        </button>
+
+        <button
+          onClick={() => onViewChange('community')}
+          className={`flex items-center gap-1 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
+            activeView === 'community'
+              ? 'bg-teal-400 text-slate-950 border border-teal-300'
+              : 'bg-slate-800 text-teal-300 hover:text-white border border-teal-500/40'
+          }`}
+          title="Community Member Portal"
+        >
+          <span>Community Member</span>
+        </button>
+
+        <button
+          onClick={() => onViewChange('community')}
+          className={`flex items-center gap-1 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
+            activeView === 'community'
+              ? 'bg-emerald-400 text-slate-950 border border-emerald-300'
+              : 'bg-slate-800 text-emerald-300 hover:text-white border border-emerald-500/40'
+          }`}
+          title="Volunteer Portal"
+        >
+          <span>Volunteer</span>
+        </button>
+
+        <button
+          onClick={() => onViewChange('donor')}
+          className={`flex items-center gap-1 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
+            activeView === 'donor'
+              ? 'bg-purple-400 text-slate-950 border border-purple-300'
+              : 'bg-slate-800 text-purple-300 hover:text-white border border-purple-500/40'
+          }`}
+          title="Donor & Sponsor Portal"
+        >
+          <span>Donor</span>
+        </button>
+
+        <button
+          onClick={() => onViewChange('staff')}
+          className={`flex items-center gap-1 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
+            activeView === 'staff'
+              ? 'bg-sky-400 text-slate-950 border border-sky-300'
+              : 'bg-slate-800 text-sky-300 hover:text-white border border-sky-500/40'
+          }`}
+          title="Staff Command Center"
+        >
+          <span>Staff</span>
+        </button>
+
+        <button
           onClick={() => onViewChange('master-admin')}
           className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
             activeView === 'master-admin'

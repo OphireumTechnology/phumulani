@@ -113,34 +113,22 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="flex items-center gap-3 shrink-0">
             {/* Language Switcher */}
-            <div className="relative">
-              <button
-                onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                className="flex items-center gap-1 text-[11px] font-medium text-teal-100 hover:text-white transition-colors cursor-pointer"
-                title="Select Language"
+            <div className="flex items-center gap-1">
+              <Globe className="w-3 h-3 text-teal-300" />
+              <label htmlFor="header-lang-select" className="sr-only">Select Language</label>
+              <select
+                id="header-lang-select"
+                aria-label="Select Language"
+                value={currentLang}
+                onChange={(e) => onLangChange(e.target.value)}
+                className="bg-teal-900 border border-teal-700 text-teal-100 rounded px-1.5 py-0.5 text-[11px] font-medium focus:ring-1 focus:ring-teal-300 outline-none cursor-pointer"
               >
-                <Globe className="w-3 h-3 text-teal-300" />
-                <span className="uppercase">{currentLang}</span>
-                <ChevronDown className="w-2.5 h-2.5 text-teal-300" />
-              </button>
-              {langDropdownOpen && (
-                <div className="absolute right-0 mt-1.5 w-36 bg-white rounded-lg shadow-xl border border-slate-200 py-1 z-50 text-slate-800">
-                  {languages.map((l) => (
-                    <button
-                      key={l.code}
-                      onClick={() => {
-                        onLangChange(l.code);
-                        setLangDropdownOpen(false);
-                      }}
-                      className={`w-full text-left px-3 py-1.5 text-xs hover:bg-slate-50 transition-colors ${
-                        currentLang === l.code ? 'font-bold text-[#104F57] bg-teal-50' : ''
-                      }`}
-                    >
-                      {l.label}
-                    </button>
-                  ))}
-                </div>
-              )}
+                {languages.map((l) => (
+                  <option key={l.code} value={l.code} className="bg-white text-slate-800">
+                    {l.label}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <span className="text-teal-700">|</span>
@@ -232,7 +220,7 @@ export const Header: React.FC<HeaderProps> = ({
               Events
             </button>
             <button
-              onClick={() => navigateToSection('get-help-section')}
+              onClick={() => navigateToSection('contact-section')}
               className="hover:text-[#104F57] transition-colors cursor-pointer"
             >
               Contact
@@ -361,7 +349,7 @@ export const Header: React.FC<HeaderProps> = ({
               Events
             </button>
             <button
-              onClick={() => navigateToSection('get-help-section')}
+              onClick={() => navigateToSection('contact-section')}
               className="text-left p-2 rounded-lg hover:bg-slate-50 text-slate-800"
             >
               Contact

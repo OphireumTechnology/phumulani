@@ -22,12 +22,11 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 22
+          cache: 'npm'
 
-      # Temporary bootstrap until a genuine npm lockfile is committed.
-      # Do not use npm ci or setup-node npm caching without package-lock.json.
-      - name: Install dependencies (lockfile bootstrap)
-        run: npm install --no-audit --no-fund
+      - name: Install dependencies (clean reproducible install)
+        run: npm ci --no-audit --no-fund
 
       - name: Verify TypeScript and build
         run: |
