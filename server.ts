@@ -20,13 +20,15 @@ import { CommunityProgramsService } from './src/services/communityProgramsServic
 import { FundingCommandService } from './src/services/fundingCommandService';
 import { mealService } from './src/services/mealService';
 import { paymentProviderService } from './src/services/paymentProviderService';
-import { authSecurityService, type StaffRole } from './src/services/authSecurityService';
+import { authSecurityService, type StaffRole, type UserSession } from './src/services/authSecurityService';
 import { unifiedAiWorkforceService } from './src/services/unifiedAiWorkforceService';
 import { phase34Service } from './src/services/phase34Service';
 import { phase36Service } from './src/services/phase36Service';
 import { phase37Service } from './src/services/phase37Service';
 import { phase38Service } from './src/services/phase38Service';
 import { phase39Service } from './src/services/phase39Service';
+import { memberCaseworkerService } from './src/services/memberCaseworkerService';
+import { programEnrollmentService, isStaffUser } from './src/services/programEnrollmentService';
 import { serverVerificationService } from './src/server/serverVerificationService';
 import type { AgentDivision } from './src/types/aiWorkforce';
 import type { PermissionDomain } from './src/types/masterAdmin';
@@ -2987,6 +2989,357 @@ app.get('/api/v1/phase39/ai-safeguarding', (_req: Request, res: Response) => {
 // M39.15: Final Acceptance Assessment
 app.get('/api/v1/phase39/acceptance', (_req: Request, res: Response) => {
   res.json(phase39Service.getFinalAcceptanceAssessment());
+});
+
+// =============================================================================
+// PHASE 41: M41.03 (MEMBER PROFILE LIFECYCLE) & M41.04 (SERVICE REQUESTS & CASEWORKER)
+// =============================================================================
+
+// Helper to authenticate session from Authorization header
+const extractSession = (req: Request): { valid: boolean; session?: UserSession; error?: string } => {
+  const authHeader = req.headers.authorization || '';
+  const sessionId = authHeader.replace(/^Bearer\s+/i, '').trim();
+  if (!sessionId) {
+    return { valid: false, error: 'Authorization token required. Please sign in.' };
+  }
+  return authSecurityService.validateSession(sessionId);
+};
+
+// M41.03: Member Registration
+app.post('/api/v1/member/register', async (req: Request, res: Response) => {
+  try {
+    const result = await memberCaseworkerService.registerMember(req.body);
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.status(201).json(result);
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || 'Registration failed' });
+  }
+});
+
+// M41.03: Member Login
+app.post('/api/v1/member/login', async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    const result = await memberCaseworkerService.loginMember(email, password);
+    if (result.locked) {
+      return res.status(429).json(result);
+    }
+    if (!result.success) {
+      return res.status(401).json(result);
+    }
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || 'Login failed' });
+  }
+});
+
+// M41.03: Session Check
+app.get('/api/v1/member/session', (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  res.json({ success: true, session: auth.session });
+});
+
+// M41.03: Member Logout
+app.post('/api/v1/member/logout', async (req: Request, res: Response) => {
+  const authHeader = req.headers.authorization || '';
+  const sessionId = authHeader.replace(/^Bearer\s+/i, '').trim();
+  await authSecurityService.revokeSession(sessionId);
+  res.json({ success: true, message: 'Logged out successfully.' });
+});
+
+// M41.03: Profile View (Anti-IDOR)
+app.get('/api/v1/member/profile', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const targetId = (req.query.memberId as string) || auth.session.userId;
+  const result = await memberCaseworkerService.getMemberProfile(targetId, auth.session);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') ? 403 : 404).json(result);
+  }
+  res.json(result);
+});
+
+// M41.03: Profile Update (Anti-IDOR)
+app.put('/api/v1/member/profile', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const targetId = req.body.memberId || auth.session.userId;
+  const result = await memberCaseworkerService.updateMemberProfile(targetId, req.body, auth.session);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') ? 403 : 400).json(result);
+  }
+  res.json(result);
+});
+
+// M41.04: Submit Service Request
+app.post('/api/v1/member/service-requests', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await memberCaseworkerService.submitServiceRequest(req.body, auth.session);
+  if (!result.success) {
+    return res.status(400).json(result);
+  }
+  res.status(201).json(result);
+});
+
+// M41.04: Member Service Requests List
+app.get('/api/v1/member/service-requests', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await memberCaseworkerService.getMemberServiceRequests(auth.session);
+  res.json(result);
+});
+
+// M41.04: Member Service Request By ID (Anti-IDOR)
+app.get('/api/v1/member/service-requests/:id', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await memberCaseworkerService.getMemberServiceRequestById(req.params.id, auth.session);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') ? 403 : 404).json(result);
+  }
+  res.json(result);
+});
+
+// M41.04: Member Notifications
+app.get('/api/v1/member/notifications', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await memberCaseworkerService.getMemberNotifications(auth.session);
+  res.json(result);
+});
+
+// M41.04: Staff Intake Queue (Authorized Staff Only)
+app.get('/api/v1/staff/service-requests', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const filters = {
+    status: req.query.status as string,
+    category: req.query.category as string,
+    unassignedOnly: req.query.unassignedOnly === 'true',
+  };
+  const result = await memberCaseworkerService.getStaffIntakeQueue(auth.session, filters);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') ? 403 : 400).json(result);
+  }
+  res.json(result);
+});
+
+// M41.04: Caseworker Assignment
+app.post('/api/v1/staff/service-requests/:id/assign', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await memberCaseworkerService.assignCaseworker(req.params.id, req.body, auth.session);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') ? 403 : 400).json(result);
+  }
+  res.json(result);
+});
+
+// M41.04: Update Case Status
+app.post('/api/v1/staff/service-requests/:id/status', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await memberCaseworkerService.updateCaseStatus(req.params.id, req.body, auth.session);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') ? 403 : 400).json(result);
+  }
+  res.json(result);
+});
+
+// M41.04: Add Internal Staff Notes
+app.post('/api/v1/staff/service-requests/:id/notes', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await memberCaseworkerService.addInternalStaffNote(
+    req.params.id,
+    req.body.noteText,
+    req.body.minRoleToView || 'staff',
+    auth.session
+  );
+  if (!result.success) {
+    return res.status(400).json(result);
+  }
+  res.json(result);
+});
+
+// M41.04: List Eligible Caseworkers
+app.get('/api/v1/staff/caseworkers', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await memberCaseworkerService.getEligibleCaseworkers(auth.session);
+  if (!result.success) {
+    return res.status(403).json(result);
+  }
+  res.json(result);
+});
+
+// M41.03 + M41.04: Integrated Operational Verification Scenario (21 Steps)
+app.post('/api/v1/verification/m4103-m4104-scenario', async (_req: Request, res: Response) => {
+  try {
+    const result = await memberCaseworkerService.execute21StepOperationalScenario();
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || 'Execution error' });
+  }
+});
+
+// =============================================================================
+// PHASE 41: M41.05 (PROGRAM ENROLLMENT, CAPACITY MANAGEMENT & WAITLISTS)
+// =============================================================================
+
+// M41.05: Program Discovery (Public & Authenticated)
+app.get('/api/v1/programs', async (req: Request, res: Response) => {
+  try {
+    const filters = {
+      category: req.query.category as string,
+      search: req.query.search as string,
+      openOnly: req.query.openOnly === 'true',
+    };
+    const result = await programEnrollmentService.getPrograms(filters);
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || 'Failed to retrieve programs' });
+  }
+});
+
+// M41.05: Single Program Details
+app.get('/api/v1/programs/:id', async (req: Request, res: Response) => {
+  try {
+    const result = await programEnrollmentService.getProgramById(req.params.id);
+    if (!result.success) {
+      return res.status(404).json(result);
+    }
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || 'Failed to retrieve program' });
+  }
+});
+
+// M41.05: Member Submit Enrollment Application (Session Derived)
+app.post('/api/v1/member/enrollments', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await programEnrollmentService.submitEnrollmentApplication(req.body, auth.session);
+  if (!result.success) {
+    return res.status(result.error?.includes('Duplicate') ? 409 : 400).json(result);
+  }
+  res.status(201).json(result);
+});
+
+// M41.05: Member View Own Enrollments
+app.get('/api/v1/member/enrollments', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await programEnrollmentService.getMemberEnrollments(auth.session);
+  res.json(result);
+});
+
+// M41.05: Member View Single Enrollment (Anti-IDOR Protected)
+app.get('/api/v1/member/enrollments/:id', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await programEnrollmentService.getMemberEnrollmentById(req.params.id, auth.session);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') ? 403 : 404).json(result);
+  }
+  res.json(result);
+});
+
+// M41.05: Cancel Enrollment & Release Capacity
+app.post('/api/v1/member/enrollments/:id/cancel', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await programEnrollmentService.cancelEnrollment(req.params.id, req.body.reason, auth.session);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') ? 403 : 400).json(result);
+  }
+  res.json(result);
+});
+
+// M41.05: Staff Program Administration - Applications & Waitlist
+app.get('/api/v1/staff/programs/:id/enrollments', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await programEnrollmentService.getStaffProgramEnrollments(req.params.id, auth.session);
+  if (!result.success) {
+    return res.status(403).json(result);
+  }
+  res.json(result);
+});
+
+// M41.05: Staff Review Application
+app.post('/api/v1/staff/enrollments/:id/review', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await programEnrollmentService.reviewEnrollmentApplication(req.params.id, req.body, auth.session);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') ? 403 : 400).json(result);
+  }
+  res.json(result);
+});
+
+// M41.05: Staff Waitlist Promotion Trigger
+app.post('/api/v1/staff/programs/:id/promote', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const isStaff = isStaffUser(auth.session);
+  if (!isStaff) {
+    return res.status(403).json({ success: false, error: 'Forbidden: Staff role required.' });
+  }
+  const result = await programEnrollmentService.promoteNextWaitlisted(req.params.id, auth.session.userEmail);
+  res.json(result);
+});
+
+// M41.05: 35-Step Deterministic Scenario Verification
+app.post('/api/v1/verification/m4105-scenario', async (_req: Request, res: Response) => {
+  try {
+    const result = await programEnrollmentService.execute35StepEnrollmentScenario();
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || 'Execution error' });
+  }
 });
 
 

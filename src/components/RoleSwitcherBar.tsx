@@ -120,7 +120,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
   }
 
   return (
-    <div className="bg-slate-950 text-white text-xs py-1.5 px-4 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3 no-print z-50">
+    <div className="bg-slate-950 text-white text-xs py-1.5 px-4 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3 no-print z-50 max-w-full overflow-hidden">
       <div className="flex items-center gap-3">
         <div className="flex items-center gap-1.5 font-bold tracking-wide text-amber-400">
           <Sparkles className="w-3.5 h-3.5" />
@@ -132,7 +132,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
           <select
             value={currentUser.id}
             onChange={(e) => handleUserSelect(e.target.value)}
-            className="bg-slate-800 text-slate-100 border border-slate-700 rounded px-2 py-0.5 text-xs focus:ring-1 focus:ring-amber-400 outline-none font-medium cursor-pointer"
+            className="bg-slate-800 text-slate-100 border border-slate-700 rounded px-2 py-0.5 text-xs focus:ring-1 focus:ring-amber-400 outline-none font-medium cursor-pointer max-w-[160px] truncate"
           >
             {users.map((u) => (
               <option key={u.id} value={u.id}>
@@ -147,7 +147,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="hidden sm:flex items-center gap-2 min-w-0 overflow-x-auto py-1">
         <button
           onClick={handleResetData}
           className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded border transition-colors text-[11px] cursor-pointer ${

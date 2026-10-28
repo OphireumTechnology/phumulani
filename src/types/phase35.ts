@@ -377,6 +377,7 @@ export interface CommunityNotification {
   title: string;
   message: string;
   referenceUrl?: string;
+  relatedEntityId?: string;
   isRead: boolean;
   inAppDelivered: boolean;
   externalEmailDeliveryStatus: 'BLOCKED_UNCONFIGURED' | 'QUEUED_LOCALLY';

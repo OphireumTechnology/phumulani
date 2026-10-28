@@ -606,6 +606,36 @@ export class Phase35Service {
     return this.serviceRequests.find((r) => r.id === id || r.trackingReference === id);
   }
 
+  public registerServiceRequest(req: IntegratedServiceRequest): void {
+    const idx = this.serviceRequests.findIndex((r) => r.id === req.id);
+    if (idx >= 0) {
+      this.serviceRequests[idx] = req;
+    } else {
+      this.serviceRequests.unshift(req);
+    }
+  }
+
+  public updateServiceRequest(req: IntegratedServiceRequest): void {
+    const idx = this.serviceRequests.findIndex((r) => r.id === req.id);
+    if (idx >= 0) {
+      this.serviceRequests[idx] = req;
+    } else {
+      this.serviceRequests.unshift(req);
+    }
+  }
+
+  public sendNotification(notification: any): void {
+    this.createNotification({
+      recipientUserId: notification.recipientUserId,
+      recipientRole: notification.recipientRole || 'community_member',
+      category: notification.category || 'SERVICE_UPDATE',
+      title: notification.title,
+      message: notification.body || notification.message,
+      referenceUrl: notification.actionUrl || notification.referenceUrl,
+      relatedEntityId: notification.relatedEntityId,
+    });
+  }
+
   public transitionServiceRequestStatus(
     id: string,
     newStatus: IntegratedServiceRequestStatus,
@@ -1523,6 +1553,7 @@ export class Phase35Service {
     title: string;
     message: string;
     referenceUrl?: string;
+    relatedEntityId?: string;
   }): CommunityNotification {
     const notif: CommunityNotification = {
       id: `NOTIF-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
@@ -1532,6 +1563,7 @@ export class Phase35Service {
       title: params.title,
       message: params.message,
       referenceUrl: params.referenceUrl,
+      relatedEntityId: params.relatedEntityId,
       isRead: false,
       inAppDelivered: true,
       externalEmailDeliveryStatus: 'BLOCKED_UNCONFIGURED', // Truth-in-monitoring: external email delivery blocked

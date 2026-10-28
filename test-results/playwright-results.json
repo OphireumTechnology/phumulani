@@ -4,7 +4,7 @@
       "/usr/local/bin/node",
       "/app/applet/node_modules/.bin/playwright",
       "test",
-      "--list"
+      "--project=chromium"
     ],
     "configFile": "/app/applet/playwright.config.ts",
     "rootDir": "/app/applet/tests/e2e",
@@ -17,14 +17,18 @@
     "grep": {},
     "grepInvert": null,
     "maxFailures": 0,
-    "metadata": {},
+    "metadata": {
+      "actualWorkers": 2
+    },
     "preserveOutput": "always",
     "projects": [
       {
         "outputDir": "/app/applet/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "chromium",
         "name": "chromium",
         "testDir": "/app/applet/tests/e2e",
@@ -38,7 +42,9 @@
         "outputDir": "/app/applet/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "firefox",
         "name": "firefox",
         "testDir": "/app/applet/tests/e2e",
@@ -52,7 +58,9 @@
         "outputDir": "/app/applet/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "webkit",
         "name": "webkit",
         "testDir": "/app/applet/tests/e2e",
@@ -66,7 +74,9 @@
         "outputDir": "/app/applet/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "id": "Mobile Chrome",
         "name": "Mobile Chrome",
         "testDir": "/app/applet/tests/e2e",
@@ -84,7 +94,9 @@
         "outputDir": "/app/applet/test-results",
         "repeatEach": 1,
         "retries": 0,
-        "metadata": {},
+        "metadata": {
+          "actualWorkers": 2
+        },
         "name": "chromium",
         "testDir": "/app/applet/tests/e2e",
         "snapshotDir": "/app/applet/tests/e2e",
@@ -121,124 +133,6 @@
         "dependencies": [],
         "ignoreSnapshots": false,
         "__projectId": "chromium"
-      },
-      {
-        "grep": {},
-        "grepInvert": null,
-        "outputDir": "/app/applet/test-results",
-        "repeatEach": 1,
-        "retries": 0,
-        "metadata": {},
-        "name": "firefox",
-        "testDir": "/app/applet/tests/e2e",
-        "snapshotDir": "/app/applet/tests/e2e",
-        "testIgnore": [],
-        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
-        "timeout": 30000,
-        "use": {
-          "baseURL": "http://localhost:3000",
-          "trace": "retain-on-failure",
-          "screenshot": "only-on-failure",
-          "video": "retain-on-failure",
-          "bypassCSP": false,
-          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:157.0) Gecko/20100101 Firefox/157.0",
-          "viewport": {
-            "width": 1280,
-            "height": 720
-          },
-          "screen": {
-            "width": 1920,
-            "height": 1080
-          },
-          "deviceScaleFactor": 1,
-          "isMobile": false,
-          "hasTouch": false,
-          "defaultBrowserType": "firefox"
-        },
-        "dependencies": [],
-        "ignoreSnapshots": false,
-        "__projectId": "firefox"
-      },
-      {
-        "grep": {},
-        "grepInvert": null,
-        "outputDir": "/app/applet/test-results",
-        "repeatEach": 1,
-        "retries": 0,
-        "metadata": {},
-        "name": "webkit",
-        "testDir": "/app/applet/tests/e2e",
-        "snapshotDir": "/app/applet/tests/e2e",
-        "testIgnore": [],
-        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
-        "timeout": 30000,
-        "use": {
-          "baseURL": "http://localhost:3000",
-          "trace": "retain-on-failure",
-          "screenshot": "only-on-failure",
-          "video": "retain-on-failure",
-          "bypassCSP": false,
-          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15",
-          "viewport": {
-            "width": 1280,
-            "height": 720
-          },
-          "screen": {
-            "width": 1792,
-            "height": 1120
-          },
-          "deviceScaleFactor": 2,
-          "isMobile": false,
-          "hasTouch": false,
-          "defaultBrowserType": "webkit"
-        },
-        "dependencies": [],
-        "ignoreSnapshots": false,
-        "__projectId": "webkit"
-      },
-      {
-        "grep": {},
-        "grepInvert": null,
-        "outputDir": "/app/applet/test-results",
-        "repeatEach": 1,
-        "retries": 0,
-        "metadata": {},
-        "name": "Mobile Chrome",
-        "testDir": "/app/applet/tests/e2e",
-        "snapshotDir": "/app/applet/tests/e2e",
-        "testIgnore": [],
-        "testMatch": "**/*.@(spec|test).?(c|m)[jt]s?(x)",
-        "timeout": 30000,
-        "use": {
-          "baseURL": "http://localhost:3000",
-          "trace": "retain-on-failure",
-          "screenshot": "only-on-failure",
-          "video": "retain-on-failure",
-          "bypassCSP": false,
-          "userAgent": "Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Mobile Safari/537.36",
-          "viewport": {
-            "width": 393,
-            "height": 727
-          },
-          "screen": {
-            "width": 393,
-            "height": 851
-          },
-          "deviceScaleFactor": 2.75,
-          "isMobile": true,
-          "hasTouch": true,
-          "defaultBrowserType": "chromium",
-          "launchOptions": {
-            "args": [
-              "--no-sandbox",
-              "--disable-setuid-sandbox",
-              "--disable-dev-shm-usage"
-            ]
-          }
-        },
-        "dependencies": [],
-        "ignoreSnapshots": false,
-        "__projectId": "Mobile Chrome"
       }
     ],
     "quiet": false,
@@ -296,8 +190,22 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 6343,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T19:17:07.671Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
               "id": "32590d30365645563343-0136b02b8e601346fbfc",
@@ -316,8 +224,22 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 6713,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T19:17:14.326Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
               "id": "32590d30365645563343-147e2125937bbbec813e",
@@ -336,8 +258,22 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5719,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T19:17:21.062Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
               "id": "32590d30365645563343-dc8f57b42c0f42a41159",
@@ -356,8 +292,22 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5980,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T19:17:26.843Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
               "id": "32590d30365645563343-30923274d55b06d53e9b",
@@ -376,311 +326,25 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 4509,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T19:17:32.840Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
               "id": "32590d30365645563343-e9dcb1fda0b9f0f1b3a5",
-              "file": "01_public_website.spec.ts",
-              "line": 76,
-              "column": 3
-            },
-            {
-              "title": "homepage loads with correct branding, mission, and emergency escape",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "32590d30365645563343-5b4176c965e27b862359",
-              "file": "01_public_website.spec.ts",
-              "line": 9,
-              "column": 3
-            },
-            {
-              "title": "navigation links function correctly across public sections",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "32590d30365645563343-078db91689faa8ae1e4a",
-              "file": "01_public_website.spec.ts",
-              "line": 22,
-              "column": 3
-            },
-            {
-              "title": "multilingual language switching updates UI text",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "32590d30365645563343-424c5ddcb5228f262463",
-              "file": "01_public_website.spec.ts",
-              "line": 46,
-              "column": 3
-            },
-            {
-              "title": "contact form handles input and validation without submission crash",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "32590d30365645563343-bc4f295d2c90867d9573",
-              "file": "01_public_website.spec.ts",
-              "line": 56,
-              "column": 3
-            },
-            {
-              "title": "mobile viewport renders responsive hamburger or streamlined navigation",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "32590d30365645563343-205ac6f8264c0a521522",
-              "file": "01_public_website.spec.ts",
-              "line": 76,
-              "column": 3
-            },
-            {
-              "title": "homepage loads with correct branding, mission, and emergency escape",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "32590d30365645563343-c802674e9f3cef4c4638",
-              "file": "01_public_website.spec.ts",
-              "line": 9,
-              "column": 3
-            },
-            {
-              "title": "navigation links function correctly across public sections",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "32590d30365645563343-cde200be99d5f21fef74",
-              "file": "01_public_website.spec.ts",
-              "line": 22,
-              "column": 3
-            },
-            {
-              "title": "multilingual language switching updates UI text",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "32590d30365645563343-54cd53d8c6efd66c1f40",
-              "file": "01_public_website.spec.ts",
-              "line": 46,
-              "column": 3
-            },
-            {
-              "title": "contact form handles input and validation without submission crash",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "32590d30365645563343-9ec5ca7b1f85b515ec51",
-              "file": "01_public_website.spec.ts",
-              "line": 56,
-              "column": 3
-            },
-            {
-              "title": "mobile viewport renders responsive hamburger or streamlined navigation",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "32590d30365645563343-a15611d2fddd4501b5ac",
-              "file": "01_public_website.spec.ts",
-              "line": 76,
-              "column": 3
-            },
-            {
-              "title": "homepage loads with correct branding, mission, and emergency escape",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "32590d30365645563343-565077e6c58c7cc6c8c4",
-              "file": "01_public_website.spec.ts",
-              "line": 9,
-              "column": 3
-            },
-            {
-              "title": "navigation links function correctly across public sections",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "32590d30365645563343-58ef99fd502bf904db8d",
-              "file": "01_public_website.spec.ts",
-              "line": 22,
-              "column": 3
-            },
-            {
-              "title": "multilingual language switching updates UI text",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "32590d30365645563343-b3486369dca046c15123",
-              "file": "01_public_website.spec.ts",
-              "line": 46,
-              "column": 3
-            },
-            {
-              "title": "contact form handles input and validation without submission crash",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "32590d30365645563343-d53021d95602eae48a7d",
-              "file": "01_public_website.spec.ts",
-              "line": 56,
-              "column": 3
-            },
-            {
-              "title": "mobile viewport renders responsive hamburger or streamlined navigation",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "32590d30365645563343-0efbab0367c66faf234a",
               "file": "01_public_website.spec.ts",
               "line": 76,
               "column": 3
@@ -713,8 +377,22 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 6591,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T19:17:07.666Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
               "id": "1bcdefcd6dd997c70750-c9e58794b0fa20f9aa7f",
@@ -733,8 +411,22 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 6409,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T19:17:14.561Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
               "id": "1bcdefcd6dd997c70750-e3c22100fdb4ce934f1c",
@@ -753,8 +445,22 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 5692,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T19:17:21.036Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
               "id": "1bcdefcd6dd997c70750-53591a86a6d70e039446",
@@ -773,251 +479,25 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 5770,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T19:17:26.746Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
               "id": "1bcdefcd6dd997c70750-a8f9123a93aa9aa03721",
-              "file": "02_member_portal.spec.ts",
-              "line": 48,
-              "column": 3
-            },
-            {
-              "title": "member authentication and dashboard rendering",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "1bcdefcd6dd997c70750-27db9001c7d51fc43e35",
-              "file": "02_member_portal.spec.ts",
-              "line": 9,
-              "column": 3
-            },
-            {
-              "title": "service request creation and status tracking displays correctly",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "1bcdefcd6dd997c70750-6d6ebb454a0d3cd47108",
-              "file": "02_member_portal.spec.ts",
-              "line": 22,
-              "column": 3
-            },
-            {
-              "title": "resource referrals and notification mark-as-read",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "1bcdefcd6dd997c70750-e9309b3f2c3165f229f3",
-              "file": "02_member_portal.spec.ts",
-              "line": 36,
-              "column": 3
-            },
-            {
-              "title": "profile and communication preferences update",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "1bcdefcd6dd997c70750-75609457532ced048287",
-              "file": "02_member_portal.spec.ts",
-              "line": 48,
-              "column": 3
-            },
-            {
-              "title": "member authentication and dashboard rendering",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "1bcdefcd6dd997c70750-5f29ae5a39b335af3d44",
-              "file": "02_member_portal.spec.ts",
-              "line": 9,
-              "column": 3
-            },
-            {
-              "title": "service request creation and status tracking displays correctly",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "1bcdefcd6dd997c70750-5dfb19f470cbd9da0ddd",
-              "file": "02_member_portal.spec.ts",
-              "line": 22,
-              "column": 3
-            },
-            {
-              "title": "resource referrals and notification mark-as-read",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "1bcdefcd6dd997c70750-1fa1fd140328cea50a27",
-              "file": "02_member_portal.spec.ts",
-              "line": 36,
-              "column": 3
-            },
-            {
-              "title": "profile and communication preferences update",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "1bcdefcd6dd997c70750-4144d55f60f475b91554",
-              "file": "02_member_portal.spec.ts",
-              "line": 48,
-              "column": 3
-            },
-            {
-              "title": "member authentication and dashboard rendering",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "1bcdefcd6dd997c70750-d62d9d6a5be810a61651",
-              "file": "02_member_portal.spec.ts",
-              "line": 9,
-              "column": 3
-            },
-            {
-              "title": "service request creation and status tracking displays correctly",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "1bcdefcd6dd997c70750-026593cf64e7616ae849",
-              "file": "02_member_portal.spec.ts",
-              "line": 22,
-              "column": 3
-            },
-            {
-              "title": "resource referrals and notification mark-as-read",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "1bcdefcd6dd997c70750-21823e0c67f1f795e0fb",
-              "file": "02_member_portal.spec.ts",
-              "line": 36,
-              "column": 3
-            },
-            {
-              "title": "profile and communication preferences update",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "1bcdefcd6dd997c70750-a53cdf46cc5f073fd579",
               "file": "02_member_portal.spec.ts",
               "line": 48,
               "column": 3
@@ -1050,8 +530,22 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 5399,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T19:17:32.541Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
               "id": "511e49bc7fc4706bd334-f92119c2ee62923a46c9",
@@ -1070,8 +564,22 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 5835,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T19:17:37.955Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
               "id": "511e49bc7fc4706bd334-587b0804f0bdafe3c750",
@@ -1090,191 +598,25 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "parallelIndex": 1,
+                      "status": "passed",
+                      "duration": 4756,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T19:17:43.864Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
               "id": "511e49bc7fc4706bd334-6aaf467ec20d27ba8d11",
-              "file": "03_staff_admin.spec.ts",
-              "line": 35,
-              "column": 3
-            },
-            {
-              "title": "staff command center loads with operational queues",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "511e49bc7fc4706bd334-ad76c0892c1428e040b9",
-              "file": "03_staff_admin.spec.ts",
-              "line": 10,
-              "column": 3
-            },
-            {
-              "title": "case assignment and referral approvals flow",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "511e49bc7fc4706bd334-c4d09b3366d1cbc37b07",
-              "file": "03_staff_admin.spec.ts",
-              "line": 22,
-              "column": 3
-            },
-            {
-              "title": "master administration navigation and 36 AI agent status",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "511e49bc7fc4706bd334-9d19b631cbedf407a043",
-              "file": "03_staff_admin.spec.ts",
-              "line": 35,
-              "column": 3
-            },
-            {
-              "title": "staff command center loads with operational queues",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "511e49bc7fc4706bd334-ffadc862b2f4ee895051",
-              "file": "03_staff_admin.spec.ts",
-              "line": 10,
-              "column": 3
-            },
-            {
-              "title": "case assignment and referral approvals flow",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "511e49bc7fc4706bd334-e14d84e9021b6ed7c0de",
-              "file": "03_staff_admin.spec.ts",
-              "line": 22,
-              "column": 3
-            },
-            {
-              "title": "master administration navigation and 36 AI agent status",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "511e49bc7fc4706bd334-d0976173e53f9478022d",
-              "file": "03_staff_admin.spec.ts",
-              "line": 35,
-              "column": 3
-            },
-            {
-              "title": "staff command center loads with operational queues",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "511e49bc7fc4706bd334-b891ed608bd78eac97a8",
-              "file": "03_staff_admin.spec.ts",
-              "line": 10,
-              "column": 3
-            },
-            {
-              "title": "case assignment and referral approvals flow",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "511e49bc7fc4706bd334-7bfbeb687ce38e13d5ff",
-              "file": "03_staff_admin.spec.ts",
-              "line": 22,
-              "column": 3
-            },
-            {
-              "title": "master administration navigation and 36 AI agent status",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "511e49bc7fc4706bd334-e4fc7a49481896bea67f",
               "file": "03_staff_admin.spec.ts",
               "line": 35,
               "column": 3
@@ -1307,8 +649,22 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5141,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T19:17:37.375Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
               "id": "0f3674bc6a3a680bd284-33035925dca994df39d9",
@@ -1327,131 +683,25 @@
                   "expectedStatus": "passed",
                   "projectId": "chromium",
                   "projectName": "chromium",
-                  "results": [],
-                  "status": "skipped"
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 5253,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-10-28T19:17:42.533Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
                 }
               ],
               "id": "0f3674bc6a3a680bd284-01148180a522942dd6f3",
-              "file": "04_volunteer_donor.spec.ts",
-              "line": 20,
-              "column": 3
-            },
-            {
-              "title": "volunteer portal loads shifts and service hour submission",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "0f3674bc6a3a680bd284-f473cb2818d55dc070cc",
-              "file": "04_volunteer_donor.spec.ts",
-              "line": 9,
-              "column": 3
-            },
-            {
-              "title": "donor portal displays contribution history with segregated pledges",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "firefox",
-                  "projectName": "firefox",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "0f3674bc6a3a680bd284-9061262ceea79eb7c7d0",
-              "file": "04_volunteer_donor.spec.ts",
-              "line": 20,
-              "column": 3
-            },
-            {
-              "title": "volunteer portal loads shifts and service hour submission",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "0f3674bc6a3a680bd284-4292ba05cdb84a642ce5",
-              "file": "04_volunteer_donor.spec.ts",
-              "line": 9,
-              "column": 3
-            },
-            {
-              "title": "donor portal displays contribution history with segregated pledges",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "webkit",
-                  "projectName": "webkit",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "0f3674bc6a3a680bd284-8cbbfce49e4396693bd3",
-              "file": "04_volunteer_donor.spec.ts",
-              "line": 20,
-              "column": 3
-            },
-            {
-              "title": "volunteer portal loads shifts and service hour submission",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "0f3674bc6a3a680bd284-542fefe7f98e3f7fc492",
-              "file": "04_volunteer_donor.spec.ts",
-              "line": 9,
-              "column": 3
-            },
-            {
-              "title": "donor portal displays contribution history with segregated pledges",
-              "ok": true,
-              "tags": [],
-              "tests": [
-                {
-                  "timeout": 30000,
-                  "annotations": [],
-                  "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
-                  "results": [],
-                  "status": "skipped"
-                }
-              ],
-              "id": "0f3674bc6a3a680bd284-1e07555dc731e4dd7231",
               "file": "04_volunteer_donor.spec.ts",
               "line": 20,
               "column": 3
@@ -1463,10 +713,10 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-10-28T07:26:44.464Z",
-    "duration": 216.471,
-    "expected": 0,
-    "skipped": 56,
+    "startTime": "2026-10-28T19:17:06.562Z",
+    "duration": 42136.704,
+    "expected": 14,
+    "skipped": 0,
     "unexpected": 0,
     "flaky": 0
   }

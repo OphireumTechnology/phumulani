@@ -1,0 +1,1181 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+# PHASE 41 — MASTER DEVELOPMENT CONTINUATION
+## M41.05 — PROGRAM ENROLLMENT, CAPACITY MANAGEMENT & WAITLIST COORDINATION
+
+**Repository:** OphireumTechnology/phumulani  
+**Execution:** Actual source-code development, integration, testing and reporting  
+**Previous acceptance:** M41.01–M41.04 reported complete  
+**Current status:** DEVELOPMENT_ACCEPTED_WITH_LIMITATIONS  
+**Infrastructure:** Production deployment deferred
+
+---
+
+# 1. MASTER EXECUTION INSTRUCTION
+
+GOOGLE AI STUDIO:
+
+PROCEED WITH M41.05.
+
+DEVELOP AND INTEGRATE A COMPLETE COMMUNITY PROGRAM ENROLLMENT, CAPACITY MANAGEMENT AND WAITLIST COORDINATION SYSTEM.
+
+DO NOT REBUILD THE APPLICATION.
+
+DO NOT REPLACE EXISTING MEMBER MANAGEMENT.
+
+DO NOT REPLACE EXISTING CASE MANAGEMENT.
+
+DO NOT CREATE DUPLICATE PROGRAM TABLES OR SERVICES.
+
+REUSE THE AUTHORITATIVE APPLICATION DATA MODELS, SERVICES, AUTHENTICATION, NOTIFICATIONS, AUDIT LOGGING AND PERSISTENCE ADAPTERS.
+
+PRESERVE ALL EXISTING FUNCTIONALITY FROM M41.01–M41.04.
+
+IMPLEMENT REAL DATA TRANSITIONS, NOT STATIC INTERFACE DEMONSTRATIONS.
+
+USE SYNTHETIC DEVELOPMENT DATA.
+
+DO NOT CLAIM SUCCESS WITHOUT EXECUTED TEST EVIDENCE.
+
+---
+
+# 2. DEVELOPMENT OBJECTIVES
+
+M41.05 MUST DELIVER:
+
+1. Community program discovery.
+2. Member enrollment applications.
+3. Eligibility validation.
+4. Authorized enrollment approvals.
+5. Program capacity management.
+6. Automatic waitlist placement.
+7. Fair and auditable waitlist ordering.
+8. Waitlist promotion.
+9. Enrollment cancellation.
+10. Capacity release and recalculation.
+11. Program-specific member notifications.
+12. Staff program administration.
+13. Cross-portal enrollment synchronization.
+14. Durable enrollment and waitlist records.
+15. Complete security and safeguarding verification.
+16. Real browser end-to-end tests.
+17. Updated GitHub Actions CI verification.
+18. Evidence-based development reports.
+
+---
+
+# 3. M41.05.01 — REPOSITORY AND PROGRAM MODEL RECONCILIATION
+
+Inspect the existing repository before modifying code.
+
+Locate and examine:
+
+- Program data models.
+- Program records.
+- Community member records.
+- Existing enrollment records.
+- Program capacity fields.
+- Waitlist models.
+- Program administration services.
+- Member authentication.
+- Staff authorization.
+- Notification services.
+- Audit services.
+- Persistence adapters.
+- Existing program-related tests.
+
+Identify the authoritative program and enrollment models.
+
+Determine whether existing fields already support:
+
+- Program ID.
+- Program name.
+- Program category.
+- Program status.
+- Maximum capacity.
+- Enrollment count.
+- Eligibility rules.
+- Enrollment status.
+- Waitlist position.
+- Application timestamp.
+- Approval timestamp.
+- Assigned staff reviewer.
+- Program schedule.
+- Program location.
+- Safeguarding classification.
+
+Reuse existing fields wherever appropriate.
+
+Where new fields are required, implement compatible schema extensions.
+
+Preserve existing records and backward compatibility.
+
+### Required output
+
+`phase41_m4105_repository_reconciliation_report.md`
+
+---
+
+# 4. M41.05.02 — MEMBER PROGRAM DISCOVERY
+
+Implement or verify that authenticated members can:
+
+- Browse available programs.
+- Search programs.
+- Filter programs by category.
+- View program descriptions.
+- View schedules.
+- View eligibility information.
+- View permitted capacity information.
+- Identify whether applications are open.
+- View their existing enrollment status.
+
+Public visitors may view public program information.
+
+Private member and enrollment records must remain protected.
+
+Do not disclose restricted program participant information.
+
+### Required tests
+
+- Public program discovery.
+- Authenticated member program discovery.
+- Program filtering.
+- Closed program handling.
+- Restricted program visibility.
+- Mobile program navigation.
+- Seven-language interface support.
+
+---
+
+# 5. M41.05.03 — MEMBER ENROLLMENT APPLICATIONS
+
+Implement a complete enrollment application workflow.
+
+### Required sequence
+
+STEP 1: Authenticated member selects a program.
+
+STEP 2: Application displays eligibility and enrollment requirements.
+
+STEP 3: Member confirms the application.
+
+STEP 4: Server derives member identity from the authenticated session.
+
+STEP 5: Server validates the program.
+
+STEP 6: Server validates enrollment availability.
+
+STEP 7: Server checks for duplicate applications.
+
+STEP 8: Server creates an enrollment application.
+
+STEP 9: Application receives a unique enrollment identifier.
+
+STEP 10: Application is persisted.
+
+STEP 11: Member receives confirmation.
+
+STEP 12: Authorized staff can review the application.
+
+STEP 13: Audit history records the submission.
+
+### Security requirements
+
+Never trust member IDs supplied by the browser.
+
+Never allow members to create enrollment applications for other members without an explicitly authorized representative workflow.
+
+Prevent duplicate active applications for the same member and program.
+
+Use idempotency protection where appropriate.
+
+---
+
+# 6. M41.05.04 — ELIGIBILITY VALIDATION
+
+Implement or verify program eligibility rules.
+
+Potential eligibility factors include:
+
+- Program availability.
+- Enrollment window.
+- Membership status.
+- Required application information.
+- Program-specific participation requirements.
+- Existing enrollment.
+- Program restrictions.
+
+Only use eligibility rules authorized by the existing program model and applicable organizational policy.
+
+Do not invent discriminatory eligibility rules.
+
+Do not automatically reject applicants based on protected characteristics.
+
+Where eligibility requires human judgment, route the application to authorized staff.
+
+### Eligibility outcomes
+
+- ELIGIBLE.
+- REVIEW_REQUIRED.
+- INELIGIBLE.
+
+Each outcome must include appropriate supporting information.
+
+Sensitive supporting information must remain protected.
+
+---
+
+# 7. M41.05.05 — ENROLLMENT LIFECYCLE STATE MACHINE
+
+Reuse canonical enrollment statuses where they already exist.
+
+If the existing model lacks a complete state machine, implement a compatible lifecycle covering:
+
+APPLICATION_SUBMITTED.
+
+ELIGIBILITY_REVIEW.
+
+APPROVED.
+
+ENROLLED.
+
+WAITLISTED.
+
+DECLINED.
+
+CANCELLED.
+
+COMPLETED.
+
+WITHDRAWN.
+
+### Required behavior
+
+- Validate all state transitions.
+- Require appropriate authorization.
+- Reject illegal status changes.
+- Record every transition.
+- Preserve transition timestamps.
+- Notify affected members when appropriate.
+
+Do not permit client-side manipulation of enrollment status.
+
+---
+
+# 8. M41.05.06 — PROGRAM CAPACITY MANAGEMENT
+
+Implement authoritative capacity enforcement.
+
+### Required fields
+
+Where compatible with existing models:
+
+- Maximum capacity.
+- Confirmed enrollment count.
+- Available places.
+- Waitlist count.
+- Enrollment status.
+
+### Capacity formula
+
+For programs with a finite capacity:
+
+AVAILABLE_PLACES = MAX_CAPACITY − ACTIVE_CONFIRMED_ENROLLMENTS
+
+Do not count:
+
+- Cancelled applications.
+- Declined applications.
+- Withdrawn applications.
+- Completed historical participation, unless the program model explicitly defines those records as occupying current capacity.
+- Waitlisted applicants.
+
+### Critical requirement
+
+NEVER ALLOW CONFIRMED ENROLLMENTS TO EXCEED PROGRAM CAPACITY.
+
+Capacity must be enforced by the authoritative server-side operation.
+
+Do not rely on frontend availability calculations.
+
+### Concurrency requirement
+
+If one place remains and multiple members apply simultaneously:
+
+ONLY ONE MEMBER MAY RECEIVE THE FINAL CONFIRMED PLACE.
+
+Other eligible applicants must receive an appropriate waitlist or review outcome.
+
+Implement atomic capacity checks using the active persistence architecture.
+
+A read-then-write sequence without concurrency protection is not sufficient.
+
+### Required tests
+
+- Empty program.
+- Partially filled program.
+- Full program.
+- Last available place.
+- Concurrent applications.
+- Capacity reduction.
+- Capacity increase.
+- Cancellation and capacity release.
+- Duplicate enrollment attempt.
+
+---
+
+# 9. M41.05.07 — AUTOMATIC WAITLIST PLACEMENT
+
+When a program reaches capacity, eligible applicants must be handled according to the program's configured waitlist policy.
+
+Where waitlisting is enabled:
+
+- Create a durable waitlist record.
+- Assign an authoritative queue position.
+- Preserve application timestamp.
+- Record waitlist entry.
+- Notify the member.
+- Make waitlist status visible to the member.
+
+Do not expose other applicants' identities.
+
+### Queue ordering
+
+Use the existing authorized waitlist policy.
+
+If no policy exists, implement deterministic first-in-first-out ordering, with a stable secondary identifier to resolve equal timestamps.
+
+Document the policy.
+
+Do not silently reorder the waitlist.
+
+---
+
+# 10. M41.05.08 — WAITLIST PROMOTION
+
+Implement promotion when capacity becomes available.
+
+### Required sequence
+
+STEP 1: A confirmed place becomes available.
+
+STEP 2: The system verifies the authoritative capacity count.
+
+STEP 3: The system identifies the next eligible waitlisted application.
+
+STEP 4: Eligibility is revalidated where required.
+
+STEP 5: The promotion operation reserves or assigns capacity atomically.
+
+STEP 6: Enrollment status is updated.
+
+STEP 7: Waitlist position records are recalculated.
+
+STEP 8: The promoted member receives an appropriate notification.
+
+STEP 9: Audit history records the promotion.
+
+### Important distinction
+
+If program policy requires the member to accept an offer before enrollment, use an offer-and-expiry process rather than automatically confirming participation.
+
+An outstanding offer must reserve capacity according to the approved policy.
+
+### Required safeguards
+
+- No double promotion.
+- No duplicate enrollment.
+- No overbooking.
+- No unauthorized promotion.
+- No skipped applicant without a documented reason.
+- No loss of queue ordering after restart.
+
+---
+
+# 11. M41.05.09 — ENROLLMENT CANCELLATION AND CAPACITY RELEASE
+
+Implement cancellation for authorized members and staff.
+
+### Required behavior
+
+- Verify the requesting user's authority.
+- Validate the enrollment state.
+- Record the cancellation.
+- Release capacity where applicable.
+- Recalculate available places.
+- Trigger waitlist processing.
+- Generate an appropriate notification.
+- Preserve audit history.
+
+### Required tests
+
+- Member cancels own enrollment.
+- Member attempts to cancel another member's enrollment.
+- Staff cancels with authorization.
+- Unauthorized staff cancellation.
+- Cancellation of already-cancelled enrollment.
+- Cancellation during concurrent enrollment.
+- Waitlist promotion after cancellation.
+
+---
+
+# 12. M41.05.10 — STAFF PROGRAM ADMINISTRATION
+
+Authorized program staff must be able to:
+
+- View permitted program enrollment applications.
+- Review eligibility.
+- Approve or decline applications.
+- Review current capacity.
+- View waitlists.
+- Promote applicants where authorized.
+- Process cancellations.
+- Record decisions.
+- Review enrollment history.
+- Generate permitted operational summaries.
+
+### Role-based controls
+
+Distinguish:
+
+- Community member.
+- Staff.
+- Program manager.
+- Authorized administrator.
+- Safeguarding officer.
+
+Do not assume every staff role has full program administration privileges.
+
+Sensitive enrollment records must remain restricted.
+
+---
+
+# 13. M41.05.11 — MEMBER NOTIFICATIONS
+
+Implement or verify notifications for:
+
+1. Application submitted.
+2. Eligibility review required.
+3. Application approved.
+4. Enrollment confirmed.
+5. Waitlist placement.
+6. Waitlist position change where appropriate.
+7. Promotion offer.
+8. Promotion confirmed.
+9. Application declined.
+10. Enrollment cancelled.
+11. Program capacity or schedule change affecting participation.
+
+Notifications must reference the appropriate enrollment or program record.
+
+Use the existing internal notification system.
+
+### External communication restriction
+
+Do not claim email or SMS delivery unless an authorized provider is connected and delivery is verified.
+
+---
+
+# 14. M41.05.12 — CROSS-PORTAL DATA CONSISTENCY
+
+Ensure that authoritative enrollment state is consistent across:
+
+- Public website.
+- Community member portal.
+- Staff operations.
+- Program administration.
+- Executive reporting.
+
+### Required verification
+
+When a member enrolls:
+
+- The member portal displays the correct status.
+- Staff views show the application.
+- Capacity calculations update.
+- Program reporting reflects the correct count.
+- Audit history records the event.
+
+When a member cancels:
+
+- Enrollment status updates.
+- Available capacity changes.
+- Waitlist processing runs.
+- Notifications are generated.
+- Reporting remains consistent.
+
+Do not create separate independent enrollment counters in different portals.
+
+---
+
+# 15. M41.05.13 — SAFEGUARDING AND PRIVACY
+
+Preserve all existing safeguarding controls.
+
+### Mandatory restrictions
+
+- Members cannot view other members' enrollment records.
+- Unauthorized staff cannot modify enrollment decisions.
+- Restricted participant information remains protected.
+- Confidential case records are not exposed through program enrollment.
+- Sensitive notifications are appropriately redacted.
+- AI agents cannot bypass authorization.
+- Audit logs do not expose confidential data unnecessarily.
+
+Preserve:
+
+- RESTRICTED_SAFEGUARDING.
+- Safe Exit.
+- Human approval controls.
+- AI emergency halt.
+- Existing quarantine workflows.
+
+Do not treat automated safeguarding tests as formal legal certification.
+
+---
+
+# 16. M41.05.14 — PERSISTENCE AND CONCURRENCY
+
+Preserve the existing embedded durable persistence adapter.
+
+The previous development summary reported:
+
+- 13 tables restored.
+- More than 1,709 records recovered.
+- Successful restart recovery.
+
+Extend persistence verification to include:
+
+- Enrollment applications.
+- Eligibility decisions.
+- Capacity changes.
+- Waitlist records.
+- Promotions.
+- Cancellations.
+- Notifications.
+- Audit history.
+
+### Concurrency tests
+
+Simulate:
+
+- Five simultaneous applications.
+- Ten simultaneous applications.
+- Multiple applicants competing for one remaining place.
+- Cancellation during promotion.
+- Duplicate promotion attempts.
+- Simultaneous staff approvals.
+
+Verify that capacity and queue invariants hold after all operations and after restart.
+
+---
+
+# 17. M41.05.15 — END-TO-END OPERATIONAL SCENARIO
+
+Implement a deterministic integrated test.
+
+### Scenario: Program reaches capacity and waitlist promotion occurs
+
+STEP 01: Create a synthetic program with capacity 2.
+
+STEP 02: Register synthetic Member A.
+
+STEP 03: Register synthetic Member B.
+
+STEP 04: Register synthetic Member C.
+
+STEP 05: Authenticate Member A.
+
+STEP 06: Submit enrollment application.
+
+STEP 07: Complete authorized eligibility and approval workflow.
+
+STEP 08: Confirm Member A occupies one place.
+
+STEP 09: Authenticate Member B.
+
+STEP 10: Submit and approve enrollment.
+
+STEP 11: Confirm Member B occupies the second place.
+
+STEP 12: Verify program available capacity equals zero.
+
+STEP 13: Authenticate Member C.
+
+STEP 14: Submit an eligible application.
+
+STEP 15: Verify Member C is waitlisted.
+
+STEP 16: Verify waitlist position equals one.
+
+STEP 17: Confirm program enrollment count remains two.
+
+STEP 18: Authenticate Member A.
+
+STEP 19: Cancel Member A's enrollment.
+
+STEP 20: Verify one place is released.
+
+STEP 21: Trigger the authorized waitlist promotion process.
+
+STEP 22: Verify Member C receives the next place or an offer, according to policy.
+
+STEP 23: Verify program capacity is not exceeded.
+
+STEP 24: Verify Member B remains enrolled.
+
+STEP 25: Verify Member C's member portal reflects the new status.
+
+STEP 26: Verify staff program administration reflects the new status.
+
+STEP 27: Verify notifications.
+
+STEP 28: Verify audit history.
+
+STEP 29: Restart the supported development process.
+
+STEP 30: Verify all enrollment and waitlist state is restored.
+
+STEP 31: Authenticate synthetic Member D.
+
+STEP 32: Attempt to access Member C's private enrollment.
+
+STEP 33: Verify access is denied.
+
+STEP 34: Execute concurrent enrollment attempts against the final available place in a separate fixture.
+
+STEP 35: Verify no overbooking or duplicate promotion.
+
+### Required result
+
+ALL 35 STEPS MUST EXECUTE AND PASS.
+
+Do not mark the scenario passing when assertions are skipped.
+
+---
+
+# 18. AUTOMATED REGRESSION TESTING
+
+Preserve the previous reported baseline:
+
+**558 / 558 TESTS PASSING.**
+
+Add at least 20 meaningful M41.05 tests.
+
+Suggested identifiers:
+
+TEST-P41-21 through TEST-P41-40.
+
+### Required coverage
+
+TEST-P41-21 — Program discovery.
+
+TEST-P41-22 — Authenticated enrollment.
+
+TEST-P41-23 — Unauthenticated enrollment rejection.
+
+TEST-P41-24 — Duplicate application prevention.
+
+TEST-P41-25 — Eligibility validation.
+
+TEST-P41-26 — Authorized approval.
+
+TEST-P41-27 — Unauthorized approval rejection.
+
+TEST-P41-28 — Capacity calculation.
+
+TEST-P41-29 — Last-place allocation.
+
+TEST-P41-30 — Concurrent overbooking prevention.
+
+TEST-P41-31 — Waitlist placement.
+
+TEST-P41-32 — Waitlist ordering.
+
+TEST-P41-33 — Waitlist promotion.
+
+TEST-P41-34 — Duplicate promotion prevention.
+
+TEST-P41-35 — Enrollment cancellation.
+
+TEST-P41-36 — Capacity release.
+
+TEST-P41-37 — Cross-member access rejection.
+
+TEST-P41-38 — Cross-portal synchronization.
+
+TEST-P41-39 — Persistence restart recovery.
+
+TEST-P41-40 — Complete integrated enrollment scenario.
+
+### Expected test count
+
+If all 20 tests are added to the unchanged 558-test suite:
+
+**Expected total: 578 tests.**
+
+This is a target, not a claimed result.
+
+Report the actual number discovered, executed, passed, failed and skipped.
+
+---
+
+# 19. PLAYWRIGHT BROWSER TESTING
+
+The previous development summary reported:
+
+**14 / 14 Chromium tests passing.**
+
+Preserve that baseline.
+
+Add real browser tests for:
+
+- Program discovery.
+- Member enrollment.
+- Full-capacity handling.
+- Waitlist placement.
+- Staff approval.
+- Waitlist promotion.
+- Cancellation.
+- Mobile enrollment.
+- Unauthorized access.
+
+### Browser projects
+
+Run:
+
+- Chromium.
+- Firefox.
+- WebKit.
+- Mobile Chrome.
+
+### Important
+
+The previous summary confirms Chromium success but does not provide passing results for the other three browser projects.
+
+Obtain actual execution evidence.
+
+Do not classify browser tests as passing merely because they are configured or discovered.
+
+---
+
+# 20. GITHUB ACTIONS CI REQUIREMENTS
+
+Preserve the existing two-job pipeline:
+
+**JOB 1: verify-and-build**
+
+- npm ci.
+- TypeScript verification.
+- Application build.
+- Full regression suite.
+
+**JOB 2: browser-tests**
+
+- Chromium.
+- Firefox.
+- WebKit.
+- Mobile Chrome.
+
+### CI requirements
+
+1. Preserve Node.js 22.
+2. Preserve the committed package-lock.json.
+3. Use npm ci.
+4. Execute the current canonical regression suite.
+5. Execute the actual Playwright tests.
+6. Upload artifacts.
+7. Record pass/fail status.
+8. Prevent false-positive CI results.
+9. Keep production deployment disabled.
+
+Where the existing workflow already satisfies a requirement, preserve it rather than rewriting it unnecessarily.
+
+---
+
+# 21. MULTILINGUAL AND ACCESSIBILITY REQUIREMENTS
+
+Preserve all seven supported languages:
+
+- English.
+- Somali.
+- Spanish.
+- Hmong.
+- Karen.
+- Oromo.
+- Amharic.
+
+Translate new program enrollment interface strings using the canonical translation architecture.
+
+Do not hardcode English-only messages in multilingual components.
+
+### Accessibility verification
+
+Test:
+
+- Keyboard navigation.
+- Accessible form labels.
+- Error messages.
+- Focus management.
+- Modal accessibility.
+- Screen-reader status announcements where appropriate.
+- Mobile viewport behavior.
+- Program status readability.
+- Waitlist notifications.
+
+Preserve the previously reported 375px mobile overflow fix.
+
+---
+
+# 22. AI WORKFORCE PRESERVATION
+
+Preserve all 36 canonical agents:
+
+**18 organizational agents:** ORG-AI-001 through ORG-AI-018.
+
+**18 fundraising agents:** FUND-AI-001 through FUND-AI-018.
+
+Preserve all five fundraising pipelines.
+
+Do not introduce new AI agents unless a documented requirement establishes that existing agents cannot support the necessary function.
+
+AI agents must not:
+
+- Approve restricted enrollments without authorization.
+- Override capacity.
+- Reorder waitlists without authorization.
+- Access confidential participant records.
+- Bypass safeguarding controls.
+- Circumvent the emergency halt.
+
+Maintain deterministic fallback mode.
+
+---
+
+# 23. INFRASTRUCTURE RESTRICTIONS
+
+Maintain the existing development configuration:
+
+```text
+POSTGRESQL=NOT_CONNECTED
+BACKEND_HOSTING=NOT_CONFIGURED
+GOOGLE_WORKSPACE=AUTHORIZATION_REQUIRED
+PAYMENT_GATEWAY=NOT_CONNECTED
+AI_MODELS=FALLBACK_MOCK
+```
+
+Do not:
+
+- Deploy production hosting.
+- Provision production Cloud SQL.
+- Connect a live payment gateway.
+- Enable live AI inference.
+- Activate Google Workspace OAuth without authorization.
+- Claim production readiness.
+
+Continue development using the approved embedded durable persistence system.
+
+---
+
+# 24. REQUIRED DEVELOPMENT REPORTS
+
+Generate the following reports:
+
+1. `phase41_m4105_repository_reconciliation_report.md`
+2. `phase41_m4105_program_discovery_report.md`
+3. `phase41_m4105_enrollment_application_report.md`
+4. `phase41_m4105_eligibility_validation_report.md`
+5. `phase41_m4105_capacity_management_report.md`
+6. `phase41_m4105_waitlist_coordination_report.md`
+7. `phase41_m4105_staff_administration_report.md`
+8. `phase41_m4105_notifications_report.md`
+9. `phase41_m4105_cross_portal_consistency_report.md`
+10. `phase41_m4105_safeguarding_authorization_report.md`
+11. `phase41_m4105_persistence_concurrency_report.md`
+12. `phase41_m4105_regression_verification_report.md`
+13. `phase41_m4105_playwright_verification_report.md`
+14. `phase41_m4105_github_actions_ci_report.md`
+15. `phase41_m4105_master_completion_report.md`
+
+Each report must include:
+
+- Existing functionality discovered.
+- Changes implemented.
+- Files modified.
+- Test commands executed.
+- Actual results.
+- Remaining defects.
+- Relevant commit SHA.
+- GitHub Actions run identifier where available.
+- Acceptance decision.
+
+Do not fabricate results.
+
+---
+
+# 25. ACCEPTANCE GATES
+
+## GATE A — PROGRAM DISCOVERY
+
+Members can discover appropriate programs.
+
+Public and private data are separated.
+
+## GATE B — ENROLLMENT
+
+Authenticated members can submit valid applications.
+
+Duplicate active applications are prevented.
+
+## GATE C — ELIGIBILITY
+
+Eligibility decisions are validated and authorized.
+
+## GATE D — CAPACITY
+
+Confirmed enrollment never exceeds capacity.
+
+Concurrent operations preserve capacity invariants.
+
+## GATE E — WAITLIST
+
+Waitlist placement and ordering are deterministic and durable.
+
+## GATE F — PROMOTION
+
+Waitlist promotion follows authorized policy.
+
+No applicant is improperly skipped.
+
+No duplicate promotion occurs.
+
+## GATE G — CANCELLATION
+
+Cancellation releases capacity appropriately.
+
+Waitlist processing responds correctly.
+
+## GATE H — SECURITY
+
+Member ownership and staff authorization are enforced.
+
+Safeguarding protections remain operational.
+
+## GATE I — CROSS-PORTAL CONSISTENCY
+
+Member, staff and reporting views use authoritative enrollment state.
+
+## GATE J — PERSISTENCE
+
+Enrollment and waitlist state survive supported restarts.
+
+## GATE K — REGRESSION
+
+Existing tests continue to pass.
+
+New M41.05 tests pass.
+
+## GATE L — BROWSER VERIFICATION
+
+Real browser results are recorded.
+
+## GATE M — DOCUMENTATION
+
+All required development reports are generated accurately.
+
+---
+
+# 26. EXECUTION SEQUENCE
+
+GOOGLE AI STUDIO:
+
+EXECUTE THE FOLLOWING ACTIONS IN ORDER.
+
+**ACTION 01:** Inspect the current repository.
+
+**ACTION 02:** Reconcile existing program and enrollment models.
+
+**ACTION 03:** Implement missing program discovery functionality.
+
+**ACTION 04:** Implement authenticated enrollment applications.
+
+**ACTION 05:** Implement eligibility validation.
+
+**ACTION 06:** Implement enrollment state transitions.
+
+**ACTION 07:** Implement authoritative capacity management.
+
+**ACTION 08:** Implement atomic concurrency protection.
+
+**ACTION 09:** Implement waitlist placement.
+
+**ACTION 10:** Implement deterministic waitlist ordering.
+
+**ACTION 11:** Implement waitlist promotion.
+
+**ACTION 12:** Implement enrollment cancellation.
+
+**ACTION 13:** Integrate staff program administration.
+
+**ACTION 14:** Integrate member notifications.
+
+**ACTION 15:** Verify cross-portal consistency.
+
+**ACTION 16:** Verify safeguarding and authorization.
+
+**ACTION 17:** Verify embedded persistence.
+
+**ACTION 18:** Add at least 20 M41.05 regression tests.
+
+**ACTION 19:** Add program enrollment Playwright tests.
+
+**ACTION 20:** Execute TypeScript verification.
+
+**ACTION 21:** Build the application.
+
+**ACTION 22:** Execute the full regression suite.
+
+**ACTION 23:** Execute real browser tests.
+
+**ACTION 24:** Inspect GitHub Actions results.
+
+**ACTION 25:** Fix actual failures.
+
+**ACTION 26:** Generate all 15 required reports.
+
+**ACTION 27:** Determine M41.05 acceptance.
+
+**ACTION 28:** Report readiness for M41.06.
+
+---
+
+# 27. FINAL REQUIRED REPORT
+
+At the end of execution, provide:
+
+### M41.05 implementation
+
+COMPLETE / COMPLETE_WITH_LIMITATIONS / BLOCKED.
+
+### Regression testing
+
+Actual passed / failed / skipped totals.
+
+### Browser testing
+
+Actual results for:
+
+- Chromium.
+- Firefox.
+- WebKit.
+- Mobile Chrome.
+
+### Capacity integrity
+
+Maximum capacity.
+
+Confirmed enrollment count.
+
+Available places.
+
+Concurrent enrollment result.
+
+### Waitlist integrity
+
+Queue ordering result.
+
+Promotion result.
+
+Duplicate promotion result.
+
+Restart recovery result.
+
+### Security
+
+Authorization tests.
+
+Cross-member access tests.
+
+Safeguarding tests.
+
+### CI
+
+Actual GitHub Actions workflow conclusion and run ID.
+
+### Infrastructure
+
+PRODUCTION_DEPLOYMENT_DEFERRED.
+
+### Next milestone
+
+M41.06 — Volunteer Onboarding, Clearance, Shift Management and Verified Service Hours.
+
+---
+
+# 28. FINAL MASTER EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+BEGIN M41.05 DEVELOPMENT IMMEDIATELY.
+
+BUILD UPON THE COMPLETED M41.03 AND M41.04 MEMBER AND CASEWORKER SYSTEMS.
+
+IMPLEMENT COMPLETE PROGRAM DISCOVERY.
+
+IMPLEMENT MEMBER ENROLLMENT APPLICATIONS.
+
+IMPLEMENT ELIGIBILITY REVIEW.
+
+IMPLEMENT AUTHORIZED APPROVAL.
+
+IMPLEMENT STRICT CAPACITY MANAGEMENT.
+
+IMPLEMENT CONCURRENCY-SAFE ENROLLMENT.
+
+IMPLEMENT AUTOMATIC WAITLIST PLACEMENT.
+
+IMPLEMENT FAIR AND AUDITABLE WAITLIST ORDERING.
+
+IMPLEMENT WAITLIST PROMOTION.
+
+IMPLEMENT ENROLLMENT CANCELLATION.
+
+IMPLEMENT CAPACITY RELEASE.
+
+IMPLEMENT MEMBER NOTIFICATIONS.
+
+IMPLEMENT STAFF PROGRAM ADMINISTRATION.
+
+VERIFY CROSS-PORTAL CONSISTENCY.
+
+PRESERVE MEMBER OWNERSHIP SECURITY.
+
+PRESERVE SAFEGUARDING CONTROLS.
+
+PRESERVE ALL 36 AI AGENTS.
+
+PRESERVE ALL FIVE FUNDRAISING PIPELINES.
+
+PRESERVE SEVEN-LANGUAGE SUPPORT.
+
+RUN THE FULL REGRESSION SUITE.
+
+RUN REAL PLAYWRIGHT BROWSER TESTS.
+
+VERIFY GITHUB ACTIONS RESULTS.
+
+VERIFY PERSISTENCE AND CONCURRENCY.
+
+GENERATE ALL 15 REQUIRED REPORTS.
+
+MAINTAIN DEVELOPMENT_ACCEPTED_WITH_LIMITATIONS UNTIL THE RELEVANT ACCEPTANCE GATES HAVE PASSED.
+
+DO NOT ACTIVATE PRODUCTION INFRASTRUCTURE.
+
+DO NOT DECLARE PHASE 41 COMPLETE.
+
+### FINAL TARGET
+
+**A FULLY INTEGRATED, CONCURRENCY-SAFE COMMUNITY PROGRAM ENROLLMENT SYSTEM WITH CAPACITY ENFORCEMENT, FAIR WAITLIST COORDINATION, AUTHORIZED STAFF APPROVALS, MEMBER NOTIFICATIONS, DURABLE PERSISTENCE AND VERIFIED END-TO-END TEST COVERAGE.**
+
+# END OF M41.05 MASTER DEVELOPMENT DIRECTIVE

@@ -532,6 +532,15 @@ export class PostgresPersistenceAdapter {
     };
   }
 
+  public async verifyProcessRestart(): Promise<{
+    success: boolean;
+    tablesReloaded: number;
+    recordsRestored: number;
+    checksum: string;
+  }> {
+    return this.simulateApplicationRestart();
+  }
+
   /**
    * Mutex queue ensuring sequential execution of writes to prevent file corruption
    */
