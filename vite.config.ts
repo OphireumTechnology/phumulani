@@ -17,6 +17,7 @@ export default defineConfig(() => {
         'path': path.resolve(import.meta.dirname, 'src/db/pathStub.ts'),
         'fs': path.resolve(import.meta.dirname, 'src/db/fsStub.ts'),
         'crypto': path.resolve(import.meta.dirname, 'src/db/cryptoStub.ts'),
+        'child_process': path.resolve(import.meta.dirname, 'src/db/childProcessStub.ts'),
       },
     },
     server: {

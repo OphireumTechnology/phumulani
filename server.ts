@@ -25,6 +25,7 @@ import { unifiedAiWorkforceService } from './src/services/unifiedAiWorkforceServ
 import { phase34Service } from './src/services/phase34Service';
 import { phase36Service } from './src/services/phase36Service';
 import { phase37Service } from './src/services/phase37Service';
+import { phase38Service } from './src/services/phase38Service';
 import type { AgentDivision } from './src/types/aiWorkforce';
 import type { PermissionDomain } from './src/types/masterAdmin';
 
@@ -2865,6 +2866,55 @@ app.get('/api/v1/phase37/languages', (_req: Request, res: Response) => {
 // M37.15: Final Acceptance Assessment
 app.get('/api/v1/phase37/acceptance', (_req: Request, res: Response) => {
   res.json(phase37Service.getFinalAcceptanceAssessment());
+});
+
+// =============================================================================
+// PHASE 38: PLAYWRIGHT AUDIT, MULTILINGUAL, ACCESSIBILITY, PERSISTENCE RESTART
+// =============================================================================
+
+// M38.01: Repository & Acceptance Traceability Matrix
+app.get('/api/v1/phase38/traceability', (_req: Request, res: Response) => {
+  res.json({ matrix: phase38Service.getTraceabilityMatrix() });
+});
+
+// M38.02 - M38.06: Playwright Browser Test Results & Sandbox Status
+app.get('/api/v1/phase38/playwright-audit', (_req: Request, res: Response) => {
+  res.json({ results: phase38Service.getPlaywrightExecutionResults() });
+});
+
+// M38.07 & M38.08: Seven Community Languages Parity & Amharic
+app.get('/api/v1/phase38/languages', (_req: Request, res: Response) => {
+  res.json({ audit: phase38Service.getSevenLanguageAudit() });
+});
+
+// M38.09: WCAG 2.2 AA Accessibility Remediation Audit
+app.get('/api/v1/phase38/accessibility', (_req: Request, res: Response) => {
+  res.json({ audit: phase38Service.getAccessibilityAudit() });
+});
+
+// M38.10: Multi-Process OS Restart & Durable Local Storage Verification
+app.get('/api/v1/phase38/persistence-restart', (_req: Request, res: Response) => {
+  res.json(phase38Service.runPersistenceRestartVerification());
+});
+
+// M38.11: Cross-Portal Synchronization and Session Reliability
+app.get('/api/v1/phase38/session-verification', async (_req: Request, res: Response) => {
+  res.json(await phase38Service.getCrossPortalSessionVerification());
+});
+
+// M38.12: Financial Ledger Evidence Reconciliation Table
+app.get('/api/v1/phase38/financial-reconciliation', (_req: Request, res: Response) => {
+  res.json({ ledger: phase38Service.getFinancialReconciliationTable() });
+});
+
+// M38.13: AI Workforce Integrity & Fail-Closed Safeguarding
+app.get('/api/v1/phase38/ai-safeguarding', (_req: Request, res: Response) => {
+  res.json(phase38Service.verifyAiWorkforceAndSafeguarding());
+});
+
+// M38.15: Phase 38 Final Acceptance Assessment
+app.get('/api/v1/phase38/acceptance', (_req: Request, res: Response) => {
+  res.json(phase38Service.getFinalAcceptanceAssessment());
 });
 
 

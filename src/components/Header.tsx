@@ -24,6 +24,8 @@ import {
   Activity,
 } from 'lucide-react';
 
+import { SUPPORTED_LANGUAGES } from '../services/multilingualAccessibilityService';
+
 interface HeaderProps {
   currentUser: User;
   activeView: string;
@@ -64,13 +66,10 @@ export const Header: React.FC<HeaderProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  const languages = [
-    { code: 'en', label: 'English' },
-    { code: 'so', label: 'Soomaali' },
-    { code: 'om', label: 'Afaan Oromoo' },
-    { code: 'es', label: 'Español' },
-    { code: 'hmn', label: 'Hmoob' },
-  ];
+  const languages = SUPPORTED_LANGUAGES.map((l) => ({
+    code: l.code,
+    label: `${l.name} (${l.localName})`,
+  }));
 
   const portals = [
     { id: 'public', label: 'Public Website & CMS', icon: Globe, desc: 'Public community pages, mission, and giving' },

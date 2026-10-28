@@ -40,6 +40,14 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#F7F9FA] text-[#263238] selection:bg-teal-100 selection:text-teal-900">
+      {/* 0. ACCESSIBILITY: SKIP TO MAIN CONTENT ANCHOR (WCAG 2.2 AA) */}
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#104F57] focus:text-white focus:rounded focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-300 font-semibold text-xs"
+      >
+        Skip to Main Content
+      </a>
+
       {/* 1. DEMO & ROLE SWITCHER TOOLBAR */}
       <RoleSwitcherBar
         currentUser={dbState.currentUser}
@@ -65,7 +73,7 @@ export default function App() {
       )}
 
       {/* 3. ACTIVE APPLICATION PORTAL VIEW */}
-      <main className="flex-1">
+      <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">
         {activeView === 'public' && (
           <PublicWebsiteView
             currentUser={dbState.currentUser}

@@ -394,12 +394,12 @@ export interface EnhancedImpactMetric {
 // =============================================================================
 // M33.13: MULTILINGUAL & ACCESSIBILITY
 // =============================================================================
-export type SupportedLanguageCode = 'en' | 'es' | 'so' | 'hmn' | 'kar' | 'orm';
+export type SupportedLanguageCode = 'en' | 'es' | 'so' | 'hmn' | 'kar' | 'orm' | 'am';
 
 export interface LanguageDefinition {
   code: SupportedLanguageCode;
   name: string;
   localName: string;
   isRTL: boolean;
-  coverageStatus: 'VERIFIED_PRODUCTION' | 'SUPERVISED_COMMUNITY_REVIEW';
+  coverageStatus: 'VERIFIED_PRODUCTION' | 'SUPERVISED_COMMUNITY_REVIEW' | 'DRAFT_MACHINE_ASSISTED' | 'REVIEW_REQUIRED';
 }
