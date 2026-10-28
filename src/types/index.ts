@@ -91,6 +91,8 @@ export function mapToCanonicalRole(role: string): CanonicalRoleFamily {
 
 export * from './developmentOps';
 export * from './phase33';
+export * from './phase34';
+export * from './phase35';
 
 export interface User {
   id: string;

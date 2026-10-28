@@ -31,9 +31,26 @@ import {
   Heart,
   Globe,
   Settings,
+  Compass,
+  Bell,
+  FileCheck2,
+  Check,
+  Star,
+  MessageSquare,
+  ExternalLink,
+  Share2,
 } from 'lucide-react';
 import { PortalLayout } from '../components/PortalLayout';
 import { CommunityProgramsService } from '../services/communityProgramsService';
+import { phase35Service } from '../services/phase35Service';
+import { MemberSelfServiceSection } from '../components/portal/MemberSelfServiceSection';
+import {
+  IntegratedServiceRequest,
+  ResourceReferralRecord,
+  ProgramEnrollmentApplication,
+  CommunityNotification,
+  UserNotificationPreferences,
+} from '../types/phase35';
 
 interface CommunityPortalViewProps {
   currentUser: User;
@@ -42,14 +59,23 @@ interface CommunityPortalViewProps {
 
 export type CommunityPortalTab =
   | 'overview'
-  | 'member_profile'
   | 'service_requests'
   | 'programs'
+  | 'enrollment_apps'
+  | 'resource_referrals'
+  | 'member_events'
+  | 'member_notifications'
+  | 'member_profile'
+  | 'comm_preferences'
+  | 'feedback_history'
   | 'privacy_consent'
   | 'applications'
   | 'log_hours'
   | 'training'
-  | 'opportunities';
+  | 'opportunities'
+  | 'legacy_member_profile'
+  | 'legacy_service_requests'
+  | 'legacy_programs';
 
 export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
   currentUser,
@@ -304,6 +330,25 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
             </div>
           </div>
         </div>
+
+      {/* MEMBER SELF-SERVICE 9 VIEWS (M35.11) */}
+      {[
+        'service_requests',
+        'programs',
+        'enrollment_apps',
+        'resource_referrals',
+        'member_events',
+        'member_notifications',
+        'member_profile',
+        'comm_preferences',
+        'feedback_history',
+      ].includes(activeTab) && (
+        <MemberSelfServiceSection
+          activeTab={activeTab}
+          currentUser={currentUser}
+          onNavigateTab={(t) => setActiveTab(t as any)}
+        />
+      )}
 
       {/* TAB 1: OVERVIEW */}
       {activeTab === 'overview' && (
@@ -577,8 +622,8 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
         </div>
       )}
 
-      {/* TAB: GENERAL SERVICE REQUESTS (M30.06) */}
-      {activeTab === 'service_requests' && (
+      {/* TAB: GENERAL SERVICE REQUESTS (M30.06 Legacy) */}
+      {activeTab === 'legacy_service_requests' && (
         <div className="space-y-6">
           <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
             <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-slate-100 pb-4">
@@ -712,8 +757,8 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
         </div>
       )}
 
-      {/* TAB: PROGRAM ENROLLMENTS (M30.06) */}
-      {activeTab === 'programs' && (
+      {/* TAB: PROGRAM ENROLLMENTS (M30.06 Legacy) */}
+      {activeTab === 'legacy_programs' && (
         <div className="space-y-6">
           <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
             <div className="flex justify-between items-center">

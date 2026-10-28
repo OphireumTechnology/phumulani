@@ -64,7 +64,9 @@ import { BoardGovernanceCalendarTab } from '../components/masterAdmin/phase34/Bo
 import { AdvancedReportingExportsTab } from '../components/masterAdmin/phase34/AdvancedReportingExportsTab';
 import { CommunityFeedbackIntelligenceTab } from '../components/masterAdmin/phase34/CommunityFeedbackIntelligenceTab';
 import { MobileAccessibilityAuditTab } from '../components/masterAdmin/phase34/MobileAccessibilityAuditTab';
+import { IntegratedServiceDeliveryTab } from '../components/masterAdmin/phase35/IntegratedServiceDeliveryTab';
 import {
+  Compass,
   Download,
   Smartphone,
   TrendingUp,
@@ -315,6 +317,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
     { id: 'advanced_exports', label: '46 Controlled Exports (M34.11)', icon: Download, badge: 'Audit Log' },
     { id: 'feedback_intelligence', label: '47 Feedback Intelligence (M34.12)', icon: MessageSquare, badge: 'Anonymous' },
     { id: 'mobile_accessibility', label: '48 Mobile Accessibility (M34.13)', icon: Smartphone, badge: 'WCAG AA' },
+    { id: 'integrated_service_delivery', label: '49 Service Delivery & Automation (Phase 35)', icon: Compass, badge: 'M35.01-15' },
     { id: 'fundraising_command_center', label: 'Fundraising & CRM', icon: DollarSign, badge: 'Active' },
     { id: 'email_command_center', label: 'Email Command Center', icon: Mail, badge: 'P0 Enterprise' },
     { id: 'ai_workforce', label: 'AI Workforce (36 Agents)', icon: Bot, badge: '36 Active' },
@@ -1339,6 +1342,13 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
           {/* ============================================================ */}
           {activeModule === 'mobile_accessibility' && (
             <MobileAccessibilityAuditTab currentUser={currentUser} />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 49: INTEGRATED SERVICE DELIVERY & AUTOMATION (PHASE 35) */}
+          {/* ============================================================ */}
+          {activeModule === 'integrated_service_delivery' && (
+            <IntegratedServiceDeliveryTab />
           )}
 
           {/* ============================================================ */}
