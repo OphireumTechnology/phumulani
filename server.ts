@@ -24,6 +24,7 @@ import { authSecurityService, type StaffRole } from './src/services/authSecurity
 import { unifiedAiWorkforceService } from './src/services/unifiedAiWorkforceService';
 import { phase34Service } from './src/services/phase34Service';
 import { phase36Service } from './src/services/phase36Service';
+import { phase37Service } from './src/services/phase37Service';
 import type { AgentDivision } from './src/types/aiWorkforce';
 import type { PermissionDomain } from './src/types/masterAdmin';
 
@@ -2793,6 +2794,79 @@ app.get('/api/v1/phase36/migrations', (_req: Request, res: Response) => {
     migrations: phase36Service.getPostgresMigrations(),
   });
 });
+
+// =============================================================================
+// PHASE 37 CONSOLIDATION & RECONCILIATION API ROUTES
+// =============================================================================
+
+// M37.01: Full Repository Feature Inventory
+app.get('/api/v1/phase37/inventory', (_req: Request, res: Response) => {
+  res.json({
+    total: phase37Service.getFeatureInventory().length,
+    inventory: phase37Service.getFeatureInventory(),
+  });
+});
+
+// M37.02: 36-Agent AI Workforce Reconciliation
+app.get('/api/v1/phase37/agent-reconciliation', (_req: Request, res: Response) => {
+  res.json({
+    verification: phase37Service.verifyAgentWorkforceReconciliation(),
+    agents: phase37Service.getAgentReconciliationMatrix(),
+  });
+});
+
+// M37.03: Service Consolidation
+app.get('/api/v1/phase37/service-consolidation', (_req: Request, res: Response) => {
+  res.json({
+    consolidations: phase37Service.getServiceConsolidationReport(),
+  });
+});
+
+// M37.04: Canonical Portal Parity
+app.get('/api/v1/phase37/canonical-portals', (_req: Request, res: Response) => {
+  res.json({
+    portals: phase37Service.verifyCanonicalPortalSync(),
+  });
+});
+
+// M37.05: Financial Ledger Reconciliation
+app.get('/api/v1/phase37/financial-reconciliation', (_req: Request, res: Response) => {
+  res.json({
+    reconciliations: phase37Service.getFinancialReconciliationReport(),
+  });
+});
+
+// M37.07: Program Capacity Concurrency Test
+app.post('/api/v1/phase37/programs/concurrency-test', (req: Request, res: Response) => {
+  const { programId = 'PROG-TEST-CONCURRENCY' } = req.body;
+  res.json(phase37Service.executeProgramCapacityConcurrencyTest(programId));
+});
+
+// M37.09: Classification-Based Safeguarding Access Check
+app.post('/api/v1/phase37/safeguarding/check-access', (req: Request, res: Response) => {
+  const { recordId, requesterRole = 'public', isAiAgent = false } = req.body;
+  if (!recordId) {
+    return res.status(400).json({ error: 'recordId is required.' });
+  }
+  const result = phase37Service.checkAccessByClassification({ recordId, requesterRole, isAiAgent });
+  if (!result.allowed) {
+    return res.status(403).json(result);
+  }
+  res.json(result);
+});
+
+// M37.12: Multilingual Coverage Matrix
+app.get('/api/v1/phase37/languages', (_req: Request, res: Response) => {
+  res.json({
+    languages: phase37Service.getLanguageCoverageMatrix(),
+  });
+});
+
+// M37.15: Final Acceptance Assessment
+app.get('/api/v1/phase37/acceptance', (_req: Request, res: Response) => {
+  res.json(phase37Service.getFinalAcceptanceAssessment());
+});
+
 
 // -----------------------------------------------------------------------------
 // VITE SPA DEV MIDDLEWARE / STATIC SERVING
