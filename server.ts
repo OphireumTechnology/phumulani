@@ -23,6 +23,7 @@ import { paymentProviderService } from './src/services/paymentProviderService';
 import { authSecurityService, type StaffRole } from './src/services/authSecurityService';
 import { unifiedAiWorkforceService } from './src/services/unifiedAiWorkforceService';
 import { phase34Service } from './src/services/phase34Service';
+import { phase36Service } from './src/services/phase36Service';
 import type { AgentDivision } from './src/types/aiWorkforce';
 import type { PermissionDomain } from './src/types/masterAdmin';
 
@@ -2673,6 +2674,124 @@ app.get('/api/admin/meal/reports/:id/export/csv', (req: Request, res: Response) 
 app.post('/api/admin/meal/security/negative-tests', (_req: Request, res: Response) => {
   const result = mealService.runPhase26MealSecurityProbes();
   res.json(result);
+});
+
+// =============================================================================
+// PHASE 36 PLATFORM RELIABILITY & SECURITY HARDENING ENDPOINTS
+// =============================================================================
+
+// M36.01: Traceability Matrix
+app.get('/api/v1/phase36/traceability', (_req: Request, res: Response) => {
+  res.json({
+    total: phase36Service.getTraceabilityMatrix().length,
+    traceabilityMatrix: phase36Service.getTraceabilityMatrix(),
+  });
+});
+
+// M36.02: Hardcoded Operational Data Remediation & $125k Forensic Audit
+app.get('/api/v1/phase36/hardcoded-audit', (_req: Request, res: Response) => {
+  res.json({
+    total: phase36Service.getHardcodedDataAudits().length,
+    audits: phase36Service.getHardcodedDataAudits(),
+    specialInvestigation: {
+      reportedValue: '$125,000',
+      findings: 'Forensic audit confirmed $125,000 is approved allocated funding for Program PROG-002 ($65k donations + $40k grants + $20k CSR) and lifetime giving for Minneapolis Foundation. Strictly segregated from settled cash in bank ($390,000 received).',
+      status: 'VERIFIED_SEGREGATED',
+    },
+  });
+});
+
+// M36.03: Canonical 10-Dashboard Synchronization Status
+app.get('/api/v1/phase36/dashboard-sync', (_req: Request, res: Response) => {
+  const syncs = phase36Service.getDashboardSyncStatuses();
+  res.json({
+    total: syncs.length,
+    synchronizedCount: syncs.filter((s) => s.syncState === 'SYNCHRONIZED').length,
+    syncs,
+  });
+});
+
+// M36.04: Persistence & CRUD Reliability
+app.get('/api/v1/phase36/crud-verification', (_req: Request, res: Response) => {
+  const verifications = phase36Service.verifyCrudReliability();
+  res.json({
+    total: verifications.length,
+    verifications,
+  });
+});
+
+// M36.05: Authentication & Session Hardening
+app.get('/api/v1/phase36/auth-policy', (_req: Request, res: Response) => {
+  res.json({
+    policy: phase36Service.getPasswordPolicyConfig(),
+    auditEventsCount: phase36Service.getAuthAuditEvents().length,
+  });
+});
+
+// M36.06: Multi-Tenant Record Ownership Check
+app.post('/api/v1/phase36/record-ownership/check', (req: Request, res: Response) => {
+  const { actorUserId, actorRole, targetRecordOwnerId, domain } = req.body;
+  if (!actorUserId || !actorRole || !targetRecordOwnerId) {
+    return res.status(400).json({ error: 'actorUserId, actorRole, and targetRecordOwnerId are required.' });
+  }
+  const result = phase36Service.checkRecordOwnership(actorUserId, actorRole, targetRecordOwnerId, domain || 'GENERAL');
+  if (!result.allowed) {
+    return res.status(403).json(result);
+  }
+  res.json(result);
+});
+
+// M36.07: Safeguarding Privacy & Sensitive Data Field Policies
+app.get('/api/v1/phase36/safeguarding-policies', (_req: Request, res: Response) => {
+  res.json({
+    policies: phase36Service.getSensitiveDataPolicies(),
+  });
+});
+
+// M36.08: AI Agent Execution with Truth-in-Monitoring & Emergency Halt
+app.post('/api/v1/phase36/ai/execute', (req: Request, res: Response) => {
+  try {
+    const { agentId, taskDescription, payload = {}, requesterRole = 'staff' } = req.body;
+    if (!agentId || !taskDescription) {
+      return res.status(400).json({ error: 'agentId and taskDescription are required.' });
+    }
+    const audit = phase36Service.executeAiTaskWithTruthfulness({
+      agentId,
+      taskDescription,
+      payload,
+      requesterRole,
+    });
+    res.json(audit);
+  } catch (err: any) {
+    if (err.message.includes('SAFEGUARDING')) {
+      return res.status(403).json({ error: err.message, blockedBySafeguarding: true });
+    }
+    if (err.message.includes('EMERGENCY HALT')) {
+      return res.status(503).json({ error: err.message, emergencyHaltActive: true });
+    }
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// M36.10: Browser User Journeys
+app.get('/api/v1/phase36/browser-journeys', (_req: Request, res: Response) => {
+  res.json({
+    total: phase36Service.getBrowserJourneys().length,
+    journeys: phase36Service.getBrowserJourneys(),
+  });
+});
+
+// M36.11: Mobile & Accessibility Audit
+app.get('/api/v1/phase36/accessibility-audit', (_req: Request, res: Response) => {
+  res.json(phase36Service.runAccessibilityAudit());
+});
+
+// M36.13: PostgreSQL 12-Version Schema Migrations
+app.get('/api/v1/phase36/migrations', (_req: Request, res: Response) => {
+  res.json({
+    total: phase36Service.getPostgresMigrations().length,
+    migrations: phase36Service.getPostgresMigrations(),
+  });
 });
 
 // -----------------------------------------------------------------------------

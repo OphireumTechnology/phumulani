@@ -598,6 +598,10 @@ export class Phase35Service {
     return [...this.serviceRequests];
   }
 
+  public getServiceRequests(): IntegratedServiceRequest[] {
+    return [...this.serviceRequests];
+  }
+
   public getServiceRequestById(id: string): IntegratedServiceRequest | undefined {
     return this.serviceRequests.find((r) => r.id === id || r.trackingReference === id);
   }
@@ -762,7 +766,12 @@ export class Phase35Service {
     staffRole: string;
   }): ResourceReferralRecord {
     const p34Resources = phase34Service.getCommunityResources();
-    const targetResource = p34Resources.find((r: any) => r.id === params.resourceId);
+    const targetResource = p34Resources.find(
+      (r: any) =>
+        r.id === params.resourceId ||
+        r.id === params.resourceId.replace('CR-', 'RES-') ||
+        r.id === params.resourceId.replace('RES-', 'CR-')
+    );
 
     if (!targetResource) {
       throw new Error(`Resource ${params.resourceId} not found in verified directory`);
@@ -1100,6 +1109,14 @@ export class Phase35Service {
     return this.volunteerLifecycles.find((v) => v.volunteerId === volunteerId || v.id === volunteerId);
   }
 
+  public getVolunteerLifecycles(): VolunteerServiceLifecycleRecord[] {
+    return [...this.volunteerLifecycles];
+  }
+
+  public getAllVolunteerLifecycles(): VolunteerServiceLifecycleRecord[] {
+    return [...this.volunteerLifecycles];
+  }
+
   // =============================================================================
   // M35.06: DONOR STEWARDSHIP & CAMPAIGN ENGAGEMENT JOURNEY
   // =============================================================================
@@ -1428,25 +1445,8 @@ export class Phase35Service {
     // Check safeguarding barrier: strict prohibition on survivor case records
     const payloadStr = JSON.stringify(params.payload).toLowerCase();
     if (payloadStr.includes('safe-mn-') || payloadStr.includes('shelter_address') || payloadStr.includes('crisis_victim')) {
-      const blockedRecord: AiWorkforceExecutionRecord = {
-        id: `AI-EXEC-BLOCKED-${Date.now()}`,
-        agentId: params.agentId,
-        agentName: agent.name,
-        division: agent.division,
-        taskDescription: params.taskDescription,
-        inputPayload: params.payload,
-        executionStatus: 'BLOCKED',
-        providerAvailability: 'FALLBACK_DETERMINISTIC',
-        evidenceSources: ['SafeguardingPolicyGateway:Rule-VAWA-1367'],
-        outputResult: 'BLOCKED BY VAWA SAFEGUARDING FIREWALL: AI models strictly barred from accessing confidential survivor data.',
-        requiresHumanApproval: true,
-        costEstCents: 0,
-        isEmergencyHalted: false,
-        createdAt: new Date().toISOString(),
-      };
-      this.aiExecutions.unshift(blockedRecord);
       db.appendAuditLog('AI_TASK_BLOCKED_SAFEGUARDING', `Agent ${params.agentId} attempted access to confidential records: blocked`);
-      return blockedRecord;
+      throw new Error('SAFEGUARDING VIOLATION: AI models strictly barred from accessing confidential survivor data.');
     }
 
     const requiresHumanApproval = ['FUND-AI-006', 'FUND-AI-007', 'FUND-AI-011', 'FUND-AI-012', 'ORG-AI-009', 'ORG-AI-012'].includes(params.agentId);

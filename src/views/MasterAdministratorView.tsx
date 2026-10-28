@@ -65,6 +65,7 @@ import { AdvancedReportingExportsTab } from '../components/masterAdmin/phase34/A
 import { CommunityFeedbackIntelligenceTab } from '../components/masterAdmin/phase34/CommunityFeedbackIntelligenceTab';
 import { MobileAccessibilityAuditTab } from '../components/masterAdmin/phase34/MobileAccessibilityAuditTab';
 import { IntegratedServiceDeliveryTab } from '../components/masterAdmin/phase35/IntegratedServiceDeliveryTab';
+import { PlatformReliabilityAuditTab } from '../components/masterAdmin/phase36/PlatformReliabilityAuditTab';
 import {
   Compass,
   Download,
@@ -318,6 +319,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
     { id: 'feedback_intelligence', label: '47 Feedback Intelligence (M34.12)', icon: MessageSquare, badge: 'Anonymous' },
     { id: 'mobile_accessibility', label: '48 Mobile Accessibility (M34.13)', icon: Smartphone, badge: 'WCAG AA' },
     { id: 'integrated_service_delivery', label: '49 Service Delivery & Automation (Phase 35)', icon: Compass, badge: 'M35.01-15' },
+    { id: 'platform_reliability_p36', label: '50 Reliability & Security Hardening (Phase 36)', icon: ShieldCheck, badge: 'M36.01-15' },
     { id: 'fundraising_command_center', label: 'Fundraising & CRM', icon: DollarSign, badge: 'Active' },
     { id: 'email_command_center', label: 'Email Command Center', icon: Mail, badge: 'P0 Enterprise' },
     { id: 'ai_workforce', label: 'AI Workforce (36 Agents)', icon: Bot, badge: '36 Active' },
@@ -1349,6 +1351,13 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
           {/* ============================================================ */}
           {activeModule === 'integrated_service_delivery' && (
             <IntegratedServiceDeliveryTab />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 50: PLATFORM RELIABILITY & SECURITY HARDENING (PHASE 36) */}
+          {/* ============================================================ */}
+          {activeModule === 'platform_reliability_p36' && (
+            <PlatformReliabilityAuditTab />
           )}
 
           {/* ============================================================ */}
