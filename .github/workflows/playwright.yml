@@ -49,10 +49,10 @@ jobs:
           echo "=== CI STAGE 3: APPLICATION BUNDLE BUILD ==="
           npm run build
 
-      # CI Stage 4 — Full regression suite (578 tests)
+      # CI Stage 4 — Full regression suite (598 tests)
       - name: CI Stage 4 — Full Regression Suite & Persistence Integrity
         run: |
-          echo "=== CI STAGE 4: AUTHORITATIVE REGRESSION SUITE (578 TESTS) ==="
+          echo "=== CI STAGE 4: AUTHORITATIVE REGRESSION SUITE (598 TESTS) ==="
           npx tsx scripts/verify_suite.ts
 
   # CI STAGES 5 - 9: BROWSER TEST DISCOVERY & CROSS-BROWSER MATRIX
