@@ -66,6 +66,7 @@ export interface TestResultItem {
     | 'Phase 39 Browser Execution, Runtime Separation & Financial Evidence'
     | 'Phase 41 Member Lifecycle & Caseworker Coordination'
     | 'Phase 41 Program Enrollment & Capacity Management'
+    | 'Phase 41 Volunteer Onboarding, Clearance & Shift Operations'
     | 'Email Operations'
     | 'Fundraising Intelligence'
     | 'Phase 11 Production Integrity'

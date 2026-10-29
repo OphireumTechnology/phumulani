@@ -22,6 +22,8 @@ export type StaffRole =
   | 'board_member'
   | 'staff'
   | 'visitor'
+  | 'volunteer'
+  | 'constituent'
   | CanonicalRoleFamily;
 
 export interface UserSession {

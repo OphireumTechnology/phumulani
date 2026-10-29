@@ -1379,6 +1379,7 @@ export class VolunteerOperationsService {
         requiresVerifiedClearance: true,
       }, safeLeadSession);
       const blockedApply = await this.applyForShift(shiftId, volSession);
+      logStep(10, 'Attempt restricted shift assignment', !blockedApply.success, 'Attempted restricted shift application prior to required clearance');
 
       // STEP 11: Confirm assignment is denied
       logStep(11, 'Confirm assignment is denied', !blockedApply.success && blockedApply.error?.includes('Restricted Shift Requirement') === true, 'Restricted shift correctly rejected without clearance');
