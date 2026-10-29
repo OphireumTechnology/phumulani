@@ -1,0 +1,1441 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+# PHASE 41 — MASTER DEVELOPMENT CONTINUATION
+## M41.06 — VOLUNTEER ONBOARDING, CLEARANCE, SHIFT MANAGEMENT & VERIFIED SERVICE HOURS
+
+**Repository:** OphireumTechnology/phumulani  
+**Execution mode:** Actual source-code development, integration, testing, CI verification and reporting  
+**Previous milestone:** M41.05 — COMPLETE_WITH_LIMITATIONS (reported)  
+**Current milestone:** M41.06  
+**Acceptance baseline:** DEVELOPMENT_ACCEPTED_WITH_LIMITATIONS  
+**Production deployment:** DEFERRED
+
+---
+
+# 1. MASTER EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+BEGIN M41.06 DEVELOPMENT.
+
+EXTEND THE EXISTING PHUMULANI VOLUNTEER MANAGEMENT SYSTEM INTO A COMPLETE, SECURE AND AUDITABLE VOLUNTEER OPERATIONS PLATFORM.
+
+DO NOT REBUILD THE APPLICATION.
+
+DO NOT REPLACE EXISTING MEMBER REGISTRATION.
+
+DO NOT CREATE A SECOND VOLUNTEER DATABASE.
+
+DO NOT CREATE DUPLICATE SHIFT OR SERVICE-HOUR SYSTEMS.
+
+REUSE EXISTING AUTHORITATIVE SERVICES, DATA MODELS, AUTHENTICATION, AUTHORIZATION, NOTIFICATIONS, AUDIT LOGGING AND EMBEDDED DURABLE PERSISTENCE.
+
+PRESERVE ALL FUNCTIONALITY DEVELOPED IN M41.01 THROUGH M41.05.
+
+IMPLEMENT ACTUAL APPLICATION WORKFLOWS.
+
+DO NOT SUBSTITUTE STATIC DEMONSTRATIONS FOR FUNCTIONAL OPERATIONS.
+
+USE SYNTHETIC DEVELOPMENT DATA.
+
+DO NOT CLAIM TEST SUCCESS WITHOUT EXECUTED EVIDENCE.
+
+---
+
+# 2. M41.06 DEVELOPMENT OBJECTIVES
+
+Deliver the following capabilities:
+
+1. Volunteer registration and onboarding.
+2. Volunteer profile management.
+3. Skills and availability matching.
+4. Training requirements.
+5. Safeguarding screening and clearance.
+6. Authorized clearance approval.
+7. Volunteer opportunity discovery.
+8. Shift creation and scheduling.
+9. Shift capacity management.
+10. Shift application and assignment.
+11. Shift cancellation and reassignment.
+12. Volunteer attendance recording.
+13. Service-hour submission.
+14. Supervisor verification of service hours.
+15. Prevention of fraudulent or duplicate hours.
+16. Volunteer service history.
+17. Volunteer coordinator dashboard.
+18. Cross-portal operational reporting.
+19. Notifications and audit history.
+20. Persistence and concurrency verification.
+21. Automated regression testing.
+22. Real browser testing.
+23. GitHub Actions CI verification.
+24. Evidence-based completion reporting.
+
+---
+
+# 3. M41.06.01 — REPOSITORY RECONCILIATION
+
+Inspect the existing repository before modifying code.
+
+Identify authoritative implementations for:
+
+- Volunteer records.
+- Volunteer applications.
+- Volunteer profiles.
+- Skills and availability.
+- Training records.
+- Safeguarding clearance.
+- Volunteer opportunities.
+- Shift schedules.
+- Shift assignments.
+- Attendance.
+- Service hours.
+- Supervisor approvals.
+- Notifications.
+- Audit events.
+- Persistence adapters.
+- Volunteer-related automated tests.
+
+Document existing capabilities and missing requirements.
+
+Reuse established types and services.
+
+Do not migrate or rename existing records unnecessarily.
+
+### Required report
+
+`phase41_m4106_repository_reconciliation_report.md`
+
+---
+
+# 4. M41.06.02 — VOLUNTEER REGISTRATION AND ONBOARDING
+
+Implement or verify a complete volunteer onboarding lifecycle.
+
+### Required workflow
+
+STEP 1: Applicant accesses volunteer registration.
+
+STEP 2: Applicant submits required information.
+
+STEP 3: Server validates the application.
+
+STEP 4: Duplicate volunteer records are checked.
+
+STEP 5: Application receives a unique identifier.
+
+STEP 6: Application is persisted.
+
+STEP 7: Volunteer receives confirmation.
+
+STEP 8: Authorized coordinator reviews the application.
+
+STEP 9: Training and clearance requirements are determined.
+
+STEP 10: Volunteer progresses through onboarding.
+
+STEP 11: Authorized staff approves or declines participation.
+
+STEP 12: Audit history records the decision.
+
+### Recommended lifecycle
+
+Reuse existing canonical statuses where available.
+
+Otherwise, implement a compatible lifecycle:
+
+APPLICATION_SUBMITTED.
+
+UNDER_REVIEW.
+
+TRAINING_REQUIRED.
+
+SCREENING_PENDING.
+
+CLEARANCE_PENDING.
+
+APPROVED.
+
+ACTIVE.
+
+SUSPENDED.
+
+DECLINED.
+
+WITHDRAWN.
+
+Do not automatically grant clearance after registration.
+
+### Security
+
+- Prevent duplicate active applications.
+- Enforce server-side validation.
+- Protect volunteer identity records.
+- Prevent unauthorized status changes.
+- Derive authenticated identity from trusted sessions.
+
+---
+
+# 5. M41.06.03 — VOLUNTEER PROFILE MANAGEMENT
+
+Implement or verify:
+
+- Volunteer name.
+- Contact preferences.
+- Skills.
+- Areas of interest.
+- Availability.
+- Preferred language.
+- Training history.
+- Clearance status.
+- Assigned shifts.
+- Service-hour history.
+
+Collect only information necessary for authorized volunteer operations.
+
+Do not expose screening details to unauthorized staff or other volunteers.
+
+### Record ownership
+
+VOLUNTEER A MUST NOT ACCESS VOLUNTEER B'S PRIVATE PROFILE.
+
+VOLUNTEER A MUST NOT MODIFY VOLUNTEER B'S APPLICATION.
+
+VOLUNTEER A MUST NOT MODIFY VOLUNTEER B'S SERVICE HOURS.
+
+VOLUNTEER A MUST NOT APPROVE THEIR OWN CLEARANCE.
+
+VOLUNTEER A MUST NOT VERIFY THEIR OWN HOURS.
+
+Implement negative authorization tests.
+
+---
+
+# 6. M41.06.04 — SKILLS AND AVAILABILITY MATCHING
+
+Support volunteer matching based on:
+
+- Declared skills.
+- Training completion.
+- Availability.
+- Opportunity requirements.
+- Assignment eligibility.
+- Clearance status.
+
+### Required behavior
+
+Display suitable opportunities without automatically assigning volunteers to restricted duties.
+
+Matching recommendations are advisory.
+
+Final assignments must satisfy server-side eligibility and clearance requirements.
+
+Do not infer protected characteristics or create discriminatory matching rules.
+
+---
+
+# 7. M41.06.05 — TRAINING MANAGEMENT
+
+Implement or verify training requirements.
+
+Examples may include:
+
+- Volunteer orientation.
+- Confidentiality training.
+- Safeguarding awareness.
+- Program-specific training.
+- Role-specific operational training.
+
+Use actual organizational requirements defined in existing records or approved policies.
+
+### Training records
+
+Where compatible with existing models, capture:
+
+- Volunteer identifier.
+- Training identifier.
+- Training status.
+- Completion date.
+- Expiration date, if applicable.
+- Verification actor.
+- Verification timestamp.
+- Audit reference.
+
+Do not treat self-reported training as verified completion unless organizational policy explicitly permits it.
+
+---
+
+# 8. M41.06.06 — SAFEGUARDING SCREENING AND CLEARANCE
+
+THIS IS A CRITICAL ACCEPTANCE REQUIREMENT.
+
+Implement or verify a fail-closed clearance system.
+
+### Clearance states
+
+Reuse existing canonical values where possible.
+
+Otherwise, support:
+
+NOT_STARTED.
+
+PENDING.
+
+UNDER_REVIEW.
+
+CLEARED.
+
+RESTRICTED.
+
+EXPIRED.
+
+REVOKED.
+
+### Required controls
+
+1. Volunteers cannot approve their own clearance.
+2. Unapproved volunteers cannot access restricted assignments.
+3. Expired clearance cannot authorize restricted assignments.
+4. Revoked clearance immediately blocks new restricted assignments.
+5. Authorized staff must record clearance decisions.
+6. Clearance changes must be audited.
+7. Sensitive screening information must remain confidential.
+8. Clearance must be rechecked when assignments are created or changed.
+
+### Human approval
+
+Automated systems may assist with administrative checks.
+
+They must not independently grant safeguarding clearance where human approval is required.
+
+### Important distinction
+
+A development clearance record is not evidence that an external background check or legally required screening has actually occurred.
+
+Do not fabricate external screening results.
+
+---
+
+# 9. M41.06.07 — VOLUNTEER OPPORTUNITY DISCOVERY
+
+Implement or verify that volunteers can:
+
+- Browse opportunities.
+- Filter by category.
+- View schedules.
+- View required skills.
+- View training requirements.
+- View permitted clearance requirements.
+- View available places.
+- Apply for eligible shifts.
+
+Restricted opportunities must not expose confidential participant information.
+
+Preserve seven-language support.
+
+---
+
+# 10. M41.06.08 — SHIFT CREATION AND SCHEDULING
+
+Authorized coordinators must be able to:
+
+- Create shifts.
+- Edit shifts.
+- Set dates and times.
+- Assign opportunities.
+- Configure capacity.
+- Define required skills.
+- Define clearance requirements.
+- Review applicants.
+- Assign volunteers.
+- Cancel shifts.
+- Record operational changes.
+
+### Shift fields
+
+Where compatible with the canonical model:
+
+- Shift ID.
+- Opportunity ID.
+- Program ID.
+- Start time.
+- End time.
+- Location.
+- Maximum volunteers.
+- Assigned volunteer count.
+- Available places.
+- Required skills.
+- Required clearance.
+- Shift status.
+- Coordinator ID.
+
+### Capacity invariant
+
+CONFIRMED_SHIFT_ASSIGNMENTS MUST NEVER EXCEED SHIFT_CAPACITY.
+
+Use authoritative server-side checks.
+
+---
+
+# 11. M41.06.09 — SHIFT APPLICATION AND ASSIGNMENT
+
+Implement the workflow:
+
+VOLUNTEER DISCOVERS SHIFT.
+
+VOLUNTEER APPLIES.
+
+SERVER VALIDATES IDENTITY.
+
+SERVER CHECKS ELIGIBILITY.
+
+SERVER CHECKS TRAINING.
+
+SERVER CHECKS CLEARANCE.
+
+SERVER CHECKS CAPACITY.
+
+AUTHORIZED COORDINATOR APPROVES ASSIGNMENT.
+
+ASSIGNMENT IS PERSISTED.
+
+VOLUNTEER IS NOTIFIED.
+
+AUDIT EVENT IS RECORDED.
+
+### Mandatory restrictions
+
+- No duplicate active assignments.
+- No overlapping assignments unless explicitly authorized.
+- No assignment without required clearance.
+- No assignment beyond shift capacity.
+- No unauthorized coordinator approval.
+- No client-side clearance override.
+
+---
+
+# 12. M41.06.10 — SHIFT CAPACITY AND CONCURRENCY
+
+Implement concurrency-safe shift allocation.
+
+### Required scenario
+
+A shift has one available position.
+
+Five eligible volunteers apply simultaneously.
+
+Expected result:
+
+- Exactly one receives the final confirmed assignment.
+- Remaining applicants receive the appropriate pending, waitlisted or declined outcome according to policy.
+- No overbooking occurs.
+- All outcomes are auditable.
+
+Use atomic server-side operations compatible with the existing persistence adapter.
+
+Do not rely on a frontend capacity check.
+
+---
+
+# 13. M41.06.11 — SHIFT CANCELLATION AND REASSIGNMENT
+
+Support:
+
+- Volunteer cancellation.
+- Coordinator cancellation.
+- Shift cancellation.
+- Assignment removal.
+- Capacity release.
+- Authorized reassignment.
+- Replacement volunteer selection.
+- Notifications.
+- Audit history.
+
+### Required controls
+
+Cancellation must not delete historical records.
+
+Capacity must be recalculated accurately.
+
+Restricted assignments must revalidate clearance during reassignment.
+
+---
+
+# 14. M41.06.12 — VOLUNTEER ATTENDANCE
+
+Implement or verify:
+
+- Check-in.
+- Check-out.
+- Attendance confirmation.
+- Supervisor review.
+- No-show handling.
+- Late arrival handling.
+- Attendance correction.
+
+### Important
+
+Attendance records are not automatically verified service hours.
+
+Separate attendance evidence from approved hour totals.
+
+---
+
+# 15. M41.06.13 — SERVICE-HOUR SUBMISSION
+
+Volunteers must be able to submit hours for eligible completed assignments.
+
+### Required fields
+
+Where compatible with existing models:
+
+- Service-hour record ID.
+- Volunteer ID.
+- Shift ID.
+- Start time.
+- End time.
+- Claimed duration.
+- Submission timestamp.
+- Verification status.
+- Supervisor ID.
+- Verification timestamp.
+- Audit reference.
+
+### Hour calculation
+
+CLAIMED_HOURS = VALIDATED_SERVICE_DURATION
+
+Do not accept:
+
+- Negative durations.
+- Invalid time ranges.
+- Duplicate hour records.
+- Unsupported future attendance.
+- Hours outside permitted assignment boundaries without authorized correction.
+- Overlapping records that double-count the same service period.
+
+---
+
+# 16. M41.06.14 — SUPERVISOR VERIFICATION
+
+Implement a controlled verification lifecycle.
+
+### Suggested states
+
+SUBMITTED.
+
+UNDER_REVIEW.
+
+APPROVED.
+
+REJECTED.
+
+CORRECTION_REQUIRED.
+
+### Mandatory rules
+
+1. Volunteers cannot approve their own hours.
+2. Unauthorized staff cannot verify hours.
+3. Supervisors must review supporting attendance evidence.
+4. Rejected hours do not count as verified hours.
+5. Pending hours do not count as verified hours.
+6. Corrections preserve audit history.
+7. Duplicate verification is rejected or safely idempotent.
+8. Verification decisions are durable.
+
+### Critical invariant
+
+**OFFICIAL_VERIFIED_HOURS = SUM(APPROVED_SERVICE_HOURS_ONLY)**
+
+Never include pending, rejected or unverified hours in official totals.
+
+---
+
+# 17. M41.06.15 — VOLUNTEER SERVICE HISTORY
+
+Implement or verify volunteer-facing history showing:
+
+- Completed shifts.
+- Submitted hours.
+- Pending verification.
+- Approved hours.
+- Rejected hours.
+- Corrections.
+- Total verified service hours.
+
+The member-facing total must match the authoritative reporting calculation.
+
+Do not expose another volunteer's private records.
+
+---
+
+# 18. M41.06.16 — COORDINATOR DASHBOARD
+
+Authorized coordinators must be able to review:
+
+- Volunteer applications.
+- Onboarding status.
+- Training requirements.
+- Clearance status.
+- Upcoming shifts.
+- Shift capacity.
+- Assignment requests.
+- Attendance records.
+- Hours awaiting verification.
+- Approved service hours.
+- Rejected submissions.
+- Operational alerts.
+
+### Dashboard integrity
+
+Do not calculate official totals from unverified claims.
+
+Do not display confidential screening details to unauthorized roles.
+
+---
+
+# 19. M41.06.17 — CROSS-PORTAL INTEGRATION
+
+Synchronize authoritative volunteer state across:
+
+- Public website.
+- Volunteer portal.
+- Staff operations.
+- Program administration.
+- Executive reporting.
+- Authorized governance reporting.
+
+### Required consistency
+
+When a volunteer receives clearance:
+
+- Volunteer status updates.
+- Eligible shift opportunities update.
+- Coordinator records update.
+- Audit history records the approval.
+
+When a volunteer receives a shift assignment:
+
+- Shift capacity updates.
+- Volunteer schedule updates.
+- Coordinator dashboard updates.
+- Notifications are generated.
+
+When service hours are approved:
+
+- Volunteer history updates.
+- Official verified-hour totals update.
+- Staff reports update.
+- Executive reporting reflects approved hours only.
+
+---
+
+# 20. M41.06.18 — NOTIFICATIONS AND AUDIT HISTORY
+
+Implement or verify notifications for:
+
+- Application submitted.
+- Application reviewed.
+- Training required.
+- Clearance approved.
+- Clearance denied or revoked.
+- Shift application received.
+- Shift assignment confirmed.
+- Shift changed.
+- Shift cancelled.
+- Hours submitted.
+- Hours approved.
+- Hours rejected.
+- Correction required.
+
+Use existing in-app notification services.
+
+Do not claim external email or SMS delivery.
+
+### Audit events
+
+Record appropriate events, including:
+
+VOLUNTEER_APPLICATION_CREATED.
+
+VOLUNTEER_PROFILE_UPDATED.
+
+TRAINING_VERIFIED.
+
+CLEARANCE_APPROVED.
+
+CLEARANCE_REVOKED.
+
+SHIFT_CREATED.
+
+SHIFT_ASSIGNED.
+
+SHIFT_CANCELLED.
+
+ATTENDANCE_RECORDED.
+
+HOURS_SUBMITTED.
+
+HOURS_APPROVED.
+
+HOURS_REJECTED.
+
+HOURS_CORRECTED.
+
+Do not include sensitive screening details in broadly accessible audit logs.
+
+---
+
+# 21. M41.06.19 — INTEGRATED END-TO-END SCENARIO
+
+Implement a deterministic 40-step operational test.
+
+### Scenario: Volunteer onboarding through verified service hours
+
+STEP 01: Create synthetic volunteer applicant A.
+
+STEP 02: Submit volunteer registration.
+
+STEP 03: Verify registration persistence.
+
+STEP 04: Authenticate Volunteer A.
+
+STEP 05: Complete volunteer profile.
+
+STEP 06: Record skills.
+
+STEP 07: Record availability.
+
+STEP 08: Submit onboarding requirements.
+
+STEP 09: Verify required training is initially incomplete.
+
+STEP 10: Attempt restricted shift assignment.
+
+STEP 11: Confirm assignment is denied.
+
+STEP 12: Record training completion.
+
+STEP 13: Authenticate authorized safeguarding reviewer.
+
+STEP 14: Review clearance requirements.
+
+STEP 15: Approve clearance using an authorized synthetic development decision.
+
+STEP 16: Verify clearance audit history.
+
+STEP 17: Create synthetic volunteer opportunity.
+
+STEP 18: Create a shift with capacity two.
+
+STEP 19: Authenticate Volunteer A.
+
+STEP 20: Apply for the shift.
+
+STEP 21: Authenticate authorized coordinator.
+
+STEP 22: Approve the assignment.
+
+STEP 23: Verify shift capacity decreases.
+
+STEP 24: Verify volunteer schedule updates.
+
+STEP 25: Verify assignment notification.
+
+STEP 26: Record check-in.
+
+STEP 27: Record check-out.
+
+STEP 28: Submit service hours.
+
+STEP 29: Verify hours remain pending.
+
+STEP 30: Verify pending hours do not increase official totals.
+
+STEP 31: Authenticate authorized supervisor.
+
+STEP 32: Review attendance evidence.
+
+STEP 33: Approve service hours.
+
+STEP 34: Verify official totals increase by the approved amount.
+
+STEP 35: Verify volunteer service history.
+
+STEP 36: Verify coordinator reporting.
+
+STEP 37: Verify executive reporting.
+
+STEP 38: Restart the supported development runtime.
+
+STEP 39: Verify durable recovery of volunteer, clearance, assignment and hour records.
+
+STEP 40: Authenticate Volunteer B and confirm access to Volunteer A's private records is denied.
+
+### Acceptance requirement
+
+ALL 40 STEPS MUST EXECUTE.
+
+ALL ASSERTIONS MUST PASS.
+
+DO NOT SKIP FAILED ACTIONS.
+
+---
+
+# 22. M41.06.20 — ADDITIONAL SECURITY TEST MATRIX
+
+Add negative tests for:
+
+1. Duplicate volunteer registration.
+2. Unauthorized profile access.
+3. Unauthorized profile modification.
+4. Self-approved clearance.
+5. Expired clearance.
+6. Revoked clearance.
+7. Restricted assignment without clearance.
+8. Unauthorized shift approval.
+9. Shift overbooking.
+10. Duplicate shift assignment.
+11. Overlapping shift assignments.
+12. Unauthorized cancellation.
+13. Invalid attendance.
+14. Negative service hours.
+15. Duplicate service-hour submission.
+16. Overlapping service-hour claims.
+17. Self-approved service hours.
+18. Unauthorized hour verification.
+19. Pending hours counted as verified.
+20. Rejected hours counted as verified.
+21. Cross-volunteer service-hour access.
+22. Confidential screening disclosure.
+23. Unauthorized AI access.
+24. Persistence corruption after concurrent updates.
+25. Audit record manipulation.
+
+---
+
+# 23. AUTOMATED REGRESSION TESTING
+
+Preserve the reported M41.05 baseline:
+
+**578 / 578 TESTS PASSING.**
+
+Add at least 20 meaningful M41.06 tests.
+
+Suggested identifiers:
+
+TEST-P41-41 through TEST-P41-60.
+
+### Test coverage
+
+TEST-P41-41 — Volunteer registration.
+
+TEST-P41-42 — Duplicate application prevention.
+
+TEST-P41-43 — Volunteer profile persistence.
+
+TEST-P41-44 — Skills and availability matching.
+
+TEST-P41-45 — Training requirement enforcement.
+
+TEST-P41-46 — Clearance approval authorization.
+
+TEST-P41-47 — Expired or revoked clearance rejection.
+
+TEST-P41-48 — Restricted shift access denial.
+
+TEST-P41-49 — Shift creation.
+
+TEST-P41-50 — Shift capacity enforcement.
+
+TEST-P41-51 — Concurrent assignment protection.
+
+TEST-P41-52 — Shift cancellation and capacity release.
+
+TEST-P41-53 — Attendance recording.
+
+TEST-P41-54 — Service-hour submission.
+
+TEST-P41-55 — Duplicate and overlapping hour rejection.
+
+TEST-P41-56 — Supervisor verification.
+
+TEST-P41-57 — Pending and rejected hour exclusion.
+
+TEST-P41-58 — Cross-volunteer ownership protection.
+
+TEST-P41-59 — Persistence restart recovery.
+
+TEST-P41-60 — Complete 40-step integrated scenario.
+
+### Expected target
+
+If the previous 578-test baseline is preserved and 20 tests are added:
+
+**TARGET: 598 TESTS.**
+
+This is a target, not an executed result.
+
+Report actual counts.
+
+---
+
+# 24. PLAYWRIGHT BROWSER VERIFICATION
+
+Preserve the reported baseline:
+
+**16 / 16 CHROMIUM TESTS PASSING.**
+
+Add browser coverage for:
+
+- Volunteer registration.
+- Profile completion.
+- Training requirements.
+- Clearance status.
+- Restricted shift rejection.
+- Opportunity discovery.
+- Shift application.
+- Coordinator approval.
+- Attendance.
+- Hour submission.
+- Supervisor verification.
+- Volunteer service history.
+- Mobile shift management.
+
+### Browser projects
+
+Execute:
+
+- Chromium.
+- Firefox.
+- WebKit.
+- Mobile Chrome.
+
+### Existing CI concern
+
+Earlier GitHub Actions evidence showed failures in the comprehensive CI workflow.
+
+Before final M41.06 acceptance:
+
+1. Inspect the latest failed workflow.
+2. Identify the failing job and step.
+3. Fix the underlying issue.
+4. Rerun the complete workflow.
+5. Record the actual run ID.
+6. Verify the regression job.
+7. Verify each browser matrix job.
+8. Preserve artifacts.
+
+Do not claim full cross-browser CI success based only on local Chromium results.
+
+---
+
+# 25. GITHUB ACTIONS CI REQUIREMENTS
+
+Preserve the two-job architecture.
+
+## Job 1 — verify-and-build
+
+Run:
+
+```bash
+npm ci --no-audit --no-fund
+npx tsc --noEmit
+npm run build
+npx tsx scripts/verify_suite.ts
+```
+
+## Job 2 — browser-tests
+
+Execute the configured browser matrix.
+
+Ensure browser installation matches the selected Playwright project.
+
+Use deterministic fixtures.
+
+Do not suppress failures with:
+
+- Unconditional continue-on-error.
+- Ignored exit codes.
+- Artificial pass markers.
+- Assertions that never execute.
+
+### Required CI evidence
+
+- Workflow run ID.
+- Commit SHA.
+- Job status.
+- Failed step, if any.
+- Regression count.
+- Browser results.
+- Artifact availability.
+- Final conclusion.
+
+---
+
+# 26. PERSISTENCE AND CONCURRENCY
+
+Preserve embedded durable persistence.
+
+The previous milestone reported recovery of:
+
+**18 tables and 5,174 records.**
+
+Extend verification to:
+
+- Volunteer applications.
+- Volunteer profiles.
+- Training records.
+- Clearance decisions.
+- Shift assignments.
+- Attendance records.
+- Service-hour submissions.
+- Supervisor verification.
+- Notifications.
+- Audit events.
+
+### Concurrency tests
+
+Test:
+
+- Five simultaneous shift applications for one position.
+- Concurrent coordinator approvals.
+- Clearance revocation during assignment.
+- Concurrent attendance updates.
+- Duplicate hour submission.
+- Simultaneous verification attempts.
+- Restart during pending service-hour review.
+
+Preserve state integrity.
+
+---
+
+# 27. SEVEN-LANGUAGE AND ACCESSIBILITY REQUIREMENTS
+
+Preserve:
+
+- English.
+- Somali.
+- Spanish.
+- Hmong.
+- Karen.
+- Oromo.
+- Amharic.
+
+Add translation keys for new volunteer interfaces.
+
+Do not replace the canonical translation architecture.
+
+### Accessibility
+
+Verify:
+
+- Keyboard navigation.
+- Form labels.
+- Focus management.
+- Status announcements.
+- Error messages.
+- Mobile navigation.
+- Shift calendar usability.
+- Clearance status readability.
+- Service-hour submission accessibility.
+
+Maintain responsive behavior at a 375px viewport.
+
+---
+
+# 28. AI WORKFORCE PRESERVATION
+
+Preserve exactly 36 canonical AI agents:
+
+18 Organizational:
+
+ORG-AI-001 through ORG-AI-018.
+
+18 Fundraising:
+
+FUND-AI-001 through FUND-AI-018.
+
+Preserve five fundraising pipelines:
+
+- Grants.
+- Major Donors.
+- CSR.
+- Capital Campaign.
+- Reconciliation.
+
+AI agents must not:
+
+- Grant safeguarding clearance.
+- Override required training.
+- Assign restricted shifts without authorization.
+- Approve service hours.
+- Modify official verified-hour totals without authorized workflow.
+- Access confidential screening information.
+- Bypass the emergency halt.
+
+Maintain fallback/mock AI operation.
+
+---
+
+# 29. INFRASTRUCTURE RESTRICTIONS
+
+Maintain truthful development configuration:
+
+```text
+POSTGRESQL=NOT_CONNECTED
+BACKEND_HOSTING=NOT_CONFIGURED
+GOOGLE_WORKSPACE=AUTHORIZATION_REQUIRED
+PAYMENT_GATEWAY=NOT_CONNECTED
+AI_MODELS=FALLBACK_MOCK
+```
+
+Do not deploy production hosting.
+
+Do not provision production PostgreSQL.
+
+Do not activate Google Workspace OAuth.
+
+Do not activate live payments.
+
+Do not activate live Gemini inference.
+
+Continue using approved development persistence.
+
+---
+
+# 30. REQUIRED DEVELOPMENT REPORTS
+
+Generate the following 15 reports:
+
+1. `phase41_m4106_repository_reconciliation_report.md`
+2. `phase41_m4106_volunteer_registration_report.md`
+3. `phase41_m4106_profile_skills_availability_report.md`
+4. `phase41_m4106_training_management_report.md`
+5. `phase41_m4106_safeguarding_clearance_report.md`
+6. `phase41_m4106_shift_management_report.md`
+7. `phase41_m4106_shift_capacity_concurrency_report.md`
+8. `phase41_m4106_attendance_management_report.md`
+9. `phase41_m4106_verified_service_hours_report.md`
+10. `phase41_m4106_notifications_audit_report.md`
+11. `phase41_m4106_cross_portal_integration_report.md`
+12. `phase41_m4106_security_authorization_report.md`
+13. `phase41_m4106_regression_persistence_report.md`
+14. `phase41_m4106_playwright_ci_verification_report.md`
+15. `phase41_m4106_master_completion_report.md`
+
+Every report must contain:
+
+- Existing functionality inspected.
+- Source files changed.
+- Functionality implemented.
+- Actual test commands.
+- Actual pass/fail/skip counts.
+- Persistence results.
+- Browser execution evidence.
+- CI run identifiers.
+- Remaining defects.
+- Acceptance determination.
+
+Do not fabricate test results.
+
+---
+
+# 31. ACCEPTANCE GATES
+
+## GATE A — VOLUNTEER REGISTRATION
+
+Volunteer registration and onboarding work correctly.
+
+## GATE B — PROFILE MANAGEMENT
+
+Skills, availability and profile records persist.
+
+## GATE C — TRAINING
+
+Required training is enforced.
+
+## GATE D — CLEARANCE
+
+Restricted assignments require valid authorized clearance.
+
+## GATE E — SHIFT MANAGEMENT
+
+Shifts can be created, assigned and cancelled.
+
+## GATE F — CAPACITY
+
+Concurrent assignment cannot exceed shift capacity.
+
+## GATE G — ATTENDANCE
+
+Attendance records are valid and auditable.
+
+## GATE H — VERIFIED HOURS
+
+Only supervisor-approved hours count toward official totals.
+
+## GATE I — AUTHORIZATION
+
+Volunteer and staff ownership restrictions are enforced.
+
+## GATE J — SAFEGUARDING
+
+Confidential records and clearance information remain protected.
+
+## GATE K — CROSS-PORTAL CONSISTENCY
+
+Volunteer, coordinator and reporting views reflect authoritative records.
+
+## GATE L — PERSISTENCE
+
+Volunteer operational records survive supported restarts.
+
+## GATE M — REGRESSION
+
+Existing functionality remains operational.
+
+New tests pass.
+
+## GATE N — BROWSER TESTING
+
+Real browser results are recorded.
+
+## GATE O — CI
+
+GitHub Actions produces an evidence-based verification result.
+
+## GATE P — DOCUMENTATION
+
+All required reports are generated accurately.
+
+---
+
+# 32. EXECUTION SEQUENCE
+
+GOOGLE AI STUDIO:
+
+EXECUTE IN THIS ORDER.
+
+**ACTION 01:** Inspect the current repository.
+
+**ACTION 02:** Reconcile existing volunteer data models.
+
+**ACTION 03:** Complete volunteer registration.
+
+**ACTION 04:** Complete volunteer profiles.
+
+**ACTION 05:** Integrate skills and availability.
+
+**ACTION 06:** Implement training requirements.
+
+**ACTION 07:** Implement safeguarding clearance.
+
+**ACTION 08:** Enforce clearance restrictions.
+
+**ACTION 09:** Complete volunteer opportunity discovery.
+
+**ACTION 10:** Complete shift creation.
+
+**ACTION 11:** Implement capacity-safe shift assignments.
+
+**ACTION 12:** Implement cancellation and reassignment.
+
+**ACTION 13:** Implement attendance records.
+
+**ACTION 14:** Implement service-hour submissions.
+
+**ACTION 15:** Implement supervisor verification.
+
+**ACTION 16:** Enforce verified-hours-only reporting.
+
+**ACTION 17:** Integrate volunteer notifications.
+
+**ACTION 18:** Integrate coordinator dashboards.
+
+**ACTION 19:** Verify cross-portal consistency.
+
+**ACTION 20:** Verify safeguarding and authorization.
+
+**ACTION 21:** Verify concurrency and persistence.
+
+**ACTION 22:** Add at least 20 M41.06 regression tests.
+
+**ACTION 23:** Add volunteer Playwright tests.
+
+**ACTION 24:** Execute TypeScript verification.
+
+**ACTION 25:** Execute the application build.
+
+**ACTION 26:** Execute the complete regression suite.
+
+**ACTION 27:** Execute browser tests.
+
+**ACTION 28:** Inspect and repair GitHub Actions failures.
+
+**ACTION 29:** Generate all 15 reports.
+
+**ACTION 30:** Determine M41.06 acceptance.
+
+**ACTION 31:** Report readiness for M41.07.
+
+---
+
+# 33. REQUIRED FINAL DEVELOPMENT SUMMARY
+
+At completion, report:
+
+### M41.06 STATUS
+
+COMPLETE / COMPLETE_WITH_LIMITATIONS / BLOCKED.
+
+### VOLUNTEER ONBOARDING
+
+Registration results.
+
+Profile results.
+
+Training results.
+
+### SAFEGUARDING
+
+Clearance approval results.
+
+Restricted assignment rejection results.
+
+### SHIFT MANAGEMENT
+
+Shift capacity results.
+
+Concurrent assignment results.
+
+Cancellation results.
+
+### VERIFIED SERVICE HOURS
+
+Hours submitted.
+
+Hours approved.
+
+Hours rejected.
+
+Official verified-hour totals.
+
+### AUTOMATED REGRESSION
+
+Tests discovered.
+
+Tests executed.
+
+Tests passed.
+
+Tests failed.
+
+Tests skipped.
+
+### BROWSER TESTING
+
+Chromium results.
+
+Firefox results.
+
+WebKit results.
+
+Mobile Chrome results.
+
+### CI
+
+Actual GitHub Actions workflow conclusion.
+
+Run ID.
+
+Commit SHA.
+
+### PERSISTENCE
+
+Tables recovered.
+
+Records recovered.
+
+Data integrity results.
+
+### INFRASTRUCTURE
+
+PRODUCTION_DEPLOYMENT_DEFERRED.
+
+### NEXT MILESTONE
+
+M41.07 — Donor, Grant and Fundraising Workflow Integration.
+
+---
+
+# 34. FINAL MASTER EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+BEGIN M41.06 DEVELOPMENT IMMEDIATELY.
+
+COMPLETE VOLUNTEER REGISTRATION.
+
+COMPLETE VOLUNTEER PROFILE MANAGEMENT.
+
+IMPLEMENT SKILLS AND AVAILABILITY MATCHING.
+
+IMPLEMENT TRAINING REQUIREMENTS.
+
+IMPLEMENT AUTHORIZED SAFEGUARDING CLEARANCE.
+
+PREVENT RESTRICTED ASSIGNMENTS WITHOUT CLEARANCE.
+
+IMPLEMENT SHIFT CREATION AND SCHEDULING.
+
+IMPLEMENT CONCURRENCY-SAFE SHIFT ASSIGNMENT.
+
+IMPLEMENT CANCELLATION AND REASSIGNMENT.
+
+IMPLEMENT ATTENDANCE TRACKING.
+
+IMPLEMENT SERVICE-HOUR SUBMISSION.
+
+IMPLEMENT SUPERVISOR VERIFICATION.
+
+ENSURE ONLY APPROVED HOURS COUNT TOWARD OFFICIAL TOTALS.
+
+INTEGRATE VOLUNTEER NOTIFICATIONS.
+
+INTEGRATE COORDINATOR DASHBOARDS.
+
+VERIFY CROSS-PORTAL CONSISTENCY.
+
+PRESERVE ALL EXISTING MEMBER AND CASEWORKER WORKFLOWS.
+
+PRESERVE PROGRAM ENROLLMENT AND WAITLIST FUNCTIONALITY.
+
+PRESERVE ALL 36 AI AGENTS.
+
+PRESERVE ALL FIVE FUNDRAISING PIPELINES.
+
+PRESERVE ALL SEVEN LANGUAGES.
+
+PRESERVE SAFEGUARDING CONTROLS.
+
+RUN THE FULL REGRESSION SUITE.
+
+RUN REAL PLAYWRIGHT BROWSER TESTS.
+
+VERIFY GITHUB ACTIONS.
+
+VERIFY PERSISTENCE AND CONCURRENCY.
+
+GENERATE ALL 15 REQUIRED REPORTS.
+
+MAINTAIN DEVELOPMENT_ACCEPTED_WITH_LIMITATIONS UNTIL ALL RELEVANT ACCEPTANCE GATES HAVE BEEN VERIFIED.
+
+DO NOT ACTIVATE PRODUCTION INFRASTRUCTURE.
+
+DO NOT DECLARE PHASE 41 COMPLETE.
+
+### FINAL TARGET
+
+**A COMPLETE, SECURE AND AUDITABLE VOLUNTEER OPERATIONS SYSTEM THAT CONNECTS REGISTRATION, TRAINING, SAFEGUARDING CLEARANCE, SHIFT ASSIGNMENT, ATTENDANCE AND SUPERVISOR-VERIFIED SERVICE HOURS.**
+
+# END OF M41.06 MASTER DEVELOPMENT DIRECTIVE

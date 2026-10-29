@@ -29,6 +29,7 @@ import { phase38Service } from './src/services/phase38Service';
 import { phase39Service } from './src/services/phase39Service';
 import { memberCaseworkerService } from './src/services/memberCaseworkerService';
 import { programEnrollmentService, isStaffUser } from './src/services/programEnrollmentService';
+import { volunteerOperationsService, isVolunteerCoordinatorOrStaff, isSafeguardingLeadOrExec } from './src/services/volunteerOperationsService';
 import { serverVerificationService } from './src/server/serverVerificationService';
 import type { AgentDivision } from './src/types/aiWorkforce';
 import type { PermissionDomain } from './src/types/masterAdmin';
@@ -3342,6 +3343,204 @@ app.post('/api/v1/verification/m4105-scenario', async (_req: Request, res: Respo
   }
 });
 
+// =============================================================================
+// PHASE 41: M41.06 (VOLUNTEER ONBOARDING, CLEARANCE, SHIFTS & SERVICE HOURS)
+// =============================================================================
+
+// M41.06: Volunteer Registration
+app.post('/api/v1/volunteers/register', async (req: Request, res: Response) => {
+  try {
+    const auth = extractSession(req);
+    const result = await volunteerOperationsService.registerVolunteer(req.body, auth.session);
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.status(201).json(result);
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || 'Registration failed' });
+  }
+});
+
+// M41.06: Volunteer Profile Retrieval (Anti-IDOR protected)
+app.get('/api/v1/volunteers/profile/:id', (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  const result = volunteerOperationsService.getVolunteerProfile(req.params.id, auth.session);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') ? 403 : 404).json(result);
+  }
+  res.json(result);
+});
+
+// M41.06: Volunteer Profile Update (Anti-IDOR protected)
+app.post('/api/v1/volunteers/profile/:id', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  const result = await volunteerOperationsService.updateVolunteerProfile(req.params.id, req.body, auth.session);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') ? 403 : 400).json(result);
+  }
+  res.json(result);
+});
+
+// M41.06: Staff Training Verification
+app.post('/api/v1/volunteers/training', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const { volunteerId, module } = req.body;
+  if (!volunteerId || !module) {
+    return res.status(400).json({ success: false, error: 'volunteerId and module are required.' });
+  }
+  const result = await volunteerOperationsService.recordTrainingCompletion(volunteerId, module, auth.session);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') ? 403 : 400).json(result);
+  }
+  res.json(result);
+});
+
+// M41.06: Safeguarding Clearance Review (Fail-closed)
+app.post('/api/v1/volunteers/clearance', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const { volunteerId, decision, notes } = req.body;
+  if (!volunteerId || !decision) {
+    return res.status(400).json({ success: false, error: 'volunteerId and decision are required.' });
+  }
+  const result = await volunteerOperationsService.approveClearance(volunteerId, decision, auth.session, notes);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') || result.error?.includes('Security Violation') ? 403 : 400).json(result);
+  }
+  res.json(result);
+});
+
+// M41.06: List Volunteer Shifts
+app.get('/api/v1/volunteers/shifts', (_req: Request, res: Response) => {
+  const shifts = volunteerOperationsService.getAllShifts();
+  res.json({ success: true, count: shifts.length, shifts });
+});
+
+// M41.06: Create Volunteer Shift (Staff Only)
+app.post('/api/v1/volunteers/shifts', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await volunteerOperationsService.createShift(req.body, auth.session);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') ? 403 : 400).json(result);
+  }
+  res.status(201).json(result);
+});
+
+// M41.06: Apply for Volunteer Shift (Concurrency Safe)
+app.post('/api/v1/volunteers/shifts/:id/apply', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await volunteerOperationsService.applyForShift(req.params.id, auth.session);
+  if (!result.success) {
+    return res.status(400).json(result);
+  }
+  res.json(result);
+});
+
+// M41.06: Cancel Shift Assignment
+app.post('/api/v1/volunteers/shifts/assignments/:id/cancel', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const { reason } = req.body;
+  const result = await volunteerOperationsService.cancelShiftAssignment(req.params.id, reason, auth.session);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') ? 403 : 400).json(result);
+  }
+  res.json(result);
+});
+
+// M41.06: Shift Attendance Recording (Check-in / Check-out)
+app.post('/api/v1/volunteers/shifts/assignments/:id/attendance', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const { action } = req.body;
+  if (!action || !['CHECK_IN', 'CHECK_OUT'].includes(action)) {
+    return res.status(400).json({ success: false, error: 'action must be CHECK_IN or CHECK_OUT.' });
+  }
+  const result = await volunteerOperationsService.recordAttendance(req.params.id, action, auth.session);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') ? 403 : 400).json(result);
+  }
+  res.json(result);
+});
+
+// M41.06: Submit Service Hours
+app.post('/api/v1/volunteers/hours/submit', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const result = await volunteerOperationsService.submitServiceHours(req.body, auth.session);
+  if (!result.success) {
+    return res.status(400).json(result);
+  }
+  res.status(201).json(result);
+});
+
+// M41.06: Staff Verify Service Hours
+app.post('/api/v1/staff/volunteers/hours/:id/verify', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  const { decision, notes } = req.body;
+  if (!decision || !['APPROVED', 'REJECTED'].includes(decision)) {
+    return res.status(400).json({ success: false, error: 'decision must be APPROVED or REJECTED.' });
+  }
+  const result = await volunteerOperationsService.verifyServiceHours(req.params.id, decision, auth.session, notes);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') || result.error?.includes('Security Violation') ? 403 : 400).json(result);
+  }
+  res.json(result);
+});
+
+// M41.06: Volunteer Service Hours History (Anti-IDOR protected)
+app.get('/api/v1/volunteers/hours/:id/history', (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  const result = volunteerOperationsService.getVolunteerServiceHistory(req.params.id, auth.session);
+  if (!result.success) {
+    return res.status(result.error?.includes('Forbidden') ? 403 : 404).json(result);
+  }
+  res.json(result);
+});
+
+// M41.06: Staff Coordinator Dashboard KPIs
+app.get('/api/v1/staff/volunteers/coordinator-dashboard', (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  if (!isVolunteerCoordinatorOrStaff(auth.session)) {
+    return res.status(403).json({ success: false, error: 'Forbidden: Volunteer Coordinator or Staff role required.' });
+  }
+  const metrics = volunteerOperationsService.getCoordinatorDashboardMetrics();
+  res.json({ success: true, metrics });
+});
+
+// M41.06: Deterministic 40-Step Scenario Verification
+app.post('/api/v1/verification/m4106-scenario', async (_req: Request, res: Response) => {
+  try {
+    const result = await volunteerOperationsService.execute40StepVolunteerScenario();
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || 'Execution error' });
+  }
+});
+
 
 // -----------------------------------------------------------------------------
 // VITE SPA DEV MIDDLEWARE / STATIC SERVING
@@ -3352,6 +3551,13 @@ async function startServer() {
   // Initialize persistent database adapter (PostgreSQL or isolated durable store)
   await dbAdapter.initialize();
   console.log('[Phumulani Platform] Database persistence layer initialized successfully.');
+
+  try {
+    await volunteerOperationsService.initialize();
+    console.log('[Phumulani Platform] Volunteer operations service initialized successfully.');
+  } catch (volErr) {
+    console.warn('[Phumulani Platform] Volunteer operations initialization notice:', volErr);
+  }
 
   try {
     const migrationService = DatabaseMigrationService.getInstance();

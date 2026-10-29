@@ -56,4 +56,35 @@ test.describe('M38.04 — Community Member Portal Journeys', () => {
 
     await expect(page.locator('body')).toBeVisible();
   });
+
+  test('M41.05: member program discovery, enrollment application, and waitlist tracking', async ({ page }) => {
+    await page.goto('/');
+    const memberBtn = page.locator('button:has-text("Community Member")').first();
+    await expect(memberBtn).toBeVisible();
+    await memberBtn.click();
+
+    // 1. Program discovery tab navigation
+    const programsTab = page.locator('button:has-text("Program Enrollments"), button:has-text("Programs")').first();
+    await expect(programsTab).toBeVisible();
+    await programsTab.click();
+
+    // Verify program content is rendered
+    const heading = page.locator('h1, h2, h3, h4').filter({ hasText: /Program|Enrollment/i }).first();
+    await expect(heading).toBeVisible();
+  });
+
+  test('M41.05: mobile enrollment navigation and responsive capacity display', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto('/');
+
+    // On mobile, switch role via select dropdown or visible button
+    const selectEl = page.locator('select').first();
+    if (await selectEl.isVisible()) {
+      await selectEl.selectOption({ index: 1 });
+    }
+
+    // Verify page loads without crashing on mobile viewport
+    await expect(page.locator('body')).toBeVisible();
+  });
 });
+

@@ -21,6 +21,7 @@ import {
 } from '../types/aiWorkforce';
 import { ALL_UNIFIED_AGENTS } from './unifiedAiWorkforceSeed';
 import { PostgresPersistenceAdapter } from './postgresPersistenceAdapter';
+import { db } from './db';
 import crypto from 'crypto';
 
 export class UnifiedAiWorkforceService {
@@ -389,7 +390,6 @@ export class UnifiedAiWorkforceService {
     if (isCrisis) {
       const auditId = `audit-vawa-quarantine-${Date.now()}`;
       try {
-        const { db } = await import('./db');
         db.createAuditLog({
           actorRole: (params.requesterRole as any) || 'staff',
           action: 'VAWA_SAFEGUARDING_QUARANTINE',
@@ -435,7 +435,6 @@ export class UnifiedAiWorkforceService {
     const auditId = `audit-exec-${Date.now()}`;
     const hash = crypto.createHash('sha256').update(auditId + agent.id + params.prompt).digest('hex');
     try {
-      const { db } = await import('./db');
       db.createAuditLog({
         id: auditId,
         actorRole: (params.requesterRole as any) || 'staff',
