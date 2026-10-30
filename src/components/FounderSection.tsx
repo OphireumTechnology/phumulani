@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { BookOpen, Film, Heart, Shield, Award, Sparkles, ChevronRight, CheckCircle2, Quote, ExternalLink } from 'lucide-react';
 import { PHUMULANI_MEDIA_INVENTORY, getMediaById } from '../services/mediaInventory';
 import { VideoEmbedPlayer } from './VideoEmbedPlayer';
+import { SafeImage } from './SafeImage';
 
 export const FounderSection: React.FC = () => {
   const [selectedBook, setSelectedBook] = useState<'facing' | 'sacred' | 'gift' | null>(null);
@@ -22,7 +23,8 @@ export const FounderSection: React.FC = () => {
       title: 'Facing the Giants',
       subtitle: 'A Journey to Freedom from Domestic Abuse',
       year: '2021',
-      cover: '/media/publications/facing-the-giants-cover.svg',
+      cover: '/images/publications/facing-the-giants-cover.svg',
+      legacyCover: '/media/publications/facing-the-giants-cover.svg',
       tag: 'Solo Memoir & Survivor Guide',
       synopsis:
         'In "Facing the Giants", Comfort Dondo recounts her personal journey moving from Zimbabwe to the United States at age 17, surviving childhood trauma and domestic violence, and confronting the towering "giants" of systemic isolation, legal intimidation, and cultural silence. The memoir provides a compassionate, practical roadmap for women seeking autonomy, safety, and renewed spiritual faith.',
@@ -37,7 +39,8 @@ export const FounderSection: React.FC = () => {
       title: 'Sacred Promise: An Anthology',
       subtitle: 'Stories of Resilience and Communal Awakening',
       year: '2023',
-      cover: '/media/publications/sacred-promise-cover.svg',
+      cover: '/images/publications/sacred-promise-cover.svg',
+      legacyCover: '/media/publications/sacred-promise-cover.svg',
       tag: 'International Bestseller',
       synopsis:
         'Compiled by global educator Dr. Tererai Trent and published by Women Changing the World Press, "Sacred Promise" gathers authentic accounts from visionary women worldwide. Comfort Dondo’s chapter details the foundational promise she made to herself while rebuilding her life in Minnesota—a promise that blossomed into Phumulani: Minnesota African Women Against Violence.',
@@ -52,7 +55,8 @@ export const FounderSection: React.FC = () => {
       title: 'The Gift in Pain',
       subtitle: 'Transforming Trauma into Communal Power',
       year: 'Forthcoming',
-      cover: '/media/publications/the-gift-in-pain-cover.svg',
+      cover: '/images/publications/the-gift-in-pain-cover.svg',
+      legacyCover: '/media/publications/the-gift-in-pain-cover.svg',
       tag: 'Advance Announcement',
       synopsis:
         'Comfort Dondo’s forthcoming work explores post-traumatic growth, community-led shelter innovations, and the structural methodology behind Phumulani’s six core programs. It examines how collective healing circles and economic independence break the intergenerational cycle of gender-based violence in immigrant diaspora communities.',
@@ -87,9 +91,12 @@ export const FounderSection: React.FC = () => {
             <div className="relative group max-w-sm sm:max-w-md w-full">
               <div className="absolute -inset-2 bg-gradient-to-r from-[#104F57] via-[#633C69] to-[#D67C35] rounded-3xl blur-lg opacity-25 group-hover:opacity-40 transition duration-500" />
               <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-slate-200/90 bg-white">
-                <img
-                  src="/media/founder/comfort-dondo-official-portrait.svg"
-                  alt="Dignified executive portrait of Comfort Dondo, founder of Phumulani"
+                <SafeImage
+                  src="/images/leadership/comfort-dondo.svg"
+                  fallbackSrc="/media/founder/comfort-dondo-official-portrait.svg"
+                  fallbackType="founder"
+                  initials="CD"
+                  alt="Comfort Dondo, Founder and Executive Director of Phumulani"
                   className="w-full h-auto object-cover aspect-[4/5] transform hover:scale-[1.02] transition-transform duration-300"
                   loading="lazy"
                 />
@@ -232,8 +239,11 @@ export const FounderSection: React.FC = () => {
               >
                 {/* Book Cover Frame */}
                 <div className="relative bg-slate-900 aspect-[2/3] overflow-hidden flex items-center justify-center p-3">
-                  <img
+                  <SafeImage
                     src={book.cover}
+                    fallbackSrc={book.legacyCover}
+                    fallbackType="publication"
+                    fallbackText={book.title}
                     alt={book.title}
                     className="w-full h-full object-contain rounded-md shadow-lg transform group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
@@ -279,8 +289,10 @@ export const FounderSection: React.FC = () => {
         {/* 5. Authentic Community Circle Spotlight */}
         <div className="bg-[#E8F3F1]/70 rounded-2xl border border-teal-200/80 p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-7 rounded-xl overflow-hidden shadow-lg border border-teal-200 bg-white">
-            <img
-              src="/media/founder/comfort-dondo-community-circle.svg"
+            <SafeImage
+              src="/images/homepage/community-hero.svg"
+              fallbackSrc="/media/founder/comfort-dondo-community-circle.svg"
+              fallbackType="hero"
               alt="Comfort Dondo facilitating authentic community healing circle in Brooklyn Park"
               className="w-full h-auto object-cover"
               loading="lazy"
@@ -330,7 +342,14 @@ export const FounderSection: React.FC = () => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center">
                     <div className="sm:col-span-4 flex justify-center">
-                      <img src={book.cover} alt={book.title} className="w-40 h-auto rounded-lg shadow-md" />
+                      <SafeImage
+                        src={book.cover}
+                        fallbackSrc={book.legacyCover}
+                        fallbackType="publication"
+                        fallbackText={book.title}
+                        alt={book.title}
+                        className="w-40 h-auto rounded-lg shadow-md"
+                      />
                     </div>
                     <div className="sm:col-span-8 space-y-3 text-xs sm:text-sm text-slate-700 leading-relaxed">
                       <p>{book.synopsis}</p>

@@ -6,6 +6,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { User } from '../types';
+import { SafeImage } from './SafeImage';
 import {
   ShieldAlert,
   Globe,
@@ -161,9 +162,11 @@ export const Header: React.FC<HeaderProps> = ({
             }}
             className="flex items-center gap-3 text-left group cursor-pointer focus-visible:outline-2 focus-visible:outline-[#104F57]"
           >
-            <img
-              src="/media/branding/phumulani-logo-primary.svg"
-              alt="Phumulani Logo Emblem"
+            <SafeImage
+              src="/images/branding/phumulani-logo.svg"
+              fallbackSrc="/media/branding/phumulani-logo-primary.svg"
+              fallbackType="logo"
+              alt="Phumulani Organization Logo"
               className="w-10 h-10 object-contain rounded-lg shadow-xs group-hover:scale-105 transition-transform shrink-0"
             />
             <div>

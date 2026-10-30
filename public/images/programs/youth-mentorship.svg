@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="ymBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F3EAF4" />
+      <stop offset="100%" stop-color="#E8F3F1" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#ymBg)" />
+  <circle cx="400" cy="280" r="230" fill="#FFFFFF" stroke="#633C69" stroke-width="2" />
+
+  <!-- Intergenerational Youth & Mentor Emblems -->
+  <g transform="translate(400, 270)">
+    <!-- Open Book of Knowledge -->
+    <path d="M0 60 C-60 40 -120 50 -150 70 L-150 -10 C-120 -30 -60 -20 0 0 C60 -20 120 -30 150 -10 L150 70 C120 50 60 40 0 60 Z" fill="#104F57" />
+    <path d="M0 55 C-60 35 -110 45 -140 65 L-140 -2 C-110 -22 -60 -12 0 5 Z" fill="#E8F3F1" />
+    <path d="M0 55 C60 35 110 45 140 65 L140 -2 C110 -22 60 -12 0 5 Z" fill="#E8F3F1" />
+
+    <!-- Mentor and Youth Silhouette Emblems -->
+    <!-- Mentor (Older sister / advocate) -->
+    <g transform="translate(-40, -50)">
+      <circle cx="0" cy="-30" r="24" fill="#633C69" />
+      <path d="M-28 20 C-28 -10 28 -10 28 20 Z" fill="#633C69" />
+    </g>
+    <!-- Youth Mentee -->
+    <g transform="translate(40, -40)">
+      <circle cx="0" cy="-22" r="18" fill="#D67C35" />
+      <path d="M-22 20 C-22 -5 22 -5 22 20 Z" fill="#D67C35" />
+    </g>
+
+    <!-- Graduation Cap / College Pathway Emblem -->
+    <g transform="translate(0, -120)">
+      <polygon points="0,-25 45,-10 0,5 -45,-10" fill="#D67C35" />
+      <rect x="-15" y="5" width="30" height="15" fill="#104F57" />
+      <line x1="35" y1="-8" x2="35" y2="15" stroke="#F9A825" stroke-width="3" />
+      <circle cx="35" cy="18" r="4" fill="#F9A825" />
+    </g>
+  </g>
+
+  <!-- Tagline Banner -->
+  <rect x="150" y="500" width="500" height="50" rx="10" fill="#104F57" />
+  <text x="400" y="531" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="14" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">
+    YOUTH &amp; SISTERHOOD MENTORSHIP · COLLEGE PATHWAYS
+  </text>
+</svg>

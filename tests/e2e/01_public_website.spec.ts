@@ -85,4 +85,71 @@ test.describe('M38.03 — Public Website Journeys', () => {
     const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
     expect(bodyWidth).toBeLessThanOrEqual(390);
   });
+
+  test('M41.10 — public website images load without broken image frames', async ({ page }) => {
+    // Intercept 404 image errors
+    const failedImages: string[] = [];
+    page.on('response', (res) => {
+      const url = res.url();
+      if ((url.endsWith('.svg') || url.endsWith('.png') || url.endsWith('.jpg') || url.endsWith('.webp')) && res.status() >= 400) {
+        failedImages.push(url);
+      }
+    });
+
+    await page.goto('/');
+
+    // 1. Verify Header Logo
+    const headerLogo = page.locator('header img, header [role="img"]').first();
+    await expect(headerLogo).toBeVisible();
+
+    // 2. Verify Homepage Hero Image
+    const heroImage = page.locator('img[alt*="community sisterhood"], [role="img"][aria-label*="Community Sanctuary"]').first();
+    await expect(heroImage).toBeVisible();
+
+    // 3. Verify Founder Representation
+    const founderImg = page.locator('img[alt*="Comfort Dondo"], [role="img"][aria-label*="Comfort Dondo"]').first();
+    await expect(founderImg).toBeVisible();
+
+    // 4. Scroll through programs section to trigger lazy-loaded images
+    const programSec = page.locator('#programs-section');
+    if (await programSec.isVisible()) {
+      await programSec.scrollIntoViewIfNeeded();
+      const programImgs = page.locator('#programs-section img, #programs-section [role="img"]');
+      const count = await programImgs.count();
+      expect(count).toBeGreaterThanOrEqual(1);
+    }
+
+    // 5. Scroll through events section
+    const eventsSec = page.locator('#events-section');
+    if (await eventsSec.isVisible()) {
+      await eventsSec.scrollIntoViewIfNeeded();
+      const eventImgs = page.locator('#events-section img, #events-section [role="img"]');
+      const count = await eventImgs.count();
+      expect(count).toBeGreaterThanOrEqual(1);
+    }
+
+    // 6. Assert zero 404 responses on local visual asset requests
+    const internalFailures = failedImages.filter((u) => u.includes('/images/') || u.includes('/media/'));
+    expect(internalFailures).toEqual([]);
+  });
+
+  test('M41.10 — responsive image verification across 6 viewports', async ({ page }) => {
+    const viewports = [
+      { width: 375, height: 667 },
+      { width: 393, height: 852 },
+      { width: 768, height: 1024 },
+      { width: 1024, height: 768 },
+      { width: 1280, height: 800 },
+      { width: 1440, height: 900 },
+    ];
+
+    for (const vp of viewports) {
+      await page.setViewportSize(vp);
+      await page.goto('/');
+      const headerLogo = page.locator('header img, header [role="img"]').first();
+      await expect(headerLogo).toBeVisible();
+      const bodyWidth = await page.evaluate(() => document.body.scrollWidth);
+      expect(bodyWidth).toBeLessThanOrEqual(vp.width + 15);
+    }
+  });
 });

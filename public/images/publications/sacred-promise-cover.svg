@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900" width="100%" height="100%">
+  <defs>
+    <linearGradient id="plumBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#412147" />
+      <stop offset="60%" stop-color="#633C69" />
+      <stop offset="100%" stop-color="#241028" />
+    </linearGradient>
+    <linearGradient id="goldFiligree" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#FFE082" />
+      <stop offset="50%" stop-color="#FFD54F" />
+      <stop offset="100%" stop-color="#FFA000" />
+    </linearGradient>
+  </defs>
+
+  <!-- Deep Ceremonial Plum Canvas -->
+  <rect width="600" height="900" fill="url(#plumBg)" />
+
+  <!-- Gold Border Filigree / Frame -->
+  <rect x="25" y="25" width="550" height="850" fill="none" stroke="url(#goldFiligree)" stroke-width="2" />
+  <rect x="35" y="35" width="530" height="830" fill="none" stroke="url(#goldFiligree)" stroke-width="1" stroke-dasharray="6 4" opacity="0.6" />
+
+  <!-- Corner Mandala Filigree -->
+  <g stroke="url(#goldFiligree)" stroke-width="2" fill="none">
+    <path d="M 45 45 Q 90 45 90 90" />
+    <circle cx="55" cy="55" r="4" fill="#FFD54F" />
+    <path d="M 555 45 Q 510 45 510 90" />
+    <circle cx="545" cy="55" r="4" fill="#FFD54F" />
+    <path d="M 45 855 Q 90 855 90 810" />
+    <circle cx="55" cy="845" r="4" fill="#FFD54F" />
+    <path d="M 555 855 Q 510 855 510 810" />
+    <circle cx="545" cy="845" r="4" fill="#FFD54F" />
+  </g>
+
+  <!-- Sacred Circle Emblem (The Sacred Promise) -->
+  <circle cx="300" cy="460" r="140" fill="none" stroke="url(#goldFiligree)" stroke-width="2" />
+  <circle cx="300" cy="460" r="120" fill="#633C69" opacity="0.4" />
+  <!-- Tree of Life & Rooted Sisterhood Emblem -->
+  <g transform="translate(300, 470)" stroke="url(#goldFiligree)" stroke-width="3" fill="none" stroke-linecap="round">
+    <path d="M 0 60 L 0 -10 Q 0 -50 -40 -70" />
+    <path d="M 0 -10 Q 0 -50 40 -70" />
+    <path d="M 0 -15 Q -30 -30 -60 -30" />
+    <path d="M 0 -15 Q 30 -30 60 -30" />
+    <circle cx="0" cy="-75" r="7" fill="#FFD54F" />
+    <circle cx="-40" cy="-70" r="5" fill="#FFE082" />
+    <circle cx="40" cy="-70" r="5" fill="#FFE082" />
+  </g>
+
+  <!-- Typography -->
+  <g transform="translate(300, 110)">
+    <text x="0" y="0" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="12" fill="#FFE082" letter-spacing="4" text-anchor="middle">
+      INTERNATIONAL BESTSELLING ANTHOLOGY
+    </text>
+  </g>
+
+  <g transform="translate(300, 200)">
+    <text x="0" y="0" font-family="'Playfair Display', Georgia, serif" font-weight="900" font-size="62" fill="url(#goldFiligree)" text-anchor="middle" letter-spacing="2">
+      SACRED
+    </text>
+    <text x="0" y="70" font-family="'Playfair Display', Georgia, serif" font-weight="900" font-size="56" fill="#FFFFFF" text-anchor="middle" letter-spacing="3">
+      PROMISE
+    </text>
+  </g>
+
+  <g transform="translate(300, 320)">
+    <text x="0" y="0" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="15" fill="#E8F3F1" text-anchor="middle" letter-spacing="1">
+      Stories of Sisterhood, Resilience and Awakening
+    </text>
+    <text x="0" y="24" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="400" font-size="13" fill="#D4E8E5" text-anchor="middle">
+      Women Changing the World Press
+    </text>
+  </g>
+
+  <!-- Compilation Credits -->
+  <g transform="translate(300, 710)">
+    <text x="0" y="0" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="12" fill="#FFD54F" letter-spacing="2" text-anchor="middle">
+      COMPILED BY DR. TERERAI TRENT
+    </text>
+    <text x="0" y="24" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="500" font-size="12" fill="#E8F3F1" text-anchor="middle">
+      Oprah Winfrey's "All-Time Favorite Guest"
+    </text>
+  </g>
+
+  <!-- Contributing Author Badge -->
+  <g transform="translate(300, 790)">
+    <rect x="-180" y="-20" width="360" height="48" rx="24" fill="#104F57" stroke="url(#goldFiligree)" stroke-width="1.5" />
+    <text x="0" y="9" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="13" fill="#FFFFFF" letter-spacing="1" text-anchor="middle">
+      FEATURING AUTHOR COMFORT DONDO
+    </text>
+  </g>
+</svg>

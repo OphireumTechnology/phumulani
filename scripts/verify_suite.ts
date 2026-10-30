@@ -52,6 +52,7 @@ async function main() {
   console.log(`Velocity Workflow: success=${velo.success}, tasks=${velo.tasks.length}`);
 
   console.log('--- SUITE EXECUTION COMPLETE: 100% SUCCESS ---');
+  process.exit(0);
 }
 
 main().catch((err) => {

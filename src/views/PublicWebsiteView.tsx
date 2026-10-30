@@ -42,6 +42,7 @@ import {
 } from 'lucide-react';
 
 import { FounderSection } from '../components/FounderSection';
+import { SafeImage } from '../components/SafeImage';
 
 interface PublicWebsiteViewProps {
   currentUser: User;
@@ -271,8 +272,10 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               <div className="bg-white rounded-2xl border border-teal-200/90 shadow-xl overflow-hidden relative space-y-4">
                 {/* Community Gathering Hero Image */}
                 <div className="relative aspect-[16/10] bg-slate-100 overflow-hidden border-b border-teal-100">
-                  <img
-                    src="/media/homepage/community-hero-healing.svg"
+                  <SafeImage
+                    src="/images/homepage/community-hero.svg"
+                    fallbackSrc="/media/homepage/community-hero-healing.svg"
+                    fallbackType="hero"
                     alt="Authentic community sisterhood gathering at Phumulani Community Center"
                     className="w-full h-full object-cover"
                     loading="eager"
@@ -287,8 +290,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   {/* Founder Identification */}
                   <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                     <div className="flex items-center gap-3">
-                      <img
-                        src="/media/founder/comfort-dondo-official-portrait.svg"
+                      <SafeImage
+                        src="/images/leadership/comfort-dondo.svg"
+                        fallbackSrc="/media/founder/comfort-dondo-official-portrait.svg"
+                        fallbackType="founder"
+                        initials="CD"
                         alt="Comfort Dondo, Founder of Phumulani"
                         className="w-12 h-12 rounded-xl object-cover border-2 border-[#104F57] shadow-sm shrink-0"
                       />
@@ -379,14 +385,15 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {programs.map((prog) => {
             const programIllustrations: Record<string, string> = {
-              advocacy: '/media/programs/legal-protection-advocacy.svg',
-              workforce: '/media/programs/workforce-resume-coaching.svg',
-              financial_literacy: '/media/programs/entrepreneurship-lab.svg',
-              mentorship: '/media/programs/youth-mentorship.svg',
-              housing: '/media/programs/healing-homes-housing.svg',
-              entrepreneurship: '/media/programs/entrepreneurship-lab.svg',
+              advocacy: '/images/programs/legal-protection-advocacy.svg',
+              workforce: '/images/programs/education-workforce.svg',
+              financial_literacy: '/images/programs/economic-empowerment.svg',
+              mentorship: '/images/programs/youth-mentorship.svg',
+              housing: '/images/programs/healing-homes-housing.svg',
+              entrepreneurship: '/images/programs/economic-empowerment.svg',
             };
-            const imageSrc = programIllustrations[prog.slug] || '/media/programs/tea-healing-circles.svg';
+            const imageSrc = programIllustrations[prog.slug] || '/images/programs/community-wellness.svg';
+            const legacyFallback = `/media/programs/${prog.slug === 'advocacy' ? 'legal-protection-advocacy' : prog.slug === 'workforce' ? 'workforce-resume-coaching' : 'tea-healing-circles'}.svg`;
 
             return (
               <div
@@ -395,8 +402,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               >
                 {/* Authentic Program Artwork */}
                 <div className="aspect-[4/3] w-full bg-slate-100 overflow-hidden border-b border-slate-100">
-                  <img
+                  <SafeImage
                     src={imageSrc}
+                    fallbackSrc={legacyFallback}
+                    fallbackType="program"
+                    fallbackText={prog.name}
                     alt={prog.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
@@ -463,8 +473,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
             <div className="lg:col-span-5 space-y-4">
               <div className="bg-white rounded-2xl p-6 border border-teal-200/80 shadow-md space-y-4">
                 <div className="flex items-center gap-4">
-                  <img
-                    src="/media/founder/comfort-dondo-official-portrait.svg"
+                  <SafeImage
+                    src="/images/leadership/comfort-dondo.svg"
+                    fallbackSrc="/media/founder/comfort-dondo-official-portrait.svg"
+                    fallbackType="founder"
+                    initials="CD"
                     alt="Comfort Dondo, Founder of Phumulani"
                     className="w-20 h-20 rounded-2xl object-cover border-2 border-[#104F57] shadow-md shrink-0"
                   />
@@ -542,8 +555,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                   <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1.5">
-                    <img
-                      src="/media/leadership/dr-elena-rostova.svg"
+                    <SafeImage
+                      src="/images/leadership/dr-elena-rostova.svg"
+                      fallbackSrc="/media/leadership/dr-elena-rostova.svg"
+                      fallbackType="leadership"
+                      initials="ER"
                       alt="Dr. Elena Rostova"
                       className="w-14 h-14 mx-auto rounded-xl object-cover shadow-2xs"
                     />
@@ -552,8 +568,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   </div>
 
                   <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1.5">
-                    <img
-                      src="/media/leadership/sister-miriam-k.svg"
+                    <SafeImage
+                      src="/images/leadership/sister-miriam-k.svg"
+                      fallbackSrc="/media/leadership/sister-miriam-k.svg"
+                      fallbackType="leadership"
+                      initials="MK"
                       alt="Sister Miriam K."
                       className="w-14 h-14 mx-auto rounded-xl object-cover shadow-2xs"
                     />
@@ -562,8 +581,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   </div>
 
                   <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1.5">
-                    <img
-                      src="/media/leadership/david-mwangi.svg"
+                    <SafeImage
+                      src="/images/leadership/david-mwangi.svg"
+                      fallbackSrc="/media/leadership/david-mwangi.svg"
+                      fallbackType="leadership"
+                      initials="DM"
                       alt="David Mwangi, CPA"
                       className="w-14 h-14 mx-auto rounded-xl object-cover shadow-2xs"
                     />
@@ -572,8 +594,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   </div>
 
                   <div className="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs space-y-1.5">
-                    <img
-                      src="/media/leadership/amina-yusuf.svg"
+                    <SafeImage
+                      src="/images/leadership/amina-yusuf.svg"
+                      fallbackSrc="/media/leadership/amina-yusuf.svg"
+                      fallbackType="leadership"
+                      initials="AY"
                       alt="Amina Yusuf"
                       className="w-14 h-14 mx-auto rounded-xl object-cover shadow-2xs"
                     />
@@ -909,15 +934,15 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
           {events.map((evt) => {
             const isFull = evt.registeredCount >= evt.capacity;
             const eventIllustrations: Record<string, string> = {
-              'evt-1': '/media/events/career-pathways-showcase.svg',
-              'evt-2': '/media/events/healing-sisterhood-banquet.svg',
-              'evt-3': '/media/events/community-supply-distribution.svg',
+              'evt-1': '/images/events/career-pathways-showcase.svg',
+              'evt-2': '/images/events/healing-sisterhood-banquet.svg',
+              'evt-3': '/images/events/community-supply-distribution.svg',
             };
             const eventImg =
               eventIllustrations[evt.id] ||
               (evt.category === 'Workforce'
-                ? '/media/events/career-pathways-showcase.svg'
-                : '/media/events/healing-sisterhood-banquet.svg');
+                ? '/images/events/career-pathways-showcase.svg'
+                : '/images/events/community-celebration.svg');
 
             return (
               <div
@@ -925,8 +950,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 className="bg-white rounded-xl border border-slate-200 overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-md transition-all group"
               >
                 <div className="aspect-[16/9] w-full bg-slate-100 overflow-hidden border-b border-slate-100">
-                  <img
+                  <SafeImage
                     src={eventImg}
+                    fallbackSrc="/media/events/healing-sisterhood-banquet.svg"
+                    fallbackType="event"
+                    fallbackText={evt.title}
                     alt={evt.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 900" width="100%" height="100%">
+  <defs>
+    <linearGradient id="deepOcean" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0E373E" />
+      <stop offset="50%" stop-color="#104F57" />
+      <stop offset="100%" stop-color="#08252A" />
+    </linearGradient>
+    <linearGradient id="lotusGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF59D" />
+      <stop offset="50%" stop-color="#FBC02D" />
+      <stop offset="100%" stop-color="#D67C35" />
+    </linearGradient>
+  </defs>
+
+  <rect width="600" height="900" fill="url(#deepOcean)" />
+
+  <!-- Radiance Ripple Behind Resilient Lotus -->
+  <circle cx="300" cy="520" r="140" fill="#E8F3F1" opacity="0.1" />
+  <circle cx="300" cy="520" r="100" fill="#FDF1E8" opacity="0.15" />
+  <circle cx="300" cy="520" r="60" fill="#D67C35" opacity="0.2" />
+
+  <!-- Blooming Golden Lotus of Post-Traumatic Growth -->
+  <g transform="translate(300, 520)">
+    <!-- Base Petals -->
+    <path d="M-80 30 Q 0 90 80 30 Q 0 10 -80 30" fill="url(#lotusGold)" opacity="0.8" />
+    <!-- Center Petals -->
+    <path d="M-50 20 Q 0 -60 50 20 Q 0 40 -50 20" fill="url(#lotusGold)" />
+    <!-- Inner Upward Blossom -->
+    <path d="M-25 15 Q 0 -90 25 15 Q 0 30 -25 15" fill="#FFF9C4" />
+    <circle cx="0" cy="-30" r="12" fill="#FFFFFF" />
+  </g>
+
+  <!-- Typography -->
+  <g transform="translate(300, 110)">
+    <text x="0" y="0" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="12" fill="#FBC02D" letter-spacing="4" text-anchor="middle">
+      FORTHCOMING ADVANCE WORK
+    </text>
+  </g>
+
+  <g transform="translate(300, 200)">
+    <text x="0" y="0" font-family="'Playfair Display', Georgia, serif" font-weight="700" font-size="44" fill="#E8F3F1" text-anchor="middle" letter-spacing="2">
+      THE GIFT IN
+    </text>
+    <text x="0" y="70" font-family="'Playfair Display', Georgia, serif" font-weight="900" font-size="76" fill="url(#lotusGold)" text-anchor="middle" letter-spacing="3">
+      PAIN
+    </text>
+  </g>
+
+  <g transform="translate(300, 320)">
+    <text x="0" y="0" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="16" fill="#FFFFFF" text-anchor="middle" letter-spacing="1">
+      Transforming Trauma into Communal Power
+    </text>
+    <text x="0" y="24" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="400" font-size="13" fill="#B2DFDB" text-anchor="middle">
+      A Blueprint for Healing Immigrant Generations
+    </text>
+  </g>
+
+  <!-- Author Byline -->
+  <g transform="translate(300, 780)">
+    <text x="0" y="0" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="12" fill="#FBC02D" letter-spacing="3" text-anchor="middle">
+      BY COMFORT DONDO
+    </text>
+    <text x="0" y="26" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="500" font-size="12" fill="#E8F3F1" text-anchor="middle">
+      Founder of Phumulani · Minneapolis, Minnesota
+    </text>
+  </g>
+</svg>

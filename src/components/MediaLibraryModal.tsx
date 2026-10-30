@@ -7,6 +7,7 @@
 import React, { useState } from 'react';
 import { ShieldCheck, ShieldAlert, FileText, Download, CheckCircle2, Lock, ExternalLink, Filter, Search, Copy, Check } from 'lucide-react';
 import { PHUMULANI_MEDIA_INVENTORY, MediaAsset } from '../services/mediaInventory';
+import { SafeImage } from './SafeImage';
 
 interface MediaLibraryModalProps {
   isOpen: boolean;
@@ -145,7 +146,7 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
                       <span className="text-[10px] text-slate-400 mt-1">Provider: {asset.videoMetadata?.provider}</span>
                     </div>
                   ) : (
-                    <img
+                    <SafeImage
                       src={asset.localPath}
                       alt={asset.altText}
                       className="w-full h-full object-contain p-2"

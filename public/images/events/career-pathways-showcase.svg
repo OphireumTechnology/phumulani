@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="100%" height="100%">
+  <defs>
+    <linearGradient id="fairBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#E8F3F1" />
+      <stop offset="100%" stop-color="#FFFFFF" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="800" fill="url(#fairBg)" />
+
+  <!-- Career Showcase Hall Architecture -->
+  <rect x="100" y="80" width="1000" height="620" rx="20" fill="#FFFFFF" stroke="#CDE3DF" stroke-width="4" />
+
+  <!-- Employer Partner Banners in Background -->
+  <g transform="translate(150, 140)">
+    <rect width="250" height="120" rx="8" fill="#104F57" />
+    <text x="125" y="55" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="16" fill="#FFFFFF" text-anchor="middle">
+      HEALTHCARE PATHWAYS
+    </text>
+    <text x="125" y="80" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="12" fill="#E8F3F1" text-anchor="middle">
+      Hennepin &amp; Ramsey Partners
+    </text>
+
+    <rect x="320" y="0" width="250" height="120" rx="8" fill="#633C69" />
+    <text x="445" y="55" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="16" fill="#FFFFFF" text-anchor="middle">
+      TECH &amp; DIGITAL LABS
+    </text>
+    <text x="445" y="80" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="12" fill="#F3EAF4" text-anchor="middle">
+      Twin Cities Corporate Sponsors
+    </text>
+
+    <rect x="640" y="0" width="250" height="120" rx="8" fill="#D67C35" />
+    <text x="765" y="55" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="16" fill="#FFFFFF" text-anchor="middle">
+      ENTREPRENEUR HUB
+    </text>
+    <text x="765" y="80" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="12" fill="#FFFFFF" text-anchor="middle">
+      Micro-Enterprise Licensing
+    </text>
+  </g>
+
+  <!-- Career Networking Tables -->
+  <ellipse cx="400" cy="500" rx="180" ry="60" fill="#263238" />
+  <ellipse cx="400" cy="490" rx="160" ry="50" fill="#E8F3F1" />
+  <ellipse cx="800" cy="500" rx="180" ry="60" fill="#263238" />
+  <ellipse cx="800" cy="490" rx="160" ry="50" fill="#E8F3F1" />
+
+  <!-- Title Badge -->
+  <g transform="translate(350, 640)">
+    <rect width="500" height="60" rx="12" fill="#104F57" />
+    <text x="250" y="37" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="700" font-size="16" fill="#FFFFFF" text-anchor="middle">
+      IMMIGRANT WOMEN CAREER PATHWAYS SHOWCASE
+    </text>
+  </g>
+</svg>

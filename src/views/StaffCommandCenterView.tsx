@@ -38,6 +38,7 @@ import {
 import { PortalLayout } from '../components/PortalLayout';
 import { PHUMULANI_MEDIA_INVENTORY, MediaAsset, getSafeguardingQueueMedia } from '../services/mediaInventory';
 import { IntegratedReportingTab } from '../components/masterAdmin/IntegratedReportingTab';
+import { SafeImage } from '../components/SafeImage';
 
 interface StaffCommandCenterViewProps {
   currentUser: User;
@@ -1078,7 +1079,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                 >
                   <div className="aspect-video bg-slate-900/10 relative overflow-hidden flex items-center justify-center">
                     {asset.localPath.endsWith('.svg') || asset.localPath.endsWith('.png') ? (
-                      <img
+                      <SafeImage
                         src={asset.localPath}
                         alt={asset.altText}
                         className="w-full h-full object-cover"
