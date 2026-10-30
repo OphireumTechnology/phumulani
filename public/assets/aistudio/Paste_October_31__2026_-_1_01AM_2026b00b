@@ -1,0 +1,1929 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+# PHASE 41 — MASTER DEVELOPMENT CONTINUATION
+## M41.08 — STAFF, EXECUTIVE AND BOARD REPORTING INTEGRATION
+
+**Repository:** OphireumTechnology/phumulani  
+**Branch:** main  
+**Execution environment:** Google AI Studio / GitHub Codespaces  
+**Development mode:** Actual source-code implementation, integration, testing, CI verification and evidence-based reporting  
+**Previous milestone:** M41.07 — COMPLETE_WITH_LIMITATIONS (reported)  
+**Current milestone:** M41.08  
+**Acceptance baseline:** DEVELOPMENT_ACCEPTED_WITH_LIMITATIONS  
+**Production deployment:** DEFERRED
+
+---
+
+# SECTION 1 — MASTER EXECUTION AUTHORIZATION
+
+GOOGLE AI STUDIO:
+
+BEGIN PHASE 41 M41.08 DEVELOPMENT.
+
+IMPLEMENT A COMPLETE STAFF, EXECUTIVE AND BOARD REPORTING SYSTEM FOR THE PHUMULANI AI COMMUNITY PLATFORM.
+
+THIS IS AN ACTUAL DEVELOPMENT TASK.
+
+DO NOT ONLY PRODUCE DOCUMENTATION.
+
+DO NOT ONLY CREATE STATIC DASHBOARD MOCKUPS.
+
+DO NOT REBUILD THE APPLICATION.
+
+DO NOT REPLACE EXISTING OPERATIONAL SERVICES.
+
+DO NOT CREATE DUPLICATE FINANCIAL LEDGERS.
+
+DO NOT CREATE DUPLICATE CASE MANAGEMENT SYSTEMS.
+
+DO NOT CREATE DUPLICATE REPORTING DATABASES.
+
+REUSE THE EXISTING AUTHORITATIVE APPLICATION SERVICES, DATA MODELS, AUTHENTICATION, AUTHORIZATION, EMBEDDED DURABLE PERSISTENCE, NOTIFICATION SERVICES AND AUDIT INFRASTRUCTURE.
+
+PRESERVE ALL FUNCTIONALITY DEVELOPED DURING M41.01 THROUGH M41.07.
+
+IMPLEMENT REAL REPORTING QUERIES, SERVER-SIDE AGGREGATION, ROLE-RESTRICTED DASHBOARDS, AUDITABLE REPORT GENERATION AND EVIDENCE-BASED EXPORTS.
+
+ALL REPORTS MUST REFLECT ACTUAL AUTHORITATIVE APPLICATION RECORDS.
+
+DO NOT INVENT METRICS.
+
+DO NOT FABRICATE FINANCIAL RESULTS.
+
+DO NOT REPRESENT DEVELOPMENT FIXTURES AS REAL COMMUNITY OUTCOMES.
+
+DO NOT DECLARE PRODUCTION READINESS.
+
+---
+
+# SECTION 2 — M41.08 PRIMARY OBJECTIVE
+
+Develop one integrated reporting architecture that supports three reporting levels:
+
+## LEVEL 1 — STAFF OPERATIONS
+
+Provide operational visibility into:
+
+- Member registration.
+- Community service requests.
+- Caseworker assignments.
+- Service request status.
+- Program enrollment.
+- Program capacity.
+- Waitlists.
+- Volunteer onboarding.
+- Volunteer clearance.
+- Volunteer shifts.
+- Volunteer attendance.
+- Verified service hours.
+- Operational notifications.
+- Overdue assignments.
+- Outstanding approvals.
+
+## LEVEL 2 — EXECUTIVE MANAGEMENT
+
+Provide management-level visibility into:
+
+- Service delivery performance.
+- Program participation.
+- Program capacity utilization.
+- Waitlist demand.
+- Volunteer engagement.
+- Verified volunteer contributions.
+- Fundraising progress.
+- Grant applications.
+- Grant awards.
+- Operational workload.
+- Department performance.
+- Safeguarding process compliance indicators.
+- AI workforce governance.
+- Organizational risks.
+- Data quality and reporting freshness.
+
+## LEVEL 3 — BOARD GOVERNANCE
+
+Provide authorized governance reporting covering:
+
+- Organizational performance.
+- Program outcomes.
+- Service delivery trends.
+- Financial classifications.
+- Fundraising pipeline summaries.
+- Grant pipeline status.
+- Volunteer contributions.
+- Strategic risks.
+- Safeguarding oversight indicators.
+- AI governance.
+- Human approval controls.
+- Audit evidence.
+- Unresolved operational exceptions.
+
+BOARD REPORTS MUST NOT EXPOSE UNNECESSARY PERSONAL INFORMATION.
+
+---
+
+# SECTION 3 — NON-NEGOTIABLE DEVELOPMENT PRESERVATION
+
+Preserve the existing reported baseline.
+
+## Operational milestones
+
+M41.01 — Repository reconciliation.
+
+M41.02 — Public website integration.
+
+M41.03 — Member registration and profile lifecycle.
+
+M41.04 — Service request and caseworker coordination.
+
+M41.05 — Program enrollment, capacity and waitlist coordination.
+
+M41.06 — Volunteer onboarding, clearance, shifts and verified hours.
+
+M41.07 — Donor, grant and fundraising integration.
+
+## Automated testing
+
+Reported baseline:
+
+618 automated regression tests.
+
+18 Chromium browser tests.
+
+18 Mobile Chrome browser tests.
+
+Firefox and WebKit previously reported passing.
+
+These are previous reported results, not automatically verified current results.
+
+## Durable persistence
+
+Previous reported recovery:
+
+28 tables.
+
+7,117 records.
+
+Preserve existing records and extend reporting without destructive migration.
+
+## AI workforce
+
+Preserve exactly 36 canonical agents:
+
+18 Organizational agents.
+
+18 Fundraising agents.
+
+Preserve all five fundraising pipelines:
+
+1. Grants.
+2. Major Donors.
+3. Corporate Social Responsibility.
+4. Capital Campaign.
+5. Reconciliation.
+
+## Languages
+
+Preserve:
+
+- English.
+- Somali.
+- Spanish.
+- Hmong.
+- Karen.
+- Oromo.
+- Amharic.
+
+## Infrastructure
+
+Maintain:
+
+POSTGRESQL=NOT_CONNECTED
+
+BACKEND_HOSTING=NOT_CONFIGURED
+
+GOOGLE_WORKSPACE=AUTHORIZATION_REQUIRED
+
+PAYMENT_GATEWAY=NOT_CONNECTED
+
+AI_MODELS=FALLBACK_MOCK
+
+---
+
+# SECTION 4 — M41.08.01 REPOSITORY INSPECTION AND REPORTING ARCHITECTURE RECONCILIATION
+
+Before writing code, inspect the actual repository.
+
+Identify:
+
+1. Existing staff dashboards.
+2. Existing executive dashboards.
+3. Existing board dashboards.
+4. Existing reporting services.
+5. Existing financial reporting logic.
+6. Existing case management reporting.
+7. Existing program enrollment metrics.
+8. Existing volunteer reporting.
+9. Existing AI governance reporting.
+10. Existing audit services.
+11. Existing authorization middleware.
+12. Existing persistence adapters.
+13. Existing chart components.
+14. Existing report export utilities.
+15. Existing browser tests.
+16. Existing regression tests.
+17. Existing GitHub Actions workflows.
+
+Create a reconciliation matrix showing:
+
+EXISTING.
+
+PARTIALLY IMPLEMENTED.
+
+MISSING.
+
+REQUIRES CORRECTION.
+
+REQUIRES SECURITY HARDENING.
+
+REQUIRES TEST COVERAGE.
+
+Do not create new modules until the authoritative implementation has been identified.
+
+### Required report
+
+`phase41_m4108_repository_reconciliation_report.md`
+
+---
+
+# SECTION 5 — M41.08.02 AUTHORITATIVE REPORTING SERVICE
+
+Implement or extend one canonical server-side reporting service.
+
+Use existing naming conventions.
+
+A possible module name, only if no equivalent exists:
+
+`src/server/operationalReportingService.ts`
+
+The final location must follow the repository's actual server architecture.
+
+### Required responsibilities
+
+- Query authoritative records.
+- Enforce report access permissions.
+- Validate date ranges.
+- Apply approved filters.
+- Aggregate operational metrics.
+- Preserve financial classifications.
+- Calculate verified volunteer totals.
+- Protect confidential records.
+- Generate reporting snapshots.
+- Record report-generation audit events.
+- Return structured reporting responses.
+
+### Critical architecture rule
+
+SECURITY-SENSITIVE REPORTING MUST EXECUTE ON THE SERVER.
+
+DO NOT IMPORT PRIVATE PERSISTENCE ENGINES INTO BROWSER COMPONENTS.
+
+DO NOT EXPOSE COMPLETE DATABASE TABLES TO FRONTEND REPORTS.
+
+DO NOT ALLOW CLIENT-SUPPLIED ROLE NAMES TO AUTHORIZE REPORT ACCESS.
+
+---
+
+# SECTION 6 — M41.08.03 REPORTING DATA CONTRACTS
+
+Define typed reporting contracts compatible with existing TypeScript models.
+
+Where appropriate, include:
+
+- Report ID.
+- Report type.
+- Reporting period.
+- Generated timestamp.
+- Source record counts.
+- Data freshness timestamp.
+- Requesting user ID.
+- Requesting role.
+- Applied filters.
+- Metric definitions.
+- Aggregated metrics.
+- Data quality warnings.
+- Confidentiality classification.
+- Report status.
+- Approval status.
+- Audit reference.
+
+### Required reporting categories
+
+STAFF_OPERATIONAL.
+
+EXECUTIVE_PERFORMANCE.
+
+BOARD_GOVERNANCE.
+
+FINANCIAL_SUMMARY.
+
+PROGRAM_PERFORMANCE.
+
+VOLUNTEER_CONTRIBUTION.
+
+CASEWORKER_WORKLOAD.
+
+FUNDRAISING_PIPELINE.
+
+AI_GOVERNANCE.
+
+SAFEGUARDING_OVERSIGHT.
+
+Reuse existing canonical categories if available.
+
+### Data quality
+
+Every metric must be traceable to authoritative records.
+
+If required data is unavailable, display:
+
+DATA_UNAVAILABLE.
+
+Do not substitute zero for missing data.
+
+Do not manufacture favorable results.
+
+---
+
+# SECTION 7 — M41.08.04 STAFF OPERATIONS DASHBOARD
+
+Develop or extend the staff operations dashboard.
+
+### Required indicators
+
+1. Total active members.
+2. New member registrations.
+3. Open service requests.
+4. Service requests awaiting review.
+5. Assigned service requests.
+6. Requests in progress.
+7. Resolved service requests.
+8. Closed service requests.
+9. Overdue service requests.
+10. Active caseworker assignments.
+11. Program applications.
+12. Confirmed enrollments.
+13. Waitlisted members.
+14. Program capacity utilization.
+15. Volunteer applications.
+16. Volunteers awaiting clearance.
+17. Active cleared volunteers.
+18. Upcoming shifts.
+19. Pending service-hour verification.
+20. Verified volunteer hours.
+
+### Required filtering
+
+- Reporting period.
+- Department.
+- Program.
+- Service status.
+- Assigned staff member.
+- Priority.
+- Relevant authorization scope.
+
+### Staff authorization
+
+A department-limited staff member must not gain organization-wide access merely by opening the reporting dashboard.
+
+Apply existing department restrictions.
+
+---
+
+# SECTION 8 — M41.08.05 CASEWORKER PERFORMANCE REPORTING
+
+Implement reporting for:
+
+- Assigned cases.
+- Open cases.
+- Cases under review.
+- Cases in progress.
+- Resolved cases.
+- Closed cases.
+- Overdue cases.
+- Average resolution duration.
+- Pending follow-ups.
+- Workload distribution.
+
+### Calculation requirements
+
+Use actual lifecycle timestamps.
+
+Exclude invalid or incomplete records from calculations where necessary.
+
+Report exclusions.
+
+Do not equate case closure with successful community outcomes unless the record supports that conclusion.
+
+### Safeguarding
+
+Restricted survivor cases must not appear in ordinary caseworker reporting.
+
+Only authorized safeguarding personnel may access protected operational details.
+
+General executive or board reporting may use appropriately aggregated, non-identifying oversight indicators when permitted by policy.
+
+---
+
+# SECTION 9 — M41.08.06 PROGRAM PERFORMANCE REPORTING
+
+Integrate M41.05 program records.
+
+### Required indicators
+
+- Total programs.
+- Active programs.
+- Enrollment capacity.
+- Confirmed enrollments.
+- Available seats.
+- Waitlisted applicants.
+- Withdrawals.
+- Completed participation.
+- Program demand.
+- Capacity utilization.
+- Waitlist movement.
+
+### Capacity calculation
+
+CAPACITY_UTILIZATION = CONFIRMED_ACTIVE_ENROLLMENTS / MAXIMUM_CAPACITY.
+
+Handle zero-capacity programs safely.
+
+### Critical rule
+
+WAITLISTED APPLICANTS MUST NOT COUNT AS CONFIRMED ENROLLMENTS.
+
+Do not inflate program participation totals.
+
+### Consistency
+
+Reporting totals must match authoritative enrollment services.
+
+---
+
+# SECTION 10 — M41.08.07 VOLUNTEER PERFORMANCE REPORTING
+
+Integrate M41.06 volunteer operations.
+
+### Required indicators
+
+- Volunteer applications.
+- Volunteers under review.
+- Volunteers awaiting training.
+- Volunteers awaiting clearance.
+- Cleared volunteers.
+- Restricted volunteers.
+- Revoked clearances.
+- Active assignments.
+- Completed shifts.
+- Pending attendance verification.
+- Submitted service hours.
+- Approved service hours.
+- Rejected service hours.
+- Total verified volunteer hours.
+
+### Mandatory invariant
+
+OFFICIAL_VERIFIED_VOLUNTEER_HOURS = SUM(APPROVED_HOURS_ONLY).
+
+Pending, rejected and unverified submissions must not contribute to official totals.
+
+### Additional controls
+
+- No duplicate hour counting.
+- No unauthorized approval.
+- No private clearance detail leakage.
+- No cross-volunteer ownership bypass.
+
+---
+
+# SECTION 11 — M41.08.08 FUNDRAISING PERFORMANCE REPORTING
+
+Integrate M41.07 fundraising records.
+
+### Required categories
+
+PLEDGED_AMOUNT.
+
+INTERNALLY_RECORDED_AMOUNT.
+
+EXTERNALLY_VERIFIED_AMOUNT.
+
+PENDING_GRANT_AMOUNT.
+
+### Required indicators
+
+- Active donors.
+- Donor engagement.
+- Active pledges.
+- Fulfilled pledges.
+- Campaign targets.
+- Campaign commitments.
+- Internal ledger amounts.
+- Externally verified receipts.
+- Pending grant requests.
+- Submitted grant applications.
+- Awarded grants.
+- Declined grants.
+- Reconciliation exceptions.
+
+### Financial integrity
+
+Do not combine all four financial classifications into one misleading received-revenue total.
+
+Do not classify pledges as cash.
+
+Do not classify pending grants as awarded funding.
+
+Do not classify awarded grants as received cash.
+
+Do not classify internally recorded settlement as bank-reconciled cash.
+
+### Historical records
+
+Preserve previously established distinctions between:
+
+- Program budget.
+- Lifetime donor giving.
+- Pending proposals.
+- Internal ledger settlements.
+
+Do not add categories together without a valid accounting basis.
+
+---
+
+# SECTION 12 — M41.08.09 FIVE FUNDRAISING PIPELINE DASHBOARD
+
+Create or extend pipeline reporting for:
+
+1. Grants.
+2. Major Donors.
+3. CSR.
+4. Capital Campaign.
+5. Reconciliation.
+
+### Pipeline indicators
+
+- Total records.
+- Active records.
+- Pending review.
+- Approved actions.
+- Rejected actions.
+- Overdue actions.
+- Human approval requirements.
+- Financial classification.
+- Audit exceptions.
+
+Do not change canonical pipeline definitions.
+
+Do not fabricate pipeline monetary amounts.
+
+---
+
+# SECTION 13 — M41.08.10 EXECUTIVE PERFORMANCE DASHBOARD
+
+Implement an integrated executive dashboard.
+
+### Required sections
+
+A. Community engagement.
+
+B. Service delivery.
+
+C. Caseworker operations.
+
+D. Program enrollment.
+
+E. Volunteer contributions.
+
+F. Fundraising performance.
+
+G. Grant development.
+
+H. Operational risks.
+
+I. Safeguarding oversight.
+
+J. AI governance.
+
+K. Data quality.
+
+L. Reporting freshness.
+
+### Executive summary
+
+Provide:
+
+- Current reporting period.
+- Key performance indicators.
+- Changes from the previous comparable period.
+- Outstanding operational risks.
+- Pending approvals.
+- Reporting limitations.
+- Data freshness.
+
+### Trend integrity
+
+Only calculate percentage changes when comparable historical data exists.
+
+If a comparison is unavailable, display:
+
+NOT_ENOUGH_HISTORICAL_DATA.
+
+Do not manufacture trends.
+
+---
+
+# SECTION 14 — M41.08.11 BOARD GOVERNANCE DASHBOARD
+
+Develop or extend a board-level reporting interface.
+
+### Required sections
+
+1. Organizational performance summary.
+2. Program delivery summary.
+3. Community service trends.
+4. Volunteer contribution summary.
+5. Fundraising pipeline summary.
+6. Grant pipeline summary.
+7. Financial classification summary.
+8. Strategic risk register.
+9. Safeguarding governance indicators.
+10. AI governance indicators.
+11. Pending board decisions.
+12. Reporting exceptions.
+13. Audit and approval status.
+
+### Confidentiality requirements
+
+BOARD REPORTS MUST DEFAULT TO AGGREGATED DATA.
+
+Do not include:
+
+- Survivor identities.
+- Shelter locations.
+- Confidential case notes.
+- Unnecessary member contact details.
+- Private donor contact information.
+- Volunteer screening details.
+- Authentication credentials.
+- Protected personal records.
+
+Apply suppression or aggregation rules to small groups when re-identification is possible.
+
+Do not assume board membership authorizes access to all underlying case files.
+
+---
+
+# SECTION 15 — M41.08.12 ROLE-BASED REPORT ACCESS
+
+Implement or verify role-based access for:
+
+- Community member.
+- Volunteer.
+- Donor.
+- Caseworker.
+- Department staff.
+- Volunteer coordinator.
+- Fundraising staff.
+- Executive.
+- Board member.
+- Master administrator.
+- Authorized safeguarding personnel.
+
+Use actual canonical roles from the repository.
+
+Do not invent new privileges unnecessarily.
+
+### Required security tests
+
+1. Member cannot access staff reports.
+2. Volunteer cannot access executive reports.
+3. Donor cannot access board reports.
+4. Department staff cannot access unauthorized department data.
+5. Fundraising staff cannot access confidential case details.
+6. Board users cannot access survivor identities.
+7. Unauthorized users cannot generate financial exports.
+8. Users cannot forge reporting roles through request parameters.
+9. Expired sessions cannot retrieve reports.
+10. Revoked sessions cannot retrieve reports.
+
+### Anti-IDOR
+
+Report identifiers must not bypass authorization.
+
+---
+
+# SECTION 16 — M41.08.13 REPORTING PERIODS AND FILTERING
+
+Support appropriate reporting periods:
+
+- Today.
+- Last seven days.
+- Current month.
+- Previous month.
+- Current quarter.
+- Previous quarter.
+- Current year.
+- Custom date range.
+
+### Validation
+
+Reject:
+
+- Invalid dates.
+- End dates before start dates.
+- Unsupported reporting ranges.
+- Unauthorized department filters.
+- Excessively expensive queries.
+
+### Time handling
+
+Use consistent timezone rules.
+
+Record the reporting timezone.
+
+Avoid off-by-one-day errors.
+
+---
+
+# SECTION 17 — M41.08.14 DATA FRESHNESS AND CONSISTENCY
+
+Every report should disclose:
+
+- Generated timestamp.
+- Source data timestamp.
+- Reporting period.
+- Source record count.
+- Data quality warnings.
+
+### Required behavior
+
+When an authoritative record changes:
+
+- Relevant staff metrics update.
+- Relevant executive metrics update.
+- Authorized board summaries update.
+- Reporting caches are invalidated or refreshed.
+- Audit history records significant reporting changes.
+
+### Important
+
+Do not label a report "real time" unless the implementation actually supports the claimed update behavior.
+
+---
+
+# SECTION 18 — M41.08.15 REPORT SNAPSHOTS AND AUDITABILITY
+
+Implement or verify immutable reporting snapshots where appropriate.
+
+### Required fields
+
+- Snapshot ID.
+- Report type.
+- Reporting period.
+- Generation timestamp.
+- Requesting actor.
+- Source version or checksum.
+- Report data checksum.
+- Approval state.
+- Audit reference.
+
+### Snapshot integrity
+
+Historical approved reports must not silently change when operational data changes.
+
+Corrections should produce a new version or an auditable amendment.
+
+Do not overwrite historical board-approved reports without preserving the prior version.
+
+---
+
+# SECTION 19 — M41.08.16 REPORT APPROVAL WORKFLOW
+
+Implement or verify:
+
+DRAFT.
+
+UNDER_REVIEW.
+
+APPROVED.
+
+REJECTED.
+
+SUPERSEDED.
+
+Reuse existing canonical statuses if available.
+
+### Required authorization
+
+- Staff may prepare authorized operational reports.
+- Executives may approve reports within their delegated authority.
+- Board report approval must follow established governance permissions.
+- AI agents cannot approve governance reports.
+- The report author cannot bypass required independent review.
+
+### Audit
+
+Record:
+
+REPORT_CREATED.
+
+REPORT_SUBMITTED_FOR_REVIEW.
+
+REPORT_APPROVED.
+
+REPORT_REJECTED.
+
+REPORT_SUPERSEDED.
+
+REPORT_EXPORTED.
+
+---
+
+# SECTION 20 — M41.08.17 REPORT EXPORTS
+
+Implement or verify secure exports.
+
+Preferred formats:
+
+- CSV.
+- PDF, if a suitable existing export implementation is available.
+- Structured JSON for authorized integrations.
+
+### Security
+
+Apply authorization before export generation.
+
+Apply the same privacy filters used in the dashboard.
+
+Do not export hidden confidential fields.
+
+Use safe filenames.
+
+Prevent spreadsheet formula injection in CSV exports.
+
+Limit export size.
+
+Record export audit events.
+
+### Financial disclosures
+
+Include appropriate classification labels and reporting limitations.
+
+Do not generate documents that falsely certify bank reconciliation or legal compliance.
+
+---
+
+# SECTION 21 — M41.08.18 DATA VISUALIZATION
+
+Implement or extend existing dashboard charts.
+
+Suggested visualizations:
+
+- Service request status distribution.
+- Caseworker workload.
+- Program capacity utilization.
+- Waitlist demand.
+- Volunteer service-hour trends.
+- Fundraising pipeline stages.
+- Grant application stages.
+- Financial classification comparison.
+- Operational risk distribution.
+
+### Requirements
+
+- Charts must use authoritative data.
+- Every chart must have accessible labels.
+- Tables must provide equivalent information.
+- Missing data must be identified.
+- Financial classifications must remain separate.
+- Color alone must not convey meaning.
+- Mobile layouts must remain usable.
+
+---
+
+# SECTION 22 — M41.08.19 SEVEN-LANGUAGE SUPPORT
+
+Preserve all seven languages:
+
+en — English.
+
+so — Somali.
+
+es — Spanish.
+
+hmn — Hmong.
+
+kar — Karen.
+
+orm — Oromo.
+
+am — Amharic.
+
+Add translation keys for:
+
+- Staff reports.
+- Executive reports.
+- Board reports.
+- Reporting filters.
+- Financial classifications.
+- Export actions.
+- Approval status.
+- Data freshness.
+- Error messages.
+- Accessibility labels.
+
+### Verification
+
+All required keys must exist in every language dictionary.
+
+Do not claim professional human translation approval without actual review.
+
+---
+
+# SECTION 23 — M41.08.20 ACCESSIBILITY AND MOBILE RESPONSIVENESS
+
+Verify:
+
+- Keyboard navigation.
+- Semantic headings.
+- Screen-reader labels.
+- Accessible tables.
+- Accessible charts.
+- Focus management.
+- Modal accessibility.
+- Filter controls.
+- Export buttons.
+- Error announcements.
+- Mobile navigation.
+- Responsive dashboard cards.
+
+### Required viewport checks
+
+375px.
+
+393px.
+
+768px.
+
+1280px.
+
+### Mobile invariant
+
+No unintended horizontal page overflow.
+
+Wide reporting tables may use explicitly labeled, accessible horizontal scrolling containers.
+
+---
+
+# SECTION 24 — M41.08.21 SAFEGUARDING REPORTING FIREWALL
+
+THIS IS A CRITICAL ACCEPTANCE REQUIREMENT.
+
+Preserve the existing safeguarding protections.
+
+### Restricted information
+
+- Survivor identities.
+- Confidential case records.
+- Shelter addresses.
+- Crisis intake details.
+- Protected referral records.
+- Restricted internal notes.
+
+### Required behavior
+
+Ordinary staff dashboards must not expose restricted records outside authorized scope.
+
+Executive reports must not reveal protected identities.
+
+Board reports must use approved, non-identifying summaries.
+
+AI-generated reporting must not bypass safeguarding authorization.
+
+### Required negative tests
+
+- Unauthorized survivor case query.
+- Confidential record export attempt.
+- Board report re-identification attempt.
+- Cross-department access attempt.
+- AI report access bypass attempt.
+- Small-group disclosure attempt.
+
+Do not claim formal VAWA compliance certification from automated test results.
+
+---
+
+# SECTION 25 — M41.08.22 AI GOVERNANCE REPORTING
+
+Preserve exactly 36 AI agents.
+
+### Required reporting
+
+- Agent registry count.
+- Agent category.
+- Operational status.
+- Human approval requirements.
+- Pending approvals.
+- Blocked actions.
+- Policy violations.
+- Emergency halt status.
+- Audit event counts.
+- Fallback/mock operating mode.
+
+### AI restrictions
+
+AI agents must not:
+
+- Approve governance reports.
+- Modify verified financial totals.
+- Reveal confidential records.
+- Override role permissions.
+- Certify legal compliance.
+- Fabricate operational outcomes.
+- Alter historical audit evidence.
+
+### Truthful disclosure
+
+AI_MODELS=FALLBACK_MOCK.
+
+Do not describe deterministic fallback results as live Gemini inference.
+
+---
+
+# SECTION 26 — M41.08.23 REPORTING PERFORMANCE
+
+Implement efficient aggregation.
+
+Avoid:
+
+- Repeated full-table scans for every dashboard component.
+- Excessive duplicate queries.
+- Unbounded reporting requests.
+- Unnecessary loading of confidential records.
+- Browser-side aggregation of private datasets.
+
+### Performance verification
+
+Measure:
+
+- Staff dashboard load.
+- Executive dashboard load.
+- Board dashboard load.
+- Reporting query duration.
+- Export generation duration.
+- Concurrent reporting requests.
+
+Record actual measurements.
+
+Do not invent performance results.
+
+---
+
+# SECTION 27 — M41.08.24 CONCURRENCY AND DATA INTEGRITY
+
+Test concurrent activity involving:
+
+- Service request updates.
+- Program enrollment changes.
+- Volunteer-hour approvals.
+- Donor pledge updates.
+- Grant application updates.
+- Report generation.
+- Report approval.
+- Report exports.
+
+### Required invariants
+
+- No double-counted records.
+- No partial financial classifications.
+- No unauthorized snapshot modification.
+- No report approval race bypass.
+- No disclosure through concurrent queries.
+- No corrupted persistent state.
+
+Use the existing durable persistence architecture.
+
+---
+
+# SECTION 28 — M41.08.25 INTEGRATED OPERATIONAL SCENARIO
+
+Implement a deterministic 45-step end-to-end scenario.
+
+## Scenario: Community Operations to Board Governance Reporting
+
+STEP 01: Initialize synthetic development fixtures.
+
+STEP 02: Authenticate an authorized community member.
+
+STEP 03: Create a synthetic service request.
+
+STEP 04: Verify request persistence.
+
+STEP 05: Authenticate an authorized caseworker.
+
+STEP 06: Assign the service request.
+
+STEP 07: Update the request lifecycle.
+
+STEP 08: Verify staff reporting reflects the update.
+
+STEP 09: Create a synthetic program application.
+
+STEP 10: Confirm enrollment.
+
+STEP 11: Verify program capacity changes.
+
+STEP 12: Create a waitlisted application.
+
+STEP 13: Verify waitlist reporting.
+
+STEP 14: Authenticate a synthetic volunteer.
+
+STEP 15: Verify volunteer onboarding.
+
+STEP 16: Verify authorized clearance.
+
+STEP 17: Assign a volunteer shift.
+
+STEP 18: Record attendance.
+
+STEP 19: Submit volunteer service hours.
+
+STEP 20: Verify pending hours do not count.
+
+STEP 21: Authenticate an authorized supervisor.
+
+STEP 22: Approve service hours.
+
+STEP 23: Verify official volunteer totals update.
+
+STEP 24: Authenticate a synthetic donor.
+
+STEP 25: Create a synthetic pledge.
+
+STEP 26: Verify pledged totals update.
+
+STEP 27: Verify cash-received totals remain unchanged.
+
+STEP 28: Create a synthetic grant opportunity.
+
+STEP 29: Progress the grant through internal review.
+
+STEP 30: Verify pending grant classification.
+
+STEP 31: Generate a staff operations report.
+
+STEP 32: Verify caseworker workload totals.
+
+STEP 33: Verify program enrollment totals.
+
+STEP 34: Verify volunteer verified-hour totals.
+
+STEP 35: Generate an executive report.
+
+STEP 36: Verify fundraising classification integrity.
+
+STEP 37: Verify operational risk indicators.
+
+STEP 38: Generate a board governance report.
+
+STEP 39: Verify confidential member details are excluded.
+
+STEP 40: Verify survivor identities are excluded.
+
+STEP 41: Attempt unauthorized report access.
+
+STEP 42: Verify access is denied.
+
+STEP 43: Create an authorized report snapshot.
+
+STEP 44: Restart the supported development runtime.
+
+STEP 45: Verify report integrity, snapshot recovery and audit history.
+
+### Acceptance requirement
+
+ALL 45 STEPS MUST EXECUTE.
+
+ALL ASSERTIONS MUST PASS.
+
+DO NOT SILENTLY SKIP FAILED OPERATIONS.
+
+---
+
+# SECTION 29 — M41.08.26 REGRESSION TEST EXPANSION
+
+Preserve the reported M41.07 baseline:
+
+618 tests.
+
+Add at least 20 meaningful M41.08 tests.
+
+Suggested identifiers:
+
+TEST-P41-81 through TEST-P41-100.
+
+### Test matrix
+
+TEST-P41-81 — Authoritative reporting service.
+
+TEST-P41-82 — Staff dashboard aggregation.
+
+TEST-P41-83 — Caseworker workload accuracy.
+
+TEST-P41-84 — Program enrollment reporting.
+
+TEST-P41-85 — Waitlist reporting accuracy.
+
+TEST-P41-86 — Volunteer verified-hour reporting.
+
+TEST-P41-87 — Financial classification segregation.
+
+TEST-P41-88 — Fundraising pipeline reporting.
+
+TEST-P41-89 — Grant reporting accuracy.
+
+TEST-P41-90 — Executive dashboard integration.
+
+TEST-P41-91 — Board governance aggregation.
+
+TEST-P41-92 — Report role authorization.
+
+TEST-P41-93 — Cross-department access denial.
+
+TEST-P41-94 — Safeguarding data exclusion.
+
+TEST-P41-95 — Reporting period validation.
+
+TEST-P41-96 — Report snapshot integrity.
+
+TEST-P41-97 — Report approval authorization.
+
+TEST-P41-98 — Secure export behavior.
+
+TEST-P41-99 — Persistence and concurrency recovery.
+
+TEST-P41-100 — Complete 45-step operational scenario.
+
+### Target
+
+618 baseline tests.
+
+20 new tests.
+
+TARGET: 638 TESTS.
+
+Expected target:
+
+638 / 638 PASSING.
+
+This is a target, not an executed result.
+
+Report actual discovered, executed, passed, failed and skipped counts.
+
+---
+
+# SECTION 30 — M41.08.27 PLAYWRIGHT BROWSER TESTING
+
+Preserve previously reported:
+
+Chromium: 18/18.
+
+Mobile Chrome: 18/18.
+
+Add real browser scenarios covering:
+
+- Staff dashboard navigation.
+- Operational reporting filters.
+- Caseworker metrics.
+- Program reporting.
+- Volunteer reporting.
+- Fundraising reporting.
+- Executive dashboard.
+- Board dashboard.
+- Report approval.
+- Secure exports.
+- Unauthorized report access.
+- Mobile reporting layouts.
+
+### Browser matrix
+
+Execute:
+
+- Chromium.
+- Firefox.
+- WebKit.
+- Mobile Chrome.
+
+### Required evidence
+
+For each project report:
+
+- Tests discovered.
+- Tests executed.
+- Tests passed.
+- Tests failed.
+- Tests skipped.
+- Duration.
+- Relevant traces or screenshots.
+
+Do not claim a browser passed merely because its project exists in the CI configuration.
+
+---
+
+# SECTION 31 — M41.08.28 GITHUB ACTIONS CI VERIFICATION
+
+Inspect:
+
+`.github/workflows/playwright.yml`
+
+Preserve the working CI architecture.
+
+## Job 1 — verify-and-build
+
+Execute:
+
+```bash
+npm ci --no-audit --no-fund
+npx tsc --noEmit
+npm run build
+npx tsx scripts/verify_suite.ts
+```
+
+## Job 2 — browser-tests
+
+Execute the configured browser matrix.
+
+### Mandatory requirements
+
+- Node.js 22.
+- Committed package-lock.json.
+- Correct npm caching.
+- Correct Playwright installation.
+- Correct project names.
+- Real browser execution.
+- Test artifact preservation.
+- No suppressed failures.
+
+### CI evidence
+
+Record:
+
+- Workflow run ID.
+- Commit SHA.
+- Job conclusions.
+- Regression results.
+- Browser results.
+- Artifact references.
+- Final workflow conclusion.
+
+If CI fails, retrieve the actual logs and repair the root cause.
+
+Do not classify CI as passing until the GitHub Actions run concludes successfully.
+
+---
+
+# SECTION 32 — M41.08.29 PERSISTENCE AND RESTART RECOVERY
+
+Preserve embedded durable storage.
+
+Previous reported baseline:
+
+28 tables.
+
+7,117 records.
+
+Extend persistence verification to:
+
+- Reporting configurations.
+- Report snapshots.
+- Report approvals.
+- Report audit events.
+- Reporting filters, where saved.
+- Export audit records.
+- Data quality warnings.
+
+### Required restart test
+
+1. Generate an authorized report.
+2. Create an immutable snapshot.
+3. Record the source checksum.
+4. Restart the supported runtime.
+5. Reload the snapshot.
+6. Verify the checksum.
+7. Verify authorization remains enforced.
+8. Verify historical approval state.
+9. Verify no confidential fields leaked.
+10. Confirm the source operational records remain intact.
+
+Report actual recovery results.
+
+---
+
+# SECTION 33 — M41.08.30 DATA QUALITY VALIDATION
+
+Implement or verify data quality indicators.
+
+### Required checks
+
+- Missing source records.
+- Duplicate source records.
+- Invalid timestamps.
+- Invalid lifecycle states.
+- Inconsistent program counts.
+- Duplicate volunteer hours.
+- Missing financial classifications.
+- Unsupported bank verification status.
+- Missing grant approval evidence.
+- Unresolved reporting exceptions.
+
+### Required behavior
+
+Reports must disclose relevant data quality issues.
+
+Do not silently correct financial or safeguarding records.
+
+Corrections must use authorized workflows.
+
+---
+
+# SECTION 34 — M41.08.31 BOARD REPORTING GOVERNANCE
+
+Implement a board reporting workflow with:
+
+- Reporting period selection.
+- Draft report generation.
+- Authorized executive review.
+- Governance approval.
+- Approved snapshot.
+- Audit trail.
+- Secure export.
+
+### Restrictions
+
+No fabricated board approval.
+
+No automatic signature generation representing a real person.
+
+No false claim that the board formally adopted a report.
+
+Development approvals must be clearly labeled synthetic when using test fixtures.
+
+---
+
+# SECTION 35 — M41.08.32 REQUIRED DEVELOPMENT REPORTS
+
+Generate the following 15 reports:
+
+1. `phase41_m4108_repository_reconciliation_report.md`
+2. `phase41_m4108_reporting_architecture_report.md`
+3. `phase41_m4108_staff_operations_reporting_report.md`
+4. `phase41_m4108_caseworker_program_reporting_report.md`
+5. `phase41_m4108_volunteer_reporting_report.md`
+6. `phase41_m4108_fundraising_financial_reporting_report.md`
+7. `phase41_m4108_executive_dashboard_report.md`
+8. `phase41_m4108_board_governance_reporting_report.md`
+9. `phase41_m4108_authorization_privacy_report.md`
+10. `phase41_m4108_reporting_snapshots_exports_report.md`
+11. `phase41_m4108_multilingual_accessibility_report.md`
+12. `phase41_m4108_safeguarding_ai_governance_report.md`
+13. `phase41_m4108_regression_persistence_report.md`
+14. `phase41_m4108_playwright_github_actions_report.md`
+15. `phase41_m4108_master_completion_report.md`
+
+### Every report must include
+
+- Scope.
+- Existing functionality inspected.
+- Source files changed.
+- New functionality implemented.
+- Integration points.
+- Security controls.
+- Test commands executed.
+- Actual test results.
+- Evidence references.
+- Known limitations.
+- Acceptance determination.
+
+Do not fabricate evidence.
+
+---
+
+# SECTION 36 — ACCEPTANCE GATES
+
+## GATE A — REPOSITORY RECONCILIATION
+
+Existing reporting services are identified and reused.
+
+## GATE B — AUTHORITATIVE REPORTING
+
+Metrics derive from canonical application records.
+
+## GATE C — STAFF OPERATIONS
+
+Staff dashboards display accurate authorized operational metrics.
+
+## GATE D — CASEWORKER AND PROGRAM REPORTING
+
+Casework and enrollment reporting is accurate.
+
+## GATE E — VOLUNTEER REPORTING
+
+Only approved volunteer hours contribute to official totals.
+
+## GATE F — FINANCIAL REPORTING
+
+Pledges, internal records, verified receipts and pending grants remain separate.
+
+## GATE G — EXECUTIVE REPORTING
+
+Executive dashboards integrate operational data accurately.
+
+## GATE H — BOARD GOVERNANCE
+
+Board reports provide appropriate aggregated governance information.
+
+## GATE I — AUTHORIZATION
+
+Role-based reporting restrictions are enforced.
+
+## GATE J — SAFEGUARDING
+
+Confidential information is excluded from unauthorized reporting.
+
+## GATE K — SNAPSHOTS AND EXPORTS
+
+Reports are auditable and exports preserve security restrictions.
+
+## GATE L — MULTILINGUAL ACCESSIBILITY
+
+All seven languages and required accessibility behaviors are preserved.
+
+## GATE M — AI GOVERNANCE
+
+All 36 AI agents and existing governance restrictions remain intact.
+
+## GATE N — PERSISTENCE
+
+Reporting records survive restart with integrity.
+
+## GATE O — REGRESSION
+
+Existing functionality remains operational.
+
+New tests execute and pass.
+
+## GATE P — BROWSER VERIFICATION
+
+Real browser testing results are recorded.
+
+## GATE Q — CI
+
+GitHub Actions verification completes successfully.
+
+## GATE R — INFRASTRUCTURE
+
+Production infrastructure remains deferred.
+
+## GATE S — DOCUMENTATION
+
+All 15 required reports are completed accurately.
+
+---
+
+# SECTION 37 — EXECUTION ORDER
+
+GOOGLE AI STUDIO:
+
+EXECUTE IN THE FOLLOWING ORDER.
+
+ACTION 01 — Inspect the current repository.
+
+ACTION 02 — Reconcile existing reporting architecture.
+
+ACTION 03 — Verify the current CI baseline.
+
+ACTION 04 — Identify authoritative data sources.
+
+ACTION 05 — Define reporting contracts.
+
+ACTION 06 — Implement server-side reporting aggregation.
+
+ACTION 07 — Implement reporting authorization.
+
+ACTION 08 — Implement staff operational dashboards.
+
+ACTION 09 — Implement caseworker reporting.
+
+ACTION 10 — Implement program reporting.
+
+ACTION 11 — Implement volunteer reporting.
+
+ACTION 12 — Implement fundraising reporting.
+
+ACTION 13 — Implement grant reporting.
+
+ACTION 14 — Implement five-pipeline reporting.
+
+ACTION 15 — Implement executive dashboards.
+
+ACTION 16 — Implement board governance dashboards.
+
+ACTION 17 — Implement reporting filters.
+
+ACTION 18 — Implement reporting freshness indicators.
+
+ACTION 19 — Implement report snapshots.
+
+ACTION 20 — Implement report approvals.
+
+ACTION 21 — Implement secure exports.
+
+ACTION 22 — Implement data visualizations.
+
+ACTION 23 — Implement multilingual interfaces.
+
+ACTION 24 — Verify accessibility and mobile responsiveness.
+
+ACTION 25 — Verify safeguarding restrictions.
+
+ACTION 26 — Verify AI governance.
+
+ACTION 27 — Verify concurrency and performance.
+
+ACTION 28 — Execute the 45-step operational scenario.
+
+ACTION 29 — Add at least 20 regression tests.
+
+ACTION 30 — Add reporting Playwright scenarios.
+
+ACTION 31 — Run TypeScript verification.
+
+ACTION 32 — Run the application build.
+
+ACTION 33 — Run the complete regression suite.
+
+ACTION 34 — Run Chromium tests.
+
+ACTION 35 — Run Firefox tests.
+
+ACTION 36 — Run WebKit tests.
+
+ACTION 37 — Run Mobile Chrome tests.
+
+ACTION 38 — Verify GitHub Actions.
+
+ACTION 39 — Repair any actual failures.
+
+ACTION 40 — Verify persistence recovery.
+
+ACTION 41 — Generate all 15 reports.
+
+ACTION 42 — Determine M41.08 acceptance.
+
+ACTION 43 — Report readiness for M41.09.
+
+---
+
+# SECTION 38 — REQUIRED FINAL COMPLETION SUMMARY
+
+At the end of development, provide the following.
+
+## A. MILESTONE STATUS
+
+M41.08:
+
+COMPLETE.
+
+COMPLETE_WITH_LIMITATIONS.
+
+OR BLOCKED.
+
+## B. IMPLEMENTED CAPABILITIES
+
+Report:
+
+- Staff dashboards.
+- Caseworker reporting.
+- Program reporting.
+- Volunteer reporting.
+- Fundraising reporting.
+- Executive dashboards.
+- Board governance dashboards.
+- Reporting authorization.
+- Report snapshots.
+- Report approvals.
+- Secure exports.
+- Multilingual support.
+- Accessibility.
+
+## C. REGRESSION RESULTS
+
+Tests discovered.
+
+Tests executed.
+
+Tests passed.
+
+Tests failed.
+
+Tests skipped.
+
+Duration.
+
+## D. BROWSER RESULTS
+
+Chromium.
+
+Firefox.
+
+WebKit.
+
+Mobile Chrome.
+
+Report actual results separately.
+
+## E. GITHUB ACTIONS
+
+Workflow run ID.
+
+Commit SHA.
+
+Job results.
+
+Final conclusion.
+
+## F. PERSISTENCE
+
+Tables recovered.
+
+Records recovered.
+
+Snapshot integrity.
+
+Audit integrity.
+
+## G. FINANCIAL INTEGRITY
+
+Pledged amount.
+
+Internally recorded amount.
+
+Externally verified amount.
+
+Pending grant amount.
+
+All classifications must remain distinct.
+
+## H. SAFEGUARDING
+
+Report privacy and authorization verification results without disclosing protected information.
+
+## I. AI GOVERNANCE
+
+Confirm 36 canonical agents.
+
+Confirm five fundraising pipelines.
+
+Confirm fallback/mock mode.
+
+## J. INFRASTRUCTURE
+
+POSTGRESQL=NOT_CONNECTED.
+
+BACKEND_HOSTING=NOT_CONFIGURED.
+
+GOOGLE_WORKSPACE=AUTHORIZATION_REQUIRED.
+
+PAYMENT_GATEWAY=NOT_CONNECTED.
+
+AI_MODELS=FALLBACK_MOCK.
+
+## K. DOCUMENTATION
+
+List all generated reports.
+
+## L. NEXT MILESTONE
+
+M41.09 — Cross-Portal Notifications, State Synchronization and Operational Coordination.
+
+---
+
+# SECTION 39 — FINAL MASTER EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+BEGIN PHASE 41 M41.08 DEVELOPMENT IMMEDIATELY.
+
+DO NOT STOP AT PLANNING.
+
+INSPECT THE EXISTING REPOSITORY.
+
+REUSE AUTHORITATIVE SERVICES.
+
+IMPLEMENT SERVER-SIDE REPORTING AGGREGATION.
+
+IMPLEMENT STAFF OPERATIONAL REPORTING.
+
+IMPLEMENT CASEWORKER PERFORMANCE REPORTING.
+
+IMPLEMENT PROGRAM CAPACITY AND WAITLIST REPORTING.
+
+IMPLEMENT VOLUNTEER VERIFIED-HOUR REPORTING.
+
+IMPLEMENT FUNDRAISING AND GRANT REPORTING.
+
+IMPLEMENT EXECUTIVE MANAGEMENT DASHBOARDS.
+
+IMPLEMENT BOARD GOVERNANCE DASHBOARDS.
+
+ENFORCE REPORTING AUTHORIZATION.
+
+PRESERVE DONOR PRIVACY.
+
+PRESERVE MEMBER PRIVACY.
+
+PRESERVE VOLUNTEER PRIVACY.
+
+PRESERVE SURVIVOR SAFEGUARDING.
+
+PRESERVE FINANCIAL CLASSIFICATION INTEGRITY.
+
+IMPLEMENT REPORT SNAPSHOTS.
+
+IMPLEMENT AUTHORIZED REPORT APPROVAL.
+
+IMPLEMENT SECURE REPORT EXPORTS.
+
+IMPLEMENT REPORTING DATA QUALITY CONTROLS.
+
+PRESERVE ALL SEVEN LANGUAGES.
+
+PRESERVE ALL 36 AI AGENTS.
+
+PRESERVE ALL FIVE FUNDRAISING PIPELINES.
+
+PRESERVE ALL EXISTING PHASE 41 FUNCTIONALITY.
+
+ADD AT LEAST 20 MEANINGFUL REGRESSION TESTS.
+
+TARGET 638 PASSING TESTS.
+
+EXECUTE REAL BROWSER TESTS.
+
+VERIFY GITHUB ACTIONS.
+
+VERIFY PERSISTENCE.
+
+GENERATE ALL 15 REQUIRED DEVELOPMENT REPORTS.
+
+DO NOT CLAIM SUCCESS WITHOUT EXECUTED EVIDENCE.
+
+DO NOT ACTIVATE PRODUCTION INFRASTRUCTURE.
+
+DO NOT DECLARE PHASE 41 COMPLETE.
+
+MAINTAIN DEVELOPMENT_ACCEPTED_WITH_LIMITATIONS UNTIL ALL REQUIRED ACCEPTANCE GATES ARE SATISFIED.
+
+## FINAL DEVELOPMENT TARGET
+
+DELIVER ONE AUTHORITATIVE, SECURE AND AUDITABLE REPORTING SYSTEM CONNECTING:
+
+COMMUNITY MEMBERS.
+
+CASEWORKERS.
+
+PROGRAMS.
+
+VOLUNTEERS.
+
+DONORS.
+
+GRANTS.
+
+FUNDRAISING.
+
+FINANCIAL CLASSIFICATIONS.
+
+EXECUTIVE MANAGEMENT.
+
+BOARD GOVERNANCE.
+
+SAFEGUARDING.
+
+AI OVERSIGHT.
+
+THE SYSTEM MUST PRODUCE ACCURATE ROLE-RESTRICTED REPORTS, PRESERVE CONFIDENTIAL INFORMATION, SUPPORT GOVERNANCE REVIEW AND MAINTAIN COMPLETE AUDITABILITY.
+
+# END OF PHASE 41 M41.08 MASTER DEVELOPMENT DIRECTIVE

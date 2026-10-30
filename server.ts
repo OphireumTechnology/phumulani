@@ -31,6 +31,7 @@ import { memberCaseworkerService } from './src/services/memberCaseworkerService'
 import { programEnrollmentService, isStaffUser } from './src/services/programEnrollmentService';
 import { volunteerOperationsService, isVolunteerCoordinatorOrStaff, isSafeguardingLeadOrExec } from './src/services/volunteerOperationsService';
 import { serverVerificationService } from './src/server/serverVerificationService';
+import { operationalReportingService, type ReportingPeriod } from './src/server/operationalReportingService';
 import type { AgentDivision } from './src/types/aiWorkforce';
 import type { PermissionDomain } from './src/types/masterAdmin';
 
@@ -391,6 +392,214 @@ app.post('/api/payments/webhook', async (req: Request, res: Response) => {
     res.json(result);
   } catch (err: any) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// =============================================================================
+// M41.08: AUTHORITATIVE REPORTING API ENDPOINTS
+// =============================================================================
+
+const getSessionFromReq = (req: Request): UserSession | undefined => {
+  const authHeader = req.headers.authorization || '';
+  const sessionId = authHeader.replace(/^Bearer\s+/i, '').trim();
+  if (sessionId) {
+    const val = authSecurityService.validateSession(sessionId);
+    if (val.valid && val.session) return val.session;
+  }
+  const token = req.query.token as string | undefined;
+  if (token) {
+    const val = authSecurityService.validateSession(token);
+    if (val.valid && val.session) return val.session;
+  }
+  return undefined;
+};
+
+// 1. Staff Operations Report
+app.get('/api/reports/staff-operations', async (req: Request, res: Response) => {
+  try {
+    const session = getSessionFromReq(req);
+    const period = (req.query.period as ReportingPeriod) || 'CURRENT_MONTH';
+    const report = await operationalReportingService.getStaffOperationsReport(
+      {
+        period,
+        startDate: req.query.startDate as string,
+        endDate: req.query.endDate as string,
+        departmentId: req.query.departmentId as string,
+        programId: req.query.programId as string,
+        priority: req.query.priority as string,
+      },
+      session!
+    );
+    res.json({ success: true, report });
+  } catch (err: any) {
+    const status = err.message.includes('Unauthorized') ? 401 : err.message.includes('Forbidden') ? 403 : 400;
+    res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+// 2. Caseworker Performance Report
+app.get('/api/reports/caseworker-workload', async (req: Request, res: Response) => {
+  try {
+    const session = getSessionFromReq(req);
+    const report = await operationalReportingService.getCaseworkerPerformanceReport(session!);
+    res.json({ success: true, report });
+  } catch (err: any) {
+    const status = err.message.includes('Unauthorized') ? 401 : err.message.includes('Forbidden') ? 403 : 400;
+    res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+// 3. Program Performance Report
+app.get('/api/reports/program-performance', async (req: Request, res: Response) => {
+  try {
+    const session = getSessionFromReq(req);
+    const report = await operationalReportingService.getProgramPerformanceReport(session!);
+    res.json({ success: true, report });
+  } catch (err: any) {
+    const status = err.message.includes('Unauthorized') ? 401 : err.message.includes('Forbidden') ? 403 : 400;
+    res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+// 4. Volunteer Performance Report
+app.get('/api/reports/volunteer-performance', async (req: Request, res: Response) => {
+  try {
+    const session = getSessionFromReq(req);
+    const report = await operationalReportingService.getVolunteerPerformanceReport(session!);
+    res.json({ success: true, report });
+  } catch (err: any) {
+    const status = err.message.includes('Unauthorized') ? 401 : err.message.includes('Forbidden') ? 403 : 400;
+    res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+// 5. Fundraising Financial Summary
+app.get('/api/reports/fundraising-performance', (req: Request, res: Response) => {
+  try {
+    const session = getSessionFromReq(req);
+    operationalReportingService.verifyReportAccess(session, 'FUNDRAISING_PERFORMANCE');
+    const summary = operationalReportingService.getFinancialClassificationSummary();
+    res.json({ success: true, summary });
+  } catch (err: any) {
+    const status = err.message.includes('Unauthorized') ? 401 : err.message.includes('Forbidden') ? 403 : 400;
+    res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+// 6. Five Pipelines Report
+app.get('/api/reports/five-pipelines', (req: Request, res: Response) => {
+  try {
+    const session = getSessionFromReq(req);
+    operationalReportingService.verifyReportAccess(session, 'FIVE_PIPELINES');
+    const pipelines = operationalReportingService.getFivePipelinesReport();
+    res.json({ success: true, pipelines });
+  } catch (err: any) {
+    const status = err.message.includes('Unauthorized') ? 401 : err.message.includes('Forbidden') ? 403 : 400;
+    res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+// 7. Executive Dashboard Report
+app.get('/api/reports/executive-dashboard', async (req: Request, res: Response) => {
+  try {
+    const session = getSessionFromReq(req);
+    const period = (req.query.period as ReportingPeriod) || 'CURRENT_MONTH';
+    const report = await operationalReportingService.getExecutiveDashboardReport(
+      {
+        period,
+        startDate: req.query.startDate as string,
+        endDate: req.query.endDate as string,
+        departmentId: req.query.departmentId as string,
+      },
+      session!
+    );
+    res.json({ success: true, report });
+  } catch (err: any) {
+    const status = err.message.includes('Unauthorized') ? 401 : err.message.includes('Forbidden') ? 403 : 400;
+    res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+// 8. Board Governance Report
+app.get('/api/reports/board-governance', async (req: Request, res: Response) => {
+  try {
+    const session = getSessionFromReq(req);
+    const report = await operationalReportingService.getBoardGovernanceReport(session!);
+    res.json({ success: true, report });
+  } catch (err: any) {
+    const status = err.message.includes('Unauthorized') ? 401 : err.message.includes('Forbidden') ? 403 : 400;
+    res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+// 9. Report Snapshots Management
+app.post('/api/reports/snapshots', async (req: Request, res: Response) => {
+  try {
+    const session = getSessionFromReq(req);
+    const { reportType, period, data } = req.body;
+    if (!reportType || !data) {
+      return res.status(400).json({ error: 'reportType and data are required.' });
+    }
+    const snapshot = await operationalReportingService.createReportSnapshot(reportType, period || 'CURRENT_MONTH', data, session!);
+    res.json({ success: true, snapshot });
+  } catch (err: any) {
+    const status = err.message.includes('Unauthorized') ? 401 : err.message.includes('Forbidden') ? 403 : 400;
+    res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/reports/snapshots', (req: Request, res: Response) => {
+  try {
+    const session = getSessionFromReq(req);
+    const snapshots = operationalReportingService.getSnapshots(session!);
+    res.json({ success: true, snapshots });
+  } catch (err: any) {
+    const status = err.message.includes('Unauthorized') ? 401 : err.message.includes('Forbidden') ? 403 : 400;
+    res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/reports/snapshots/:id', (req: Request, res: Response) => {
+  try {
+    const session = getSessionFromReq(req);
+    const snapshot = operationalReportingService.getSnapshotById(req.params.id, session!);
+    res.json({ success: true, snapshot });
+  } catch (err: any) {
+    const status = err.message.includes('Unauthorized') ? 401 : err.message.includes('Forbidden') ? 403 : 404;
+    res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/reports/snapshots/:id/approval', async (req: Request, res: Response) => {
+  try {
+    const session = getSessionFromReq(req);
+    const { decision, notes = '' } = req.body;
+    if (!decision || (decision !== 'APPROVED' && decision !== 'REJECTED')) {
+      return res.status(400).json({ error: 'decision must be APPROVED or REJECTED.' });
+    }
+    const updated = await operationalReportingService.updateSnapshotApproval(req.params.id, decision, notes, session!);
+    res.json({ success: true, snapshot: updated });
+  } catch (err: any) {
+    const status = err.message.includes('Unauthorized') ? 401 : err.message.includes('Forbidden') ? 403 : 400;
+    res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+// 10. Secure Report Exports (CSV / JSON)
+app.post('/api/reports/export', (req: Request, res: Response) => {
+  try {
+    const session = getSessionFromReq(req);
+    const { reportType, format = 'CSV', data } = req.body;
+    if (!reportType || !data) {
+      return res.status(400).json({ error: 'reportType and data are required.' });
+    }
+    const exportResult = operationalReportingService.generateExport(reportType, format, data, session!);
+    res.setHeader('Content-Type', exportResult.mimeType);
+    res.setHeader('Content-Disposition', `attachment; filename="${exportResult.filename}"`);
+    res.send(exportResult.content);
+  } catch (err: any) {
+    const status = err.message.includes('Unauthorized') ? 401 : err.message.includes('Forbidden') ? 403 : 400;
+    res.status(status).json({ success: false, error: err.message });
   }
 });
 

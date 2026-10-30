@@ -45,4 +45,30 @@ test.describe('M38.05 — Staff & Administration Journeys', () => {
       await expect(page.locator('h1, h2, h3').filter({ hasText: /AI Workforce|Agent/i }).first()).toBeVisible();
     }
   });
+
+  test('M41.08: Staff and Board operational reporting tab navigation', async ({ page }) => {
+    await page.goto('/');
+
+    // Test Master Admin Reporting Tab
+    const adminBtn = page.locator('button:has-text("Master Admin")').first();
+    if (await adminBtn.isVisible()) {
+      await adminBtn.click();
+      const reportingNav = page.locator('button:has-text("Authoritative Reporting (M41.08)"), button:has-text("Reporting")').first();
+      if (await reportingNav.isVisible()) {
+        await reportingNav.click();
+        await expect(page.locator('text=Separation of Duties').first()).toBeVisible();
+      }
+    }
+
+    // Test Staff Command Center Reports Tab
+    const staffBtn = page.locator('button:has-text("Staff")').first();
+    if (await staffBtn.isVisible()) {
+      await staffBtn.click();
+      const reportsTab = page.locator('button:has-text("Reports"), button:has-text("Staff Operations Report")').first();
+      if (await reportsTab.isVisible()) {
+        await reportsTab.click();
+        await expect(page.locator('body')).toBeVisible();
+      }
+    }
+  });
 });

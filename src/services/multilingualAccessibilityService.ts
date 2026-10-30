@@ -592,6 +592,97 @@ export const COMMUNITY_TRANSLATION_DICTIONARY: Record<string, Record<SupportedLa
     orm: 'Galmeen keessan iccitiin eegama, eeyyama malee hin qoodamu.',
     am: 'የእርስዎ ሚስጥራዊ መረጃዎች በጥብቅ የተጠበቁ ናቸው፤ ያለእርስዎ ፈቃድ ለማንም አይሰጡም።',
   },
+  // M41.08: Staff, Executive and Board Reporting Keys
+  staff_reports: {
+    en: 'Staff Operational Reports',
+    so: 'Warbixinnada Hawlgalka Shaqaalaha',
+    es: 'Informes Operativos del Personal',
+    hmn: 'Cov Ntaub Ntawv Qhia Txog Cov Neeg Ua Haujlwm',
+    kar: 'တၢ်မၤတၢ်အမံၤတၢ်ကစီၣ်',
+    orm: 'Gabaasa Hojii Hojjettootaa',
+    am: 'የሰራተኞች የክንውን ሪፖርቶች',
+  },
+  executive_reports: {
+    en: 'Executive Performance Reports',
+    so: 'Warbixinnada Waxqabadka Maamulka',
+    es: 'Informes de Desempeño Ejecutivo',
+    hmn: 'Cov Ntaub Ntawv Qhia Txog Kev Tswj Hwm',
+    kar: 'တၢ်ကစီၣ်လၢခိၣ်နၢ်တဖၣ်',
+    orm: 'Gabaasa Raawwii Hojii Hoggansaa',
+    am: 'የስራ አስፈፃሚ አፈፃፀም ሪፖርቶች',
+  },
+  board_reports: {
+    en: 'Board Governance Reports',
+    so: 'Warbixinnada Maamulka Guddiga',
+    es: 'Informes de Gobernanza de la Junta',
+    hmn: 'Cov Ntaub Ntawv Qhia Txog Pawg Thawj Coj',
+    kar: 'တၢ်ကစီၣ်လၢကမံးတံာ်ခိၣ်နၢ်',
+    orm: 'Gabaasa Bulchiinsa Boordii',
+    am: 'የቦርድ አስተዳደር ሪፖርቶች',
+  },
+  reporting_filters: {
+    en: 'Reporting Period & Filters',
+    so: 'Xilliga Warbixinta & Shaandhooyinka',
+    es: 'Período de Informe y Filtros',
+    hmn: 'Lub Sij Hawm Qhia & Cov Lim',
+    kar: 'တၢ်ဆၢကတီၢ်ဒီးတၢ်ဃုထၢ',
+    orm: 'Yeroo Gabaasaa fi Filannoo',
+    am: 'የሪፖርት ጊዜ እና ማጣሪያዎች',
+  },
+  financial_classifications: {
+    en: 'Financial Ledger Classifications',
+    so: 'Qaybaha Dhaqaalaha ee Diiwaanka',
+    es: 'Clasificaciones del Libro Financiero',
+    hmn: 'Kev Cais Nyiaj Txiag hauv Phau Ntawv',
+    kar: 'တၢ်စရီစရီတၢ်ပာ်ဖျrole',
+    orm: 'Ramaddii Galmee Faayinaansii',
+    am: 'የፋይናንስ መዝገብ ምደባዎች',
+  },
+  export_actions: {
+    en: 'Secure Report Export',
+    so: 'Dhoofinta Warbixinta Ammaanka ah',
+    es: 'Exportación Segura de Informes',
+    hmn: 'Kev Muab Ntaub Ntawv Tawm Zoo',
+    kar: 'တၢ်ထုးထီၣ်တၢ်ကစီၣ်လၢတၢ်ပူၤဖျဲး',
+    orm: 'Gabaasa Nageenyaan Baasuu',
+    am: 'ደህንነቱ የተጠበቀ የሪፖርት ኤክስፖርት',
+  },
+  approval_status: {
+    en: 'Report Approval Status',
+    so: 'Xaaladda Ansixinta Warbixinta',
+    es: 'Estado de Aprobación del Informe',
+    hmn: 'Cov Xwm Txheej Pom Zoo Ntaub Ntawv',
+    kar: 'တၢ်တူၢ်လိာ်တၢ်ကစီၣ်အလုၢ်အလၢ',
+    orm: 'Haala Raggaasisa Gabaasaa',
+    am: 'የሪፖርት ማፅደቅ ሁኔታ',
+  },
+  data_freshness: {
+    en: 'Data Freshness & Record Verification',
+    so: 'Casriyaynta Xogta & Xaqiijinta Diiwaanka',
+    es: 'Actualización de Datos y Verificación',
+    hmn: 'Cov Ntaub Ntawv Tshiab & Kev Pom Zoo',
+    kar: 'တၢ်ဂ့ၢ်တၢ်ကျိၤအသီဒီးတၢ်သမံသမိး',
+    orm: 'Haarummaa Daataa fi Mirkaneessa',
+    am: 'የመረጃ አዲስነት እና የማረጋገጫ ሁኔታ',
+  },
+  error_messages: {
+    en: 'Authorized Access Required',
+    so: 'Waxaa Loo Baahan Yahay Oggolaansho',
+    es: 'Se Requiere Acceso Autorizado',
+    hmn: 'Yuav Tsum Muaj Cai Nkag Mus',
+    kar: 'တၢ်ခွဲးတၢ်ယာ်ဘၣ်တၢ်လိၣ်ဘၣ်',
+    orm: 'Eeyyama Hayyamame Barbaachisa',
+    am: 'የተፈቀደ መዳረሻ ያስፈልጋል',
+  },
+  accessibility_labels: {
+    en: 'Accessible Reporting Visualizations',
+    so: 'Muuqaallada Warbixinta ee La Helo Karo',
+    es: 'Visualizaciones de Informes Accesibles',
+    hmn: 'Kev Saib Xyuas Ntaub Ntawv yooj yim',
+    kar: 'တၢ်ထံၣ်တၢ်ကစီၣ်လၢညီ',
+    orm: 'Mul’ata Gabaasa Dhaqqabamaa',
+    am: 'ተደራሽ የሪፖርት እይታዎች',
+  },
 };
 
 export interface LanguageAuditResult {
@@ -648,10 +739,22 @@ class MultilingualAccessibilityService {
   }
 
   public translate(key: string, targetLang?: SupportedLanguageCode): string {
-    const lang = targetLang || this.currentLanguage;
+    const rawLang = targetLang || this.currentLanguage;
+    const lang = (rawLang === ('om' as any) ? 'orm' : rawLang) as SupportedLanguageCode;
     const entry = COMMUNITY_TRANSLATION_DICTIONARY[key];
     if (!entry) return key;
     return entry[lang] || entry['en'] || key;
+  }
+
+  public getDictionary(lang: string): Record<string, string> {
+    const code = (lang === 'om' ? 'orm' : lang) as SupportedLanguageCode;
+    const res: Record<string, string> = {};
+    for (const [k, v] of Object.entries(COMMUNITY_TRANSLATION_DICTIONARY)) {
+      if (v[code]) {
+        res[k] = v[code];
+      }
+    }
+    return res;
   }
 
   public getSupportedLanguages(): LanguageDefinition[] {

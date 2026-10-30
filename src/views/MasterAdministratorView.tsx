@@ -58,6 +58,7 @@ import { ProgramCapacityPlanningTab } from '../components/masterAdmin/phase34/Pr
 import { VolunteerSchedulingTab } from '../components/masterAdmin/phase34/VolunteerSchedulingTab';
 import { FundraisingIntelligenceTab } from '../components/masterAdmin/phase34/FundraisingIntelligenceTab';
 import { AiWorkforceEvaluationTab } from '../components/masterAdmin/phase34/AiWorkforceEvaluationTab';
+import { IntegratedReportingTab } from '../components/masterAdmin/IntegratedReportingTab';
 import { KnowledgeSearchTab } from '../components/masterAdmin/phase34/KnowledgeSearchTab';
 import { ExecutiveScenarioPlanningTab } from '../components/masterAdmin/phase34/ExecutiveScenarioPlanningTab';
 import { BoardGovernanceCalendarTab } from '../components/masterAdmin/phase34/BoardGovernanceCalendarTab';
@@ -320,6 +321,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
     { id: 'mobile_accessibility', label: '48 Mobile Accessibility (M34.13)', icon: Smartphone, badge: 'WCAG AA' },
     { id: 'integrated_service_delivery', label: '49 Service Delivery & Automation (Phase 35)', icon: Compass, badge: 'M35.01-15' },
     { id: 'platform_reliability_p36', label: '50 Reliability & Security Hardening (Phase 36)', icon: ShieldCheck, badge: 'M36.01-15' },
+    { id: 'integrated_reporting_m4108', label: '51 Authoritative Reporting (M41.08)', icon: BarChart3, badge: 'L1/L2/L3' },
     { id: 'fundraising_command_center', label: 'Fundraising & CRM', icon: DollarSign, badge: 'Active' },
     { id: 'email_command_center', label: 'Email Command Center', icon: Mail, badge: 'P0 Enterprise' },
     { id: 'ai_workforce', label: 'AI Workforce (36 Agents)', icon: Bot, badge: '36 Active' },
@@ -1358,6 +1360,13 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
           {/* ============================================================ */}
           {activeModule === 'platform_reliability_p36' && (
             <PlatformReliabilityAuditTab />
+          )}
+
+          {/* ============================================================ */}
+          {/* MODULE 51: AUTHORITATIVE REPORTING INTEGRATION (PHASE 41 M41.08) */}
+          {/* ============================================================ */}
+          {activeModule === 'integrated_reporting_m4108' && (
+            <IntegratedReportingTab currentUser={currentUser} />
           )}
 
           {/* ============================================================ */}

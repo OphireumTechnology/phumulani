@@ -33,9 +33,11 @@ import {
   Camera,
   Image as ImageIcon,
   ExternalLink,
+  BarChart3,
 } from 'lucide-react';
 import { PortalLayout } from '../components/PortalLayout';
 import { PHUMULANI_MEDIA_INVENTORY, MediaAsset, getSafeguardingQueueMedia } from '../services/mediaInventory';
+import { IntegratedReportingTab } from '../components/masterAdmin/IntegratedReportingTab';
 
 interface StaffCommandCenterViewProps {
   currentUser: User;
@@ -59,7 +61,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
   const restrictedIntakes = state.restrictedIntakes;
 
   const [activeTab, setActiveTab] = useState<
-    'inbox' | 'volunteers' | 'events' | 'finance' | 'ai_queue' | 'restricted' | 'media'
+    'inbox' | 'volunteers' | 'events' | 'finance' | 'ai_queue' | 'restricted' | 'media' | 'reports'
   >('inbox');
 
   // Selected message for viewing/drafting
@@ -213,6 +215,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
         { id: 'volunteers', label: 'Volunteer Screening Queue', icon: Users, badge: pendingVolunteersCount },
         { id: 'events', label: 'Event Operations', icon: Calendar, badge: events.length },
         { id: 'finance', label: 'Donations & Ledger', icon: DollarSign },
+        { id: 'reports', label: 'Staff Operations Reports', icon: BarChart3 },
       ],
     },
     {
@@ -1114,6 +1117,11 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
             </div>
           </div>
         </div>
+      )}
+
+      {/* TAB 8: STAFF OPERATIONS REPORTS (M41.08) */}
+      {activeTab === 'reports' && (
+        <IntegratedReportingTab currentUser={currentUser} />
       )}
 
       {/* CREATE EVENT MODAL */}

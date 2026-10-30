@@ -24,8 +24,10 @@ import {
   Lock,
   Heart,
   Users,
+  BarChart3,
 } from 'lucide-react';
 import { PortalLayout } from '../components/PortalLayout';
+import { IntegratedReportingTab } from '../components/masterAdmin/IntegratedReportingTab';
 
 interface GovernancePortalViewProps {
   currentUser: User;
@@ -43,7 +45,7 @@ export const GovernancePortalView: React.FC<GovernancePortalViewProps> = ({
   const auditLogs = state.auditLogs;
   const donations = state.donations;
 
-  const [activeTab, setActiveTab] = useState<'kpis' | 'grants' | 'board' | 'risks' | 'audit'>('kpis');
+  const [activeTab, setActiveTab] = useState<'kpis' | 'grants' | 'board' | 'risks' | 'audit' | 'board_reports'>('kpis');
   const [activeDocketGrant, setActiveDocketGrant] = useState<any | null>(null);
 
   const totalFundraisingYTD = donations
@@ -59,6 +61,7 @@ export const GovernancePortalView: React.FC<GovernancePortalViewProps> = ({
         { id: 'kpis', label: 'Executive KPIs & Financials', icon: TrendingUp },
         { id: 'grants', label: 'Grants Pipeline', icon: DollarSign, badge: grants.length },
         { id: 'board', label: 'Board Resolutions & Minutes', icon: Vote, badge: resolutions.length },
+        { id: 'board_reports', label: 'Board Governance Reports', icon: BarChart3 },
       ],
     },
     {
@@ -443,6 +446,11 @@ export const GovernancePortalView: React.FC<GovernancePortalViewProps> = ({
             </table>
           </div>
         </div>
+      )}
+
+      {/* TAB 6: BOARD GOVERNANCE REPORTS (M41.08) */}
+      {activeTab === 'board_reports' && (
+        <IntegratedReportingTab currentUser={currentUser} />
       )}
       </div>
 
