@@ -1,0 +1,5 @@
+{
+  "summary":  "Architectural specification for Milestone M41.09 covering cross-portal notification dispatch, state synchronization, event bus coordination, VAWA Section 1367 zero-PII boundary enforcement, and multi-channel delivery status.",
+  "updatedAt":  "2026-10-30T18:04:33.436880333Z",
+  "userFacing":  true
+}
