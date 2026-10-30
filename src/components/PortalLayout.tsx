@@ -23,7 +23,11 @@ import {
   X,
   ArrowLeft,
   Shield,
+  Bell,
 } from 'lucide-react';
+
+import { NotificationCenterModal } from './NotificationCenterModal';
+import { operationalEventService } from '../services/operationalEventService';
 
 export interface PortalNavItem {
   id: string;
@@ -63,6 +67,37 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [portalsDropdownOpen, setPortalsDropdownOpen] = useState(false);
+  const [notificationModalOpen, setNotificationModalOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  React.useEffect(() => {
+    let isMounted = true;
+    const fetchUnread = async () => {
+      try {
+        const session = {
+          sessionId: `sess-${currentUser.id}`,
+          userId: currentUser.id,
+          name: currentUser.name,
+          email: currentUser.email,
+          role: currentUser.role,
+          department: currentUser.department,
+          token: `tok-${currentUser.id}`,
+          createdAt: new Date().toISOString(),
+          expiresAt: new Date(Date.now() + 3600000).toISOString(),
+        };
+        const res = await operationalEventService.getNotificationsForUser(session, { unreadOnly: true });
+        if (isMounted && res.success) {
+          setUnreadCount(res.unreadCount);
+        }
+      } catch {
+        // Safe development fallback
+      }
+    };
+    fetchUnread();
+    return () => {
+      isMounted = false;
+    };
+  }, [currentUser.id]);
 
   const portals = [
     { id: 'public', label: 'Public Website', icon: Globe },
@@ -172,6 +207,21 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
               </div>
             )}
           </div>
+
+          {/* In-App Notification Center Bell */}
+          <button
+            onClick={() => setNotificationModalOpen(true)}
+            className="relative p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
+            title="Open Notification Center"
+            aria-label="Open Notification Center"
+          >
+            <Bell className="w-4 h-4 text-[#104F57]" />
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-amber-500 text-white font-bold text-[9px] px-1.5 py-0.2 rounded-full ring-2 ring-white">
+                {unreadCount}
+              </span>
+            )}
+          </button>
 
           {/* Safe Exit */}
           <button
@@ -354,6 +404,30 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
           {children}
         </main>
       </div>
+
+      {/* Cross-Portal Notification Center Modal */}
+      <NotificationCenterModal
+        isOpen={notificationModalOpen}
+        onClose={() => {
+          setNotificationModalOpen(false);
+          const session = {
+            sessionId: `sess-${currentUser.id}`,
+            userId: currentUser.id,
+            name: currentUser.name,
+            email: currentUser.email,
+            role: currentUser.role,
+            department: currentUser.department,
+            token: `tok-${currentUser.id}`,
+            createdAt: new Date().toISOString(),
+            expiresAt: new Date(Date.now() + 3600000).toISOString(),
+          };
+          operationalEventService.getNotificationsForUser(session, { unreadOnly: true }).then((res) => {
+            if (res.success) setUnreadCount(res.unreadCount);
+          });
+        }}
+        currentUser={currentUser}
+        currentLang="en"
+      />
     </div>
   );
 };

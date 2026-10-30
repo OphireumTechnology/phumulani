@@ -260,6 +260,13 @@ export class VolunteerOperationsService {
     const savedShifts = await this.dbAdapter.select<VolunteerShiftRecord>('volunteer_shifts');
     if (savedShifts && savedShifts.length > 0) {
       for (const s of savedShifts) {
+        if (typeof s.maxVolunteers !== 'number' || isNaN(s.maxVolunteers)) {
+          s.maxVolunteers = 5;
+        }
+        if (typeof s.assignedCount !== 'number' || isNaN(s.assignedCount)) {
+          s.assignedCount = 0;
+        }
+        s.availablePlaces = Math.max(0, s.maxVolunteers - s.assignedCount);
         this.shifts.set(s.id, s);
       }
     } else {
@@ -1533,6 +1540,10 @@ export class VolunteerOperationsService {
   private recalculateShiftCapacity(shiftId: string): void {
     const shift = this.shifts.get(shiftId);
     if (!shift) return;
+
+    if (typeof shift.maxVolunteers !== 'number' || isNaN(shift.maxVolunteers)) {
+      shift.maxVolunteers = 5;
+    }
 
     const confirmedCount = Array.from(this.assignments.values()).filter(
       (a) => a.shiftId === shiftId && ['ASSIGNED', 'CONFIRMED', 'CHECKED_IN', 'COMPLETED'].includes(a.status)

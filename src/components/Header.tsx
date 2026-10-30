@@ -23,9 +23,12 @@ import {
   LogIn,
   ShieldCheck,
   Activity,
+  Bell,
 } from 'lucide-react';
 
 import { SUPPORTED_LANGUAGES } from '../services/multilingualAccessibilityService';
+import { NotificationCenterModal } from './NotificationCenterModal';
+import { operationalEventService } from '../services/operationalEventService';
 
 interface HeaderProps {
   currentUser: User;
@@ -45,6 +48,37 @@ export const Header: React.FC<HeaderProps> = ({
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [portalsDropdownOpen, setPortalsDropdownOpen] = useState(false);
+  const [notificationModalOpen, setNotificationModalOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchUnread = async () => {
+      try {
+        const session = {
+          sessionId: `sess-${currentUser.id}`,
+          userId: currentUser.id,
+          name: currentUser.name,
+          email: currentUser.email,
+          role: currentUser.role,
+          department: currentUser.department,
+          token: `tok-${currentUser.id}`,
+          createdAt: new Date().toISOString(),
+          expiresAt: new Date(Date.now() + 3600000).toISOString(),
+        };
+        const res = await operationalEventService.getNotificationsForUser(session, { unreadOnly: true });
+        if (isMounted && res.success) {
+          setUnreadCount(res.unreadCount);
+        }
+      } catch {
+        // Safe development fallback
+      }
+    };
+    fetchUnread();
+    return () => {
+      isMounted = false;
+    };
+  }, [currentUser.id]);
 
   // Safe Exit function: replaces browser history and opens neutral destination
   const handleSafeExit = () => {
@@ -298,6 +332,21 @@ export const Header: React.FC<HeaderProps> = ({
               )}
             </div>
 
+            {/* In-App Notification Center Bell */}
+            <button
+              onClick={() => setNotificationModalOpen(true)}
+              className="relative p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
+              title="Open Notification Center"
+              aria-label="Open Notification Center"
+            >
+              <Bell className="w-4 h-4 text-[#104F57]" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-amber-500 text-white font-bold text-[9px] px-1.5 py-0.2 rounded-full ring-2 ring-white">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
+
             {/* Mobile Drawer Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -384,6 +433,31 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
       )}
+
+      {/* Cross-Portal Notification Center Modal */}
+      <NotificationCenterModal
+        isOpen={notificationModalOpen}
+        onClose={() => {
+          setNotificationModalOpen(false);
+          // Refresh unread count on modal close
+          const session = {
+            sessionId: `sess-${currentUser.id}`,
+            userId: currentUser.id,
+            name: currentUser.name,
+            email: currentUser.email,
+            role: currentUser.role,
+            department: currentUser.department,
+            token: `tok-${currentUser.id}`,
+            createdAt: new Date().toISOString(),
+            expiresAt: new Date(Date.now() + 3600000).toISOString(),
+          };
+          operationalEventService.getNotificationsForUser(session, { unreadOnly: true }).then((res) => {
+            if (res.success) setUnreadCount(res.unreadCount);
+          });
+        }}
+        currentUser={currentUser}
+        currentLang={currentLang}
+      />
     </header>
   );
 };

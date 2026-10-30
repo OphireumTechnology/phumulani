@@ -1,0 +1,1913 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+# PHASE 41 — MASTER DEVELOPMENT CONTINUATION
+## M41.09 — CROSS-PORTAL NOTIFICATIONS, STATE SYNCHRONIZATION AND OPERATIONAL COORDINATION
+
+**Repository:** OphireumTechnology/phumulani
+**Branch:** main
+**Execution environment:** Google AI Studio
+**Development mode:** Source-code implementation, integration, automated testing, real browser verification, CI validation and evidence-based reporting
+**Previous milestone:** M41.08 — COMPLETE_WITH_LIMITATIONS (reported)
+**Supplementary website image repair:** COMPLETE_WITH_LIMITATIONS (reported)
+**Current milestone:** M41.09
+**Acceptance baseline:** DEVELOPMENT_ACCEPTED_WITH_LIMITATIONS
+**Production infrastructure:** DEFERRED
+
+---
+
+# SECTION 1 — MASTER EXECUTION AUTHORIZATION
+
+GOOGLE AI STUDIO:
+
+BEGIN PHASE 41 M41.09 DEVELOPMENT.
+
+IMPLEMENT A COMPLETE CROSS-PORTAL NOTIFICATION, STATE SYNCHRONIZATION AND OPERATIONAL COORDINATION SYSTEM FOR THE PHUMULANI AI COMMUNITY PLATFORM.
+
+THIS IS AN ACTUAL DEVELOPMENT TASK.
+
+DO NOT STOP AT PLANNING.
+
+DO NOT ONLY GENERATE DOCUMENTATION.
+
+DO NOT CREATE STATIC MOCKUP NOTIFICATIONS THAT ARE DISCONNECTED FROM AUTHORITATIVE BUSINESS RECORDS.
+
+DO NOT REBUILD THE APPLICATION.
+
+DO NOT REPLACE EXISTING OPERATIONAL SERVICES.
+
+DO NOT CREATE DUPLICATE MEMBER, VOLUNTEER, DONOR, PROGRAM, CASEWORK OR FINANCIAL DATABASES.
+
+REUSE EXISTING AUTHENTICATION, AUTHORIZATION, PERSISTENCE, AUDIT, SAFEGUARDING AND NOTIFICATION INFRASTRUCTURE WHERE AVAILABLE.
+
+PRESERVE ALL FUNCTIONALITY DEVELOPED DURING M41.01 THROUGH M41.08.
+
+PRESERVE THE WEBSITE IMAGE REPAIRS.
+
+IMPLEMENT REAL SERVER-SIDE EVENT PROCESSING, DURABLE NOTIFICATION RECORDS, AUTHORIZED STATE SYNCHRONIZATION, DELIVERY TRACKING AND CROSS-PORTAL CONSISTENCY VERIFICATION.
+
+DO NOT ACTIVATE LIVE EXTERNAL COMMUNICATION SERVICES.
+
+DO NOT ACTIVATE PRODUCTION INFRASTRUCTURE.
+
+DO NOT CLAIM SUCCESS WITHOUT ACTUAL EXECUTION EVIDENCE.
+
+---
+
+# SECTION 2 — PRIMARY DEVELOPMENT OBJECTIVE
+
+Establish a single authoritative coordination architecture connecting:
+
+1. Public Website.
+2. Community Member Portal.
+3. Staff Command Center.
+4. Caseworker Operations.
+5. Program Administration.
+6. Volunteer Portal.
+7. Donor Portal.
+8. Fundraising CRM.
+9. Executive Management.
+10. Board Governance.
+11. Master Administration.
+12. Existing Client Portal and other authorized operational interfaces.
+
+The architecture must ensure that an authorized change to an operational record results in:
+
+- A valid business-state transition.
+- A durable audit event.
+- Correctly scoped notifications.
+- Appropriate updates to dependent portals.
+- Accurate reporting metrics.
+- No duplicate processing.
+- No unauthorized disclosure.
+- Recoverable state after application restart.
+
+### Fundamental rule
+
+THE AUTHORITATIVE BUSINESS RECORD IS THE SOURCE OF TRUTH.
+
+NOTIFICATIONS ARE CONSEQUENCES OF BUSINESS EVENTS.
+
+NOTIFICATIONS MUST NEVER BECOME AN INDEPENDENT SOURCE OF BUSINESS STATE.
+
+---
+
+# SECTION 3 — PRESERVE THE EXISTING DEVELOPMENT BASELINE
+
+Preserve all reported completed milestones:
+
+M41.01 — Repository Reconciliation.
+
+M41.02 — Public Website Integration.
+
+M41.03 — Member Registration and Profile Lifecycle.
+
+M41.04 — Service Request and Caseworker Coordination.
+
+M41.05 — Program Enrollment, Capacity and Waitlist Coordination.
+
+M41.06 — Volunteer Onboarding, Clearance, Shifts and Verified Service Hours.
+
+M41.07 — Donor, Grant and Fundraising Integration.
+
+M41.08 — Staff, Executive and Board Reporting Integration.
+
+### Regression baseline
+
+Reported:
+
+648 automated tests passing.
+
+This includes the previous 638-test baseline and 10 website image verification tests.
+
+### Browser baseline
+
+Preserve existing Chromium, Firefox, WebKit and Mobile Chrome coverage.
+
+Do not assume browser success without current execution results.
+
+### AI workforce
+
+Preserve exactly 36 canonical agents:
+
+ORG-AI-001 through ORG-AI-018.
+
+FUND-AI-001 through FUND-AI-018.
+
+### Fundraising pipelines
+
+Preserve all five:
+
+- Grants.
+- Major Donors.
+- Corporate Social Responsibility.
+- Capital Campaign.
+- Reconciliation.
+
+### Languages
+
+Preserve:
+
+en — English.
+
+so — Somali.
+
+es — Spanish.
+
+hmn — Hmong.
+
+kar — Karen.
+
+orm — Oromo.
+
+am — Amharic.
+
+### Website assets
+
+Preserve:
+
+- SafeImage component.
+- getAssetUrl resolver.
+- GitHub Pages subpath handling.
+- Logo fallback.
+- Community hero illustration.
+- Founder initials fallback.
+- Program imagery.
+- Publication imagery.
+- Responsive image behavior.
+
+---
+
+# SECTION 4 — M41.09.01 REPOSITORY RECONCILIATION
+
+Inspect the actual repository before implementing new modules.
+
+Identify:
+
+- Existing notification services.
+- Existing notification data models.
+- Existing in-app notification components.
+- Existing member notification logic.
+- Existing caseworker notification logic.
+- Existing volunteer notifications.
+- Existing fundraising notifications.
+- Existing grant approval notifications.
+- Existing reporting notifications.
+- Existing event or message services.
+- Existing audit event infrastructure.
+- Existing durable persistence adapter.
+- Existing API routes.
+- Existing authentication middleware.
+- Existing authorization middleware.
+- Existing cross-portal synchronization logic.
+- Existing frontend polling or refresh mechanisms.
+- Existing test fixtures.
+- Existing GitHub Actions workflows.
+
+### Required classification
+
+For every component, classify it as:
+
+EXISTING_AND_REUSABLE.
+
+PARTIALLY_IMPLEMENTED.
+
+MISSING.
+
+REQUIRES_CORRECTION.
+
+REQUIRES_SECURITY_HARDENING.
+
+REQUIRES_TEST_COVERAGE.
+
+### Mandatory requirement
+
+Reuse canonical implementations.
+
+Do not introduce a second notification database if an authoritative one already exists.
+
+### Required report
+
+phase41_m4109_repository_reconciliation_report.md
+
+---
+
+# SECTION 5 — M41.09.02 AUTHORITATIVE EVENT COORDINATION SERVICE
+
+Implement or extend one server-side event coordination service.
+
+Suggested module, only if no equivalent exists:
+
+src/server/operationalEventService.ts
+
+### Required responsibilities
+
+- Accept validated business events.
+- Identify the authoritative source record.
+- Validate the event type.
+- Validate the acting user.
+- Validate the business transition.
+- Assign a unique event ID.
+- Record event creation time.
+- Persist event metadata.
+- Determine authorized recipients.
+- Generate notification records.
+- Trigger appropriate synchronization.
+- Record processing results.
+- Support retry and recovery.
+- Prevent duplicate processing.
+- Preserve audit integrity.
+
+### Architecture requirement
+
+EVENT PROCESSING MUST EXECUTE ON THE SERVER.
+
+DO NOT TRUST CLIENT-SUPPLIED EVENT OWNERSHIP.
+
+DO NOT ALLOW THE BROWSER TO GENERATE PRIVILEGED EVENTS WITHOUT SERVER AUTHORIZATION.
+
+---
+
+# SECTION 6 — M41.09.03 CANONICAL EVENT CONTRACTS
+
+Define typed event contracts compatible with existing repository models.
+
+Suggested fields:
+
+- eventId.
+- eventType.
+- aggregateType.
+- aggregateId.
+- aggregateVersion.
+- actorId.
+- actorRole.
+- occurredAt.
+- recordedAt.
+- correlationId.
+- causationId.
+- idempotencyKey.
+- eventClassification.
+- permittedRecipientScopes.
+- processingStatus.
+- auditReference.
+
+### Important
+
+Do not include raw confidential case narratives or sensitive personal information in general-purpose event payloads.
+
+Use minimal event metadata.
+
+Retrieve protected information separately through authorized server-side services.
+
+### Suggested event classifications
+
+PUBLIC.
+
+MEMBER_PRIVATE.
+
+STAFF_RESTRICTED.
+
+FINANCIAL_RESTRICTED.
+
+SAFEGUARDING_RESTRICTED.
+
+GOVERNANCE_RESTRICTED.
+
+Reuse existing classifications where available.
+
+---
+
+# SECTION 7 — M41.09.04 BUSINESS EVENT CATALOG
+
+Implement or reconcile event types covering the existing platform.
+
+## Member events
+
+MEMBER_REGISTERED.
+
+MEMBER_PROFILE_UPDATED.
+
+MEMBER_PREFERENCES_UPDATED.
+
+## Service request events
+
+SERVICE_REQUEST_SUBMITTED.
+
+SERVICE_REQUEST_UNDER_REVIEW.
+
+SERVICE_REQUEST_ASSIGNED.
+
+SERVICE_REQUEST_REASSIGNED.
+
+SERVICE_REQUEST_IN_PROGRESS.
+
+SERVICE_REQUEST_RESOLVED.
+
+SERVICE_REQUEST_CLOSED.
+
+## Program events
+
+PROGRAM_APPLICATION_SUBMITTED.
+
+PROGRAM_ENROLLMENT_CONFIRMED.
+
+PROGRAM_WAITLISTED.
+
+PROGRAM_WAITLIST_POSITION_UPDATED.
+
+PROGRAM_WAITLIST_PROMOTED.
+
+PROGRAM_ENROLLMENT_WITHDRAWN.
+
+PROGRAM_CAPACITY_UPDATED.
+
+## Volunteer events
+
+VOLUNTEER_APPLICATION_SUBMITTED.
+
+VOLUNTEER_TRAINING_UPDATED.
+
+VOLUNTEER_CLEARANCE_APPROVED.
+
+VOLUNTEER_CLEARANCE_REVOKED.
+
+VOLUNTEER_SHIFT_ASSIGNED.
+
+VOLUNTEER_SHIFT_CANCELLED.
+
+VOLUNTEER_ATTENDANCE_RECORDED.
+
+VOLUNTEER_HOURS_SUBMITTED.
+
+VOLUNTEER_HOURS_APPROVED.
+
+VOLUNTEER_HOURS_REJECTED.
+
+## Fundraising events
+
+DONOR_PROFILE_UPDATED.
+
+DONOR_PLEDGE_CREATED.
+
+DONOR_PLEDGE_UPDATED.
+
+DONOR_PLEDGE_CANCELLED.
+
+FUNDRAISING_CAMPAIGN_UPDATED.
+
+GRANT_APPLICATION_ASSIGNED.
+
+GRANT_REVIEW_REQUESTED.
+
+GRANT_INTERNAL_APPROVAL_GRANTED.
+
+GRANT_APPLICATION_STATUS_UPDATED.
+
+GRANT_AWARD_RECORDED.
+
+FINANCIAL_RECONCILIATION_EXCEPTION.
+
+## Reporting events
+
+REPORT_SNAPSHOT_CREATED.
+
+REPORT_REVIEW_REQUESTED.
+
+REPORT_APPROVED.
+
+REPORT_REJECTED.
+
+REPORT_SUPERSEDED.
+
+BOARD_REPORT_PUBLISHED.
+
+## Governance events
+
+AI_HUMAN_APPROVAL_REQUIRED.
+
+AI_ACTION_BLOCKED.
+
+AI_EMERGENCY_HALT_ACTIVATED.
+
+SECURITY_POLICY_VIOLATION.
+
+### Important
+
+Map these names to existing canonical event definitions where available.
+
+Do not duplicate semantically equivalent events.
+
+---
+
+# SECTION 8 — M41.09.05 DURABLE EVENT PERSISTENCE
+
+Implement durable event storage using the existing embedded persistence engine.
+
+### Required capabilities
+
+- Event persistence.
+- Event processing state.
+- Retry metadata.
+- Event ordering metadata.
+- Idempotency tracking.
+- Correlation identifiers.
+- Audit references.
+- Restart recovery.
+
+### Processing states
+
+PENDING.
+
+PROCESSING.
+
+COMPLETED.
+
+RETRY_PENDING.
+
+FAILED.
+
+QUARANTINED.
+
+Reuse existing canonical states if available.
+
+### Mandatory invariant
+
+AN EVENT MUST NOT BE LOST SIMPLY BECAUSE THE APPLICATION RESTARTS.
+
+### Transaction integrity
+
+Where supported, commit the business-state change and corresponding outbox event atomically.
+
+If the embedded engine cannot support atomic writes across the relevant records, implement a documented recovery mechanism that detects and repairs incomplete event publication.
+
+Do not claim exactly-once delivery unless the implementation and tests establish that guarantee.
+
+Prefer at-least-once processing with idempotent consumers.
+
+---
+
+# SECTION 9 — M41.09.06 NOTIFICATION ORCHESTRATION
+
+Implement or extend one authoritative in-app notification service.
+
+### Required capabilities
+
+- Notification creation.
+- Recipient resolution.
+- Notification classification.
+- Delivery tracking.
+- Read/unread status.
+- Notification preferences.
+- Related record linking.
+- Deduplication.
+- Retry handling.
+- Expiration or archival rules.
+- Audit history.
+
+### Suggested notification fields
+
+notificationId.
+
+eventId.
+
+recipientId.
+
+recipientRole.
+
+notificationType.
+
+titleKey.
+
+messageKey.
+
+relatedEntityType.
+
+relatedEntityId.
+
+createdAt.
+
+readAt.
+
+deliveryStatus.
+
+confidentialityLevel.
+
+### Security requirement
+
+DO NOT EMBED SENSITIVE CASE DETAILS IN NOTIFICATION PREVIEWS.
+
+---
+
+# SECTION 10 — M41.09.07 NOTIFICATION LIFECYCLE
+
+Implement a clear notification lifecycle.
+
+Suggested states:
+
+CREATED.
+
+READY.
+
+DELIVERED_IN_APP.
+
+READ.
+
+ARCHIVED.
+
+FAILED.
+
+### Required behavior
+
+A notification must not be marked read merely because it was created.
+
+A notification must not be marked delivered through an external channel that is not configured.
+
+A failed notification must not modify the underlying business record.
+
+### External delivery
+
+Google Workspace and Gmail remain unauthorized.
+
+External delivery must remain staged or blocked.
+
+Do not claim emails were sent.
+
+---
+
+# SECTION 11 — M41.09.08 MEMBER NOTIFICATIONS
+
+Implement or verify member notifications for:
+
+- Registration confirmation.
+- Profile update confirmation.
+- Service request receipt.
+- Case assignment.
+- Case status changes.
+- Program application receipt.
+- Enrollment confirmation.
+- Waitlist status.
+- Waitlist promotion.
+- Program withdrawal confirmation.
+
+### Ownership
+
+Member A must never receive Member B's private notifications.
+
+Notification links must not bypass member ownership restrictions.
+
+---
+
+# SECTION 12 — M41.09.09 CASEWORKER COORDINATION
+
+Integrate service request events with staff and member portals.
+
+### Required workflow
+
+1. Member submits a service request.
+2. Server validates the request.
+3. Request is persisted.
+4. An event is recorded.
+5. Authorized staff queue updates.
+6. Authorized staff receives an in-app notification.
+7. Caseworker accepts or receives assignment.
+8. Assignment event is recorded.
+9. Member receives an appropriately redacted update.
+10. Staff reporting reflects the current case state.
+11. Audit history records the transition.
+
+### Safeguarding
+
+Restricted crisis cases must follow the existing safeguarding quarantine workflow.
+
+Do not send sensitive details through ordinary notifications.
+
+---
+
+# SECTION 13 — M41.09.10 PROGRAM ENROLLMENT SYNCHRONIZATION
+
+Integrate M41.05 program operations.
+
+### Required events
+
+- Application submitted.
+- Enrollment confirmed.
+- Waitlist placement.
+- Waitlist promotion.
+- Withdrawal.
+- Capacity change.
+
+### Required invariants
+
+- Confirmed enrollment totals match authoritative program records.
+- Waitlisted applicants do not count as confirmed enrollments.
+- Waitlist positions remain deterministic.
+- Concurrent applications cannot overbook a program.
+- Duplicate events cannot create duplicate enrollments.
+- Promotion notifications cannot create additional seats.
+
+### Critical rule
+
+NOTIFICATION PROCESSING MUST NEVER OVERRIDE THE PROGRAM CAPACITY ENGINE.
+
+---
+
+# SECTION 14 — M41.09.11 VOLUNTEER COORDINATION
+
+Integrate M41.06 volunteer operations.
+
+### Required notifications
+
+- Application received.
+- Training required.
+- Clearance approved.
+- Clearance revoked.
+- Shift assigned.
+- Shift changed.
+- Shift cancelled.
+- Attendance recorded.
+- Hours submitted.
+- Hours approved.
+- Hours rejected.
+
+### Required controls
+
+Volunteer clearance details remain restricted.
+
+Pending service hours must not appear as verified hours.
+
+Notification delivery must not automatically approve hours.
+
+A revoked volunteer must not receive unauthorized shift assignments.
+
+---
+
+# SECTION 15 — M41.09.12 DONOR AND FUNDRAISING COORDINATION
+
+Integrate M41.07 fundraising services.
+
+### Required notifications
+
+- Pledge recorded.
+- Pledge updated.
+- Campaign update.
+- Grant assignment.
+- Grant review requested.
+- Internal grant approval.
+- Grant status change.
+- Reconciliation exception.
+
+### Financial restrictions
+
+A pledge notification must not say payment was received.
+
+A grant approval notification must not imply external funder acceptance.
+
+A reconciliation notification must not claim bank verification without evidence.
+
+### Privacy
+
+Donor financial details must remain restricted to authorized recipients.
+
+---
+
+# SECTION 16 — M41.09.13 EXECUTIVE AND BOARD COORDINATION
+
+Integrate M41.08 reporting workflows.
+
+### Required events
+
+- Report snapshot created.
+- Executive review requested.
+- Report approved.
+- Report rejected.
+- Board report published.
+- Report superseded.
+
+### Authorization
+
+Only authorized executives and board users may receive restricted governance notifications.
+
+Do not expose board-only reports to general staff.
+
+Do not treat AI-generated recommendations as formal human approvals.
+
+---
+
+# SECTION 17 — M41.09.14 CROSS-PORTAL STATE SYNCHRONIZATION
+
+Implement a secure synchronization mechanism.
+
+Choose the simplest architecture supported by the current repository.
+
+Possible development-safe approaches:
+
+- Authenticated polling.
+- Versioned API refresh.
+- Server-Sent Events.
+- Existing supported event infrastructure.
+
+Do not introduce a production message broker unless explicitly authorized.
+
+### Required behavior
+
+When a canonical record changes:
+
+1. Persist the new authoritative state.
+2. Increment or update the relevant version.
+3. Record the event.
+4. Update authorized dependent views.
+5. Refresh affected reporting metrics.
+6. Preserve audit history.
+
+### Client requirements
+
+- Detect stale versions.
+- Refresh authorized records.
+- Avoid duplicate UI updates.
+- Handle temporary disconnection.
+- Recover after reconnection.
+- Prevent cross-account state leakage.
+
+### Critical rule
+
+A browser cache must never override newer authoritative server state.
+
+---
+
+# SECTION 18 — M41.09.15 IDEMPOTENCY AND DUPLICATE PREVENTION
+
+Implement idempotent event handling.
+
+### Required scenarios
+
+- Duplicate service request event.
+- Duplicate enrollment event.
+- Duplicate waitlist promotion event.
+- Duplicate shift assignment event.
+- Duplicate volunteer-hour approval event.
+- Duplicate donor pledge event.
+- Duplicate grant approval event.
+- Duplicate report approval event.
+
+### Required result
+
+Duplicate delivery must not create duplicate business effects.
+
+Use stable event identifiers and idempotency keys.
+
+Preserve audit evidence.
+
+---
+
+# SECTION 19 — M41.09.16 EVENT ORDERING AND CONCURRENCY
+
+Test:
+
+- Multiple updates to the same service request.
+- Concurrent waitlist promotions.
+- Concurrent volunteer-hour approvals.
+- Simultaneous pledge updates.
+- Concurrent report approvals.
+- Out-of-order notification delivery.
+
+### Required safeguards
+
+- Reject invalid state transitions.
+- Detect stale versions.
+- Preserve authoritative ordering.
+- Avoid lost updates.
+- Avoid double counting.
+- Prevent unauthorized conflict resolution.
+
+### Important
+
+Notification display order may differ from event processing order.
+
+Use authoritative timestamps and record versions to determine current business state.
+
+---
+
+# SECTION 20 — M41.09.17 RETRY AND FAILURE RECOVERY
+
+Implement durable retry behavior for transient failures.
+
+### Required capabilities
+
+- Bounded retry attempts.
+- Retry delay or backoff.
+- Error classification.
+- Persistent failure state.
+- Manual review of terminal failures.
+- Dead-letter or quarantine handling where appropriate.
+- Recovery after restart.
+
+### Restrictions
+
+Do not retry permanently unauthorized operations.
+
+Do not repeatedly expose confidential information in error logs.
+
+Do not silently discard failed events.
+
+---
+
+# SECTION 21 — M41.09.18 NOTIFICATION PREFERENCES
+
+Support appropriate user preferences.
+
+Examples:
+
+- Program updates.
+- Volunteer updates.
+- Fundraising communications.
+- General announcements.
+- Optional engagement notifications.
+
+### Important distinction
+
+Optional communication preferences must not suppress essential operational or security notifications when policy requires them.
+
+Respect donor marketing consent.
+
+Do not override safeguarding communication restrictions.
+
+---
+
+# SECTION 22 — M41.09.19 NOTIFICATION CENTER UI
+
+Implement or extend notification interfaces across authorized portals.
+
+### Required capabilities
+
+- Notification list.
+- Unread count.
+- Read status.
+- Notification details.
+- Related record navigation.
+- Filtering.
+- Pagination or bounded loading.
+- Empty state.
+- Error state.
+- Loading state.
+- Accessible controls.
+
+### Required behavior
+
+Clicking a notification must not bypass authorization to the related record.
+
+If the recipient no longer has access, show an appropriate access-denied state.
+
+Do not leak protected record titles or descriptions.
+
+---
+
+# SECTION 23 — M41.09.20 STAFF OPERATIONAL COORDINATION DASHBOARD
+
+Implement or extend a staff coordination view.
+
+### Required indicators
+
+- New service requests.
+- Unassigned cases.
+- Pending program applications.
+- Waitlist promotions.
+- Volunteer clearance tasks.
+- Upcoming shifts.
+- Pending hour approvals.
+- Grant review tasks.
+- Report approval tasks.
+- Failed notification events.
+
+### Authorization
+
+Each staff member must see only tasks within their permitted operational scope.
+
+---
+
+# SECTION 24 — M41.09.21 EXECUTIVE OPERATIONAL OVERSIGHT
+
+Provide executive-level coordination indicators.
+
+### Required metrics
+
+- Pending operational approvals.
+- Overdue coordination tasks.
+- Notification processing failures.
+- Unresolved synchronization conflicts.
+- Stale reporting data.
+- Safeguarding escalation counts where authorized.
+- AI human-approval queues.
+
+### Data integrity
+
+Use authoritative event and operational records.
+
+Do not fabricate organizational performance indicators.
+
+---
+
+# SECTION 25 — M41.09.22 SAFEGUARDING NOTIFICATION FIREWALL
+
+THIS IS A CRITICAL ACCEPTANCE REQUIREMENT.
+
+Preserve existing survivor confidentiality protections.
+
+### Prohibited disclosures
+
+- Survivor names in general notifications.
+- Shelter addresses.
+- Crisis intake narratives.
+- Restricted case notes.
+- Confidential referral details.
+- Sensitive personal identifiers.
+
+### Required behavior
+
+Safeguarding-restricted events must:
+
+1. Be classified as restricted.
+2. Resolve only authorized recipients.
+3. Use redacted notification content.
+4. Avoid broad event broadcasting.
+5. Preserve confidential audit handling.
+6. Reject unauthorized retrieval.
+7. Prevent leakage through browser caches.
+8. Prevent leakage through exported notification records.
+
+### Negative testing
+
+Attempt unauthorized access through:
+
+- Notification APIs.
+- Notification IDs.
+- Related entity links.
+- Browser state.
+- Staff dashboards.
+- Executive dashboards.
+- Board dashboards.
+- Event history.
+- Retry logs.
+
+All unauthorized disclosure attempts must fail.
+
+Do not claim formal legal certification solely from automated tests.
+
+---
+
+# SECTION 26 — M41.09.23 AI WORKFORCE GOVERNANCE
+
+Preserve 36 canonical agents.
+
+### Required event coverage
+
+- AI recommendation created.
+- Human approval requested.
+- AI action blocked.
+- AI emergency halt activated.
+- AI workflow resumed by authorized human.
+- AI policy exception recorded.
+
+### Mandatory restrictions
+
+AI agents must not:
+
+- Approve restricted case decisions.
+- Override program capacity.
+- Approve volunteer clearance.
+- Approve verified service hours without authorization.
+- Move financial funds.
+- Certify grant submissions.
+- Approve board reports.
+- Modify audit history.
+- Bypass safeguarding restrictions.
+- Disable the emergency halt.
+
+Maintain:
+
+AI_MODELS=FALLBACK_MOCK.
+
+---
+
+# SECTION 27 — M41.09.24 MULTILINGUAL NOTIFICATIONS
+
+Preserve seven languages.
+
+### Required support
+
+English.
+
+Somali.
+
+Spanish.
+
+Hmong.
+
+Karen.
+
+Oromo.
+
+Amharic.
+
+### Required implementation
+
+Use translation keys rather than embedding a single language in every notification record.
+
+Where possible, store:
+
+- Notification type.
+- Translation key.
+- Safe interpolation parameters.
+- Recipient language preference.
+
+Render localized content according to the user's selected language.
+
+### Security
+
+Do not include confidential text in translation parameters.
+
+### Verification
+
+Confirm key parity across all seven dictionaries.
+
+Do not claim human linguistic approval without actual review.
+
+---
+
+# SECTION 28 — M41.09.25 ACCESSIBILITY AND MOBILE SUPPORT
+
+Verify notification interfaces at:
+
+375px.
+
+393px.
+
+768px.
+
+1024px.
+
+1280px.
+
+1440px.
+
+### Required behavior
+
+- Keyboard navigation.
+- Accessible unread counts.
+- Screen-reader-friendly status updates.
+- Semantic headings.
+- Accessible notification links.
+- Appropriate focus management.
+- No unintended horizontal overflow.
+- No inaccessible mobile notification controls.
+- Safe Exit remains accessible.
+
+Preserve the completed website image repairs.
+
+---
+
+# SECTION 29 — M41.09.26 PERFORMANCE AND OBSERVABILITY
+
+Implement appropriate operational diagnostics.
+
+### Required metrics
+
+- Events created.
+- Events processed.
+- Events failed.
+- Events retried.
+- Pending events.
+- Notification records created.
+- Notification delivery latency.
+- Unread notification counts.
+- Synchronization conflicts.
+- Recovery attempts.
+
+### Privacy
+
+Do not include confidential payloads in general diagnostic logs.
+
+### Performance
+
+Measure actual event processing and notification query performance.
+
+Do not invent performance results.
+
+---
+
+# SECTION 30 — M41.09.27 PERSISTENCE AND RESTART RECOVERY
+
+Preserve the existing embedded durable persistence engine.
+
+Previous reported M41.08 baseline:
+
+22 tables.
+
+8,818 records.
+
+These figures require reconciliation against the earlier reported M41.07 table count.
+
+### Required recovery scenario
+
+1. Create an authorized business event.
+2. Persist the source record.
+3. Persist the event.
+4. Generate a notification.
+5. Simulate a processing interruption.
+6. Restart the supported development runtime.
+7. Recover pending events.
+8. Resume processing.
+9. Verify no duplicate business effects.
+10. Verify notification integrity.
+11. Verify audit integrity.
+12. Verify authorization remains enforced.
+
+Report actual recovered table and record counts.
+
+Do not overwrite existing data to make the counts match a historical report.
+
+---
+
+# SECTION 31 — M41.09.28 INTEGRATED 50-STEP OPERATIONAL SCENARIO
+
+Implement a deterministic end-to-end scenario.
+
+## Scenario: Community Member to Organization-Wide Coordination
+
+STEP 01: Initialize synthetic development fixtures.
+
+STEP 02: Authenticate Member A.
+
+STEP 03: Update Member A's profile.
+
+STEP 04: Verify profile update event.
+
+STEP 05: Submit a service request.
+
+STEP 06: Verify service request persistence.
+
+STEP 07: Verify event persistence.
+
+STEP 08: Verify staff notification creation.
+
+STEP 09: Authenticate authorized staff.
+
+STEP 10: View the staff coordination queue.
+
+STEP 11: Assign a caseworker.
+
+STEP 12: Verify assignment event.
+
+STEP 13: Verify member notification.
+
+STEP 14: Update service request status.
+
+STEP 15: Verify staff and member views synchronize.
+
+STEP 16: Submit a program application.
+
+STEP 17: Verify enrollment or waitlist decision.
+
+STEP 18: Verify program event creation.
+
+STEP 19: Verify member notification.
+
+STEP 20: Verify program reporting consistency.
+
+STEP 21: Authenticate Volunteer A.
+
+STEP 22: Submit a volunteer application.
+
+STEP 23: Verify coordinator notification.
+
+STEP 24: Complete authorized clearance workflow.
+
+STEP 25: Verify clearance event.
+
+STEP 26: Assign a volunteer shift.
+
+STEP 27: Verify shift notification.
+
+STEP 28: Submit volunteer hours.
+
+STEP 29: Verify hours remain unapproved.
+
+STEP 30: Approve hours through authorized supervisor.
+
+STEP 31: Verify approval event.
+
+STEP 32: Verify volunteer notification.
+
+STEP 33: Verify reporting counts approved hours only.
+
+STEP 34: Authenticate Donor A.
+
+STEP 35: Create a synthetic pledge.
+
+STEP 36: Verify pledge event.
+
+STEP 37: Verify donor notification.
+
+STEP 38: Verify pledged totals update.
+
+STEP 39: Verify externally verified cash remains unchanged.
+
+STEP 40: Create a synthetic grant review task.
+
+STEP 41: Verify authorized fundraising notification.
+
+STEP 42: Generate a reporting snapshot.
+
+STEP 43: Verify executive review notification.
+
+STEP 44: Approve through an authorized independent reviewer.
+
+STEP 45: Verify report approval event.
+
+STEP 46: Attempt cross-member notification access.
+
+STEP 47: Verify access is denied.
+
+STEP 48: Replay a previously processed event.
+
+STEP 49: Verify no duplicate business effect.
+
+STEP 50: Restart the runtime and verify event, notification, reporting and audit recovery.
+
+### Acceptance
+
+ALL 50 STEPS MUST EXECUTE.
+
+ALL ASSERTIONS MUST PASS.
+
+DO NOT SILENTLY SKIP FAILED STEPS.
+
+---
+
+# SECTION 32 — M41.09.29 AUTOMATED REGRESSION EXPANSION
+
+Preserve the reported baseline:
+
+648 tests.
+
+Add at least 20 meaningful M41.09 tests.
+
+Suggested identifiers:
+
+TEST-P41-101 through TEST-P41-120.
+
+### Required tests
+
+TEST-P41-101 — Canonical event creation.
+
+TEST-P41-102 — Event schema validation.
+
+TEST-P41-103 — Event persistence.
+
+TEST-P41-104 — Notification recipient resolution.
+
+TEST-P41-105 — Member notification ownership.
+
+TEST-P41-106 — Caseworker assignment coordination.
+
+TEST-P41-107 — Program enrollment synchronization.
+
+TEST-P41-108 — Waitlist promotion idempotency.
+
+TEST-P41-109 — Volunteer clearance notification.
+
+TEST-P41-110 — Verified volunteer-hour synchronization.
+
+TEST-P41-111 — Donor pledge notification.
+
+TEST-P41-112 — Grant review coordination.
+
+TEST-P41-113 — Report approval notification.
+
+TEST-P41-114 — Cross-portal state versioning.
+
+TEST-P41-115 — Duplicate event prevention.
+
+TEST-P41-116 — Out-of-order event handling.
+
+TEST-P41-117 — Retry and failure recovery.
+
+TEST-P41-118 — Safeguarding notification firewall.
+
+TEST-P41-119 — Restart persistence integrity.
+
+TEST-P41-120 — Complete 50-step operational scenario.
+
+### Target
+
+648 existing tests.
+
+20 new tests.
+
+TARGET: 668 TESTS.
+
+Expected:
+
+668 / 668 PASSING.
+
+This is a target, not an executed result.
+
+Report actual test counts.
+
+---
+
+# SECTION 33 — M41.09.30 PLAYWRIGHT BROWSER VERIFICATION
+
+Add real browser scenarios covering:
+
+- Member notification center.
+- Staff notification center.
+- Service request synchronization.
+- Program enrollment updates.
+- Volunteer shift notifications.
+- Volunteer-hour approval notifications.
+- Donor pledge notifications.
+- Executive report approval notifications.
+- Notification read/unread status.
+- Unauthorized notification access.
+- Mobile notification navigation.
+- Seven-language notification rendering.
+
+### Required browser projects
+
+Chromium.
+
+Firefox.
+
+WebKit.
+
+Mobile Chrome.
+
+### Required evidence
+
+For each browser:
+
+- Tests discovered.
+- Tests executed.
+- Tests passed.
+- Tests failed.
+- Tests skipped.
+- Duration.
+- Relevant traces or screenshots.
+
+Do not classify configured browsers as passing without execution.
+
+---
+
+# SECTION 34 — M41.09.31 GITHUB ACTIONS VERIFICATION
+
+Inspect:
+
+.github/workflows/playwright.yml
+
+Preserve:
+
+- Node.js 22.
+- npm ci.
+- Root package-lock.json.
+- TypeScript verification.
+- Vite build.
+- Full regression suite.
+- Browser matrix.
+- Test artifacts.
+
+### Required commands
+
+```bash
+npm ci --no-audit --no-fund
+npx tsc --noEmit
+npm run build
+npx tsx scripts/verify_suite.ts
+```
+
+### CI requirement
+
+Confirm the committed lockfile exists.
+
+Confirm GitHub Actions executes successfully.
+
+Record:
+
+- Commit SHA.
+- Workflow run ID.
+- Job conclusions.
+- Actual regression counts.
+- Actual browser counts.
+- Final workflow conclusion.
+
+If CI fails, retrieve the actual error logs.
+
+Repair the root cause.
+
+Do not bypass failing checks.
+
+---
+
+# SECTION 35 — M41.09.32 SECURITY AND NEGATIVE TESTING
+
+Test:
+
+1. Unauthorized notification retrieval.
+2. Cross-member notification access.
+3. Cross-volunteer notification access.
+4. Cross-donor notification access.
+5. Unauthorized staff notification access.
+6. Forged event actor identity.
+7. Forged event recipient identity.
+8. Unauthorized event replay.
+9. Invalid business transition.
+10. Duplicate event processing.
+11. Stale state overwrite.
+12. Restricted case disclosure.
+13. Financial notification misclassification.
+14. Unauthorized report approval.
+15. AI approval bypass.
+16. Safeguarding quarantine bypass.
+17. Expired session access.
+18. Revoked session access.
+19. Notification export leakage.
+20. Restart recovery corruption.
+
+### Acceptance
+
+All unauthorized operations must fail closed.
+
+---
+
+# SECTION 36 — M41.09.33 INFRASTRUCTURE RESTRICTIONS
+
+Maintain:
+
+POSTGRESQL=NOT_CONNECTED
+
+BACKEND_HOSTING=NOT_CONFIGURED
+
+GOOGLE_WORKSPACE=AUTHORIZATION_REQUIRED
+
+PAYMENT_GATEWAY=NOT_CONNECTED
+
+AI_MODELS=FALLBACK_MOCK
+
+### Do not activate
+
+- Production PostgreSQL.
+- Production backend hosting.
+- Google Workspace OAuth.
+- Live Gmail delivery.
+- Live SMS delivery.
+- Live merchant payment processing.
+- Live Gemini inference.
+- Production message brokers.
+
+Use the existing development-safe infrastructure.
+
+---
+
+# SECTION 37 — REQUIRED DEVELOPMENT REPORTS
+
+Generate the following 15 reports:
+
+1. phase41_m4109_repository_reconciliation_report.md
+2. phase41_m4109_event_architecture_report.md
+3. phase41_m4109_event_persistence_report.md
+4. phase41_m4109_notification_orchestration_report.md
+5. phase41_m4109_member_caseworker_coordination_report.md
+6. phase41_m4109_program_waitlist_sync_report.md
+7. phase41_m4109_volunteer_coordination_report.md
+8. phase41_m4109_donor_grant_coordination_report.md
+9. phase41_m4109_executive_board_coordination_report.md
+10. phase41_m4109_cross_portal_state_sync_report.md
+11. phase41_m4109_safeguarding_authorization_report.md
+12. phase41_m4109_multilingual_accessibility_report.md
+13. phase41_m4109_regression_persistence_report.md
+14. phase41_m4109_playwright_github_actions_report.md
+15. phase41_m4109_master_completion_report.md
+
+### Every report must include
+
+- Scope.
+- Existing implementation inspected.
+- Source files changed.
+- New functionality implemented.
+- Integration points.
+- Security controls.
+- Test commands executed.
+- Actual results.
+- Evidence references.
+- Commit SHA where available.
+- CI run ID where available.
+- Outstanding defects.
+- Acceptance determination.
+
+Do not fabricate evidence.
+
+---
+
+# SECTION 38 — ACCEPTANCE GATES
+
+GATE A — Repository reconciliation completed.
+
+GATE B — Canonical event architecture implemented.
+
+GATE C — Durable event persistence verified.
+
+GATE D — Notification orchestration operational.
+
+GATE E — Member and caseworker coordination verified.
+
+GATE F — Program and waitlist synchronization verified.
+
+GATE G — Volunteer coordination verified.
+
+GATE H — Donor and grant coordination verified.
+
+GATE I — Executive and board coordination verified.
+
+GATE J — Cross-portal state consistency verified.
+
+GATE K — Idempotency and concurrency verified.
+
+GATE L — Retry and restart recovery verified.
+
+GATE M — Safeguarding and authorization verified.
+
+GATE N — Seven-language support preserved.
+
+GATE O — Accessibility and mobile responsiveness verified.
+
+GATE P — AI governance preserved.
+
+GATE Q — Full regression suite passes.
+
+GATE R — Real browser verification passes.
+
+GATE S — GitHub Actions execution verified.
+
+GATE T — Production infrastructure remains deferred.
+
+GATE U — All 15 reports completed.
+
+---
+
+# SECTION 39 — REQUIRED EXECUTION ORDER
+
+ACTION 01 — Inspect the repository.
+
+ACTION 02 — Reconcile existing notification infrastructure.
+
+ACTION 03 — Verify the current regression and CI baseline.
+
+ACTION 04 — Define canonical event contracts.
+
+ACTION 05 — Implement the event coordination service.
+
+ACTION 06 — Implement durable event persistence.
+
+ACTION 07 — Implement notification orchestration.
+
+ACTION 08 — Implement recipient authorization.
+
+ACTION 09 — Integrate member notifications.
+
+ACTION 10 — Integrate caseworker notifications.
+
+ACTION 11 — Integrate program enrollment notifications.
+
+ACTION 12 — Integrate waitlist coordination.
+
+ACTION 13 — Integrate volunteer notifications.
+
+ACTION 14 — Integrate donor notifications.
+
+ACTION 15 — Integrate grant review notifications.
+
+ACTION 16 — Integrate executive reporting notifications.
+
+ACTION 17 — Integrate board governance notifications.
+
+ACTION 18 — Implement state synchronization.
+
+ACTION 19 — Implement idempotency.
+
+ACTION 20 — Implement concurrency protection.
+
+ACTION 21 — Implement retry and recovery.
+
+ACTION 22 — Implement notification preferences.
+
+ACTION 23 — Implement notification center interfaces.
+
+ACTION 24 — Implement staff coordination indicators.
+
+ACTION 25 — Implement executive coordination indicators.
+
+ACTION 26 — Verify safeguarding restrictions.
+
+ACTION 27 — Verify AI governance.
+
+ACTION 28 — Add seven-language notification support.
+
+ACTION 29 — Verify accessibility and mobile layouts.
+
+ACTION 30 — Verify performance and observability.
+
+ACTION 31 — Execute the 50-step operational scenario.
+
+ACTION 32 — Add at least 20 regression tests.
+
+ACTION 33 — Add Playwright browser tests.
+
+ACTION 34 — Run TypeScript verification.
+
+ACTION 35 — Run the application build.
+
+ACTION 36 — Run the full regression suite.
+
+ACTION 37 — Run Chromium tests.
+
+ACTION 38 — Run Firefox tests.
+
+ACTION 39 — Run WebKit tests.
+
+ACTION 40 — Run Mobile Chrome tests.
+
+ACTION 41 — Verify GitHub Actions.
+
+ACTION 42 — Repair any actual failures.
+
+ACTION 43 — Verify restart recovery.
+
+ACTION 44 — Generate all 15 reports.
+
+ACTION 45 — Determine M41.09 acceptance.
+
+ACTION 46 — Report readiness for M41.10.
+
+---
+
+# SECTION 40 — REQUIRED FINAL COMPLETION SUMMARY
+
+At completion, report:
+
+## A. MILESTONE STATUS
+
+M41.09:
+
+COMPLETE.
+
+COMPLETE_WITH_LIMITATIONS.
+
+OR BLOCKED.
+
+## B. EVENT ARCHITECTURE
+
+- Event types implemented.
+- Event persistence.
+- Idempotency.
+- Ordering.
+- Retry behavior.
+- Recovery behavior.
+
+## C. NOTIFICATIONS
+
+- Member notifications.
+- Staff notifications.
+- Caseworker notifications.
+- Program notifications.
+- Volunteer notifications.
+- Donor notifications.
+- Grant notifications.
+- Executive notifications.
+- Board notifications.
+
+## D. SYNCHRONIZATION
+
+- Authoritative state consistency.
+- Portal refresh behavior.
+- Conflict detection.
+- Stale-state protection.
+
+## E. REGRESSION
+
+- Tests discovered.
+- Tests executed.
+- Tests passed.
+- Tests failed.
+- Tests skipped.
+- Duration.
+
+## F. BROWSER TESTS
+
+- Chromium.
+- Firefox.
+- WebKit.
+- Mobile Chrome.
+
+Report actual results.
+
+## G. GITHUB ACTIONS
+
+- Commit SHA.
+- Workflow run ID.
+- Job conclusions.
+- Final workflow conclusion.
+
+## H. PERSISTENCE
+
+- Tables recovered.
+- Records recovered.
+- Pending events recovered.
+- Duplicate events prevented.
+- Audit integrity.
+
+## I. SAFEGUARDING
+
+- Confidentiality verification.
+- Unauthorized access rejection.
+- Notification redaction.
+- Protected event handling.
+
+## J. AI GOVERNANCE
+
+- 36 canonical agents preserved.
+- Five fundraising pipelines preserved.
+- Human approval controls preserved.
+- Fallback/mock mode preserved.
+
+## K. INFRASTRUCTURE
+
+POSTGRESQL=NOT_CONNECTED.
+
+BACKEND_HOSTING=NOT_CONFIGURED.
+
+GOOGLE_WORKSPACE=AUTHORIZATION_REQUIRED.
+
+PAYMENT_GATEWAY=NOT_CONNECTED.
+
+AI_MODELS=FALLBACK_MOCK.
+
+## L. DOCUMENTATION
+
+List all 15 generated reports.
+
+## M. NEXT MILESTONE
+
+M41.10 — Seven-Language Community User Acceptance Testing.
+
+---
+
+# SECTION 41 — FINAL MASTER EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+BEGIN PHASE 41 M41.09 DEVELOPMENT.
+
+INSPECT THE EXISTING REPOSITORY.
+
+PRESERVE ALL COMPLETED MILESTONES.
+
+PRESERVE ALL WEBSITE IMAGE REPAIRS.
+
+IMPLEMENT ONE AUTHORITATIVE EVENT COORDINATION ARCHITECTURE.
+
+IMPLEMENT DURABLE EVENT PERSISTENCE.
+
+IMPLEMENT SECURE IN-APP NOTIFICATIONS.
+
+IMPLEMENT MEMBER AND CASEWORKER COORDINATION.
+
+IMPLEMENT PROGRAM ENROLLMENT AND WAITLIST SYNCHRONIZATION.
+
+IMPLEMENT VOLUNTEER SHIFT AND VERIFIED-HOUR NOTIFICATIONS.
+
+IMPLEMENT DONOR AND GRANT NOTIFICATIONS.
+
+IMPLEMENT EXECUTIVE AND BOARD REPORTING NOTIFICATIONS.
+
+IMPLEMENT CROSS-PORTAL STATE SYNCHRONIZATION.
+
+ENFORCE IDEMPOTENCY.
+
+ENFORCE CONCURRENCY PROTECTION.
+
+IMPLEMENT RETRY AND RESTART RECOVERY.
+
+IMPLEMENT NOTIFICATION PREFERENCES.
+
+IMPLEMENT ACCESSIBLE NOTIFICATION CENTERS.
+
+PRESERVE ALL SEVEN LANGUAGES.
+
+PRESERVE SAFEGUARDING AND PRIVACY.
+
+PRESERVE FINANCIAL CLASSIFICATION INTEGRITY.
+
+PRESERVE ALL 36 AI AGENTS.
+
+PRESERVE ALL FIVE FUNDRAISING PIPELINES.
+
+PRESERVE THE 648-TEST REGRESSION BASELINE.
+
+ADD AT LEAST 20 MEANINGFUL TESTS.
+
+TARGET 668 PASSING REGRESSION TESTS.
+
+EXECUTE THE 50-STEP OPERATIONAL SCENARIO.
+
+RUN TYPESCRIPT VERIFICATION.
+
+RUN THE APPLICATION BUILD.
+
+RUN THE FULL REGRESSION SUITE.
+
+RUN REAL PLAYWRIGHT TESTS.
+
+VERIFY GITHUB ACTIONS.
+
+VERIFY DURABLE PERSISTENCE.
+
+GENERATE ALL 15 REQUIRED DEVELOPMENT REPORTS.
+
+DO NOT CLAIM SUCCESS WITHOUT EXECUTED EVIDENCE.
+
+DO NOT ACTIVATE PRODUCTION INFRASTRUCTURE.
+
+DO NOT DECLARE PHASE 41 COMPLETE.
+
+MAINTAIN DEVELOPMENT_ACCEPTED_WITH_LIMITATIONS UNTIL ALL REQUIRED ACCEPTANCE GATES ARE SATISFIED.
+
+## FINAL DEVELOPMENT TARGET
+
+DELIVER A COMPLETE, SECURE, DURABLE AND AUDITABLE CROSS-PORTAL COORDINATION SYSTEM CONNECTING:
+
+COMMUNITY MEMBERS.
+
+CASEWORKERS.
+
+PROGRAMS.
+
+WAITLISTS.
+
+VOLUNTEERS.
+
+DONORS.
+
+GRANTS.
+
+FUNDRAISING.
+
+STAFF OPERATIONS.
+
+EXECUTIVE MANAGEMENT.
+
+BOARD GOVERNANCE.
+
+AI WORKFORCE OVERSIGHT.
+
+SAFEGUARDING.
+
+THE PLATFORM MUST SYNCHRONIZE AUTHORIZED BUSINESS STATE, GENERATE APPROPRIATE NOTIFICATIONS, PREVENT DUPLICATE PROCESSING, PRESERVE CONFIDENTIAL INFORMATION AND RECOVER RELIABLY AFTER RESTART.
+
+# END OF PHASE 41 M41.09 MASTER DEVELOPMENT DIRECTIVE
