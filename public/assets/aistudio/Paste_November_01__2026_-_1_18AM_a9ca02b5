@@ -1,0 +1,1837 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+# PHASE 41 — MASTER DEVELOPMENT CONTINUATION DIRECTIVE
+
+## M41.10 — SEVEN-LANGUAGE COMMUNITY USER ACCEPTANCE TESTING
+
+Repository: OphireumTechnology/phumulani
+Branch: main
+Development Environment: Google AI Studio
+Milestone: M41.10
+Previous Milestone: M41.09
+Acceptance Baseline: DEVELOPMENT_ACCEPTED_WITH_LIMITATIONS
+Production Infrastructure: DEFERRED
+
+---
+
+# 1. MASTER DEVELOPMENT AUTHORIZATION
+
+GOOGLE AI STUDIO:
+
+BEGIN PHASE 41 M41.10 DEVELOPMENT.
+
+IMPLEMENT A COMPLETE SEVEN-LANGUAGE COMMUNITY USER ACCEPTANCE TESTING AND LOCALIZATION VERIFICATION FRAMEWORK.
+
+THIS IS AN ACTUAL DEVELOPMENT AND TESTING TASK.
+
+DO NOT STOP AT GENERATING A PLAN.
+
+DO NOT ONLY CREATE DOCUMENTATION.
+
+INSPECT THE EXISTING REPOSITORY.
+
+REUSE THE EXISTING MULTILINGUAL ACCESSIBILITY SERVICE, TRANSLATION DICTIONARIES, AUTHENTICATION SERVICES, COMMUNITY PORTALS, NOTIFICATION SERVICES, OPERATIONAL EVENT SERVICES AND AUTOMATED TEST INFRASTRUCTURE.
+
+PRESERVE ALL COMPLETED MILESTONES M41.01 THROUGH M41.09.
+
+PRESERVE THE WEBSITE IMAGE REPAIRS.
+
+DO NOT REBUILD THE APPLICATION.
+
+DO NOT ACTIVATE PRODUCTION INFRASTRUCTURE.
+
+DO NOT FABRICATE COMMUNITY TEST PARTICIPANTS.
+
+DO NOT INVENT HUMAN TRANSLATION APPROVALS.
+
+DO NOT CLAIM HUMAN USER ACCEPTANCE TESTING HAS OCCURRED UNLESS ACTUAL AUTHORIZED PARTICIPANTS HAVE COMPLETED DOCUMENTED TEST SESSIONS.
+
+IMPLEMENT THE NECESSARY TESTING TOOLS, TRANSLATION IMPROVEMENTS, USER FEEDBACK MECHANISMS, AUTOMATED VERIFICATION AND EVIDENCE REPORTS.
+
+---
+
+# 2. PRIMARY MILESTONE OBJECTIVE
+
+Ensure that Phumulani's community-facing workflows are understandable, navigable, accessible and operational in all seven supported languages.
+
+The platform must support users who may have:
+
+- Limited English proficiency.
+- Limited digital literacy.
+- Different cultural expectations.
+- Limited access to desktop computers.
+- Mobile-only internet access.
+- Accessibility needs.
+- Privacy and safeguarding concerns.
+
+The goal is not merely to display translated text.
+
+The goal is to enable community members to complete real operational tasks safely and confidently.
+
+---
+
+# 3. SEVEN CANONICAL LANGUAGES
+
+Preserve exactly the existing seven supported language codes:
+
+| Code | Language |
+|------|----------|
+| en | English |
+| so | Somali |
+| es | Spanish |
+| hmn | Hmong |
+| kar | Karen |
+| orm | Oromo |
+| am | Amharic |
+
+Do not change canonical language codes without reviewing existing persistence records, translation dictionaries, browser tests and API contracts.
+
+Do not introduce duplicate language identifiers.
+
+### Required verification
+
+For every language:
+
+1. Verify dictionary availability.
+2. Verify language selector functionality.
+3. Verify translated navigation.
+4. Verify translated forms.
+5. Verify validation messages.
+6. Verify notifications.
+7. Verify error messages.
+8. Verify status labels.
+9. Verify confirmation messages.
+10. Verify mobile layout.
+11. Verify text rendering.
+12. Verify accessibility.
+13. Verify language preference persistence.
+14. Verify fallback behavior.
+15. Verify safeguarding messages.
+
+### Important
+
+Dictionary completeness does not establish translation accuracy.
+
+Human linguistic review must be tracked separately.
+
+---
+
+# 4. M41.10.01 — REPOSITORY BASELINE RECONCILIATION
+
+Inspect the actual implementation.
+
+Review:
+
+- Existing multilingualAccessibilityService.
+- Translation dictionaries.
+- Language selection components.
+- Public website.
+- Community member portal.
+- Volunteer portal.
+- Donor portal.
+- Staff and caseworker interfaces.
+- Executive and board interfaces.
+- Notification center.
+- Operational event service.
+- Authentication and profile services.
+- Program enrollment services.
+- Volunteer operations.
+- Fundraising services.
+- Existing automated regression tests.
+- Existing Playwright tests.
+- GitHub Actions configuration.
+
+### Required checks
+
+Confirm:
+
+- Existing translation key count.
+- Missing keys.
+- Duplicate keys.
+- Empty values.
+- Placeholder mismatches.
+- Unsupported language fallbacks.
+- Untranslated interface text.
+- Existing browser coverage.
+- Existing accessibility issues.
+
+### Baseline
+
+Previously reported:
+
+668 passing automated regression tests.
+
+Verify the actual current count before extending the suite.
+
+Do not silently replace or remove existing tests.
+
+### Required report
+
+phase41_m4110_repository_reconciliation_report.md
+
+---
+
+# 5. M41.10.02 — CANONICAL TRANSLATION INVENTORY
+
+Create a complete inventory of user-facing text.
+
+Include:
+
+- Website navigation.
+- Homepage sections.
+- Program descriptions.
+- Registration forms.
+- Login forms.
+- Profile management.
+- Service request forms.
+- Case status labels.
+- Program applications.
+- Waitlist messages.
+- Volunteer applications.
+- Volunteer clearance instructions.
+- Shift scheduling.
+- Volunteer-hour submissions.
+- Donor forms.
+- Pledge confirmation.
+- Notification center.
+- Notification preferences.
+- Error messages.
+- Success messages.
+- Empty states.
+- Accessibility labels.
+- Privacy notices.
+- Safe Exit controls.
+- Emergency resource information.
+
+### Required implementation
+
+Create or extend automated dictionary auditing.
+
+Identify hardcoded English text that should be localized.
+
+Do not automatically translate legal, safeguarding or emergency content without review.
+
+### Acceptance
+
+Every required translation key must exist in all seven dictionaries.
+
+Missing keys must be reported.
+
+---
+
+# 6. M41.10.03 — TRANSLATION KEY PARITY ENGINE
+
+Implement automated verification for:
+
+- Missing keys.
+- Duplicate keys.
+- Empty translations.
+- Invalid interpolation tokens.
+- Inconsistent placeholders.
+- Unexpected HTML.
+- Unsupported formatting.
+- Invalid Unicode sequences.
+- Accidental fallback text.
+- Incorrect language mappings.
+
+### Example
+
+If the English dictionary contains:
+
+serviceRequest.status.assigned
+
+Then all six additional dictionaries must contain the same key.
+
+### Placeholder consistency
+
+If the source contains:
+
+"Hello, {name}"
+
+Every translation must preserve the {name} parameter.
+
+### Security
+
+Do not allow translation interpolation to inject executable HTML.
+
+Render user-provided parameters as escaped text.
+
+---
+
+# 7. M41.10.04 — PUBLIC WEBSITE LANGUAGE VALIDATION
+
+Verify all seven languages on the public website.
+
+### Required sections
+
+- Header.
+- Navigation.
+- Homepage.
+- Mission.
+- About.
+- Programs.
+- Volunteer.
+- Donate.
+- Contact.
+- Footer.
+- Emergency Safe Exit.
+
+### Required behavior
+
+Selecting a language must update all supported interface elements.
+
+The selected language must persist according to the existing user preference model.
+
+Navigation must remain functional.
+
+Images must remain correctly loaded.
+
+The website must not display broken image icons.
+
+### Important
+
+Preserve the previously completed SafeImage and asset-path repairs.
+
+---
+
+# 8. M41.10.05 — MEMBER REGISTRATION UAT
+
+Create automated and human-reviewable acceptance scenarios for member registration.
+
+### Required journey
+
+1. Select preferred language.
+2. Open registration.
+3. Review instructions.
+4. Enter registration details.
+5. Submit the form.
+6. Receive validation feedback.
+7. Complete registration.
+8. Access the member portal.
+9. Verify preferred language persistence.
+10. Review confirmation messages.
+
+### Verify
+
+- Required fields are understandable.
+- Password instructions are clear.
+- Validation messages are localized.
+- Error messages identify corrective actions.
+- Successful registration is understandable.
+- No untranslated critical controls remain.
+
+### Security
+
+Preserve password hashing, session security and Anti-IDOR protections.
+
+---
+
+# 9. M41.10.06 — SERVICE REQUEST AND CASEWORK UAT
+
+Verify the service request journey in every language.
+
+### Required workflow
+
+Member authentication.
+
+Service request creation.
+
+Submission confirmation.
+
+Tracking reference display.
+
+Case status updates.
+
+Caseworker assignment notification.
+
+Request resolution.
+
+### Required localization
+
+- Service categories.
+- Field labels.
+- Required-field messages.
+- Tracking instructions.
+- Status labels.
+- Notifications.
+- Resolution messages.
+
+### Safeguarding
+
+Restricted crisis intake must remain confidential.
+
+Do not expose survivor narratives through translation debugging, screenshots, logs or test reports.
+
+---
+
+# 10. M41.10.07 — PROGRAM ENROLLMENT UAT
+
+Verify:
+
+- Program discovery.
+- Program descriptions.
+- Eligibility explanations.
+- Application submission.
+- Enrollment confirmation.
+- Waitlist placement.
+- Waitlist position changes.
+- Waitlist promotion.
+- Withdrawal.
+
+### Required tests
+
+Confirm that translated messages accurately distinguish:
+
+ENROLLED.
+
+WAITLISTED.
+
+PENDING_REVIEW.
+
+WITHDRAWN.
+
+REJECTED.
+
+Do not allow translation errors to misrepresent eligibility or available capacity.
+
+### Preserve
+
+The authoritative capacity engine.
+
+FIFO waitlist coordination.
+
+Concurrent enrollment protection.
+
+---
+
+# 11. M41.10.08 — VOLUNTEER PORTAL UAT
+
+Verify the volunteer journey in all seven languages.
+
+### Required workflows
+
+- Volunteer application.
+- Onboarding.
+- Training instructions.
+- Clearance status.
+- Shift discovery.
+- Shift assignment.
+- Attendance check-in.
+- Attendance check-out.
+- Service-hour submission.
+- Supervisor approval.
+- Verified-hour history.
+
+### Critical terminology
+
+Translations must clearly distinguish:
+
+SUBMITTED HOURS.
+
+PENDING HOURS.
+
+APPROVED HOURS.
+
+REJECTED HOURS.
+
+### Financial and operational integrity
+
+Do not classify unapproved hours as verified.
+
+Do not allow language changes to bypass clearance controls.
+
+---
+
+# 12. M41.10.09 — DONOR PORTAL UAT
+
+Verify:
+
+- Donor profile.
+- Communication consent.
+- Campaign discovery.
+- Pledge creation.
+- Pledge history.
+- Giving history.
+- Donation intentions.
+- Financial confirmation messages.
+
+### Critical financial terminology
+
+Translations must distinguish:
+
+PLEDGED.
+
+INTERNALLY RECORDED.
+
+EXTERNALLY VERIFIED.
+
+PENDING GRANT.
+
+### Mandatory restriction
+
+Do not display a pledge as completed payment.
+
+Do not display internally recorded funds as bank-verified cash.
+
+Do not imply that live payment processing is operational.
+
+PAYMENT_GATEWAY=NOT_CONNECTED.
+
+---
+
+# 13. M41.10.10 — NOTIFICATION CENTER UAT
+
+Integrate with M41.09.
+
+Verify:
+
+- Notification bell.
+- Unread badge.
+- Notification modal.
+- Category filters.
+- Read/unread status.
+- Notification preferences.
+- Related record links.
+- Empty states.
+- Error states.
+- Language switching.
+
+### Required categories
+
+ALL.
+
+CASEWORK.
+
+PROGRAMS.
+
+VOLUNTEER.
+
+DONATIONS.
+
+SYSTEM.
+
+### Security
+
+Translation must not expose confidential event payloads.
+
+Preserve recipient ownership checks.
+
+---
+
+# 14. M41.10.11 — CROSS-PORTAL LANGUAGE PERSISTENCE
+
+Verify that language preference is consistently applied across authorized portals.
+
+### Required scenario
+
+1. Member selects Somali.
+2. Member completes an authorized workflow.
+3. Member receives an in-app notification.
+4. Notification renders in Somali.
+5. Member logs out.
+6. Member logs in again.
+7. Language preference remains consistent.
+8. Member switches to Spanish.
+9. Interface updates.
+10. New notifications use Spanish.
+
+### Required implementation
+
+Use the existing canonical preference record.
+
+Avoid maintaining conflicting language preferences in unrelated services.
+
+### Authorization
+
+One user's language preference must not modify another user's profile.
+
+---
+
+# 15. M41.10.12 — CULTURAL AND LINGUISTIC QUALITY REVIEW
+
+Create a structured review framework for each language.
+
+### Review categories
+
+- Meaning accuracy.
+- Natural phrasing.
+- Cultural appropriateness.
+- Terminology consistency.
+- Reading clarity.
+- Form instructions.
+- Error message clarity.
+- Safeguarding terminology.
+- Emergency instructions.
+- Financial terminology.
+- Accessibility language.
+
+### Review statuses
+
+NOT_REVIEWED.
+
+REVIEW_PENDING.
+
+REVIEWED_WITH_ISSUES.
+
+APPROVED_BY_HUMAN_REVIEWER.
+
+REJECTED.
+
+### Important
+
+AI-generated translation suggestions must remain marked as machine-assisted until reviewed by an appropriately qualified human.
+
+Do not fabricate reviewer names.
+
+Do not automatically mark translations approved.
+
+---
+
+# 16. M41.10.13 — COMMUNITY UAT PARTICIPANT FRAMEWORK
+
+Implement a consent-based testing process.
+
+### Participant roles
+
+- Community member.
+- Volunteer.
+- Donor.
+- Caseworker.
+- Program coordinator.
+- Multilingual reviewer.
+- Accessibility reviewer.
+
+### Requirements
+
+Provide a mechanism for recording:
+
+- Participant role.
+- Language tested.
+- Test scenario.
+- Consent confirmation.
+- Date.
+- Device type.
+- Task outcome.
+- Difficulty rating.
+- Feedback.
+- Observed defects.
+- Reviewer recommendations.
+
+### Privacy
+
+Use participant codes rather than unnecessary personal identifiers.
+
+Do not record sensitive survivor histories.
+
+Do not require real community members to submit actual confidential case information during testing.
+
+### Mandatory distinction
+
+AUTOMATED_TESTING_COMPLETE does not mean HUMAN_UAT_COMPLETE.
+
+---
+
+# 17. M41.10.14 — UAT SESSION MANAGEMENT
+
+Implement a lightweight UAT session registry using existing durable storage.
+
+Suggested fields:
+
+sessionId.
+
+participantCode.
+
+participantRole.
+
+languageCode.
+
+deviceType.
+
+scenarioId.
+
+startedAt.
+
+completedAt.
+
+consentRecorded.
+
+taskOutcome.
+
+difficultyRating.
+
+feedbackReference.
+
+reviewStatus.
+
+### Required protections
+
+- Access restricted to authorized reviewers.
+- No unnecessary PII.
+- No fabricated sessions.
+- Audit history preserved.
+- Export controls.
+- Appropriate retention handling.
+
+Do not collect sensitive personal information unless necessary and authorized.
+
+---
+
+# 18. M41.10.15 — COMMUNITY TASK SUCCESS MEASUREMENT
+
+Implement actual measurement of:
+
+- Task completion.
+- Task abandonment.
+- Validation errors.
+- Navigation errors.
+- Time to completion.
+- Assistance requested.
+- Participant-reported difficulty.
+- Translation defects.
+- Accessibility barriers.
+
+### Important
+
+Report actual observed values.
+
+If no human participants have completed sessions, report:
+
+HUMAN_UAT_PARTICIPANTS=0
+
+HUMAN_UAT_STATUS=NOT_EXECUTED
+
+Do not manufacture success rates.
+
+### Proposed acceptance targets
+
+For critical workflows, aim for at least 90% successful completion among participating reviewers.
+
+This is a proposed threshold, not evidence of performance.
+
+Document sample size and limitations.
+
+---
+
+# 19. M41.10.16 — SEVEN-LANGUAGE MOBILE VERIFICATION
+
+Verify the following viewport widths:
+
+375px.
+
+393px.
+
+768px.
+
+1024px.
+
+1280px.
+
+1440px.
+
+### Required checks
+
+- No unintended horizontal scrolling.
+- No clipped translated text.
+- No overlapping buttons.
+- No truncated emergency controls.
+- No broken language selector.
+- No hidden form labels.
+- No unreadable notifications.
+- No broken image assets.
+- No inaccessible modal dialogs.
+
+### Script rendering
+
+Verify correct Unicode display for:
+
+- Amharic.
+- Karen.
+- Somali.
+- Oromo.
+- Hmong.
+- Spanish.
+- English.
+
+Do not assume script rendering is correct merely because the text exists in a dictionary.
+
+---
+
+# 20. M41.10.17 — ACCESSIBILITY VERIFICATION
+
+Test:
+
+- Keyboard navigation.
+- Focus visibility.
+- Form labels.
+- Error identification.
+- Dialog focus management.
+- Language attributes.
+- Screen-reader announcements.
+- Accessible notification badges.
+- Responsive text.
+- Contrast.
+- Safe Exit accessibility.
+
+### Language attributes
+
+Ensure the document or relevant interface regions expose the correct language metadata.
+
+### Required distinction
+
+Automated accessibility checks are useful but cannot independently establish full WCAG conformance.
+
+Document manual-review requirements.
+
+---
+
+# 21. M41.10.18 — SAFEGUARDING LANGUAGE VALIDATION
+
+THIS IS A CRITICAL REQUIREMENT.
+
+Verify that safeguarding notices remain clear and confidential in all seven languages.
+
+### Required content areas
+
+- Emergency Safe Exit.
+- Crisis referral instructions.
+- Confidentiality notices.
+- Consent explanations.
+- Restricted case status.
+- Protected notifications.
+- Sensitive form warnings.
+
+### Prohibited behavior
+
+Do not expose survivor information through:
+
+- Translation dictionaries.
+- Browser logs.
+- UAT screenshots.
+- Feedback records.
+- Notification previews.
+- Exported test results.
+- Analytics events.
+
+### Human review
+
+Safeguarding translations must receive qualified human review before being described as linguistically approved.
+
+Do not claim legal compliance certification solely from tests.
+
+---
+
+# 22. M41.10.19 — ERROR AND RECOVERY EXPERIENCE
+
+Test all seven languages against:
+
+- Invalid login.
+- Expired session.
+- Missing required field.
+- Duplicate registration.
+- Invalid service request.
+- Program capacity reached.
+- Waitlist placement.
+- Volunteer clearance denied.
+- Shift capacity reached.
+- Invalid pledge amount.
+- Unauthorized access.
+- Temporary server failure.
+- Notification synchronization delay.
+
+### Acceptance
+
+Errors must explain the next appropriate user action without revealing confidential information.
+
+---
+
+# 23. M41.10.20 — TRANSLATION FALLBACK POLICY
+
+Implement a documented fallback policy.
+
+### Required behavior
+
+- Detect missing translations.
+- Log non-sensitive diagnostics.
+- Use a safe fallback language.
+- Preserve application functionality.
+- Avoid displaying raw translation keys to users.
+- Flag missing critical translations for correction.
+
+### Critical restriction
+
+Emergency and safeguarding messages must not silently fall back to an unreviewed translation while being represented as fully localized.
+
+Record the actual fallback behavior.
+
+---
+
+# 24. M41.10.21 — AUTOMATED REGRESSION EXPANSION
+
+Preserve the reported baseline:
+
+668 tests.
+
+Add at least 20 new M41.10 tests.
+
+Suggested identifiers:
+
+TEST-P41-121 through TEST-P41-140.
+
+### Required tests
+
+TEST-P41-121 — Seven-language dictionary availability.
+
+TEST-P41-122 — Translation key parity.
+
+TEST-P41-123 — Placeholder consistency.
+
+TEST-P41-124 — Language selector behavior.
+
+TEST-P41-125 — Language preference persistence.
+
+TEST-P41-126 — Member registration localization.
+
+TEST-P41-127 — Authentication error localization.
+
+TEST-P41-128 — Service request localization.
+
+TEST-P41-129 — Case status localization.
+
+TEST-P41-130 — Program enrollment localization.
+
+TEST-P41-131 — Waitlist notification localization.
+
+TEST-P41-132 — Volunteer onboarding localization.
+
+TEST-P41-133 — Volunteer-hour terminology.
+
+TEST-P41-134 — Donor pledge terminology.
+
+TEST-P41-135 — Financial classification language integrity.
+
+TEST-P41-136 — Notification center localization.
+
+TEST-P41-137 — Cross-portal language synchronization.
+
+TEST-P41-138 — Safeguarding translation restrictions.
+
+TEST-P41-139 — UAT session persistence and authorization.
+
+TEST-P41-140 — Integrated multilingual operational scenario.
+
+### Target
+
+668 baseline tests.
+
+20 additional tests.
+
+TARGET: 688 PASSING TESTS.
+
+Do not report 688 passing unless all tests actually execute successfully.
+
+---
+
+# 25. M41.10.22 — INTEGRATED 60-STEP MULTILINGUAL SCENARIO
+
+Implement a deterministic 60-step operational scenario.
+
+### English
+
+STEP 01 — Initialize synthetic fixtures.
+
+STEP 02 — Select English.
+
+STEP 03 — Verify public navigation.
+
+STEP 04 — Register a synthetic member.
+
+STEP 05 — Verify localized registration confirmation.
+
+STEP 06 — Submit a service request.
+
+STEP 07 — Verify localized tracking information.
+
+STEP 08 — Verify notification delivery.
+
+### Somali
+
+STEP 09 — Switch to Somali.
+
+STEP 10 — Verify navigation.
+
+STEP 11 — Verify profile labels.
+
+STEP 12 — Verify service request labels.
+
+STEP 13 — Verify validation messages.
+
+STEP 14 — Verify case status.
+
+STEP 15 — Verify notification localization.
+
+STEP 16 — Verify language persistence.
+
+### Spanish
+
+STEP 17 — Switch to Spanish.
+
+STEP 18 — Verify navigation.
+
+STEP 19 — Verify program discovery.
+
+STEP 20 — Submit a program application.
+
+STEP 21 — Verify enrollment or waitlist message.
+
+STEP 22 — Verify notification localization.
+
+STEP 23 — Verify form validation.
+
+STEP 24 — Verify language persistence.
+
+### Hmong
+
+STEP 25 — Switch to Hmong.
+
+STEP 26 — Verify navigation.
+
+STEP 27 — Verify volunteer onboarding.
+
+STEP 28 — Verify training instructions.
+
+STEP 29 — Verify clearance terminology.
+
+STEP 30 — Verify shift information.
+
+STEP 31 — Verify service-hour labels.
+
+STEP 32 — Verify notification localization.
+
+### Karen
+
+STEP 33 — Switch to Karen.
+
+STEP 34 — Verify navigation.
+
+STEP 35 — Verify program information.
+
+STEP 36 — Verify application labels.
+
+STEP 37 — Verify waitlist terminology.
+
+STEP 38 — Verify notification messages.
+
+STEP 39 — Verify Unicode rendering.
+
+STEP 40 — Verify language persistence.
+
+### Oromo
+
+STEP 41 — Switch to Oromo.
+
+STEP 42 — Verify navigation.
+
+STEP 43 — Verify donor portal labels.
+
+STEP 44 — Verify pledge terminology.
+
+STEP 45 — Verify financial classifications.
+
+STEP 46 — Verify donor notification.
+
+STEP 47 — Verify validation messages.
+
+STEP 48 — Verify language persistence.
+
+### Amharic
+
+STEP 49 — Switch to Amharic.
+
+STEP 50 — Verify navigation.
+
+STEP 51 — Verify service request labels.
+
+STEP 52 — Verify notification center.
+
+STEP 53 — Verify safeguarding notices.
+
+STEP 54 — Verify Unicode rendering.
+
+STEP 55 — Verify mobile layout.
+
+STEP 56 — Verify language persistence.
+
+### Final Integrity Checks
+
+STEP 57 — Verify cross-user ownership isolation.
+
+STEP 58 — Verify all seven translation dictionaries.
+
+STEP 59 — Restart the development runtime and verify preferences persist.
+
+STEP 60 — Verify audit history, operational state and safeguarding integrity.
+
+### Acceptance
+
+All 60 steps must execute.
+
+All assertions must pass.
+
+Do not silently skip steps.
+
+Use synthetic data.
+
+---
+
+# 26. M41.10.23 — PLAYWRIGHT BROWSER VERIFICATION
+
+Implement or extend Playwright coverage.
+
+### Required browser projects
+
+Chromium.
+
+Firefox.
+
+WebKit.
+
+Mobile Chrome.
+
+### Required scenarios
+
+- Seven-language selector.
+- Public website navigation.
+- Member registration.
+- Member profile.
+- Service request.
+- Program enrollment.
+- Volunteer portal.
+- Donor portal.
+- Notification center.
+- Mobile navigation.
+- Unicode rendering.
+- Accessibility checks.
+- Language persistence.
+- Error handling.
+- Safeguarding restrictions.
+
+### Evidence requirements
+
+For each browser project, report:
+
+Tests discovered.
+
+Tests executed.
+
+Tests passed.
+
+Tests failed.
+
+Tests skipped.
+
+Duration.
+
+### Critical requirement
+
+Do not report a configured browser project as passing unless its tests actually execute.
+
+---
+
+# 27. M41.10.24 — GITHUB ACTIONS VERIFICATION
+
+Inspect:
+
+.github/workflows/playwright.yml
+
+Preserve:
+
+- Node.js 22.
+- npm ci.
+- package-lock.json.
+- TypeScript verification.
+- Vite build.
+- Full regression suite.
+- Browser matrix.
+- Playwright artifacts.
+
+### Required commands
+
+npm ci --no-audit --no-fund
+
+npx tsc --noEmit
+
+npm run build
+
+npx tsx scripts/verify_suite.ts
+
+### Required evidence
+
+Commit SHA.
+
+GitHub Actions run ID.
+
+Job conclusions.
+
+Actual test counts.
+
+Browser matrix results.
+
+Final workflow conclusion.
+
+### Important
+
+Do not claim CI success without actual workflow evidence.
+
+---
+
+# 28. M41.10.25 — COMMUNITY REVIEWER FEEDBACK WORKFLOW
+
+Implement a structured feedback and defect resolution process.
+
+### Required defect fields
+
+defectId.
+
+languageCode.
+
+scenarioId.
+
+severity.
+
+description.
+
+expectedBehavior.
+
+actualBehavior.
+
+reportedBy.
+
+reportedAt.
+
+resolutionStatus.
+
+resolutionEvidence.
+
+### Severity categories
+
+CRITICAL.
+
+HIGH.
+
+MEDIUM.
+
+LOW.
+
+### Required behavior
+
+Critical safeguarding translation defects must block acceptance.
+
+High-severity errors affecting service access must be resolved before human UAT approval.
+
+Minor cosmetic defects may remain documented with explicit acceptance limitations.
+
+---
+
+# 29. M41.10.26 — HUMAN UAT ACCEPTANCE REGISTER
+
+Create an evidence-based acceptance register.
+
+### Required language-level status
+
+ENGLISH_UAT.
+
+SOMALI_UAT.
+
+SPANISH_UAT.
+
+HMONG_UAT.
+
+KAREN_UAT.
+
+OROMO_UAT.
+
+AMHARIC_UAT.
+
+### Allowed values
+
+NOT_STARTED.
+
+IN_PROGRESS.
+
+COMPLETED_WITH_ISSUES.
+
+HUMAN_APPROVED.
+
+BLOCKED.
+
+### Mandatory rule
+
+Do not set HUMAN_APPROVED without documented approval from an actual authorized reviewer.
+
+If reviewers are unavailable, report:
+
+HUMAN_UAT_STATUS=PENDING_AUTHORIZED_PARTICIPANTS.
+
+This must remain an explicit limitation.
+
+---
+
+# 30. M41.10.27 — PERSISTENCE AND RESTART RECOVERY
+
+Verify that the following survive restart:
+
+- Language preferences.
+- UAT session records.
+- UAT feedback.
+- Translation review status.
+- Defect records.
+- Notification preferences.
+- Member profiles.
+- Service requests.
+- Program enrollments.
+- Volunteer records.
+- Donor records.
+- Event coordination records.
+- Audit history.
+
+### Previous reported baseline
+
+32 tables.
+
+13,061 records.
+
+Reconcile actual schema counts.
+
+Do not manufacture historical record totals.
+
+---
+
+# 31. M41.10.28 — SECURITY NEGATIVE TESTING
+
+Test:
+
+1. Member A cannot access Member B's UAT feedback.
+2. Unauthorized users cannot edit translation approvals.
+3. A reviewer cannot impersonate another reviewer.
+4. A participant cannot modify official acceptance records.
+5. Invalid language codes are rejected or safely handled.
+6. Translation interpolation cannot execute scripts.
+7. Confidential case data cannot enter feedback exports.
+8. Restricted notification payloads remain redacted.
+9. Expired sessions cannot submit privileged reviews.
+10. Revoked sessions cannot approve translations.
+11. AI agents cannot approve human UAT.
+12. Unauthorized staff cannot access protected reviewer records.
+13. UAT exports exclude unnecessary PII.
+14. Event synchronization cannot leak protected records.
+15. Language changes cannot bypass role authorization.
+
+All unauthorized operations must fail closed.
+
+---
+
+# 32. M41.10.29 — AI GOVERNANCE PRESERVATION
+
+Preserve exactly 36 canonical AI agents.
+
+18 organizational agents.
+
+18 fundraising agents.
+
+Preserve all five fundraising pipelines.
+
+### AI restrictions
+
+AI may assist with:
+
+- Draft translation suggestions.
+- Dictionary audits.
+- Terminology consistency checks.
+- Automated test generation.
+- Defect classification.
+
+AI must not:
+
+- Fabricate human reviewer feedback.
+- Certify linguistic accuracy.
+- Approve safeguarding translations.
+- Mark human UAT complete.
+- Override financial classifications.
+- Bypass authorization.
+- Activate live AI inference without authorization.
+
+Maintain:
+
+AI_MODELS=FALLBACK_MOCK.
+
+---
+
+# 33. M41.10.30 — INFRASTRUCTURE RESTRICTIONS
+
+Maintain:
+
+POSTGRESQL=NOT_CONNECTED
+
+BACKEND_HOSTING=NOT_CONFIGURED
+
+GOOGLE_WORKSPACE=AUTHORIZATION_REQUIRED
+
+PAYMENT_GATEWAY=NOT_CONNECTED
+
+AI_MODELS=FALLBACK_MOCK
+
+Do not activate:
+
+Production PostgreSQL.
+
+Production backend hosting.
+
+Google Workspace OAuth.
+
+Live Gmail delivery.
+
+Live payment processing.
+
+Live Gemini inference.
+
+Production analytics collection involving sensitive participant information.
+
+---
+
+# 34. REQUIRED DEVELOPMENT REPORTS
+
+Generate 15 reports.
+
+1. phase41_m4110_repository_reconciliation_report.md
+2. phase41_m4110_translation_inventory_report.md
+3. phase41_m4110_dictionary_parity_report.md
+4. phase41_m4110_public_website_localization_report.md
+5. phase41_m4110_member_casework_uat_report.md
+6. phase41_m4110_program_enrollment_uat_report.md
+7. phase41_m4110_volunteer_uat_report.md
+8. phase41_m4110_donor_notification_uat_report.md
+9. phase41_m4110_cultural_linguistic_review_report.md
+10. phase41_m4110_community_participant_framework_report.md
+11. phase41_m4110_accessibility_mobile_report.md
+12. phase41_m4110_safeguarding_authorization_report.md
+13. phase41_m4110_regression_persistence_report.md
+14. phase41_m4110_playwright_github_actions_report.md
+15. phase41_m4110_master_completion_report.md
+
+### Report requirements
+
+Every report must include:
+
+- Scope.
+- Source files inspected.
+- Implementation changes.
+- Translation issues discovered.
+- Defects corrected.
+- Tests executed.
+- Actual results.
+- Reviewer evidence where applicable.
+- Outstanding limitations.
+- Acceptance determination.
+
+Do not fabricate human UAT results.
+
+---
+
+# 35. ACCEPTANCE GATES
+
+GATE A — Repository baseline reconciled.
+
+GATE B — Seven-language dictionaries verified.
+
+GATE C — Translation key parity verified.
+
+GATE D — Public website localization verified.
+
+GATE E — Member registration localization verified.
+
+GATE F — Service request localization verified.
+
+GATE G — Program enrollment localization verified.
+
+GATE H — Volunteer localization verified.
+
+GATE I — Donor localization verified.
+
+GATE J — Notification localization verified.
+
+GATE K — Language preference persistence verified.
+
+GATE L — Mobile responsiveness verified.
+
+GATE M — Automated accessibility checks passed.
+
+GATE N — Safeguarding language controls verified.
+
+GATE O — Human UAT framework implemented.
+
+GATE P — Human reviewer results truthfully classified.
+
+GATE Q — Regression suite passed.
+
+GATE R — Real browser tests passed.
+
+GATE S — GitHub Actions verification completed.
+
+GATE T — Durable persistence verified.
+
+GATE U — AI governance preserved.
+
+GATE V — Production infrastructure remains deferred.
+
+GATE W — All 15 reports generated.
+
+### Acceptance classification
+
+Use one of:
+
+COMPLETE.
+
+COMPLETE_WITH_LIMITATIONS.
+
+BLOCKED.
+
+### Human UAT distinction
+
+If all technical tests pass but human participants have not completed actual UAT:
+
+TECHNICAL_LOCALIZATION_VERIFICATION=COMPLETE.
+
+HUMAN_COMMUNITY_UAT=PENDING.
+
+M41.10=COMPLETE_WITH_LIMITATIONS.
+
+Do not declare full human UAT acceptance.
+
+---
+
+# 36. REQUIRED EXECUTION ORDER
+
+ACTION 01 — Inspect the repository.
+
+ACTION 02 — Reconcile the 668-test baseline.
+
+ACTION 03 — Inspect all seven dictionaries.
+
+ACTION 04 — Inventory user-facing text.
+
+ACTION 05 — Implement translation parity auditing.
+
+ACTION 06 — Correct missing translation keys.
+
+ACTION 07 — Correct placeholder inconsistencies.
+
+ACTION 08 — Verify public website localization.
+
+ACTION 09 — Verify member registration.
+
+ACTION 10 — Verify authentication messages.
+
+ACTION 11 — Verify service requests.
+
+ACTION 12 — Verify case status messages.
+
+ACTION 13 — Verify program enrollment.
+
+ACTION 14 — Verify waitlist messages.
+
+ACTION 15 — Verify volunteer onboarding.
+
+ACTION 16 — Verify volunteer shifts.
+
+ACTION 17 — Verify volunteer hours.
+
+ACTION 18 — Verify donor pledge language.
+
+ACTION 19 — Verify financial terminology.
+
+ACTION 20 — Verify notification localization.
+
+ACTION 21 — Verify cross-portal language persistence.
+
+ACTION 22 — Implement UAT session records.
+
+ACTION 23 — Implement participant consent tracking.
+
+ACTION 24 — Implement structured feedback.
+
+ACTION 25 — Implement translation review statuses.
+
+ACTION 26 — Implement UAT defect tracking.
+
+ACTION 27 — Verify safeguarding language restrictions.
+
+ACTION 28 — Verify Unicode rendering.
+
+ACTION 29 — Verify mobile layouts.
+
+ACTION 30 — Verify accessibility.
+
+ACTION 31 — Implement 20 regression tests.
+
+ACTION 32 — Implement the 60-step scenario.
+
+ACTION 33 — Run TypeScript verification.
+
+ACTION 34 — Run the application build.
+
+ACTION 35 — Run the complete regression suite.
+
+ACTION 36 — Run Chromium tests.
+
+ACTION 37 — Run Firefox tests.
+
+ACTION 38 — Run WebKit tests.
+
+ACTION 39 — Run Mobile Chrome tests.
+
+ACTION 40 — Verify restart recovery.
+
+ACTION 41 — Verify GitHub Actions.
+
+ACTION 42 — Repair actual defects.
+
+ACTION 43 — Generate all 15 reports.
+
+ACTION 44 — Classify human UAT status.
+
+ACTION 45 — Determine milestone acceptance.
+
+ACTION 46 — Report readiness for M41.11.
+
+---
+
+# 37. REQUIRED FINAL COMPLETION SUMMARY
+
+At completion, provide:
+
+## A. MILESTONE STATUS
+
+M41.10 status.
+
+Acceptance limitations.
+
+## B. LOCALIZATION
+
+Number of languages verified.
+
+Number of translation keys.
+
+Missing translations.
+
+Corrected translations.
+
+Placeholder mismatches.
+
+## C. OPERATIONAL WORKFLOWS
+
+Public website.
+
+Member registration.
+
+Casework.
+
+Programs.
+
+Volunteers.
+
+Donors.
+
+Notifications.
+
+## D. HUMAN UAT
+
+Actual participants.
+
+Actual completed sessions.
+
+Languages reviewed.
+
+Approved translations.
+
+Outstanding review requirements.
+
+## E. TESTING
+
+Regression tests discovered.
+
+Regression tests executed.
+
+Regression tests passed.
+
+Regression tests failed.
+
+Regression tests skipped.
+
+## F. BROWSER TESTING
+
+Chromium results.
+
+Firefox results.
+
+WebKit results.
+
+Mobile Chrome results.
+
+## G. PERSISTENCE
+
+Recovered tables.
+
+Recovered records.
+
+Language preference recovery.
+
+UAT feedback recovery.
+
+## H. SECURITY
+
+Anti-IDOR results.
+
+Safeguarding results.
+
+Translation injection protection.
+
+Human approval restrictions.
+
+## I. CI
+
+Commit SHA.
+
+Workflow run ID.
+
+Job conclusions.
+
+## J. INFRASTRUCTURE
+
+POSTGRESQL=NOT_CONNECTED.
+
+BACKEND_HOSTING=NOT_CONFIGURED.
+
+GOOGLE_WORKSPACE=AUTHORIZATION_REQUIRED.
+
+PAYMENT_GATEWAY=NOT_CONNECTED.
+
+AI_MODELS=FALLBACK_MOCK.
+
+## K. DOCUMENTATION
+
+List all 15 reports.
+
+## L. NEXT MILESTONE
+
+M41.11 — Accessibility and Mobile User Acceptance Testing.
+
+---
+
+# 38. FINAL MASTER EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+BEGIN M41.10 IMPLEMENTATION.
+
+PRESERVE ALL EXISTING PLATFORM FUNCTIONALITY.
+
+PRESERVE ALL 36 AI AGENTS.
+
+PRESERVE ALL FIVE FUNDRAISING PIPELINES.
+
+PRESERVE THE 668-TEST REGRESSION BASELINE.
+
+PRESERVE ALL SEVEN LANGUAGES.
+
+PRESERVE THE WEBSITE IMAGE REPAIRS.
+
+PRESERVE THE M41.09 EVENT AND NOTIFICATION ARCHITECTURE.
+
+AUDIT ALL TRANSLATION DICTIONARIES.
+
+IMPLEMENT AUTOMATED KEY PARITY CHECKS.
+
+VERIFY PUBLIC WEBSITE LOCALIZATION.
+
+VERIFY MEMBER REGISTRATION LOCALIZATION.
+
+VERIFY SERVICE REQUEST LOCALIZATION.
+
+VERIFY PROGRAM ENROLLMENT LOCALIZATION.
+
+VERIFY VOLUNTEER WORKFLOWS.
+
+VERIFY DONOR WORKFLOWS.
+
+VERIFY NOTIFICATION LOCALIZATION.
+
+VERIFY CROSS-PORTAL LANGUAGE PERSISTENCE.
+
+IMPLEMENT CONSENT-BASED HUMAN UAT INFRASTRUCTURE.
+
+IMPLEMENT REVIEWER FEEDBACK AND DEFECT TRACKING.
+
+DO NOT FABRICATE HUMAN PARTICIPANTS.
+
+DO NOT CLAIM HUMAN TRANSLATION APPROVAL WITHOUT EVIDENCE.
+
+VERIFY SAFEGUARDING.
+
+VERIFY ACCESSIBILITY.
+
+VERIFY MOBILE RESPONSIVENESS.
+
+ADD AT LEAST 20 REGRESSION TESTS.
+
+TARGET 688 PASSING TESTS.
+
+EXECUTE THE 60-STEP MULTILINGUAL SCENARIO.
+
+RUN TYPESCRIPT VERIFICATION.
+
+RUN THE APPLICATION BUILD.
+
+RUN REAL PLAYWRIGHT TESTS.
+
+VERIFY GITHUB ACTIONS.
+
+VERIFY DURABLE PERSISTENCE.
+
+GENERATE ALL 15 REQUIRED REPORTS.
+
+MAINTAIN DEVELOPMENT_ACCEPTED_WITH_LIMITATIONS.
+
+DO NOT ACTIVATE PRODUCTION INFRASTRUCTURE.
+
+DO NOT DECLARE PHASE 41 COMPLETE.
+
+## FINAL DEVELOPMENT TARGET
+
+DELIVER A SEVEN-LANGUAGE COMMUNITY PLATFORM WHERE USERS CAN:
+
+UNDERSTAND REGISTRATION.
+
+COMPLETE SERVICE REQUESTS.
+
+APPLY FOR PROGRAMS.
+
+TRACK WAITLIST STATUS.
+
+PARTICIPATE IN VOLUNTEER WORKFLOWS.
+
+UNDERSTAND DONOR PLEDGES.
+
+READ NOTIFICATIONS.
+
+NAVIGATE MOBILE INTERFACES.
+
+ACCESS SAFEGUARDING INFORMATION.
+
+MAINTAIN LANGUAGE PREFERENCES.
+
+COMPLETE ESSENTIAL TASKS WITHOUT UNNECESSARY LANGUAGE BARRIERS.
+
+AUTOMATED LOCALIZATION MUST BE VERIFIED.
+
+HUMAN COMMUNITY UAT MUST BE RECORDED TRUTHFULLY.
+
+# END OF PHASE 41 M41.10 MASTER DEVELOPMENT DIRECTIVE

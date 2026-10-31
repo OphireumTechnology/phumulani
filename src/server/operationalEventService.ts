@@ -2151,7 +2151,7 @@ export class OperationalEventService {
       });
 
       // STEP 40: Create a synthetic grant review task
-      let grantTaskId = 'GRANT-REV-SCEN-01';
+      let grantTaskId = `GRANT-REV-SCEN-${Date.now()}`;
       await runStep(40, 'Create synthetic grant review task', async () => {
         await this.dbAdapter.insert('grant_review_tasks', {
           id: grantTaskId,
@@ -2175,14 +2175,14 @@ export class OperationalEventService {
           },
           staffCoordinator
         );
-        const execNotifs = await this.getNotificationsForUser(executiveSession);
+        const execNotifs = await this.getNotificationsForUser(executiveSession, { limit: 200 });
         const gNotif = execNotifs.notifications.find((n) => n.eventId === pub.event!.eventId);
         if (!gNotif) throw new Error('Executive grant review notification missing');
         return `Fundraising notification verified: ${gNotif.titleKey}`;
       });
 
       // STEP 42: Generate a reporting snapshot
-      let snapId = 'SNAP-SCEN-4109';
+      let snapId = `SNAP-SCEN-4109-${Date.now()}`;
       await runStep(42, 'Generate reporting snapshot', async () => {
         await this.dbAdapter.insert('operational_reporting_snapshots', {
           id: snapId,
