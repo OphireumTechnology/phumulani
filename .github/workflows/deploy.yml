@@ -1,15 +1,12 @@
-
 name: Deploy Phumulani Website
 
 on:
-  pull_request:
+  workflow_run:
+    workflows: ["Phumulani Comprehensive CI & Browser Verification Pipeline"]
     branches:
       - main
-      - feature/**
-  push:
-    branches:
-      - main
-      - feature/phumulani-phase6-enterprise-integration
+    types:
+      - completed
   workflow_dispatch:
 
 permissions:
@@ -24,18 +21,22 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       - name: Validate TypeScript
         run: npm run lint
@@ -58,17 +59,14 @@ jobs:
           fi
 
       - name: Configure GitHub Pages
-        if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
 
       - name: Upload compiled website
-        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
 
   deploy:
-    if: github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
     environment:

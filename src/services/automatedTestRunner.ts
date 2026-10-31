@@ -14756,13 +14756,30 @@ export class AutomatedTestRunner {
       'Authorized Staff Enrollment Review & Approval (M41.05.10)',
       'Verifies authorized staff member can review pending application and update status to ENROLLED',
       async () => {
+        const fixtureProgId = `PROG-STAFF-REV-${Date.now()}`;
+        await programEnrollmentService.createProgram({
+          id: fixtureProgId,
+          name: 'Staff Review Test Program',
+          description: 'Dedicated cohort for staff review verification',
+          category: 'LANGUAGE_ACCESS',
+          status: 'ACTIVE',
+          maxCapacity: 10,
+          isOpen: true,
+          scheduleSummary: 'Mon 10:00 AM',
+          locationSummary: 'Lab B',
+          eligibilityCriteria: ['Adult immigrant'],
+          responsibleDepartment: 'DEPT-PROG',
+          programManagerName: 'Sarah Chen',
+          programManagerEmail: 'sarah.chen@phumulani.org',
+          safeguardingClassification: 'PUBLIC',
+        });
         const member = await memberCaseworkerService.registerMember({
           name: 'Staff Review Member',
           email: `staff.rev.${Date.now()}@example.org`,
           password: 'Password123#Secure',
         });
         const app = await programEnrollmentService.submitEnrollmentApplication(
-          { programId: 'PROG-005', applicantNotes: 'Pending documentation review request' },
+          { programId: fixtureProgId, applicantNotes: 'Pending documentation review request' },
           member.session!
         );
 
