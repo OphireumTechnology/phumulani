@@ -58,9 +58,11 @@ export const Header: React.FC<HeaderProps> = ({
         const session = {
           sessionId: `sess-${currentUser.id}`,
           userId: currentUser.id,
+          userEmail: currentUser.email,
           name: currentUser.name,
           email: currentUser.email,
           role: currentUser.role,
+          departmentId: currentUser.department || '',
           department: currentUser.department,
           token: `tok-${currentUser.id}`,
           createdAt: new Date().toISOString(),
@@ -443,9 +445,11 @@ export const Header: React.FC<HeaderProps> = ({
           const session = {
             sessionId: `sess-${currentUser.id}`,
             userId: currentUser.id,
+            userEmail: currentUser.email,
             name: currentUser.name,
             email: currentUser.email,
             role: currentUser.role,
+            departmentId: currentUser.department || '',
             department: currentUser.department,
             token: `tok-${currentUser.id}`,
             createdAt: new Date().toISOString(),

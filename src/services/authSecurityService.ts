@@ -8,38 +8,50 @@
 import crypto from 'crypto';
 import { PostgresPersistenceAdapter } from './postgresPersistenceAdapter';
 import type { PermissionDomain } from '../types/masterAdmin';
-import type { CanonicalRoleFamily } from '../types';
+import type { CanonicalRoleFamily, UserRole } from '../types';
 
 export type StaffRole =
   | 'master_admin'
   | 'executive_director'
+  | 'EXECUTIVE_DIRECTOR'
   | 'finance_director'
   | 'grants_director'
   | 'programs_director'
   | 'volunteer_coordinator'
   | 'development_director'
   | 'safeguarding_lead'
+  | 'safeguarding_officer'
+  | 'SAFEGUARDING_OFFICER'
   | 'board_member'
   | 'staff'
+  | 'STAFF'
   | 'visitor'
   | 'volunteer'
+  | 'VOLUNTEER'
   | 'constituent'
-  | CanonicalRoleFamily;
+  | 'CASEWORKER'
+  | 'caseworker'
+  | CanonicalRoleFamily
+  | UserRole;
 
 export interface UserSession {
   sessionId: string;
   userId: string;
   userEmail: string;
+  email?: string;
+  name?: string;
   role: StaffRole;
-  departmentId: string;
-  mfaVerified: boolean;
+  departmentId?: string;
+  department?: string;
+  mfaVerified?: boolean;
   createdAt: string;
   expiresAt: string;
-  lastActiveAt: string;
+  lastActiveAt?: string;
   ipAddress?: string;
   userAgent?: string;
-  csrfToken: string;
-  isRevoked: boolean;
+  csrfToken?: string;
+  token?: string;
+  isRevoked?: boolean;
 }
 
 export interface LoginAttemptResult {

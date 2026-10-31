@@ -58,9 +58,11 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
   const userSession = {
     sessionId: `sess-${currentUser.id}`,
     userId: currentUser.id,
+    userEmail: currentUser.email,
     name: currentUser.name,
     email: currentUser.email,
     role: currentUser.role,
+    departmentId: currentUser.department || '',
     department: currentUser.department,
     token: `tok-${currentUser.id}`,
     createdAt: new Date().toISOString(),
