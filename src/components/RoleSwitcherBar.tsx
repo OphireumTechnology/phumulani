@@ -37,11 +37,11 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
         onViewChange('community');
       } else if (selected.role === 'donor' && activeView !== 'donor') {
         onViewChange('donor');
-      } else if (['staff', 'volunteer_coordinator', 'finance_officer', 'safeguarding_officer', 'program_manager'].includes(selected.role) && activeView === 'public') {
+      } else if (['staff', 'volunteer_coordinator', 'finance_officer', 'safeguarding_officer', 'program_manager'].includes(selected.role) && activeView !== 'staff') {
         onViewChange('staff');
-      } else if (['executive_director', 'board_member', 'governance_officer'].includes(selected.role) && activeView === 'public') {
+      } else if (['executive_director', 'board_member', 'governance_officer'].includes(selected.role) && activeView !== 'governance') {
         onViewChange('governance');
-      } else if (selected.role === 'community_advocate' || selected.role === 'community_member') {
+      } else if ((selected.role === 'community_advocate' || selected.role === 'community_member') && activeView !== 'community') {
         onViewChange('community');
       }
     }
@@ -128,8 +128,12 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
         </div>
         <span className="text-slate-600 hidden sm:inline">|</span>
         <div className="flex items-center gap-2">
-          <span className="text-slate-400 text-[11px]">Role Simulation:</span>
+          <label htmlFor="role-simulation-select" className="text-slate-400 text-[11px] cursor-pointer">
+            Role Simulation:
+          </label>
           <select
+            id="role-simulation-select"
+            aria-label="Role Simulation"
             value={currentUser.id}
             onChange={(e) => handleUserSelect(e.target.value)}
             className="bg-slate-800 text-slate-100 border border-slate-700 rounded px-2 py-0.5 text-xs focus:ring-1 focus:ring-amber-400 outline-none font-medium cursor-pointer max-w-[160px] truncate"
