@@ -1395,7 +1395,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
             </p>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs">
+          <div className="flex flex-wrap items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs max-w-full min-w-0">
             {(['all', 'legal', 'housing', 'healing', 'workforce'] as const).map((cat) => (
               <button
                 key={cat}
