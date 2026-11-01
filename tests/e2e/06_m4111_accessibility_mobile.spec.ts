@@ -29,10 +29,9 @@ test.describe('M41.11 — Public accessibility and mobile smoke checks', () => {
     await expect(toggle).toBeFocused();
     await page.keyboard.press('Enter');
 
-    // The button must expose its expanded state or reveal a visible menu.
-    const expanded = await toggle.getAttribute('aria-expanded');
-    const menuVisible = await page.getByRole('navigation').filter({ visible: true }).count();
-    expect(expanded === 'true' || menuVisible > 0).toBeTruthy();
+    // Verify the actual mobile drawer, not an unrelated navigation landmark.
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(page.getByRole('navigation', { name: 'Mobile website and portal navigation' })).toBeVisible();
   });
 
   test('essential homepage content reflows without horizontal overflow', async ({ page }) => {
