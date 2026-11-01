@@ -1052,3 +1052,62 @@ info@phumulani.org | (763) 555-0199`,
     description: 'Standard front-office acknowledgment with program links and emergency safety notice.',
   },
 ];
+
+// ===========================================================================
+// M54.03 & M54.04: 12-STEP SETUP WIZARD & PILOT READINESS TYPES
+// ===========================================================================
+
+export type SetupWizardStepStatus = 'PENDING' | 'IN_PROGRESS' | 'VERIFIED' | 'FAILED' | 'BLOCKED';
+
+export interface SetupWizardStep {
+  stepNumber: number;
+  title: string;
+  requirementDescription: string;
+  status: SetupWizardStepStatus;
+  actionLabel: string;
+  actionEndpoint?: string;
+  diagnosticOutput?: string;
+  truthfulDisclosure?: string;
+  verifiedAt?: string;
+  details?: Record<string, unknown>;
+}
+
+export interface SetupWizardStatus {
+  overallStatus: 'NOT_STARTED' | 'IN_PROGRESS' | 'READY_FOR_PILOT' | 'BLOCKED';
+  totalSteps: number;
+  completedSteps: number;
+  steps: SetupWizardStep[];
+  activePilotConfig?: {
+    mailboxEmail: string;
+    organizationDomain: string;
+    pilotStatus: string;
+    authorizedRecipients: string[];
+    expiresAt: string | null;
+  };
+  disclosures: {
+    liveCredentialsPresent: boolean;
+    cloudProjectConfigured: boolean;
+    googleWorkspacePilotEnabled: boolean;
+    liveEmailSendingEnabled: boolean;
+    operatingMode: string;
+    truthNotice: string;
+  };
+}
+
+export interface PilotReadinessVerification {
+  mailboxEmail: string;
+  ready: boolean;
+  verdict: 'PILOT_READY' | 'PILOT_BLOCKED' | 'PILOT_ACTIVE';
+  checks: {
+    mailboxExists: boolean;
+    domainMatchesOrg: boolean;
+    executiveRoleAuthorized: boolean;
+    oauthIdentityMatched: boolean;
+    scopeApproved: boolean;
+    recipientsAllowlistConfigured: boolean;
+    emergencyShutdownFunctional: boolean;
+  };
+  blockingReasons: string[];
+  recommendations: string[];
+}
+

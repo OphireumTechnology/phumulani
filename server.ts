@@ -4477,6 +4477,28 @@ app.post('/api/admin/database/verify-external', async (req: Request, res: Respon
   }
 });
 
+// 37. Phase 54 12-Step Setup Wizard Status (M54.03)
+app.get('/api/admin/email/wizard/status', (_req: Request, res: Response) => {
+  try {
+    const status = googleWorkspaceAdapter.getSetupWizardStatus();
+    res.json(status);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 38. Phase 54 Pilot Readiness Verification (M54.04)
+app.post('/api/admin/email/pilot/verify-ready', (req: Request, res: Response) => {
+  try {
+    const { mailboxEmail } = req.body || {};
+    const result = googleWorkspaceAdapter.verifyPilotReady(mailboxEmail);
+    res.json(result);
+  } catch (err: any) {
+    res.status(400).json({ ready: false, verdict: 'PILOT_BLOCKED', error: err.message });
+  }
+});
+
+
 
 
 // -----------------------------------------------------------------------------
