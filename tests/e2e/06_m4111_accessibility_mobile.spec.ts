@@ -43,8 +43,22 @@ test.describe('M41.11 — Public accessibility and mobile smoke checks', () => {
       const dimensions = await page.evaluate(() => ({
         documentWidth: document.documentElement.scrollWidth,
         viewportWidth: document.documentElement.clientWidth,
+        overflowingElements: Array.from(document.querySelectorAll('body *'))
+          .filter((element) => {
+            const rect = element.getBoundingClientRect();
+            const style = getComputedStyle(element);
+            return style.display !== 'none' && style.visibility !== 'hidden' &&
+              (rect.right > document.documentElement.clientWidth + 1 || rect.left < -1);
+          })
+          .slice(0, 12)
+          .map((element) => ({
+            tag: element.tagName,
+            className: typeof element.className === 'string' ? element.className.slice(0, 140) : '',
+            right: Math.round(element.getBoundingClientRect().right),
+            left: Math.round(element.getBoundingClientRect().left),
+          })),
       }));
-      expect.soft(dimensions.documentWidth, `overflow at ${width}px`)
+      expect.soft(dimensions.documentWidth, `overflow at ${width}px: ${JSON.stringify(dimensions.overflowingElements)}`)
         .toBeLessThanOrEqual(dimensions.viewportWidth + 1);
     }
   });
