@@ -21,22 +21,22 @@ export const VideoEmbedPlayer: React.FC<VideoEmbedPlayerProps> = ({ media, autoP
   return (
     <div className="bg-slate-900 rounded-2xl overflow-hidden shadow-xl border border-slate-800 text-white flex flex-col">
       {/* 1. Header Attribution & Safeguarding Indicator */}
-      <div className="bg-slate-950 px-4 py-2.5 flex items-center justify-between text-xs border-b border-slate-800">
-        <div className="flex items-center gap-2">
-          <Film className="w-3.5 h-3.5 text-amber-400" />
-          <span className="font-semibold text-slate-200 truncate max-w-xs sm:max-w-md">
+      <div className="bg-slate-950 px-3 sm:px-4 py-2 sm:py-2.5 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 text-xs border-b border-slate-800 min-w-0 max-w-full">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1 max-w-full">
+          <Film className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          <span className="font-semibold text-slate-200 truncate text-[11px] sm:text-xs">
             {media.title}
           </span>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1 sm:gap-2 shrink-0">
           {videoMeta?.hasCaptions && (
-            <span className="inline-flex items-center gap-1 bg-teal-900/80 text-teal-200 border border-teal-700 px-2 py-0.5 rounded text-[10px] font-bold">
-              <Subtitles className="w-3 h-3" />
-              <span>CC / CAPTIONS</span>
+            <span className="inline-flex items-center gap-1 bg-teal-900/80 text-teal-200 border border-teal-700 px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-bold">
+              <Subtitles className="w-2.5 h-2.5 sm:w-3 sm:h-3 shrink-0" />
+              <span>CC<span className="hidden min-[360px]:inline"> / CAPTIONS</span></span>
             </span>
           )}
-          <span className="text-[10px] text-emerald-400 bg-emerald-950/70 border border-emerald-800 px-2 py-0.5 rounded font-mono">
-            VERIFIED PRESERVATION
+          <span className="text-[9px] sm:text-[10px] text-emerald-400 bg-emerald-950/70 border border-emerald-800 px-1.5 py-0.5 rounded font-mono">
+            <span className="hidden min-[360px]:inline">VERIFIED </span>PRESERVATION
           </span>
         </div>
       </div>
@@ -70,10 +70,10 @@ export const VideoEmbedPlayer: React.FC<VideoEmbedPlayerProps> = ({ media, autoP
                   {media.caption}
                 </p>
               </div>
-              <div className="inline-flex items-center gap-2 text-[11px] text-amber-300 bg-black/60 px-3 py-1 rounded-full border border-amber-400/30">
+              <div className="inline-flex flex-wrap justify-center items-center gap-1.5 sm:gap-2 text-[10px] sm:text-[11px] text-amber-300 bg-black/60 px-2.5 sm:px-3 py-1 rounded-full border border-amber-400/30 max-w-full">
                 <span>Duration: {videoMeta?.duration || 'Recorded Video'}</span>
-                <span>·</span>
-                <span>Click to Stream Authentic Video</span>
+                <span className="hidden min-[360px]:inline">·</span>
+                <span className="hidden min-[360px]:inline">Click to Stream Authentic Video</span>
               </div>
             </div>
           </div>

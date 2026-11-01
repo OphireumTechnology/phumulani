@@ -4,7 +4,7 @@
       "/usr/local/bin/node",
       "/app/applet/node_modules/.bin/playwright",
       "test",
-      "--project=Mobile Chrome"
+      "--project=webkit"
     ],
     "configFile": "/app/applet/playwright.config.ts",
     "rootDir": "/app/applet/tests/e2e",
@@ -97,7 +97,7 @@
         "metadata": {
           "actualWorkers": 2
         },
-        "name": "Mobile Chrome",
+        "name": "webkit",
         "testDir": "/app/applet/tests/e2e",
         "snapshotDir": "/app/applet/tests/e2e",
         "testIgnore": [],
@@ -109,30 +109,23 @@
           "screenshot": "only-on-failure",
           "video": "retain-on-failure",
           "bypassCSP": false,
-          "userAgent": "Mozilla/5.0 (Linux; Android 11; Pixel 5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Mobile Safari/537.36",
+          "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/27.2 Safari/605.1.15",
           "viewport": {
-            "width": 393,
-            "height": 727
+            "width": 1280,
+            "height": 720
           },
           "screen": {
-            "width": 393,
-            "height": 851
+            "width": 1792,
+            "height": 1120
           },
-          "deviceScaleFactor": 2.75,
-          "isMobile": true,
-          "hasTouch": true,
-          "defaultBrowserType": "chromium",
-          "launchOptions": {
-            "args": [
-              "--no-sandbox",
-              "--disable-setuid-sandbox",
-              "--disable-dev-shm-usage"
-            ]
-          }
+          "deviceScaleFactor": 2,
+          "isMobile": false,
+          "hasTouch": false,
+          "defaultBrowserType": "webkit"
         },
         "dependencies": [],
         "ignoreSnapshots": false,
-        "__projectId": "Mobile Chrome"
+        "__projectId": "webkit"
       }
     ],
     "quiet": false,
@@ -188,19 +181,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5007,
+                      "duration": 7339,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:11.957Z",
+                      "startTime": "2026-11-01T06:19:38.637Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -208,7 +201,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "32590d30365645563343-565077e6c58c7cc6c8c4",
+              "id": "32590d30365645563343-c802674e9f3cef4c4638",
               "file": "01_public_website.spec.ts",
               "line": 9,
               "column": 3
@@ -222,19 +215,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4911,
+                      "duration": 14103,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:17.232Z",
+                      "startTime": "2026-11-01T06:19:46.263Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -242,7 +235,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "32590d30365645563343-58ef99fd502bf904db8d",
+              "id": "32590d30365645563343-cde200be99d5f21fef74",
               "file": "01_public_website.spec.ts",
               "line": 22,
               "column": 3
@@ -256,19 +249,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4632,
+                      "duration": 8049,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:22.169Z",
+                      "startTime": "2026-11-01T06:20:00.415Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -276,7 +269,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "32590d30365645563343-b3486369dca046c15123",
+              "id": "32590d30365645563343-54cd53d8c6efd66c1f40",
               "file": "01_public_website.spec.ts",
               "line": 46,
               "column": 3
@@ -290,19 +283,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5352,
+                      "duration": 8441,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:26.860Z",
+                      "startTime": "2026-11-01T06:20:08.518Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -310,7 +303,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "32590d30365645563343-d53021d95602eae48a7d",
+              "id": "32590d30365645563343-9ec5ca7b1f85b515ec51",
               "file": "01_public_website.spec.ts",
               "line": 56,
               "column": 3
@@ -324,19 +317,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4679,
+                      "duration": 6649,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:32.238Z",
+                      "startTime": "2026-11-01T06:20:17.018Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -344,7 +337,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "32590d30365645563343-0efbab0367c66faf234a",
+              "id": "32590d30365645563343-a15611d2fddd4501b5ac",
               "file": "01_public_website.spec.ts",
               "line": 76,
               "column": 3
@@ -358,19 +351,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 5515,
+                      "duration": 8548,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:36.940Z",
+                      "startTime": "2026-11-01T06:20:23.720Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -378,7 +371,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "32590d30365645563343-f6a1de28433d4366847c",
+              "id": "32590d30365645563343-5a35fd528e0d39d85a89",
               "file": "01_public_website.spec.ts",
               "line": 89,
               "column": 3
@@ -392,19 +385,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 17136,
+                      "duration": 22387,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:42.484Z",
+                      "startTime": "2026-11-01T06:20:32.293Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -412,7 +405,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "32590d30365645563343-3af95f7f7933d233ba84",
+              "id": "32590d30365645563343-8c61a7c9d98a1367f56d",
               "file": "01_public_website.spec.ts",
               "line": 136,
               "column": 3
@@ -443,19 +436,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 5618,
+                      "duration": 7908,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:11.955Z",
+                      "startTime": "2026-11-01T06:19:38.646Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -463,7 +456,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "1bcdefcd6dd997c70750-d62d9d6a5be810a61651",
+              "id": "1bcdefcd6dd997c70750-5f29ae5a39b335af3d44",
               "file": "02_member_portal.spec.ts",
               "line": 96,
               "column": 3
@@ -477,19 +470,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 5469,
+                      "duration": 8889,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:17.843Z",
+                      "startTime": "2026-11-01T06:19:46.831Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -497,7 +490,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "1bcdefcd6dd997c70750-026593cf64e7616ae849",
+              "id": "1bcdefcd6dd997c70750-5dfb19f470cbd9da0ddd",
               "file": "02_member_portal.spec.ts",
               "line": 106,
               "column": 3
@@ -511,19 +504,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 5727,
+                      "duration": 8258,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:23.345Z",
+                      "startTime": "2026-11-01T06:19:55.768Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -531,7 +524,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "1bcdefcd6dd997c70750-21823e0c67f1f795e0fb",
+              "id": "1bcdefcd6dd997c70750-1fa1fd140328cea50a27",
               "file": "02_member_portal.spec.ts",
               "line": 117,
               "column": 3
@@ -545,19 +538,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 5465,
+                      "duration": 8601,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:29.091Z",
+                      "startTime": "2026-11-01T06:20:04.054Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -565,7 +558,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "1bcdefcd6dd997c70750-a53cdf46cc5f073fd579",
+              "id": "1bcdefcd6dd997c70750-4144d55f60f475b91554",
               "file": "02_member_portal.spec.ts",
               "line": 126,
               "column": 3
@@ -579,19 +572,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 5149,
+                      "duration": 9096,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:34.576Z",
+                      "startTime": "2026-11-01T06:20:12.686Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -599,7 +592,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "1bcdefcd6dd997c70750-6bbcfd04a4ddc73eda7a",
+              "id": "1bcdefcd6dd997c70750-79b0e342b94a363f2d68",
               "file": "02_member_portal.spec.ts",
               "line": 135,
               "column": 3
@@ -613,19 +606,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 4703,
+                      "duration": 6191,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:39.774Z",
+                      "startTime": "2026-11-01T06:20:21.831Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -633,7 +626,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "1bcdefcd6dd997c70750-ecaa4d407f4460ff5fa9",
+              "id": "1bcdefcd6dd997c70750-1ff10f68b6b544ef8054",
               "file": "02_member_portal.spec.ts",
               "line": 147,
               "column": 3
@@ -664,19 +657,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 4249,
+                      "duration": 7893,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:44.523Z",
+                      "startTime": "2026-11-01T06:20:28.064Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -684,7 +677,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "511e49bc7fc4706bd334-b891ed608bd78eac97a8",
+              "id": "511e49bc7fc4706bd334-ffadc862b2f4ee895051",
               "file": "03_staff_admin.spec.ts",
               "line": 97,
               "column": 3
@@ -698,19 +691,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 4773,
+                      "duration": 9030,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:48.790Z",
+                      "startTime": "2026-11-01T06:20:36.022Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -718,7 +711,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "511e49bc7fc4706bd334-7bfbeb687ce38e13d5ff",
+              "id": "511e49bc7fc4706bd334-e14d84e9021b6ed7c0de",
               "file": "03_staff_admin.spec.ts",
               "line": 107,
               "column": 3
@@ -732,19 +725,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 4441,
+                      "duration": 8231,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:53.582Z",
+                      "startTime": "2026-11-01T06:20:45.125Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -752,7 +745,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "511e49bc7fc4706bd334-e4fc7a49481896bea67f",
+              "id": "511e49bc7fc4706bd334-d0976173e53f9478022d",
               "file": "03_staff_admin.spec.ts",
               "line": 117,
               "column": 3
@@ -766,19 +759,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 4205,
+                      "duration": 7608,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:58.044Z",
+                      "startTime": "2026-11-01T06:20:53.379Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -786,7 +779,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "511e49bc7fc4706bd334-02b674b481ad84baf416",
+              "id": "511e49bc7fc4706bd334-3273672c87e50ddc8fd5",
               "file": "03_staff_admin.spec.ts",
               "line": 129,
               "column": 3
@@ -817,19 +810,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4742,
+                      "duration": 7760,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:56:59.672Z",
+                      "startTime": "2026-11-01T06:20:54.752Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -837,7 +830,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "0f3674bc6a3a680bd284-542fefe7f98e3f7fc492",
+              "id": "0f3674bc6a3a680bd284-4292ba05cdb84a642ce5",
               "file": "04_volunteer_donor.spec.ts",
               "line": 76,
               "column": 3
@@ -851,19 +844,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 0,
                       "parallelIndex": 0,
                       "status": "passed",
-                      "duration": 4288,
+                      "duration": 7217,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:57:04.436Z",
+                      "startTime": "2026-11-01T06:21:02.535Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -871,7 +864,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "0f3674bc6a3a680bd284-1e07555dc731e4dd7231",
+              "id": "0f3674bc6a3a680bd284-8cbbfce49e4396693bd3",
               "file": "04_volunteer_donor.spec.ts",
               "line": 85,
               "column": 3
@@ -902,19 +895,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3931,
+                      "duration": 6885,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:57:02.276Z",
+                      "startTime": "2026-11-01T06:21:01.053Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -922,7 +915,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "5f84b7bd1111b8beea02-83ac9da13a3566580d6d",
+              "id": "5f84b7bd1111b8beea02-8201f9d748686aaaa29b",
               "file": "05_cross_portal_notifications.spec.ts",
               "line": 10,
               "column": 3
@@ -936,19 +929,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 4349,
+                      "duration": 8589,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:57:06.224Z",
+                      "startTime": "2026-11-01T06:21:07.959Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -956,7 +949,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "5f84b7bd1111b8beea02-d66e8b735a7b8000966d",
+              "id": "5f84b7bd1111b8beea02-c0351930e08c4b365c97",
               "file": "05_cross_portal_notifications.spec.ts",
               "line": 16,
               "column": 3
@@ -970,19 +963,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 4289,
+                      "duration": 9509,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:57:10.588Z",
+                      "startTime": "2026-11-01T06:21:16.623Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -990,7 +983,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "5f84b7bd1111b8beea02-8e38f56e72ebd2c1b13d",
+              "id": "5f84b7bd1111b8beea02-2abe649b2e6d27956b47",
               "file": "05_cross_portal_notifications.spec.ts",
               "line": 35,
               "column": 3
@@ -1004,19 +997,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3781,
+                      "duration": 9696,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:57:14.891Z",
+                      "startTime": "2026-11-01T06:21:26.149Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1024,7 +1017,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "5f84b7bd1111b8beea02-a3ec93b39c73b6728f93",
+              "id": "5f84b7bd1111b8beea02-f4cc44236b7c0ec2d5e5",
               "file": "05_cross_portal_notifications.spec.ts",
               "line": 50,
               "column": 3
@@ -1038,19 +1031,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3507,
+                      "duration": 8380,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:57:18.686Z",
+                      "startTime": "2026-11-01T06:21:35.864Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1058,7 +1051,7 @@
                   "status": "expected"
                 }
               ],
-              "id": "5f84b7bd1111b8beea02-9233bb6aba46564cb335",
+              "id": "5f84b7bd1111b8beea02-44aa5b4e9a259dfc7150",
               "file": "05_cross_portal_notifications.spec.ts",
               "line": 67,
               "column": 3
@@ -1072,19 +1065,19 @@
                   "timeout": 30000,
                   "annotations": [],
                   "expectedStatus": "passed",
-                  "projectId": "Mobile Chrome",
-                  "projectName": "Mobile Chrome",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
                   "results": [
                     {
                       "workerIndex": 1,
                       "parallelIndex": 1,
                       "status": "passed",
-                      "duration": 3037,
+                      "duration": 9503,
                       "errors": [],
                       "stdout": [],
                       "stderr": [],
                       "retry": 0,
-                      "startTime": "2026-11-01T02:57:22.209Z",
+                      "startTime": "2026-11-01T06:21:44.267Z",
                       "annotations": [],
                       "attachments": []
                     }
@@ -1092,9 +1085,162 @@
                   "status": "expected"
                 }
               ],
-              "id": "5f84b7bd1111b8beea02-6978ee5851817f61125a",
+              "id": "5f84b7bd1111b8beea02-ed05d9137f33e220c0ea",
               "file": "05_cross_portal_notifications.spec.ts",
               "line": 85,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "06_m4111_accessibility_mobile.spec.ts",
+      "file": "06_m4111_accessibility_mobile.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "M41.11 — Public accessibility and mobile smoke checks",
+          "file": "06_m4111_accessibility_mobile.spec.ts",
+          "line": 8,
+          "column": 6,
+          "specs": [
+            {
+              "title": "public page exposes a usable main landmark and keyboard-reachable Safe Exit",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7532,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-01T06:21:09.834Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "123875246a62ad5c7448-91859d3d39e6d8914980",
+              "file": "06_m4111_accessibility_mobile.spec.ts",
+              "line": 9,
+              "column": 3
+            },
+            {
+              "title": "mobile navigation can be opened using keyboard activation",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7256,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-01T06:21:17.388Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "123875246a62ad5c7448-e7e22242c70e9dfa5ac4",
+              "file": "06_m4111_accessibility_mobile.spec.ts",
+              "line": 22,
+              "column": 3
+            },
+            {
+              "title": "essential homepage content reflows without horizontal overflow",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 21595,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-01T06:21:24.666Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "123875246a62ad5c7448-054a440fe147e43fe168",
+              "file": "06_m4111_accessibility_mobile.spec.ts",
+              "line": 37,
+              "column": 3
+            },
+            {
+              "title": "language selector has an accessible name and is keyboard focusable",
+              "ok": true,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "webkit",
+                  "projectName": "webkit",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "parallelIndex": 0,
+                      "status": "passed",
+                      "duration": 7282,
+                      "errors": [],
+                      "stdout": [],
+                      "stderr": [],
+                      "retry": 0,
+                      "startTime": "2026-11-01T06:21:46.329Z",
+                      "annotations": [],
+                      "attachments": []
+                    }
+                  ],
+                  "status": "expected"
+                }
+              ],
+              "id": "123875246a62ad5c7448-205d464ba4ebaa9d3404",
+              "file": "06_m4111_accessibility_mobile.spec.ts",
+              "line": 66,
               "column": 3
             }
           ]
@@ -1104,9 +1250,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2026-11-01T02:56:10.843Z",
-    "duration": 74501.458,
-    "expected": 25,
+    "startTime": "2026-11-01T06:19:37.531Z",
+    "duration": 136405.28699999998,
+    "expected": 29,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0

@@ -120,15 +120,15 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
   }
 
   return (
-    <div className="bg-slate-950 text-white text-xs py-1.5 px-4 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3 no-print z-50 max-w-full overflow-hidden">
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-1.5 font-bold tracking-wide text-amber-400">
-          <Sparkles className="w-3.5 h-3.5" />
-          <span>DEMO SIMULATION TOOLBAR</span>
+    <div className="bg-slate-950 text-white text-xs py-1.5 px-3 sm:px-4 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 sm:gap-3 no-print z-50 w-full min-w-0">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3 min-w-0 w-full sm:w-auto">
+        <div className="flex items-center gap-1.5 font-bold tracking-wide text-amber-400 min-w-0">
+          <Sparkles className="w-3.5 h-3.5 shrink-0" />
+          <span className="truncate text-[11px] sm:text-xs">DEMO SIMULATION TOOLBAR</span>
         </div>
         <span className="text-slate-600 hidden sm:inline">|</span>
-        <div className="flex items-center gap-2">
-          <label htmlFor="role-simulation-select" className="text-slate-400 text-[11px] cursor-pointer">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 max-w-full">
+          <label htmlFor="role-simulation-select" className="text-slate-400 text-[11px] cursor-pointer shrink-0">
             Role Simulation:
           </label>
           <select
@@ -136,7 +136,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
             aria-label="Role Simulation"
             value={currentUser.id}
             onChange={(e) => handleUserSelect(e.target.value)}
-            className="bg-slate-800 text-slate-100 border border-slate-700 rounded px-2 py-0.5 text-xs focus:ring-1 focus:ring-amber-400 outline-none font-medium cursor-pointer max-w-[160px] truncate"
+            className="bg-slate-800 text-slate-100 border border-slate-700 rounded px-2 py-0.5 text-xs focus:ring-1 focus:ring-amber-400 outline-none font-medium cursor-pointer w-full max-w-[150px] min-w-0 truncate"
           >
             {users.map((u) => (
               <option key={u.id} value={u.id}>

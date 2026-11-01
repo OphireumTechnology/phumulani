@@ -1395,12 +1395,12 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
             </p>
           </div>
 
-          <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl text-xs">
+          <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 bg-slate-100 p-1 rounded-xl text-xs max-w-full">
             {(['all', 'legal', 'housing', 'healing', 'workforce'] as const).map((cat) => (
               <button
                 key={cat}
                 onClick={() => setResourceFilter(cat)}
-                className={`px-3 py-1.5 rounded-lg font-semibold capitalize cursor-pointer transition-colors ${
+                className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg font-semibold capitalize cursor-pointer transition-colors ${
                   resourceFilter === cat ? 'bg-white text-teal-900 shadow-2xs' : 'text-slate-600 hover:text-slate-900'
                 }`}
               >

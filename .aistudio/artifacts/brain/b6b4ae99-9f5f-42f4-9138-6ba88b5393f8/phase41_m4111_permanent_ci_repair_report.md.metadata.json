@@ -1,0 +1,5 @@
+{
+  "summary":  "Phase 41 M41.11 — Permanent Accessibility and Responsive Layout Failure Resolution Report. Details root cause diagnosis across runs #26 to #30 and Run #41278815637, exact DOM element identification causing horizontal overflow at 320px and 375px in VideoEmbedPlayer and PublicWebsiteView, source code repairs in RoleSwitcherBar, Header, VideoEmbedPlayer, and PublicWebsiteView, and 100% test pass verification across all four browser projects (Chromium, Firefox, WebKit, Mobile Chrome), TypeScript, Vite production build, and the 688 automated regression suite.",
+  "updatedAt":  "2026-11-01T06:26:33.609090463Z",
+  "userFacing":  true
+}
