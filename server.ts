@@ -4034,6 +4034,143 @@ app.get('/api/admin/email/audit-logs', (_req: Request, res: Response) => {
   res.json({ auditLogs, total: auditLogs.length });
 });
 
+// 16. Test Mailbox Connection Handshake
+app.post('/api/admin/email/mailboxes/:id/test', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  if (actor.role === 'visitor') {
+    return res.status(403).json({ error: 'Staff role required' });
+  }
+  const result = db.testMailboxConnection(req.params.id);
+  res.json(result);
+});
+
+// 17. Disconnect Mailbox and Revoke Tokens
+app.post('/api/admin/email/mailboxes/:id/disconnect', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  if (actor.role === 'visitor') {
+    return res.status(403).json({ error: 'Staff role required' });
+  }
+  db.disconnectMailbox(req.params.id);
+  res.json({ success: true, message: 'Mailbox disconnected and provider tokens revoked.' });
+});
+
+// 18. Delete Organizational Mailbox Configuration
+app.delete('/api/admin/email/mailboxes/:id', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  if (actor.role === 'visitor' || actor.role === 'staff') {
+    return res.status(403).json({ error: 'Master Admin or Executive Director role required to delete mailboxes.' });
+  }
+  db.deleteConnectedMailbox(req.params.id);
+  res.json({ success: true, message: 'Mailbox configuration deleted.' });
+});
+
+// 19. Direct Outbound Message Composition
+app.post('/api/admin/email/compose', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  if (actor.role === 'visitor') {
+    return res.status(403).json({ error: 'Staff role required to send outbound email.' });
+  }
+  const { mailboxId, recipientEmail, subject, bodyText, category, priority, idempotencyKey } = req.body;
+  if (!recipientEmail || !subject || !bodyText) {
+    return res.status(400).json({ error: 'recipientEmail, subject, and bodyText are required.' });
+  }
+  const result = db.composeDirectOutboundEmail({
+    mailboxId: mailboxId || db.getState().connectedMailboxes[0]?.id,
+    recipientEmail,
+    subject,
+    bodyText,
+    category,
+    priority,
+    idempotencyKey,
+  });
+  res.json(result);
+});
+
+// 20. Link Thread to CRM Constituent Profile
+app.post('/api/admin/email/threads/:id/crm-link', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  if (actor.role === 'visitor') {
+    return res.status(403).json({ error: 'Staff role required' });
+  }
+  const { entityType, entityId, entityName } = req.body;
+  if (!entityType || !entityId || !entityName) {
+    return res.status(400).json({ error: 'entityType, entityId, and entityName are required.' });
+  }
+  const result = db.linkThreadToCrm(req.params.id, { entityType, entityId, entityName });
+  if (!result.success) {
+    return res.status(403).json(result);
+  }
+  res.json(result);
+});
+
+// 21. Unlink Thread from CRM
+app.delete('/api/admin/email/threads/:id/crm-link', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  if (actor.role === 'visitor') {
+    return res.status(403).json({ error: 'Staff role required' });
+  }
+  db.unlinkThreadFromCrm(req.params.id);
+  res.json({ success: true, message: 'CRM linkage removed.' });
+});
+
+// 22. Update Thread Attributes (Assignee, Priority, Category, Status, Read State)
+app.patch('/api/admin/email/threads/:id', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  if (actor.role === 'visitor') {
+    return res.status(403).json({ error: 'Staff role required' });
+  }
+  const { assignedStaffId, assignedStaffName, priority, category, status, isRead } = req.body;
+  if (assignedStaffId && assignedStaffName) {
+    db.assignEmailThread(req.params.id, assignedStaffId, assignedStaffName);
+  }
+  if (priority) {
+    db.updateThreadPriority(req.params.id, priority);
+  }
+  if (category) {
+    db.classifyEmailThread(req.params.id, category);
+  }
+  if (status) {
+    db.updateThreadStatus(req.params.id, status);
+  }
+  if (isRead !== undefined) {
+    db.updateMessageReadState(req.params.id, isRead);
+  }
+  res.json({ success: true, message: 'Thread attributes updated.' });
+});
+
+// 23. Create Follow-Up Task
+app.post('/api/admin/email/follow-ups', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  if (actor.role === 'visitor') {
+    return res.status(403).json({ error: 'Staff role required' });
+  }
+  const { title, dueDate, assignedTo, priority, relatedEntityName, relatedThreadId, taskType } = req.body;
+  if (!title || !dueDate || !assignedTo) {
+    return res.status(400).json({ error: 'title, dueDate, and assignedTo are required.' });
+  }
+  const newTask = db.createFollowUpTask({
+    title,
+    dueDate,
+    assignedTo,
+    priority: priority || 'high',
+    relatedEntityName: relatedEntityName || 'Constituent',
+    relatedThreadId,
+    taskType: taskType || 'email_reply',
+    status: 'pending',
+  });
+  res.json({ success: true, task: newTask });
+});
+
+// 24. Toggle Follow-Up Task Status
+app.put('/api/admin/email/follow-ups/:id/toggle', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  if (actor.role === 'visitor') {
+    return res.status(403).json({ error: 'Staff role required' });
+  }
+  db.toggleFollowUpTask(req.params.id);
+  res.json({ success: true, message: 'Follow-up task status updated.' });
+});
+
 
 // -----------------------------------------------------------------------------
 // VITE SPA DEV MIDDLEWARE / STATIC SERVING

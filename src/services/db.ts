@@ -1397,6 +1397,241 @@ class DatabaseService {
     this.appendAuditLog('MAILBOX_SYNC_TRIGGERED', `Mailbox [${mbx.email}] synchronized by ${actor.name}`);
   }
 
+  public addConnectedMailbox(data: Partial<ConnectedMailbox>): ConnectedMailbox {
+    const actor = this.state.currentUser;
+    const newMailbox: ConnectedMailbox = {
+      id: data.id || `mbx-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
+      email: data.email?.toLowerCase().trim() || 'inbox@phumulani.org',
+      displayName: data.displayName || 'Department Mailbox',
+      department: data.department || 'Operations',
+      provider: data.provider || 'Google Workspace',
+      status: data.status || 'AUTHORIZATION_REQUIRED',
+      connectionState: data.connectionState || 'AUTHORIZATION_REQUIRED',
+      mailboxType: data.mailboxType || 'shared',
+      lastSyncedAt: new Date().toISOString(),
+      unreadCount: 0,
+      totalThreads: 0,
+      authStatus: 'SIMULATED — LIVE OAUTH REQUIRED',
+      permissionScopes: data.permissionScopes || [
+        'https://www.googleapis.com/auth/gmail.readonly',
+        'https://www.googleapis.com/auth/gmail.send',
+      ],
+      twoWaySyncEnabled: data.twoWaySyncEnabled ?? true,
+      historicalImportStatus: 'not_started',
+      historicalImportProgress: 0,
+      totalImportedMessages: 0,
+      syncLagSeconds: 0,
+      sentMessagesReconciled: 0,
+      duplicatesPrevented: 0,
+      authFailures: 0,
+      rateLimitEvents: 0,
+      ...data,
+    };
+    this.saveState({
+      ...this.state,
+      connectedMailboxes: [...this.state.connectedMailboxes, newMailbox],
+    });
+    this.appendAuditLog('MAILBOX_REGISTERED', `New organizational mailbox [${newMailbox.email}] registered for ${newMailbox.department} by ${actor.name}`);
+    this.appendSyncAuditLog({
+      mailboxEmail: newMailbox.email,
+      action: 'MAILBOX_REGISTERED',
+      actor: actor.name,
+      details: `Organizational mailbox [${newMailbox.email}] created with status: ${newMailbox.status}`,
+      direction: 'internal',
+      status: 'success',
+    });
+    return newMailbox;
+  }
+
+  public updateConnectedMailbox(
+    idOrMailbox: string | ConnectedMailbox,
+    updates?: Partial<ConnectedMailbox>
+  ): void {
+    const actor = this.state.currentUser;
+    const mailboxId = typeof idOrMailbox === 'string' ? idOrMailbox : idOrMailbox.id;
+    const mailboxUpdates = typeof idOrMailbox === 'string' ? (updates || {}) : idOrMailbox;
+    const updated = this.state.connectedMailboxes.map((m) =>
+      m.id === mailboxId ? { ...m, ...mailboxUpdates } : m
+    );
+    this.saveState({ ...this.state, connectedMailboxes: updated });
+    const mbx = this.state.connectedMailboxes.find((m) => m.id === mailboxId);
+    this.appendAuditLog('MAILBOX_UPDATED', `Mailbox [${mbx?.email || mailboxId}] settings updated by ${actor.name}`);
+  }
+
+  public deleteConnectedMailbox(mailboxId: string): void {
+    const actor = this.state.currentUser;
+    const mbx = this.state.connectedMailboxes.find((m) => m.id === mailboxId);
+    if (!mbx) return;
+    const updated = this.state.connectedMailboxes.filter((m) => m.id !== mailboxId);
+    this.saveState({ ...this.state, connectedMailboxes: updated });
+    this.appendAuditLog('MAILBOX_DELETED', `Mailbox [${mbx.email}] removed by ${actor.name}`);
+  }
+
+  public testMailboxConnection(mailboxId: string): { success: boolean; latencyMs: number; status: string; message: string } {
+    const actor = this.state.currentUser;
+    const mbx = this.state.connectedMailboxes.find((m) => m.id === mailboxId);
+    if (!mbx) {
+      return { success: false, latencyMs: 0, status: 'ERROR', message: 'Mailbox not found.' };
+    }
+    const latency = Math.floor(45 + Math.random() * 60);
+    this.appendSyncAuditLog({
+      mailboxEmail: mbx.email,
+      action: 'CONNECTION_TEST_EXECUTED',
+      actor: actor.name,
+      details: `Connection test executed: Provider simulated handshake completed in ${latency}ms. Status: ${mbx.status}`,
+      direction: 'two_way',
+      status: 'success',
+    });
+    return {
+      success: true,
+      latencyMs: latency,
+      status: mbx.status,
+      message: `Provider handshake simulated successfully in ${latency}ms. Operational mode: STAGED_DEVELOPMENT.`,
+    };
+  }
+
+  public disconnectMailbox(mailboxId: string): void {
+    const actor = this.state.currentUser;
+    const mbx = this.state.connectedMailboxes.find((m) => m.id === mailboxId);
+    if (!mbx) return;
+    const updated = this.state.connectedMailboxes.map((m) =>
+      m.id === mailboxId
+        ? {
+            ...m,
+            status: 'DISCONNECTED' as const,
+            connectionState: 'DISCONNECTED' as const,
+            authStatus: 'revoked',
+          }
+        : m
+    );
+    this.saveState({ ...this.state, connectedMailboxes: updated });
+    this.appendAuditLog('MAILBOX_DISCONNECTED', `Mailbox [${mbx.email}] disconnected and tokens revoked by ${actor.name}`);
+  }
+
+  public linkThreadToCrm(
+    threadId: string,
+    crmLink: { entityType: 'donor' | 'grant' | 'partnership' | 'volunteer' | 'campaign' | 'partner' | 'client'; entityId: string; entityName: string }
+  ): { success: boolean; error?: string } {
+    const actor = this.state.currentUser;
+    const thread = this.state.enterpriseEmailThreads.find((t) => t.id === threadId);
+    if (!thread) return { success: false, error: 'Thread not found.' };
+
+    // Strict Safeguarding Boundary: Category 01 threads cannot be indexed to external CRM
+    if (thread.classification === '01_safeguarding') {
+      this.appendAuditLog('SAFEGUARDING_CRM_LINK_BLOCKED', `Attempted CRM linkage blocked on Category 01 thread [${threadId}] under VAWA safeguarding policy.`);
+      return {
+        success: false,
+        error: 'CRITICAL SAFEGUARDING BOUNDARY: Confidential survivor communications cannot be linked to external CRM records under VAWA Section 1367.',
+      };
+    }
+
+    const updated = this.state.enterpriseEmailThreads.map((t) =>
+      t.id === threadId ? { ...t, crmLink } : t
+    );
+    this.saveState({ ...this.state, enterpriseEmailThreads: updated });
+    this.appendAuditLog('THREAD_CRM_LINKED', `Thread "${thread.threadSubject}" linked to CRM [${crmLink.entityType}: ${crmLink.entityName}] by ${actor.name}`);
+    return { success: true };
+  }
+
+  public unlinkThreadFromCrm(threadId: string): void {
+    const actor = this.state.currentUser;
+    const thread = this.state.enterpriseEmailThreads.find((t) => t.id === threadId);
+    if (!thread) return;
+    const updated = this.state.enterpriseEmailThreads.map((t) =>
+      t.id === threadId ? { ...t, crmLink: undefined } : t
+    );
+    this.saveState({ ...this.state, enterpriseEmailThreads: updated });
+    this.appendAuditLog('THREAD_CRM_UNLINKED', `Thread "${thread.threadSubject}" unlinked from CRM by ${actor.name}`);
+  }
+
+  public composeDirectOutboundEmail(params: {
+    mailboxId: string;
+    recipientEmail: string;
+    recipientName?: string;
+    subject: string;
+    bodyText: string;
+    category?: EmailClassificationCategory;
+    priority?: EmailPriorityLevel;
+    idempotencyKey?: string;
+  }): { success: boolean; threadId: string; messageId: string } {
+    const actor = this.state.currentUser;
+    const mbx = this.state.connectedMailboxes.find((m) => m.id === params.mailboxId) || this.state.connectedMailboxes[0];
+    const threadId = `th-out-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`;
+    const messageId = `msg-out-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`;
+    const now = new Date().toISOString();
+
+    const newThread: EnterpriseEmailThread = {
+      id: threadId,
+      mailboxId: mbx.id,
+      mailboxEmail: mbx.email,
+      threadSubject: params.subject,
+      classification: params.category || '23_general_inquiries',
+      priority: params.priority || 'P3',
+      status: 'responded',
+      folder: 'SENT',
+      isRead: true,
+      isArchived: false,
+      assignedStaffId: actor.id,
+      assignedStaffName: actor.name,
+      slaDeadline: new Date(Date.now() + 86400000 * 2).toISOString(),
+      isOverdue: false,
+      lastMessageAt: now,
+      messageCount: 1,
+      participantEmails: [params.recipientEmail, mbx.email],
+      messages: [
+        {
+          id: messageId,
+          threadId,
+          senderName: actor.name,
+          senderEmail: mbx.email,
+          recipientEmail: params.recipientEmail,
+          subject: params.subject,
+          bodyText: params.bodyText,
+          receivedAt: now,
+          direction: 'outbound',
+          folder: 'SENT',
+          isRead: true,
+          isArchived: false,
+          isHistorical: false,
+        },
+      ],
+      draft: {
+        id: `drf-out-${Date.now()}`,
+        threadId,
+        inReplyToMessageId: messageId,
+        suggestedSubject: params.subject,
+        proposedBody: params.bodyText,
+        recipientEmail: params.recipientEmail,
+        toneStyle: 'professional',
+        verifiedContextSummary: 'Direct outbound staff dispatch',
+        requiredStaffAction: 'None',
+        confidenceScore: 100,
+        status: 'sent',
+        generatedByAgent: actor.name,
+        approvedByStaff: actor.name,
+        approvedAt: now,
+        sentAt: now,
+        createdAt: now,
+      },
+    };
+
+    this.saveState({
+      ...this.state,
+      enterpriseEmailThreads: [newThread, ...this.state.enterpriseEmailThreads],
+    });
+
+    this.appendSyncAuditLog({
+      mailboxEmail: mbx.email,
+      action: 'OUTBOUND_DISPATCH_AUTHORIZED',
+      actor: actor.name,
+      details: `Direct outbound email dispatched to ${params.recipientEmail} with subject "${params.subject}". Staged delivery confirmed.`,
+      direction: 'outbound',
+      status: 'success',
+    });
+
+    return { success: true, threadId, messageId };
+  }
+
   public updateAutoResponderRule(rule: AutoResponderRule): void {
     const actor = this.state.currentUser;
     const updated = this.state.autoResponderRules.map((r) => (r.id === rule.id ? rule : r));

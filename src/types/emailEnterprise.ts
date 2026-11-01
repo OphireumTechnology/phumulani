@@ -490,7 +490,7 @@ export interface EnterpriseEmailThread {
   messages: EnterpriseEmailMessage[];
   draft?: EmailDraft;
   crmLink?: {
-    entityType: 'donor' | 'grant' | 'partnership' | 'volunteer' | 'campaign' | 'partner';
+    entityType: 'donor' | 'grant' | 'partnership' | 'volunteer' | 'campaign' | 'partner' | 'client';
     entityId: string;
     entityName: string;
   };
