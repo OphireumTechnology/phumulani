@@ -352,17 +352,17 @@ export class PostgresPersistenceAdapter {
       }
     }
 
-    let detailedState: PostgresDetailedState = 'CONNECTED_STAGING';
+    let detailedState: PostgresDetailedState = 'EMBEDDED_STAGING';
     if (!this.isInitialized) {
-      detailedState = isPgConfigured ? 'CONFIGURED_UNVERIFIED' : 'NOT_CONNECTED';
+      detailedState = isPgConfigured ? 'EXTERNAL_CONFIGURED_UNVERIFIED' : 'EXTERNAL_NOT_CONFIGURED';
     } else if (this.connectionError) {
-      detailedState = 'ERROR';
+      detailedState = 'EXTERNAL_CONNECTION_FAILED';
     } else if (isPgActive) {
-      detailedState = process.env.NODE_ENV === 'production' || isProdOnly ? 'CONNECTED_PRODUCTION' : 'CONNECTED_STAGING';
+      detailedState = process.env.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_ONLY' ? 'PRODUCTION_NOT_AUTHORIZED' : 'EXTERNAL_CONNECTED_STAGING';
     } else if (isPgConfigured && !isPgActive) {
-      detailedState = 'DEGRADED';
+      detailedState = 'EXTERNAL_CONNECTION_FAILED';
     } else {
-      detailedState = 'CONNECTED_STAGING';
+      detailedState = 'EMBEDDED_STAGING';
     }
 
     return {
@@ -396,7 +396,7 @@ export class PostgresPersistenceAdapter {
   }
 
   /**
-   * M52.10: Verifies an external PostgreSQL connection without risking the current runtime state.
+   * M53.12 / M52.10: Verifies an external PostgreSQL connection without risking the current runtime state.
    */
   public async verifyExternalConnection(testUrl?: string): Promise<{
     success: boolean;
@@ -412,11 +412,25 @@ export class PostgresPersistenceAdapter {
     if (!targetUrl) {
       return {
         success: false,
-        state: 'NOT_CONNECTED',
+        state: 'EXTERNAL_NOT_CONFIGURED',
         ssl: false,
         error: 'No database URL provided or configured in environment.',
       };
     }
+
+    // Fail-safe protection against unauthorized production database activation (M53.12)
+    if (
+      (targetUrl.toLowerCase().includes('prod') || targetUrl.toLowerCase().includes('production')) &&
+      process.env.PHUMULANI_OPERATIONAL_MODE !== 'PRODUCTION_AUTHORIZED'
+    ) {
+      return {
+        success: false,
+        state: 'PRODUCTION_NOT_AUTHORIZED',
+        ssl: false,
+        error: 'PRODUCTION_NOT_AUTHORIZED: Production database access is not authorized in STAGED_DEVELOPMENT mode.',
+      };
+    }
+
     const t0 = Date.now();
     try {
       const u = new URL(targetUrl);
@@ -439,7 +453,7 @@ export class PostgresPersistenceAdapter {
       const latencyMs = Date.now() - t0;
       return {
         success: true,
-        state: 'CONNECTED_STAGING',
+        state: 'EXTERNAL_CONNECTED_STAGING',
         host: u.host,
         database: u.pathname.replace(/^\//, ''),
         ssl: isSecure,
@@ -449,7 +463,7 @@ export class PostgresPersistenceAdapter {
     } catch (err: any) {
       return {
         success: false,
-        state: 'ERROR',
+        state: 'EXTERNAL_CONNECTION_FAILED',
         ssl: false,
         latencyMs: Date.now() - t0,
         error: `External PostgreSQL verification failed: ${err.message}`,

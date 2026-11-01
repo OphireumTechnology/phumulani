@@ -1,0 +1,1120 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+# PHASE 53 — LIVE-PROVIDER PILOT, ENTERPRISE EMAIL OPERATIONS & EXTERNAL DATABASE ACCEPTANCE
+## MASTER DEVELOPMENT EXECUTION INSTRUCTION — GOOGLE AI STUDIO
+
+**PROJECT:** PHUMULANI AI COMMUNITY PLATFORM  
+**REPOSITORY:** `OphireumTechnology/phumulani`  
+**DEVELOPMENT ENVIRONMENT:** Google AI Studio  
+**SOURCE CONTROL:** Native Google AI Studio ↔ GitHub integration  
+**VERIFIED PHASE 52 BASELINE:** `751929f589b03a2912cf38ac06cbe971085ec563`  
+**VERIFIED CI:** GitHub Actions #59 — SUCCESS  
+**VERIFIED DEPLOYMENT WORKFLOW:** GitHub Actions #99 — SUCCESS  
+**PRIMARY MODULE:** `/admin/master/email`  
+**OPERATING MODE:** `STAGED_DEVELOPMENT`  
+**PRODUCTION ACTIVATION:** NOT AUTHORIZED
+
+---
+
+# 1. MASTER EXECUTION MANDATE
+
+GOOGLE AI STUDIO:
+
+Begin Phase 53 development immediately.
+
+Continue from the latest actual GitHub source, preserving all completed work from Phases 1–52.
+
+Phase 52 delivered Google Workspace OAuth, email state management, SLA monitoring, pilot readiness, and related integration code.
+
+Phase 53 must focus on **real operational verification, functional completion, external integration, security hardening, and independently evidenced acceptance**.
+
+Do not rebuild completed features.
+
+Do not create static demonstration screens as substitutes for working backend functionality.
+
+Do not claim a real provider connection when only fixtures or simulated responses have been tested.
+
+## Mandatory outcomes
+
+1. Complete Google Workspace OAuth onboarding and connection diagnostics.
+2. Prepare controlled authorization of the institutional pilot mailbox.
+3. Verify real inbound Gmail operations when access is granted.
+4. Verify tightly controlled outbound sending when separately approved.
+5. Complete mailbox administration and staff workflow functionality.
+6. Verify external PostgreSQL integration against an actual nonproduction instance when available.
+7. Harden safeguarding isolation, AI restrictions, and server-side authorization.
+8. Complete cross-application communication workflows.
+9. Implement enterprise monitoring, recovery, and operational reporting.
+10. Execute comprehensive automated tests.
+11. Prepare genuine human acceptance evidence.
+12. Synchronize reviewed code through native GitHub integration.
+13. Verify the new remote SHA and corresponding CI result.
+
+**Never use missing credentials as justification to fabricate a successful connection.**
+
+---
+
+# PART A — SOURCE BASELINE AND CONTINUITY
+
+## M53.01 — RECONCILE THE VERIFIED PHASE 52 BASELINE
+
+Refresh the latest remote repository before making changes.
+
+Verify the actual current commit and inspect all Phase 52 implementation files.
+
+Review:
+
+- Email Command Center.
+- Mailbox administration.
+- Google Workspace adapter.
+- OAuth authorization routes.
+- Gmail synchronization services.
+- Email approval and dispatch services.
+- PostgreSQL persistence adapter.
+- Integration health dashboard.
+- Safeguarding access controls.
+- Phase 48–52 verification scripts.
+- GitHub Actions workflows.
+- `package.json`.
+- `package-lock.json`.
+
+Identify incomplete functionality and source-level inconsistencies.
+
+Preserve all previous fixes.
+
+Do not overwrite newer GitHub commits with stale Google AI Studio workspace files.
+
+### Permanent npm lockfile protection
+
+`package-lock.json` is a mandatory tracked file.
+
+Never delete it during:
+
+- Environment variable updates.
+- Gemini API changes.
+- Google Workspace OAuth configuration.
+- Dependency cleanup.
+- Source synchronization.
+- Database migration development.
+- CI workflow changes.
+
+Before every GitHub synchronization, inspect the proposed diff.
+
+If `package-lock.json` is unexpectedly deleted, stop synchronization and repair the workspace.
+
+---
+
+# PART B — GOOGLE WORKSPACE AUTHORIZATION
+
+## M53.02 — COMPLETE REAL OAUTH CONNECTION READINESS
+
+Inspect and complete the existing Google Workspace OAuth implementation.
+
+Verify:
+
+- Google Cloud OAuth client configuration.
+- Approved redirect URIs.
+- OAuth authorization code exchange.
+- PKCE S256 where applicable.
+- Cryptographically secure state generation.
+- One-time state validation.
+- Callback session binding.
+- Least-privilege scopes.
+- Refresh token handling.
+- Token revocation.
+- Secure server-side credential storage.
+- Provider identity verification.
+- Reauthorization.
+- Error handling.
+
+Create a clear administrative setup interface showing:
+
+`NOT_CONFIGURED`
+
+`AUTHORIZATION_REQUIRED`
+
+`AUTHORIZING`
+
+`CONNECTED`
+
+`SYNCING`
+
+`DEGRADED`
+
+`REAUTHORIZATION_REQUIRED`
+
+`REVOKED`
+
+`DISCONNECTED`
+
+`ERROR`
+
+Connection states must reflect actual provider responses.
+
+Do not mark a mailbox connected based only on successful fixture tests.
+
+---
+
+## M53.03 — ORGANIZATIONAL GOOGLE WORKSPACE ONBOARDING
+
+Prepare an administrator-guided onboarding process.
+
+The process must explain:
+
+1. Google Cloud project requirements.
+2. Gmail API enablement.
+3. OAuth consent configuration.
+4. Approved OAuth scopes.
+5. Redirect URI registration.
+6. Google Workspace organizational authorization requirements.
+7. Secure credential entry.
+8. Mailbox identity verification.
+9. Connection testing.
+10. Revocation and emergency disconnection.
+
+Never request passwords or OAuth secrets through ordinary chat messages.
+
+Use secure server-side configuration.
+
+If credentials are not available, leave the connection at:
+
+`AUTHORIZATION_REQUIRED`
+
+Document the exact missing external dependency.
+
+---
+
+## M53.04 — CONTROLLED PILOT MAILBOX
+
+Use the proposed pilot mailbox:
+
+`donations@phumulani.org`
+
+First confirm that the mailbox exists and is authorized for testing.
+
+Implement an auditable pilot approval workflow requiring:
+
+- Authenticated organizational administrator.
+- Appropriate executive authorization.
+- Explicit pilot scope.
+- Authorized mailbox identity.
+- Approved test recipients.
+- Expiration date.
+- Recorded approval decision.
+- Revocation capability.
+
+Do not use a fixed confirmation phrase embedded in source code as a secret.
+
+Keep the default settings:
+
+```env
+GOOGLE_WORKSPACE_PILOT_ENABLED=false
+LIVE_EMAIL_SENDING_ENABLED=false
+```
+
+Only an authenticated, explicitly authorized human action may activate an approved pilot.
+
+Do not activate live sending as part of an automated build, test, migration, or deployment.
+
+---
+
+# PART C — REAL GMAIL INBOUND OPERATIONS
+
+## M53.05 — COMPLETE INBOUND PROVIDER CONNECTIVITY
+
+Implement and verify the actual Gmail API operations required for authorized inbound synchronization.
+
+Support:
+
+- Account identity retrieval.
+- Message listing.
+- Message retrieval.
+- Thread retrieval.
+- Pagination.
+- MIME parsing.
+- HTML sanitization.
+- Attachment metadata.
+- Label synchronization.
+- Historical import.
+- Incremental history synchronization.
+- Duplicate detection.
+- Cursor persistence.
+- Retry and exponential backoff.
+- Token expiration recovery.
+- Invalid history cursor recovery.
+- Interrupted import recovery.
+
+Separate verification levels:
+
+`FIXTURE_VERIFIED`
+
+`PROVIDER_CONNECTED`
+
+`LIVE_IMPORT_VERIFIED`
+
+Only report `LIVE_IMPORT_VERIFIED` after an actual authorized Gmail operation has been completed and evidenced.
+
+Do not import confidential historical correspondence without an approved data-handling and retention plan.
+
+---
+
+## M53.06 — INBOUND MESSAGE CLASSIFICATION AND ROUTING
+
+Preserve the 25-category email taxonomy.
+
+Ensure each imported message can enter the existing operational workflow:
+
+`NEW`
+
+`TRIAGED`
+
+`ASSIGNED`
+
+`DRAFTING`
+
+`AWAITING_APPROVAL`
+
+`APPROVED`
+
+`SENT`
+
+`FOLLOW_UP_REQUIRED`
+
+`RESOLVED`
+
+`QUARANTINED`
+
+Verify:
+
+- Classification confidence.
+- Department routing.
+- P0–P4 priority.
+- SLA deadline assignment.
+- Staff assignment.
+- Supervisor escalation.
+- Restricted-message detection.
+- Audit recording.
+
+Use a safe manual review route when classification is uncertain.
+
+Never expose restricted Category 01 correspondence through general triage views.
+
+---
+
+# PART D — OUTBOUND EMAIL DELIVERY
+
+## M53.07 — COMPLETE PROVIDER DISPATCH
+
+Complete the Gmail provider dispatch implementation.
+
+Preserve the canonical human approval actions:
+
+`APPROVE`
+
+`EDIT_AND_APPROVE`
+
+`REJECT`
+
+`ESCALATE_RETURN`
+
+Ensure:
+
+- AI-generated drafts remain unapproved until human review.
+- Editing a materially changed draft invalidates previous approval.
+- The sender is authorized for the mailbox.
+- Recipients are permitted.
+- Attachments pass security checks.
+- A valid approval exists.
+- The approved version matches the dispatched version.
+- A unique idempotency key is recorded.
+- The outbound message is serialized correctly.
+- Provider responses are recorded.
+- Failures are recoverable.
+
+Use the delivery lifecycle:
+
+`STAGED`
+
+`APPROVED`
+
+`QUEUED`
+
+`PROVIDER_ACCEPTED`
+
+`DELIVERY_CONFIRMED`
+
+`FAILED`
+
+`CANCELLED`
+
+`RECONCILIATION_REQUIRED`
+
+Treat `RECONCILIATION_REQUIRED` as an explicit exception state.
+
+Do not automatically resend messages after an ambiguous provider response.
+
+Do not treat a Gmail API success response or a sent-folder record as definitive proof that the recipient received the message.
+
+---
+
+## M53.08 — CONTROLLED LIVE OUTBOUND TEST
+
+Prepare a narrowly scoped live sending test.
+
+Requirements:
+
+1. Authorized pilot activation.
+2. Approved sender identity.
+3. Approved recipient address.
+4. Human-approved test message.
+5. No confidential content.
+6. No financial receipt claims.
+7. No survivor-service information.
+8. Dispatch audit record.
+9. Provider response evidence.
+10. Explicit rollback and shutdown capability.
+
+Do not execute this test without actual authorization.
+
+Do not send live emails during CI.
+
+If external access remains unavailable, complete the implementation and mark the live test `BLOCKED_EXTERNAL`.
+
+---
+
+# PART E — COMPLETE EMAIL ADMINISTRATION
+
+## M53.09 — ENTERPRISE MAILBOX MANAGEMENT
+
+Preserve the five original institutional mailboxes:
+
+- `info@phumulani.org`
+- `donations@phumulani.org`
+- `executive@phumulani.org`
+- `grants@phumulani.org`
+- `partnerships@phumulani.org`
+
+Reconcile the three additional specialized mailboxes against documented organizational authorization.
+
+For each mailbox, provide:
+
+- Department.
+- Account owner.
+- Authorized users.
+- Connection status.
+- Token health.
+- Last synchronization.
+- Unread count.
+- Pending approvals.
+- Failed dispatches.
+- Error diagnostics.
+- Audit history.
+- Reauthorization.
+- Disconnection.
+
+Do not display a configured address as an authorized live mailbox without actual verification.
+
+---
+
+## M53.10 — UNIFIED INBOX AND STAFF COLLABORATION
+
+Verify all existing Email Administration functionality:
+
+- Shared inbox.
+- Search.
+- Filters.
+- Conversation threading.
+- Staff assignment.
+- Department routing.
+- Internal notes.
+- Draft versioning.
+- Human approval.
+- Follow-up tasks.
+- Resolution.
+- SLA monitoring.
+- Analytics.
+- Audit history.
+
+Ensure changes persist across browser refresh and backend restart.
+
+Test concurrent updates by multiple staff members.
+
+Prevent unauthorized access and lost updates.
+
+Internal notes must never appear in outbound message payloads.
+
+---
+
+## M53.11 — EMAIL TEMPLATES AND LOCALIZATION
+
+Preserve the existing organizational templates.
+
+Verify merge-token handling.
+
+Support all seven languages:
+
+`en`
+
+`so`
+
+`es`
+
+`hmn`
+
+`kar`
+
+`orm`
+
+`am`
+
+Prevent sending messages with unresolved required merge tokens.
+
+Provide preview, validation, and human approval before dispatch.
+
+Ensure restricted safeguarding correspondence cannot be processed by general automated templates.
+
+---
+
+# PART F — POSTGRESQL INTEGRATION
+
+## M53.12 — ACTUAL EXTERNAL POSTGRESQL VERIFICATION
+
+Inspect the current persistence adapter.
+
+Differentiate:
+
+- Embedded durable staging storage.
+- Mock or in-memory storage.
+- External nonproduction PostgreSQL.
+- Production PostgreSQL.
+
+Implement a secure external connection test using:
+
+- Server-side credentials.
+- TLS validation.
+- Connection timeout.
+- Health query.
+- Connection pooling.
+- Parameterized queries.
+- Least-privilege database roles.
+
+Do not call embedded storage `CONNECTED_STAGING` if the label implies an external PostgreSQL connection.
+
+Use precise statuses:
+
+`EMBEDDED_STAGING`
+
+`EXTERNAL_NOT_CONFIGURED`
+
+`EXTERNAL_CONFIGURED_UNVERIFIED`
+
+`EXTERNAL_CONNECTED_STAGING`
+
+`EXTERNAL_CONNECTION_FAILED`
+
+`PRODUCTION_NOT_AUTHORIZED`
+
+Do not activate a production database without separate approval.
+
+---
+
+## M53.13 — DATABASE TRANSACTIONS AND MIGRATIONS
+
+Verify persistence for:
+
+- Mailboxes.
+- Threads.
+- Messages.
+- Assignments.
+- Drafts.
+- Approvals.
+- Dispatch ledger.
+- Follow-up tasks.
+- CRM links.
+- Audit events.
+- Synchronization cursors.
+
+Implement or verify:
+
+- Transaction atomicity.
+- Rollback.
+- Referential integrity.
+- Unique constraints.
+- Optimistic concurrency.
+- Migration version tracking.
+- Safe migration failure handling.
+- Restart recovery.
+
+Use disposable test databases for destructive tests.
+
+Do not execute destructive migrations on live organizational records.
+
+---
+
+## M53.14 — BACKUP AND RESTORE
+
+Complete:
+
+- Encrypted backups.
+- Access-controlled backup storage.
+- Backup integrity verification.
+- Restore testing.
+- Recovery documentation.
+- Retention controls.
+- Failure alerts.
+
+A checksum alone is not evidence of backup confidentiality or successful recovery.
+
+Record actual restore-test results.
+
+Never commit backup files or database snapshots to GitHub.
+
+---
+
+# PART G — SECURITY AND CONFIDENTIAL SAFEGUARDING
+
+## M53.15 — SERVER-SIDE AUTHORIZATION
+
+Test:
+
+- Unauthenticated access.
+- Unauthorized mailbox access.
+- Cross-mailbox IDOR.
+- Unauthorized draft changes.
+- Unauthorized approval.
+- Unauthorized dispatch.
+- Unauthorized pilot activation.
+- OAuth callback tampering.
+- Token replay.
+- Attachment access.
+- Search result leakage.
+- Audit export leakage.
+- Privilege escalation.
+
+Enforce all authorization on the server.
+
+Do not rely only on frontend hiding or redaction.
+
+---
+
+## M53.16 — INDEPENDENT SAFEGUARDING BOUNDARY
+
+Preserve the original confidential survivor-services security requirements.
+
+Verify:
+
+- Restricted Category 01 routing.
+- Authorized safeguarding staff access.
+- Server-side redaction.
+- Restricted attachments.
+- Search isolation.
+- CRM exclusion.
+- General AI exclusion.
+- Audit minimization.
+- Safe Exit behavior.
+- Secure case assignment.
+- Unauthorized access rejection.
+
+Do not treat a database table name or application role label as proof of isolation.
+
+Review the actual storage, service, credential, and API boundaries.
+
+If the approved architecture requires physical isolation, document and implement the necessary infrastructure rather than claiming it already exists.
+
+Do not place confidential survivor-service records in general AI prompts or unrestricted shared inboxes.
+
+---
+
+## M53.17 — AI WORKFORCE GOVERNANCE
+
+Preserve all 36 canonical AI agents:
+
+`ORG-AI-001` through `ORG-AI-018`
+
+`FUND-AI-001` through `FUND-AI-018`
+
+Verify:
+
+- Supervisor mapping.
+- Tool permissions.
+- Restricted operations.
+- Draft-only email generation.
+- Human approval.
+- Prompt-injection resistance.
+- Token accounting.
+- Audit logging.
+- Emergency shutdown.
+
+AI must not approve its own drafts.
+
+AI must not independently send external email.
+
+General AI must not access survivor-service records.
+
+---
+
+# PART H — CROSS-APPLICATION OPERATIONS
+
+## M53.18 — FIVE-APPLICATION VERIFICATION
+
+Verify the Email Administration system integrates correctly with:
+
+**Application A — Public Website/CMS**
+
+Public inquiries, contact forms, events, and communications.
+
+**Application B — Community and Volunteer Hub**
+
+Onboarding, training, schedules, and volunteer-hour communications.
+
+**Application C — Donor and Sponsor Portal**
+
+Pledges, stewardship, sponsorship, and grant inquiries.
+
+**Application D — Staff Command Center**
+
+Triage, assignments, approvals, and escalations.
+
+**Application E — Executive and Governance Portal**
+
+Board correspondence, governance approvals, and authorized reporting.
+
+Preserve financial separation between settled funds, pledges, and pending grants.
+
+Do not issue final tax receipts for unsettled contributions.
+
+---
+
+## M53.19 — SIX WORKFLOW ACCEPTANCE
+
+Test the original workflows:
+
+A. Communications.
+
+B. Volunteers.
+
+C. Donations.
+
+D. Events.
+
+E. Confidential Safeguarding.
+
+F. Grants and Governance.
+
+For each workflow verify:
+
+- Authorized initiation.
+- Correct routing.
+- Valid state transitions.
+- Persistence.
+- Audit history.
+- Cross-application consistency.
+- Error recovery.
+- Unauthorized access rejection.
+
+Do not claim all workflows are fully integrated solely because their dashboards render.
+
+---
+
+# PART I — OPERATIONS AND MONITORING
+
+## M53.20 — ENTERPRISE INTEGRATION HEALTH CENTER
+
+Implement accurate health monitoring for:
+
+- Google Workspace.
+- Individual mailboxes.
+- OAuth credentials.
+- Inbound synchronization.
+- Outbound dispatch.
+- PostgreSQL.
+- AI gateway.
+- Payment gateway.
+- Backend hosting.
+- Audit persistence.
+
+Display:
+
+- Actual connection status.
+- Last successful operation.
+- Last error.
+- Retry status.
+- Administrative action required.
+
+Never report simulated provider health as live connectivity.
+
+---
+
+## M53.21 — ADMINISTRATOR RECOVERY CENTER
+
+Complete authorized recovery controls:
+
+- Recheck connection.
+- Reauthorize mailbox.
+- Revoke connection.
+- Retry failed import.
+- Repair synchronization cursor.
+- Review uncertain dispatch.
+- Reconcile delivery ledger.
+- Test database connectivity.
+- Review migration status.
+- Export redacted diagnostics.
+- Disable pilot.
+- Emergency shutdown.
+
+Require elevated authorization for sensitive operations.
+
+Record every state-changing action in the audit log.
+
+---
+
+# PART J — QUALITY AND HUMAN ACCEPTANCE
+
+## M53.22 — CREATE PHASE 53 TEST SUITE
+
+Create:
+
+`scripts/verify_phase53_provider_pilot.ts`
+
+Test at minimum:
+
+1. OAuth state validation.
+2. PKCE verification.
+3. Callback replay prevention.
+4. Token expiration.
+5. Token revocation.
+6. Provider identity mismatch.
+7. Unauthorized pilot activation.
+8. Inbound import.
+9. MIME parsing.
+10. HTML sanitization.
+11. Attachment restrictions.
+12. Duplicate import suppression.
+13. Cursor recovery.
+14. Provider rate limiting.
+15. Human approval enforcement.
+16. Stale approval invalidation.
+17. Unauthorized sending.
+18. Duplicate dispatch prevention.
+19. Ambiguous dispatch reconciliation.
+20. Safeguarding isolation.
+21. AI exclusion.
+22. PostgreSQL connectivity.
+23. Transaction rollback.
+24. Migration failure.
+25. Restart persistence.
+26. Backup restore.
+27. Audit continuity.
+28. Emergency shutdown.
+29. Cross-application consistency.
+30. Pilot deactivation.
+
+Use deterministic provider fixtures for CI.
+
+Execute real-provider tests only in an authorized environment.
+
+---
+
+## M53.23 — COMPLETE QUALITY GATES
+
+Execute:
+
+```bash
+npm ci
+npx tsc --noEmit
+npm run lint
+npm run build
+```
+
+Execute:
+
+- Platform regression suite.
+- Phase 48 email tests.
+- Phase 49 email tests.
+- Phase 50 integration tests.
+- Phase 51 pilot tests.
+- Phase 52 live-readiness tests.
+- New Phase 53 tests.
+- Configured Playwright browser tests.
+
+Report separately:
+
+- Discovered.
+- Executed.
+- Passed.
+- Failed.
+- Skipped.
+- Blocked by external services.
+
+Do not double-count assertions.
+
+Do not claim browser tests passed when they were only discovered.
+
+Do not weaken security tests to achieve green CI.
+
+---
+
+## M53.24 — GENUINE HUMAN ACCEPTANCE
+
+Prepare and record acceptance for:
+
+- Email Administrator.
+- Communications Staff.
+- Safeguarding Lead.
+- Executive Director.
+- Finance Reviewer.
+- Governance Reviewer.
+
+Each acceptance must contain:
+
+- Reviewer identity and role.
+- Scenario.
+- Expected outcome.
+- Observed outcome.
+- Evidence.
+- Date.
+- Actual approval decision.
+- Outstanding issues.
+
+Do not generate fictional sign-offs.
+
+Do not treat automated acceptance fixtures as real human approval.
+
+Do not activate live sending based solely on a test harness.
+
+---
+
+# PART K — GITHUB DELIVERY
+
+## M53.25 — NATIVE GITHUB SYNCHRONIZATION
+
+Use the existing native Google AI Studio ↔ GitHub integration.
+
+Repository:
+
+`OphireumTechnology/phumulani`
+
+Required delivery process:
+
+1. Refresh the latest remote source.
+2. Verify the current SHA.
+3. Preserve Phase 52 implementation.
+4. Preserve `package-lock.json`.
+5. Preserve CI workflows.
+6. Review the full source diff.
+7. Exclude secrets and runtime databases.
+8. Run all local quality checks.
+9. Prefer a reviewable development branch and pull request.
+10. Synchronize reviewed changes.
+11. Verify the actual new remote SHA.
+12. Wait for the corresponding GitHub Actions run.
+13. Fix failures before claiming success.
+
+Do not force-push.
+
+Do not overwrite newer remote changes.
+
+If the native sync attempts to delete `package-lock.json`, abort immediately.
+
+Do not assume that a successful local build proves remote delivery.
+
+---
+
+## M53.26 — REQUIRED DOCUMENTATION
+
+Create or update:
+
+`docs/development/phase53-google-workspace-onboarding.md`
+
+`docs/development/phase53-live-provider-pilot.md`
+
+`docs/development/phase53-email-operations.md`
+
+`docs/development/phase53-postgresql-verification.md`
+
+`docs/development/phase53-security-and-safeguarding.md`
+
+`docs/development/phase53-human-acceptance.md`
+
+`docs/development/phase53-test-evidence.md`
+
+Documentation must accurately describe implemented functionality and actual evidence.
+
+Do not substitute documentation for missing code.
+
+---
+
+# PART L — DEVELOPMENT EXECUTION ORDER
+
+## BATCH 1 — BASELINE AND GAP AUDIT
+
+Reconcile the Phase 52 source and identify remaining operational defects.
+
+## BATCH 2 — GOOGLE WORKSPACE
+
+Complete OAuth onboarding, mailbox verification, inbound synchronization, and controlled outbound integration.
+
+## BATCH 3 — POSTGRESQL
+
+Complete external database readiness, transactional verification, migrations, and recovery.
+
+## BATCH 4 — SECURITY
+
+Complete authorization, safeguarding isolation, AI safety, and negative testing.
+
+## BATCH 5 — ENTERPRISE OPERATIONS
+
+Complete administrator recovery, monitoring, five-application integration, and six-workflow verification.
+
+## BATCH 6 — ACCEPTANCE AND DELIVERY
+
+Complete automated testing, genuine human acceptance preparation, native GitHub synchronization, and remote CI verification.
+
+Each batch must produce source changes or independently verifiable evidence.
+
+Do not report milestones complete merely because documents were created.
+
+---
+
+# REQUIRED PHASE 53 DELIVERY REPORT
+
+```text
+PHUMULANI PHASE 53 — LIVE-PROVIDER PILOT AND ENTERPRISE ACCEPTANCE REPORT
+
+SOURCE CONTROL
+Repository:
+Starting Remote SHA:
+Ending Remote SHA:
+Development Branch:
+Native GitHub Sync:
+Package Lockfile:
+GitHub Actions Run URL:
+CI Conclusion:
+
+EMAIL ADMINISTRATION
+Dashboard:
+Mailbox Management:
+Unified Inbox:
+25-Category Triage:
+Priority SLA:
+AI Drafting:
+Human Approval:
+Outbound Dispatch:
+Templates:
+CRM Integration:
+Follow-Up Tasks:
+Analytics:
+Audit Logs:
+
+GOOGLE WORKSPACE
+Configured Mailboxes:
+Actually Authorized Mailboxes:
+OAuth Configuration:
+OAuth Authorization:
+Provider Identity Verified:
+Historical Import:
+Incremental Sync:
+Live Import Executed:
+Live Sending Enabled:
+Real Message Sent:
+Provider Acceptance:
+Delivery Confirmation:
+External Blockers:
+
+POSTGRESQL
+Embedded Staging Storage:
+External PostgreSQL Connection:
+Migrations:
+Transaction Verification:
+Persistence Recovery:
+Backup Verification:
+Restore Verification:
+
+SECURITY
+Mailbox RBAC:
+Anti-IDOR:
+Safeguarding Isolation:
+General AI Exclusion:
+Pilot Authorization:
+Emergency Shutdown:
+Independent Security Review:
+
+CROSS-APPLICATION
+Application A:
+Application B:
+Application C:
+Application D:
+Application E:
+Six Workflow Verification:
+
+QUALITY
+TypeScript:
+Build:
+Platform Regression:
+Phase 48 Tests:
+Phase 49 Tests:
+Phase 50 Tests:
+Phase 51 Tests:
+Phase 52 Tests:
+Phase 53 Tests:
+Playwright Discovered:
+Playwright Executed:
+Playwright Passed:
+Playwright Failed:
+
+HUMAN ACCEPTANCE
+Email Administrator:
+Communications Staff:
+Safeguarding Lead:
+Executive Director:
+Finance Reviewer:
+Governance Reviewer:
+
+OUTSTANDING
+External Credentials Required:
+External Services Not Connected:
+Human Approvals Pending:
+Known Defects:
+Security Findings:
+Unverified Claims:
+Next Development Priority:
+```
+
+---
+
+# FINAL EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+**BEGIN PHASE 53 DEVELOPMENT NOW.**
+
+Continue from the verified Phase 52 GitHub source.
+
+Preserve all five applications, six workflows, 36 AI agents, and seven languages.
+
+Complete the Google Workspace integration for real-provider operation.
+
+Prepare and verify the controlled institutional mailbox pilot.
+
+Complete reliable Gmail inbound synchronization.
+
+Complete human-approved outbound email dispatch.
+
+Complete external PostgreSQL readiness, transactions, migrations, and recovery.
+
+Maintain strict safeguarding isolation and zero general AI access to confidential survivor records.
+
+Complete enterprise monitoring, administrator recovery, and cross-application verification.
+
+Keep live email sending and production database activation disabled unless explicitly authorized.
+
+Never delete `package-lock.json`.
+
+Execute all required tests and resolve failures.
+
+Synchronize reviewed code using the native Google AI Studio–GitHub connection.
+
+Verify the new remote SHA and corresponding GitHub Actions results.
+
+Deliver working software, executable tests, security evidence, operational documentation, and a truthful Phase 53 completion report.
+
+**END OF PHASE 53 MASTER DEVELOPMENT DIRECTIVE.**

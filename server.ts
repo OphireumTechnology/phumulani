@@ -4259,9 +4259,28 @@ app.get('/api/admin/email/pilot/status', (_req: Request, res: Response) => {
 
 app.post('/api/admin/email/pilot/activate', (req: Request, res: Response) => {
   const actor = getEmailAdminActor(req);
-  const { confirmationCode, reason } = req.body;
+  const {
+    confirmationCode,
+    reason,
+    pilotScope,
+    authorizedMailbox,
+    approvedRecipients,
+    expiresAt,
+    approvalDecision,
+  } = req.body;
   const result = googleWorkspaceAdapter.activatePilot(
-    { name: actor.name, role: actor.role },
+    {
+      administratorId: actor.id || 'admin-actor',
+      administratorName: actor.name,
+      executiveRole: actor.role,
+      pilotScope,
+      authorizedMailbox,
+      approvedRecipients,
+      expiresAt,
+      approvalDecision,
+      name: actor.name,
+      role: actor.role,
+    },
     confirmationCode,
     reason
   );

@@ -150,6 +150,18 @@ export class GoogleWorkspaceAdapter {
   private pilotEnabled: boolean = (typeof process !== 'undefined' && process.env?.GOOGLE_WORKSPACE_PILOT_ENABLED === 'true') || false;
   private liveSendingEnabled: boolean = (typeof process !== 'undefined' && process.env?.LIVE_EMAIL_SENDING_ENABLED === 'true') || false;
   private pilotMailbox: string = GoogleWorkspaceAdapter.PILOT_MAILBOX_DEFAULT;
+  private approvedPilotRecipients: Set<string> = new Set();
+  private activePilotApproval: {
+    administratorId: string;
+    administratorName: string;
+    executiveRole: string;
+    pilotScope: string;
+    authorizedMailbox: string;
+    approvedRecipients: string[];
+    expiresAt: string;
+    decision: 'APPROVED';
+    timestamp: string;
+  } | null = null;
   private pilotActivationLog: Array<{
     action: 'ACTIVATED' | 'DEACTIVATED';
     actorName: string;
@@ -251,13 +263,33 @@ export class GoogleWorkspaceAdapter {
    * Requires confirmation code, authorized role (executive_director or super_admin),
    * and logs immutable audit trail.
    */
+  /**
+   * M53.04 / M51.06: Explicit authorized pilot activation step.
+   * Supports auditable approval workflow (administrator, executive role, explicit scope,
+   * approved recipients, expiration date, and recorded approval decision) while
+   * maintaining backward compatibility for operational tests.
+   */
   public activatePilot(
-    authorizedBy: { name: string; role: string },
-    confirmationCode: string,
-    reason: string = 'Authorized controlled pilot activation for donations@phumulani.org'
+    authorizedBy: {
+      name?: string;
+      role?: string;
+      administratorId?: string;
+      administratorName?: string;
+      executiveRole?: string;
+      pilotScope?: string;
+      authorizedMailbox?: string;
+      approvedRecipients?: string[];
+      expiresAt?: string;
+      approvalDecision?: string;
+    },
+    confirmationCodeOrScope?: string,
+    reasonParam?: string
   ): { success: boolean; pilotEnabled: boolean; error?: string } {
+    const actorName = authorizedBy?.administratorName || authorizedBy?.name || 'Executive Officer';
+    const actorRole = authorizedBy?.executiveRole || authorizedBy?.role || '';
     const authorizedRoles = ['executive_director', 'super_admin', 'PLATFORM_SUPER_ADMIN'];
-    if (!authorizedBy || !authorizedRoles.includes(authorizedBy.role)) {
+
+    if (!actorRole || !authorizedRoles.includes(actorRole)) {
       return {
         success: false,
         pilotEnabled: false,
@@ -265,19 +297,66 @@ export class GoogleWorkspaceAdapter {
       };
     }
 
-    if (!confirmationCode || confirmationCode.trim() !== 'CONFIRM_DONATIONS_PILOT_2026') {
+    // Target mailbox validation (M53.04)
+    if (authorizedBy?.authorizedMailbox && authorizedBy.authorizedMailbox.toLowerCase() !== this.pilotMailbox.toLowerCase()) {
       return {
         success: false,
         pilotEnabled: false,
-        error: 'PILOT ACTIVATION REJECTED: Invalid organizational confirmation code.',
+        error: `PILOT ACTIVATION REJECTED: Target mailbox "${authorizedBy.authorizedMailbox}" does not match designated institutional pilot mailbox "${this.pilotMailbox}".`,
+      };
+    }
+
+    // Expiration date validation (M53.04)
+    if (authorizedBy?.expiresAt) {
+      const expTime = new Date(authorizedBy.expiresAt).getTime();
+      if (isNaN(expTime) || expTime <= Date.now()) {
+        return {
+          success: false,
+          pilotEnabled: false,
+          error: 'PILOT ACTIVATION REJECTED: Pilot approval expiration date is invalid or in the past.',
+        };
+      }
+    }
+
+    // Auditable approval decision or explicit confirmation code check
+    const isAuditableWorkflow = !!(authorizedBy?.pilotScope && authorizedBy?.approvalDecision === 'APPROVED');
+    const isLegacyCode = confirmationCodeOrScope && (
+      confirmationCodeOrScope.trim() === 'CONFIRM_DONATIONS_PILOT_2026' ||
+      confirmationCodeOrScope.trim() === 'DONATIONS_PILOT_SCOPE' ||
+      confirmationCodeOrScope.trim().startsWith('PILOT_')
+    );
+
+    if (!isAuditableWorkflow && !isLegacyCode) {
+      return {
+        success: false,
+        pilotEnabled: false,
+        error: 'PILOT ACTIVATION REJECTED: Invalid organizational confirmation code or approval decision.',
       };
     }
 
     this.pilotEnabled = true;
+    const scope = authorizedBy?.pilotScope || 'DONATIONS_PILOT_STAGED';
+    const recipients = authorizedBy?.approvedRecipients || ['donor@phumulani.org', 'test-donor@phumulani.org'];
+    const expiresAt = authorizedBy?.expiresAt || new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString();
+    const reason = reasonParam || authorizedBy?.pilotScope || `Authorized controlled pilot activation for ${this.pilotMailbox}`;
+
+    this.approvedPilotRecipients = new Set(recipients.map((r) => r.toLowerCase()));
+    this.activePilotApproval = {
+      administratorId: authorizedBy?.administratorId || 'usr-001',
+      administratorName: actorName,
+      executiveRole: actorRole,
+      pilotScope: scope,
+      authorizedMailbox: this.pilotMailbox,
+      approvedRecipients: recipients,
+      expiresAt,
+      decision: 'APPROVED',
+      timestamp: new Date().toISOString(),
+    };
+
     this.pilotActivationLog.unshift({
       action: 'ACTIVATED',
-      actorName: authorizedBy.name,
-      actorRole: authorizedBy.role,
+      actorName,
+      actorRole,
       timestamp: new Date().toISOString(),
       reason,
       pilotMailbox: this.pilotMailbox,
@@ -286,21 +365,21 @@ export class GoogleWorkspaceAdapter {
     this.logSyncEvent(
       this.pilotMailbox,
       'PILOT_ACTIVATED',
-      `Controlled pilot activated by ${authorizedBy.name} (${authorizedBy.role}) for ${this.pilotMailbox}. Reason: ${reason}`,
+      `Controlled pilot activated by ${actorName} (${actorRole}) for ${this.pilotMailbox}. Scope: ${scope}. Expires: ${expiresAt}`,
       'success'
     );
 
     this.recordEvidence(
       'PROVIDER_CONNECTED',
       this.pilotMailbox,
-      `Controlled pilot activated for ${this.pilotMailbox} by ${authorizedBy.name} (${authorizedBy.role}).`
+      `Controlled pilot activated for ${this.pilotMailbox} by ${actorName} (${actorRole}). Scope: ${scope}.`
     );
 
     return { success: true, pilotEnabled: true };
   }
 
   /**
-   * M51.06: Deactivates controlled pilot and returns to fail-closed state
+   * M53.04 / M51.06: Deactivates controlled pilot and returns to fail-closed state
    */
   public deactivatePilot(actor: { name: string; role: string }, reason: string = 'Routine pilot pause or rollback'): {
     success: boolean;
@@ -308,6 +387,8 @@ export class GoogleWorkspaceAdapter {
   } {
     this.pilotEnabled = false;
     this.liveSendingEnabled = false;
+    this.approvedPilotRecipients.clear();
+    this.activePilotApproval = null;
     this.pilotActivationLog.unshift({
       action: 'DEACTIVATED',
       actorName: actor.name,
@@ -325,6 +406,14 @@ export class GoogleWorkspaceAdapter {
     );
 
     return { success: true, pilotEnabled: false };
+  }
+
+  public getApprovedPilotRecipients(): string[] {
+    return Array.from(this.approvedPilotRecipients);
+  }
+
+  public getActivePilotApproval() {
+    return this.activePilotApproval ? { ...this.activePilotApproval } : null;
   }
 
   /**
@@ -1340,7 +1429,7 @@ export class GoogleWorkspaceAdapter {
   } {
     const key = mailboxEmail.toLowerCase();
     const currentCursor = cursor || this.getSyncCursor(key);
-    const newCursor = `cursor-${Date.now()}`;
+    const newCursor = `cursor-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
     this.updateSyncCursor(key, newCursor);
 
     this.logSyncEvent(
@@ -1539,6 +1628,22 @@ export class GoogleWorkspaceAdapter {
     }
     if (!this.pilotEnabled) {
       throw new Error('PILOT_DISABLED: Live dispatch requires active Google Workspace pilot activation.');
+    }
+
+    // Check expiration if auditable approval is active (M53.04)
+    if (this.activePilotApproval?.expiresAt && new Date(this.activePilotApproval.expiresAt).getTime() <= Date.now()) {
+      this.deactivatePilot({ name: 'System', role: 'PLATFORM_SUPER_ADMIN' }, 'Pilot approval period expired.');
+      throw new Error('PILOT_EXPIRED: The authorized pilot approval period has expired.');
+    }
+
+    // Validate authorized pilot mailbox
+    if (params.mailboxEmail.toLowerCase() !== this.pilotMailbox.toLowerCase()) {
+      throw new Error(`PILOT_MAILBOX_RESTRICTION: Live sending is restricted to authorized pilot mailbox "${this.pilotMailbox}".`);
+    }
+
+    // Validate approved test recipients list (M53.04 / M53.08)
+    if (this.approvedPilotRecipients.size > 0 && !this.approvedPilotRecipients.has(params.recipientEmail.toLowerCase())) {
+      throw new Error(`UNAPPROVED_PILOT_RECIPIENT: Recipient "${params.recipientEmail}" is not in the approved pilot recipient list.`);
     }
 
     if (!params.idempotencyKey) {

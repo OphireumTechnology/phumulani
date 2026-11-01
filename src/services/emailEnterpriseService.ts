@@ -447,6 +447,16 @@ Draft a professional, compassionate response following Phumulani's organizationa
     toneStyle: ResponseToneStyle = 'professional',
     actorName: string = 'Staff Caseworker'
   ): EmailDraft {
+    // MANDATORY SAFEGUARDING AIR-GAP: Prohibit general AI drafting on confidential survivor records (M53.16 / M53.17)
+    if (
+      thread.classification === '01_safeguarding' ||
+      (thread.messages && thread.messages.some((m) => m.bodyText?.toLowerCase().includes('immediate danger') || m.bodyText?.toLowerCase().includes('confidential survivor')))
+    ) {
+      throw new Error(
+        'SAFEGUARDING_AIR_GAP_VIOLATION: General AI drafting is strictly prohibited for Category 01 confidential survivor communications under VAWA Section 1367.'
+      );
+    }
+
     const latestMessage = thread.messages[thread.messages.length - 1];
     const category = thread.classification;
     const recipient = latestMessage.senderEmail;
@@ -1726,6 +1736,18 @@ Draft a professional, compassionate response following Phumulani's organizationa
   /**
    * 15b. Fail-Closed Human Approval & Outbound Email Dispatch with Strict Note Stripping & Material Invalidation
    */
+  public static dispatchOutboundEmail(
+    threadId: string,
+    approverUser: { id: string; name: string; role: string },
+    options: { idempotencyKey: string; updatedBody?: string }
+  ): {
+    success: boolean;
+    authorizationRecord?: OutboundEmailAuthorization;
+    error?: string;
+  } {
+    return this.authorizeAndSendOutboundDraft(threadId, approverUser, options);
+  }
+
   public static authorizeAndSendOutboundDraft(
     threadId: string,
     approverUser: { id: string; name: string; role: string },
