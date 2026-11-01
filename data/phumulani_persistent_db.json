@@ -3,7 +3,7 @@
     "platform": "Phumulani AI Community Platform",
     "schema": "PostgreSQL 15+ Compatible DDL",
     "engine": "ISOLATED_EMBEDDED_DURABLE",
-    "persistedAt": "2026-11-01T06:24:18.232Z",
+    "persistedAt": "2026-11-01T13:30:00.351Z",
     "tablesCount": 34,
     "classification": "INTEGRATION_COMPLETE_STAGED_READY"
   },
@@ -7792,6 +7792,421 @@
         "action": "auth:session_created",
         "details": "Created session for user synth.member.1793514256531@example.org (Role: COMMUNITY_MEMBER, MFA: true).",
         "signature": "d114b45ec1e95967bf9b3b42f3d8d5525fcc25b43388d254af757ef75fd58bd1"
+      },
+      {
+        "id": "p28-persist-1793539783190",
+        "timestamp": "2026-11-01T13:29:43.190Z",
+        "actor_role": "system_verification",
+        "action": "test:persistence_durability",
+        "details": "Phase 28 durable restart persistence validation",
+        "signature": "sig-p28-02"
+      },
+      {
+        "id": "p28-txn-1793539783557",
+        "timestamp": "2026-11-01T13:29:43.557Z",
+        "actor_role": "system_verification",
+        "action": "test:transaction_commit",
+        "details": "Phase 28 ACID transaction verification",
+        "signature": "sig-p28-03"
+      },
+      {
+        "id": "audit-sess-1793539783813-gyhi",
+        "timestamp": "2026-11-01T13:29:43.813Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user test.staff@phumulani.org (Role: staff, MFA: false).",
+        "signature": "8b7d3858b5dbee7090b1130679e75b26899aa3912508e1fbfe92a4f5920c11f8"
+      },
+      {
+        "id": "audit-sess-1793539783946-39gu",
+        "timestamp": "2026-11-01T13:29:43.946Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "9753d1e2f1d0b19ccc21bb791a9c664878e14b29d66c4d73b21c509e64d3c5b9"
+      },
+      {
+        "id": "audit-sess-1793539784085-e6w0",
+        "timestamp": "2026-11-01T13:29:44.085Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user revoke.staff@phumulani.org (Role: staff, MFA: true).",
+        "signature": "68e1bfe60d32832aff8d481618543147e276a147f322010d6b32af36bae05102"
+      },
+      {
+        "id": "audit-sess-rev-1793539784229",
+        "timestamp": "2026-11-01T13:29:44.229Z",
+        "actor_role": "staff",
+        "action": "auth:session_revoked",
+        "details": "Revoked session 9f82e73a... for user revoke.staff@phumulani.org.",
+        "signature": "dede0ebf370023f585473f2eeb1a275c75e544d499182efd3893af7b554a1b0d"
+      },
+      {
+        "id": "audit-sess-1793539784373-6ldh",
+        "timestamp": "2026-11-01T13:29:44.373Z",
+        "actor_role": "executive_director",
+        "action": "auth:session_created",
+        "details": "Created session for user comfort.dondo@phumulani.org (Role: executive_director, MFA: true).",
+        "signature": "0f94cedab0aef0bd162b21434d17ed117db960d8ef2e32218bfba2bcf51d6d5c"
+      },
+      {
+        "id": "ai-audit-p28-1793539784513",
+        "timestamp": "2026-11-01T13:29:44.513Z",
+        "actor_role": "ai_agent_runner",
+        "action": "ai:execute_task",
+        "details": "Executed task for FUND-AI-001 with human approval gate intact.",
+        "signature": "186188e107f46389ace2c5eb96a7f155967b1292a0ad47aaa3ee05a97e6766e2"
+      },
+      {
+        "id": "audit-pay-1793539784772",
+        "timestamp": "2026-11-01T13:29:44.772Z",
+        "actor_role": "payment_webhook_system",
+        "action": "donation:reconcile_verified",
+        "details": "Reconciled payment pi_p28_1793539784645 for $50. Issued receipt PHUM-2026-61814.",
+        "signature": "516f8cfd0d3a7b00f526d85fff0b412a3ea7c0ab1999fbd4b09aaa91767b72af"
+      },
+      {
+        "id": "p28-conc-1793539785003-0",
+        "timestamp": "2026-11-01T13:29:45.003Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 0",
+        "signature": "sig-conc-0"
+      },
+      {
+        "id": "p28-conc-1793539785003-1",
+        "timestamp": "2026-11-01T13:29:45.003Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 1",
+        "signature": "sig-conc-1"
+      },
+      {
+        "id": "p28-conc-1793539785003-2",
+        "timestamp": "2026-11-01T13:29:45.003Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 2",
+        "signature": "sig-conc-2"
+      },
+      {
+        "id": "p28-conc-1793539785003-3",
+        "timestamp": "2026-11-01T13:29:45.003Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 3",
+        "signature": "sig-conc-3"
+      },
+      {
+        "id": "p28-conc-1793539785003-4",
+        "timestamp": "2026-11-01T13:29:45.003Z",
+        "actor_role": "concurrency_tester",
+        "action": "test:concurrency_lock",
+        "details": "Parallel write test iteration 4",
+        "signature": "sig-conc-4"
+      },
+      {
+        "id": "audit-handoff-1793539785680",
+        "timestamp": "2026-11-01T13:29:45.680Z",
+        "actor_role": "staff",
+        "action": "handoff:cross_division_executed",
+        "details": "Handoff handoff-1793539785680: ORG-AI-011 -> FUND-AI-007. Workflow: wf-1793539785680.",
+        "signature": "7173c9a6cf4886e3e9cc7a220e81861cac0f86d186538345353a75d0e1c1edf7"
+      },
+      {
+        "id": "audit-killswitch-1793539785837",
+        "timestamp": "2026-11-01T13:29:45.837Z",
+        "actor_role": "master_admin",
+        "action": "workforce:emergency_halt_all",
+        "details": "CRITICAL: Global emergency kill switch activated by Admin safety inspection drill. All 36 agents paused.",
+        "signature": "c8e3ec96a6d06a9299f8a82015444427b5fffc75f4aa70fc84886563d5af9e84"
+      },
+      {
+        "id": "audit-resume-1793539785976",
+        "timestamp": "2026-11-01T13:29:45.976Z",
+        "actor_role": "master_admin",
+        "action": "workforce:resume_all",
+        "details": "Global emergency halt deactivated by Executive Governance. All 36 agents resumed.",
+        "signature": "cdde1a417bebd14e6b89302f65f6a1e292e3a8ec7466510d949847025a15ef1e"
+      },
+      {
+        "id": "audit-appr-1793539786135",
+        "timestamp": "2026-11-01T13:29:46.135Z",
+        "actor_role": "Supervising Director",
+        "action": "agent_approval:approved",
+        "details": "Reviewed agent recommendation appr-p29-1793539785976 by Fundraising Orchestrator: approved. Notes: Approved following executive committee review.",
+        "signature": "a14e9975ab130ab61fc39b2e9cc9c6ac284401125a5b836f1e8033d213047324"
+      },
+      {
+        "id": "audit-handoff-1793539786276",
+        "timestamp": "2026-11-01T13:29:46.276Z",
+        "actor_role": "fundraising_director",
+        "action": "handoff:cross_division_executed",
+        "details": "Handoff handoff-1793539786276: FUND-AI-003 -> ORG-AI-001. Workflow: wf-1793539786276.",
+        "signature": "b4faf40ecfe2fd1b7c2e6d5f1a569bd4cad73bf263372cdd5d1e94f78d13ce5f"
+      },
+      {
+        "id": "audit-recov-1793539786597",
+        "action": "auth:password_recovery_requested",
+        "email": "fatima.test.1793539786418@example.org",
+        "timestamp": "2026-11-01T13:29:46.597Z",
+        "tokenHash": "3d4622e56376826795aca482118a2daaba5afb2251fc335e98971b7106275697"
+      },
+      {
+        "id": "audit-killswitch-1793539787103",
+        "timestamp": "2026-11-01T13:29:47.103Z",
+        "actor_role": "master_admin",
+        "action": "workforce:emergency_halt_all",
+        "details": "CRITICAL: Global emergency kill switch activated by Executive Director. All 36 agents paused.",
+        "signature": "a1072a16c0c3dbddaf09c7cbe7dd0cf0f50911b47de8a0e80dfa6945d61a6b65"
+      },
+      {
+        "id": "audit-resume-1793539787103",
+        "timestamp": "2026-11-01T13:29:47.103Z",
+        "actor_role": "master_admin",
+        "action": "workforce:resume_all",
+        "details": "Global emergency halt deactivated by Executive Director. All 36 agents resumed.",
+        "signature": "f6d6cbe68a3cf731741d56b0092acc9e5a892fb8949d7294f3cc978e500b5812"
+      },
+      {
+        "id": "audit-sess-1793539787439-3e9d",
+        "timestamp": "2026-11-01T13:29:47.439Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user sec.test.1793539787439@phumulani.org (Role: staff, MFA: true).",
+        "signature": "e3c5d14fe61cd83839731dcd6983496cc1ccc7413062bfa60cd37286a15dfec7"
+      },
+      {
+        "id": "audit-sess-rev-1793539787573",
+        "timestamp": "2026-11-01T13:29:47.573Z",
+        "actor_role": "staff",
+        "action": "auth:session_revoked",
+        "details": "Revoked session 5e6a0a93... for user sec.test.1793539787439@phumulani.org.",
+        "signature": "d9f77c4672e25592a2fd0a6e26226175d8cd3702ca611f2bd5d4a3c6a35e52ba"
+      },
+      {
+        "id": "audit-sess-1793539791692-hfko",
+        "timestamp": "2026-11-01T13:29:51.691Z",
+        "actor_role": "staff",
+        "action": "auth:session_created",
+        "details": "Created session for user session.crossportal.1793539791691@phumulani.org (Role: staff, MFA: false).",
+        "signature": "a8275dceae52f836c22d6610579a3ffa5d696f817231072de54a9026819b54bf"
+      },
+      {
+        "id": "audit-sess-rev-1793539791855",
+        "timestamp": "2026-11-01T13:29:51.855Z",
+        "actor_role": "staff",
+        "action": "auth:session_revoked",
+        "details": "Revoked session c33d36f2... for user session.crossportal.1793539791691@phumulani.org.",
+        "signature": "72c17a5d0ce7c09ffffc94b1f834de8fb4ef3db45a2034085df94bc5dab2b36d"
+      },
+      {
+        "id": "audit-reg-1793539792547-090644",
+        "timestamp": "2026-11-01T13:29:52.191Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "actor_id": "usr-mem-1793539792141-0d635c13",
+        "action": "MEMBER_REGISTERED",
+        "details": "New community member registered: First Registrant (dup.test.1793539792139@example.org). Preferred language: en.",
+        "signature": "9da7a3028a313807f5a358bc0775ce10d717de53d774424c17ea07abc64f25ad"
+      },
+      {
+        "id": "audit-sess-1793539792708-31b9",
+        "timestamp": "2026-11-01T13:29:52.708Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "action": "auth:session_created",
+        "details": "Created session for user dup.test.1793539792139@example.org (Role: COMMUNITY_MEMBER, MFA: false).",
+        "signature": "446375dd31f78515e74b72b1cadc3fed7aeae9a17d88ef0b566895f7939f170a"
+      },
+      {
+        "id": "audit-reg-1793539793490-7dc669",
+        "timestamp": "2026-11-01T13:29:53.098Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "actor_id": "usr-mem-1793539793042-166e7a97",
+        "action": "MEMBER_REGISTERED",
+        "details": "New community member registered: Auth Test User (auth.test.1793539793040@example.org). Preferred language: en.",
+        "signature": "18b4773ec84c1a7fa55ddaf530c8e5b127def026ede7e442376c74f530eb395e"
+      },
+      {
+        "id": "audit-sess-1793539793701-uh4l",
+        "timestamp": "2026-11-01T13:29:53.701Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "action": "auth:session_created",
+        "details": "Created session for user auth.test.1793539793040@example.org (Role: COMMUNITY_MEMBER, MFA: false).",
+        "signature": "1ca8c53a435c3d49f835617f9aa45b56e7003a7beea5cc288751a5fe98b60695"
+      },
+      {
+        "id": "audit-sess-1793539793924-k5c2",
+        "timestamp": "2026-11-01T13:29:53.924Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "action": "auth:session_created",
+        "details": "Created session for user auth.test.1793539793040@example.org (Role: COMMUNITY_MEMBER, MFA: false).",
+        "signature": "194d68da5765c89086e66f2ea06c7edb7704b4ed1b3f1855f574ebe122fa4ea2"
+      },
+      {
+        "id": "audit-sess-1793539794114-qlwn",
+        "timestamp": "2026-11-01T13:29:54.114Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "action": "auth:session_created",
+        "details": "Created session for user rev.test@example.org (Role: COMMUNITY_MEMBER, MFA: false).",
+        "signature": "860fdc8f808daf3d555bdeab79eb593072a8738c0a05ee66d52cddc9ee6312a1"
+      },
+      {
+        "id": "audit-sess-rev-1793539794285",
+        "timestamp": "2026-11-01T13:29:54.285Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "action": "auth:session_revoked",
+        "details": "Revoked session 8a6c3709... for user rev.test@example.org.",
+        "signature": "a23570d7adac61ca524908f37f700a43dcb276862eab357f492a692d09f26722"
+      },
+      {
+        "id": "audit-reg-1793539794821-a34a58",
+        "timestamp": "2026-11-01T13:29:54.514Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "actor_id": "usr-mem-1793539794463-a422024c",
+        "action": "MEMBER_REGISTERED",
+        "details": "New community member registered: Amina Community Member (amina.profile.1793539794461@example.org). Preferred language: so.",
+        "signature": "e3ffad1be9777d075e70cac51f185699ceacb5f4d5897470e82ee5b4abab30c4"
+      },
+      {
+        "id": "audit-sess-1793539794951-92jh",
+        "timestamp": "2026-11-01T13:29:54.951Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "action": "auth:session_created",
+        "details": "Created session for user amina.profile.1793539794461@example.org (Role: COMMUNITY_MEMBER, MFA: false).",
+        "signature": "3adaa82adda330bed547bce022baf47813425612a65bbb0fef63eabaa5419984"
+      },
+      {
+        "id": "audit-prof-upd-1793539795257-ebb87f",
+        "timestamp": "2026-11-01T13:29:55.257Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "actor_id": "usr-mem-1793539794463-a422024c",
+        "action": "MEMBER_PROFILE_UPDATED",
+        "details": "Profile updated for member usr-mem-1793539794463-a422024c (amina.profile.1793539794461@example.org). Language: so."
+      },
+      {
+        "id": "audit-reg-1793539795777-a2ed16",
+        "timestamp": "2026-11-01T13:29:55.458Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "actor_id": "usr-mem-1793539795420-b0d4137d",
+        "action": "MEMBER_REGISTERED",
+        "details": "New community member registered: Member Alice (alice.1793539795418@example.org). Preferred language: en.",
+        "signature": "f42d508819e62587eb8af81b69a2c9658868f94402a6c6f03d17ad6061169c1f"
+      },
+      {
+        "id": "audit-sess-1793539795924-epde",
+        "timestamp": "2026-11-01T13:29:55.924Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "action": "auth:session_created",
+        "details": "Created session for user alice.1793539795418@example.org (Role: COMMUNITY_MEMBER, MFA: false).",
+        "signature": "6ad034660daafcdfb67890c6f9a31dcb1dfc77d8b6295b101375c675d57d5609"
+      },
+      {
+        "id": "audit-reg-1793539796423-b1b811",
+        "timestamp": "2026-11-01T13:29:56.135Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "actor_id": "usr-mem-1793539796084-0d1f8f08",
+        "action": "MEMBER_REGISTERED",
+        "details": "New community member registered: Member Bob (bob.1793539796083@example.org). Preferred language: en.",
+        "signature": "9760606120907da9c10984f60e47e8d7767e533ceb1658b0be723ed8fcc39f4c"
+      },
+      {
+        "id": "audit-sess-1793539796561-sfll",
+        "timestamp": "2026-11-01T13:29:56.561Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "action": "auth:session_created",
+        "details": "Created session for user bob.1793539796083@example.org (Role: COMMUNITY_MEMBER, MFA: false).",
+        "signature": "a6e61f7225798f3d6a9cf22b12dd947c73bd4934c5997e460ee1d13ea483734c"
+      },
+      {
+        "id": "audit-reg-1793539797050-bd156c",
+        "timestamp": "2026-11-01T13:29:56.749Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "actor_id": "usr-mem-1793539796709-a6dcb8a0",
+        "action": "MEMBER_REGISTERED",
+        "details": "New community member registered: Member Carol (carol.1793539796708@example.org). Preferred language: en.",
+        "signature": "329a264437bb8aea55346373847562f3e5878d4b21aa5f153af3488f6d7b9938"
+      },
+      {
+        "id": "audit-sess-1793539797193-a61f",
+        "timestamp": "2026-11-01T13:29:57.192Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "action": "auth:session_created",
+        "details": "Created session for user carol.1793539796708@example.org (Role: COMMUNITY_MEMBER, MFA: false).",
+        "signature": "9dede11eeddc79984af7d952ea960cc67326b71b1da95162a9fc99fbe7737e2c"
+      },
+      {
+        "id": "audit-reg-1793539797680-d6e1ef",
+        "timestamp": "2026-11-01T13:29:57.392Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "actor_id": "usr-mem-1793539797349-859a5306",
+        "action": "MEMBER_REGISTERED",
+        "details": "New community member registered: Member Dan (dan.1793539797348@example.org). Preferred language: en.",
+        "signature": "aae733df574e9abfdeecef757e393f3dece5a70823baeaa968d0932f8ad3e4cc"
+      },
+      {
+        "id": "audit-sess-1793539797810-ofyr",
+        "timestamp": "2026-11-01T13:29:57.810Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "action": "auth:session_created",
+        "details": "Created session for user dan.1793539797348@example.org (Role: COMMUNITY_MEMBER, MFA: false).",
+        "signature": "265153efa4141d6a39d8e7791ca6f0bd80af718edadcdc40b456cc918d74bb9e"
+      },
+      {
+        "id": "audit-reg-1793539798298-8a4a33",
+        "timestamp": "2026-11-01T13:29:58.010Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "actor_id": "usr-mem-1793539797966-7636567b",
+        "action": "MEMBER_REGISTERED",
+        "details": "New community member registered: Multilingual Member (multi.1793539797964@example.org). Preferred language: en.",
+        "signature": "97f6dd9002b5048d166f82f4fa1001e9700b533035a7881d0a17831d6ef59daa"
+      },
+      {
+        "id": "audit-sess-1793539798467-45o2",
+        "timestamp": "2026-11-01T13:29:58.467Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "action": "auth:session_created",
+        "details": "Created session for user multi.1793539797964@example.org (Role: COMMUNITY_MEMBER, MFA: false).",
+        "signature": "86833239f2195f27ff2de77a7899cd134f19c461f220291dc68033d96da38231"
+      },
+      {
+        "id": "audit-prof-upd-1793539798811-cdfc0d",
+        "timestamp": "2026-11-01T13:29:58.811Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "actor_id": "usr-mem-1793539797966-7636567b",
+        "action": "MEMBER_PROFILE_UPDATED",
+        "details": "Profile updated for member usr-mem-1793539797966-7636567b (multi.1793539797964@example.org). Language: en."
+      },
+      {
+        "id": "audit-prof-upd-1793539799123-831c13",
+        "timestamp": "2026-11-01T13:29:59.124Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "actor_id": "usr-mem-1793539797966-7636567b",
+        "action": "MEMBER_PROFILE_UPDATED",
+        "details": "Profile updated for member usr-mem-1793539797966-7636567b (multi.1793539797964@example.org). Language: so."
+      },
+      {
+        "id": "audit-prof-upd-1793539799441-1872b5",
+        "timestamp": "2026-11-01T13:29:59.441Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "actor_id": "usr-mem-1793539797966-7636567b",
+        "action": "MEMBER_PROFILE_UPDATED",
+        "details": "Profile updated for member usr-mem-1793539797966-7636567b (multi.1793539797964@example.org). Language: es."
+      },
+      {
+        "id": "audit-prof-upd-1793539799731-77c741",
+        "timestamp": "2026-11-01T13:29:59.732Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "actor_id": "usr-mem-1793539797966-7636567b",
+        "action": "MEMBER_PROFILE_UPDATED",
+        "details": "Profile updated for member usr-mem-1793539797966-7636567b (multi.1793539797964@example.org). Language: hmn."
+      },
+      {
+        "id": "audit-prof-upd-1793539800069-223aef",
+        "timestamp": "2026-11-01T13:30:00.069Z",
+        "actor_role": "COMMUNITY_MEMBER",
+        "actor_id": "usr-mem-1793539797966-7636567b",
+        "action": "MEMBER_PROFILE_UPDATED",
+        "details": "Profile updated for member usr-mem-1793539797966-7636567b (multi.1793539797964@example.org). Language: kar."
       }
     ],
     "donations_verified": [
@@ -8898,6 +9313,20 @@
         "campaign_id": "general",
         "receipt_number": "PHUM-2026-66658",
         "verified_at": "2026-11-01T06:22:32.585Z",
+        "is_synthetic": false,
+        "payment_status": "succeeded"
+      },
+      {
+        "id": "don-1793539784645-3a37a7",
+        "payment_intent_id": "pi_p28_1793539784645",
+        "donor_name": "P28 Verified Donor",
+        "donor_email": "donor.p28@community.org",
+        "amount": 50,
+        "currency": "usd",
+        "program_designation": "PROG-001",
+        "campaign_id": "general",
+        "receipt_number": "PHUM-2026-61814",
+        "verified_at": "2026-11-01T13:29:44.645Z",
         "is_synthetic": false,
         "payment_status": "succeeded"
       }
@@ -37398,6 +37827,132 @@
         "departmentId": "DEPT-COMM",
         "createdAt": "2026-11-01T06:24:16.571Z",
         "updatedAt": "2026-11-01T06:24:16.571Z"
+      },
+      {
+        "id": "usr-mem-1793539786420-7mr3",
+        "name": "Fatima Al-Mansoor",
+        "email": "fatima.test.1793539786418@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phone": "",
+        "passwordHash": "f322ea766d11a66101ac1f5c73529b71d2f3abce53cacea2e96a7b2a44eddf6378c5cdded0847af96479fab22a7c7a8b8e10d1bff9a5b13dd6fc6a12b229d427",
+        "passwordSalt": "654d00f0248fcdb6532e997889d63532ffbf3e441badd7ace4d14dda79096848",
+        "status": "active",
+        "mfaEnabled": false,
+        "departmentId": "DEPT-COMM",
+        "createdAt": "2026-11-01T13:29:46.462Z",
+        "updatedAt": "2026-11-01T13:29:46.462Z"
+      },
+      {
+        "id": "usr-mem-1793539792141-0d635c13",
+        "name": "First Registrant",
+        "email": "dup.test.1793539792139@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phone": "",
+        "passwordHash": "0e8c19463747396020263ccee96c8f3ff13d936df44eed0dc4c8963f7b0ba8100fbe64e09b61f96564ae4bba79eed3ea587cdac170216700aca9aba732e76faa",
+        "passwordSalt": "43493586e2e93940f572b784e18276a9f04b7f970f4e30344138b06a9837df4f",
+        "status": "active",
+        "departmentId": "DEPT-COMM",
+        "mfaEnabled": false,
+        "createdAt": "2026-11-01T13:29:52.191Z",
+        "updatedAt": "2026-11-01T13:29:52.191Z"
+      },
+      {
+        "id": "usr-mem-1793539793042-166e7a97",
+        "name": "Auth Test User",
+        "email": "auth.test.1793539793040@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phone": "",
+        "passwordHash": "8ff8d070b55c294490bcba49ad80bf2a3b4b0905c690cec1c5f61d78574d586897f190fecf6228f18131b683568b237df7e8806b56360b9b0b3df24b42689373",
+        "passwordSalt": "02fab19cbf5de82484206297955caa47f1f8e89c0da35eec4a190c6be7845ba8",
+        "status": "active",
+        "departmentId": "DEPT-COMM",
+        "mfaEnabled": false,
+        "createdAt": "2026-11-01T13:29:53.098Z",
+        "updatedAt": "2026-11-01T13:29:53.098Z"
+      },
+      {
+        "id": "usr-mem-1793539794463-a422024c",
+        "name": "Amina Community Member",
+        "email": "amina.profile.1793539794461@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phone": "612-555-0101",
+        "passwordHash": "2149e079c2180124c048ad03c057c5bad5c88f1f728293f7ee7210c072d4a39ab827b91fbb5fa1230e733ac0175d6123e8360b5a53def833ef75b2061dfd62b0",
+        "passwordSalt": "380e139f0479a90679f000b4b4e0f26ca8961096ee1f3dbf2736245f2470b3fc",
+        "status": "active",
+        "departmentId": "DEPT-COMM",
+        "mfaEnabled": false,
+        "createdAt": "2026-11-01T13:29:54.514Z",
+        "updatedAt": "2026-11-01T13:29:54.514Z"
+      },
+      {
+        "id": "usr-mem-1793539795420-b0d4137d",
+        "name": "Member Alice",
+        "email": "alice.1793539795418@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phone": "",
+        "passwordHash": "75c50e4f9e5149370e643d9d31521d57504a635cfa8be41fa7ee000b615d5b64d868c2e67ef40e01b7c3f7f67be83023c27b8f6a6c33d2105879f28209ac7f21",
+        "passwordSalt": "b183e82f9a491f9dd6f7015647724adade5452580a5b7628618fa3a241801e2b",
+        "status": "active",
+        "departmentId": "DEPT-COMM",
+        "mfaEnabled": false,
+        "createdAt": "2026-11-01T13:29:55.458Z",
+        "updatedAt": "2026-11-01T13:29:55.458Z"
+      },
+      {
+        "id": "usr-mem-1793539796084-0d1f8f08",
+        "name": "Member Bob",
+        "email": "bob.1793539796083@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phone": "",
+        "passwordHash": "0b302431a2fb04ab4acc0a36ad0d4d0908b02a3b1c6b039906d575a729df9c28056b2e7556546eafa8351320ecbb0e010772dbb4fd50001a585f7b711ee708db",
+        "passwordSalt": "d4e046aae8ed9091ecf37c26963c33579395054a9fd79332c862f6f208b16d02",
+        "status": "active",
+        "departmentId": "DEPT-COMM",
+        "mfaEnabled": false,
+        "createdAt": "2026-11-01T13:29:56.135Z",
+        "updatedAt": "2026-11-01T13:29:56.135Z"
+      },
+      {
+        "id": "usr-mem-1793539796709-a6dcb8a0",
+        "name": "Member Carol",
+        "email": "carol.1793539796708@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phone": "",
+        "passwordHash": "70ec9be61c3cfb7497ef13e6d50902461c2d6fdf179a57152678d0ac9033f43e2308ea5a77e33361cf06285a91f1b91a7d1f34fb5927204eeb03247317b9d0f5",
+        "passwordSalt": "49ddf7c51c5f5740331f96b986d88bad9bcbdcd86145d8a47176a611c6b9747a",
+        "status": "active",
+        "departmentId": "DEPT-COMM",
+        "mfaEnabled": false,
+        "createdAt": "2026-11-01T13:29:56.749Z",
+        "updatedAt": "2026-11-01T13:29:56.749Z"
+      },
+      {
+        "id": "usr-mem-1793539797349-859a5306",
+        "name": "Member Dan",
+        "email": "dan.1793539797348@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phone": "612-555-4444",
+        "passwordHash": "72301f269d24d62ac60e0c13c394e06856c7ee160b6975fa898910373b330c879999e07142004f10582cfd586160fdf66246238a48241c5da4a0ee711969fa2c",
+        "passwordSalt": "ed5c6dc08c96867de437e314dbd6a7cc52cd9444124356ae33c61d3761562830",
+        "status": "active",
+        "departmentId": "DEPT-COMM",
+        "mfaEnabled": false,
+        "createdAt": "2026-11-01T13:29:57.392Z",
+        "updatedAt": "2026-11-01T13:29:57.392Z"
+      },
+      {
+        "id": "usr-mem-1793539797966-7636567b",
+        "name": "Multilingual Member",
+        "email": "multi.1793539797964@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phone": "",
+        "passwordHash": "1c9f1b5151afd4b8cf715db75509ec3ad42728a23bcbce6223b1a799c401bb534272b629a79ecf5ce8e19198dbaaf65d690d6cdee4fb3071d9fbe03d742b39ed",
+        "passwordSalt": "961558420721a526cd024181d3bf70b08dcaa0e75fbe7291179b47e237bcad49",
+        "status": "active",
+        "departmentId": "DEPT-COMM",
+        "mfaEnabled": false,
+        "createdAt": "2026-11-01T13:29:58.010Z",
+        "updatedAt": "2026-11-01T13:29:58.010Z"
       }
     ],
     "p38_restart_records": [
@@ -76630,6 +77185,166 @@
         "accommodations": "",
         "createdAt": "2026-11-01T06:24:03.411Z",
         "updatedAt": "2026-11-01T06:24:03.411Z"
+      },
+      {
+        "id": "usr-mem-1793539792141-0d635c13",
+        "name": "First Registrant",
+        "email": "dup.test.1793539792139@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phoneNumber": "",
+        "preferredLanguage": "en",
+        "programInterests": [
+          "PROG-001",
+          "PROG-002"
+        ],
+        "notificationPreferences": {
+          "email": true,
+          "sms": false,
+          "inApp": true
+        },
+        "accommodations": "",
+        "createdAt": "2026-11-01T13:29:52.191Z",
+        "updatedAt": "2026-11-01T13:29:52.191Z"
+      },
+      {
+        "id": "usr-mem-1793539793042-166e7a97",
+        "name": "Auth Test User",
+        "email": "auth.test.1793539793040@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phoneNumber": "",
+        "preferredLanguage": "en",
+        "programInterests": [
+          "PROG-001",
+          "PROG-002"
+        ],
+        "notificationPreferences": {
+          "email": true,
+          "sms": false,
+          "inApp": true
+        },
+        "accommodations": "",
+        "createdAt": "2026-11-01T13:29:53.098Z",
+        "updatedAt": "2026-11-01T13:29:53.098Z"
+      },
+      {
+        "id": "usr-mem-1793539794463-a422024c",
+        "name": "Amina Community Member",
+        "email": "amina.profile.1793539794461@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phoneNumber": "612-555-9999",
+        "preferredLanguage": "so",
+        "programInterests": [
+          "PROG-001",
+          "PROG-002"
+        ],
+        "notificationPreferences": {
+          "email": true,
+          "sms": false,
+          "inApp": true
+        },
+        "accommodations": "Large print materials",
+        "createdAt": "2026-11-01T13:29:54.514Z",
+        "updatedAt": "2026-11-01T13:29:55.103Z"
+      },
+      {
+        "id": "usr-mem-1793539795420-b0d4137d",
+        "name": "Member Alice",
+        "email": "alice.1793539795418@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phoneNumber": "",
+        "preferredLanguage": "en",
+        "programInterests": [
+          "PROG-001",
+          "PROG-002"
+        ],
+        "notificationPreferences": {
+          "email": true,
+          "sms": false,
+          "inApp": true
+        },
+        "accommodations": "",
+        "createdAt": "2026-11-01T13:29:55.458Z",
+        "updatedAt": "2026-11-01T13:29:55.458Z"
+      },
+      {
+        "id": "usr-mem-1793539796084-0d1f8f08",
+        "name": "Member Bob",
+        "email": "bob.1793539796083@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phoneNumber": "",
+        "preferredLanguage": "en",
+        "programInterests": [
+          "PROG-001",
+          "PROG-002"
+        ],
+        "notificationPreferences": {
+          "email": true,
+          "sms": false,
+          "inApp": true
+        },
+        "accommodations": "",
+        "createdAt": "2026-11-01T13:29:56.135Z",
+        "updatedAt": "2026-11-01T13:29:56.135Z"
+      },
+      {
+        "id": "usr-mem-1793539796709-a6dcb8a0",
+        "name": "Member Carol",
+        "email": "carol.1793539796708@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phoneNumber": "",
+        "preferredLanguage": "en",
+        "programInterests": [
+          "PROG-001",
+          "PROG-002"
+        ],
+        "notificationPreferences": {
+          "email": true,
+          "sms": false,
+          "inApp": true
+        },
+        "accommodations": "",
+        "createdAt": "2026-11-01T13:29:56.749Z",
+        "updatedAt": "2026-11-01T13:29:56.749Z"
+      },
+      {
+        "id": "usr-mem-1793539797349-859a5306",
+        "name": "Member Dan",
+        "email": "dan.1793539797348@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phoneNumber": "612-555-4444",
+        "preferredLanguage": "en",
+        "programInterests": [
+          "PROG-001",
+          "PROG-002"
+        ],
+        "notificationPreferences": {
+          "email": true,
+          "sms": false,
+          "inApp": true
+        },
+        "accommodations": "",
+        "createdAt": "2026-11-01T13:29:57.392Z",
+        "updatedAt": "2026-11-01T13:29:57.392Z"
+      },
+      {
+        "id": "usr-mem-1793539797966-7636567b",
+        "name": "Multilingual Member",
+        "email": "multi.1793539797964@example.org",
+        "role": "COMMUNITY_MEMBER",
+        "phoneNumber": "",
+        "preferredLanguage": "orm",
+        "programInterests": [
+          "PROG-001",
+          "PROG-002"
+        ],
+        "notificationPreferences": {
+          "email": true,
+          "sms": false,
+          "inApp": true
+        },
+        "accommodations": "",
+        "createdAt": "2026-11-01T13:29:58.010Z",
+        "updatedAt": "2026-11-01T13:30:00.256Z"
       }
     ],
     "service_requests": [
