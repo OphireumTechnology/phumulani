@@ -23,6 +23,20 @@ jobs:
       - name: Checkout Codebase
         uses: actions/checkout@v4
 
+      - name: Guard required npm lockfile before Node setup
+        shell: bash
+        run: |
+          if [ ! -s package-lock.json ]; then
+            echo "::error file=package-lock.json::Required tracked npm lockfile is missing. Google AI Studio sync must preserve package-lock.json; restore it from the last passing commit."
+            exit 1
+          fi
+          if ! git ls-files --error-unmatch package-lock.json >/dev/null 2>&1; then
+            echo "::error file=package-lock.json::package-lock.json must be tracked in Git."
+            exit 1
+          fi
+          node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package-lock.json','utf8'));if(!p.lockfileVersion||!p.packages)process.exit(1)"
+          echo "Required tracked npm lockfile is present and structurally valid."
+
       - name: Setup Node.js Runtime (v22)
         uses: actions/setup-node@v4
         with:
@@ -71,6 +85,20 @@ jobs:
     steps:
       - name: Checkout Codebase
         uses: actions/checkout@v4
+
+      - name: Guard required npm lockfile before Node setup
+        shell: bash
+        run: |
+          if [ ! -s package-lock.json ]; then
+            echo "::error file=package-lock.json::Required tracked npm lockfile is missing. Google AI Studio sync must preserve package-lock.json; restore it from the last passing commit."
+            exit 1
+          fi
+          if ! git ls-files --error-unmatch package-lock.json >/dev/null 2>&1; then
+            echo "::error file=package-lock.json::package-lock.json must be tracked in Git."
+            exit 1
+          fi
+          node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package-lock.json','utf8'));if(!p.lockfileVersion||!p.packages)process.exit(1)"
+          echo "Required tracked npm lockfile is present and structurally valid."
 
       - name: Setup Node.js Runtime (v22)
         uses: actions/setup-node@v4
