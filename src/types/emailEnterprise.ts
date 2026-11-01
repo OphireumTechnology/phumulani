@@ -81,10 +81,13 @@ export type EmailFolder = 'INBOX' | 'SENT' | 'ARCHIVE' | 'TRASH' | 'SPAM' | 'DRA
 export type MailboxConnectionState =
   | 'NOT_CONFIGURED'
   | 'AUTHORIZATION_REQUIRED'
+  | 'AUTHORIZING'
   | 'CONNECTING'
   | 'CONNECTED'
   | 'SYNCING'
   | 'DEGRADED'
+  | 'REAUTHORIZATION_REQUIRED'
+  | 'REVOKED'
   | 'DISCONNECTED'
   | 'AUTHENTICATION_FAILED'
   | 'RATE_LIMITED'
@@ -93,6 +96,26 @@ export type MailboxConnectionState =
   | 'syncing'
   | 'error'
   | 'disconnected';
+
+export type EmailDeliveryState =
+  | 'STAGED'
+  | 'APPROVED'
+  | 'QUEUED'
+  | 'PROVIDER_ACCEPTED'
+  | 'DELIVERY_CONFIRMED'
+  | 'FAILED'
+  | 'CANCELLED'
+  | 'RECONCILIATION_REQUIRED';
+
+export type PostgresDetailedState =
+  | 'NOT_CONNECTED'
+  | 'CONFIGURED_UNVERIFIED'
+  | 'CONNECTED_STAGING'
+  | 'CONNECTED_PRODUCTION'
+  | 'DEGRADED'
+  | 'ERROR';
+
+export type SlaStatus = 'ON_TRACK' | 'APPROACHING_DEADLINE' | 'BREACHED' | 'ESCALATED';
 
 export type MailboxType = 'primary' | 'collaborative' | 'shared' | 'alias';
 
@@ -185,6 +208,7 @@ export interface OutboundEmailAuthorization {
   idempotencyKey: string;
   providerSubmissionId?: string;
   deliveryStatus: 'submitted' | 'delivered' | 'bounced' | 'failed';
+  deliveryState?: EmailDeliveryState;
   dispatchedAt?: string;
   reconciledInSentFolder: boolean;
   error?: string;

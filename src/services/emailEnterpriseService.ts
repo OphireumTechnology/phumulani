@@ -40,6 +40,7 @@ import {
   EmailAIRewriteAction,
   EmailTemplate,
   EMAIL_TEMPLATES,
+  SlaStatus,
 } from '../types/emailEnterprise';
 import {
   DonorContact,
@@ -627,6 +628,69 @@ Draft a professional, compassionate response following Phumulani's organizationa
       aiDraftAcceptanceRatePercent: 96.4,
       classificationAccuracyPercent: 98.2,
       autoResponsesSentTotal,
+    };
+  }
+
+  /**
+   * M52.09: SLA Monitoring and Escalation
+   * Calculates SLA compliance for threads based on priority level (P0=1h, P1=4h, P2=24h, P3=48h, P4=72h).
+   * Redacts confidential survivor details for Category 01 to prevent disclosure in supervisor alerts.
+   */
+  public static calculateSlaStatus(
+    thread: EnterpriseEmailThread,
+    referenceTime: Date = new Date()
+  ): {
+    priority: EmailPriorityLevel;
+    slaHours: number;
+    elapsedHours: number;
+    remainingHours: number;
+    status: SlaStatus;
+    deadlineAt: string;
+    supervisorAlertRequired: boolean;
+    alertTitle: string;
+    alertDetails: string;
+    alertRedacted: boolean;
+  } {
+    const priority = thread.priority || 'P3';
+    const config = PRIORITY_CONFIG[priority] || PRIORITY_CONFIG.P3;
+    const slaHours = config.slaHours;
+
+    const createdAt = new Date(thread.lastMessageAt || (thread as any).createdAt || referenceTime).getTime();
+    const elapsedMs = Math.max(0, referenceTime.getTime() - createdAt);
+    const elapsedHours = Math.round((elapsedMs / (1000 * 60 * 60)) * 10) / 10;
+    const remainingHours = Math.round((slaHours - elapsedHours) * 10) / 10;
+
+    const deadlineAt = new Date(createdAt + slaHours * 60 * 60 * 1000).toISOString();
+
+    let status: SlaStatus = 'ON_TRACK';
+    if (elapsedHours >= slaHours) {
+      status = 'BREACHED';
+    } else if (remainingHours <= slaHours * 0.25) {
+      status = 'APPROACHING_DEADLINE';
+    }
+
+    const supervisorAlertRequired = status === 'BREACHED' || (status === 'APPROACHING_DEADLINE' && (priority === 'P0' || priority === 'P1'));
+
+    const isSafeguarding = thread.classification === '01_safeguarding';
+    const alertTitle = isSafeguarding
+      ? `[SAFEGUARDING ALERT] Confidential Priority ${priority} Response Overdue`
+      : `[SLA ESCALATION] ${priority} Thread Response Overdue: ${thread.threadSubject.substring(0, 40)}`;
+
+    const alertDetails = isSafeguarding
+      ? 'CONFIDENTIAL SURVIVOR RECORD: Details restricted under VAWA Section 1367. Assigned exclusively to Sister Miriam K. Immediate caseworker check-in required.'
+      : `Thread [${thread.id}] assigned to ${thread.assignedStaffName || 'Unassigned'} has breached SLA of ${slaHours}h (Elapsed: ${elapsedHours}h).`;
+
+    return {
+      priority,
+      slaHours,
+      elapsedHours,
+      remainingHours,
+      status,
+      deadlineAt,
+      supervisorAlertRequired,
+      alertTitle,
+      alertDetails,
+      alertRedacted: isSafeguarding,
     };
   }
 

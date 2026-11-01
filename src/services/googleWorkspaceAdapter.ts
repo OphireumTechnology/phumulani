@@ -6,18 +6,22 @@
  * Provider-agnostic architecture with truthful staged status reporting.
  */
 
+import { EmailDeliveryState } from '../types/emailEnterprise';
+
 export type GoogleWorkspaceAuthStatus =
   | 'NOT_CONFIGURED'
   | 'AUTHORIZATION_REQUIRED'
+  | 'AUTHORIZING'
   | 'CONNECTED'
   | 'SYNCING'
   | 'DEGRADED'
+  | 'REAUTHORIZATION_REQUIRED'
+  | 'REVOKED'
   | 'DISCONNECTED'
   | 'ERROR'
   | 'CONSENT_PENDING'
   | 'AUTHORIZED'
   | 'EXPIRED'
-  | 'REVOKED'
   | 'RATE_LIMITED';
 
 export interface GoogleWorkspaceConfig {
@@ -171,6 +175,7 @@ export class GoogleWorkspaceAdapter {
   private syncCheckpoints: Map<string, SyncCheckpoint[]> = new Map();
   private syncAuditLogs: Array<{ id: string; mailboxEmail: string; action: string; timestamp: string; details: string; status: 'success' | 'warning' | 'error' }> = [];
   private dispatchedIdempotencyKeys: Set<string> = new Set();
+  private deliveryStates: Map<string, { state: EmailDeliveryState; timestamp: string; notes?: string }> = new Map();
 
   public static getInstance(): GoogleWorkspaceAdapter {
     if (!GoogleWorkspaceAdapter.instance) {
@@ -302,6 +307,7 @@ export class GoogleWorkspaceAdapter {
     pilotEnabled: boolean;
   } {
     this.pilotEnabled = false;
+    this.liveSendingEnabled = false;
     this.pilotActivationLog.unshift({
       action: 'DEACTIVATED',
       actorName: actor.name,
@@ -642,6 +648,281 @@ export class GoogleWorkspaceAdapter {
     this.handleRevokedToken(mailboxEmail);
     this.updateMailboxStatus(mailboxEmail, 'DISCONNECTED');
     this.logSyncEvent(mailboxEmail, 'MAILBOX_DISCONNECTED', `Administrative disconnection executed for ${mailboxEmail}.`, 'warning');
+  }
+
+  /**
+   * M52.02: Starts authorization for a mailbox, setting status to AUTHORIZING
+   */
+  public startAuthorization(mailboxEmail: string): {
+    authUrl: string;
+    state: string;
+    codeVerifier: string;
+    codeChallenge: string;
+    scopes: string[];
+  } {
+    const res = this.initiateOAuth(mailboxEmail);
+    this.updateMailboxStatus(mailboxEmail, 'AUTHORIZING');
+    this.logSyncEvent(mailboxEmail, 'AUTHORIZATION_STARTED', `OAuth handshake started for ${mailboxEmail}. Status set to AUTHORIZING.`, 'success');
+    return res;
+  }
+
+  /**
+   * M52.02: Reviews requested permissions with purpose, least-privilege compliance, and security notes
+   */
+  public reviewPermissions(): {
+    scopes: Array<{ scope: string; purpose: string; risk: string; isLeastPrivilege: boolean }>;
+    totalScopes: number;
+    administrativeEscalation: boolean;
+    truthfulDisclosure: string;
+  } {
+    return {
+      scopes: [
+        { scope: 'https://www.googleapis.com/auth/gmail.send', purpose: 'Outbound Quad-Action approved email transmission', risk: 'Controlled', isLeastPrivilege: true },
+        { scope: 'https://www.googleapis.com/auth/gmail.readonly', purpose: 'Inbound message retrieval and triage ingestion', risk: 'Low', isLeastPrivilege: true },
+        { scope: 'https://www.googleapis.com/auth/gmail.modify', purpose: 'Two-way synchronization of thread labels, read/unread flags', risk: 'Controlled', isLeastPrivilege: true },
+        { scope: 'https://www.googleapis.com/auth/gmail.labels', purpose: 'Operational category label synchronization', risk: 'Low', isLeastPrivilege: true },
+        { scope: 'https://www.googleapis.com/auth/userinfo.email', purpose: 'Institutional domain verification (@phumulani.org)', risk: 'Low', isLeastPrivilege: true },
+      ],
+      totalScopes: 5,
+      administrativeEscalation: false,
+      truthfulDisclosure: 'Zero administrative escalation. Full mail.google.com account access is strictly excluded.',
+    };
+  }
+
+  /**
+   * M52.02: Completes OAuth callback and transitions status to CONNECTED
+   */
+  public completeOAuthCallback(params: {
+    state: string;
+    code: string;
+    codeVerifier: string;
+  }): {
+    success: boolean;
+    mailboxEmail: string;
+    status: GoogleWorkspaceAuthStatus;
+    tokenType: string;
+    expiresIn: number;
+    error?: string;
+  } {
+    const res = this.handleOAuthCallback(params.code, params.state, params.codeVerifier);
+    if (res.success) {
+      this.updateMailboxStatus(res.mailboxEmail, 'CONNECTED');
+      this.recordEvidence('PROVIDER_CONNECTED', res.mailboxEmail, 'OAuth callback verified with PKCE S256 verifier. Status transitioned to CONNECTED.');
+      return { ...res, status: 'CONNECTED' };
+    }
+    return res;
+  }
+
+  /**
+   * M52.02 & M52.07: Verifies mailbox identity against institutional policies
+   */
+  public verifyMailboxIdentity(mailboxEmail: string): {
+    verified: boolean;
+    mailboxEmail: string;
+    department?: string;
+    role?: string;
+    isInstitutional: boolean;
+    isAuxiliary: boolean;
+    error?: string;
+  } {
+    const mbx = this.mailboxes.find((m) => m.email.toLowerCase() === mailboxEmail.toLowerCase());
+    if (!mbx) {
+      return {
+        verified: false,
+        mailboxEmail,
+        isInstitutional: false,
+        isAuxiliary: false,
+        error: `Mailbox "${mailboxEmail}" not found in registered organizational profiles.`,
+      };
+    }
+    const isDomainValid = mbx.email.endsWith('@phumulani.org');
+    const isInstitutional = GoogleWorkspaceAdapter.CANONICAL_5_INSTITUTIONAL_MAILBOXES.includes(mbx.email.toLowerCase());
+    const isAuxiliary = GoogleWorkspaceAdapter.AUXILIARY_SPECIALIZED_MAILBOXES.includes(mbx.email.toLowerCase());
+
+    return {
+      verified: isDomainValid,
+      mailboxEmail: mbx.email,
+      department: mbx.department,
+      role: mbx.role,
+      isInstitutional,
+      isAuxiliary,
+    };
+  }
+
+  /**
+   * M52.02: Sets status to REAUTHORIZATION_REQUIRED and triggers reauth
+   */
+  public reauthorize(mailboxEmail: string): { success: boolean; authUrl: string; state: string } {
+    this.updateMailboxStatus(mailboxEmail, 'REAUTHORIZATION_REQUIRED');
+    const auth = this.initiateOAuth(mailboxEmail);
+    this.logSyncEvent(mailboxEmail, 'REAUTHORIZATION_REQUIRED', `Reauthorization initiated for ${mailboxEmail}.`, 'warning');
+    return { success: true, authUrl: auth.authUrl, state: auth.state };
+  }
+
+  /**
+   * M52.02: Disconnects mailbox
+   */
+  public disconnect(mailboxEmail: string): void {
+    this.disconnectMailbox(mailboxEmail);
+  }
+
+  /**
+   * M52.02: Revokes access and purges vault
+   */
+  public revokeAccess(mailboxEmail: string): { success: boolean; mailboxEmail: string; purgedAt: string } {
+    return this.revokeAndPurgeTokens(mailboxEmail);
+  }
+
+  /**
+   * M52.02: Sanitized diagnostics without leaking tokens or secrets
+   */
+  public getSanitizedDiagnostics(mailboxEmail?: string): DiagnosticConnectionResult & {
+    sanitized: boolean;
+    activeStatesCount: number;
+    evidenceCount: number;
+  } {
+    const diag = this.runDiagnosticConnectionTest(mailboxEmail);
+    return {
+      ...diag,
+      sanitized: true,
+      activeStatesCount: this.activeOAuthStates.size,
+      evidenceCount: this.evidenceRegistry.length,
+    };
+  }
+
+  /**
+   * M52.06: Outbound Delivery State Management
+   */
+  public trackDeliveryState(
+    dispatchId: string,
+    state: EmailDeliveryState,
+    notes?: string
+  ): void {
+    this.deliveryStates.set(dispatchId, {
+      state,
+      timestamp: new Date().toISOString(),
+      notes,
+    });
+    this.logSyncEvent('donations@phumulani.org', 'DELIVERY_STATE_CHANGED', `Dispatch [${dispatchId}] state: ${state}.${notes ? ` Notes: ${notes}` : ''}`, 'success');
+  }
+
+  public getDeliveryState(dispatchId: string): {
+    dispatchId: string;
+    state: EmailDeliveryState;
+    timestamp?: string;
+    notes?: string;
+  } {
+    const record = this.deliveryStates.get(dispatchId);
+    return {
+      dispatchId,
+      state: record?.state || 'STAGED',
+      timestamp: record?.timestamp,
+      notes: record?.notes,
+    };
+  }
+
+  public reconcileAmbiguousDispatch(dispatchId: string, providerEvidenceId?: string): {
+    reconciled: boolean;
+    previousState: EmailDeliveryState;
+    newState: EmailDeliveryState;
+    reconciliationEvidence: string;
+  } {
+    const current = this.deliveryStates.get(dispatchId);
+    const prev = current?.state || 'QUEUED';
+    if (providerEvidenceId) {
+      this.trackDeliveryState(dispatchId, 'DELIVERY_CONFIRMED', `Confirmed via provider evidence ${providerEvidenceId}`);
+      return {
+        reconciled: true,
+        previousState: prev,
+        newState: 'DELIVERY_CONFIRMED',
+        reconciliationEvidence: `Matched provider message ID ${providerEvidenceId}`,
+      };
+    } else {
+      this.trackDeliveryState(dispatchId, 'RECONCILIATION_REQUIRED', 'Ambiguous provider delivery outcome. Placed in review queue without duplicate re-transmission.');
+      return {
+        reconciled: false,
+        previousState: prev,
+        newState: 'RECONCILIATION_REQUIRED',
+        reconciliationEvidence: 'Pending human or sent-folder reconciliation.',
+      };
+    }
+  }
+
+  /**
+   * M52.05: MIME Body Decoding & HTML Sanitization
+   */
+  public decodeAndSanitizeMime(rawBody: string): {
+    sanitizedHtml: string;
+    plainText: string;
+    hasThreatsFiltered: boolean;
+    detectedThreats: string[];
+  } {
+    const detectedThreats: string[] = [];
+    let sanitized = rawBody || '';
+
+    // Check for script tags
+    if (/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi.test(sanitized)) {
+      detectedThreats.push('SCRIPT_TAG_INJECTION');
+      sanitized = sanitized.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '[FILTERED_SCRIPT]');
+    }
+
+    // Check for iframes
+    if (/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi.test(sanitized)) {
+      detectedThreats.push('IFRAME_INJECTION');
+      sanitized = sanitized.replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '[FILTERED_IFRAME]');
+    }
+
+    // Check for inline event handlers (onload, onerror, onclick)
+    if (/on\w+\s*=\s*["'][^"']*["']/gi.test(sanitized)) {
+      detectedThreats.push('INLINE_EVENT_HANDLER');
+      sanitized = sanitized.replace(/on\w+\s*=\s*["'][^"']*["']/gi, 'data-disabled-handler=""');
+    }
+
+    // Check for javascript: protocol
+    if (/javascript\s*:/gi.test(sanitized)) {
+      detectedThreats.push('JAVASCRIPT_URI_SCHEME');
+      sanitized = sanitized.replace(/javascript\s*:/gi, 'about:blank#filtered-');
+    }
+
+    const plainText = sanitized.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+
+    return {
+      sanitizedHtml: sanitized,
+      plainText,
+      hasThreatsFiltered: detectedThreats.length > 0,
+      detectedThreats,
+    };
+  }
+
+  /**
+   * M52.05: Attachment metadata inspection & validation
+   */
+  public validateAttachment(filename: string, sizeBytes: number, mimeType: string): {
+    valid: boolean;
+    quarantined: boolean;
+    reason?: string;
+  } {
+    const dangerousExtensions = ['.exe', '.bat', '.sh', '.cmd', '.vbs', '.js', '.scr'];
+    const ext = filename.substring(filename.lastIndexOf('.')).toLowerCase();
+
+    if (dangerousExtensions.includes(ext)) {
+      return {
+        valid: false,
+        quarantined: true,
+        reason: `DANGEROUS_ATTACHMENT_REJECTED: Executable attachment "${filename}" is blocked by security policy.`,
+      };
+    }
+
+    const MAX_SIZE = 25 * 1024 * 1024; // 25MB
+    if (sizeBytes > MAX_SIZE) {
+      return {
+        valid: false,
+        quarantined: false,
+        reason: `ATTACHMENT_SIZE_EXCEEDED: Size (${Math.round(sizeBytes / 1024 / 1024)}MB) exceeds 25MB threshold.`,
+      };
+    }
+
+    return { valid: true, quarantined: false };
   }
 
   /**

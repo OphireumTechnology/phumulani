@@ -4333,6 +4333,131 @@ app.get('/api/admin/email/recovery/diagnostics', (_req: Request, res: Response) 
   });
 });
 
+// 28. Phase 52 Google Workspace Start Authorization (M52.02)
+app.post('/api/admin/email/mailboxes/:email/auth/start', (req: Request, res: Response) => {
+  try {
+    const mailboxEmail = req.params.email;
+    const result = googleWorkspaceAdapter.startAuthorization(mailboxEmail);
+    res.json({ success: true, ...result });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 29. Phase 52 Google Workspace Complete OAuth Callback (M52.02)
+app.post('/api/admin/email/mailboxes/:email/auth/complete', (req: Request, res: Response) => {
+  try {
+    const { state, code, codeVerifier } = req.body;
+    const result = googleWorkspaceAdapter.completeOAuthCallback({ state, code, codeVerifier });
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 30. Phase 52 Google Workspace Reauthorize Mailbox (M52.02)
+app.post('/api/admin/email/mailboxes/:email/reauthorize', (req: Request, res: Response) => {
+  try {
+    const mailboxEmail = req.params.email;
+    const result = googleWorkspaceAdapter.reauthorize(mailboxEmail);
+    res.json(result);
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 31. Phase 52 Google Workspace Disconnect Mailbox (M52.02)
+app.post('/api/admin/email/mailboxes/:email/disconnect', (req: Request, res: Response) => {
+  try {
+    const mailboxEmail = req.params.email;
+    googleWorkspaceAdapter.disconnect(mailboxEmail);
+    res.json({ success: true, mailboxEmail, status: 'DISCONNECTED' });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 32. Phase 52 Google Workspace Revoke Access (M52.02)
+app.post('/api/admin/email/mailboxes/:email/revoke', (req: Request, res: Response) => {
+  try {
+    const mailboxEmail = req.params.email;
+    const result = googleWorkspaceAdapter.revokeAccess(mailboxEmail);
+    res.json(result);
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 33. Phase 52 Google Workspace Mailbox Identity Verification (M52.02 / M52.07)
+app.get('/api/admin/email/mailboxes/:email/verify-identity', (req: Request, res: Response) => {
+  try {
+    const mailboxEmail = req.params.email;
+    const result = googleWorkspaceAdapter.verifyMailboxIdentity(mailboxEmail);
+    res.json(result);
+  } catch (err: any) {
+    res.status(400).json({ verified: false, error: err.message });
+  }
+});
+
+// 34. Phase 52 Reconcile Ambiguous Dispatch (M52.06)
+app.post('/api/admin/email/dispatches/:id/reconcile', (req: Request, res: Response) => {
+  try {
+    const dispatchId = req.params.id;
+    const { providerEvidenceId } = req.body;
+    const result = googleWorkspaceAdapter.reconcileAmbiguousDispatch(dispatchId, providerEvidenceId);
+    res.json(result);
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 35. Phase 52 SLA Monitoring & Escalation Dashboard (M52.09)
+app.get('/api/admin/email/sla/dashboard', (_req: Request, res: Response) => {
+  try {
+    const threads = db.getState().enterpriseEmailThreads || [];
+    const slaItems = threads.map((th) => EmailEnterpriseService.calculateSlaStatus(th));
+    const breached = slaItems.filter((s) => s.status === 'BREACHED').length;
+    const approaching = slaItems.filter((s) => s.status === 'APPROACHING_DEADLINE').length;
+    const onTrack = slaItems.filter((s) => s.status === 'ON_TRACK').length;
+    const supervisorAlerts = slaItems.filter((s) => s.supervisorAlertRequired);
+
+    res.json({
+      summary: {
+        totalThreads: threads.length,
+        breached,
+        approaching,
+        onTrack,
+        supervisorAlertsCount: supervisorAlerts.length,
+      },
+      alerts: supervisorAlerts.map((a) => ({
+        title: a.alertTitle,
+        details: a.alertDetails,
+        priority: a.priority,
+        slaHours: a.slaHours,
+        elapsedHours: a.elapsedHours,
+        isRedacted: a.alertRedacted,
+      })),
+      timestamp: new Date().toISOString(),
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// 36. Phase 52 External PostgreSQL Connection Verification (M52.10)
+app.post('/api/admin/database/verify-external', async (req: Request, res: Response) => {
+  try {
+    const { testDatabaseUrl } = req.body;
+    const result = await dbAdapter.verifyExternalConnection(testDatabaseUrl);
+    res.json(result);
+  } catch (err: any) {
+    res.status(400).json({ success: false, state: 'ERROR', error: err.message });
+  }
+});
+
 
 
 // -----------------------------------------------------------------------------
