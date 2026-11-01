@@ -77,3 +77,57 @@ test.describe('M41.11 — Public accessibility and mobile smoke checks', () => {
     await expect(selector).toBeFocused();
   });
 });
+
+
+test.describe('M41.11 — Authenticated portal mobile navigation', () => {
+  async function openStaffPortal(page: import('@playwright/test').Page) {
+    await page.setViewportSize({ width: 393, height: 851 });
+    await page.goto('/');
+    const mobileMenu = page.getByRole('button', { name: 'Toggle Navigation Menu' });
+    await expect(mobileMenu).toBeVisible();
+    await mobileMenu.click();
+    const staffLink = page.getByRole('navigation', { name: 'Mobile website and portal navigation' })
+      .getByRole('button', { name: /Staff Command Center/i }).first();
+    await expect(staffLink).toBeVisible();
+    await staffLink.click();
+    const toggle = page.getByRole('button', { name: 'Toggle Navigation Sidebar' });
+    await expect(toggle).toBeVisible();
+    return toggle;
+  }
+
+  test('portal sidebar exposes state and can be dismissed with Escape', async ({ page }) => {
+    const toggle = await openStaffPortal(page);
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    const drawer = page.getByRole('navigation', { name: 'Mobile portal navigation' });
+    await expect(drawer).toBeVisible();
+    await page.keyboard.press('Escape');
+    await expect(drawer).toHaveCount(0);
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  test('portal mobile drawer has an accessible close control', async ({ page }) => {
+    const toggle = await openStaffPortal(page);
+    await toggle.click();
+    const drawer = page.getByRole('navigation', { name: 'Mobile portal navigation' });
+    await drawer.getByRole('button', { name: 'Close mobile portal navigation' }).click();
+    await expect(drawer).toHaveCount(0);
+    await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  test('portal mobile drawer fits a 320px viewport', async ({ page }) => {
+    const toggle = await openStaffPortal(page);
+    await page.setViewportSize({ width: 320, height: 851 });
+    await expect(toggle).toBeVisible();
+    await toggle.click();
+    const drawer = page.getByRole('navigation', { name: 'Mobile portal navigation' });
+    await expect(drawer).toBeVisible();
+    const geometry = await drawer.evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      return { left: rect.left, right: rect.right, viewport: document.documentElement.clientWidth };
+    });
+    expect(geometry.left).toBeGreaterThanOrEqual(0);
+    expect(geometry.right).toBeLessThanOrEqual(geometry.viewport + 1);
+  });
+});
