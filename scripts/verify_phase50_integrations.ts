@@ -195,7 +195,13 @@ async function runPhase50Verification() {
 
   // Schema migrations verification
   const migrations = pg.getMigrations();
-  assert(migrations.length === 3, 'Registered 3 versioned schema migrations (M50_001, M50_002, M50_003)');
+  assert(
+    migrations.length >= 3 &&
+    migrations.some((m) => m.id === 'M50_001_core_identity') &&
+    migrations.some((m) => m.id === 'M50_002_email_enterprise') &&
+    migrations.some((m) => m.id === 'M50_003_community_governance'),
+    'Registered versioned schema migrations (M50_001, M50_002, M50_003)'
+  );
   assert(migrations.every((m) => m.applied === true), 'All registered migrations marked as applied in baseline');
 
   // Test reversible migration rollback and re-apply

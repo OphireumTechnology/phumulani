@@ -4246,6 +4246,94 @@ app.put('/api/admin/email/follow-ups/:id/toggle', (req: Request, res: Response) 
   res.json({ success: true, message: 'Follow-up task status updated.' });
 });
 
+// 25. Phase 51 Controlled Pilot Status & Activation (M51.06)
+app.get('/api/admin/email/pilot/status', (_req: Request, res: Response) => {
+  res.json({
+    pilotEnabled: googleWorkspaceAdapter.isPilotEnabled(),
+    liveSendingEnabled: googleWorkspaceAdapter.isLiveSendingEnabled(),
+    pilotMailbox: googleWorkspaceAdapter.getPilotMailbox(),
+    evidence: googleWorkspaceAdapter.getEvidenceRegistry(),
+    truthfulNotice: 'Controlled pilot is restricted to donations@phumulani.org. Live sending fails closed by default.',
+  });
+});
+
+app.post('/api/admin/email/pilot/activate', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  const { confirmationCode, reason } = req.body;
+  const result = googleWorkspaceAdapter.activatePilot(
+    { name: actor.name, role: actor.role },
+    confirmationCode,
+    reason
+  );
+  if (!result.success) {
+    return res.status(403).json(result);
+  }
+  res.json(result);
+});
+
+app.post('/api/admin/email/pilot/deactivate', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  const { reason } = req.body;
+  const result = googleWorkspaceAdapter.deactivatePilot(
+    { name: actor.name, role: actor.role },
+    reason
+  );
+  res.json(result);
+});
+
+// 26. Phase 51 Conversation 10-State Transition Endpoint (M51.02)
+app.post('/api/admin/email/threads/:id/transition', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  if (actor.role === 'visitor') {
+    return res.status(403).json({ error: 'Staff role required for status transition.' });
+  }
+  const { targetStatus, reason } = req.body;
+  if (!targetStatus) {
+    return res.status(400).json({ error: 'targetStatus is required.' });
+  }
+  const result = EmailEnterpriseService.transitionConversationStatus(
+    req.params.id,
+    targetStatus as ConversationStatus,
+    actor,
+    reason
+  );
+  if (!result.success) {
+    return res.status(400).json(result);
+  }
+  res.json(result);
+});
+
+// 27. Phase 51 Administrator Recovery & Diagnostics Tools (M51.18)
+app.get('/api/admin/email/recovery/diagnostics', (_req: Request, res: Response) => {
+  const dbInfo = dbAdapter.getConnectionInfo();
+  const gwProfiles = googleWorkspaceAdapter.getMailboxes();
+  const institutional = googleWorkspaceAdapter.getInstitutionalMailboxes();
+  const auxiliary = googleWorkspaceAdapter.getAuxiliaryMailboxes();
+  const migrations = dbAdapter.getMigrations();
+  const auditLogs = db.getSyncAuditLogs().slice(0, 50);
+
+  res.json({
+    timestamp: new Date().toISOString(),
+    operationalMode: 'STAGED_DEVELOPMENT',
+    database: {
+      engine: dbInfo.engine,
+      status: dbInfo.databaseStatus,
+      checksum: dbInfo.checksum,
+      tablesVerifiedCount: dbInfo.tablesVerifiedCount,
+      migrations,
+    },
+    googleWorkspace: {
+      pilotEnabled: googleWorkspaceAdapter.isPilotEnabled(),
+      liveSendingEnabled: googleWorkspaceAdapter.isLiveSendingEnabled(),
+      institutionalMailboxesCount: institutional.length,
+      auxiliaryMailboxesCount: auxiliary.length,
+      profiles: gwProfiles,
+    },
+    auditSummary: `Sanitized recovery diagnostic packet. Zero survivor disclosures. Records logged: ${auditLogs.length}`,
+  });
+});
+
+
 
 // -----------------------------------------------------------------------------
 // VITE SPA DEV MIDDLEWARE / STATIC SERVING

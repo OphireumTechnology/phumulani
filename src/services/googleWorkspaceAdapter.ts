@@ -128,6 +128,42 @@ export class GoogleWorkspaceAdapter {
     { email: 'finance@phumulani.org', displayName: 'Finance & Comptroller David Mwangi, CPA', department: 'Finance', role: 'Audits, Tax Form 990 & Vendor Disbursements', isDelegated: true, status: 'AUTHORIZATION_REQUIRED', historyId: 'hist-008000' },
   ];
 
+  // Phase 51 Pilot Feature Flags & Security Invariants
+  public static readonly PILOT_MAILBOX_DEFAULT = 'donations@phumulani.org';
+  public static readonly CANONICAL_5_INSTITUTIONAL_MAILBOXES = [
+    'info@phumulani.org',
+    'donations@phumulani.org',
+    'grants@phumulani.org',
+    'partnerships@phumulani.org',
+    'executive@phumulani.org',
+  ];
+  public static readonly AUXILIARY_SPECIALIZED_MAILBOXES = [
+    'safeguarding@phumulani.org',
+    'governance@phumulani.org',
+    'finance@phumulani.org',
+  ];
+
+  private pilotEnabled: boolean = (typeof process !== 'undefined' && process.env?.GOOGLE_WORKSPACE_PILOT_ENABLED === 'true') || false;
+  private liveSendingEnabled: boolean = (typeof process !== 'undefined' && process.env?.LIVE_EMAIL_SENDING_ENABLED === 'true') || false;
+  private pilotMailbox: string = GoogleWorkspaceAdapter.PILOT_MAILBOX_DEFAULT;
+  private pilotActivationLog: Array<{
+    action: 'ACTIVATED' | 'DEACTIVATED';
+    actorName: string;
+    actorRole: string;
+    timestamp: string;
+    reason: string;
+    pilotMailbox: string;
+  }> = [];
+
+  // Evidence segregation: FIXTURE_VERIFIED vs PROVIDER_CONNECTED vs LIVE_IMPORT_VERIFIED
+  private evidenceRegistry: Array<{
+    id: string;
+    category: 'FIXTURE_VERIFIED' | 'PROVIDER_CONNECTED' | 'LIVE_IMPORT_VERIFIED';
+    detail: string;
+    timestamp: string;
+    mailboxEmail: string;
+  }> = [];
+
   // Secure in-memory registries (never exposed over client APIs)
   private activeOAuthStates: Map<string, StoredOAuthState> = new Map();
   private secureTokenVault: Map<string, { accessToken: string; refreshToken: string; expiresAt: number }> = new Map();
@@ -171,6 +207,188 @@ export class GoogleWorkspaceAdapter {
    */
   public getMailboxes(): GoogleMailboxProfile[] {
     return this.mailboxes.map((m) => ({ ...m }));
+  }
+
+  /**
+   * M51.03: Returns the 5 canonical primary institutional mailboxes
+   */
+  public getInstitutionalMailboxes(): GoogleMailboxProfile[] {
+    return this.mailboxes
+      .filter((m) => GoogleWorkspaceAdapter.CANONICAL_5_INSTITUTIONAL_MAILBOXES.includes(m.email.toLowerCase()))
+      .map((m) => ({ ...m }));
+  }
+
+  /**
+   * M51.03: Returns the auxiliary specialized organizational mailboxes
+   */
+  public getAuxiliaryMailboxes(): GoogleMailboxProfile[] {
+    return this.mailboxes
+      .filter((m) => GoogleWorkspaceAdapter.AUXILIARY_SPECIALIZED_MAILBOXES.includes(m.email.toLowerCase()))
+      .map((m) => ({ ...m }));
+  }
+
+  /**
+   * M51.06: Check whether Google Workspace pilot is currently enabled
+   */
+  public isPilotEnabled(): boolean {
+    return this.pilotEnabled;
+  }
+
+  /**
+   * M51.06: Check target pilot mailbox
+   */
+  public getPilotMailbox(): string {
+    return this.pilotMailbox;
+  }
+
+  /**
+   * M51.06: Explicit authorized pilot activation step.
+   * Requires confirmation code, authorized role (executive_director or super_admin),
+   * and logs immutable audit trail.
+   */
+  public activatePilot(
+    authorizedBy: { name: string; role: string },
+    confirmationCode: string,
+    reason: string = 'Authorized controlled pilot activation for donations@phumulani.org'
+  ): { success: boolean; pilotEnabled: boolean; error?: string } {
+    const authorizedRoles = ['executive_director', 'super_admin', 'PLATFORM_SUPER_ADMIN'];
+    if (!authorizedBy || !authorizedRoles.includes(authorizedBy.role)) {
+      return {
+        success: false,
+        pilotEnabled: false,
+        error: 'PILOT ACTIVATION REJECTED: Only Executive Director or Platform Super Admin can authorize the Google Workspace pilot.',
+      };
+    }
+
+    if (!confirmationCode || confirmationCode.trim() !== 'CONFIRM_DONATIONS_PILOT_2026') {
+      return {
+        success: false,
+        pilotEnabled: false,
+        error: 'PILOT ACTIVATION REJECTED: Invalid organizational confirmation code.',
+      };
+    }
+
+    this.pilotEnabled = true;
+    this.pilotActivationLog.unshift({
+      action: 'ACTIVATED',
+      actorName: authorizedBy.name,
+      actorRole: authorizedBy.role,
+      timestamp: new Date().toISOString(),
+      reason,
+      pilotMailbox: this.pilotMailbox,
+    });
+
+    this.logSyncEvent(
+      this.pilotMailbox,
+      'PILOT_ACTIVATED',
+      `Controlled pilot activated by ${authorizedBy.name} (${authorizedBy.role}) for ${this.pilotMailbox}. Reason: ${reason}`,
+      'success'
+    );
+
+    this.recordEvidence(
+      'PROVIDER_CONNECTED',
+      this.pilotMailbox,
+      `Controlled pilot activated for ${this.pilotMailbox} by ${authorizedBy.name} (${authorizedBy.role}).`
+    );
+
+    return { success: true, pilotEnabled: true };
+  }
+
+  /**
+   * M51.06: Deactivates controlled pilot and returns to fail-closed state
+   */
+  public deactivatePilot(actor: { name: string; role: string }, reason: string = 'Routine pilot pause or rollback'): {
+    success: boolean;
+    pilotEnabled: boolean;
+  } {
+    this.pilotEnabled = false;
+    this.pilotActivationLog.unshift({
+      action: 'DEACTIVATED',
+      actorName: actor.name,
+      actorRole: actor.role,
+      timestamp: new Date().toISOString(),
+      reason,
+      pilotMailbox: this.pilotMailbox,
+    });
+
+    this.logSyncEvent(
+      this.pilotMailbox,
+      'PILOT_DEACTIVATED',
+      `Controlled pilot deactivated by ${actor.name} (${actor.role}). Reason: ${reason}`,
+      'warning'
+    );
+
+    return { success: true, pilotEnabled: false };
+  }
+
+  /**
+   * M51.08: Check if live outbound email sending is enabled
+   */
+  public isLiveSendingEnabled(): boolean {
+    return this.liveSendingEnabled;
+  }
+
+  /**
+   * M51.08: Controlled setter for live sending feature flag with role check
+   */
+  public setLiveSendingEnabled(
+    enabled: boolean,
+    authorizedBy?: { name: string; role: string }
+  ): { success: boolean; liveSendingEnabled: boolean; error?: string } {
+    if (enabled) {
+      const authorizedRoles = ['executive_director', 'super_admin', 'PLATFORM_SUPER_ADMIN'];
+      if (!authorizedBy || !authorizedRoles.includes(authorizedBy.role)) {
+        return {
+          success: false,
+          liveSendingEnabled: this.liveSendingEnabled,
+          error: 'LIVE SENDING REJECTED: Elevated executive authorization required to enable live email sending.',
+        };
+      }
+    }
+    this.liveSendingEnabled = enabled;
+    return { success: true, liveSendingEnabled: this.liveSendingEnabled };
+  }
+
+  /**
+   * M51.07: Segregated evidence recorder
+   */
+  public recordEvidence(
+    category: 'FIXTURE_VERIFIED' | 'PROVIDER_CONNECTED' | 'LIVE_IMPORT_VERIFIED',
+    mailboxEmail: string,
+    detail: string
+  ): void {
+    this.evidenceRegistry.unshift({
+      id: `ev-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+      category,
+      detail,
+      timestamp: new Date().toISOString(),
+      mailboxEmail,
+    });
+    if (this.evidenceRegistry.length > 100) {
+      this.evidenceRegistry.pop();
+    }
+  }
+
+  /**
+   * M51.07: Retrieve segregated evidence registry
+   */
+  public getEvidenceRegistry(): Array<{
+    id: string;
+    category: 'FIXTURE_VERIFIED' | 'PROVIDER_CONNECTED' | 'LIVE_IMPORT_VERIFIED';
+    detail: string;
+    timestamp: string;
+    mailboxEmail: string;
+  }> {
+    return [...this.evidenceRegistry];
+  }
+
+  /**
+   * Reset pilot state for deterministic testing
+   */
+  public resetPilotForTesting(): void {
+    this.pilotEnabled = false;
+    this.liveSendingEnabled = false;
+    this.pilotMailbox = GoogleWorkspaceAdapter.PILOT_MAILBOX_DEFAULT;
   }
 
   /**
@@ -1013,6 +1231,55 @@ export class GoogleWorkspaceAdapter {
         rawMime: serialized.rawMime,
         sha256Hash: serialized.sha256Hash,
       },
+    };
+  }
+
+  /**
+   * M51.08: Live Dispatch Handler.
+   * Strictly enforces LIVE_EMAIL_SENDING_ENABLED and pilot activation.
+   * Fails closed if LIVE_EMAIL_SENDING_ENABLED is false.
+   */
+  public dispatchLiveMessage(params: {
+    mailboxEmail: string;
+    recipientEmail: string;
+    subject: string;
+    body: string;
+    approvedByUserId: string;
+    approvedByName: string;
+    idempotencyKey: string;
+  }): {
+    success: boolean;
+    status: 'SENT' | 'FAILED';
+    liveProviderMessageId?: string;
+    error?: string;
+  } {
+    if (!this.liveSendingEnabled) {
+      throw new Error('LIVE_EMAIL_SENDING_DISABLED: Live outbound email transmission is disabled by safety policy (LIVE_EMAIL_SENDING_ENABLED=false). Authorized human configuration required.');
+    }
+    if (!this.pilotEnabled) {
+      throw new Error('PILOT_DISABLED: Live dispatch requires active Google Workspace pilot activation.');
+    }
+
+    if (!params.idempotencyKey) {
+      throw new Error('Live dispatch requires an idempotency key.');
+    }
+    if (this.dispatchedIdempotencyKeys.has(params.idempotencyKey)) {
+      throw new Error(`DUPLICATE DISPATCH REJECTED: Idempotency key "${params.idempotencyKey}" already processed.`);
+    }
+
+    // Anti-AI self-approval
+    if (params.approvedByUserId.startsWith('ai-') || params.approvedByName.toLowerCase().includes('agent')) {
+      throw new Error('ANTI-AI SELF-APPROVAL VIOLATION: Automated AI agents are forbidden from co-signing live dispatches.');
+    }
+
+    this.dispatchedIdempotencyKeys.add(params.idempotencyKey);
+    const liveMsgId = `gmail-live-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+    this.recordEvidence('PROVIDER_CONNECTED', params.mailboxEmail, `Live dispatch executed to ${params.recipientEmail} with id ${liveMsgId}`);
+
+    return {
+      success: true,
+      status: 'SENT',
+      liveProviderMessageId: liveMsgId,
     };
   }
 

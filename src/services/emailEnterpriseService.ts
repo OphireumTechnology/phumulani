@@ -1395,9 +1395,127 @@ Draft a professional, compassionate response following Phumulani's organizationa
    * 3. REJECT: Reject with mandatory audit reason
    * 4. ESCALATE_RETURN: Return to draft or escalate to designated senior officer
    */
+  public static readonly CANONICAL_CONVERSATION_STATES: ConversationStatus[] = [
+    'NEW',
+    'TRIAGED',
+    'ASSIGNED',
+    'DRAFTING',
+    'AWAITING_APPROVAL',
+    'APPROVED',
+    'SENT',
+    'FOLLOW_UP_REQUIRED',
+    'RESOLVED',
+    'QUARANTINED',
+  ];
+
+  public static readonly PERMITTED_STATUS_TRANSITIONS: Record<string, string[]> = {
+    'NEW': ['TRIAGED', 'QUARANTINED', 'ASSIGNED'],
+    'TRIAGED': ['ASSIGNED', 'QUARANTINED', 'NEW'],
+    'ASSIGNED': ['DRAFTING', 'FOLLOW_UP_REQUIRED', 'RESOLVED', 'QUARANTINED', 'TRIAGED'],
+    'DRAFTING': ['AWAITING_APPROVAL', 'ASSIGNED', 'RESOLVED', 'QUARANTINED'],
+    'AWAITING_APPROVAL': ['APPROVED', 'DRAFTING', 'ASSIGNED', 'QUARANTINED'],
+    'APPROVED': ['SENT', 'DRAFTING', 'QUARANTINED'],
+    'SENT': ['FOLLOW_UP_REQUIRED', 'RESOLVED', 'QUARANTINED'],
+    'FOLLOW_UP_REQUIRED': ['ASSIGNED', 'DRAFTING', 'RESOLVED', 'QUARANTINED'],
+    'RESOLVED': ['ASSIGNED', 'NEW', 'QUARANTINED'],
+    'QUARANTINED': ['TRIAGED', 'ASSIGNED'],
+  };
+
+  /**
+   * M51.02: Validates conversation state transitions.
+   * Explicitly detects and rejects invalid transitions (e.g. NEW -> SENT, DRAFTING -> SENT).
+   */
+  public static validateConversationTransition(
+    fromStatus: ConversationStatus | string,
+    toStatus: ConversationStatus | string,
+    userRole: string = 'staff'
+  ): { valid: boolean; reason?: string } {
+    const from = (fromStatus || 'NEW').toString().toUpperCase();
+    const to = (toStatus || 'NEW').toString().toUpperCase();
+
+    if (from === to) {
+      return { valid: true };
+    }
+
+    // Direct dispatch bypass attempts
+    if (['NEW', 'TRIAGED', 'ASSIGNED', 'DRAFTING', 'AWAITING_APPROVAL', 'QUARANTINED'].includes(from) && to === 'SENT') {
+      return {
+        valid: false,
+        reason: `INVALID_STATE_TRANSITION: Cannot transition directly from ${from} to SENT without prior human approval and dispatch execution.`,
+      };
+    }
+
+    // Direct approval bypass
+    if (['NEW', 'TRIAGED', 'ASSIGNED'].includes(from) && to === 'APPROVED') {
+      return {
+        valid: false,
+        reason: `INVALID_STATE_TRANSITION: Cannot transition from ${from} to APPROVED without drafting and review.`,
+      };
+    }
+
+    // Safeguarding quarantine release requires authorized safeguarding officer
+    if (from === 'QUARANTINED') {
+      const authorizedRoles = ['safeguarding_officer', 'Sister Miriam K.', 'PLATFORM_SUPER_ADMIN', 'executive_director'];
+      if (!authorizedRoles.includes(userRole)) {
+        return {
+          valid: false,
+          reason: 'SAFEGUARDING_AUTHORIZATION_REQUIRED: Only Sister Miriam K. or Platform Super Admin can release or reassign quarantined records.',
+        };
+      }
+    }
+
+    const permitted = this.PERMITTED_STATUS_TRANSITIONS[from];
+    if (!permitted || !permitted.includes(to)) {
+      return {
+        valid: false,
+        reason: `INVALID_STATE_TRANSITION: Transition from ${from} to ${to} is not permitted by operational state machine rules.`,
+      };
+    }
+
+    return { valid: true };
+  }
+
+  /**
+   * M51.02: Executes state transition with audit logging and invariant enforcement
+   */
+  public static transitionConversationStatus(
+    threadId: string,
+    targetStatus: ConversationStatus,
+    user: { id: string; name: string; role: string },
+    reason?: string
+  ): { success: boolean; thread?: EnterpriseEmailThread; error?: string } {
+    const thread = db.getState().enterpriseEmailThreads.find((t) => t.id === threadId);
+    if (!thread) {
+      return { success: false, error: 'Target thread not found.' };
+    }
+
+    const currentStatus = (thread.status || 'NEW') as ConversationStatus;
+    const validation = this.validateConversationTransition(currentStatus, targetStatus, user.role);
+    if (!validation.valid) {
+      return { success: false, error: validation.reason };
+    }
+
+    const updatedThreads = db.getState().enterpriseEmailThreads.map((t) =>
+      t.id === threadId ? { ...t, status: targetStatus } : t
+    );
+    db.saveState({ ...db.getState(), enterpriseEmailThreads: updatedThreads });
+
+    db.appendSyncAuditLog({
+      mailboxEmail: thread.mailboxEmail,
+      action: 'CONVERSATION_STATUS_TRANSITION',
+      actor: user.name,
+      details: `Thread [${thread.id}] status transitioned from ${currentStatus} to ${targetStatus}.${reason ? ` Reason: ${reason}` : ''}`,
+      direction: 'internal',
+      status: 'success',
+    });
+
+    const updatedThread = updatedThreads.find((t) => t.id === threadId);
+    return { success: true, thread: updatedThread };
+  }
+
   public static executeQuadActionReview(
     threadId: string,
-    action: 'APPROVE' | 'EDIT_AND_APPROVE' | 'REJECT' | 'ESCALATE_RETURN',
+    action: 'APPROVE' | 'EDIT_AND_APPROVE' | 'REJECT' | 'ESCALATE_RETURN' | 'REQUEST_CHANGES',
     reviewerUser: { id: string; name: string; role: string },
     options?: {
       editedSubject?: string;
@@ -1433,7 +1551,11 @@ Draft a professional, compassionate response following Phumulani's organizationa
       return { success: false, action, error: 'POLICY VIOLATION: Automated AI self-approval is strictly forbidden.' };
     }
 
-    switch (action) {
+    // M51.08: Reconcile REQUEST_CHANGES to canonical ESCALATE_RETURN
+    const resolvedAction: 'APPROVE' | 'EDIT_AND_APPROVE' | 'REJECT' | 'ESCALATE_RETURN' =
+      action === 'REQUEST_CHANGES' ? 'ESCALATE_RETURN' : action;
+
+    switch (resolvedAction) {
       case 'APPROVE': {
         const approvedRes = this.approveDraft(threadId, reviewerUser);
         if (approvedRes.success) {
@@ -1441,15 +1563,15 @@ Draft a professional, compassionate response following Phumulani's organizationa
             t.id === threadId ? { ...t, status: 'APPROVED' as ConversationStatus } : t
           );
           db.saveState({ ...db.getState(), enterpriseEmailThreads: updatedThreads });
-          return { success: true, action, draft: approvedRes.draft, threadStatus: 'APPROVED' };
+          return { success: true, action: resolvedAction, draft: approvedRes.draft, threadStatus: 'APPROVED' };
         }
-        return { success: false, action, error: approvedRes.error };
+        return { success: false, action: resolvedAction, error: approvedRes.error };
       }
 
       case 'EDIT_AND_APPROVE': {
         const editedBody = options?.editedBody?.trim();
         if (!editedBody) {
-          return { success: false, action, error: 'Edited body cannot be empty for Edit & Approve.' };
+          return { success: false, action: resolvedAction, error: 'Edited body cannot be empty for Edit & Approve.' };
         }
         const currentVersion = thread.draft.version || 1;
         const updatedDraft: EmailDraft = {
@@ -1480,16 +1602,16 @@ Draft a professional, compassionate response following Phumulani's organizationa
           status: 'success',
         });
 
-        return { success: true, action, draft: updatedDraft, threadStatus: 'APPROVED' };
+        return { success: true, action: resolvedAction, draft: updatedDraft, threadStatus: 'APPROVED' };
       }
 
       case 'REJECT': {
         const reason = options?.reason?.trim() || 'Draft rejected by reviewer.';
         const rejectRes = this.rejectDraft(threadId, reviewerUser, reason);
         if (rejectRes.success) {
-          return { success: true, action, draft: rejectRes.draft, threadStatus: 'TRIAGED' };
+          return { success: true, action: resolvedAction, draft: rejectRes.draft, threadStatus: 'TRIAGED' };
         }
-        return { success: false, action, error: rejectRes.error };
+        return { success: false, action: resolvedAction, error: rejectRes.error };
       }
 
       case 'ESCALATE_RETURN': {
@@ -1522,13 +1644,13 @@ Draft a professional, compassionate response following Phumulani's organizationa
             status: 'warning',
           });
 
-          return { success: true, action, draft: updatedDraft, threadStatus: 'ASSIGNED' };
+          return { success: true, action: resolvedAction, draft: updatedDraft, threadStatus: 'ASSIGNED' };
         } else {
           const retRes = this.returnToDraft(threadId, reviewerUser, reason);
           if (retRes.success) {
-            return { success: true, action, draft: retRes.draft, threadStatus: 'DRAFTING' };
+            return { success: true, action: resolvedAction, draft: retRes.draft, threadStatus: 'DRAFTING' };
           }
-          return { success: false, action, error: retRes.error };
+          return { success: false, action: resolvedAction, error: retRes.error };
         }
       }
 

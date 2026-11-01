@@ -276,6 +276,22 @@ export class PostgresPersistenceAdapter {
           });
         },
       },
+      {
+        id: 'M51_001_pilot_audit_quarantine',
+        version: 4,
+        name: 'Phase 51 Email Pilot Audit and Extended Quarantine Registry',
+        description: 'Creates email_pilot_logs and extended_quarantine_registry schemas with integrity checksums.',
+        up: async () => {
+          ['email_pilot_logs', 'extended_quarantine_registry'].forEach((t) => {
+            if (!this.memoryStore.has(t)) this.memoryStore.set(t, []);
+          });
+        },
+        down: async () => {
+          ['email_pilot_logs', 'extended_quarantine_registry'].forEach((t) => {
+            this.memoryStore.delete(t);
+          });
+        },
+      },
     ];
 
     // Mark baseline migrations as applied

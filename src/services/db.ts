@@ -1473,7 +1473,7 @@ class DatabaseService {
     if (!mbx) {
       return { success: false, latencyMs: 0, status: 'ERROR', message: 'Mailbox not found.' };
     }
-    const latency = Math.floor(45 + Math.random() * 60);
+    const latency = Math.floor(45 + Math.random() * 50);
     this.appendSyncAuditLog({
       mailboxEmail: mbx.email,
       action: 'CONNECTION_TEST_EXECUTED',
