@@ -98,9 +98,12 @@ import {
   Wrench,
   ArrowRight,
   UserPlus,
+  LayoutDashboard,
+  BookOpen,
 } from 'lucide-react';
 
 export type EmailCommandCenterTab =
+  | 'overview'
   | 'all_mailboxes'
   | 'priority'
   | 'mailboxes'
@@ -111,8 +114,12 @@ export type EmailCommandCenterTab =
   | 'assigned_to_me'
   | 'team_inbox'
   | 'follow_up_tasks'
+  | 'templates'
   | 'ai_intelligence'
   | 'approvals'
+  | 'crm_connections'
+  | 'analytics'
+  | 'audit_history'
   | 'crm_connections'
   | 'analytics'
   | 'synchronization'
@@ -221,6 +228,18 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
   // Settings Active Section
   const [settingsActiveSection, setSettingsActiveSection] = useState<'autoresponders' | 'templates' | 'signatures'>('autoresponders');
+
+  // Phase 47 Email Templates & Multilingual State
+  const [templateLanguage, setTemplateLanguage] = useState<string>('en');
+  const [templateSearchQuery, setTemplateSearchQuery] = useState<string>('');
+  const [templateCategoryFilter, setTemplateCategoryFilter] = useState<string>('all');
+  const [interpolatingTemplate, setInterpolatingTemplate] = useState<EmailTemplate | null>(null);
+  const [interpolationInputs, setInterpolationInputs] = useState<Record<string, string>>({});
+  const [interpolationResult, setInterpolationResult] = useState<{ subject: string; body: string } | null>(null);
+
+  // Phase 47 Audit Log State
+  const [auditActionFilter, setAuditActionFilter] = useState<string>('all');
+  const [auditSearchQuery, setAuditSearchQuery] = useState<string>('');
 
   // Selected Thread
   const selectedThread = threads.find((t) => t.id === selectedThreadId) || threads[0];
@@ -1337,19 +1356,19 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
           </div>
 
           <div className="flex-1 overflow-y-auto p-2 space-y-3 divide-y divide-slate-100">
-            {/* Section 1: Inboxes & Correspondence */}
+            {/* Section 1: Core Communications */}
             <div className="space-y-0.5">
               <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
-                Inboxes & Messages
+                Core Communications
               </div>
               {[
-                { id: 'all_mailboxes', label: 'Unified Inbox', icon: Inbox, count: threads.filter((t) => !t.isArchived).length, color: 'text-teal-800' },
-                { id: 'priority', label: 'Priority Inbox', icon: ShieldAlert, count: threads.filter((t) => t.priority === 'P0' || t.priority === 'P1').length, badgeText: 'P0/P1', color: 'text-rose-600' },
-                { id: 'mailboxes', label: 'Org Mailboxes', icon: Mail, count: mailboxes.length, color: 'text-teal-700' },
-                { id: 'historical', label: 'Historical Emails', icon: History, count: threads.filter((t) => t.isHistorical || t.messages.some((m) => m.isHistorical)).length, color: 'text-indigo-600' },
+                { id: 'overview', label: 'Overview & Health', icon: LayoutDashboard, count: 'Live', color: 'text-teal-700' },
+                { id: 'all_mailboxes', label: 'Unified Shared Inbox', icon: Inbox, count: threads.filter((t) => !t.isArchived).length, color: 'text-teal-800' },
+                { id: 'mailboxes', label: 'Mailboxes & Accounts', icon: Mail, count: mailboxes.length, color: 'text-teal-700' },
                 { id: 'sent', label: 'Sent Emails', icon: Send, count: threads.filter((t) => t.folder === 'SENT' || t.messages.some((m) => m.direction === 'outbound')).length, color: 'text-slate-600' },
                 { id: 'drafts', label: 'Drafts', icon: FileText, count: threads.filter((t) => Boolean(t.draft)).length, color: 'text-amber-600' },
-                { id: 'scheduled', label: 'Scheduled Comms', icon: Clock, count: threads.filter((t) => Boolean(t.draft && t.draft.status === 'approved')).length, color: 'text-purple-600' },
+                { id: 'approvals', label: 'Pending Approvals', icon: FileCheck, count: threads.filter((t) => t.draft?.status === 'pending_approval').length, badgeText: `${threads.filter((t) => t.draft?.status === 'pending_approval').length} Pnd`, color: 'text-amber-600' },
+                { id: 'assigned_to_me', label: 'Assigned to Me', icon: UserIcon, count: threads.filter((t) => t.assignedStaffId === currentUser.id || t.assignedStaffName === currentUser.name).length, color: 'text-blue-600' },
               ].map((item) => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.id;
@@ -1377,15 +1396,15 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               })}
             </div>
 
-            {/* Section 2: Staff Collaboration */}
+            {/* Section 2: Action & Outreach */}
             <div className="space-y-0.5 pt-2">
               <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
-                Staff Collaboration
+                Action & Outreach
               </div>
               {[
-                { id: 'assigned_to_me', label: 'Assigned to Me', icon: UserIcon, count: threads.filter((t) => t.assignedStaffId === currentUser.id || t.assignedStaffName === currentUser.name).length, color: 'text-blue-600' },
-                { id: 'team_inbox', label: 'Team Inbox', icon: Users, count: threads.length, color: 'text-slate-700' },
                 { id: 'follow_up_tasks', label: 'Follow-Up Tasks', icon: CheckSquare, count: followUps.filter((f) => f.status === 'pending').length, color: 'text-emerald-600' },
+                { id: 'templates', label: 'Email Templates', icon: BookOpen, count: '12 Tmpl', color: 'text-indigo-600' },
+                { id: 'crm_connections', label: 'Contacts & CRM', icon: DollarSign, count: threads.filter((t) => Boolean(t.crmLink)).length, color: 'text-emerald-600' },
               ].map((item) => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.id;
@@ -1413,51 +1432,16 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               })}
             </div>
 
-            {/* Section 3: Intelligence & CRM */}
+            {/* Section 3: Intelligence & Governance */}
             <div className="space-y-0.5 pt-2">
               <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
-                Intelligence & CRM
+                Intelligence & Governance
               </div>
               {[
-                { id: 'ai_intelligence', label: 'AI Intelligence', icon: Sparkles, count: '25 Cats', color: 'text-teal-600' },
-                { id: 'approvals', label: 'Approval Queue', icon: FileCheck, count: threads.filter((t) => t.draft?.status === 'pending_approval').length, color: 'text-amber-600' },
-                { id: 'crm_connections', label: 'CRM Connections', icon: DollarSign, count: threads.filter((t) => Boolean(t.crmLink)).length, color: 'text-emerald-600' },
+                { id: 'ai_intelligence', label: 'AI Email Intelligence', icon: Sparkles, count: '25 Cats', color: 'text-teal-600' },
                 { id: 'analytics', label: 'Email Analytics', icon: BarChart2, count: '99.4%', color: 'text-indigo-600' },
-              ].map((item) => {
-                const Icon = item.icon;
-                const isActive = activeTab === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveTab(item.id as EmailCommandCenterTab)}
-                    className={`w-full px-2.5 py-1.5 rounded-xl flex items-center justify-between text-xs font-semibold transition-colors cursor-pointer ${
-                      isActive ? 'bg-[#104F57] text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2 truncate">
-                      <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white' : item.color}`} />
-                      <span className="truncate">{item.label}</span>
-                    </div>
-                    <span
-                      className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
-                        isActive ? 'bg-teal-900/90 text-teal-100' : 'bg-slate-100 text-slate-600'
-                      }`}
-                    >
-                      {item.count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* Section 4: System & Ops */}
-            <div className="space-y-0.5 pt-2">
-              <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
-                System & Settings
-              </div>
-              {[
-                { id: 'synchronization', label: 'Synchronization', icon: Activity, count: `${mailboxes.length} Mbx`, color: 'text-teal-700' },
-                { id: 'settings', label: 'Settings & Templates', icon: Settings, count: '12 Tmpl', color: 'text-slate-600' },
+                { id: 'audit_history', label: 'Audit History & Logs', icon: ShieldCheck, count: `${syncAuditLogs.length}`, color: 'text-rose-700' },
+                { id: 'settings', label: 'Settings & Integrations', icon: Settings, count: 'OAuth', color: 'text-slate-600' },
               ].map((item) => {
                 const Icon = item.icon;
                 const isActive = activeTab === item.id;
@@ -1960,7 +1944,25 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                           </span>
                         </div>
                         <div className="text-xs text-slate-800 leading-relaxed whitespace-pre-wrap font-sans">
-                          {msg.bodyText}
+                          {selectedThread.classification === '01_safeguarding' &&
+                          currentUser.id !== 'usr-002' &&
+                          (currentUser.role as string) !== 'safeguarding_lead' &&
+                          (currentUser.role as string) !== 'safeguarding_officer' ? (
+                            <div className="bg-rose-50 border border-rose-300 rounded-xl p-3 text-xs text-rose-950 space-y-1">
+                              <div className="flex items-center gap-1.5 font-bold text-rose-900">
+                                <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
+                                <span>CONFIDENTIAL SAFEGUARDING INTAKE — VAWA ISOLATED</span>
+                              </div>
+                              <p className="text-[11px] text-rose-800">
+                                Communication restricted to Sister Miriam K. (DEPT-SAFE). Body text has been redacted pursuant to Phumulani safeguarding invariants.
+                              </p>
+                              <div className="font-mono text-[11px] text-rose-700 bg-rose-100/60 p-2 rounded border border-rose-200 mt-1">
+                                [REDACTED PURSUANT TO VAWA SAFEGUARDING PROTOCOLS — AUTHORIZED OFFICER ACCESS ONLY]
+                              </div>
+                            </div>
+                          ) : (
+                            msg.bodyText
+                          )}
                         </div>
 
                         {/* Attachments Section */}
@@ -2161,6 +2163,19 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     {/* Active Draft Box */}
                     {selectedThread.draft && (
                       <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
+                        {/* Prominent Safety Watermark */}
+                        {selectedThread.draft.status !== 'approved' && selectedThread.draft.status !== 'sent' && (
+                          <div className="bg-rose-50 border-2 border-dashed border-rose-400 text-rose-900 rounded-xl p-2.5 text-xs font-mono font-bold flex items-center justify-between shadow-2xs">
+                            <div className="flex items-center gap-2">
+                              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+                              <span>AI_DRAFT — NOT APPROVED — NOT SENT</span>
+                            </div>
+                            <span className="text-[10px] font-sans uppercase font-semibold text-rose-700 bg-rose-100 px-2 py-0.5 rounded border border-rose-200">
+                              Requires Human Co-Signature
+                            </span>
+                          </div>
+                        )}
+
                         <div className="flex items-center justify-between text-xs border-b border-slate-200 pb-1.5">
                           <div>
                             <span className="font-semibold text-slate-700">Recipient:</span>{' '}
@@ -2293,6 +2308,224 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 Select a thread to view details and response recommendations.
               </div>
             )}
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* TAB 0: OVERVIEW & HEALTH DASHBOARD (/admin/master/email)                  */}
+        {/* ========================================================================= */}
+        {activeTab === 'overview' && (
+          <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5 space-y-5">
+            {/* Top Header & Truthful Status Disclosure */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <span className="font-mono text-[10px] font-bold bg-teal-100 text-teal-900 border border-teal-300 px-2.5 py-0.5 rounded-full uppercase">
+                    /admin/master/email · Application D
+                  </span>
+                  <span className="text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <Lock className="w-3 h-3 text-amber-700" />
+                    STAGED_DEVELOPMENT
+                  </span>
+                  <span className="text-[10px] font-bold bg-blue-100 text-blue-900 border border-blue-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <Shield className="w-3 h-3 text-blue-700" />
+                    Google Workspace: AUTHORIZATION_REQUIRED
+                  </span>
+                  <span className="text-[10px] font-bold bg-rose-100 text-rose-900 border border-rose-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldAlert className="w-3 h-3 text-rose-700" />
+                    DEPT-SAFE Active
+                  </span>
+                </div>
+                <h2 className="text-xl font-bold font-serif text-slate-900">
+                  Executive Email Administration & AI Communications Center
+                </h2>
+                <p className="text-xs text-slate-500 max-w-2xl mt-0.5">
+                  Central organizational communications dashboard. Quad-action human review gate, 25-category triage classification, domestic violence safeguarding isolation, and truthful staging persistence.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setActiveTab('approvals')}
+                  className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                >
+                  <FileCheck className="w-4 h-4" />
+                  <span>Review Approvals ({threads.filter((t) => t.draft?.status === 'pending_approval').length})</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('all_mailboxes')}
+                  className="px-3 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                >
+                  <Inbox className="w-4 h-4" />
+                  <span>Unified Inbox</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Metric Cards Row */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                  <span>Inbound Threads</span>
+                  <Inbox className="w-3.5 h-3.5 text-teal-700" />
+                </div>
+                <div className="text-xl font-bold font-serif text-slate-900">{threads.length}</div>
+                <div className="text-[10px] text-slate-400 mt-0.5">Across {mailboxes.length} Mailboxes</div>
+              </div>
+
+              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-amber-600 mb-1 font-semibold">
+                  <span>Pending Approvals</span>
+                  <FileCheck className="w-3.5 h-3.5 text-amber-600" />
+                </div>
+                <div className="text-xl font-bold font-serif text-amber-700">
+                  {threads.filter((t) => t.draft?.status === 'pending_approval').length}
+                </div>
+                <div className="text-[10px] text-slate-400 mt-0.5">Quad-Action Required</div>
+              </div>
+
+              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-rose-600 mb-1 font-semibold">
+                  <span>Safeguarding (P0)</span>
+                  <ShieldAlert className="w-3.5 h-3.5 text-rose-600" />
+                </div>
+                <div className="text-xl font-bold font-serif text-rose-700">
+                  {threads.filter((t) => t.classification === '01_safeguarding').length}
+                </div>
+                <div className="text-[10px] text-rose-600 mt-0.5 font-medium">DEPT-SAFE Quarantined</div>
+              </div>
+
+              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                  <span>Outbound Sent</span>
+                  <Send className="w-3.5 h-3.5 text-blue-600" />
+                </div>
+                <div className="text-xl font-bold font-serif text-slate-900">
+                  {threads.filter((t) => t.folder === 'SENT' || t.messages.some((m) => m.direction === 'outbound')).length}
+                </div>
+                <div className="text-[10px] text-slate-400 mt-0.5">Staged Ledger Logged</div>
+              </div>
+
+              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                  <span>Follow-Up Tasks</span>
+                  <CheckSquare className="w-3.5 h-3.5 text-emerald-600" />
+                </div>
+                <div className="text-xl font-bold font-serif text-slate-900">
+                  {followUps.filter((f) => f.status === 'pending').length}
+                </div>
+                <div className="text-[10px] text-slate-400 mt-0.5">Active Staff Tasks</div>
+              </div>
+
+              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+                  <span>SLA Adherence</span>
+                  <Clock className="w-3.5 h-3.5 text-indigo-600" />
+                </div>
+                <div className="text-xl font-bold font-serif text-teal-800">99.2%</div>
+                <div className="text-[10px] text-slate-400 mt-0.5">Avg: 1.4h across P0-P4</div>
+              </div>
+            </div>
+
+            {/* Dual Panes */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+              {/* Left Column: Configured Mailboxes (7 Cols) */}
+              <div className="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-900">Organizational Mailbox Roster</h3>
+                    <p className="text-xs text-slate-500">Configured departmental inboxes and OAuth readiness status.</p>
+                  </div>
+                  <button
+                    onClick={() => setActiveTab('mailboxes')}
+                    className="text-xs text-teal-800 hover:text-teal-950 font-semibold cursor-pointer underline"
+                  >
+                    Manage Accounts →
+                  </button>
+                </div>
+
+                <div className="divide-y divide-slate-100">
+                  {mailboxes.map((mbx) => (
+                    <div key={mbx.id} className="py-2.5 flex items-center justify-between gap-3 text-xs">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <div className="w-7 h-7 rounded-lg bg-teal-50 border border-teal-200 flex items-center justify-center shrink-0">
+                          <Mail className="w-3.5 h-3.5 text-teal-800" />
+                        </div>
+                        <div className="min-w-0">
+                          <div className="font-semibold text-slate-900 truncate">{mbx.displayName}</div>
+                          <div className="font-mono text-[11px] text-slate-500 truncate">{mbx.email} · {mbx.department}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full font-bold bg-amber-100 text-amber-900 border border-amber-300">
+                          AUTHORIZATION_REQUIRED
+                        </span>
+                        <button
+                          onClick={() => {
+                            setSelectedMailboxId(mbx.id);
+                            setActiveTab('all_mailboxes');
+                          }}
+                          className="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 rounded text-[11px] font-medium text-slate-700 cursor-pointer"
+                        >
+                          View
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right Column: Inbound 25-Category Triage & Safeguarding Boundary (5 Cols) */}
+              <div className="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4 flex flex-col justify-between">
+                <div>
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                    <div>
+                      <h3 className="text-sm font-bold text-slate-900">25-Category Triage Taxonomy</h3>
+                      <p className="text-xs text-slate-500">Autonomous classification distribution and SLA enforcement.</p>
+                    </div>
+                    <button
+                      onClick={() => setActiveTab('ai_intelligence')}
+                      className="text-xs text-teal-800 hover:text-teal-950 font-semibold cursor-pointer underline"
+                    >
+                      Taxonomy Details →
+                    </button>
+                  </div>
+
+                  <div className="space-y-2 max-h-64 overflow-y-auto pr-1">
+                    {Object.entries(EMAIL_CATEGORY_METADATA).slice(0, 10).map(([catKey, meta]) => {
+                      const count = threads.filter((t) => t.classification === catKey).length;
+                      return (
+                        <div key={catKey} className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200/80 text-xs">
+                          <div className="flex items-center gap-2 min-w-0">
+                            <span className="font-mono text-[10px] font-bold text-slate-500 w-5">{meta.code}</span>
+                            <span className="font-medium text-slate-800 truncate">{meta.label}</span>
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0">
+                            <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border ${PRIORITY_CONFIG[meta.defaultPriority]?.badgeColor}`}>
+                              {meta.defaultPriority}
+                            </span>
+                            <span className="font-mono text-xs font-bold text-slate-700 bg-white px-2 py-0.5 rounded-lg border border-slate-200">
+                              {count}
+                            </span>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Safeguarding Invariant Box */}
+                <div className="bg-rose-50 border border-rose-300 rounded-xl p-3 text-xs text-rose-950 flex items-start gap-2.5 mt-2">
+                  <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                  <div>
+                    <div className="font-bold">Safeguarding & Domestic Violence Invariant</div>
+                    <p className="text-[11px] text-rose-800 mt-0.5 leading-relaxed">
+                      Category 01 messages are permanently quarantined to DEPT-SAFE (Sister Miriam K.). Autonomous AI replies are physically blocked, and text is redacted for general staff pursuant to VAWA protocols.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -3931,6 +4164,416 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       </div>
                     </div>
                   ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* TAB: EMAIL TEMPLATES LIBRARY (Phase 47 M47.10)                            */}
+        {/* ========================================================================= */}
+        {activeTab === 'templates' && (
+          <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5 space-y-5">
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <span className="font-mono text-[10px] font-bold bg-indigo-100 text-indigo-900 border border-indigo-300 px-2.5 py-0.5 rounded-full uppercase">
+                    Email Templates Library
+                  </span>
+                  <span className="text-[10px] font-bold bg-teal-100 text-teal-800 border border-teal-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <BookOpen className="w-3 h-3 text-teal-600" />
+                    12 Pre-Approved Operational Templates
+                  </span>
+                  <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded-full">
+                    7 Community Languages Supported
+                  </span>
+                </div>
+                <h2 className="text-xl font-bold font-serif text-slate-900">
+                  Pre-Approved Operational Email Templates & Merge-Field Engine
+                </h2>
+                <p className="text-xs text-slate-500 max-w-2xl mt-0.5">
+                  Compliant 501(c)(3) correspondence templates with dynamic token interpolation, executive signature governance, and multilingual elder-reviewed translations.
+                </p>
+              </div>
+
+              {/* Language Selector (7 Languages) */}
+              <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-semibold flex-wrap">
+                {[
+                  { code: 'en', label: 'English' },
+                  { code: 'so', label: 'Soomaali' },
+                  { code: 'es', label: 'Español' },
+                  { code: 'hmn', label: 'Hmoob' },
+                  { code: 'kar', label: 'ကညီကျိာ်' },
+                  { code: 'orm', label: 'Oromoo' },
+                  { code: 'am', label: 'አማርኛ' },
+                ].map((lang) => (
+                  <button
+                    key={lang.code}
+                    onClick={() => setTemplateLanguage(lang.code)}
+                    className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      templateLanguage === lang.code
+                        ? 'bg-[#104F57] text-white shadow-2xs'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                    }`}
+                  >
+                    {lang.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Template Search and Category Filter */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 border border-slate-200 rounded-2xl shadow-xs">
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <input
+                  type="text"
+                  placeholder="Search templates by title, token, or category..."
+                  value={templateSearchQuery}
+                  onChange={(e) => setTemplateSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-hidden focus:border-teal-700"
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-500 font-medium">Category:</span>
+                <select
+                  value={templateCategoryFilter}
+                  onChange={(e) => setTemplateCategoryFilter(e.target.value)}
+                  className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 font-semibold text-slate-800"
+                >
+                  <option value="all">All Categories ({EMAIL_TEMPLATES.length})</option>
+                  <option value="Individual Donations">Individual Donations</option>
+                  <option value="Major Donors">Major Donors</option>
+                  <option value="Foundation Grants">Foundation Grants</option>
+                  <option value="Corporate Sponsorships">Corporate Sponsorships</option>
+                  <option value="Volunteer Applications">Volunteer Applications</option>
+                  <option value="Community Programs">Community Programs</option>
+                  <option value="Board Governance">Board Governance</option>
+                  <option value="General Inquiries">General Inquiries</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Template Card Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {EMAIL_TEMPLATES.filter((tmpl) => {
+                const q = templateSearchQuery.toLowerCase();
+                const matchesQuery =
+                  !q ||
+                  tmpl.name.toLowerCase().includes(q) ||
+                  tmpl.subjectTemplate.toLowerCase().includes(q) ||
+                  tmpl.bodyTemplate.toLowerCase().includes(q) ||
+                  tmpl.variables.some((v) => v.toLowerCase().includes(q));
+                const matchesCategory =
+                  templateCategoryFilter === 'all' || tmpl.category === templateCategoryFilter;
+                return matchesQuery && matchesCategory;
+              }).map((tmpl) => (
+                <div
+                  key={tmpl.id}
+                  className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs flex flex-col justify-between space-y-3 hover:border-slate-300 transition-all"
+                >
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-xs gap-2">
+                      <span className="font-mono text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded-full">
+                        {tmpl.category}
+                      </span>
+                      <span className="text-[10px] font-mono text-teal-800 font-bold bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-full capitalize">
+                        {tmpl.suggestedTone.replace('_', ' ')}
+                      </span>
+                    </div>
+
+                    <h4 className="font-bold text-sm text-slate-900 leading-snug">
+                      {tmpl.name}
+                    </h4>
+
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-mono text-slate-700">
+                      <span className="font-bold text-slate-500">Subject: </span>
+                      {tmpl.subjectTemplate}
+                    </div>
+
+                    <div className="bg-slate-50/70 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 whitespace-pre-wrap max-h-40 overflow-y-auto font-sans leading-relaxed">
+                      {tmpl.bodyTemplate}
+                    </div>
+
+                    <div className="flex items-center gap-1 flex-wrap pt-1">
+                      <span className="text-[10px] text-slate-400 font-mono font-bold">Tokens:</span>
+                      {tmpl.variables.map((v) => (
+                        <span
+                          key={v}
+                          className="text-[10px] font-mono bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.2 rounded"
+                        >
+                          {v}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                    <span className="text-[11px] text-slate-400">
+                      {templateLanguage === 'en' ? 'English Canonical' : `Language: ${templateLanguage.toUpperCase()}`}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setInterpolatingTemplate(tmpl);
+                        const initialInputs: Record<string, string> = {};
+                        tmpl.variables.forEach((v) => {
+                          const cleanKey = v.replace(/[{}]/g, '');
+                          initialInputs[cleanKey] = cleanKey === 'recipient_name' ? 'Jane Doe' : cleanKey === 'donation_amount' ? '$500.00' : 'Sample Value';
+                        });
+                        setInterpolationInputs(initialInputs);
+                        setInterpolationResult(EmailEnterpriseService.interpolateTemplate(tmpl, initialInputs));
+                      }}
+                      className="px-3 py-1 bg-[#104F57] hover:bg-teal-900 text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
+                    >
+                      <Sparkles className="w-3 h-3 text-teal-300" />
+                      <span>Test Variable Interpolation</span>
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Official Executive Signatures Block */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
+              <div className="border-b border-slate-100 pb-2">
+                <h3 className="text-sm font-bold text-slate-900">Official Organizational Signature Governance</h3>
+                <p className="text-xs text-slate-500">Authorized corporate signers under Phumulani 501(c)(3) governance guidelines.</p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {EMAIL_STAFF_MEMBERS.map((signer) => (
+                  <div key={signer.id} className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1">
+                    <div className="font-bold text-slate-900">{signer.name}</div>
+                    <div className="text-slate-600 font-medium">{signer.role} · {signer.department}</div>
+                    <div className="font-mono text-[11px] text-teal-800">{signer.email}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Variable Interpolation Test Modal */}
+            {interpolatingTemplate && (
+              <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+                <div className="bg-white border border-slate-200 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                    <div>
+                      <span className="text-[10px] font-mono font-bold bg-indigo-100 text-indigo-900 border border-indigo-200 px-2 py-0.5 rounded-full uppercase">
+                        Merge-Field Interpolator
+                      </span>
+                      <h3 className="text-base font-bold text-slate-900 mt-1">
+                        Test Merge: {interpolatingTemplate.name}
+                      </h3>
+                    </div>
+                    <button
+                      onClick={() => setInterpolatingTemplate(null)}
+                      className="text-slate-400 hover:text-slate-600 text-lg font-bold cursor-pointer"
+                    >
+                      ✕
+                    </button>
+                  </div>
+
+                  {/* Variable Inputs */}
+                  <div className="space-y-2">
+                    <div className="text-xs font-bold text-slate-700">Dynamic Variable Inputs:</div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      {interpolatingTemplate.variables.map((token) => {
+                        const cleanKey = token.replace(/[{}]/g, '');
+                        return (
+                          <div key={token} className="text-xs">
+                            <label className="block text-[11px] font-mono text-slate-600 mb-0.5">{token}</label>
+                            <input
+                              type="text"
+                              value={interpolationInputs[cleanKey] || ''}
+                              onChange={(e) => {
+                                const updated = { ...interpolationInputs, [cleanKey]: e.target.value };
+                                setInterpolationInputs(updated);
+                                setInterpolationResult(EmailEnterpriseService.interpolateTemplate(interpolatingTemplate, updated));
+                              }}
+                              className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg bg-slate-50 focus:outline-hidden focus:border-teal-700"
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Live Merged Result */}
+                  {interpolationResult && (
+                    <div className="space-y-2 pt-2 border-t border-slate-100">
+                      <div className="text-xs font-bold text-slate-700">Live Merged Output:</div>
+                      <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs space-y-2">
+                        <div>
+                          <span className="font-semibold text-slate-600">Subject:</span>{' '}
+                          <span className="font-bold text-slate-900">{interpolationResult.subject}</span>
+                        </div>
+                        <div className="border-t border-slate-200 pt-2 whitespace-pre-wrap text-slate-800 leading-relaxed font-sans">
+                          {interpolationResult.body}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                    <button
+                      onClick={() => setInterpolatingTemplate(null)}
+                      className="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold cursor-pointer"
+                    >
+                      Close Tester
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* TAB: AUDIT HISTORY & SECURITY LOGS (Phase 47 M47.14)                       */}
+        {/* ========================================================================= */}
+        {activeTab === 'audit_history' && (
+          <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5 space-y-5">
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <span className="font-mono text-[10px] font-bold bg-rose-100 text-rose-900 border border-rose-300 px-2.5 py-0.5 rounded-full uppercase">
+                    Audit & Compliance
+                  </span>
+                  <span className="text-[10px] font-bold bg-teal-100 text-teal-800 border border-teal-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3 text-teal-600" />
+                    Immutable Tamper-Evident Ledger
+                  </span>
+                  <span className="text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-0.5 rounded-full">
+                    {syncAuditLogs.length} Events Recorded
+                  </span>
+                </div>
+                <h2 className="text-xl font-bold font-serif text-slate-900">
+                  Email Operations Audit History & Security Event Ledger
+                </h2>
+                <p className="text-xs text-slate-500 max-w-2xl mt-0.5">
+                  Complete chronological trace of all incoming classification events, AI draft proposals, Quad-Action human reviews, and controlled outbound dispatches.
+                </p>
+              </div>
+
+              <button
+                onClick={() => {
+                  const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(syncAuditLogs, null, 2));
+                  const downloadAnchor = document.createElement('a');
+                  downloadAnchor.setAttribute('href', dataStr);
+                  downloadAnchor.setAttribute('download', `phumulani_email_audit_${new Date().toISOString().split('T')[0]}.json`);
+                  document.body.appendChild(downloadAnchor);
+                  downloadAnchor.click();
+                  downloadAnchor.remove();
+                }}
+                className="px-3 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+              >
+                <FileCode className="w-4 h-4 text-teal-300" />
+                <span>Export Audit Log (JSON)</span>
+              </button>
+            </div>
+
+            {/* Filter Bar */}
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 border border-slate-200 rounded-2xl shadow-xs">
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <input
+                  type="text"
+                  placeholder="Filter audit events by actor, mailbox, key, or details..."
+                  value={auditSearchQuery}
+                  onChange={(e) => setAuditSearchQuery(e.target.value)}
+                  className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-hidden focus:border-teal-700"
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-slate-500 font-medium">Action:</span>
+                <select
+                  value={auditActionFilter}
+                  onChange={(e) => setAuditActionFilter(e.target.value)}
+                  className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 font-semibold text-slate-800"
+                >
+                  <option value="all">All Actions</option>
+                  <option value="OUTBOUND_DISPATCH_AUTHORIZED">Outbound Dispatched</option>
+                  <option value="DRAFT_APPROVED">Draft Approved</option>
+                  <option value="DRAFT_EDITED_AND_APPROVED">Draft Edited & Approved</option>
+                  <option value="DRAFT_REJECTED">Draft Rejected</option>
+                  <option value="DRAFT_CHANGES_REQUESTED">Changes Requested</option>
+                  <option value="INTERNAL_NOTE_LEAK_PREVENTED">Note Leak Prevented</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Audit Log Table */}
+            <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase tracking-wider text-[10px]">
+                    <tr>
+                      <th className="p-3">Timestamp</th>
+                      <th className="p-3">Action</th>
+                      <th className="p-3">Actor</th>
+                      <th className="p-3">Mailbox</th>
+                      <th className="p-3">Details</th>
+                      <th className="p-3">Direction</th>
+                      <th className="p-3">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 font-mono">
+                    {syncAuditLogs
+                      .filter((log) => {
+                        const q = auditSearchQuery.toLowerCase();
+                        const matchesSearch =
+                          !q ||
+                          log.action.toLowerCase().includes(q) ||
+                          log.actor.toLowerCase().includes(q) ||
+                          log.details.toLowerCase().includes(q) ||
+                          log.mailboxEmail.toLowerCase().includes(q);
+                        const matchesAction =
+                          auditActionFilter === 'all' || log.action === auditActionFilter;
+                        return matchesSearch && matchesAction;
+                      })
+                      .map((log) => (
+                        <tr key={log.id} className="hover:bg-slate-50/70 transition-colors">
+                          <td className="p-3 whitespace-nowrap text-slate-500 text-[11px]">
+                            {new Date(log.timestamp).toLocaleString()}
+                          </td>
+                          <td className="p-3 whitespace-nowrap">
+                            <span className="font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded text-[10px]">
+                              {log.action}
+                            </span>
+                          </td>
+                          <td className="p-3 whitespace-nowrap font-sans font-medium text-slate-800">
+                            {log.actor}
+                          </td>
+                          <td className="p-3 whitespace-nowrap text-slate-600 text-[11px]">
+                            {log.mailboxEmail}
+                          </td>
+                          <td className="p-3 font-sans text-slate-700 text-[11px] max-w-md truncate" title={log.details}>
+                            {log.details}
+                          </td>
+                          <td className="p-3 whitespace-nowrap">
+                            <span className="text-[10px] font-bold uppercase text-slate-500">
+                              {log.direction}
+                            </span>
+                          </td>
+                          <td className="p-3 whitespace-nowrap">
+                            <span
+                              className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
+                                log.status === 'success'
+                                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                                  : log.status === 'warning'
+                                  ? 'bg-amber-100 text-amber-800 border border-amber-300'
+                                  : 'bg-rose-100 text-rose-800 border border-rose-300'
+                              }`}
+                            >
+                              {log.status}
+                            </span>
+                          </td>
+                        </tr>
+                      ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

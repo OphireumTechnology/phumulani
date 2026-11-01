@@ -396,10 +396,15 @@ export type ConversationStatus =
   | 'NEW'
   | 'TRIAGED'
   | 'ASSIGNED'
-  | 'IN_PROGRESS'
+  | 'DRAFTING'
   | 'AWAITING_APPROVAL'
-  | 'AWAITING_EXTERNAL_RESPONSE'
+  | 'APPROVED'
+  | 'SENT'
+  | 'FOLLOW_UP_REQUIRED'
   | 'RESOLVED'
+  | 'QUARANTINED'
+  | 'IN_PROGRESS'
+  | 'AWAITING_EXTERNAL_RESPONSE'
   | 'ARCHIVED'
   | 'ESCALATED'
   | 'unread'
@@ -410,6 +415,24 @@ export type ConversationStatus =
   | 'escalated_safeguarding'
   | 'new'
   | 'triage_ready';
+
+export type QuadActionReviewType =
+  | 'APPROVE'
+  | 'EDIT_AND_APPROVE'
+  | 'REJECT'
+  | 'ESCALATE_RETURN';
+
+export type OutboundEmailDeliveryStatus =
+  | 'DRAFT'
+  | 'PENDING_APPROVAL'
+  | 'APPROVED'
+  | 'QUEUED'
+  | 'SENT'
+  | 'FAILED'
+  | 'CANCELLED'
+  | 'submitted'
+  | 'delivered'
+  | 'bounced';
 
 export interface EnterpriseEmailMessage {
   id: string;

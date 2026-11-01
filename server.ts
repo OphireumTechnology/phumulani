@@ -34,6 +34,10 @@ import { serverVerificationService } from './src/server/serverVerificationServic
 import { operationalReportingService, type ReportingPeriod } from './src/server/operationalReportingService';
 import type { AgentDivision } from './src/types/aiWorkforce';
 import type { PermissionDomain } from './src/types/masterAdmin';
+import { db } from './src/services/db';
+import { EmailEnterpriseService } from './src/services/emailEnterpriseService';
+import { googleWorkspaceAdapter } from './src/services/googleWorkspaceAdapter';
+import { EMAIL_TEMPLATES, type ConversationStatus, type QuadActionReviewType } from './src/types/emailEnterprise';
 
 dotenv.config();
 
@@ -3748,6 +3752,286 @@ app.post('/api/v1/verification/m4106-scenario', async (_req: Request, res: Respo
   } catch (err: any) {
     res.status(500).json({ success: false, error: err?.message || 'Execution error' });
   }
+});
+
+// =============================================================================
+// PHASE 47: MASTER EMAIL ADMINISTRATION & GOOGLE WORKSPACE ENDPOINTS
+// Route: /admin/master/email · Application D (Staff Command Center)
+// Operational Mode: STAGED_DEVELOPMENT · Status: AUTHORIZATION_REQUIRED
+// =============================================================================
+
+// Helper to authenticate staff actor from session or headers
+function getEmailAdminActor(req: Request): { id: string; name: string; role: string; isSafeguarding: boolean } {
+  const authHeader = req.headers['authorization'];
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.substring(7);
+    const validation = authSecurityService.validateSession(token);
+    if (validation.valid && validation.session) {
+      const sess = validation.session;
+      const isSafeguarding = sess.userId === 'usr-002' || (sess.role as string) === 'safeguarding_lead' || (sess.role as string) === 'safeguarding_officer';
+      return { id: sess.userId, name: sess.name || sess.userEmail, role: sess.role, isSafeguarding };
+    }
+  }
+  const role = (req.headers['x-phumulani-role'] as string) || 'staff';
+  const userId = (req.headers['x-phumulani-user-id'] as string) || (role === 'safeguarding_lead' ? 'usr-002' : 'usr-001');
+  const userName = (req.headers['x-phumulani-user-name'] as string) || (role === 'safeguarding_lead' ? 'Sister Miriam K.' : 'Comfort Dondo');
+  const isSafeguarding = userId === 'usr-002' || role === 'safeguarding_lead' || role === 'safeguarding_officer';
+  return { id: userId, name: userName, role, isSafeguarding };
+}
+
+// 1. Google Workspace truthful integration status
+app.get('/api/admin/email/google-workspace/status', (_req: Request, res: Response) => {
+  res.json(googleWorkspaceAdapter.getStatus());
+});
+
+// 2. Google Workspace scope validation against least-privilege policy
+app.post('/api/admin/email/google-workspace/verify-scopes', (req: Request, res: Response) => {
+  const { scopes = [] } = req.body;
+  const validation = googleWorkspaceAdapter.validateScopes(scopes);
+  res.json(validation);
+});
+
+// 3. List connected organizational mailboxes
+app.get('/api/admin/email/mailboxes', (_req: Request, res: Response) => {
+  const mailboxes = db.getState().connectedMailboxes;
+  const gwMailboxes = googleWorkspaceAdapter.getMailboxes();
+  res.json({
+    mailboxes,
+    googleWorkspaceProfiles: gwMailboxes,
+    operationalMode: 'STAGED_DEVELOPMENT',
+    googleWorkspaceStatus: 'AUTHORIZATION_REQUIRED',
+  });
+});
+
+// 4. Update or add organizational mailbox
+app.post('/api/admin/email/mailboxes', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  if (actor.role === 'visitor') {
+    return res.status(403).json({ error: 'Forbidden: Staff role required to configure mailboxes.' });
+  }
+  const validation = EmailEnterpriseService.validateMailboxConfiguration(req.body);
+  if (!validation.isValid) {
+    return res.status(400).json({ error: 'Mailbox validation failed', errors: validation.errors });
+  }
+  const updatedMailbox = {
+    ...req.body,
+    status: 'AUTHORIZATION_REQUIRED' as const,
+    connectionState: 'AUTHORIZATION_REQUIRED' as const,
+    lastSyncedAt: new Date().toISOString(),
+  };
+  const mailboxes = db.getState().connectedMailboxes;
+  const exists = mailboxes.some((m) => m.id === updatedMailbox.id || m.email === updatedMailbox.email);
+  const updated = exists
+    ? mailboxes.map((m) => (m.id === updatedMailbox.id || m.email === updatedMailbox.email ? { ...m, ...updatedMailbox } : m))
+    : [...mailboxes, updatedMailbox];
+  db.saveState({ ...db.getState(), connectedMailboxes: updated });
+  res.json({ success: true, mailbox: updatedMailbox });
+});
+
+// 5. List Email Threads with Anti-IDOR Safeguarding Isolation
+app.get('/api/admin/email/threads', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  const { folder, category, priority, status, mailboxId, search } = req.query as Record<string, string>;
+  let threads = db.getState().enterpriseEmailThreads;
+
+  if (folder && folder !== 'all') {
+    threads = threads.filter((t) => t.folder === folder);
+  }
+  if (category) {
+    threads = threads.filter((t) => t.classification === category);
+  }
+  if (priority) {
+    threads = threads.filter((t) => t.priority === priority);
+  }
+  if (status) {
+    threads = threads.filter((t) => t.status === status);
+  }
+  if (mailboxId) {
+    threads = threads.filter((t) => t.mailboxId === mailboxId || t.mailboxEmail === mailboxId);
+  }
+  if (search) {
+    const q = search.toLowerCase();
+    threads = threads.filter(
+      (t) =>
+        t.threadSubject.toLowerCase().includes(q) ||
+        t.participantEmails.some((e) => e.toLowerCase().includes(q))
+    );
+  }
+
+  // Anti-IDOR: Redact domestic violence / safeguarding body text for non-safeguarding staff
+  const sanitizedThreads = threads.map((t) => {
+    if (t.classification === '01_safeguarding' && !actor.isSafeguarding) {
+      return {
+        ...t,
+        messages: t.messages.map((m) => ({
+          ...m,
+          bodyText: '[CONFIDENTIAL SAFEGUARDING RECORD — VAWA RESTRICTED TO SISTER MIRIAM K.]',
+          attachments: [],
+        })),
+        draft: undefined,
+        crmLink: undefined,
+      };
+    }
+    return t;
+  });
+
+  res.json({ threads: sanitizedThreads, total: sanitizedThreads.length });
+});
+
+// 6. Get Single Thread with Strict Anti-IDOR Boundary
+app.get('/api/admin/email/threads/:id', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  const thread = db.getState().enterpriseEmailThreads.find((t) => t.id === req.params.id);
+  if (!thread) {
+    return res.status(404).json({ error: 'Thread not found' });
+  }
+
+  if (thread.classification === '01_safeguarding' && !actor.isSafeguarding) {
+    return res.status(403).json({
+      error: 'ACCESS DENIED: Confidential survivor intake protected under VAWA. Access restricted to Sister Miriam K. (DEPT-SAFE).',
+      safeguardingQuarantined: true,
+    });
+  }
+
+  res.json({ thread });
+});
+
+// 7. Add Internal Staff Note (strictly isolated from outbound payload)
+app.post('/api/admin/email/threads/:id/notes', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  const { noteText } = req.body;
+  if (!noteText || !noteText.trim()) {
+    return res.status(400).json({ error: 'Note text is required.' });
+  }
+  db.addThreadInternalNote(req.params.id, noteText.trim(), actor.name);
+  res.json({ success: true, message: 'Internal staff note recorded. Isolated from external dispatch.' });
+});
+
+// 8. Triage & Classify Message (25 Categories + Priority P0-P4)
+app.post('/api/admin/email/triage', (req: Request, res: Response) => {
+  const { subject = '', body = '', senderEmail = '' } = req.body;
+  const classification = EmailEnterpriseService.classifyMessage(subject, body, senderEmail);
+  const priority = EmailEnterpriseService.calculatePriority(classification.category, subject, body);
+  res.json({
+    category: classification.category,
+    confidence: classification.confidence,
+    reasoning: classification.reasoning,
+    priority: priority.level,
+    slaHours: priority.slaHours,
+    isSafeguardingAlert: classification.isSafeguardingAlert,
+  });
+});
+
+// 9. Generate AI Email Draft (Watermarked AI_DRAFT — NOT APPROVED — NOT SENT)
+app.post('/api/admin/email/drafts', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  const { threadId, tone = 'professional' } = req.body;
+  const thread = db.getState().enterpriseEmailThreads.find((t) => t.id === threadId);
+  if (!thread) {
+    return res.status(404).json({ error: 'Thread not found' });
+  }
+
+  // Safeguarding halt: zero automated AI drafts on confidential domestic violence records
+  if (thread.classification === '01_safeguarding') {
+    return res.status(403).json({
+      error: 'CRITICAL SAFEGUARDING HALT: Domestic violence and crisis records cannot receive automated AI drafts.',
+      isSafeguardingHalt: true,
+    });
+  }
+
+  const draft = EmailEnterpriseService.generateDraft(thread, tone);
+  res.json({
+    draft,
+    watermark: 'AI_DRAFT — NOT APPROVED — NOT SENT',
+    requiresHumanReview: true,
+  });
+});
+
+// 10. Quad-Action Human Review (Approve, Edit & Approve, Reject, Escalate/Return)
+app.post('/api/admin/email/review', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  const { threadId, action, editedSubject, editedBody, reason, escalateToStaffId, escalateToStaffName } = req.body;
+
+  if (!threadId || !action) {
+    return res.status(400).json({ error: 'threadId and action are required.' });
+  }
+
+  // Anti-AI self-approval
+  if (actor.id.startsWith('ai-') || actor.name.toLowerCase().includes('agent')) {
+    return res.status(403).json({ error: 'POLICY VIOLATION: Automated AI self-approval is forbidden.' });
+  }
+
+  const reviewResult = EmailEnterpriseService.executeQuadActionReview(
+    threadId,
+    action as QuadActionReviewType,
+    actor,
+    { editedSubject, editedBody, reason, escalateToStaffId, escalateToStaffName }
+  );
+
+  if (!reviewResult.success) {
+    return res.status(400).json(reviewResult);
+  }
+
+  res.json(reviewResult);
+});
+
+// 11. Controlled Outbound Dispatch (Mandatory Idempotency & Staging Delivery)
+app.post('/api/admin/email/dispatch', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  const { threadId, idempotencyKey, updatedBody } = req.body;
+
+  if (!threadId || !idempotencyKey) {
+    return res.status(400).json({ error: 'threadId and idempotencyKey are required for controlled dispatch.' });
+  }
+
+  const dispatchResult = EmailEnterpriseService.authorizeAndSendOutboundDraft(
+    threadId,
+    actor,
+    { idempotencyKey, updatedBody }
+  );
+
+  if (!dispatchResult.success) {
+    return res.status(400).json(dispatchResult);
+  }
+
+  res.json({
+    ...dispatchResult,
+    operationalMode: 'STAGED_DEVELOPMENT',
+    googleWorkspaceStatus: 'AUTHORIZATION_REQUIRED',
+    truthfulNotice: 'Message queued and reconciled in Staged Sent folder. Live external delivery pending Google Workspace consent.',
+  });
+});
+
+// 12. Approved Email Templates Library
+app.get('/api/admin/email/templates', (_req: Request, res: Response) => {
+  res.json({
+    templates: EMAIL_TEMPLATES,
+    total: EMAIL_TEMPLATES.length,
+    languagesSupported: ['en', 'so', 'es', 'hmn', 'kar', 'orm', 'am'],
+  });
+});
+
+// 13. Template Interpolation
+app.post('/api/admin/email/templates/interpolate', (req: Request, res: Response) => {
+  const { templateId, variables = {} } = req.body;
+  const template = EMAIL_TEMPLATES.find((t) => t.id === templateId);
+  if (!template) {
+    return res.status(404).json({ error: 'Template not found' });
+  }
+  const result = EmailEnterpriseService.interpolateTemplate(template, variables);
+  res.json(result);
+});
+
+// 14. Real Operational Email Analytics
+app.get('/api/admin/email/analytics', (_req: Request, res: Response) => {
+  const analytics = EmailEnterpriseService.calculateAnalytics();
+  res.json(analytics);
+});
+
+// 15. Audit Logs for Email Synchronization & Review Actions
+app.get('/api/admin/email/audit-logs', (_req: Request, res: Response) => {
+  const auditLogs = db.getSyncAuditLogs();
+  res.json({ auditLogs, total: auditLogs.length });
 });
 
 

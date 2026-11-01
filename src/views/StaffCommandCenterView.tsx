@@ -276,6 +276,14 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
               <div className="font-serif text-lg font-bold text-emerald-400">{PHUMULANI_MEDIA_INVENTORY.length}</div>
               <div className="text-[10px] text-slate-400">Media Vault</div>
             </div>
+            <div
+              onClick={() => onViewChange('email-command')}
+              className="bg-[#104F57] hover:bg-teal-900 border border-teal-400/50 rounded-xl p-3 text-center min-w-[110px] cursor-pointer transition-colors text-white"
+              title="Open Master Email Administration (/admin/master/email)"
+            >
+              <div className="font-serif text-lg font-bold text-teal-200">Email Admin</div>
+              <div className="text-[10px] text-teal-300">Command Center →</div>
+            </div>
           </div>
         </div>
 
@@ -300,7 +308,17 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
           {/* Left Column: Messages List */}
           <div className="lg:col-span-5 border-r border-slate-200 divide-y divide-slate-100 overflow-y-auto max-h-[700px]">
             <div className="p-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center text-xs font-semibold text-slate-600">
-              <span>Inbox Queue (Workflow A)</span>
+              <div className="flex items-center gap-2">
+                <span>Inbox Queue (Workflow A)</span>
+                <button
+                  type="button"
+                  onClick={() => onViewChange('email-command')}
+                  className="text-[10px] font-bold text-teal-800 hover:text-teal-950 bg-teal-50 border border-teal-300 px-2 py-0.5 rounded-full cursor-pointer"
+                  title="Open Master Email Administration (/admin/master/email)"
+                >
+                  Full Email Admin →
+                </button>
+              </div>
               <span className="text-[11px] text-slate-400">Classified by Agent A02</span>
             </div>
 

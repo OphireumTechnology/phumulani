@@ -7,7 +7,7 @@
 import React from 'react';
 import { db } from '../services/db';
 import { User, UserRole } from '../types';
-import { UserCheck, Shield, RefreshCw, Sparkles, AlertCircle } from 'lucide-react';
+import { UserCheck, Shield, RefreshCw, Sparkles, AlertCircle, Mail } from 'lucide-react';
 
 interface RoleSwitcherBarProps {
   currentUser: User;
@@ -244,6 +244,19 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
         >
           <Shield className="w-3 h-3 text-amber-400" />
           <span>Master Admin</span>
+        </button>
+
+        <button
+          onClick={() => onViewChange('email-command')}
+          className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
+            activeView === 'email-command'
+              ? 'bg-teal-400 text-slate-950 border border-teal-300'
+              : 'bg-slate-800 text-teal-300 hover:text-white border border-teal-500/40'
+          }`}
+          title="Master Email Administration (/admin/master/email)"
+        >
+          <Mail className="w-3 h-3 text-teal-400" />
+          <span>Email Admin</span>
         </button>
 
         <button

@@ -80,9 +80,10 @@ export class EmailEnterpriseService {
     // Critical Safeguarding Safeguards (Category 01 - Priority P0)
     // Evaluates traumatic keywords AND non-keyword metadata / crisis channel indicators
     const safeguardingKeywords = [
-      'danger', 'emergency', 'shelter', 'protection order', 'domestic violence',
-      'stalking', 'abuse', 'trauma', 'jeopardy', 'relocation', 'tonight', 'crisis',
-      'discreet', 'safe house', 'escort', 'fleeing', 'threatened', 'custody danger'
+      'immediate danger', 'protection order', 'restraining order', 'domestic violence',
+      'stalking', 'physical abuse', 'abuser', 'fleeing', 'relocation tonight',
+      'safe house', 'custody danger', 'emergency safe house', 'crisis shelter',
+      'threatened to kill', 'confidential survivor'
     ];
 
     const senderLower = senderEmail.toLowerCase();
@@ -178,11 +179,11 @@ export class EmailEnterpriseService {
     }
 
     // Category 15 / 16: Community Programs & Events
-    if (text.includes('tea circle') || text.includes('healing circle') || text.includes('workshop') || text.includes('event registration') || text.includes('banquet')) {
+    if (text.includes('tea circle') || text.includes('healing circle') || text.includes('workshop') || text.includes('rsvp') || text.includes('community meeting') || text.includes('parent circle') || text.includes('sisterhood circle') || text.includes('circle') || text.includes('banquet') || text.includes('event registration')) {
       return {
         category: '15_community_programs',
         confidence: 91,
-        reasoning: 'Community participant inquiry regarding healing circles or educational workshops.',
+        reasoning: 'Community programming or cultural workshop participation inquiry.',
         isSafeguardingAlert: false,
       };
     }
@@ -193,6 +194,16 @@ export class EmailEnterpriseService {
         category: '05_individual_donations',
         confidence: 92,
         reasoning: 'Individual donor support or 501(c)(3) tax receipt clarification.',
+        isSafeguardingAlert: false,
+      };
+    }
+
+    // Category 19: Finance & Accounting
+    if (text.includes('invoice') || text.includes('w-9') || text.includes('audit report') || text.includes('form 990') || text.includes('tax exemption') || text.includes('david mwangi')) {
+      return {
+        category: '19_finance_accounting',
+        confidence: 93,
+        reasoning: 'Accounting, tax documentation, vendor billing or audit inquiry.',
         isSafeguardingAlert: false,
       };
     }
@@ -223,7 +234,7 @@ export class EmailEnterpriseService {
     category: EmailClassificationCategory,
     subject: string,
     body: string
-  ): { priority: EmailPriorityLevel; slaHours: number; deadline: string } {
+  ): { priority: EmailPriorityLevel; level: EmailPriorityLevel; slaHours: number; deadline: string } {
     const text = `${subject} ${body}`.toLowerCase();
     let priority: EmailPriorityLevel = EMAIL_CATEGORY_METADATA[category]?.defaultPriority || 'P3';
 
@@ -236,20 +247,43 @@ export class EmailEnterpriseService {
       priority = 'P2';
     }
 
-    const slaHours = PRIORITY_CONFIG[priority].slaHours;
+    const slaHours = PRIORITY_CONFIG[priority]?.slaHours || 24;
     const deadline = new Date(Date.now() + slaHours * 3600 * 1000).toISOString();
 
-    return { priority, slaHours, deadline };
+    return { priority, level: priority, slaHours, deadline };
   }
 
   /**
    * 3. Controlled Auto-Responder Evaluation Engine (AR01 - AR10)
    */
   public static evaluateAutoResponder(
-    message: EnterpriseEmailMessage,
-    category: EmailClassificationCategory,
-    rules: AutoResponderRule[]
+    messageOrCategory: EnterpriseEmailMessage | string,
+    categoryOrSubject?: EmailClassificationCategory | string,
+    rulesOrFrom?: AutoResponderRule[] | string,
+    toEmail?: string,
+    rulesArray?: AutoResponderRule[]
   ): { shouldSend: boolean; rule?: AutoResponderRule; logEntry: AutoResponderLog } {
+    let category: EmailClassificationCategory;
+    let senderEmail = 'unknown@sender.com';
+    let subject = 'No Subject';
+    let recipientEmail = 'info@phumulani.org';
+    let rules: AutoResponderRule[] = [];
+
+    if (typeof messageOrCategory === 'string') {
+      category = messageOrCategory as EmailClassificationCategory;
+      subject = typeof categoryOrSubject === 'string' ? categoryOrSubject : 'No Subject';
+      senderEmail = typeof rulesOrFrom === 'string' ? rulesOrFrom : 'unknown@sender.com';
+      recipientEmail = toEmail || 'info@phumulani.org';
+      rules = Array.isArray(rulesArray) ? rulesArray : [];
+    } else {
+      const msg = messageOrCategory as EnterpriseEmailMessage;
+      category = categoryOrSubject as EmailClassificationCategory;
+      rules = Array.isArray(rulesOrFrom) ? rulesOrFrom : [];
+      senderEmail = msg?.senderEmail || 'unknown@sender.com';
+      subject = msg?.subject || 'No Subject';
+      recipientEmail = msg?.recipientEmail || 'info@phumulani.org';
+    }
+
     // INVARIANT: Never send auto-responses if category is safeguarding / crisis
     if (category === '01_safeguarding') {
       return {
@@ -258,8 +292,8 @@ export class EmailEnterpriseService {
           id: `log-ar-${Date.now()}`,
           ruleId: 'AR01',
           ruleName: 'MANDATORY SAFETY SUPPRESSION',
-          recipientEmail: message.senderEmail,
-          messageSubject: message.subject,
+          recipientEmail: senderEmail,
+          messageSubject: subject,
           timestamp: new Date().toISOString(),
           status: 'blocked_by_safety',
           reason: 'MANDATORY SAFETY SUPPRESSION: Category 01_safeguarding requires 100% discreet human handling. Automated external response is prohibited.',
@@ -268,9 +302,11 @@ export class EmailEnterpriseService {
     }
 
     // Match enabled rule
-    const matchingRule = rules.find(
-      (r) => r.enabled && r.eligibleCategories.includes(category) && (r.mailbox === message.recipientEmail || r.mailbox === 'info@phumulani.org')
-    );
+    const matchingRule = Array.isArray(rules)
+      ? rules.find(
+          (r) => r.enabled && r.eligibleCategories?.includes(category) && (r.mailbox === recipientEmail || r.mailbox === 'info@phumulani.org')
+        )
+      : undefined;
 
     if (!matchingRule) {
       return {
@@ -279,11 +315,11 @@ export class EmailEnterpriseService {
           id: `log-ar-${Date.now()}`,
           ruleId: 'AR01',
           ruleName: 'No Matching Rule',
-          recipientEmail: message.senderEmail,
-          messageSubject: message.subject,
+          recipientEmail: senderEmail,
+          messageSubject: subject,
           timestamp: new Date().toISOString(),
           status: 'suppressed',
-          reason: `No enabled auto-responder rule configured for category [${category}] on mailbox [${message.recipientEmail}].`,
+          reason: `No enabled auto-responder rule configured for category [${category}] on mailbox [${recipientEmail}].`,
         },
       };
     }
@@ -295,8 +331,8 @@ export class EmailEnterpriseService {
         id: `log-ar-${Date.now()}`,
         ruleId: matchingRule.id,
         ruleName: matchingRule.name,
-        recipientEmail: message.senderEmail,
-        messageSubject: message.subject,
+        recipientEmail: senderEmail,
+        messageSubject: subject,
         timestamp: new Date().toISOString(),
         status: 'sent',
       },
@@ -308,8 +344,8 @@ export class EmailEnterpriseService {
    */
   public static generateDraft(
     thread: EnterpriseEmailThread,
-    toneStyle: ResponseToneStyle,
-    actorName: string
+    toneStyle: ResponseToneStyle = 'professional',
+    actorName: string = 'Staff Caseworker'
   ): EmailDraft {
     const latestMessage = thread.messages[thread.messages.length - 1];
     const category = thread.classification;
@@ -455,12 +491,12 @@ export class EmailEnterpriseService {
    * 5. Metrics & Operational SLA Aggregation
    */
   public static calculateAnalytics(
-    threads: EnterpriseEmailThread[],
-    rules: AutoResponderRule[],
-    donors: DonorProfile[],
-    pipeline: MajorDonorPipelineDeal[],
-    grants: GrantPipelineOpportunity[],
-    tasks: FollowUpTask[]
+    threads: EnterpriseEmailThread[] = db.getState().enterpriseEmailThreads || [],
+    rules: AutoResponderRule[] = db.getState().autoResponderRules || [],
+    donors: DonorProfile[] = (db.getState().fundraisingDonors as any) || [],
+    pipeline: MajorDonorPipelineDeal[] = (db.getState() as any).majorDonorPipeline || [],
+    grants: GrantPipelineOpportunity[] = (db.getState() as any).grantPipeline || [],
+    tasks: FollowUpTask[] = (db.getState() as any).emailFollowUpTasks || []
   ): EmailAnalyticsReport {
     const totalIncoming = threads.reduce((sum, th) => sum + th.messages.filter(m => m.direction === 'inbound').length, 0);
     const unreadCount = threads.filter(t => t.status === 'unread').length;
@@ -1250,6 +1286,156 @@ export class EmailEnterpriseService {
     });
 
     return { success: true, draft: resetDraft };
+  }
+
+  /**
+   * 14e. Quad-Action Human Review Handler (Phase 47 M47.08)
+   * Enforces server-side Quad-Action review:
+   * 1. APPROVE: Co-sign and approve as-is
+   * 2. EDIT_AND_APPROVE: Save human edits, increment version, and approve
+   * 3. REJECT: Reject with mandatory audit reason
+   * 4. ESCALATE_RETURN: Return to draft or escalate to designated senior officer
+   */
+  public static executeQuadActionReview(
+    threadId: string,
+    action: 'APPROVE' | 'EDIT_AND_APPROVE' | 'REJECT' | 'ESCALATE_RETURN',
+    reviewerUser: { id: string; name: string; role: string },
+    options?: {
+      editedSubject?: string;
+      editedBody?: string;
+      reason?: string;
+      escalateToStaffId?: string;
+      escalateToStaffName?: string;
+    }
+  ): {
+    success: boolean;
+    action: string;
+    draft?: EmailDraft;
+    threadStatus?: ConversationStatus;
+    error?: string;
+  } {
+    if (!reviewerUser || !reviewerUser.id) {
+      return { success: false, action, error: 'Reviewer identification required.' };
+    }
+
+    // Role check: Only authorized staff or administrators may perform review actions
+    const unauthorizedRoles = ['visitor', 'anonymous'];
+    if (unauthorizedRoles.includes(reviewerUser.role)) {
+      return { success: false, action, error: 'Access Denied: Insufficient permissions for email review.' };
+    }
+
+    const thread = db.getState().enterpriseEmailThreads.find((t) => t.id === threadId);
+    if (!thread || !thread.draft) {
+      return { success: false, action, error: 'Target thread or draft not found.' };
+    }
+
+    // Prevent AI self-approval
+    if (reviewerUser.id.startsWith('ai-') || reviewerUser.name.toLowerCase().includes('agent')) {
+      return { success: false, action, error: 'POLICY VIOLATION: Automated AI self-approval is strictly forbidden.' };
+    }
+
+    switch (action) {
+      case 'APPROVE': {
+        const approvedRes = this.approveDraft(threadId, reviewerUser);
+        if (approvedRes.success) {
+          const updatedThreads = db.getState().enterpriseEmailThreads.map((t) =>
+            t.id === threadId ? { ...t, status: 'APPROVED' as ConversationStatus } : t
+          );
+          db.saveState({ ...db.getState(), enterpriseEmailThreads: updatedThreads });
+          return { success: true, action, draft: approvedRes.draft, threadStatus: 'APPROVED' };
+        }
+        return { success: false, action, error: approvedRes.error };
+      }
+
+      case 'EDIT_AND_APPROVE': {
+        const editedBody = options?.editedBody?.trim();
+        if (!editedBody) {
+          return { success: false, action, error: 'Edited body cannot be empty for Edit & Approve.' };
+        }
+        const currentVersion = thread.draft.version || 1;
+        const updatedDraft: EmailDraft = {
+          ...thread.draft,
+          proposedBody: editedBody,
+          suggestedSubject: options?.editedSubject?.trim() || thread.draft.suggestedSubject,
+          status: 'approved',
+          approvedByStaff: reviewerUser.name,
+          approvedByUserId: reviewerUser.id,
+          approvedAt: new Date().toISOString(),
+          approvedBody: editedBody,
+          approvedSubject: options?.editedSubject?.trim() || thread.draft.suggestedSubject,
+          approvedVersion: currentVersion + 1,
+          version: currentVersion + 1,
+        };
+
+        const updatedThreads = db.getState().enterpriseEmailThreads.map((t) =>
+          t.id === threadId ? { ...t, draft: updatedDraft, status: 'APPROVED' as ConversationStatus } : t
+        );
+        db.saveState({ ...db.getState(), enterpriseEmailThreads: updatedThreads });
+
+        db.appendSyncAuditLog({
+          mailboxEmail: thread.mailboxEmail,
+          action: 'DRAFT_EDITED_AND_APPROVED',
+          actor: reviewerUser.name,
+          details: `Draft [${updatedDraft.id}] edited and approved by ${reviewerUser.name}. Version bumped to v${updatedDraft.version}.`,
+          direction: 'internal',
+          status: 'success',
+        });
+
+        return { success: true, action, draft: updatedDraft, threadStatus: 'APPROVED' };
+      }
+
+      case 'REJECT': {
+        const reason = options?.reason?.trim() || 'Draft rejected by reviewer.';
+        const rejectRes = this.rejectDraft(threadId, reviewerUser, reason);
+        if (rejectRes.success) {
+          return { success: true, action, draft: rejectRes.draft, threadStatus: 'TRIAGED' };
+        }
+        return { success: false, action, error: rejectRes.error };
+      }
+
+      case 'ESCALATE_RETURN': {
+        const reason = options?.reason?.trim() || 'Returned to drafting queue with reviewer feedback.';
+        if (options?.escalateToStaffId) {
+          const updatedDraft: EmailDraft = {
+            ...thread.draft,
+            status: 'changes_requested',
+            changesRequestedReason: reason,
+          };
+          const updatedThreads = db.getState().enterpriseEmailThreads.map((t) =>
+            t.id === threadId
+              ? {
+                  ...t,
+                  assignedStaffId: options.escalateToStaffId,
+                  assignedStaffName: options.escalateToStaffName || 'Senior Officer',
+                  status: 'ASSIGNED' as ConversationStatus,
+                  draft: updatedDraft,
+                }
+              : t
+          );
+          db.saveState({ ...db.getState(), enterpriseEmailThreads: updatedThreads });
+
+          db.appendSyncAuditLog({
+            mailboxEmail: thread.mailboxEmail,
+            action: 'DRAFT_ESCALATED',
+            actor: reviewerUser.name,
+            details: `Draft [${thread.draft.id}] escalated to staff ${options.escalateToStaffName || options.escalateToStaffId}. Reason: ${reason}`,
+            direction: 'internal',
+            status: 'warning',
+          });
+
+          return { success: true, action, draft: updatedDraft, threadStatus: 'ASSIGNED' };
+        } else {
+          const retRes = this.returnToDraft(threadId, reviewerUser, reason);
+          if (retRes.success) {
+            return { success: true, action, draft: retRes.draft, threadStatus: 'DRAFTING' };
+          }
+          return { success: false, action, error: retRes.error };
+        }
+      }
+
+      default:
+        return { success: false, action, error: `Unrecognized review action: ${action}` };
+    }
   }
 
   /**
