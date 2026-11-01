@@ -56,7 +56,7 @@ const reviewAttemptVisitor = EmailEnterpriseService.executeQuadActionReview(
   visitorActor
 );
 assert(
-  reviewAttemptVisitor.success === false && reviewAttemptVisitor.error?.includes('Access Denied'),
+  reviewAttemptVisitor.success === false && reviewAttemptVisitor.error?.includes('Access Denied') === true,
   'SEC-01: Unauthorized visitor cannot perform mailbox administrative reviews'
 );
 
@@ -134,7 +134,7 @@ const bypassAttempt = EmailEnterpriseService.authorizeAndSendOutboundDraft(
   { idempotencyKey: `key-bypass-${Date.now()}` }
 );
 assert(
-  bypassAttempt.success === false && bypassAttempt.error?.includes('SAFETY POLICY VIOLATION'),
+  bypassAttempt.success === false && bypassAttempt.error?.includes('SAFETY POLICY VIOLATION') === true,
   'SEC-06: Approval bypass prevented: Unapproved draft cannot be dispatched'
 );
 
@@ -147,7 +147,7 @@ const aiSelfApproval = EmailEnterpriseService.executeQuadActionReview(
   aiActor
 );
 assert(
-  aiSelfApproval.success === false && aiSelfApproval.error?.includes('Automated AI self-approval is strictly forbidden'),
+  aiSelfApproval.success === false && aiSelfApproval.error?.includes('Automated AI self-approval is strictly forbidden') === true,
   'SEC-07: Anti-AI self-approval enforced: Automated AI agents cannot co-sign or approve drafts'
 );
 
@@ -167,7 +167,7 @@ if (draftToModify && draftToModify.draft) {
     }
   );
   assert(
-    tamperAttempt.success === false && tamperAttempt.error?.includes('MATERIAL CHANGE DETECTED'),
+    tamperAttempt.success === false && tamperAttempt.error?.includes('MATERIAL CHANGE DETECTED') === true,
     'SEC-08: Material modification post-approval invalidates approval and forces re-review'
   );
 }
@@ -206,7 +206,7 @@ const initiated = googleWorkspaceAdapter.initiateOAuth('info@phumulani.org');
 const forgedState = 'forged_tampered_state_token_12345';
 const tamperCheck = googleWorkspaceAdapter.validateOAuthState(forgedState);
 assert(
-  tamperCheck.valid === false && tamperCheck.error?.includes('TAMPERING DETECTED'),
+  tamperCheck.valid === false && tamperCheck.error?.includes('TAMPERING DETECTED') === true,
   'SEC-10: OAuth state tampering detected and rejected'
 );
 
@@ -243,7 +243,7 @@ if (safeThreadCrm) {
     entityName: 'Illegal CRM Link',
   });
   assert(
-    crmAttempt.success === false && crmAttempt.error?.includes('SAFEGUARDING BOUNDARY'),
+    crmAttempt.success === false && crmAttempt.error?.includes('SAFEGUARDING BOUNDARY') === true,
     'SEC-14: Category 01 Safeguarding thread link to external CRM strictly blocked under VAWA Sec 1367'
   );
 }
@@ -286,11 +286,11 @@ assert(
 const tamperedCursor1 = googleWorkspaceAdapter.updateSyncCursor('info@phumulani.org', '../../etc/passwd');
 const tamperedCursor2 = googleWorkspaceAdapter.updateSyncCursor('info@phumulani.org', '-100');
 assert(
-  tamperedCursor1.success === false && tamperedCursor1.error?.includes('SYNC CURSOR TAMPERING'),
+  tamperedCursor1.success === false && tamperedCursor1.error?.includes('SYNC CURSOR TAMPERING') === true,
   'SEC-18a: Path traversal pattern in sync cursor is rejected'
 );
 assert(
-  tamperedCursor2.success === false && tamperedCursor2.error?.includes('SYNC CURSOR TAMPERING'),
+  tamperedCursor2.success === false && tamperedCursor2.error?.includes('SYNC CURSOR TAMPERING') === true,
   'SEC-18b: Negative integer in sync cursor is rejected'
 );
 
@@ -310,7 +310,7 @@ const privilegedActionAttempt = EmailEnterpriseService.executeQuadActionReview(
   staleAdminSessionUser
 );
 assert(
-  privilegedActionAttempt.success === false && privilegedActionAttempt.error?.includes('Access Denied'),
+  privilegedActionAttempt.success === false && privilegedActionAttempt.error?.includes('Access Denied') === true,
   'SEC-20: Demoted user role in active session blocked from executing supervisor actions'
 );
 
@@ -409,7 +409,7 @@ assert(escRes.threadStatus === 'ASSIGNED', 'Thread status escalated and assigned
 
 // Concurrency Validation
 const concurrencyCheck = EmailEnterpriseService.validateOptimisticConcurrency(threadToApprove.id, '2026-01-01T00:00:00Z');
-assert(concurrencyCheck.valid === false && concurrencyCheck.error?.includes('CONCURRENCY CONFLICT'), 'Optimistic concurrency detects stale client updates');
+assert(concurrencyCheck.valid === false && concurrencyCheck.error?.includes('CONCURRENCY CONFLICT') === true, 'Optimistic concurrency detects stale client updates');
 
 // =============================================================================
 // SECTION 4: 5-APPLICATION INTEGRATION & TEMPLATE INTERPOLATION (M49.12 & M49.13)
