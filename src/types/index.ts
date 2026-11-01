@@ -261,7 +261,7 @@ export interface VolunteerHourLog {
 
 // Donations & Finance
 export type PaymentFrequency = 'one_time' | 'monthly' | 'annual';
-export type PaymentStatus = 'pending' | 'succeeded' | 'failed' | 'refunded';
+export type PaymentStatus = 'pending' | 'succeeded' | 'failed' | 'refunded' | 'pledged';
 
 export interface Campaign {
   id: string;
@@ -291,6 +291,23 @@ export interface Donation {
   createdAt: string;
   reconciled: boolean;
   reconciledAt?: string;
+}
+
+export interface PledgeIntention {
+  id: string;
+  donorName: string;
+  donorEmail: string;
+  totalPledgeAmount: number;
+  unearnedBalance: number;
+  campaignId: string;
+  campaignTitle: string;
+  startYear: number;
+  endYear: number;
+  annualInstallmentAmount: number;
+  status: 'PLEDGED_UNEARNED' | 'FULFILLED' | 'CANCELLED';
+  isSegregatedFromSettledCash: boolean;
+  notes?: string;
+  createdAt: string;
 }
 
 // Events
