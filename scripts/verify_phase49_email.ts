@@ -28,7 +28,7 @@ console.log('================================================================\n'
 let passCount = 0;
 let failCount = 0;
 
-function assert(condition: boolean, testName: string, details?: string) {
+function assert(condition: any, testName: string, details?: string) {
   if (condition) {
     console.log(`[PASS] ${testName}`);
     passCount++;
