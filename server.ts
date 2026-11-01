@@ -4698,6 +4698,36 @@ app.get('/api/admin/email/mailboxes/:email/multi-dimensional-status', (req: Requ
     res.status(400).json({ success: false, error: err.message });
   }
 });
+
+// 46. Phase 57 Enterprise Operations Monitoring (M57.16)
+app.get('/api/admin/operations/monitoring', (_req: Request, res: Response) => {
+  try {
+    const monitoring = googleWorkspaceAdapter.getEnterpriseOperationsMonitoring();
+    res.json({ success: true, monitoring });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 47. Phase 57 Administrator Operational Recovery Controls (M57.15, M57.21)
+app.post('/api/admin/email/recovery/execute', (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const { mailboxEmail, action, reason } = req.body || {};
+    if (!mailboxEmail || !action) {
+      return res.status(400).json({ success: false, error: 'mailboxEmail and action are required.' });
+    }
+    const result = googleWorkspaceAdapter.executeAdministratorRecovery(
+      mailboxEmail,
+      action,
+      { id: actor.id, name: actor.name, role: actor.role },
+      reason || 'Routine administrator operational recovery'
+    );
+    res.json({ success: true, recovery: result });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
 // VITE SPA DEV MIDDLEWARE / STATIC SERVING
 // -----------------------------------------------------------------------------
 

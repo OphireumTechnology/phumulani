@@ -1176,4 +1176,63 @@ export interface PilotReadinessVerification {
   recommendations: string[];
 }
 
+// =============================================================================
+// PHASE 57: ENTERPRISE OPERATIONS MONITORING & ADMINISTRATOR RECOVERY (M57.15, M57.16)
+// =============================================================================
+
+export interface SubsystemHealthStatus {
+  subsystemId: string;
+  name: string;
+  connectionStatus: 'CONNECTED' | 'DISARMED_STAGING' | 'BLOCKED_EXTERNAL' | 'HEALTHY' | 'DEGRADED' | 'FAILED';
+  isLive: boolean;
+  lastSuccessfulOperation: string;
+  lastError: string | null;
+  retryState: 'IDLE' | 'RETRYING' | 'EXHAUSTED' | 'NOT_APPLICABLE';
+  requiredAdministratorAction: string | null;
+  metrics?: Record<string, unknown>;
+}
+
+export interface EnterpriseOperationsMonitoring {
+  timestamp: string;
+  operatingMode: 'STAGED_DEVELOPMENT' | 'PRODUCTION';
+  productionAuthorized: boolean;
+  subsystems: {
+    googleWorkspace: SubsystemHealthStatus;
+    mailboxes: SubsystemHealthStatus;
+    oauthTokens: SubsystemHealthStatus;
+    inboundSync: SubsystemHealthStatus;
+    outboundDelivery: SubsystemHealthStatus;
+    postgresql: SubsystemHealthStatus;
+    aiGateway: SubsystemHealthStatus;
+    paymentGateway: SubsystemHealthStatus;
+    backendHosting: SubsystemHealthStatus;
+    auditPersistence: SubsystemHealthStatus;
+  };
+  mailboxSummary: {
+    totalCanonical: number;
+    configuredCount: number;
+    authorizedLiveCount: number;
+    stagedApprovedCount: number;
+    airGappedCount: number;
+  };
+}
+
+export type AdministratorRecoveryType =
+  | 'RESET_RATE_LIMIT'
+  | 'CLEAR_ERROR_STATE'
+  | 'RESET_SYNC_CURSOR'
+  | 'RECONCILE_STUCK_DISPATCH'
+  | 'RESYNC_FULL_CHECKPOINT';
+
+export interface AdministratorRecoveryResult {
+  success: boolean;
+  mailboxEmail: string;
+  action: AdministratorRecoveryType;
+  recoveredState: string;
+  details: string;
+  timestamp: string;
+  auditLogId: string;
+}
+
+
 
