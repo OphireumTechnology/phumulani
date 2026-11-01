@@ -140,7 +140,7 @@ export const Header: React.FC<HeaderProps> = ({
           Compact, non-overlapping, with prominent Safe Exit
           ======================================================== */}
       <div className="bg-[#104F57] text-white py-1.5 px-4 text-xs max-w-full overflow-hidden">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-1 sm:gap-4 min-w-0">
           <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
             <ShieldAlert className="w-3.5 h-3.5 text-amber-300 shrink-0" />
             <span className="text-[11px] text-slate-100 truncate">
@@ -148,7 +148,7 @@ export const Header: React.FC<HeaderProps> = ({
             </span>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-1 sm:gap-3 shrink-0">
             {/* Language Switcher */}
             <div className="flex items-center gap-1">
               <Globe className="w-3 h-3 text-teal-300" />
@@ -188,25 +188,25 @@ export const Header: React.FC<HeaderProps> = ({
           Height: 76px, Max-width: 1280px (max-w-7xl)
           Left: Logo | Center: Navigation | Right: Actions
           ======================================================== */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-19">
+      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between gap-1 sm:gap-3 h-19 min-w-0">
           {/* LEFT: Official Phumulani Logo */}
           <button
             onClick={() => {
               onViewChange('public');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="flex items-center gap-3 text-left group cursor-pointer focus-visible:outline-2 focus-visible:outline-[#104F57]"
+            className="flex items-center gap-1 sm:gap-3 min-w-0 text-left group cursor-pointer focus-visible:outline-2 focus-visible:outline-[#104F57]"
           >
             <SafeImage
               src="/images/branding/phumulani-logo.svg"
               fallbackSrc="/media/branding/phumulani-logo-primary.svg"
               fallbackType="logo"
               alt="Phumulani Organization Logo"
-              className="w-10 h-10 object-contain rounded-lg shadow-xs group-hover:scale-105 transition-transform shrink-0"
+              className="w-8 h-8 sm:w-10 sm:h-10 object-contain rounded-lg shadow-xs group-hover:scale-105 transition-transform shrink-0"
             />
             <div>
-              <div className="font-serif text-xl font-bold text-[#104F57] tracking-tight group-hover:text-[#633C69] transition-colors leading-none">
+              <div className="font-serif text-sm min-[360px]:text-base sm:text-xl font-bold text-[#104F57] tracking-tight group-hover:text-[#633C69] transition-colors leading-none">
                 PHUMULANI
               </div>
               <div className="text-[10px] tracking-wider uppercase text-slate-500 font-semibold mt-1 hidden sm:block">
@@ -267,12 +267,13 @@ export const Header: React.FC<HeaderProps> = ({
           </nav>
 
           {/* RIGHT: Primary Action Group */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2 shrink-0">
             {/* Get Help Accent Button */}
             <button
               onClick={() => navigateToSection('get-help-section')}
-              className="flex items-center gap-1 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer"
+              className="flex items-center gap-1 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 px-1.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer"
               title="Discreet support routing & emergency help"
+              aria-label="Get Help"
             >
               <LifeBuoy className="w-3.5 h-3.5 text-rose-600" />
               <span className="hidden xs:inline">Get Help</span>
@@ -281,10 +282,11 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Donate CTA Button */}
             <button
               onClick={() => navigateToSection('donate-section')}
-              className="flex items-center gap-1 bg-[#D67C35] hover:bg-[#c26d2c] text-white px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs font-bold shadow-xs transition-colors cursor-pointer"
+              className="flex items-center gap-1 bg-[#D67C35] hover:bg-[#c26d2c] text-white px-1.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs font-bold shadow-xs transition-colors cursor-pointer"
+              aria-label="Donate"
             >
               <Heart className="w-3.5 h-3.5 fill-white/20" />
-              <span>Donate</span>
+              <span className="hidden min-[360px]:inline">Donate</span>
             </button>
 
             {/* Portal Switcher / Login Dropdown (Desktop / Tablet) */}
@@ -337,7 +339,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* In-App Notification Center Bell */}
             <button
               onClick={() => setNotificationModalOpen(true)}
-              className="relative p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
+              className="relative p-1.5 sm:p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
               title="Open Notification Center"
               aria-label="Open Notification Center"
             >
@@ -352,8 +354,10 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Mobile Drawer Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100"
+              className="lg:hidden p-1.5 sm:p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100"
               aria-label="Toggle Navigation Menu"
+              aria-expanded={mobileMenuOpen}
+              aria-controls="public-mobile-navigation"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -363,7 +367,7 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* MOBILE DRAWER */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-4 shadow-xl">
+        <nav id="public-mobile-navigation" aria-label="Mobile website and portal navigation" className="lg:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-4 shadow-xl">
           <div className="font-bold text-xs text-slate-400 uppercase tracking-wider">
             Main Navigation
           </div>
@@ -433,7 +437,7 @@ export const Header: React.FC<HeaderProps> = ({
               );
             })}
           </div>
-        </div>
+        </nav>
       )}
 
       {/* Cross-Portal Notification Center Modal */}
