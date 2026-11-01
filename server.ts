@@ -4679,11 +4679,25 @@ app.post('/api/admin/email/pilot/test-send', (req: Request, res: Response) => {
   }
 });
 
+// 44. Phase 56 Canonical Mailbox Inventory (M56.03)
+app.get('/api/admin/email/mailboxes/canonical-inventory', (_req: Request, res: Response) => {
+  try {
+    const inventory = googleWorkspaceAdapter.getCanonicalMailboxInventory();
+    res.json({ success: true, total: inventory.length, inventory });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
 
-
-
-
-// -----------------------------------------------------------------------------
+// 45. Phase 56 Multi-Dimensional Mailbox Status Resolution (M56.04)
+app.get('/api/admin/email/mailboxes/:email/multi-dimensional-status', (req: Request, res: Response) => {
+  try {
+    const status = googleWorkspaceAdapter.getMailboxMultiDimensionalStatus(req.params.email);
+    res.json({ success: true, email: req.params.email, dimensionalStatus: status });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
 // VITE SPA DEV MIDDLEWARE / STATIC SERVING
 // -----------------------------------------------------------------------------
 

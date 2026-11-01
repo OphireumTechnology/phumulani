@@ -4210,6 +4210,114 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 </table>
               </div>
             </div>
+
+            {/* M56.03 & M56.04: Phase 56 Canonical 10-Mailbox Multi-Dimensional Inventory */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold text-sm text-slate-900">
+                      Reconciled Organizational Mailbox Inventory & 5-Dimensional Status (Phase 56 — M56.03 & M56.04)
+                    </h3>
+                    <span className="font-mono text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full font-bold">
+                      10 Canonical Mailboxes Reconciled
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Separates CONFIGURATION_STATUS, INTERNAL_APPROVAL_STATUS, PROVIDER_AUTHORIZATION_STATUS, INBOUND_SYNC_STATUS, and OUTBOUND_PERMISSION_STATUS to prevent staging vs live contradictions.
+                  </p>
+                </div>
+                <span className="text-[11px] font-mono font-bold bg-slate-100 px-2.5 py-1 rounded-lg text-slate-700">
+                  Zero Fabrication Mandate: Truthful Staging Disclosures
+                </span>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-50 text-slate-600 uppercase text-[10px] font-mono border-b border-slate-200">
+                    <tr>
+                      <th className="py-2.5 px-3">Address & Designation</th>
+                      <th className="py-2.5 px-3">Department & Owner</th>
+                      <th className="py-2.5 px-3">Safeguarding Boundary</th>
+                      <th className="py-2.5 px-3">Internal Approval</th>
+                      <th className="py-2.5 px-3">Provider Auth</th>
+                      <th className="py-2.5 px-3">Inbound Sync</th>
+                      <th className="py-2.5 px-3">Outbound Perm</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {googleWorkspaceAdapter.getCanonicalMailboxInventory().map((box) => (
+                      <tr key={box.address} className="hover:bg-slate-50/50">
+                        <td className="py-2.5 px-3 font-semibold text-slate-900">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono font-bold text-teal-900">{box.address}</span>
+                            <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold ${
+                              box.designation === 'ACTIVE_PRIMARY'
+                                ? 'bg-indigo-100 text-indigo-800'
+                                : box.designation === 'ACTIVE_COLLABORATIVE'
+                                ? 'bg-blue-100 text-blue-800'
+                                : 'bg-slate-100 text-slate-700'
+                            }`}>
+                              {box.designation.replace('ACTIVE_', '')}
+                            </span>
+                          </div>
+                          <span className="text-[10px] text-slate-500 block truncate max-w-xs">{box.purpose}</span>
+                        </td>
+                        <td className="py-2.5 px-3">
+                          <span className="font-semibold text-slate-800 block">{box.department}</span>
+                          <span className="text-[10px] text-slate-500 font-mono">{box.owner}</span>
+                        </td>
+                        <td className="py-2.5 px-3 font-mono text-[10px]">
+                          <span className={`px-2 py-0.5 rounded font-bold border ${
+                            box.safeguardingClassification === 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP'
+                              ? 'bg-rose-100 text-rose-800 border-rose-300'
+                              : box.safeguardingClassification === 'RESTRICTED'
+                              ? 'bg-amber-100 text-amber-800 border-amber-300'
+                              : 'bg-slate-100 text-slate-700 border-slate-200'
+                          }`}>
+                            {box.safeguardingClassification === 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP'
+                              ? 'VAWA SEC 1367 AIR GAP'
+                              : box.safeguardingClassification}
+                          </span>
+                        </td>
+                        <td className="py-2.5 px-3 font-mono text-[10px]">
+                          <span className="bg-sky-50 text-sky-800 border border-sky-200 px-2 py-0.5 rounded font-bold">
+                            {box.dimensionalStatus.internalApprovalStatus}
+                          </span>
+                        </td>
+                        <td className="py-2.5 px-3 font-mono text-[10px]">
+                          <span className={`px-2 py-0.5 rounded font-bold border ${
+                            box.dimensionalStatus.providerAuthorizationStatus === 'BLOCKED_EXTERNAL'
+                              ? 'bg-rose-50 text-rose-800 border-rose-200'
+                              : box.dimensionalStatus.providerAuthorizationStatus === 'TOKEN_HEALTHY'
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                              : 'bg-amber-50 text-amber-800 border-amber-200'
+                          }`}>
+                            {box.dimensionalStatus.providerAuthorizationStatus}
+                          </span>
+                        </td>
+                        <td className="py-2.5 px-3 font-mono text-[10px]">
+                          <span className="bg-teal-50 text-teal-800 border border-teal-200 px-2 py-0.5 rounded font-bold">
+                            {box.dimensionalStatus.inboundSyncStatus}
+                          </span>
+                        </td>
+                        <td className="py-2.5 px-3 font-mono text-[10px]">
+                          <span className={`px-2 py-0.5 rounded font-bold border ${
+                            box.dimensionalStatus.outboundPermissionStatus === 'PILOT_AUTHORIZED_STAGED'
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                              : box.dimensionalStatus.outboundPermissionStatus === 'DISARMED_STAGING'
+                              ? 'bg-slate-100 text-slate-700 border-slate-200'
+                              : 'bg-rose-50 text-rose-800 border-rose-200'
+                          }`}>
+                            {box.dimensionalStatus.outboundPermissionStatus}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         )}
 

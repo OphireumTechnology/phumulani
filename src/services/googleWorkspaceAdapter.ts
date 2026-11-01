@@ -14,6 +14,13 @@ import {
   Phase55MailboxVerificationStatus,
   LiveImportEvidenceCategory,
   PilotReadinessVerification,
+  CanonicalMailboxRecord,
+  MailboxMultiDimensionalStatus,
+  ConfigurationStatus,
+  InternalApprovalStatus,
+  ProviderAuthorizationStatus,
+  InboundSyncStatus,
+  OutboundPermissionStatus,
 } from '../types/emailEnterprise';
 
 export type GoogleWorkspaceAuthStatus =
@@ -153,6 +160,20 @@ export class GoogleWorkspaceAdapter {
     'safeguarding@phumulani.org',
     'governance@phumulani.org',
     'finance@phumulani.org',
+  ];
+
+  // Phase 56 Reconciled 10-Mailbox Canonical Inventory (M56.03)
+  public static readonly CANONICAL_10_ORGANIZATIONAL_MAILBOXES = [
+    'donations@phumulani.org',
+    'grants@phumulani.org',
+    'partnerships@phumulani.org',
+    'safeguarding@phumulani.org',
+    'board@phumulani.org',
+    'info@phumulani.org',
+    'executive@phumulani.org',
+    'intake@phumulani.org',
+    'volunteer@phumulani.org',
+    'media@phumulani.org',
   ];
 
   private pilotEnabled: boolean = (typeof process !== 'undefined' && process.env?.GOOGLE_WORKSPACE_PILOT_ENABLED === 'true') || false;
@@ -1798,6 +1819,231 @@ export class GoogleWorkspaceAdapter {
   }
 
   /**
+   * M56.04: Multi-dimensional status resolution separating staging approvals from provider evidence.
+   * Resolves Phase 55 contradiction by evaluating 5 independent dimensions:
+   * 1. CONFIGURATION_STATUS (CONFIGURED / NOT_CONFIGURED)
+   * 2. INTERNAL_APPROVAL_STATUS (STAGED_APPROVED / EXECUTIVE_AUTHORIZED / PENDING_REVIEW / REVOKED)
+   * 3. PROVIDER_AUTHORIZATION_STATUS (OAUTH_PENDING / OAUTH_AUTHORIZED / TOKEN_HEALTHY / TOKEN_EXPIRED / BLOCKED_EXTERNAL)
+   * 4. INBOUND_SYNC_STATUS (FIXTURE_VERIFIED / SYNC_IDLE / SYNCING / PROVIDER_CONNECTED / LIVE_IMPORT_VERIFIED / BLOCKED_EXTERNAL)
+   * 5. OUTBOUND_PERMISSION_STATUS (DISARMED_STAGING / PILOT_AUTHORIZED_STAGED / LIVE_SEND_VERIFIED / BLOCKED_EXTERNAL)
+   */
+  public getMailboxMultiDimensionalStatus(email: string): MailboxMultiDimensionalStatus {
+    const key = email.toLowerCase();
+    const isMockClient = !this.config.clientId || this.config.clientId === 'phumulani-stage-client-id';
+    const hasTokens = this.secureTokenVault.has(key);
+    const mbx = this.mailboxes.find(
+      (m) => m.email.toLowerCase() === key || (key === 'board@phumulani.org' && m.email === 'governance@phumulani.org')
+    );
+
+    // 1. Configuration Status
+    const configurationStatus: ConfigurationStatus =
+      mbx || GoogleWorkspaceAdapter.CANONICAL_10_ORGANIZATIONAL_MAILBOXES.includes(key)
+        ? 'CONFIGURED'
+        : 'NOT_CONFIGURED';
+
+    // 2. Internal Approval Status
+    let internalApprovalStatus: InternalApprovalStatus = 'PENDING_REVIEW';
+    if (mbx?.status === 'REVOKED') {
+      internalApprovalStatus = 'REVOKED';
+    } else if (key === this.pilotMailbox.toLowerCase() && this.activePilotApproval?.decision === 'APPROVED') {
+      internalApprovalStatus = 'EXECUTIVE_AUTHORIZED';
+    } else if (configurationStatus === 'CONFIGURED') {
+      internalApprovalStatus = 'STAGED_APPROVED';
+    }
+
+    // 3. Provider Authorization Status
+    // A staging approval must NOT imply actual Google Workspace authorization.
+    let providerAuthorizationStatus: ProviderAuthorizationStatus = 'OAUTH_PENDING';
+    if (mbx?.status === 'REVOKED') {
+      providerAuthorizationStatus = 'BLOCKED_EXTERNAL';
+    } else if (hasTokens) {
+      const health = this.getTokenHealth(key);
+      if (health.status === 'EXPIRED') {
+        providerAuthorizationStatus = 'TOKEN_EXPIRED';
+      } else {
+        providerAuthorizationStatus = 'TOKEN_HEALTHY';
+      }
+    } else if (isMockClient) {
+      providerAuthorizationStatus = 'BLOCKED_EXTERNAL';
+    } else {
+      providerAuthorizationStatus = 'OAUTH_PENDING';
+    }
+
+    // 4. Inbound Sync Status
+    // Only actual provider evidence may establish PROVIDER_CONNECTED or LIVE_IMPORT_VERIFIED
+    let inboundSyncStatus: InboundSyncStatus = 'SYNC_IDLE';
+    const evidence = this.evidenceRegistry.filter((e) => e.mailboxEmail.toLowerCase() === key);
+    const hasLiveImport = evidence.some((e) => e.category === 'LIVE_IMPORT_VERIFIED');
+    const hasProviderConnected = evidence.some((e) => e.category === 'PROVIDER_CONNECTED');
+    const checkpoints = this.syncCheckpoints.get(key) || [];
+    const hasSyncAuditLogs = this.syncAuditLogs.some((l) => l.mailboxEmail.toLowerCase() === key);
+
+    if (hasLiveImport) {
+      inboundSyncStatus = 'LIVE_IMPORT_VERIFIED';
+    } else if (hasProviderConnected && hasTokens && !isMockClient) {
+      inboundSyncStatus = 'PROVIDER_CONNECTED';
+    } else if (checkpoints.length > 0 || hasSyncAuditLogs || isMockClient) {
+      inboundSyncStatus = 'FIXTURE_VERIFIED';
+    } else {
+      inboundSyncStatus = 'BLOCKED_EXTERNAL';
+    }
+
+    // 5. Outbound Permission Status
+    let outboundPermissionStatus: OutboundPermissionStatus = 'DISARMED_STAGING';
+    if (!this.liveSendingEnabled) {
+      if (key === this.pilotMailbox.toLowerCase() && this.pilotEnabled && this.activePilotApproval) {
+        outboundPermissionStatus = 'PILOT_AUTHORIZED_STAGED';
+      } else {
+        outboundPermissionStatus = 'DISARMED_STAGING';
+      }
+    } else {
+      if (key === this.pilotMailbox.toLowerCase() && this.pilotEnabled && hasTokens && !isMockClient) {
+        outboundPermissionStatus = 'LIVE_SEND_VERIFIED';
+      } else {
+        outboundPermissionStatus = 'BLOCKED_EXTERNAL';
+      }
+    }
+
+    return {
+      configurationStatus,
+      internalApprovalStatus,
+      providerAuthorizationStatus,
+      inboundSyncStatus,
+      outboundPermissionStatus,
+    };
+  }
+
+  /**
+   * M56.03: Reconciled 10-Mailbox Canonical Inventory.
+   * Eliminates discrepancies between Phase 55 (8 mailboxes) and seed/development (info, executive).
+   */
+  public getCanonicalMailboxInventory(): CanonicalMailboxRecord[] {
+    const isMockClient = !this.config.clientId || this.config.clientId === 'phumulani-stage-client-id';
+
+    const metadata: Record<
+      string,
+      {
+        department: string;
+        purpose: string;
+        owner: string;
+        rolePermissions: string[];
+        safeguardingClassification: 'GENERAL' | 'RESTRICTED' | 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP';
+        designation: 'ACTIVE_PRIMARY' | 'ACTIVE_COLLABORATIVE' | 'ACTIVE_ALIAS' | 'RETIRED';
+      }
+    > = {
+      'donations@phumulani.org': {
+        department: 'Development & Fundraising',
+        purpose: 'Individual donations, donor stewardship, major gift pledges, and controlled pilot transmissions',
+        owner: 'Sarah Jenkins (Development Director) / Comfort Dondo (ED)',
+        rolePermissions: ['DEVELOPMENT_DIRECTOR', 'EXECUTIVE_DIRECTOR', 'PLATFORM_SUPER_ADMIN'],
+        safeguardingClassification: 'RESTRICTED',
+        designation: 'ACTIVE_PRIMARY',
+      },
+      'grants@phumulani.org': {
+        department: 'Finance & Grants',
+        purpose: 'Institutional grants, foundation compliance, RFP submissions, and government grants',
+        owner: 'Institutional Grants Lead / David Mwangi, CPA',
+        rolePermissions: ['GRANTS_OFFICER', 'FINANCE_DIRECTOR', 'EXECUTIVE_DIRECTOR'],
+        safeguardingClassification: 'RESTRICTED',
+        designation: 'ACTIVE_PRIMARY',
+      },
+      'partnerships@phumulani.org': {
+        department: 'Strategic Alliances',
+        purpose: 'Corporate partnerships, CSR sponsorships, community coalitions, and employer relations',
+        owner: 'Corporate Relations Lead',
+        rolePermissions: ['PARTNERSHIPS_LEAD', 'DEVELOPMENT_DIRECTOR'],
+        safeguardingClassification: 'GENERAL',
+        designation: 'ACTIVE_PRIMARY',
+      },
+      'safeguarding@phumulani.org': {
+        department: 'Safeguarding (DEPT-SAFE)',
+        purpose: 'Confidential survivor inquiries, emergency safety planning, shelter relocation (VAWA Section 1367)',
+        owner: 'Sister Miriam K. / Dr. Elena Rostova',
+        rolePermissions: ['SAFEGUARDING_OFFICER', 'Sister Miriam K.'],
+        safeguardingClassification: 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP',
+        designation: 'ACTIVE_PRIMARY',
+      },
+      'board@phumulani.org': {
+        department: 'Board Governance',
+        purpose: 'Board resolutions, meeting quorum notices, executive compensation, and compliance filings',
+        owner: 'Board Secretary / General Counsel',
+        rolePermissions: ['BOARD_SECRETARY', 'BOARD_CHAIR', 'EXECUTIVE_DIRECTOR'],
+        safeguardingClassification: 'RESTRICTED',
+        designation: 'ACTIVE_PRIMARY',
+      },
+      'info@phumulani.org': {
+        department: 'Operations & Community',
+        purpose: 'General community inquiries, public intake triage, front desk coordination',
+        owner: 'Office Administrator',
+        rolePermissions: ['OPERATIONS_STAFF', 'CASEWORKER'],
+        safeguardingClassification: 'GENERAL',
+        designation: 'ACTIVE_COLLABORATIVE',
+      },
+      'executive@phumulani.org': {
+        department: 'Executive Leadership',
+        purpose: 'Office of the Executive Director, high-level philanthropy, public advocacy',
+        owner: 'Comfort Dondo (Executive Director & Founder)',
+        rolePermissions: ['EXECUTIVE_DIRECTOR', 'PLATFORM_SUPER_ADMIN'],
+        safeguardingClassification: 'RESTRICTED',
+        designation: 'ACTIVE_PRIMARY',
+      },
+      'intake@phumulani.org': {
+        department: 'Member Services',
+        purpose: 'Direct service intake, member applications, counseling appointments',
+        owner: 'Amina Yusuf (Lead Caseworker)',
+        rolePermissions: ['CASEWORKER', 'MEMBER_SERVICES_LEAD'],
+        safeguardingClassification: 'RESTRICTED',
+        designation: 'ACTIVE_PRIMARY',
+      },
+      'volunteer@phumulani.org': {
+        department: 'Volunteer Operations',
+        purpose: 'Volunteer recruitment, background check coordination, shift rosters',
+        owner: 'Volunteer Coordinator',
+        rolePermissions: ['VOLUNTEER_COORDINATOR', 'OPERATIONS_STAFF'],
+        safeguardingClassification: 'GENERAL',
+        designation: 'ACTIVE_COLLABORATIVE',
+      },
+      'media@phumulani.org': {
+        department: 'Communications',
+        purpose: 'Media relations, press releases, journalist interview inquiries',
+        owner: 'Communications Director',
+        rolePermissions: ['COMMUNICATIONS_DIRECTOR', 'EXECUTIVE_DIRECTOR'],
+        safeguardingClassification: 'GENERAL',
+        designation: 'ACTIVE_ALIAS',
+      },
+    };
+
+    return GoogleWorkspaceAdapter.CANONICAL_10_ORGANIZATIONAL_MAILBOXES.map((address) => {
+      const meta = metadata[address] || {
+        department: 'General Operations',
+        purpose: 'Institutional correspondence',
+        owner: 'Phumulani Administrator',
+        rolePermissions: ['OPERATIONS_STAFF'],
+        safeguardingClassification: 'GENERAL' as const,
+        designation: 'ACTIVE_PRIMARY' as const,
+      };
+
+      const dim = this.getMailboxMultiDimensionalStatus(address);
+      const hasTokens = this.secureTokenVault.has(address.toLowerCase());
+
+      return {
+        address,
+        department: meta.department,
+        purpose: meta.purpose,
+        owner: meta.owner,
+        rolePermissions: meta.rolePermissions,
+        providerStatus: isMockClient ? 'BLOCKED_EXTERNAL' : hasTokens ? 'PROVIDER_CONNECTED' : 'CONFIGURED_UNVERIFIED',
+        oauthStatus: isMockClient ? 'BLOCKED_EXTERNAL' : hasTokens ? 'OAUTH_AUTHORIZED' : 'OAUTH_PENDING',
+        synchronizationStatus: dim.inboundSyncStatus === 'LIVE_IMPORT_VERIFIED' ? 'LIVE_IMPORT_VERIFIED' : 'FIXTURE_VERIFIED',
+        outboundPermission: dim.outboundPermissionStatus,
+        safeguardingClassification: meta.safeguardingClassification,
+        designation: meta.designation,
+        dimensionalStatus: dim,
+      };
+    });
+  }
+
+  /**
    * M55.04: Mailbox status matrix covering all 5 institutional + 3 specialized mailboxes.
    */
   public getMailboxStatusMatrix(): Array<{
@@ -1807,6 +2053,7 @@ export class GoogleWorkspaceAdapter {
     role: string;
     type: 'institutional' | 'auxiliary';
     phase55Status: Phase55MailboxVerificationStatus;
+    dimensionalStatus: MailboxMultiDimensionalStatus;
     isPilotMailbox: boolean;
     lastCheckedAt: string;
   }> {
@@ -1819,6 +2066,7 @@ export class GoogleWorkspaceAdapter {
         role: m.role,
         type: isInst ? 'institutional' : 'auxiliary',
         phase55Status: this.getMailboxVerificationStatus(m.email),
+        dimensionalStatus: this.getMailboxMultiDimensionalStatus(m.email),
         isPilotMailbox: m.email.toLowerCase() === this.pilotMailbox.toLowerCase(),
         lastCheckedAt: this.config.lastCheckedAt,
       };

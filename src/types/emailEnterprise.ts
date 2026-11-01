@@ -1082,6 +1082,43 @@ export type LiveImportEvidenceCategory =
   | 'PROVIDER_CONNECTED'
   | 'LIVE_IMPORT_VERIFIED';
 
+// ===========================================================================
+// M56.03 - M56.05: PHASE 56 MULTI-DIMENSIONAL STATUS & CANONICAL MAILBOXES
+// ===========================================================================
+
+export type ConfigurationStatus = 'CONFIGURED' | 'NOT_CONFIGURED';
+export type InternalApprovalStatus = 'STAGED_APPROVED' | 'EXECUTIVE_AUTHORIZED' | 'PENDING_REVIEW' | 'REVOKED';
+export type ProviderAuthorizationStatus = 'OAUTH_PENDING' | 'OAUTH_AUTHORIZED' | 'TOKEN_HEALTHY' | 'TOKEN_EXPIRED' | 'BLOCKED_EXTERNAL';
+export type InboundSyncStatus = 'FIXTURE_VERIFIED' | 'SYNC_IDLE' | 'SYNCING' | 'PROVIDER_CONNECTED' | 'LIVE_IMPORT_VERIFIED' | 'BLOCKED_EXTERNAL';
+export type OutboundPermissionStatus = 'DISARMED_STAGING' | 'PILOT_AUTHORIZED_STAGED' | 'LIVE_SEND_VERIFIED' | 'BLOCKED_EXTERNAL';
+
+export interface MailboxMultiDimensionalStatus {
+  configurationStatus: ConfigurationStatus;
+  internalApprovalStatus: InternalApprovalStatus;
+  providerAuthorizationStatus: ProviderAuthorizationStatus;
+  inboundSyncStatus: InboundSyncStatus;
+  outboundPermissionStatus: OutboundPermissionStatus;
+}
+
+export interface CanonicalMailboxRecord {
+  address: string;
+  department: string;
+  purpose: string;
+  owner: string;
+  rolePermissions: string[];
+  providerStatus: 'CONFIGURED_UNVERIFIED' | 'PROVIDER_CONNECTED' | 'BLOCKED_EXTERNAL';
+  oauthStatus: 'NOT_PROVISIONED' | 'OAUTH_PENDING' | 'OAUTH_AUTHORIZED' | 'REVOKED' | 'BLOCKED_EXTERNAL';
+  synchronizationStatus: 'FIXTURE_VERIFIED' | 'SYNC_IDLE' | 'LIVE_IMPORT_VERIFIED' | 'BLOCKED_EXTERNAL';
+  outboundPermission: 'DISARMED_STAGING' | 'PILOT_AUTHORIZED_STAGED' | 'LIVE_SEND_VERIFIED' | 'BLOCKED_EXTERNAL';
+  safeguardingClassification: 'GENERAL' | 'RESTRICTED' | 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP';
+  designation: 'ACTIVE_PRIMARY' | 'ACTIVE_COLLABORATIVE' | 'ACTIVE_ALIAS' | 'RETIRED';
+  dimensionalStatus: MailboxMultiDimensionalStatus;
+}
+
+export type CanonicalApprovalAction = 'APPROVE' | 'EDIT_AND_APPROVE' | 'REJECT' | 'ESCALATE_RETURN';
+export type LegacyApprovalAction = 'EDIT' | 'REASSIGN' | 'REQUEST_CHANGES';
+export type HumanApprovalAction = CanonicalApprovalAction | LegacyApprovalAction;
+
 export interface SetupWizardStep {
   stepNumber: number;
   title: string;

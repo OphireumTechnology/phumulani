@@ -1589,7 +1589,7 @@ Draft a professional, compassionate response following Phumulani's organizationa
 
   public static executeQuadActionReview(
     threadId: string,
-    action: 'APPROVE' | 'EDIT_AND_APPROVE' | 'REJECT' | 'ESCALATE_RETURN' | 'REQUEST_CHANGES',
+    action: 'APPROVE' | 'EDIT_AND_APPROVE' | 'REJECT' | 'ESCALATE_RETURN' | 'REQUEST_CHANGES' | 'EDIT' | 'REASSIGN' | string,
     reviewerUser: { id: string; name: string; role: string },
     options?: {
       editedSubject?: string;
@@ -1625,9 +1625,20 @@ Draft a professional, compassionate response following Phumulani's organizationa
       return { success: false, action, error: 'POLICY VIOLATION: Automated AI self-approval is strictly forbidden.' };
     }
 
-    // M51.08: Reconcile REQUEST_CHANGES to canonical ESCALATE_RETURN
-    const resolvedAction: 'APPROVE' | 'EDIT_AND_APPROVE' | 'REJECT' | 'ESCALATE_RETURN' =
-      action === 'REQUEST_CHANGES' ? 'ESCALATE_RETURN' : action;
+    // M56.05: Authoritative backend state machine normalization with explicit compatibility mappings
+    const rawAction = (action || '').toUpperCase().trim();
+    let resolvedAction: 'APPROVE' | 'EDIT_AND_APPROVE' | 'REJECT' | 'ESCALATE_RETURN';
+    if (rawAction === 'APPROVE') {
+      resolvedAction = 'APPROVE';
+    } else if (rawAction === 'EDIT_AND_APPROVE' || rawAction === 'EDIT') {
+      resolvedAction = 'EDIT_AND_APPROVE';
+    } else if (rawAction === 'REJECT') {
+      resolvedAction = 'REJECT';
+    } else if (rawAction === 'ESCALATE_RETURN' || rawAction === 'REASSIGN' || rawAction === 'REQUEST_CHANGES') {
+      resolvedAction = 'ESCALATE_RETURN';
+    } else {
+      return { success: false, action, error: `UNRECOGNIZED_APPROVAL_ACTION: Action "${action}" is not supported.` };
+    }
 
     switch (resolvedAction) {
       case 'APPROVE': {
@@ -1680,7 +1691,10 @@ Draft a professional, compassionate response following Phumulani's organizationa
       }
 
       case 'REJECT': {
-        const reason = options?.reason?.trim() || 'Draft rejected by reviewer.';
+        const reason = options?.reason?.trim();
+        if (!reason) {
+          return { success: false, action: resolvedAction, error: 'AUDIT REQUIREMENT: Rejection requires an explicit reason.' };
+        }
         const rejectRes = this.rejectDraft(threadId, reviewerUser, reason);
         if (rejectRes.success) {
           return { success: true, action: resolvedAction, draft: rejectRes.draft, threadStatus: 'TRIAGED' };
