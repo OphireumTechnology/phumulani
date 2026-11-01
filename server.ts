@@ -4498,6 +4498,188 @@ app.post('/api/admin/email/pilot/verify-ready', (req: Request, res: Response) =>
   }
 });
 
+// 39. Phase 55 Mailbox Verification Status Matrix (M55.04)
+app.get('/api/admin/email/mailboxes/status-matrix', (_req: Request, res: Response) => {
+  try {
+    const matrix = googleWorkspaceAdapter.getMailboxStatusMatrix();
+    res.json({ success: true, total: matrix.length, matrix });
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get('/api/admin/email/mailboxes/:email/status-matrix', (req: Request, res: Response) => {
+  try {
+    const status = googleWorkspaceAdapter.getMailboxVerificationStatus(req.params.email);
+    res.json({ success: true, email: req.params.email, phase55Status: status });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 40. Phase 55 Individual Setup Wizard Step Verification (M55.02)
+app.post('/api/admin/email/wizard/step/:stepNumber/verify', (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const stepNumber = parseInt(req.params.stepNumber, 10);
+    const step = googleWorkspaceAdapter.executeWizardStepVerification(stepNumber, {
+      name: actor.name,
+      role: actor.role,
+    });
+    res.json({ success: true, step });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 41. Phase 55 Dedicated Wizard Action Endpoints (M55.02)
+app.post('/api/admin/email/wizard/verify-project', (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const step = googleWorkspaceAdapter.executeWizardStepVerification(1, { name: actor.name, role: actor.role });
+    res.json({ success: true, step });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/email/wizard/check-quota', (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const step = googleWorkspaceAdapter.executeWizardStepVerification(2, { name: actor.name, role: actor.role });
+    res.json({ success: true, step });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/email/wizard/verify-consent', (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const step = googleWorkspaceAdapter.executeWizardStepVerification(3, { name: actor.name, role: actor.role });
+    res.json({ success: true, step });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/email/wizard/verify-redirect-uri', (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const step = googleWorkspaceAdapter.executeWizardStepVerification(4, { name: actor.name, role: actor.role });
+    res.json({ success: true, step });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/email/wizard/validate-scopes', (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const step = googleWorkspaceAdapter.executeWizardStepVerification(5, { name: actor.name, role: actor.role });
+    res.json({ success: true, step });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/email/wizard/vault-status', (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const step = googleWorkspaceAdapter.executeWizardStepVerification(7, { name: actor.name, role: actor.role });
+    res.json({ success: true, step });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/email/wizard/verify-pilot-identity', (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const step = googleWorkspaceAdapter.executeWizardStepVerification(8, { name: actor.name, role: actor.role });
+    res.json({ success: true, step });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/email/wizard/provider-auth-status', (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const step = googleWorkspaceAdapter.executeWizardStepVerification(9, { name: actor.name, role: actor.role });
+    res.json({ success: true, step });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/email/wizard/test-connection', (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const step = googleWorkspaceAdapter.executeWizardStepVerification(10, { name: actor.name, role: actor.role });
+    res.json({ success: true, step });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/email/wizard/test-inbound-sync', (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const syncRes = googleWorkspaceAdapter.startIncrementalSync('donations@phumulani.org');
+    const step = googleWorkspaceAdapter.executeWizardStepVerification(11, { name: actor.name, role: actor.role });
+    res.json({ success: true, syncResult: syncRes, step });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/email/wizard/pilot-readiness', (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const step = googleWorkspaceAdapter.executeWizardStepVerification(12, { name: actor.name, role: actor.role });
+    res.json({ success: true, step });
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 42. Phase 55 Live Provider Connection Inspection (M55.06)
+app.post('/api/admin/email/provider/verify-connection', (req: Request, res: Response) => {
+  try {
+    const { mailboxEmail } = req.body || {};
+    const result = googleWorkspaceAdapter.verifyActualProviderConnection(mailboxEmail);
+    res.json(result);
+  } catch (err: any) {
+    res.status(400).json({ connected: false, status: 'FAILED', error: err.message });
+  }
+});
+
+// 43. Phase 55 Controlled Live Outbound Sending Test (M55.10)
+app.post('/api/admin/email/pilot/test-send', (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const { testRecipient, subject, body, idempotencyKey } = req.body;
+    if (!testRecipient || !subject || !body || !idempotencyKey) {
+      return res.status(400).json({ error: 'testRecipient, subject, body, and idempotencyKey are required.' });
+    }
+    const result = googleWorkspaceAdapter.executeControlledLiveSendingTest({
+      testRecipient,
+      approvedBy: { name: actor.name, role: actor.role },
+      subject,
+      body,
+      idempotencyKey,
+    });
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
 
 
 

@@ -1054,10 +1054,33 @@ info@phumulani.org | (763) 555-0199`,
 ];
 
 // ===========================================================================
-// M54.03 & M54.04: 12-STEP SETUP WIZARD & PILOT READINESS TYPES
+// M54.03, M54.04 & M55.02-M55.04: 12-STEP SETUP WIZARD & PILOT READINESS TYPES
 // ===========================================================================
 
-export type SetupWizardStepStatus = 'PENDING' | 'IN_PROGRESS' | 'VERIFIED' | 'FAILED' | 'BLOCKED';
+export type SetupWizardStepStatus =
+  | 'NOT_STARTED'
+  | 'ACTION_REQUIRED'
+  | 'CONFIGURED_UNVERIFIED'
+  | 'VERIFIED'
+  | 'FAILED'
+  | 'BLOCKED_EXTERNAL'
+  | 'EXPIRED'
+  | 'PENDING'
+  | 'BLOCKED'
+  | 'IN_PROGRESS';
+
+export type Phase55MailboxVerificationStatus =
+  | 'CONFIGURED_ONLY'
+  | 'IDENTITY_VERIFIED'
+  | 'OAUTH_AUTHORIZED'
+  | 'PROVIDER_CONNECTED'
+  | 'SYNC_VERIFIED'
+  | 'SEND_PILOT_AUTHORIZED';
+
+export type LiveImportEvidenceCategory =
+  | 'FIXTURE_VERIFIED'
+  | 'PROVIDER_CONNECTED'
+  | 'LIVE_IMPORT_VERIFIED';
 
 export interface SetupWizardStep {
   stepNumber: number;
@@ -1069,6 +1092,11 @@ export interface SetupWizardStep {
   diagnosticOutput?: string;
   truthfulDisclosure?: string;
   verifiedAt?: string;
+  lastVerificationTime?: string;
+  evidenceSource?: string;
+  authorizedAdminAction?: string;
+  clearFailureReason?: string;
+  recoveryGuidance?: string;
   details?: Record<string, unknown>;
 }
 
@@ -1110,4 +1138,5 @@ export interface PilotReadinessVerification {
   blockingReasons: string[];
   recommendations: string[];
 }
+
 

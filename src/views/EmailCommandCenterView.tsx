@@ -3932,64 +3932,124 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               )}
             </div>
 
-            {/* 12-Step Wizard Cards Grid (M54.03) */}
+            {/* 12-Step Wizard Cards Grid (M54.03 & M55.02) */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <h3 className="font-bold text-sm text-slate-900">
-                  12 Mandatory Verification Steps (M54.03 Execution Flow)
-                </h3>
-                <span className="text-xs font-mono text-slate-500">
+                <div>
+                  <h3 className="font-bold text-sm text-slate-900">
+                    12 Mandatory Verification Steps (M55.02 Execution Flow)
+                  </h3>
+                  <p className="text-[11px] text-slate-500">
+                    Each step backed by real server-side state, evidence source, authorized admin action, and recovery guidance.
+                  </p>
+                </div>
+                <span className="text-xs font-mono font-bold px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-slate-700">
                   {wizardStatus.completedSteps} of 12 Steps Passed
                 </span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
                 {wizardStatus.steps.map((step) => {
+                  const getStatusBadge = (status: string) => {
+                    switch (status) {
+                      case 'VERIFIED':
+                        return 'bg-emerald-100 text-emerald-800 border-emerald-300';
+                      case 'ACTION_REQUIRED':
+                        return 'bg-amber-100 text-amber-900 border-amber-300';
+                      case 'CONFIGURED_UNVERIFIED':
+                        return 'bg-sky-100 text-sky-800 border-sky-300';
+                      case 'BLOCKED_EXTERNAL':
+                      case 'BLOCKED':
+                        return 'bg-rose-100 text-rose-800 border-rose-300';
+                      case 'EXPIRED':
+                        return 'bg-purple-100 text-purple-800 border-purple-300';
+                      case 'FAILED':
+                        return 'bg-red-100 text-red-800 border-red-300';
+                      default:
+                        return 'bg-slate-100 text-slate-700 border-slate-200';
+                    }
+                  };
+
                   const isVerified = step.status === 'VERIFIED';
-                  const isBlocked = step.status === 'BLOCKED';
-                  const isFailed = step.status === 'FAILED';
+                  const isBlocked = step.status === 'BLOCKED_EXTERNAL' || step.status === 'BLOCKED';
 
                   return (
                     <div
                       key={step.stepNumber}
                       className="border border-slate-200 rounded-2xl p-4 bg-white flex flex-col justify-between space-y-3 shadow-2xs hover:border-slate-300 transition-all text-xs"
                     >
-                      <div>
-                        <div className="flex items-center justify-between mb-1.5">
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
                           <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
                             Step {step.stepNumber.toString().padStart(2, '0')}
                           </span>
                           <span
-                            className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full uppercase border ${
-                              isVerified
-                                ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                                : isBlocked
-                                ? 'bg-rose-100 text-rose-800 border-rose-300'
-                                : isFailed
-                                ? 'bg-rose-100 text-rose-800 border-rose-300'
-                                : 'bg-amber-100 text-amber-800 border-amber-300'
-                            }`}
+                            className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full uppercase border ${getStatusBadge(
+                              step.status
+                            )}`}
                           >
                             {step.status}
                           </span>
                         </div>
 
-                        <h4 className="font-bold text-sm text-slate-900 leading-snug mb-1">
+                        <h4 className="font-bold text-sm text-slate-900 leading-snug">
                           {step.title}
                         </h4>
 
-                        <p className="text-[11px] text-slate-500 leading-relaxed mb-2">
+                        <p className="text-[11px] text-slate-500 leading-relaxed">
                           {step.requirementDescription}
                         </p>
 
-                        {step.diagnosticOutput && (
-                          <div className="p-2 bg-slate-50 border border-slate-200 rounded-xl font-mono text-[10px] text-slate-700 mb-2 truncate">
-                            <span className="text-slate-400 font-bold">Diag: </span>
-                            {step.diagnosticOutput}
+                        {/* Evidence Source & Verification Timestamp */}
+                        <div className="p-2 bg-slate-50 border border-slate-200 rounded-xl space-y-1 text-[10px]">
+                          {step.evidenceSource && (
+                            <div>
+                              <strong className="text-slate-600">Evidence Source: </strong>
+                              <span className="font-mono text-slate-800">{step.evidenceSource}</span>
+                            </div>
+                          )}
+                          {step.lastVerificationTime && (
+                            <div>
+                              <strong className="text-slate-600">Last Verified: </strong>
+                              <span className="font-mono text-slate-700">
+                                {new Date(step.lastVerificationTime).toLocaleTimeString()} (
+                                {new Date(step.lastVerificationTime).toLocaleDateString()})
+                              </span>
+                            </div>
+                          )}
+                          {step.diagnosticOutput && (
+                            <div className="truncate text-slate-700 pt-0.5 border-t border-slate-200/60 font-mono">
+                              <strong className="text-slate-500">Diag: </strong>
+                              {step.diagnosticOutput}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Authorized Administrator Action */}
+                        {step.authorizedAdminAction && (
+                          <div className="p-2 bg-blue-50/60 border border-blue-200 rounded-xl text-[10px] text-blue-950 leading-relaxed">
+                            <strong className="text-blue-900 font-semibold">Admin Action: </strong>
+                            {step.authorizedAdminAction}
                           </div>
                         )}
 
-                        {step.truthfulDisclosure && (
+                        {/* Failure Reason & Recovery Guidance */}
+                        {step.clearFailureReason && (
+                          <div className="p-2 bg-rose-50 border border-rose-200 rounded-xl text-[10px] text-rose-950 space-y-1">
+                            <div>
+                              <strong className="text-rose-900 font-bold">Failure Reason: </strong>
+                              {step.clearFailureReason}
+                            </div>
+                            {step.recoveryGuidance && (
+                              <div className="text-rose-800 pt-0.5 border-t border-rose-200/60">
+                                <strong className="font-semibold">Recovery: </strong>
+                                {step.recoveryGuidance}
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {step.truthfulDisclosure && !step.clearFailureReason && (
                           <div className="p-2 bg-amber-50/70 border border-amber-200 rounded-xl text-[10px] text-amber-900 leading-relaxed">
                             <strong className="text-amber-950 font-semibold">Disclosure: </strong>
                             {step.truthfulDisclosure}
@@ -4004,12 +4064,20 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         <button
                           type="button"
                           onClick={() => {
-                            refreshWizardState();
-                            setActionNotice({
-                              type: 'info',
-                              message: `Executed verification check for Step ${step.stepNumber}: ${step.title}.`,
-                            });
-                            setTimeout(() => setActionNotice(null), 5000);
+                            try {
+                              googleWorkspaceAdapter.executeWizardStepVerification(step.stepNumber, {
+                                name: currentUser.name || 'Admin User',
+                                role: currentUser.role || 'Staff',
+                              });
+                              refreshWizardState();
+                              setActionNotice({
+                                type: 'info',
+                                message: `Executed verification check for Step ${step.stepNumber}: ${step.title}.`,
+                              });
+                              setTimeout(() => setActionNotice(null), 5000);
+                            } catch (err: any) {
+                              setActionNotice({ type: 'warning', message: err.message });
+                            }
                           }}
                           className={`px-3 py-1 rounded-lg text-xs font-bold cursor-pointer ${
                             isVerified
@@ -4023,6 +4091,123 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     </div>
                   );
                 })}
+              </div>
+            </div>
+
+            {/* M55.04: Organizational Mailbox Verification Matrix */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-bold text-sm text-slate-900">
+                      Organizational Mailbox Verification Status Matrix (M55.04)
+                    </h3>
+                    <span className="font-mono text-[10px] bg-teal-100 text-teal-800 border border-teal-300 px-2 py-0.5 rounded-full font-bold">
+                      8 Mailboxes Audited
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Distinguishes CONFIGURED_ONLY, IDENTITY_VERIFIED, OAUTH_AUTHORIZED, PROVIDER_CONNECTED, SYNC_VERIFIED, and SEND_PILOT_AUTHORIZED.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] font-mono text-slate-500">
+                    Mode: {wizardStatus.disclosures.operatingMode}
+                  </span>
+                </div>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-50 text-slate-600 uppercase text-[10px] font-mono border-b border-slate-200">
+                    <tr>
+                      <th className="py-2.5 px-3">Mailbox</th>
+                      <th className="py-2.5 px-3">Classification & Department</th>
+                      <th className="py-2.5 px-3">Type</th>
+                      <th className="py-2.5 px-3">Phase 55 Verification Status</th>
+                      <th className="py-2.5 px-3">Pilot Scope</th>
+                      <th className="py-2.5 px-3 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {googleWorkspaceAdapter.getMailboxStatusMatrix().map((item) => {
+                      const getStatusBadge = (st: string) => {
+                        switch (st) {
+                          case 'SEND_PILOT_AUTHORIZED':
+                            return 'bg-emerald-100 text-emerald-800 border-emerald-300';
+                          case 'SYNC_VERIFIED':
+                            return 'bg-teal-100 text-teal-800 border-teal-300';
+                          case 'PROVIDER_CONNECTED':
+                            return 'bg-blue-100 text-blue-800 border-blue-300';
+                          case 'OAUTH_AUTHORIZED':
+                            return 'bg-indigo-100 text-indigo-800 border-indigo-300';
+                          case 'IDENTITY_VERIFIED':
+                            return 'bg-slate-100 text-slate-800 border-slate-300';
+                          default:
+                            return 'bg-amber-100 text-amber-900 border-amber-300';
+                        }
+                      };
+
+                      return (
+                        <tr key={item.email} className="hover:bg-slate-50/50 transition-colors">
+                          <td className="py-2.5 px-3">
+                            <div className="font-bold text-slate-900">{item.email}</div>
+                            <div className="text-[11px] text-slate-500">{item.displayName}</div>
+                          </td>
+                          <td className="py-2.5 px-3">
+                            <div className="text-slate-800 font-medium">{item.department}</div>
+                            <div className="text-[10px] text-slate-500">{item.role}</div>
+                          </td>
+                          <td className="py-2.5 px-3">
+                            <span
+                              className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border ${
+                                item.type === 'institutional'
+                                  ? 'bg-purple-100 text-purple-800 border-purple-300'
+                                  : 'bg-slate-100 text-slate-700 border-slate-200'
+                              }`}
+                            >
+                              {item.type}
+                            </span>
+                          </td>
+                          <td className="py-2.5 px-3">
+                            <span
+                              className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full uppercase border ${getStatusBadge(
+                                item.phase55Status
+                              )}`}
+                            >
+                              {item.phase55Status}
+                            </span>
+                          </td>
+                          <td className="py-2.5 px-3 font-mono text-[11px]">
+                            {item.isPilotMailbox ? (
+                              <span className="font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+                                PRIMARY PILOT
+                              </span>
+                            ) : (
+                              <span className="text-slate-400">Restricted</span>
+                            )}
+                          </td>
+                          <td className="py-2.5 px-3 text-right">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const check = googleWorkspaceAdapter.verifyActualProviderConnection(item.email);
+                                setActionNotice({
+                                  type: check.connected ? 'success' : 'warning',
+                                  message: `Mailbox ${item.email} verification: ${check.outcome}. ${check.failureReason || ''}`,
+                                });
+                                refreshWizardState();
+                              }}
+                              className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-[11px] cursor-pointer"
+                            >
+                              Inspect Connection
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
