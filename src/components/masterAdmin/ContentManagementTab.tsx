@@ -35,7 +35,7 @@ export interface CmsContentItem {
   slug: string;
   title: string;
   category: 'PAGE' | 'PROGRAM' | 'NEWS' | 'RESOURCE' | 'LEADERSHIP' | 'POLICY';
-  status: 'DRAFT' | 'IN_REVIEW' | 'APPROVED' | 'PUBLISHED' | 'SCHEDULED';
+  status: 'DRAFT' | 'IN_REVIEW' | 'APPROVED' | 'PUBLISHED' | 'SCHEDULED' | 'ARCHIVED';
   version: number;
   lastEditedBy: string;
   lastEditedAt: string;
@@ -340,6 +340,25 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
     setTimeout(() => setAuditMessage(null), 4000);
   };
 
+  const handleArchiveItem = (id: string) => {
+    setItems((prev) =>
+      prev.map((it) => {
+        if (it.id === id) {
+          return {
+            ...it,
+            status: 'ARCHIVED',
+            version: it.version + 1,
+            lastEditedBy: currentUser.name,
+            lastEditedAt: new Date().toISOString(),
+          };
+        }
+        return it;
+      })
+    );
+    setAuditMessage(`Content item ${id} archived by ${currentUser.name}.`);
+    setTimeout(() => setAuditMessage(null), 4000);
+  };
+
   const handleSaveEdit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingItem) return;
@@ -473,6 +492,7 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
             <option value="IN_REVIEW">In Review</option>
             <option value="DRAFT">Draft</option>
             <option value="SCHEDULED">Scheduled</option>
+            <option value="ARCHIVED">Archived</option>
           </select>
         </div>
 
@@ -551,6 +571,8 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
                         ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
                         : item.status === 'IN_REVIEW'
                         ? 'bg-amber-50 text-amber-800 border border-amber-200'
+                        : item.status === 'ARCHIVED'
+                        ? 'bg-gray-100 text-gray-600 border border-gray-300'
                         : 'bg-slate-100 text-slate-700 border border-slate-200'
                     }`}
                   >
@@ -588,6 +610,26 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
                   >
                     <Check className="w-3 h-3" />
                     <span>Approve & Publish</span>
+                  </button>
+                )}
+
+                {item.status !== 'ARCHIVED' ? (
+                  <button
+                    onClick={() => handleArchiveItem(item.id)}
+                    className="px-2.5 py-1.5 border border-amber-300 text-amber-700 hover:bg-amber-50 rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer"
+                    title="Archive this content item"
+                  >
+                    <Clock className="w-3 h-3 text-amber-600" />
+                    <span>Archive</span>
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => handleApprovePublish(item.id)}
+                    className="px-2.5 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer"
+                    title="Restore and publish content"
+                  >
+                    <Check className="w-3 h-3" />
+                    <span>Restore</span>
                   </button>
                 )}
 

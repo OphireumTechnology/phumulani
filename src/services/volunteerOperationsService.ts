@@ -71,7 +71,11 @@ export type ServiceHourVerificationStatus =
   | 'UNDER_REVIEW'
   | 'APPROVED'
   | 'REJECTED'
-  | 'CORRECTION_REQUIRED';
+  | 'CORRECTION_REQUIRED'
+  | 'SCHEDULED'
+  | 'REPORTED'
+  | 'VERIFIED'
+  | 'DISPUTED';
 
 export type ShiftAssignmentStatus =
   | 'REQUESTED'
@@ -1159,7 +1163,7 @@ export class VolunteerOperationsService {
 
   public async verifyServiceHours(
     hourRecordId: string,
-    decision: 'APPROVED' | 'REJECTED',
+    decision: 'APPROVED' | 'REJECTED' | 'DISPUTED',
     staffSession: UserSession,
     notes?: string
   ): Promise<{ success: boolean; hourRecord?: VolunteerServiceHourRecord; error?: string }> {
@@ -1184,6 +1188,8 @@ export class VolunteerOperationsService {
     record.verifiedAt = now;
     if (decision === 'APPROVED') {
       record.verificationNotes = notes || 'Hours officially certified by community supervisor.';
+    } else if (decision === 'DISPUTED') {
+      record.rejectedReason = notes || 'Hours submission disputed pending coordinator review.';
     } else {
       record.rejectedReason = notes || 'Hours submission does not match supervised attendance records.';
     }

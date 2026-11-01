@@ -3707,8 +3707,8 @@ app.post('/api/v1/staff/volunteers/hours/:id/verify', async (req: Request, res: 
     return res.status(401).json({ success: false, error: auth.error });
   }
   const { decision, notes } = req.body;
-  if (!decision || !['APPROVED', 'REJECTED'].includes(decision)) {
-    return res.status(400).json({ success: false, error: 'decision must be APPROVED or REJECTED.' });
+  if (!decision || !['APPROVED', 'REJECTED', 'DISPUTED'].includes(decision)) {
+    return res.status(400).json({ success: false, error: 'decision must be APPROVED, REJECTED, or DISPUTED.' });
   }
   const result = await volunteerOperationsService.verifyServiceHours(req.params.id, decision, auth.session, notes);
   if (!result.success) {
