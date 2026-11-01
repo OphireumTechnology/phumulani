@@ -3791,6 +3791,72 @@ app.post('/api/admin/email/google-workspace/verify-scopes', (req: Request, res: 
   res.json(validation);
 });
 
+// 2a. Google Workspace OAuth Initiation (M49.04)
+app.post('/api/admin/email/google-workspace/oauth/initiate', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  if (actor.role === 'visitor') {
+    return res.status(403).json({ error: 'Staff role required to initiate OAuth onboarding.' });
+  }
+  const { mailboxEmail } = req.body;
+  if (!mailboxEmail) {
+    return res.status(400).json({ error: 'mailboxEmail is required.' });
+  }
+  try {
+    const oauthInit = googleWorkspaceAdapter.initiateOAuth(mailboxEmail);
+    res.json(oauthInit);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// 2b. Google Workspace OAuth Callback & Token Exchange (M49.04)
+app.post('/api/admin/email/google-workspace/oauth/callback', (req: Request, res: Response) => {
+  const { code, state, codeVerifier } = req.body;
+  if (!code || !state || !codeVerifier) {
+    return res.status(400).json({ error: 'code, state, and codeVerifier are required.' });
+  }
+  const result = googleWorkspaceAdapter.handleOAuthCallback(code, state, codeVerifier);
+  if (!result.success) {
+    return res.status(400).json(result);
+  }
+  res.json(result);
+});
+
+// 2c. Google Workspace Connection Health Diagnostics (M49.03/M49.04)
+app.get('/api/admin/email/google-workspace/health', (req: Request, res: Response) => {
+  const mailboxEmail = req.query.mailboxEmail as string | undefined;
+  const health = googleWorkspaceAdapter.checkConnectionHealth(mailboxEmail);
+  res.json(health);
+});
+
+// 2d. Inbound Historical Import Simulation (M49.05)
+app.post('/api/admin/email/google-workspace/sync/historical', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  if (actor.role === 'visitor') {
+    return res.status(403).json({ error: 'Staff role required to trigger historical sync.' });
+  }
+  const { mailboxEmail, maxMessages } = req.body;
+  if (!mailboxEmail) {
+    return res.status(400).json({ error: 'mailboxEmail is required.' });
+  }
+  const importResult = googleWorkspaceAdapter.startHistoricalImport(mailboxEmail, { maxMessages });
+  res.json(importResult);
+});
+
+// 2e. Inbound Incremental Sync Simulation (M49.05)
+app.post('/api/admin/email/google-workspace/sync/incremental', (req: Request, res: Response) => {
+  const actor = getEmailAdminActor(req);
+  if (actor.role === 'visitor') {
+    return res.status(403).json({ error: 'Staff role required to trigger incremental sync.' });
+  }
+  const { mailboxEmail, cursor } = req.body;
+  if (!mailboxEmail) {
+    return res.status(400).json({ error: 'mailboxEmail is required.' });
+  }
+  const syncResult = googleWorkspaceAdapter.startIncrementalSync(mailboxEmail, cursor);
+  res.json(syncResult);
+});
+
 // 3. List connected organizational mailboxes
 app.get('/api/admin/email/mailboxes', (_req: Request, res: Response) => {
   const mailboxes = db.getState().connectedMailboxes;
@@ -4119,6 +4185,15 @@ app.patch('/api/admin/email/threads/:id', (req: Request, res: Response) => {
   if (actor.role === 'visitor') {
     return res.status(403).json({ error: 'Staff role required' });
   }
+
+  // Optimistic Concurrency Control (M49.06)
+  if (req.body.clientLastMessageAt) {
+    const concurrency = EmailEnterpriseService.validateOptimisticConcurrency(req.params.id, req.body.clientLastMessageAt);
+    if (!concurrency.valid) {
+      return res.status(409).json({ error: concurrency.error, currentTimestamp: concurrency.currentTimestamp });
+    }
+  }
+
   const { assignedStaffId, assignedStaffName, priority, category, status, isRead } = req.body;
   if (assignedStaffId && assignedStaffName) {
     db.assignEmailThread(req.params.id, assignedStaffId, assignedStaffName);

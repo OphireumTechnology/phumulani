@@ -1,0 +1,1004 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+# PHASE 49 — ENTERPRISE EMAIL ADMINISTRATION, GOOGLE WORKSPACE INTEGRATION & OPERATIONAL ACCEPTANCE
+## MASTER DEVELOPMENT EXECUTION DIRECTIVE FOR GOOGLE AI STUDIO
+
+**PROJECT:** PHUMULANI AI COMMUNITY PLATFORM  
+**REPOSITORY:** OphireumTechnology/phumulani  
+**DEVELOPMENT ENVIRONMENT:** Google AI Studio  
+**SOURCE CONTROL:** Native Google AI Studio ↔ GitHub integration  
+**LAST VERIFIED GITHUB COMMIT:** `1134ab00e95df9b99749e169f259311632a24662`  
+**LAST VERIFIED CI:** GitHub Actions run `41324860767` — SUCCESS  
+**PRIMARY APPLICATION:** Staff Command Center / Email Administration  
+**PRIMARY ROUTE:** `/admin/master/email`  
+**OPERATIONAL MODE:** `STAGED_DEVELOPMENT`  
+**PRODUCTION ACTIVATION:** NOT AUTHORIZED
+
+---
+
+# 1. MASTER EXECUTION OBJECTIVE
+
+GOOGLE AI STUDIO:
+
+Continue developing the existing PHUMULANI AI COMMUNITY PLATFORM.
+
+Use the original project proposal, architecture and development plan, and all verified development from Phases 22–48.
+
+**Do not rebuild the platform or replace working components.**
+
+Phase 47/48 established the following email capabilities:
+
+- Central Email Administration dashboard.
+- Five institutional mailbox configurations.
+- Unified multi-mailbox inbox.
+- Original 25-category classification.
+- P0–P4 priority scoring.
+- Restricted safeguarding quarantine.
+- AI-assisted drafting.
+- Quad-action human approval.
+- Staged outbound dispatch ledger.
+- Staff collaboration.
+- Email templates.
+- CRM integration.
+- Follow-up management.
+- Analytics.
+- Audit logging.
+- Google Workspace provider adapter.
+- Automated regression and browser testing.
+
+Phase 49 must convert these capabilities into a more complete, reliable, secure, operationally testable enterprise email administration system.
+
+**The objective is not to produce another dashboard. The objective is to complete functional behavior, correct architectural gaps, and establish verifiable operational readiness.**
+
+External services requiring credentials or organizational approval must remain disconnected until authorized.
+
+---
+
+# 2. M49.01 — SOURCE RECONCILIATION AND CI BASELINE PROTECTION
+
+Before making changes:
+
+1. Inspect the current Google AI Studio source tree.
+2. Retrieve the latest actual GitHub revision.
+3. Compare local and remote changes.
+4. Confirm Phase 47/48 Email Administration functionality is present.
+5. Preserve all newer verified GitHub commits.
+6. Inspect existing services, API routes, data models, and tests.
+7. Identify unfinished, simulated, duplicated, or insecure implementations.
+8. Create a functional gap register.
+9. Preserve all existing five-application features.
+10. Confirm the GitHub CI workflow is operational.
+
+**CRITICAL LOCKFILE REQUIREMENT**
+
+The repository has experienced repeated CI failures because native synchronization deleted `package-lock.json`.
+
+The lockfile was restored and explicit CI checks were added in commit:
+
+`1134ab00e95df9b99749e169f259311632a24662`
+
+Mandatory rules:
+
+- Never delete `package-lock.json`.
+- Never exclude it from synchronization.
+- Never add it to `.gitignore`.
+- Never perform dependency cleanup that removes it.
+- Never replace it with an unrelated lockfile.
+- Update it only when actual package dependencies change.
+- Review every native GitHub synchronization diff.
+
+If synchronization proposes deleting the lockfile, stop the synchronization and correct the workspace.
+
+Do not weaken CI or disable npm caching to hide this defect.
+
+---
+
+# 3. M49.02 — COMPLETE EMAIL ADMINISTRATION FUNCTIONAL AUDIT
+
+Inspect every section of:
+
+`/admin/master/email`
+
+Validate:
+
+1. Dashboard overview.
+2. Mailbox administration.
+3. Unified Inbox.
+4. Conversation details.
+5. Drafts.
+6. Pending approvals.
+7. Sent mail.
+8. Staff assignments.
+9. Follow-up tasks.
+10. Templates.
+11. CRM linking.
+12. AI email intelligence.
+13. Analytics.
+14. Audit history.
+15. Integration settings, where present.
+
+For every feature, verify:
+
+- Navigation works.
+- Correct data loads.
+- Authorized users can perform intended actions.
+- Unauthorized users are denied.
+- Forms validate correctly.
+- Backend endpoints are connected.
+- Changes persist.
+- Refresh does not erase saved state.
+- Server restart does not corrupt state.
+- Errors are displayed correctly.
+- Audit events are recorded.
+- Cross-application state remains consistent.
+
+Classify each feature:
+
+`WORKING_VERIFIED`
+
+`PARTIALLY_WORKING`
+
+`MOCK_ONLY`
+
+`UI_ONLY`
+
+`BROKEN`
+
+`BLOCKED_EXTERNAL`
+
+`BLOCKED_APPROVAL`
+
+Do not report a feature as complete based only on UI rendering.
+
+---
+
+# 4. M49.03 — ORGANIZATIONAL MAILBOX ADMINISTRATION
+
+Preserve the five historically configured institutional mailbox addresses:
+
+- info@phumulani.org
+- donations@phumulani.org
+- executive@phumulani.org
+- grants@phumulani.org
+- partnerships@phumulani.org
+
+Treat these as configured addresses, not independently verified live Google Workspace accounts.
+
+Complete functional administration for:
+
+- Mailbox registration.
+- Display names.
+- Department ownership.
+- Authorized staff.
+- Supervisor permissions.
+- Connection settings.
+- Mailbox signatures.
+- Routing rules.
+- Connection diagnostics.
+- Synchronization health.
+- Error history.
+- Mailbox activation and deactivation.
+- Credential revocation.
+- Administrative audit records.
+
+Use explicit connection states:
+
+`NOT_CONFIGURED`
+
+`AUTHORIZATION_REQUIRED`
+
+`CONNECTED`
+
+`SYNCING`
+
+`DEGRADED`
+
+`DISCONNECTED`
+
+`ERROR`
+
+Do not display CONNECTED without successful provider verification.
+
+---
+
+# 5. M49.04 — GOOGLE WORKSPACE OAUTH 2.0 INTEGRATION
+
+Inspect and extend:
+
+`src/services/googleWorkspaceAdapter.ts`
+
+Implement a production-compatible, server-side Google Workspace integration architecture.
+
+Required functionality:
+
+1. OAuth authorization initiation.
+2. Secure state generation and validation.
+3. PKCE where applicable.
+4. OAuth callback handling.
+5. Least-privilege Gmail scopes.
+6. Secure credential storage.
+7. Token refresh.
+8. Expired-token handling.
+9. Revoked-token handling.
+10. Reauthorization.
+11. Mailbox discovery.
+12. Provider identity verification.
+13. Connection health checks.
+14. Integration error reporting.
+15. Administrative disconnection.
+
+Credentials must never be embedded in frontend code or committed to GitHub.
+
+Do not request that OAuth client secrets or refresh tokens be pasted into development chat messages.
+
+Use server-side secret configuration.
+
+Where external credentials are unavailable, implement and test the adapter with controlled fixtures.
+
+**Do not claim OAuth onboarding has been completed until an authorized administrator actually completes the provider consent process.**
+
+---
+
+# 6. M49.05 — INBOUND EMAIL SYNCHRONIZATION
+
+Implement reliable inbound synchronization.
+
+Required features:
+
+- Historical message import.
+- Incremental message synchronization.
+- Thread reconstruction.
+- Message ID preservation.
+- Duplicate detection.
+- Cursor persistence.
+- Retry logic.
+- Exponential backoff.
+- Provider rate-limit handling.
+- Synchronization checkpoints.
+- Failed-sync recovery.
+- Reconciliation after interruption.
+- Attachment metadata handling.
+- Mailbox-specific synchronization logs.
+
+Implement idempotent import behavior.
+
+Repeated synchronization must not duplicate messages.
+
+Simulate interruptions, partial failures, revoked credentials, rate limits, and malformed messages.
+
+Do not confuse a successful fixture import with live Gmail synchronization.
+
+---
+
+# 7. M49.06 — ADVANCED SHARED INBOX OPERATIONS
+
+Complete and harden the shared inbox.
+
+Required functionality:
+
+- Multi-mailbox aggregation.
+- Conversation threading.
+- Unread/read status.
+- Starred and flagged states.
+- Category assignment.
+- Priority adjustment.
+- Department assignment.
+- Staff assignment.
+- Reassignment.
+- Internal notes.
+- Conversation status changes.
+- Archiving.
+- Restoration.
+- Search.
+- Filtering.
+- Sorting.
+- Pagination.
+- Attachment access.
+- Conversation history.
+- Audit history.
+
+Support concurrent staff operations.
+
+Prevent stale updates from silently overwriting newer changes.
+
+Use optimistic concurrency or equivalent controls where appropriate.
+
+Enforce authorization on the server for every conversation operation.
+
+---
+
+# 8. M49.07 — ORIGINAL 25-CATEGORY EMAIL TRIAGE
+
+Preserve the authoritative 25-category taxonomy from the original architecture and Phase 47 implementation.
+
+Do not replace the taxonomy with an invented classification system.
+
+Complete:
+
+- Automatic classification.
+- Confidence scoring.
+- Department routing.
+- P0–P4 priority scoring.
+- SLA assignment.
+- Human classification correction.
+- Classification history.
+- Audit records.
+- Routing exceptions.
+- Low-confidence review queues.
+
+Ensure the original Category 01 safeguarding routing is preserved.
+
+Use deterministic staging fallback when live AI models are unavailable.
+
+Do not claim that fallback classification is live AI inference.
+
+---
+
+# 9. M49.08 — SAFEGUARDING EMAIL ISOLATION
+
+This is a critical security workstream.
+
+Preserve the independent survivor-services boundary.
+
+For confidential or potentially sensitive messages:
+
+- Restrict content access to approved safeguarding roles.
+- Prevent ordinary staff from opening confidential threads.
+- Prevent message-body leakage in inbox previews.
+- Prevent confidential information from appearing in search results.
+- Restrict attachments.
+- Exclude sensitive content from general CRM.
+- Exclude sensitive content from unrestricted analytics.
+- Prevent automatic external replies.
+- Prevent general AI agent access.
+- Prevent unauthorized exports.
+- Audit every authorized access.
+- Support approved emergency escalation.
+
+Do not rely on client-side redaction alone.
+
+**The backend must enforce the confidentiality boundary before returning data.**
+
+Test unauthorized direct API access, identifier manipulation, exports, search, notifications, and audit interfaces.
+
+Preserve Safe Exit and the existing safeguarding controls.
+
+---
+
+# 10. M49.09 — AI EMAIL ASSISTANT
+
+Complete the AI email assistance workflow.
+
+Supported actions:
+
+- Summarize eligible messages.
+- Recommend classification.
+- Suggest priority.
+- Recommend department routing.
+- Generate reply drafts.
+- Rewrite drafts.
+- Suggest tone adjustments.
+- Suggest follow-up tasks.
+- Translate eligible content.
+- Recommend templates.
+
+Every generated response must remain subject to human review.
+
+Maintain the visible status:
+
+`AI_DRAFT — NOT APPROVED — NOT SENT`
+
+Implement:
+
+- Draft versioning.
+- AI output provenance.
+- Prompt-injection resistance.
+- Tool authorization.
+- Audit history.
+- Token usage tracking where supported.
+- Model failure handling.
+- Deterministic fallback behavior.
+
+Treat incoming email content as untrusted data.
+
+Instructions embedded in incoming messages must never override PHUMULANI's security or approval rules.
+
+---
+
+# 11. M49.10 — QUAD-ACTION HUMAN APPROVAL
+
+Preserve the established actions:
+
+`APPROVE`
+
+`EDIT_AND_APPROVE`
+
+`REJECT`
+
+`ESCALATE_RETURN`
+
+Complete server-side enforcement.
+
+Required checks:
+
+- Authenticated human reviewer.
+- Authorized reviewer role.
+- Valid draft version.
+- Correct mailbox permissions.
+- Appropriate separation of duties.
+- Complete decision audit.
+- Reapproval after material edits.
+- No AI self-approval.
+- No unauthorized bypass.
+- No dispatch of rejected drafts.
+
+Test direct API calls attempting to bypass the interface.
+
+Approval must be tied to the exact message version authorized for dispatch.
+
+---
+
+# 12. M49.11 — RELIABLE OUTBOUND EMAIL DELIVERY
+
+Complete the outbound email dispatch architecture.
+
+Implement:
+
+- Recipient validation.
+- Sender authorization.
+- Approved-content retrieval.
+- MIME construction.
+- Attachment validation.
+- Idempotency keys.
+- Dispatch queue.
+- Retry handling.
+- Failure recovery.
+- Provider message identifiers.
+- Duplicate-send prevention.
+- Sent-message history.
+- Audit events.
+- Delivery status tracking.
+
+Distinguish:
+
+`DRAFT`
+
+`PENDING_APPROVAL`
+
+`APPROVED`
+
+`QUEUED`
+
+`PROVIDER_ACCEPTED`
+
+`FAILED`
+
+`CANCELLED`
+
+`DELIVERY_CONFIRMED` only when supported by reliable delivery evidence.
+
+Do not interpret successful Gmail API acceptance as proof that the recipient read or received the email.
+
+When Google Workspace is disconnected, prevent actual sending and display truthful staging status.
+
+---
+
+# 13. M49.12 — EMAIL TEMPLATES AND SIGNATURES
+
+Preserve the 12 reported organizational templates and seven-language variants.
+
+Complete:
+
+- Template creation.
+- Editing.
+- Draft saving.
+- Review.
+- Approval.
+- Publication.
+- Version history.
+- Archiving.
+- Restoration.
+- Merge-field validation.
+- Preview.
+- Signature management.
+- Department ownership.
+- Multilingual variants.
+
+Test invalid merge fields and missing required values.
+
+Do not permit unverified financial figures to be inserted automatically into donor acknowledgments.
+
+---
+
+# 14. M49.13 — CRM AND CROSS-APPLICATION COMMUNICATIONS
+
+Connect the email system to the five applications.
+
+**Application A — Public Website/CMS**
+
+Public inquiries must route into authorized communications queues.
+
+**Application B — Community & Volunteer Hub**
+
+Volunteer applications, onboarding, training, shifts, and follow-up correspondence must link to appropriate communication records.
+
+**Application C — Donor & Sponsor Portal**
+
+Pledges, donor inquiries, sponsorship correspondence, and stewardship follow-ups must connect to authorized donor communications.
+
+Preserve separation between pledges and settled payments.
+
+**Application D — Staff Command Center**
+
+Email assignments, approvals, notifications, and tasks must update staff operational views.
+
+**Application E — Executive/Governance**
+
+Governance correspondence must respect executive and board confidentiality permissions.
+
+Do not expose confidential safeguarding or board records through general CRM search.
+
+---
+
+# 15. M49.14 — FOLLOW-UP MANAGEMENT AND AUTOMATION
+
+Complete:
+
+- Email-linked task creation.
+- Staff assignment.
+- Due dates.
+- Priority.
+- Overdue alerts.
+- Escalation.
+- Task completion.
+- Conversation linking.
+- CRM linking.
+- Audit history.
+
+AI may recommend follow-up actions.
+
+External email dispatch must remain subject to the applicable human approval policy.
+
+Ensure scheduled tasks persist after application restart.
+
+---
+
+# 16. M49.15 — EMAIL ANALYTICS AND AUDITABILITY
+
+Implement accurate operational metrics:
+
+- Incoming volume.
+- Outbound volume.
+- Unread backlog.
+- High-priority messages.
+- Category distribution.
+- Department workload.
+- First-response time.
+- Resolution time.
+- Approval turnaround.
+- AI draft acceptance.
+- Failed dispatches.
+- Follow-up completion.
+- Mailbox synchronization health.
+
+Calculate metrics from actual stored records.
+
+Do not display invented operational statistics as live organizational data.
+
+Ensure audit events capture:
+
+- Actor.
+- Role.
+- Action.
+- Target record.
+- Timestamp.
+- Previous and new state where appropriate.
+- Approval reference.
+- Dispatch reference.
+
+Do not expose confidential message bodies in general audit exports.
+
+---
+
+# 17. M49.16 — PERSISTENCE AND RECOVERY
+
+Verify the current staging persistence adapter.
+
+Test:
+
+- Mailbox configuration recovery.
+- Message recovery.
+- Thread recovery.
+- Draft recovery.
+- Approval recovery.
+- Dispatch ledger recovery.
+- Template recovery.
+- Follow-up recovery.
+- Audit recovery.
+- Synchronization cursor recovery.
+
+Simulate:
+
+- Server restart.
+- Interrupted synchronization.
+- Duplicate provider events.
+- Partial transaction failure.
+- Concurrent edits.
+- Stale approval attempts.
+- Repeated dispatch requests.
+
+Do not claim production PostgreSQL durability while the external database remains disconnected.
+
+Keep runtime database files and confidential email content out of GitHub.
+
+---
+
+# 18. M49.17 — SEVEN-LANGUAGE AND ACCESSIBILITY VALIDATION
+
+Preserve:
+
+`en`, `so`, `es`, `hmn`, `kar`, `orm`, `am`
+
+Validate localization across all Email Administration screens.
+
+Test:
+
+- Keyboard navigation.
+- Screen-reader labels.
+- Form error announcements.
+- Focus management.
+- Modal dialogs.
+- Responsive layouts.
+- Mobile navigation.
+- Text scaling.
+- Color contrast.
+- Language switching.
+
+Target WCAG 2.2 AA.
+
+Do not claim manual accessibility acceptance based only on automated tests.
+
+---
+
+# 19. M49.18 — SECURITY TESTING
+
+Create negative tests covering:
+
+1. Unauthorized mailbox access.
+2. Cross-mailbox IDOR.
+3. Unauthorized conversation access.
+4. Confidential message leakage.
+5. Restricted attachment access.
+6. Approval bypass.
+7. AI self-approval.
+8. Draft modification after approval.
+9. Duplicate outbound sending.
+10. OAuth state tampering.
+11. Token exposure.
+12. Prompt injection.
+13. Unsafe HTML content.
+14. Unauthorized CRM linking.
+15. Confidential search-result exposure.
+16. Unrestricted analytics export.
+17. Unauthorized audit export.
+18. Synchronization cursor tampering.
+19. Revoked credential handling.
+20. Role changes during an active session.
+
+Repair discovered vulnerabilities.
+
+Do not weaken security tests merely to obtain passing results.
+
+---
+
+# 20. M49.19 — EXECUTE REAL QUALITY GATES
+
+Run:
+
+```bash
+npm ci
+npm run lint
+npm run build
+```
+
+Execute the existing regression suite.
+
+Execute Phase 48 email integration tests.
+
+Add and execute Phase 49 tests.
+
+Execute the actual Playwright browser matrix:
+
+- Chromium.
+- Firefox.
+- WebKit.
+- Mobile Chrome.
+
+Report separately:
+
+- Tests discovered.
+- Tests executed.
+- Tests passed.
+- Tests failed.
+- Tests skipped.
+- Tests blocked by external authorization.
+
+Do not substitute test discovery for execution.
+
+Do not claim passing CI until the corresponding GitHub Actions run actually completes successfully.
+
+---
+
+# 21. M49.20 — HUMAN ACCEPTANCE PREPARATION
+
+Prepare role-specific acceptance scenarios for:
+
+- Email Administrator.
+- Communications Staff.
+- Department Supervisor.
+- Safeguarding Lead.
+- Executive Director.
+- Governance Reviewer.
+
+Include practical scenarios:
+
+- Registering a mailbox configuration.
+- Importing staging email.
+- Classifying a message.
+- Assigning a conversation.
+- Drafting a response.
+- Approving a response.
+- Rejecting a response.
+- Escalating a conversation.
+- Blocking an unauthorized send.
+- Handling a confidential message.
+- Recovering from a synchronization failure.
+- Reviewing audit history.
+
+Prepare acceptance records for the designated organizational approvers.
+
+**Do not fabricate human signatures, consent, or approval.**
+
+Human acceptance remains pending until completed by authorized individuals.
+
+---
+
+# 22. M49.21 — GOOGLE WORKSPACE ONBOARDING READINESS
+
+Prepare a practical administrator onboarding checklist.
+
+Include:
+
+1. Google Cloud project selection.
+2. OAuth consent configuration.
+3. Required Gmail API enablement.
+4. Authorized redirect URIs.
+5. Least-privilege scope review.
+6. Credential storage.
+7. Mailbox administrator consent.
+8. Pilot mailbox authorization.
+9. Read-only synchronization validation.
+10. Thread and duplicate reconciliation.
+11. Restricted-message isolation verification.
+12. Controlled outbound sending test.
+13. Token revocation test.
+14. Recovery and monitoring.
+15. Formal authorization before activation.
+
+**Do not activate live sending simply because code or credentials become available.**
+
+Require explicit organizational approval and successful security validation.
+
+---
+
+# 23. M49.22 — NATIVE GITHUB SYNCHRONIZATION
+
+Use the existing native Google AI Studio ↔ GitHub connection.
+
+Repository:
+
+`OphireumTechnology/phumulani`
+
+Mandatory sequence:
+
+1. Refresh the latest remote revision.
+2. Inspect local changes.
+3. Preserve existing Phase 48 functionality.
+4. Preserve `package-lock.json`.
+5. Exclude runtime databases and secrets.
+6. Execute local quality checks.
+7. Review synchronization diff.
+8. Prefer a reviewable development branch.
+9. Synchronize approved source changes.
+10. Verify the actual remote commit SHA.
+11. Check GitHub Actions.
+12. Repair failures before proceeding.
+
+Do not force-push.
+
+Do not silently overwrite newer remote changes.
+
+Do not use Windows-drive synchronization or ZIP transfers.
+
+If native synchronization cannot safely preserve tracked files, stop and report the blocker.
+
+---
+
+# 24. PHASE 49 IMPLEMENTATION ORDER
+
+Execute development in controlled batches.
+
+## Batch 1 — Email Functional Integrity
+
+Complete source reconciliation, navigation checks, mailbox administration, inbox behavior, conversation operations, and persistence.
+
+## Batch 2 — Google Workspace Adapter
+
+Complete OAuth readiness, secure credential handling, synchronization, import recovery, deduplication, and provider diagnostics.
+
+## Batch 3 — AI and Approval Security
+
+Complete classification, drafting, quad-action approval, prompt-injection defenses, and confidential safeguarding isolation.
+
+## Batch 4 — Outbound and Cross-Application Integration
+
+Complete dispatch reliability, templates, CRM linking, follow-up tasks, and five-application communication workflows.
+
+## Batch 5 — Security and Operational Assurance
+
+Execute negative authorization tests, recovery tests, accessibility checks, and role-specific acceptance scenarios.
+
+## Batch 6 — Verified GitHub Delivery
+
+Synchronize reviewed source changes, preserve the lockfile, verify the remote commit, and confirm CI.
+
+For every batch, deliver:
+
+- Actual source changes.
+- Functional evidence.
+- Executed tests.
+- Known limitations.
+- GitHub delivery evidence.
+
+Do not mark an incomplete batch as complete.
+
+---
+
+# 25. REQUIRED DOCUMENTATION
+
+Create or update:
+
+`docs/development/phase49-email-integration.md`
+
+`docs/development/phase49-security-verification.md`
+
+`docs/development/phase49-google-workspace-onboarding.md`
+
+`docs/development/phase49-operational-acceptance.md`
+
+Documentation must describe actual implementation and test evidence.
+
+Do not create documentation in place of implementing required functionality.
+
+---
+
+# 26. REQUIRED PHASE 49 DELIVERY REPORT
+
+Return:
+
+```text
+PHUMULANI PHASE 49 — EMAIL INTEGRATION & OPERATIONAL ACCEPTANCE REPORT
+
+SOURCE CONTROL
+Repository:
+Starting Remote SHA:
+Ending Remote SHA:
+Development Branch:
+Native GitHub Sync:
+Package Lockfile Retained:
+CI Workflow URL:
+CI Conclusion:
+
+EMAIL ADMINISTRATION
+Dashboard:
+Mailbox Management:
+Unified Inbox:
+Message Search:
+25-Category Triage:
+Priority Scoring:
+AI Drafting:
+Quad-Action Approval:
+Outbound Dispatch:
+Templates:
+CRM Integration:
+Follow-Up Tasks:
+Analytics:
+Audit Logs:
+
+GOOGLE WORKSPACE
+Provider Adapter:
+OAuth Authorization:
+Mailbox Verification:
+Historical Import:
+Incremental Sync:
+Live Sending:
+Provider Error Handling:
+Credential Security:
+Remaining External Dependencies:
+
+SAFEGUARDING
+Restricted Routing:
+Server-Side Isolation:
+Anti-IDOR:
+General AI Exclusion:
+Confidential Search Protection:
+Attachment Protection:
+Audit Verification:
+
+QUALITY
+TypeScript:
+Build:
+Regression Tests:
+Phase 48 Email Tests:
+Phase 49 Tests:
+Playwright Discovered:
+Playwright Executed:
+Playwright Passed:
+Playwright Failed:
+Security Tests:
+Recovery Tests:
+Accessibility:
+
+HUMAN ACCEPTANCE
+Email Administrator:
+Communications Staff:
+Safeguarding Lead:
+Executive Director:
+Governance Reviewer:
+
+REMAINING WORK
+Working Verified Features:
+Partially Working Features:
+Mock-Only Features:
+Blocked External Features:
+Human Approvals Required:
+Security Findings:
+Next Development Priority:
+```
+
+---
+
+# 27. FINAL EXECUTION COMMAND
+
+GOOGLE AI STUDIO:
+
+**BEGIN PHASE 49 DEVELOPMENT IMMEDIATELY.**
+
+**CONTINUE FROM THE ACTUAL CURRENT PHUMULANI SOURCE CODE AND VERIFIED GITHUB BASELINE.**
+
+**MAKE EMAIL ADMINISTRATION THE MOST COMPLETE, SECURE, AND RELIABLE OPERATIONAL MODULE IN THE PLATFORM.**
+
+**PRESERVE THE FIVE MAILBOX CONFIGURATIONS, 25-CATEGORY TRIAGE, AI DRAFTING, QUAD-ACTION HUMAN APPROVAL, CRM LINKING, TEMPLATES, FOLLOW-UPS, ANALYTICS, AND AUDIT HISTORY.**
+
+**COMPLETE GOOGLE WORKSPACE INTEGRATION READINESS, INCLUDING SECURE OAUTH, INBOUND SYNCHRONIZATION, DEDUPLICATION, ERROR RECOVERY, AND CONTROLLED OUTBOUND DELIVERY.**
+
+**IMPLEMENT SERVER-SIDE SAFEGUARDING ISOLATION AND NEGATIVE SECURITY TESTS.**
+
+**VERIFY CROSS-APPLICATION COMMUNICATIONS ACROSS THE FIVE PHUMULANI APPLICATIONS.**
+
+**EXECUTE REAL AUTOMATED TESTS AND THE FULL BROWSER MATRIX.**
+
+**DO NOT CLAIM LIVE EMAIL DELIVERY WITHOUT VERIFIED PROVIDER AUTHORIZATION.**
+
+**DO NOT FABRICATE HUMAN ACCEPTANCE OR FINANCIAL COMPLIANCE.**
+
+**NEVER DELETE `package-lock.json`.**
+
+**SYNCHRONIZE REVIEWED DEVELOPMENT THROUGH THE EXISTING NATIVE GOOGLE AI STUDIO–GITHUB CONNECTION.**
+
+**VERIFY THE REMOTE COMMIT AND SUCCESSFUL GITHUB CI.**
+
+**REMAIN IN STAGED DEVELOPMENT UNTIL EXTERNAL AUTHORIZATION AND OPERATIONAL ACCEPTANCE ARE COMPLETE.**
+
+**DELIVER FUNCTIONAL SOFTWARE AND VERIFIED EVIDENCE, NOT ONLY A DEVELOPMENT REPORT.**
+
+END OF PHASE 49 MASTER DEVELOPMENT DIRECTIVE.
