@@ -6,3 +6,13 @@ coverage/
 *.log
 .env*
 !.env.example
+
+# Runtime persistence and sensitive local state
+data/phumulani_persistent_db.json
+data/*.sqlite
+data/*.sqlite3
+data/*.db
+
+# Generated test output
+playwright-report/
+test-results/
