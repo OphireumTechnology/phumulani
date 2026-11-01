@@ -55,7 +55,8 @@ test.describe('M41.11 — Public accessibility and mobile smoke checks', () => {
     const selector = page.locator('#header-lang-select, select[aria-label="Select Language"]').first();
     await expect(selector).toBeVisible();
     const accessibleName = await selector.evaluate((el) => {
-      const label = el.labels?.[0]?.textContent?.trim() || '';
+      const select = el as HTMLSelectElement;
+      const label = select.labels?.[0]?.textContent?.trim() || '';
       return el.getAttribute('aria-label') || label || el.getAttribute('aria-labelledby') || '';
     });
     expect(accessibleName.trim().length).toBeGreaterThan(0);
