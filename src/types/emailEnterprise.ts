@@ -1232,6 +1232,8 @@ export interface AdministratorRecoveryResult {
   details: string;
   timestamp: string;
   auditLogId: string;
+  dryRun?: boolean;
+  error?: string;
 }
 
 

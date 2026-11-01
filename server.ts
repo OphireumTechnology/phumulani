@@ -4699,9 +4699,13 @@ app.get('/api/admin/email/mailboxes/:email/multi-dimensional-status', (req: Requ
   }
 });
 
-// 46. Phase 57 Enterprise Operations Monitoring (M57.16)
-app.get('/api/admin/operations/monitoring', (_req: Request, res: Response) => {
+// 46. Phase 57/58 Enterprise Operations Monitoring (M57.16, M58.15)
+app.get('/api/admin/operations/monitoring', (req: Request, res: Response) => {
   try {
+    const actor = getEmailAdminActor(req);
+    if (actor.role === 'visitor') {
+      return res.status(403).json({ success: false, error: 'Staff or administrator role required to access enterprise operations monitoring.' });
+    }
     const monitoring = googleWorkspaceAdapter.getEnterpriseOperationsMonitoring();
     res.json({ success: true, monitoring });
   } catch (err: any) {
@@ -4709,11 +4713,11 @@ app.get('/api/admin/operations/monitoring', (_req: Request, res: Response) => {
   }
 });
 
-// 47. Phase 57 Administrator Operational Recovery Controls (M57.15, M57.21)
+// 47. Phase 57/58 Administrator Operational Recovery Controls (M57.15, M57.21, M58.16)
 app.post('/api/admin/email/recovery/execute', (req: Request, res: Response) => {
   try {
     const actor = getEmailAdminActor(req);
-    const { mailboxEmail, action, reason } = req.body || {};
+    const { mailboxEmail, action, reason, dryRun } = req.body || {};
     if (!mailboxEmail || !action) {
       return res.status(400).json({ success: false, error: 'mailboxEmail and action are required.' });
     }
@@ -4721,11 +4725,14 @@ app.post('/api/admin/email/recovery/execute', (req: Request, res: Response) => {
       mailboxEmail,
       action,
       { id: actor.id, name: actor.name, role: actor.role },
-      reason || 'Routine administrator operational recovery'
+      reason,
+      { dryRun: !!dryRun }
     );
     res.json({ success: true, recovery: result });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    const isPermissionError = err.message.includes('CROSS_MAILBOX') || err.message.includes('PERMISSION_DENIED');
+    const status = isPermissionError ? 403 : 400;
+    res.status(status).json({ success: false, error: err.message });
   }
 });
 // VITE SPA DEV MIDDLEWARE / STATIC SERVING

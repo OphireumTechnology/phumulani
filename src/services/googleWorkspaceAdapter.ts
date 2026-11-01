@@ -2507,57 +2507,119 @@ export class GoogleWorkspaceAdapter {
     mailboxEmail: string,
     action: AdministratorRecoveryType,
     actor: { id: string; name: string; role: string },
-    reason: string
+    reason: string,
+    options?: { dryRun?: boolean }
   ): AdministratorRecoveryResult {
     const key = mailboxEmail.toLowerCase();
     const timestamp = new Date().toISOString();
+    const isDryRun = !!(options && options.dryRun);
+
+    // 1. Mandatory audit reason verification (Fail-closed)
+    if (!reason || typeof reason !== 'string' || !reason.trim()) {
+      throw new Error('AUDIT REQUIREMENT: Explicit recovery reason is mandatory.');
+    }
+
+    // 2. Elevated administrator role verification (Fail-closed)
+    const normalizedRole = (actor.role || '').toLowerCase();
+    const allowedRoles = [
+      'super_admin',
+      'executive_director',
+      'platform_super_admin',
+      'system_administrator',
+      'staff_lead',
+      'it_admin',
+      'safeguarding_lead',
+    ];
+    if (!allowedRoles.includes(normalizedRole)) {
+      throw new Error('PERMISSION_DENIED: Elevated administrator role required for operational recovery.');
+    }
+
+    // 3. Cross-mailbox safeguarding isolation (Anti-IDOR / VAWA Safeguarding Air-Gap)
+    if (key === 'safeguarding@phumulani.org' && normalizedRole !== 'safeguarding_lead') {
+      throw new Error('CROSS_MAILBOX_ACCESS_DENIED: Safeguarding recovery restricted to authorized safeguarding lead.');
+    }
+
     const mbx = this.mailboxes.find((m) => m.email.toLowerCase() === key);
     let recoveredState = 'HEALTHY';
     let details = '';
 
     switch (action) {
       case 'RESET_RATE_LIMIT': {
-        if (mbx && mbx.status === 'RATE_LIMITED') {
-          mbx.status = this.secureTokenVault.has(key) ? 'CONNECTED' : 'AUTHORIZATION_REQUIRED';
+        const projectedStatus = this.secureTokenVault.has(key) ? 'CONNECTED' : 'AUTHORIZATION_REQUIRED';
+        if (!isDryRun && mbx && mbx.status === 'RATE_LIMITED') {
+          mbx.status = projectedStatus;
         }
-        recoveredState = mbx ? mbx.status : 'AUTHORIZATION_REQUIRED';
-        details = `Rate limit backoff counters reset by ${actor.name} (${actor.role}). Reason: ${reason}`;
+        recoveredState = isDryRun
+          ? 'DRY_RUN_PROJECTED'
+          : mbx
+          ? mbx.status
+          : 'AUTHORIZATION_REQUIRED';
+        details = isDryRun
+          ? `[DRY RUN] Would reset rate limit backoff counters for ${mailboxEmail}. Projected state: ${projectedStatus}. Reason: ${reason}`
+          : `Rate limit backoff counters reset by ${actor.name} (${actor.role}). Reason: ${reason}`;
         break;
       }
       case 'CLEAR_ERROR_STATE': {
-        if (mbx && (mbx.status === 'ERROR' || mbx.status === 'DEGRADED')) {
-          mbx.status = this.secureTokenVault.has(key) ? 'CONNECTED' : 'AUTHORIZATION_REQUIRED';
+        const projectedStatus = this.secureTokenVault.has(key) ? 'CONNECTED' : 'AUTHORIZATION_REQUIRED';
+        if (!isDryRun && mbx && (mbx.status === 'ERROR' || mbx.status === 'DEGRADED')) {
+          mbx.status = projectedStatus;
         }
-        recoveredState = mbx ? mbx.status : 'AUTHORIZATION_REQUIRED';
-        details = `Error/degraded state cleared by ${actor.name} (${actor.role}). Mailbox status restored to ${recoveredState}. Reason: ${reason}`;
+        recoveredState = isDryRun
+          ? 'DRY_RUN_PROJECTED'
+          : mbx
+          ? mbx.status
+          : 'AUTHORIZATION_REQUIRED';
+        details = isDryRun
+          ? `[DRY RUN] Would clear error/degraded state for ${mailboxEmail}. Projected state: ${projectedStatus}. Reason: ${reason}`
+          : `Error/degraded state cleared by ${actor.name} (${actor.role}). Mailbox status restored to ${recoveredState}. Reason: ${reason}`;
         break;
       }
       case 'RESET_SYNC_CURSOR': {
-        const rec = this.recoverInvalidCursor(key);
-        recoveredState = `CURSOR_RESET_${rec.newCursor}`;
-        details = `Sync cursor reset and advanced to ${rec.newCursor} while preserving local annotations. Initiated by ${actor.name}. Reason: ${reason}`;
+        if (isDryRun) {
+          const currentCursor = this.getSyncCursor(key);
+          recoveredState = 'DRY_RUN_PROJECTED';
+          details = `[DRY RUN] Would reset sync cursor for ${mailboxEmail} from ${currentCursor} to hist-recovered-<timestamp>. Reason: ${reason}`;
+        } else {
+          const rec = this.recoverInvalidCursor(key);
+          recoveredState = `CURSOR_RESET_${rec.newCursor}`;
+          details = `Sync cursor reset and advanced to ${rec.newCursor} while preserving local annotations. Initiated by ${actor.name}. Reason: ${reason}`;
+        }
         break;
       }
       case 'RECONCILE_STUCK_DISPATCH': {
-        let reconciledCount = 0;
-        for (const [dispId, stateObj] of this.deliveryStates.entries()) {
+        let matchingCount = 0;
+        for (const [, stateObj] of this.deliveryStates.entries()) {
           if (stateObj.state === 'RECONCILIATION_REQUIRED' || stateObj.state === 'QUEUED') {
-            this.deliveryStates.set(dispId, {
-              state: 'DELIVERY_CONFIRMED',
-              timestamp,
-              notes: `Reconciled via administrator recovery by ${actor.name}`,
-            });
-            reconciledCount++;
+            matchingCount++;
           }
         }
-        recoveredState = `RECONCILED_${reconciledCount}_DISPATCHES`;
-        details = `Stuck outbound dispatches reconciled (${reconciledCount} processed). Initiated by ${actor.name}. Reason: ${reason}`;
+        if (isDryRun) {
+          recoveredState = 'DRY_RUN_PROJECTED';
+          details = `[DRY RUN] Would reconcile ${matchingCount} stuck outbound dispatches. Reason: ${reason}`;
+        } else {
+          for (const [dispId, stateObj] of this.deliveryStates.entries()) {
+            if (stateObj.state === 'RECONCILIATION_REQUIRED' || stateObj.state === 'QUEUED') {
+              this.deliveryStates.set(dispId, {
+                state: 'DELIVERY_CONFIRMED',
+                timestamp,
+                notes: `Reconciled via administrator recovery by ${actor.name}`,
+              });
+            }
+          }
+          recoveredState = `RECONCILED_${matchingCount}_DISPATCHES`;
+          details = `Stuck outbound dispatches reconciled (${matchingCount} processed). Initiated by ${actor.name}. Reason: ${reason}`;
+        }
         break;
       }
       case 'RESYNC_FULL_CHECKPOINT': {
-        const importRes = this.startHistoricalImport(key, { maxMessages: 10 });
-        recoveredState = `CHECKPOINT_CREATED_${importRes.checkpoint.checkpointId}`;
-        details = `Fresh synchronization checkpoint generated for ${mailboxEmail}. Initiated by ${actor.name}. Reason: ${reason}`;
+        if (isDryRun) {
+          recoveredState = 'DRY_RUN_PROJECTED';
+          details = `[DRY RUN] Would generate fresh synchronization checkpoint for ${mailboxEmail}. Reason: ${reason}`;
+        } else {
+          const importRes = this.startHistoricalImport(key, { maxMessages: 10 });
+          recoveredState = `CHECKPOINT_CREATED_${importRes.checkpoint.checkpointId}`;
+          details = `Fresh synchronization checkpoint generated for ${mailboxEmail}. Initiated by ${actor.name}. Reason: ${reason}`;
+        }
         break;
       }
       default: {
@@ -2566,15 +2628,20 @@ export class GoogleWorkspaceAdapter {
       }
     }
 
-    const auditLogId = `log-recov-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
-    this.syncAuditLogs.unshift({
-      id: auditLogId,
-      mailboxEmail: key,
-      action: `ADMIN_RECOVERY_${action}`,
-      details,
-      status: 'success',
-      timestamp,
-    });
+    const auditLogId = isDryRun
+      ? `log-dryrun-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`
+      : `log-recov-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+
+    if (!isDryRun) {
+      this.syncAuditLogs.unshift({
+        id: auditLogId,
+        mailboxEmail: key,
+        action: `ADMIN_RECOVERY_${action}`,
+        details,
+        status: 'success',
+        timestamp,
+      });
+    }
 
     return {
       success: true,
@@ -2584,6 +2651,7 @@ export class GoogleWorkspaceAdapter {
       details,
       timestamp,
       auditLogId,
+      dryRun: isDryRun,
     };
   }
 
