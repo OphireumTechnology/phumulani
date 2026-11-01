@@ -203,10 +203,10 @@ export const Header: React.FC<HeaderProps> = ({
               fallbackSrc="/media/branding/phumulani-logo-primary.svg"
               fallbackType="logo"
               alt="Phumulani Organization Logo"
-              className="w-10 h-10 object-contain rounded-lg shadow-xs group-hover:scale-105 transition-transform shrink-0"
+              className="w-8 h-8 sm:w-10 sm:h-10 object-contain rounded-lg shadow-xs group-hover:scale-105 transition-transform shrink-0"
             />
             <div>
-              <div className="font-serif text-base sm:text-xl font-bold text-[#104F57] tracking-tight group-hover:text-[#633C69] transition-colors leading-none">
+              <div className="font-serif text-sm min-[360px]:text-base sm:text-xl font-bold text-[#104F57] tracking-tight group-hover:text-[#633C69] transition-colors leading-none">
                 PHUMULANI
               </div>
               <div className="text-[10px] tracking-wider uppercase text-slate-500 font-semibold mt-1 hidden sm:block">
@@ -273,6 +273,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => navigateToSection('get-help-section')}
               className="flex items-center gap-1 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 px-1.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer"
               title="Discreet support routing & emergency help"
+              aria-label="Get Help"
             >
               <LifeBuoy className="w-3.5 h-3.5 text-rose-600" />
               <span className="hidden xs:inline">Get Help</span>
@@ -282,9 +283,10 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={() => navigateToSection('donate-section')}
               className="flex items-center gap-1 bg-[#D67C35] hover:bg-[#c26d2c] text-white px-1.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs font-bold shadow-xs transition-colors cursor-pointer"
+              aria-label="Donate"
             >
               <Heart className="w-3.5 h-3.5 fill-white/20" />
-              <span>Donate</span>
+              <span className="hidden min-[360px]:inline">Donate</span>
             </button>
 
             {/* Portal Switcher / Login Dropdown (Desktop / Tablet) */}
@@ -337,7 +339,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* In-App Notification Center Bell */}
             <button
               onClick={() => setNotificationModalOpen(true)}
-              className="relative p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
+              className="relative p-1.5 sm:p-2 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
               title="Open Notification Center"
               aria-label="Open Notification Center"
             >
@@ -352,7 +354,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Mobile Drawer Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100"
+              className="lg:hidden p-1.5 sm:p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100"
               aria-label="Toggle Navigation Menu"
               aria-expanded={mobileMenuOpen}
               aria-controls="public-mobile-navigation"
