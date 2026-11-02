@@ -2,13 +2,17 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  * Phumulani AI Community Platform — Universal Inbound Synchronization Engine
- * Grounded in Master Development Instruction Phase 60 (M60.07, M60.10)
+ * Phase 61 Production-Grade Synchronization, Durable Checkpoints & Rate Limiting
+ * Grounded in Master Development Directive Phase 61
  */
 
+import fs from 'fs';
+import path from 'path';
 import {
   SyncOptions,
   SyncResult,
   NormalizedEmailMessage,
+  NormalizedEmailAttachment,
   EmailConnectionAuditEvent,
 } from '../../types/emailConnectors';
 import { EmailConnector } from '../../types/emailConnectors';
@@ -22,6 +26,7 @@ export interface SyncCheckpointRecord {
   previousCursorValue?: string;
   messagesProcessed: number;
   duplicatesSkipped: number;
+  syncType: 'INITIAL' | 'INCREMENTAL';
   status: 'COMPLETED' | 'IN_PROGRESS' | 'FAILED' | 'ROLLED_BACK';
   timestamp: string;
 }
@@ -31,14 +36,114 @@ export class UniversalSyncEngine {
   private checkpoints: Map<string, SyncCheckpointRecord[]> = new Map();
   private processedMessageIds: Set<string> = new Set();
   private auditLogs: EmailConnectionAuditEvent[] = [];
+  private persistenceFilePath: string;
 
-  private constructor() {}
+  private constructor() {
+    this.persistenceFilePath = path.resolve(process.cwd(), '.sync_checkpoints_vault.json');
+    this.loadDurableState();
+  }
 
   public static getInstance(): UniversalSyncEngine {
     if (!UniversalSyncEngine.instance) {
       UniversalSyncEngine.instance = new UniversalSyncEngine();
     }
     return UniversalSyncEngine.instance;
+  }
+
+  /**
+   * Loads persisted sync checkpoints and deduplication index across application restarts.
+   */
+  private loadDurableState(): void {
+    try {
+      if (fs.existsSync(this.persistenceFilePath)) {
+        const raw = fs.readFileSync(this.persistenceFilePath, 'utf8');
+        const parsed = JSON.parse(raw);
+        if (parsed.checkpoints && typeof parsed.checkpoints === 'object') {
+          for (const [connId, records] of Object.entries(parsed.checkpoints)) {
+            if (Array.isArray(records)) {
+              this.checkpoints.set(connId, records as SyncCheckpointRecord[]);
+            }
+          }
+        }
+        if (Array.isArray(parsed.processedMessageIds)) {
+          this.processedMessageIds = new Set(parsed.processedMessageIds);
+        }
+        if (Array.isArray(parsed.auditLogs)) {
+          this.auditLogs = parsed.auditLogs;
+        }
+      }
+    } catch (err) {
+      console.warn('[UniversalSyncEngine] Failed to load durable sync state (continuing in-memory):', err);
+    }
+  }
+
+  /**
+   * Persists sync checkpoints atomically to disk to ensure durability across restarts.
+   */
+  private saveDurableState(): void {
+    try {
+      const data = {
+        savedAt: new Date().toISOString(),
+        checkpoints: Object.fromEntries(this.checkpoints.entries()),
+        processedMessageIds: Array.from(this.processedMessageIds),
+        auditLogs: this.auditLogs.slice(0, 300),
+      };
+      const tmpPath = `${this.persistenceFilePath}.tmp.${Date.now()}`;
+      fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf8');
+      fs.renameSync(tmpPath, this.persistenceFilePath);
+    } catch (err) {
+      console.warn('[UniversalSyncEngine] Failed to persist sync state to disk:', err);
+    }
+  }
+
+  /**
+   * Executes an asynchronous task with exponential backoff on rate limits or network transient failures.
+   */
+  public async executeWithRetry<T>(
+    fn: () => Promise<T>,
+    maxRetries: number = 3,
+    initialDelayMs: number = 50
+  ): Promise<T> {
+    let lastError: unknown;
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        return await fn();
+      } catch (err) {
+        lastError = err;
+        if (attempt < maxRetries) {
+          const delay = initialDelayMs * Math.pow(2, attempt - 1);
+          await new Promise((res) => setTimeout(res, delay));
+        }
+      }
+    }
+    throw lastError;
+  }
+
+  /**
+   * Validates attachment metadata and quarantines executable or dangerous extensions.
+   */
+  public inspectAttachment(attachment: NormalizedEmailAttachment): NormalizedEmailAttachment {
+    const dangerousExtensions = ['.exe', '.bat', '.cmd', '.vbs', '.js', '.scr', '.pif', '.msi'];
+    const ext = attachment.filename.substring(attachment.filename.lastIndexOf('.')).toLowerCase();
+
+    if (dangerousExtensions.includes(ext)) {
+      return {
+        ...attachment,
+        isQuarantined: true,
+        quarantineReason: `BLOCKED_DANGEROUS_EXTENSION: Attachment "${attachment.filename}" quarantined by security policy.`,
+      };
+    }
+
+    const MAX_SIZE = 50 * 1024 * 1024; // 50MB
+    if (attachment.sizeBytes > MAX_SIZE) {
+      return {
+        ...attachment,
+        isQuarantined: true,
+        quarantineReason: `ATTACHMENT_SIZE_EXCEEDED: Size (${Math.round(attachment.sizeBytes / 1024 / 1024)}MB) exceeds limit.`,
+      };
+    }
+
+    return { ...attachment, isQuarantined: false };
   }
 
   /**
@@ -50,12 +155,13 @@ export class UniversalSyncEngine {
     options: SyncOptions
   ): Promise<SyncResult> {
     const { connectionId, mailboxEmail } = options;
+    const isInitial = !options.cursor || options.forceFullResync;
 
     try {
-      // 1. Fetch raw messages from connector
-      const messages = await connector.listMessages(options);
+      // 1. Fetch raw messages from connector with retry handler
+      const messages = await this.executeWithRetry(() => connector.listMessages(options));
 
-      // 2. Perform deduplication
+      // 2. Perform deduplication & attachment inspection
       let newCount = 0;
       let dupCount = 0;
       const deduplicated: NormalizedEmailMessage[] = [];
@@ -66,13 +172,19 @@ export class UniversalSyncEngine {
           dupCount++;
         } else {
           this.processedMessageIds.add(dedupeKey);
+
+          // Inspect attachments if present
+          if (msg.attachments && msg.attachments.length > 0) {
+            msg.attachments = msg.attachments.map((att) => this.inspectAttachment(att));
+          }
+
           deduplicated.push(msg);
           newCount++;
         }
       }
 
       // 3. Delegate to connector synchronize for cursor advancement
-      const syncResult = await connector.synchronize(options);
+      const syncResult = await this.executeWithRetry(() => connector.synchronize(options));
 
       // 4. Record Checkpoint
       const checkpoint: SyncCheckpointRecord = {
@@ -84,6 +196,7 @@ export class UniversalSyncEngine {
         previousCursorValue: syncResult.oldCursor,
         messagesProcessed: newCount,
         duplicatesSkipped: dupCount,
+        syncType: isInitial ? 'INITIAL' : 'INCREMENTAL',
         status: 'COMPLETED',
         timestamp: new Date().toISOString(),
       };
@@ -95,7 +208,7 @@ export class UniversalSyncEngine {
 
       // 5. Audit Event
       this.auditLogs.unshift({
-        id: `aud-sync-${Date.now()}`,
+        id: `aud-sync-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
         connectionId,
         mailboxEmail,
         provider: connector.provider,
@@ -103,9 +216,12 @@ export class UniversalSyncEngine {
         actorName: 'UniversalSyncDaemon',
         actorRole: 'SYSTEM_SCHEDULER',
         timestamp: new Date().toISOString(),
-        details: `Sync completed: ${newCount} imported, ${dupCount} duplicates skipped. Cursor: ${syncResult.newCursor}`,
+        details: `${isInitial ? 'Initial' : 'Incremental'} sync completed: ${newCount} imported, ${dupCount} duplicates skipped. Cursor: ${syncResult.newCursor}`,
         status: 'success',
       });
+
+      // 6. Save durable state to disk
+      this.saveDurableState();
 
       return {
         ...syncResult,
@@ -116,7 +232,7 @@ export class UniversalSyncEngine {
       const errorMessage = err instanceof Error ? err.message : String(err);
 
       this.auditLogs.unshift({
-        id: `aud-sync-err-${Date.now()}`,
+        id: `aud-sync-err-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
         connectionId,
         mailboxEmail,
         provider: connector.provider,
@@ -127,6 +243,8 @@ export class UniversalSyncEngine {
         details: `Sync failure: ${errorMessage}`,
         status: 'error',
       });
+
+      this.saveDurableState();
 
       return {
         success: false,
@@ -171,6 +289,7 @@ export class UniversalSyncEngine {
       status: 'warning',
     });
 
+    this.saveDurableState();
     return prior;
   }
 
@@ -181,6 +300,30 @@ export class UniversalSyncEngine {
   public getAuditLogs(connectionId?: string): EmailConnectionAuditEvent[] {
     if (!connectionId) return this.auditLogs;
     return this.auditLogs.filter((a) => a.connectionId === connectionId);
+  }
+
+  /**
+   * Reloads persistent checkpoints from disk (used to verify restart survival in tests).
+   */
+  public reloadDurableState(): void {
+    this.checkpoints.clear();
+    this.processedMessageIds.clear();
+    this.auditLogs = [];
+    this.loadDurableState();
+  }
+
+  /**
+   * Resets in-memory state for clean test isolation.
+   */
+  public resetForTesting(): void {
+    this.checkpoints.clear();
+    this.processedMessageIds.clear();
+    this.auditLogs = [];
+    try {
+      if (fs.existsSync(this.persistenceFilePath)) {
+        fs.unlinkSync(this.persistenceFilePath);
+      }
+    } catch {}
   }
 }
 

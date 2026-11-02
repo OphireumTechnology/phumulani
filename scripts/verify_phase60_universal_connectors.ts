@@ -36,6 +36,8 @@ async function runPhase60Verification() {
   console.log('  Universal Email Connector Framework & Multi-Provider Verification');
   console.log('================================================================================\n');
 
+  universalSyncEngine.resetForTesting();
+
   // ---------------------------------------------------------------------------
   // 1. Lockfile integrity & permanent protection (M60.01)
   // ---------------------------------------------------------------------------

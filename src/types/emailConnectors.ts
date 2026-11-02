@@ -21,14 +21,20 @@ export type AuthMethodType =
   | 'TOKEN';
 
 export type ConnectorConnectionStatus =
+  | 'NOT_CONFIGURED'
+  | 'CONFIGURATION_REQUIRED'
+  | 'AUTHORIZATION_REQUIRED'
+  | 'AUTHORIZED'
+  | 'CONNECTED'
+  | 'SYNCHRONIZING'
+  | 'CONNECTED_WITH_ERRORS'
+  | 'TOKEN_EXPIRED'
+  | 'REVOKED'
   | 'CONFIGURED_UNVERIFIED'
   | 'OAUTH_PENDING'
   | 'OAUTH_AUTHORIZED'
-  | 'CONNECTED'
   | 'AUTHENTICATION_FAILED'
-  | 'REVOKED'
   | 'DISCONNECTED'
-  | 'TOKEN_EXPIRED'
   | 'BLOCKED_EXTERNAL'
   | 'ERROR';
 
@@ -257,6 +263,18 @@ export interface EmailConnector {
   getCapabilities(): Promise<ProviderCapabilities>;
 }
 
+export interface ProviderEvidenceRecord {
+  state: ConnectorConnectionStatus;
+  timestamp: string;
+  roundTripLatencyMs: number;
+  tlsVersion: string;
+  cipherSuite: string;
+  dnsResolution: 'RESOLVED_OK' | 'DNS_ERROR' | 'MOCK_RESOLVED';
+  tokenExpiryIso?: string;
+  diagnosticsDetail: string;
+  rawVerificationEvidence?: Record<string, unknown>;
+}
+
 export interface EmailConnectionRecord {
   id: string;
   emailAddress: string;
@@ -268,15 +286,23 @@ export interface EmailConnectionRecord {
   authStatus: ConnectorConnectionStatus;
   connectionHealth: ConnectorHealthStatus;
   lastSyncAt: string | null;
+  lastSuccessfulSyncAt?: string | null;
   lastError: string | null;
   incomingMessageCount: number;
+  outgoingMessageCount?: number;
+  syncFailureCount?: number;
+  credentialExpiresAt?: string | null;
+  credentialWarning?: boolean;
   sendingPermission: ConnectorSendingPermission;
   syncStatus: ConnectorSyncStatus;
   folders: string[];
+  folderInspection?: NormalizedEmailFolder[];
   isInstitutionalMailbox: boolean;
   safeguardingClassification: 'GENERAL' | 'RESTRICTED' | 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP';
   syncCursor?: string;
   cursorType?: string;
+  evidenceHistory?: ProviderEvidenceRecord[];
+  currentEvidence?: ProviderEvidenceRecord;
   createdAt: string;
   updatedAt: string;
 }

@@ -4991,6 +4991,57 @@ app.post('/api/admin/email/connectors/:id/dispatch', async (req: Request, res: R
   }
 });
 
+// 65. Phase 61 Token Refresh
+app.post('/api/admin/email/connectors/:id/refresh-token', async (req: Request, res: Response) => {
+  try {
+    const success = await connectorRegistry.refreshToken(req.params.id);
+    res.json({ success });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 66. Phase 61 Token Revocation & Vault Purge
+app.post('/api/admin/email/connectors/:id/revoke', async (req: Request, res: Response) => {
+  try {
+    const success = await connectorRegistry.revokeConnection(req.params.id);
+    res.json({ success });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 67. Phase 61 AI-Assisted Message Triage & Classification
+app.post('/api/admin/email/connectors/:id/triage', (req: Request, res: Response) => {
+  try {
+    const { subject, body, senderEmail } = req.body || {};
+    if (!subject || !body || !senderEmail) {
+      return res.status(400).json({ success: false, error: 'subject, body, and senderEmail are required.' });
+    }
+    const triageResult = connectorRegistry.triageMessage(subject, body, senderEmail);
+    res.json({ success: true, triage: triageResult });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 68. Phase 61 Full Verification Evidence History
+app.get('/api/admin/email/connectors/:id/evidence', (req: Request, res: Response) => {
+  try {
+    const conn = connectorRegistry.getConnection(req.params.id);
+    if (!conn) {
+      return res.status(404).json({ success: false, error: 'Connection not found.' });
+    }
+    res.json({
+      success: true,
+      currentEvidence: conn.currentEvidence,
+      evidenceHistory: conn.evidenceHistory || [],
+    });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 // -----------------------------------------------------------------------------
 // VITE SPA DEV MIDDLEWARE / STATIC SERVING
 // -----------------------------------------------------------------------------

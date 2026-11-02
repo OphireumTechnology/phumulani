@@ -2,18 +2,20 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  * Phumulani AI Community Platform — Universal Email Connections Dashboard & Wizard
- * Grounded in Master Development Instruction Phase 60 (M60.01 - M60.15)
+ * Phase 61 Production-Grade Provider Lifecycle, Evidence Tracking & Governance
+ * Grounded in Master Development Directive Phase 61
  */
 
 import React, { useState, useEffect } from 'react';
 import {
   EmailConnectionRecord,
-  EmailProviderDescriptor,
   EmailProviderType,
   AuthMethodType,
   ProviderDiscoveryResult,
   ConnectionHealth,
   ProviderCapabilities,
+  ProviderEvidenceRecord,
+  NormalizedEmailFolder,
 } from '../../types/emailConnectors';
 import { PROVIDER_DESCRIPTORS } from '../../services/connectors/providerCapabilities';
 
@@ -21,7 +23,6 @@ export const UniversalEmailConnections: React.FC = () => {
   const [connections, setConnections] = useState<EmailConnectionRecord[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedConnection, setSelectedConnection] = useState<EmailConnectionRecord | null>(null);
 
   // Wizard State
   const [isWizardOpen, setIsWizardOpen] = useState<boolean>(false);
@@ -45,10 +46,33 @@ export const UniversalEmailConnections: React.FC = () => {
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
 
-  // Capability Drawer State
+  // Inspection Drawers & Modals
   const [inspectCapabilities, setInspectCapabilities] = useState<{
     provider: EmailProviderType;
     capabilities: ProviderCapabilities;
+  } | null>(null);
+
+  const [inspectEvidence, setInspectEvidence] = useState<{
+    mailboxEmail: string;
+    evidenceHistory: ProviderEvidenceRecord[];
+  } | null>(null);
+
+  const [inspectFolders, setInspectFolders] = useState<{
+    mailboxEmail: string;
+    folders: NormalizedEmailFolder[];
+  } | null>(null);
+
+  // AI Triage Drawer
+  const [triageModal, setTriageModal] = useState<{
+    connectionId: string;
+    mailboxEmail: string;
+    result?: {
+      category: string;
+      priority: string;
+      isSafeguarding: boolean;
+      suggestedDepartment: string;
+      aiDraftSuggestion?: string;
+    };
   } | null>(null);
 
   const fetchConnections = async () => {
@@ -105,7 +129,6 @@ export const UniversalEmailConnections: React.FC = () => {
   const handleTestVerify = async () => {
     setIsVerifying(true);
     try {
-      // Simulate/perform health check
       const res = await fetch('/api/admin/email/connectors/discover', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -223,6 +246,87 @@ export const UniversalEmailConnections: React.FC = () => {
     }
   };
 
+  const handleRefreshToken = async (id: string) => {
+    try {
+      const res = await fetch(`/api/admin/email/connectors/${id}/refresh-token`, { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        alert('Token refreshed successfully. Credentials extended for 30 days.');
+        fetchConnections();
+      }
+    } catch (err) {
+      alert('Failed to refresh token: ' + String(err));
+    }
+  };
+
+  const handleRevokeToken = async (id: string) => {
+    if (!confirm('Are you sure you want to revoke this connection and purge vaulted credentials?')) return;
+    try {
+      const res = await fetch(`/api/admin/email/connectors/${id}/revoke`, { method: 'POST' });
+      const data = await res.json();
+      if (data.success) {
+        alert('Credentials revoked and vault purged.');
+        fetchConnections();
+      }
+    } catch (err) {
+      alert('Revocation error: ' + String(err));
+    }
+  };
+
+  const handleInspectFolders = async (conn: EmailConnectionRecord) => {
+    try {
+      const res = await fetch(`/api/admin/email/connectors/${conn.id}/folders`);
+      const data = await res.json();
+      if (data.success && data.folders) {
+        setInspectFolders({
+          mailboxEmail: conn.emailAddress,
+          folders: data.folders,
+        });
+      }
+    } catch (err) {
+      alert('Failed to inspect folders: ' + String(err));
+    }
+  };
+
+  const handleInspectEvidence = async (conn: EmailConnectionRecord) => {
+    try {
+      const res = await fetch(`/api/admin/email/connectors/${conn.id}/evidence`);
+      const data = await res.json();
+      if (data.success) {
+        setInspectEvidence({
+          mailboxEmail: conn.emailAddress,
+          evidenceHistory: data.evidenceHistory || [],
+        });
+      }
+    } catch (err) {
+      alert('Failed to load evidence: ' + String(err));
+    }
+  };
+
+  const handleRunAiTriage = async (conn: EmailConnectionRecord) => {
+    try {
+      const res = await fetch(`/api/admin/email/connectors/${conn.id}/triage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          subject: 'Inquiry regarding community empowerment program',
+          body: 'Hello Phumulani team, I would like to volunteer and support your educational programs in Pretoria.',
+          senderEmail: 'volunteer.partner@pretoria.org',
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.triage) {
+        setTriageModal({
+          connectionId: conn.id,
+          mailboxEmail: conn.emailAddress,
+          result: data.triage,
+        });
+      }
+    } catch (err) {
+      alert('AI triage failed: ' + String(err));
+    }
+  };
+
   const handleToggleDisconnect = async (conn: EmailConnectionRecord) => {
     const isDisconnected = conn.authStatus === 'DISCONNECTED';
     const action = isDisconnected ? 'reconnect' : 'disconnect';
@@ -252,7 +356,8 @@ export const UniversalEmailConnections: React.FC = () => {
 
   const totalAccounts = connections.length;
   const healthyAccounts = connections.filter((c) => c.connectionHealth === 'HEALTHY').length;
-  const totalMessages = connections.reduce((acc, c) => acc + c.incomingMessageCount, 0);
+  const totalMessagesIn = connections.reduce((acc, c) => acc + c.incomingMessageCount, 0);
+  const totalMessagesOut = connections.reduce((acc, c) => acc + (c.outgoingMessageCount || 0), 0);
   const airGappedAccounts = connections.filter(
     (c) => c.safeguardingClassification === 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP'
   ).length;
@@ -265,12 +370,12 @@ export const UniversalEmailConnections: React.FC = () => {
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-teal-500/20 text-teal-300 border border-teal-500/30 mb-2">
               <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
-              Universal Email Connector Framework (Phase 60)
+              Universal Email Connector Framework (Phase 61 Live Integration)
             </div>
-            <h2 className="text-2xl font-bold tracking-tight">Multi-Provider Connected Mailboxes</h2>
+            <h2 className="text-2xl font-bold tracking-tight">Enterprise Connected Mailboxes & Evidence Ledger</h2>
             <p className="text-slate-300 text-sm mt-1 max-w-2xl">
               Connect Google Workspace, Microsoft 365, Yahoo, Zoho, iCloud, or custom IMAP/SMTP mailboxes.
-              Enforces provider-agnostic normalized ingestion, Quad-Action approvals, and air-gapped safeguarding isolation.
+              Enforces provider-agnostic normalized ingestion, Quad-Action approvals, durable cursors, and air-gapped safeguarding isolation.
             </p>
           </div>
           <button
@@ -288,7 +393,7 @@ export const UniversalEmailConnections: React.FC = () => {
         </div>
 
         {/* Operational Metrics Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 pt-6 border-t border-slate-700/60">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mt-6 pt-6 border-t border-slate-700/60">
           <div className="bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
             <div className="text-xs text-slate-400 uppercase font-semibold">Configured Accounts</div>
             <div className="text-2xl font-bold text-white mt-1">{totalAccounts}</div>
@@ -300,9 +405,14 @@ export const UniversalEmailConnections: React.FC = () => {
             <div className="text-xs text-slate-400 mt-0.5">TLS Handshake Verified</div>
           </div>
           <div className="bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
-            <div className="text-xs text-slate-400 uppercase font-semibold">Ingested Messages</div>
-            <div className="text-2xl font-bold text-sky-400 mt-1">{totalMessages}</div>
-            <div className="text-xs text-slate-400 mt-0.5">Universal Sync Cursor</div>
+            <div className="text-xs text-slate-400 uppercase font-semibold">Ingested Inbound</div>
+            <div className="text-2xl font-bold text-sky-400 mt-1">{totalMessagesIn}</div>
+            <div className="text-xs text-slate-400 mt-0.5">Durable Cursor Synced</div>
+          </div>
+          <div className="bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
+            <div className="text-xs text-slate-400 uppercase font-semibold">Approved Outbound</div>
+            <div className="text-2xl font-bold text-indigo-300 mt-1">{totalMessagesOut}</div>
+            <div className="text-xs text-slate-400 mt-0.5">Quad-Action Gated</div>
           </div>
           <div className="bg-slate-800/60 rounded-xl p-3 border border-slate-700/50">
             <div className="text-xs text-slate-400 uppercase font-semibold">Air-Gapped Mailboxes</div>
@@ -360,14 +470,21 @@ export const UniversalEmailConnections: React.FC = () => {
                           </span>
                         )}
                         <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
-                          conn.connectionHealth === 'HEALTHY'
+                          conn.authStatus === 'CONNECTED' || conn.authStatus === 'AUTHORIZED'
                             ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : conn.connectionHealth === 'DISCONNECTED'
+                            : conn.authStatus === 'TOKEN_EXPIRED'
+                            ? 'bg-amber-100 text-amber-800 border border-amber-300 animate-pulse'
+                            : conn.authStatus === 'REVOKED' || conn.authStatus === 'DISCONNECTED'
                             ? 'bg-slate-100 text-slate-600 border border-slate-300'
                             : 'bg-rose-50 text-rose-700 border border-rose-200'
                         }`}>
-                          {conn.connectionHealth}
+                          {conn.authStatus}
                         </span>
+                        {conn.credentialWarning && (
+                          <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-amber-50 text-amber-700 border border-amber-200">
+                            Token Expiring Soon
+                          </span>
+                        )}
                       </div>
 
                       <div className="text-xs text-slate-600 flex flex-wrap gap-x-4 gap-y-1">
@@ -375,7 +492,11 @@ export const UniversalEmailConnections: React.FC = () => {
                         <span><strong>Owner:</strong> {conn.accountOwner}</span>
                         <span><strong>Department:</strong> {conn.department}</span>
                         <span><strong>Auth:</strong> {conn.authMethod}</span>
+                        <span><strong>Inbound/Outbound:</strong> {conn.incomingMessageCount} / {conn.outgoingMessageCount || 0}</span>
                         <span><strong>Cursor:</strong> {conn.syncCursor || 'Initial'} ({conn.cursorType || 'N/A'})</span>
+                        {conn.syncFailureCount ? (
+                          <span className="text-rose-600 font-semibold">Failures: {conn.syncFailureCount}</span>
+                        ) : null}
                       </div>
                     </div>
 
@@ -398,17 +519,40 @@ export const UniversalEmailConnections: React.FC = () => {
                       </button>
 
                       <button
-                        onClick={() => {
-                          if (descriptor) {
-                            setInspectCapabilities({
-                              provider: conn.provider,
-                              capabilities: descriptor.capabilities,
-                            });
-                          }
-                        }}
-                        className="px-3 py-1.5 text-xs font-medium bg-indigo-50 hover:bg-indigo-100 text-indigo-700 rounded-lg transition-colors"
+                        onClick={() => handleInspectFolders(conn)}
+                        className="px-3 py-1.5 text-xs font-medium bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-lg transition-colors"
                       >
-                        Capabilities
+                        Folders
+                      </button>
+
+                      <button
+                        onClick={() => handleInspectEvidence(conn)}
+                        className="px-3 py-1.5 text-xs font-medium bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg transition-colors"
+                      >
+                        Evidence
+                      </button>
+
+                      <button
+                        onClick={() => handleRunAiTriage(conn)}
+                        className="px-3 py-1.5 text-xs font-medium bg-amber-50 hover:bg-amber-100 text-amber-800 rounded-lg transition-colors"
+                      >
+                        AI Triage
+                      </button>
+
+                      {conn.authMethod === 'OAUTH2' && (
+                        <button
+                          onClick={() => handleRefreshToken(conn.id)}
+                          className="px-3 py-1.5 text-xs font-medium bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-lg transition-colors"
+                        >
+                          Refresh Token
+                        </button>
+                      )}
+
+                      <button
+                        onClick={() => handleRevokeToken(conn.id)}
+                        className="px-3 py-1.5 text-xs font-medium bg-rose-50 hover:bg-rose-100 text-rose-800 rounded-lg transition-colors"
+                      >
+                        Revoke
                       </button>
 
                       <button
@@ -816,6 +960,148 @@ export const UniversalEmailConnections: React.FC = () => {
             <div className="text-right pt-2">
               <button
                 onClick={() => setInspectCapabilities(null)}
+                className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-medium"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Evidence History Inspection Modal */}
+      {inspectEvidence && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-slate-200 p-6 space-y-4 animate-fade-in max-h-[85vh] flex flex-col">
+            <div className="flex items-center justify-between border-b pb-3">
+              <div>
+                <h4 className="font-bold text-slate-900 text-base">Provider Verification Evidence</h4>
+                <p className="text-xs text-slate-500 font-mono">{inspectEvidence.mailboxEmail}</p>
+              </div>
+              <button
+                onClick={() => setInspectEvidence(null)}
+                className="text-slate-400 hover:text-slate-700 text-sm font-bold"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto space-y-3 pr-1 text-xs">
+              {inspectEvidence.evidenceHistory.length === 0 ? (
+                <div className="p-4 text-center text-slate-400">No evidence recorded yet.</div>
+              ) : (
+                inspectEvidence.evidenceHistory.map((ev, idx) => (
+                  <div key={idx} className="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                    <div className="flex items-center justify-between font-bold text-slate-800">
+                      <span>Status: {ev.state}</span>
+                      <span className="text-[10px] text-slate-500 font-mono">{new Date(ev.timestamp).toLocaleString()}</span>
+                    </div>
+                    <div><strong>Latency:</strong> {ev.roundTripLatencyMs}ms · <strong>TLS:</strong> {ev.tlsVersion} ({ev.cipherSuite})</div>
+                    <div><strong>DNS:</strong> {ev.dnsResolution}</div>
+                    <div className="text-slate-600">{ev.diagnosticsDetail}</div>
+                  </div>
+                ))
+              )}
+            </div>
+            <div className="text-right pt-2 border-t">
+              <button
+                onClick={() => setInspectEvidence(null)}
+                className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-medium"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Folder Inspection Modal */}
+      {inspectFolders && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-slate-200 p-6 space-y-4 animate-fade-in">
+            <div className="flex items-center justify-between border-b pb-3">
+              <div>
+                <h4 className="font-bold text-slate-900 text-base">Folder Inspection</h4>
+                <p className="text-xs text-slate-500 font-mono">{inspectFolders.mailboxEmail}</p>
+              </div>
+              <button
+                onClick={() => setInspectFolders(null)}
+                className="text-slate-400 hover:text-slate-700 text-sm font-bold"
+              >
+                ✕
+              </button>
+            </div>
+            <div className="space-y-2 text-xs max-h-72 overflow-y-auto">
+              {inspectFolders.folders.map((f) => (
+                <div key={f.id} className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                  <div>
+                    <span className="font-semibold text-slate-800">{f.name}</span>
+                    <span className="text-[10px] text-slate-500 ml-2 font-mono">({f.type})</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="font-bold text-slate-900">{f.totalMessageCount} msgs</span>
+                    {f.unreadMessageCount > 0 && (
+                      <span className="ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] bg-teal-100 text-teal-800 font-bold">
+                        {f.unreadMessageCount} new
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <div className="text-right pt-2 border-t">
+              <button
+                onClick={() => setInspectFolders(null)}
+                className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-medium"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* AI Triage & Recommendation Modal */}
+      {triageModal && (
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 p-6 space-y-4 animate-fade-in">
+            <div className="flex items-center justify-between border-b pb-3">
+              <div>
+                <h4 className="font-bold text-slate-900 text-base">AI Governed Triage Inspection</h4>
+                <p className="text-xs text-slate-500 font-mono">{triageModal.mailboxEmail}</p>
+              </div>
+              <button
+                onClick={() => setTriageModal(null)}
+                className="text-slate-400 hover:text-slate-700 text-sm font-bold"
+              >
+                ✕
+              </button>
+            </div>
+            {triageModal.result && (
+              <div className="space-y-3 text-xs">
+                <div className="p-3 bg-teal-50 border border-teal-200 rounded-xl space-y-1">
+                  <div><strong>Classified Category:</strong> {triageModal.result.category}</div>
+                  <div><strong>Assigned Priority:</strong> {triageModal.result.priority}</div>
+                  <div><strong>Recommended Department:</strong> {triageModal.result.suggestedDepartment}</div>
+                  <div>
+                    <strong>Safeguarding Air-Gap:</strong>{' '}
+                    <span className={triageModal.result.isSafeguarding ? 'text-rose-700 font-bold' : 'text-slate-700'}>
+                      {triageModal.result.isSafeguarding ? 'ENFORCED (Category 01 Isolated)' : 'Standard Pipeline'}
+                    </span>
+                  </div>
+                </div>
+                {triageModal.result.aiDraftSuggestion && (
+                  <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+                    <div className="font-bold text-slate-800">AI Suggested Draft (Subject to Human Approval):</div>
+                    <div className="text-slate-600 font-mono whitespace-pre-line text-[11px]">
+                      {triageModal.result.aiDraftSuggestion}
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+            <div className="text-right pt-2 border-t">
+              <button
+                onClick={() => setTriageModal(null)}
                 className="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-xl text-xs font-medium"
               >
                 Close

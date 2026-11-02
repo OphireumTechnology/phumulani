@@ -55,7 +55,7 @@ export class MicrosoftConnector implements EmailConnector {
       connectionId,
       provider: 'MICROSOFT',
       mailboxEmail: this.mailboxEmail,
-      status: 'OAUTH_AUTHORIZED',
+      status: 'AUTHORIZED',
       details: 'Microsoft Graph OAuth 2.0 Azure AD consent granted.',
       authenticatedAt: new Date().toISOString(),
     };
