@@ -24,6 +24,8 @@ import {
   EnterpriseOperationsMonitoring,
   AdministratorRecoveryType,
   AdministratorRecoveryResult,
+  Phase59ProviderVerificationStatus,
+  EvidenceBackedProviderVerificationResult,
 } from '../types/emailEnterprise';
 
 export type GoogleWorkspaceAuthStatus =
@@ -220,6 +222,18 @@ export class GoogleWorkspaceAdapter {
   private syncAuditLogs: Array<{ id: string; mailboxEmail: string; action: string; timestamp: string; details: string; status: 'success' | 'warning' | 'error' }> = [];
   private dispatchedIdempotencyKeys: Set<string> = new Set();
   private deliveryStates: Map<string, { state: EmailDeliveryState; timestamp: string; notes?: string }> = new Map();
+  private recoverySnapshots: Map<
+    string,
+    {
+      recoveryLogId: string;
+      mailboxEmail: string;
+      action: AdministratorRecoveryType;
+      priorStatus: GoogleWorkspaceAuthStatus;
+      priorCursor: string;
+      priorDeliveryStates: Map<string, { state: EmailDeliveryState; timestamp: string; notes?: string }>;
+      timestamp: string;
+    }
+  > = new Map();
 
   public static getInstance(): GoogleWorkspaceAdapter {
     if (!GoogleWorkspaceAdapter.instance) {
@@ -2508,7 +2522,7 @@ export class GoogleWorkspaceAdapter {
     action: AdministratorRecoveryType,
     actor: { id: string; name: string; role: string },
     reason: string,
-    options?: { dryRun?: boolean }
+    options?: { dryRun?: boolean; targetRecoveryLogId?: string }
   ): AdministratorRecoveryResult {
     const key = mailboxEmail.toLowerCase();
     const timestamp = new Date().toISOString();
@@ -2539,9 +2553,26 @@ export class GoogleWorkspaceAdapter {
       throw new Error('CROSS_MAILBOX_ACCESS_DENIED: Safeguarding recovery restricted to authorized safeguarding lead.');
     }
 
+    // Handle ROLLBACK_RECOVERY action directly
+    if (action === 'ROLLBACK_RECOVERY') {
+      const targetLogId = options?.targetRecoveryLogId || Array.from(this.recoverySnapshots.keys()).pop();
+      if (!targetLogId) {
+        throw new Error('RECOVERY_ROLLBACK_FAILED: No prior recovery snapshot found to rollback.');
+      }
+      return this.rollbackAdministratorRecovery(targetLogId, actor, reason);
+    }
+
     const mbx = this.mailboxes.find((m) => m.email.toLowerCase() === key);
     let recoveredState = 'HEALTHY';
     let details = '';
+
+    // Snapshot state before mutation if not a dry-run
+    const snapshotDeliveryStates = new Map<string, { state: EmailDeliveryState; timestamp: string; notes?: string }>();
+    for (const [dispId, val] of this.deliveryStates.entries()) {
+      snapshotDeliveryStates.set(dispId, { ...val });
+    }
+    const priorStatus = mbx ? mbx.status : ('AUTHORIZATION_REQUIRED' as GoogleWorkspaceAuthStatus);
+    const priorCursor = this.getSyncCursor(key);
 
     switch (action) {
       case 'RESET_RATE_LIMIT': {
@@ -2633,6 +2664,16 @@ export class GoogleWorkspaceAdapter {
       : `log-recov-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
 
     if (!isDryRun) {
+      this.recoverySnapshots.set(auditLogId, {
+        recoveryLogId: auditLogId,
+        mailboxEmail: key,
+        action,
+        priorStatus,
+        priorCursor,
+        priorDeliveryStates: snapshotDeliveryStates,
+        timestamp,
+      });
+
       this.syncAuditLogs.unshift({
         id: auditLogId,
         mailboxEmail: key,
@@ -2652,6 +2693,209 @@ export class GoogleWorkspaceAdapter {
       timestamp,
       auditLogId,
       dryRun: isDryRun,
+    };
+  }
+
+  /**
+   * M59.15 & M59.23: Recovery rollback mechanism.
+   * Atomically reverts a prior administrator recovery action to its exact pre-recovery snapshot.
+   */
+  public rollbackAdministratorRecovery(
+    targetRecoveryLogId: string,
+    actor: { id: string; name: string; role: string },
+    reason: string
+  ): AdministratorRecoveryResult {
+    const timestamp = new Date().toISOString();
+
+    // 1. Mandatory audit reason verification (Fail-closed)
+    if (!reason || typeof reason !== 'string' || !reason.trim()) {
+      throw new Error('AUDIT REQUIREMENT: Explicit recovery reason is mandatory.');
+    }
+
+    // 2. Elevated administrator role verification (Fail-closed)
+    const normalizedRole = (actor.role || '').toLowerCase();
+    const allowedRoles = [
+      'super_admin',
+      'executive_director',
+      'platform_super_admin',
+      'system_administrator',
+      'staff_lead',
+      'it_admin',
+      'safeguarding_lead',
+    ];
+    if (!allowedRoles.includes(normalizedRole)) {
+      throw new Error('PERMISSION_DENIED: Elevated administrator role required for operational recovery.');
+    }
+
+    // 3. Find target snapshot
+    const snapshot = this.recoverySnapshots.get(targetRecoveryLogId);
+    if (!snapshot) {
+      throw new Error(`RECOVERY_SNAPSHOT_NOT_FOUND: No recovery snapshot found for log ID "${targetRecoveryLogId}".`);
+    }
+
+    // 4. Cross-mailbox safeguarding isolation (Anti-IDOR)
+    if (snapshot.mailboxEmail.toLowerCase() === 'safeguarding@phumulani.org' && normalizedRole !== 'safeguarding_lead') {
+      throw new Error('CROSS_MAILBOX_ACCESS_DENIED: Safeguarding recovery restricted to authorized safeguarding lead.');
+    }
+
+    const key = snapshot.mailboxEmail.toLowerCase();
+    const mbx = this.mailboxes.find((m) => m.email.toLowerCase() === key);
+
+    // 5. Atomic restore of prior state
+    if (mbx) {
+      mbx.status = snapshot.priorStatus;
+    }
+    this.syncCursors.set(key, snapshot.priorCursor);
+    this.deliveryStates = new Map(snapshot.priorDeliveryStates);
+
+    const auditLogId = `log-rollback-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+    const details = `Rolled back recovery action "${snapshot.action}" (log: ${targetRecoveryLogId}) for ${snapshot.mailboxEmail}. Restored status to ${snapshot.priorStatus}, cursor to ${snapshot.priorCursor}. Executed by ${actor.name} (${actor.role}). Reason: ${reason}`;
+
+    this.syncAuditLogs.unshift({
+      id: auditLogId,
+      mailboxEmail: key,
+      action: 'ADMIN_RECOVERY_ROLLBACK',
+      details,
+      status: 'warning',
+      timestamp,
+    });
+
+    return {
+      success: true,
+      mailboxEmail: key,
+      action: 'ROLLBACK_RECOVERY',
+      recoveredState: `ROLLED_BACK_TO_${snapshot.priorStatus}`,
+      details,
+      timestamp,
+      auditLogId,
+      targetRecoveryLogId,
+      dryRun: false,
+    };
+  }
+
+  /**
+   * M59.06: Evidence-backed provider verification service.
+   * Truthfully distinguishes exact provider states:
+   * NOT_CONFIGURED, CONFIGURED_UNVERIFIED, AUTHORIZATION_REQUIRED, OAUTH_AUTHORIZED,
+   * PROVIDER_CONNECTED, PROVIDER_ERROR, TOKEN_EXPIRED, REVOKED.
+   * Only reports PROVIDER_CONNECTED after authenticated Google API operation succeeds.
+   */
+  public getEvidenceBackedProviderVerification(
+    mailboxEmail: string = this.pilotMailbox
+  ): EvidenceBackedProviderVerificationResult {
+    const key = mailboxEmail.toLowerCase();
+    const timestamp = new Date().toISOString();
+    const mbx = this.mailboxes.find(
+      (m) => m.email.toLowerCase() === key || (key === 'board@phumulani.org' && m.email === 'governance@phumulani.org')
+    );
+    const isMockClient = !this.config.clientId || this.config.clientId === 'phumulani-stage-client-id';
+
+    if (!mbx && !GoogleWorkspaceAdapter.CANONICAL_10_ORGANIZATIONAL_MAILBOXES.includes(key)) {
+      return {
+        mailboxEmail: key,
+        status: 'NOT_CONFIGURED',
+        isLiveConnected: false,
+        isMockClient,
+        evidenceSource: 'NONE',
+        lastVerificationTimestamp: timestamp,
+        failureReason: `Mailbox "${mailboxEmail}" is not configured in organizational register.`,
+        recommendedAction: 'Add mailbox to canonical organizational inventory.',
+      };
+    }
+
+    if (mbx?.status === 'REVOKED') {
+      return {
+        mailboxEmail: key,
+        status: 'REVOKED',
+        isLiveConnected: false,
+        isMockClient,
+        evidenceSource: 'SECURE_VAULT',
+        lastVerificationTimestamp: timestamp,
+        failureReason: 'OAuth credentials and delegation revoked by administrator.',
+        recommendedAction: 'Re-initiate administrator OAuth consent to restore authorization.',
+      };
+    }
+
+    if (mbx?.status === 'ERROR' || mbx?.status === 'DEGRADED') {
+      return {
+        mailboxEmail: key,
+        status: 'PROVIDER_ERROR',
+        isLiveConnected: false,
+        isMockClient,
+        evidenceSource: 'SECURE_VAULT',
+        lastVerificationTimestamp: timestamp,
+        failureReason: 'Provider gateway returned an error or degraded handshake.',
+        recommendedAction: 'Execute CLEAR_ERROR_STATE recovery or verify Google API endpoints.',
+      };
+    }
+
+    const hasTokens = this.secureTokenVault.has(key);
+    if (hasTokens) {
+      const health = this.getTokenHealth(key);
+      if (health.status === 'EXPIRED') {
+        return {
+          mailboxEmail: key,
+          status: 'TOKEN_EXPIRED',
+          isLiveConnected: false,
+          isMockClient,
+          evidenceSource: 'SECURE_VAULT',
+          lastVerificationTimestamp: timestamp,
+          failureReason: 'OAuth 2.0 access and refresh tokens have expired.',
+          recommendedAction: 'Trigger token refresh handshake or re-authenticate.',
+        };
+      }
+
+      // Check for authentic live provider evidence:
+      const liveEvidence = this.evidenceRegistry.find(
+        (e) => e.mailboxEmail.toLowerCase() === key && e.category === 'PROVIDER_CONNECTED'
+      );
+
+      if (!isMockClient && liveEvidence) {
+        return {
+          mailboxEmail: key,
+          status: 'PROVIDER_CONNECTED',
+          isLiveConnected: true,
+          isMockClient: false,
+          evidenceSource: 'LIVE_GOOGLE_WORKSPACE_API',
+          lastVerificationTimestamp: timestamp,
+          verifiedOperation: liveEvidence.detail,
+        };
+      }
+
+      return {
+        mailboxEmail: key,
+        status: 'OAUTH_AUTHORIZED',
+        isLiveConnected: false,
+        isMockClient,
+        evidenceSource: 'SECURE_VAULT',
+        lastVerificationTimestamp: timestamp,
+        verifiedOperation: 'OAuth credentials verified in secure vault (staged development).',
+        recommendedAction: 'Awaiting production Google Cloud project provisioning for live verification.',
+      };
+    }
+
+    if (isMockClient) {
+      return {
+        mailboxEmail: key,
+        status: 'CONFIGURED_UNVERIFIED',
+        isLiveConnected: false,
+        isMockClient: true,
+        evidenceSource: 'STAGED_MOCK_FIXTURE',
+        lastVerificationTimestamp: timestamp,
+        failureReason: 'Mailbox configured in staging but pending live Google Workspace provider connection.',
+        recommendedAction: 'Complete 12-Step Setup Wizard and execute OAuth administrator onboarding.',
+      };
+    }
+
+    return {
+      mailboxEmail: key,
+      status: 'AUTHORIZATION_REQUIRED',
+      isLiveConnected: false,
+      isMockClient: false,
+      evidenceSource: 'NONE',
+      lastVerificationTimestamp: timestamp,
+      failureReason: 'No OAuth tokens present in secure vault.',
+      recommendedAction: 'Initiate OAuth authorization flow via /api/admin/email/mailboxes/:email/auth/start.',
     };
   }
 

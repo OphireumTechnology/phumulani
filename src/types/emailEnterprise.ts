@@ -1222,7 +1222,8 @@ export type AdministratorRecoveryType =
   | 'CLEAR_ERROR_STATE'
   | 'RESET_SYNC_CURSOR'
   | 'RECONCILE_STUCK_DISPATCH'
-  | 'RESYNC_FULL_CHECKPOINT';
+  | 'RESYNC_FULL_CHECKPOINT'
+  | 'ROLLBACK_RECOVERY';
 
 export interface AdministratorRecoveryResult {
   success: boolean;
@@ -1233,7 +1234,34 @@ export interface AdministratorRecoveryResult {
   timestamp: string;
   auditLogId: string;
   dryRun?: boolean;
+  targetRecoveryLogId?: string;
   error?: string;
+}
+
+// =============================================================================
+// PHASE 59: REAL PROVIDER VERIFICATION & EVIDENCE-BACKED SERVICE (M59.06)
+// =============================================================================
+
+export type Phase59ProviderVerificationStatus =
+  | 'NOT_CONFIGURED'
+  | 'CONFIGURED_UNVERIFIED'
+  | 'AUTHORIZATION_REQUIRED'
+  | 'OAUTH_AUTHORIZED'
+  | 'PROVIDER_CONNECTED'
+  | 'PROVIDER_ERROR'
+  | 'TOKEN_EXPIRED'
+  | 'REVOKED';
+
+export interface EvidenceBackedProviderVerificationResult {
+  mailboxEmail: string;
+  status: Phase59ProviderVerificationStatus;
+  isLiveConnected: boolean;
+  isMockClient: boolean;
+  evidenceSource: 'LIVE_GOOGLE_WORKSPACE_API' | 'STAGED_MOCK_FIXTURE' | 'SECURE_VAULT' | 'NONE';
+  lastVerificationTimestamp: string;
+  verifiedOperation?: string;
+  failureReason?: string;
+  recommendedAction?: string;
 }
 
 

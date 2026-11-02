@@ -4717,7 +4717,7 @@ app.get('/api/admin/operations/monitoring', (req: Request, res: Response) => {
 app.post('/api/admin/email/recovery/execute', (req: Request, res: Response) => {
   try {
     const actor = getEmailAdminActor(req);
-    const { mailboxEmail, action, reason, dryRun } = req.body || {};
+    const { mailboxEmail, action, reason, dryRun, targetRecoveryLogId } = req.body || {};
     if (!mailboxEmail || !action) {
       return res.status(400).json({ success: false, error: 'mailboxEmail and action are required.' });
     }
@@ -4726,13 +4726,23 @@ app.post('/api/admin/email/recovery/execute', (req: Request, res: Response) => {
       action,
       { id: actor.id, name: actor.name, role: actor.role },
       reason,
-      { dryRun: !!dryRun }
+      { dryRun: !!dryRun, targetRecoveryLogId }
     );
     res.json({ success: true, recovery: result });
   } catch (err: any) {
     const isPermissionError = err.message.includes('CROSS_MAILBOX') || err.message.includes('PERMISSION_DENIED');
     const status = isPermissionError ? 403 : 400;
     res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+// 48. Phase 59 Evidence-Backed Provider Verification (M59.06)
+app.get('/api/admin/email/mailboxes/:email/provider-verification', (req: Request, res: Response) => {
+  try {
+    const verification = googleWorkspaceAdapter.getEvidenceBackedProviderVerification(req.params.email);
+    res.json({ success: true, verification });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
   }
 });
 // VITE SPA DEV MIDDLEWARE / STATIC SERVING
