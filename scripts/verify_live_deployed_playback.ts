@@ -188,7 +188,7 @@ async function verifyLiveSite() {
 
           console.log(`[${result.viewport}] Video element state:`, playbackState);
 
-          if (playbackState && playbackState.foundVideoTag) {
+          if (playbackState.foundVideoTag && 'paused' in playbackState && typeof playbackState.paused === 'boolean' && 'currentTime' in playbackState && typeof playbackState.currentTime === 'number' && 'duration' in playbackState && typeof playbackState.duration === 'number') {
             if (!playbackState.paused || playbackState.currentTime > 0) {
               result.playbackStarted = true;
               // wait another 2 seconds to confirm progression
