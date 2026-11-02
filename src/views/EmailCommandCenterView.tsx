@@ -40,6 +40,7 @@ import {
 } from '../types/emailEnterprise';
 import { EmailEnterpriseService } from '../services/emailEnterpriseService';
 import { googleWorkspaceAdapter } from '../services/googleWorkspaceAdapter';
+import { UniversalEmailConnections } from '../components/email/UniversalEmailConnections';
 import {
   Mail,
   Inbox,
@@ -138,7 +139,8 @@ export type EmailCommandCenterTab =
   | 'autoresponders'
   | 'fundraising'
   | 'partnerships'
-  | 'setup_wizard';
+  | 'setup_wizard'
+  | 'universal_connectors';
 
 interface EmailCommandCenterViewProps {
   currentUser: User;
@@ -1486,6 +1488,21 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             <span>12-Step Setup Wizard</span>
             <span className="px-1.5 py-0.2 rounded-full text-[9px] font-mono bg-amber-200 text-amber-900 font-bold">
               12 Steps
+            </span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('universal_connectors')}
+            className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer border ${
+              activeTab === 'universal_connectors'
+                ? 'bg-teal-900 text-white border-teal-700 shadow-xs'
+                : 'bg-emerald-50/80 text-emerald-900 border-emerald-200 hover:bg-emerald-100'
+            }`}
+          >
+            <Share2 className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Universal Connectors</span>
+            <span className="px-1.5 py-0.2 rounded-full text-[9px] font-mono bg-emerald-200 text-emerald-900 font-bold">
+              Phase 60
             </span>
           </button>
         </div>
@@ -4321,6 +4338,14 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
           </div>
         )}
 
+        {/* ========================================================================= */}
+        {/* TAB: UNIVERSAL EMAIL CONNECTOR FRAMEWORK (PHASE 60 M60.01 - M60.15)       */}
+        {/* ========================================================================= */}
+        {activeTab === 'universal_connectors' && (
+          <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5">
+            <UniversalEmailConnections />
+          </div>
+        )}
 
         {/* ========================================================================= */}
         {/* TAB 2: AUTO-RESPONDER CENTER (AR01 - AR10) */}

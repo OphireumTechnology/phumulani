@@ -38,6 +38,7 @@ import { db } from './src/services/db';
 import { EmailEnterpriseService } from './src/services/emailEnterpriseService';
 import { googleWorkspaceAdapter } from './src/services/googleWorkspaceAdapter';
 import { EMAIL_TEMPLATES, type ConversationStatus, type QuadActionReviewType } from './src/types/emailEnterprise';
+import { connectorRegistry, PROVIDER_DESCRIPTORS } from './src/services/connectors';
 
 dotenv.config();
 
@@ -4745,6 +4746,252 @@ app.get('/api/admin/email/mailboxes/:email/provider-verification', (req: Request
     res.status(400).json({ success: false, error: err.message });
   }
 });
+
+// =============================================================================
+// PHASE 60 — UNIVERSAL EMAIL CONNECTOR FRAMEWORK ENDPOINTS (M60.01 - M60.15)
+// =============================================================================
+
+// 49. Provider Descriptors & Capability Catalog
+app.get('/api/admin/email/connectors/providers', (_req: Request, res: Response) => {
+  try {
+    res.json({ success: true, providers: PROVIDER_DESCRIPTORS });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 50. Automatic Provider Discovery
+app.post('/api/admin/email/connectors/discover', (req: Request, res: Response) => {
+  try {
+    const { emailAddress } = req.body || {};
+    if (!emailAddress) {
+      return res.status(400).json({ success: false, error: 'emailAddress is required for provider discovery.' });
+    }
+    const discovery = connectorRegistry.discoverProvider(emailAddress);
+    res.json({ success: true, discovery });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 51. List All Configured Email Connections
+app.get('/api/admin/email/connectors', (_req: Request, res: Response) => {
+  try {
+    const connections = connectorRegistry.listConnections();
+    res.json({ success: true, count: connections.length, connections });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 52. Register New Email Connection
+app.post('/api/admin/email/connectors', async (req: Request, res: Response) => {
+  try {
+    const { emailAddress, provider, displayName, accountOwner, department, authMethod, credentials, safeguardingClassification } = req.body || {};
+    if (!emailAddress || !provider) {
+      return res.status(400).json({ success: false, error: 'emailAddress and provider are required.' });
+    }
+
+    const created = await connectorRegistry.registerConnection(
+      {
+        emailAddress,
+        provider,
+        displayName,
+        accountOwner,
+        department,
+        authMethod,
+        safeguardingClassification,
+      },
+      credentials
+    );
+
+    res.json({ success: true, connection: created });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 53. Get Single Connection Record
+app.get('/api/admin/email/connectors/:id', (req: Request, res: Response) => {
+  try {
+    const connection = connectorRegistry.getConnection(req.params.id);
+    if (!connection) {
+      return res.status(404).json({ success: false, error: 'Connection not found.' });
+    }
+    res.json({ success: true, connection });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 54. Update Connection Configuration
+app.patch('/api/admin/email/connectors/:id', (req: Request, res: Response) => {
+  try {
+    const updated = connectorRegistry.updateConnection(req.params.id, req.body);
+    if (!updated) {
+      return res.status(404).json({ success: false, error: 'Connection not found.' });
+    }
+    res.json({ success: true, connection: updated });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 55. Delete Connection
+app.delete('/api/admin/email/connectors/:id', (req: Request, res: Response) => {
+  try {
+    const success = connectorRegistry.deleteConnection(req.params.id);
+    if (!success) {
+      return res.status(404).json({ success: false, error: 'Connection not found.' });
+    }
+    res.json({ success: true, deletedId: req.params.id });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 56. Verify Connection Health
+app.post('/api/admin/email/connectors/:id/verify', async (req: Request, res: Response) => {
+  try {
+    const health = await connectorRegistry.verifyConnection(req.params.id);
+    res.json({ success: true, health });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 57. Trigger Connection Synchronization
+app.post('/api/admin/email/connectors/:id/sync', async (req: Request, res: Response) => {
+  try {
+    const syncResult = await connectorRegistry.syncConnection(req.params.id);
+    res.json({ success: syncResult.success, syncResult });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 58. Disconnect Connection
+app.post('/api/admin/email/connectors/:id/disconnect', async (req: Request, res: Response) => {
+  try {
+    const disconnected = await connectorRegistry.disconnectConnection(req.params.id);
+    res.json({ success: disconnected });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 59. Reconnect Connection
+app.post('/api/admin/email/connectors/:id/reconnect', async (req: Request, res: Response) => {
+  try {
+    const reconnected = await connectorRegistry.reconnectConnection(req.params.id);
+    res.json({ success: reconnected });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 60. Get Connection Folders
+app.get('/api/admin/email/connectors/:id/folders', async (req: Request, res: Response) => {
+  try {
+    const connector = connectorRegistry.getConnectorInstance(req.params.id);
+    if (!connector) {
+      return res.status(404).json({ success: false, error: 'Connector not found.' });
+    }
+    const folders = await connector.listFolders();
+    res.json({ success: true, folders });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 61. List Messages for Connection
+app.get('/api/admin/email/connectors/:id/messages', async (req: Request, res: Response) => {
+  try {
+    const connection = connectorRegistry.getConnection(req.params.id);
+    const connector = connectorRegistry.getConnectorInstance(req.params.id);
+    if (!connection || !connector) {
+      return res.status(404).json({ success: false, error: 'Connection or connector not found.' });
+    }
+    const messages = await connector.listMessages({
+      connectionId: connection.id,
+      mailboxEmail: connection.emailAddress,
+    });
+    res.json({ success: true, count: messages.length, messages });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 62. Get Connection Capabilities
+app.get('/api/admin/email/connectors/:id/capabilities', async (req: Request, res: Response) => {
+  try {
+    const connector = connectorRegistry.getConnectorInstance(req.params.id);
+    if (!connector) {
+      return res.status(404).json({ success: false, error: 'Connector not found.' });
+    }
+    const capabilities = await connector.getCapabilities();
+    res.json({ success: true, capabilities });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// 63. Get Audit Events for Connection
+app.get('/api/admin/email/connectors/:id/audit', (req: Request, res: Response) => {
+  try {
+    const events = connectorRegistry.getAuditEvents(req.params.id);
+    res.json({ success: true, count: events.length, events });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// 64. Universal Outbound Dispatch with Quad-Action & Anti-AI Self-Approval Guard
+app.post('/api/admin/email/connectors/:id/dispatch', async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const { id, recipientEmails, subject, bodyText, bodyHtml, idempotencyKey, approvalVersion } = req.body || {};
+
+    if (!recipientEmails || !subject || !bodyText || !idempotencyKey) {
+      return res.status(400).json({
+        success: false,
+        error: 'recipientEmails, subject, bodyText, and idempotencyKey are required.',
+      });
+    }
+
+    const connection = connectorRegistry.getConnection(req.params.id);
+    if (!connection) {
+      return res.status(404).json({ success: false, error: 'Connection not found.' });
+    }
+
+    const dispatchResult = await connectorRegistry.dispatchApprovedMessage({
+      id: id || `disp-${Date.now()}`,
+      connectionId: req.params.id,
+      senderAccount: connection.emailAddress,
+      recipientEmails: Array.isArray(recipientEmails) ? recipientEmails : [recipientEmails],
+      subject,
+      bodyText,
+      bodyHtml,
+      idempotencyKey,
+      approvedByUserId: actor.id,
+      approvedByName: actor.name,
+      approvedAt: new Date().toISOString(),
+      approvalVersion: approvalVersion || 1,
+      deliveryState: 'APPROVED',
+    });
+
+    if (!dispatchResult.success) {
+      return res.status(400).json(dispatchResult);
+    }
+    res.json(dispatchResult);
+  } catch (err: any) {
+    const isSafeguarding = err.message.includes('SAFEGUARDING_AIR_GAP_VIOLATION');
+    const status = isSafeguarding ? 403 : 400;
+    res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+// -----------------------------------------------------------------------------
 // VITE SPA DEV MIDDLEWARE / STATIC SERVING
 // -----------------------------------------------------------------------------
 
