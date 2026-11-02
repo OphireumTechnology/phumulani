@@ -180,7 +180,7 @@ export class AutomatedTestRunner {
         // Verify founder and published works
         const founderProgram = state.programs.find((p) => p.name.includes('Mentorship') || p.name.includes('Advocacy') || p.name.includes('Healing') || p.name.includes('Tea'));
         if (!founderProgram) throw new Error('Core community and mentorship programs missing.');
-        return 'Homepage loads successfully: 19 authentic media assets verified, founder spotlight active, Vimeo player (ID 874129503) embedded, and Safe Exit configured to weather.com.';
+        return 'Homepage loads successfully: 19 authentic media assets verified, founder spotlight active, Vimeo player (ID 355031901) embedded, and Safe Exit configured to weather.com.';
       }
     );
 

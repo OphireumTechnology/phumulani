@@ -204,7 +204,7 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
       domain: 'Public Website and CMS',
       status: 'VERIFIED FUNCTIONAL',
       classification: 'PUBLIC',
-      evidence: 'Hero section, Comfort Dondo biography, 3 books showcase, Vimeo ID 874129503 embed, Safe Exit to weather.com verified.',
+      evidence: 'Hero section, Comfort Dondo biography, 3 books showcase, Vimeo ID 355031901 embed, Safe Exit to weather.com verified.',
       responsibleOfficer: 'Comfort Dondo (CEO)',
     },
     {
