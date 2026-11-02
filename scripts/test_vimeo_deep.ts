@@ -75,7 +75,7 @@ async function testVimeoPlayback() {
         };
       }).catch(err => ({ evalError: err.message }));
       console.log(`Sec ${i}:`, state);
-      if (state && !state.paused && state.currentTime > 0) {
+      if ('paused' in state && typeof state.paused === 'boolean' && 'currentTime' in state && typeof state.currentTime === 'number' && !state.paused && state.currentTime > 0) {
         console.log('PLAYBACK CONFIRMED ACTIVE! Current time:', state.currentTime);
         break;
       }
