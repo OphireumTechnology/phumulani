@@ -41,6 +41,11 @@ import {
 import { EmailEnterpriseService } from '../services/emailEnterpriseService';
 import { googleWorkspaceAdapter } from '../services/googleWorkspaceAdapter';
 import { UniversalEmailConnections } from '../components/email/UniversalEmailConnections';
+import { EmailCompactHeader } from '../components/email/EmailCompactHeader';
+import { EmailSummaryStrip } from '../components/email/EmailSummaryStrip';
+import { EmailSidebar } from '../components/email/EmailSidebar';
+import { EmailMessageList } from '../components/email/EmailMessageList';
+import { EmailReadingPane } from '../components/email/EmailReadingPane';
 import {
   Mail,
   Inbox,
@@ -204,8 +209,12 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
   // Action Notice Banner
   const [actionNotice, setActionNotice] = useState<{ type: 'success' | 'warning' | 'info'; message: string } | null>(null);
 
+  // Phase 60.1 Staff-First Responsive Workspace State
+  const [mobileScreen, setMobileScreen] = useState<'folders' | 'list' | 'detail'>('list');
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   // Quick filter pills
-  const [quickFilter, setQuickFilter] = useState<'all' | 'p0' | 'needs_reply' | 'awaiting_approval' | 'donors' | 'unassigned'>('all');
+  const [quickFilter, setQuickFilter] = useState<'all' | 'p0' | 'needs_reply' | 'awaiting_approval' | 'donors' | 'unassigned' | 'unread' | 'priority' | 'assigned_to_me'>('all');
 
   // Draft editing state
   const [isEditingDraft, setIsEditingDraft] = useState(false);
@@ -342,6 +351,9 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
         // Quick filter pill check
         if (quickFilter === 'p0' && t.priority !== 'P0') return false;
+        if (quickFilter === 'priority' && t.priority !== 'P0' && t.priority !== 'P1') return false;
+        if (quickFilter === 'unread' && t.isRead) return false;
+        if (quickFilter === 'assigned_to_me' && t.assignedStaffId !== currentUser.id && t.assignedStaffName !== currentUser.name) return false;
         if (quickFilter === 'needs_reply') {
           const lastMsg = t.messages[t.messages.length - 1];
           if (!lastMsg || lastMsg.direction !== 'inbound' || t.status === 'resolved') return false;
@@ -1060,591 +1072,112 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
   return (
     <div className="min-h-screen bg-[#F4F6F8] flex flex-col font-sans text-slate-800">
-      {/* 1. MASTER EMAIL COMMAND CENTER TOP HEADER */}
-      <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-xs">
-        <div className="px-4 py-2.5 flex flex-wrap items-center justify-between gap-3">
-          {/* Left: Department Identity */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={() => onBackToMasterAdmin ? onBackToMasterAdmin() : onViewChange('master-admin')}
-              className="p-1.5 rounded-lg text-slate-500 hover:text-teal-900 hover:bg-slate-100 transition-colors flex items-center gap-1 text-xs font-semibold"
-              title="Return to Master Administrator Command Center"
-            >
-              <ChevronRight className="w-4 h-4 rotate-180" />
-              <span>Master Admin</span>
-            </button>
-            <div className="h-5 w-px bg-slate-200" />
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-[#104F57] text-white flex items-center justify-center shadow-xs">
-                <Mail className="w-4 h-4" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <span className="font-serif font-bold text-slate-900 text-sm tracking-tight">
-                    PHUMULANI — AI EMAIL COMMAND CENTER
-                  </span>
-                  <span className="text-[10px] font-mono font-bold bg-teal-100 text-teal-900 border border-teal-300 px-2 py-0.2 rounded-full uppercase">
-                    P0 Operations
-                  </span>
-                </div>
-                <p className="text-[11px] text-slate-500">
-                  Live Enterprise Communications · Fundraising Intelligence · Executive Office
-                </p>
-              </div>
-            </div>
-          </div>
+      {/* 1. COMPACT HEADER (Area A) */}
+      <EmailCompactHeader
+        currentUser={currentUser}
+        mailboxes={mailboxes}
+        selectedMailboxId={selectedMailboxId}
+        onMailboxChange={(id) => {
+          setSelectedMailboxId(id);
+          if (activeTab === 'mailboxes') {
+            setActiveTab('all_mailboxes');
+          }
+        }}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+        unreadCount={analytics.unreadCount}
+        pendingApprovalsCount={analytics.draftsAwaitingApprovalCount}
+        onOpenCompose={() => setIsComposeOpen(true)}
+        onSyncMailbox={handleSyncMailbox}
+        onBackToMasterAdmin={onBackToMasterAdmin ? onBackToMasterAdmin : () => onViewChange('master-admin')}
+        onOpenSettings={() => setActiveTab('settings')}
+        onOpenAuditLogs={() => setIsAuditLogsModalOpen(true)}
+      />
 
-          {/* Center: Mailbox Selector */}
-          <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-xl text-xs">
-            <Inbox className="w-3.5 h-3.5 text-teal-800" />
-            <span className="font-semibold text-slate-600 hidden md:inline">Mailbox:</span>
-            <select
-              value={selectedMailboxId}
-              onChange={(e) => setSelectedMailboxId(e.target.value)}
-              className="bg-transparent font-medium text-slate-800 focus:outline-hidden cursor-pointer"
-            >
-              <option value="all">All Mailboxes ({mailboxes.length} Connected)</option>
-              {mailboxes.map((mbx) => (
-                <option key={mbx.id} value={mbx.id}>
-                  {mbx.email} ({mbx.department})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Right: Actions, AI Status & Compose */}
+      {/* Action Notice Alert */}
+      {actionNotice && (
+        <div
+          className={`px-4 py-2 text-xs font-medium border-b flex items-center justify-between ${
+            actionNotice.type === 'success'
+              ? 'bg-emerald-50 text-emerald-900 border-emerald-200'
+              : actionNotice.type === 'warning'
+              ? 'bg-amber-50 text-amber-900 border-amber-200'
+              : 'bg-blue-50 text-blue-900 border-blue-200'
+          }`}
+        >
           <div className="flex items-center gap-2">
-            {/* AI Workforce Status Pill */}
-            <div className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 bg-emerald-50 border border-emerald-200 rounded-full text-xs font-semibold text-emerald-800">
-              <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-              <span>A02 Email Manager Active</span>
-              <span className="text-[10px] bg-emerald-200/60 px-1 rounded font-mono">Supervised</span>
-            </div>
-
-            {/* Compose Button */}
-            <button
-              onClick={() => setIsComposeOpen(true)}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
-            >
-              <Plus className="w-3.5 h-3.5" />
-              <span>New Email</span>
-            </button>
-
-            {/* Sync Active Mailbox */}
-            <button
-              onClick={() => handleSyncMailbox(selectedMailboxId === 'all' ? 'mbx-info' : selectedMailboxId)}
-              className="p-1.5 text-slate-600 hover:text-teal-900 border border-slate-200 hover:bg-slate-50 rounded-lg transition-colors cursor-pointer"
-              title="Synchronize Mailbox with Google Workspace Gateway"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-
-        {/* Action Notice Alert */}
-        {actionNotice && (
-          <div
-            className={`px-4 py-2 text-xs font-medium border-t flex items-center justify-between ${
-              actionNotice.type === 'success'
-                ? 'bg-emerald-50 text-emerald-900 border-emerald-200'
-                : actionNotice.type === 'warning'
-                ? 'bg-amber-50 text-amber-900 border-amber-200'
-                : 'bg-blue-50 text-blue-900 border-blue-200'
-            }`}
-          >
-            <div className="flex items-center gap-2">
-              {actionNotice.type === 'success' ? (
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              ) : actionNotice.type === 'warning' ? (
-                <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
-              ) : (
-                <AlertCircle className="w-4 h-4 text-blue-600 shrink-0" />
-              )}
-              <span>{actionNotice.message}</span>
-            </div>
-            <button
-              onClick={() => setActionNotice(null)}
-              className="text-slate-400 hover:text-slate-600 cursor-pointer"
-            >
-              <XCircle className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        )}
-      </header>
-
-      {/* 2. 12 VERIFIED KPI METRICS CARDS */}
-      <section className="bg-white border-b border-slate-200 px-4 py-3">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
-          {/* Card 1: Total Incoming */}
-          <div className="bg-[#F8FAFB] border border-slate-200/80 rounded-xl p-2.5 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-slate-500 text-[11px] font-medium">
-              <span>Total Incoming</span>
-              <Mail className="w-3.5 h-3.5 text-teal-800" />
-            </div>
-            <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="text-xl font-bold text-slate-900">{analytics.totalIncoming}</span>
-              <span className="text-[10px] text-teal-700 font-semibold">Live Threads</span>
-            </div>
-          </div>
-
-          {/* Card 2: Unread Messages */}
-          <div className="bg-[#F8FAFB] border border-slate-200/80 rounded-xl p-2.5 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-slate-500 text-[11px] font-medium">
-              <span>Unread Messages</span>
-              <Inbox className="w-3.5 h-3.5 text-blue-600" />
-            </div>
-            <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="text-xl font-bold text-blue-900">{analytics.unreadCount}</span>
-              <span className="text-[10px] text-blue-700 font-semibold">Triage Ready</span>
-            </div>
-          </div>
-
-          {/* Card 3: Critical P0 */}
-          <div className="bg-rose-50/60 border border-rose-200 rounded-xl p-2.5 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-rose-700 text-[11px] font-bold">
-              <span>Critical (P0)</span>
-              <ShieldAlert className="w-3.5 h-3.5 text-rose-600" />
-            </div>
-            <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="text-xl font-bold text-rose-900">{analytics.criticalP0Count}</span>
-              <span className="text-[10px] text-rose-700 font-semibold">Safeguarding / &lt;1h</span>
-            </div>
-          </div>
-
-          {/* Card 4: Urgent P1 */}
-          <div className="bg-orange-50/60 border border-orange-200 rounded-xl p-2.5 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-orange-700 text-[11px] font-bold">
-              <span>Urgent (P1)</span>
-              <Clock className="w-3.5 h-3.5 text-orange-600" />
-            </div>
-            <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="text-xl font-bold text-orange-900">{analytics.urgentP1Count}</span>
-              <span className="text-[10px] text-orange-700 font-semibold">Grants & Exec / &lt;4h</span>
-            </div>
-          </div>
-
-          {/* Card 5: AI Drafts Awaiting Approval */}
-          <div className="bg-amber-50/60 border border-amber-200 rounded-xl p-2.5 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-amber-800 text-[11px] font-bold">
-              <span>Drafts Awaiting Approval</span>
-              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-            </div>
-            <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="text-xl font-bold text-amber-900">{analytics.draftsAwaitingApprovalCount}</span>
-              <span className="text-[10px] text-amber-700 font-semibold">Human In Loop</span>
-            </div>
-          </div>
-
-          {/* Card 6: Overdue Follow-ups */}
-          <div className="bg-[#F8FAFB] border border-slate-200/80 rounded-xl p-2.5 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-slate-500 text-[11px] font-medium">
-              <span>Overdue Follow-ups</span>
-              <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
-            </div>
-            <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="text-xl font-bold text-slate-900">{analytics.overdueFollowUpsCount}</span>
-              <span className="text-[10px] text-emerald-700 font-semibold">On Track</span>
-            </div>
-          </div>
-
-          {/* Card 7: Active Donor Conversations */}
-          <div className="bg-[#F8FAFB] border border-slate-200/80 rounded-xl p-2.5 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-slate-500 text-[11px] font-medium">
-              <span>Active Donors</span>
-              <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
-            </div>
-            <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="text-xl font-bold text-slate-900">{analytics.activeDonorConversations}</span>
-              <span className="text-[10px] text-emerald-700 font-semibold">Relationships</span>
-            </div>
-          </div>
-
-          {/* Card 8: Active Fundraising Pipeline */}
-          <div className="bg-[#F8FAFB] border border-slate-200/80 rounded-xl p-2.5 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-slate-500 text-[11px] font-medium">
-              <span>Major Gifts Pipeline</span>
-              <TrendingUp className="w-3.5 h-3.5 text-teal-700" />
-            </div>
-            <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="text-xl font-bold text-teal-900">${(pipeline.reduce((s, p) => s + p.estimatedAmount, 0) / 1000).toFixed(0)}k</span>
-              <span className="text-[10px] text-slate-500 font-semibold">{pipeline.length} Deals</span>
-            </div>
-          </div>
-
-          {/* Card 9: Upcoming Grant Deadlines */}
-          <div className="bg-[#F8FAFB] border border-slate-200/80 rounded-xl p-2.5 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-slate-500 text-[11px] font-medium">
-              <span>Active Grants</span>
-              <Award className="w-3.5 h-3.5 text-indigo-600" />
-            </div>
-            <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="text-xl font-bold text-indigo-900">{analytics.upcomingGrantDeadlines}</span>
-              <span className="text-[10px] text-indigo-700 font-semibold">${(grants.reduce((s, g) => s + g.fundingAmount, 0) / 1000).toFixed(0)}k Total</span>
-            </div>
-          </div>
-
-          {/* Card 10: Scheduled Meetings */}
-          <div className="bg-[#F8FAFB] border border-slate-200/80 rounded-xl p-2.5 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-slate-500 text-[11px] font-medium">
-              <span>Executive Calendar</span>
-              <Calendar className="w-3.5 h-3.5 text-purple-600" />
-            </div>
-            <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="text-xl font-bold text-purple-900">{calendarProposals.length}</span>
-              <span className="text-[10px] text-purple-700 font-semibold">Coordinated</span>
-            </div>
-          </div>
-
-          {/* Card 11: Auto-Responders Sent */}
-          <div className="bg-[#F8FAFB] border border-slate-200/80 rounded-xl p-2.5 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-slate-500 text-[11px] font-medium">
-              <span>Auto-Responders</span>
-              <Send className="w-3.5 h-3.5 text-teal-600" />
-            </div>
-            <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="text-xl font-bold text-slate-900">{analytics.autoResponsesSentTotal}</span>
-              <span className="text-[10px] text-teal-700 font-semibold">AR01-AR10 Rules</span>
-            </div>
-          </div>
-
-          {/* Card 12: Processing Errors */}
-          <div className="bg-emerald-50/40 border border-emerald-200/70 rounded-xl p-2.5 flex flex-col justify-between">
-            <div className="flex items-center justify-between text-emerald-800 text-[11px] font-semibold">
-              <span>Fail-Closed Status</span>
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-            </div>
-            <div className="mt-1 flex items-baseline gap-1.5">
-              <span className="text-xl font-bold text-emerald-900">0 Errors</span>
-              <span className="text-[10px] text-emerald-700 font-semibold">100% Operational</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. NAVIGATION SUB-TABS (Section 6 Mandated Views + Operations) */}
-      <div className="bg-white border-b border-slate-200 px-4 py-1.5 space-y-1">
-        {/* Row 1: Unified Mailbox Views */}
-        <div className="flex items-center gap-1 overflow-x-auto scrollbar-none text-xs font-semibold">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold px-1 shrink-0">
-            Mail Views:
-          </span>
-
-          <button
-            onClick={() => setActiveTab('all_mailboxes')}
-            className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer ${
-              activeTab === 'all_mailboxes'
-                ? 'bg-[#104F57] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <Inbox className="w-3.5 h-3.5" />
-            <span>All Mailboxes</span>
-            <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${activeTab === 'all_mailboxes' ? 'bg-teal-800 text-teal-100' : 'bg-slate-200 text-slate-700'}`}>
-              {threads.filter((t) => !t.isArchived).length}
-            </span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('historical')}
-            className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer ${
-              activeTab === 'historical'
-                ? 'bg-[#104F57] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <History className="w-3.5 h-3.5 text-indigo-500" />
-            <span>Historical Emails</span>
-            <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${activeTab === 'historical' ? 'bg-teal-800 text-teal-100' : 'bg-indigo-100 text-indigo-800'}`}>
-              {threads.filter((t) => t.isHistorical || t.messages.some((m) => m.isHistorical)).length}
-            </span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('new_emails')}
-            className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer ${
-              activeTab === 'new_emails'
-                ? 'bg-[#104F57] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5 text-blue-500" />
-            <span>New Emails</span>
-            <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${activeTab === 'new_emails' ? 'bg-teal-800 text-teal-100' : 'bg-blue-100 text-blue-800'}`}>
-              {threads.filter((t) => !t.isHistorical && (t.status === 'new' || t.status === 'triage_ready' || t.isRead === false)).length}
-            </span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('priority')}
-            className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer ${
-              activeTab === 'priority'
-                ? 'bg-[#104F57] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />
-            <span>Priority Inbox</span>
-            <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${activeTab === 'priority' ? 'bg-teal-800 text-teal-100' : 'bg-rose-100 text-rose-800'}`}>
-              {threads.filter((t) => t.priority === 'P0' || t.priority === 'P1').length} P0/P1
-            </span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('donors')}
-            className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer ${
-              activeTab === 'donors'
-                ? 'bg-[#104F57] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <DollarSign className="w-3.5 h-3.5 text-emerald-500" />
-            <span>Donor Emails</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('grants')}
-            className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer ${
-              activeTab === 'grants'
-                ? 'bg-[#104F57] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <Award className="w-3.5 h-3.5 text-indigo-500" />
-            <span>Grant Emails</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('corporate')}
-            className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer ${
-              activeTab === 'corporate'
-                ? 'bg-[#104F57] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <Building className="w-3.5 h-3.5 text-teal-500" />
-            <span>Corporate Emails</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('executive')}
-            className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer ${
-              activeTab === 'executive'
-                ? 'bg-[#104F57] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <UserCheck className="w-3.5 h-3.5 text-purple-500" />
-            <span>Executive Emails</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('sent')}
-            className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer ${
-              activeTab === 'sent'
-                ? 'bg-[#104F57] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <Send className="w-3.5 h-3.5 text-slate-500" />
-            <span>Sent Emails</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('archived')}
-            className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer ${
-              activeTab === 'archived'
-                ? 'bg-[#104F57] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <Archive className="w-3.5 h-3.5 text-slate-500" />
-            <span>Archived Emails</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('synchronization')}
-            className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer border ${
-              activeTab === 'synchronization'
-                ? 'bg-teal-900 text-white border-teal-700 shadow-xs'
-                : 'bg-teal-50/80 text-teal-900 border-teal-200 hover:bg-teal-100'
-            }`}
-          >
-            <Activity className="w-3.5 h-3.5 text-teal-600" />
-            <span>Sync Management</span>
-            <span className="px-1.5 py-0.2 rounded-full text-[9px] font-mono bg-teal-200 text-teal-900 font-bold">
-              5 Mailboxes
-            </span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('setup_wizard')}
-            className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer border ${
-              activeTab === 'setup_wizard'
-                ? 'bg-amber-800 text-white border-amber-600 shadow-xs'
-                : 'bg-amber-50/80 text-amber-900 border-amber-200 hover:bg-amber-100'
-            }`}
-          >
-            <Wrench className="w-3.5 h-3.5 text-amber-600" />
-            <span>12-Step Setup Wizard</span>
-            <span className="px-1.5 py-0.2 rounded-full text-[9px] font-mono bg-amber-200 text-amber-900 font-bold">
-              12 Steps
-            </span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('universal_connectors')}
-            className={`px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer border ${
-              activeTab === 'universal_connectors'
-                ? 'bg-teal-900 text-white border-teal-700 shadow-xs'
-                : 'bg-emerald-50/80 text-emerald-900 border-emerald-200 hover:bg-emerald-100'
-            }`}
-          >
-            <Share2 className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Universal Connectors</span>
-            <span className="px-1.5 py-0.2 rounded-full text-[9px] font-mono bg-emerald-200 text-emerald-900 font-bold">
-              Phase 60
-            </span>
-          </button>
-        </div>
-
-        {/* Row 2: Department Operations */}
-        <div className="flex items-center gap-1 overflow-x-auto scrollbar-none text-xs font-semibold pt-1 border-t border-slate-100">
-          <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold px-1 shrink-0">
-            Operations:
-          </span>
-
-          <button
-            onClick={() => setActiveTab('approvals')}
-            className={`px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer ${
-              activeTab === 'approvals'
-                ? 'bg-[#104F57] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>AI Drafts & Approvals</span>
-            {analytics.draftsAwaitingApprovalCount > 0 && (
-              <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono bg-amber-500 text-white">
-                {analytics.draftsAwaitingApprovalCount}
-              </span>
+            {actionNotice.type === 'success' ? (
+              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            ) : actionNotice.type === 'warning' ? (
+              <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+            ) : (
+              <AlertCircle className="w-4 h-4 text-blue-600 shrink-0" />
             )}
-          </button>
-
+            <span>{actionNotice.message}</span>
+          </div>
           <button
-            onClick={() => setActiveTab('autoresponders')}
-            className={`px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer ${
-              activeTab === 'autoresponders'
-                ? 'bg-[#104F57] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
+            onClick={() => setActionNotice(null)}
+            className="text-slate-400 hover:text-slate-600 cursor-pointer"
+            aria-label="Dismiss alert"
           >
-            <Sliders className="w-3.5 h-3.5" />
-            <span>Auto-Responders (AR01–AR10)</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('analytics')}
-            className={`px-2.5 py-1 rounded-lg flex items-center gap-1.5 transition-colors whitespace-nowrap cursor-pointer ${
-              activeTab === 'analytics'
-                ? 'bg-[#104F57] text-white shadow-xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
-            }`}
-          >
-            <BarChart2 className="w-3.5 h-3.5" />
-            <span>Communications Intelligence</span>
+            <XCircle className="w-3.5 h-3.5" />
           </button>
         </div>
-      </div>
+      )}
 
-      {/* 4. MAIN WORKSPACE 3-PANEL CONTAINER (Milestone 23.01) */}
-      <div className="flex-1 overflow-hidden p-4 flex flex-col md:flex-row gap-4">
-        {/* PANEL 1: LEFT NAVIGATION SIDEBAR (16 Working Sections with Unread Badges) */}
-        <aside className="w-full md:w-56 xl:w-64 bg-white border border-slate-200 rounded-2xl flex flex-col shadow-xs overflow-hidden shrink-0">
-          <div className="p-3 border-b border-slate-100 bg-slate-50/70">
-            <div className="flex items-center justify-between text-xs mb-1.5">
-              <span className="font-bold text-slate-800 flex items-center gap-1.5">
-                <Layers className="w-3.5 h-3.5 text-teal-800" />
-                <span>Mail Workspace</span>
-              </span>
-              <span className="text-[10px] font-mono bg-teal-50 text-teal-900 border border-teal-200 px-1.5 py-0.2 rounded font-semibold">
-                16 Sections
-              </span>
-            </div>
-            {/* Quick Mailbox Switcher Dropdown */}
-            <select
-              value={selectedMailboxId}
-              onChange={(e) => {
-                setSelectedMailboxId(e.target.value);
-                if (activeTab === 'mailboxes') {
-                  setActiveTab('all_mailboxes');
-                }
-              }}
-              className="w-full bg-white border border-slate-200 rounded-lg p-1.5 text-[11px] font-medium text-slate-700 cursor-pointer"
-            >
-              <option value="all">All 5 Mailboxes</option>
-              {mailboxes.map((mbx) => (
-                <option key={mbx.id} value={mbx.id}>
-                  {mbx.email}
-                </option>
-              ))}
-            </select>
-          </div>
+      {/* 2. COMPACT SUMMARY STRIP (Replaces 12-card grid) */}
+      <EmailSummaryStrip
+        unreadCount={analytics.unreadCount}
+        priorityCount={analytics.criticalP0Count + analytics.urgentP1Count}
+        awaitingApprovalCount={analytics.draftsAwaitingApprovalCount}
+        followUpsCount={analytics.overdueFollowUpsCount}
+        activeFilter={quickFilter}
+        onFilterClick={(filter) => {
+          if (filter === 'priority') {
+            setActiveTab('priority');
+            setQuickFilter('p0');
+          } else if (filter === 'awaiting_approval') {
+            setActiveTab('approvals');
+            setQuickFilter('awaiting_approval');
+          } else if (filter === 'follow_ups') {
+            setActiveTab('follow_up_tasks');
+          } else if (filter === 'unread') {
+            setActiveTab('all_mailboxes');
+            setQuickFilter('unread');
+          } else {
+            setActiveTab('all_mailboxes');
+            setQuickFilter('all');
+          }
+        }}
+      />
 
-          <div className="flex-1 overflow-y-auto p-2 space-y-1">
-            <div className="px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-400 font-bold">
-              16 Mandated Sections (M48.01)
-            </div>
-            {[
-              { num: '01', id: 'overview', label: 'Email Overview', icon: LayoutDashboard, badgeText: 'Live', color: 'text-teal-700' },
-              { num: '02', id: 'all_mailboxes', label: 'Unified Inbox', icon: Inbox, count: threads.filter((t) => !t.isArchived).length, color: 'text-teal-800' },
-              { num: '03', id: 'mailboxes', label: 'Organizational Mailboxes', icon: Mail, count: `${mailboxes.length} Mbx`, color: 'text-teal-700' },
-              { num: '04', id: 'conversations', label: 'Inbox Conversations', icon: MessageSquare, count: threads.filter((t) => !t.isArchived && t.folder !== 'SENT').length, color: 'text-blue-600' },
-              { num: '05', id: 'sent', label: 'Sent Messages', icon: Send, count: threads.filter((t) => t.folder === 'SENT' || t.messages.some((m) => m.direction === 'outbound')).length, color: 'text-slate-600' },
-              { num: '06', id: 'drafts', label: 'Draft Messages', icon: FileText, count: threads.filter((t) => Boolean(t.draft)).length, color: 'text-amber-600' },
-              { num: '07', id: 'approvals', label: 'Pending Approvals', icon: FileCheck, count: threads.filter((t) => t.draft?.status === 'pending_approval').length, badgeText: `${threads.filter((t) => t.draft?.status === 'pending_approval').length} Gate`, color: 'text-amber-600' },
-              { num: '08', id: 'assigned_to_me', label: 'Assigned Conversations', icon: UserIcon, count: threads.filter((t) => t.assignedStaffId === currentUser.id || t.assignedStaffName === currentUser.name).length, color: 'text-blue-600' },
-              { num: '09', id: 'follow_up_tasks', label: 'Follow-Up Tasks', icon: CheckSquare, count: followUps.filter((f) => f.status === 'pending').length, color: 'text-emerald-600' },
-              { num: '10', id: 'templates', label: 'Email Templates', icon: BookOpen, count: '12 Tmpl', color: 'text-indigo-600' },
-              { num: '11', id: 'crm_connections', label: 'Contacts and CRM', icon: DollarSign, count: `${donors.length} CRM`, color: 'text-emerald-600' },
-              { num: '12', id: 'ai_intelligence', label: 'AI Email Assistant', icon: Sparkles, count: '25 Cats', color: 'text-teal-600' },
-              { num: '13', id: 'analytics', label: 'Email Analytics', icon: BarChart2, count: '99.4%', color: 'text-indigo-600' },
-              { num: '14', id: 'audit_history', label: 'Audit Logs', icon: ShieldCheck, count: `${syncAuditLogs.length} Evt`, color: 'text-rose-700' },
-              { num: '15', id: 'settings', label: 'Email Settings', icon: Settings, count: 'Config', color: 'text-slate-600' },
-              { num: '16', id: 'synchronization', label: 'Google Workspace Integration', icon: Activity, count: 'OAuth', color: 'text-teal-800' },
-              { num: '17', id: 'setup_wizard', label: '12-Step Setup Wizard', icon: Wrench, count: '12 Steps', color: 'text-amber-700' },
-            ].map((item) => {
-              const Icon = item.icon;
-              const isActive = activeTab === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id as EmailCommandCenterTab)}
-                  className={`w-full px-2 py-1.5 rounded-xl flex items-center justify-between text-xs font-semibold transition-colors cursor-pointer ${
-                    isActive ? 'bg-[#104F57] text-white shadow-2xs' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
-                  }`}
-                  title={`${item.num}. ${item.label}`}
-                >
-                  <div className="flex items-center gap-1.5 truncate">
-                    <span className={`text-[10px] font-mono font-bold w-4 ${isActive ? 'text-teal-200' : 'text-slate-400'}`}>
-                      {item.num}
-                    </span>
-                    <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-white' : item.color}`} />
-                    <span className="truncate">{item.label}</span>
-                  </div>
-                  <span
-                    className={`text-[9px] font-mono px-1.5 py-0.2 rounded-full shrink-0 ${
-                      isActive ? 'bg-teal-900/90 text-teal-100' : 'bg-slate-100 text-slate-600'
-                    }`}
-                  >
-                    {item.badgeText ?? item.count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </aside>
+      {/* 3. MAIN WORKSPACE CONTAINER */}
+      <div className="flex-1 overflow-hidden p-3 md:p-4 flex flex-col md:flex-row gap-3 md:gap-4">
+        {/* AREA B: COLLAPSIBLE SIDEBAR */}
+        <div
+          className={`${
+            mobileScreen === 'folders' ? 'block' : 'hidden md:block'
+          } shrink-0`}
+        >
+          <EmailSidebar
+            currentUser={currentUser}
+            activeTab={activeTab}
+            onTabSelect={(tab) => {
+              setActiveTab(tab);
+              setMobileScreen('list');
+            }}
+            unreadCount={analytics.unreadCount}
+            priorityCount={analytics.criticalP0Count + analytics.urgentP1Count}
+            draftsCount={threads.filter((t) => Boolean(t.draft)).length}
+            approvalsCount={analytics.draftsAwaitingApprovalCount}
+            followUpsCount={analytics.overdueFollowUpsCount}
+            sentCount={threads.filter((t) => t.folder === 'SENT' || t.messages.some((m) => m.direction === 'outbound')).length}
+            isCollapsed={!isSidebarOpen}
+            onToggleCollapse={() => setIsSidebarOpen(!isSidebarOpen)}
+          />
+        </div>
 
-        {/* WORKSPACE CONTENT: PANELS 2 & 3 */}
+        {/* WORKSPACE CONTENT: INBOX PANELS (AREAS C & D) */}
         {(activeTab === 'all_mailboxes' ||
           activeTab === 'conversations' ||
           activeTab === 'historical' ||
@@ -1660,841 +1193,114 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
           activeTab === 'executive' ||
           activeTab === 'sent' ||
           activeTab === 'archived') && (
-          <div className="flex-1 flex flex-col lg:flex-row gap-4 overflow-hidden">
-            {/* Center Thread List (Panel 2) */}
-            <div className="w-full lg:w-96 bg-white border border-slate-200 rounded-2xl flex flex-col shadow-xs overflow-hidden shrink-0">
-              {/* Filter / Search Bar with Quick Filter Pills */}
-              <div className="p-3 border-b border-slate-200 space-y-2 bg-slate-50/50">
-                <div className="relative">
-                  <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
-                  <input
-                    type="text"
-                    placeholder="Search threads, senders, keywords..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-9 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-xl focus:outline-hidden focus:border-teal-700"
-                  />
-                </div>
-
-                {/* Quick Filter Pills (Milestone 23.02) */}
-                <div className="flex items-center gap-1 overflow-x-auto pb-0.5 text-[10px] scrollbar-none">
-                  {[
-                    { id: 'all', label: 'All' },
-                    { id: 'p0', label: 'P0 Emergency' },
-                    { id: 'needs_reply', label: 'Needs Reply' },
-                    { id: 'awaiting_approval', label: 'Awaiting Approval' },
-                    { id: 'donors', label: 'Donors' },
-                    { id: 'unassigned', label: 'Unassigned' },
-                  ].map((pill) => (
-                    <button
-                      key={pill.id}
-                      onClick={() => setQuickFilter(pill.id as any)}
-                      className={`px-2 py-0.5 rounded-full font-semibold whitespace-nowrap transition-colors cursor-pointer ${
-                        quickFilter === pill.id
-                          ? 'bg-[#104F57] text-white shadow-2xs'
-                          : 'bg-slate-100 hover:bg-slate-200 text-slate-600'
-                      }`}
-                    >
-                      {pill.label}
-                    </button>
-                  ))}
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <div className="flex-1">
-                    <select
-                      value={priorityFilter}
-                      onChange={(e) => setPriorityFilter(e.target.value)}
-                      className="w-full text-[11px] font-semibold bg-white border border-slate-200 rounded-lg p-1.5 text-slate-700"
-                    >
-                      <option value="all">All Priorities</option>
-                      <option value="P0">P0 — Critical (&lt;1h)</option>
-                      <option value="P1">P1 — Urgent (&lt;4h)</option>
-                      <option value="P2">P2 — High (&lt;24h)</option>
-                      <option value="P3">P3 — Normal (&lt;48h)</option>
-                      <option value="P4">P4 — Low (&lt;72h)</option>
-                    </select>
-                  </div>
-                  <div className="flex-1">
-                    <select
-                      value={categoryFilter}
-                      onChange={(e) => setCategoryFilter(e.target.value)}
-                      className="w-full text-[11px] font-semibold bg-white border border-slate-200 rounded-lg p-1.5 text-slate-700 truncate"
-                    >
-                      <option value="all">All 25 Categories</option>
-                      {Object.entries(EMAIL_CATEGORY_METADATA).map(([catKey, meta]) => (
-                        <option key={catKey} value={catKey}>
-                          {meta.code} {meta.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-              </div>
-
-              {/* Thread List Items */}
-              <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
-                {filteredThreads.length === 0 ? (
-                  <div className="p-8 text-center text-slate-400 text-xs">
-                    <Inbox className="w-8 h-8 mx-auto mb-2 opacity-40" />
-                    <p>No messages match active filters.</p>
-                  </div>
-                ) : (
-                  filteredThreads.map((thread) => {
-                    const isSelected = thread.id === selectedThreadId;
-                    const meta = EMAIL_CATEGORY_METADATA[thread.classification];
-                    const priorityCfg = PRIORITY_CONFIG[thread.priority];
-                    const isSafeguarding = thread.classification === '01_safeguarding';
-
-                    return (
-                      <div
-                        key={thread.id}
-                        onClick={() => setSelectedThreadId(thread.id)}
-                        className={`p-3 cursor-pointer transition-all ${
-                          isSelected
-                            ? 'bg-teal-50/70 border-l-4 border-[#104F57]'
-                            : 'hover:bg-slate-50'
-                        } ${isSafeguarding ? 'bg-rose-50/30' : ''}`}
-                      >
-                        <div className="flex items-center justify-between gap-1 mb-1">
-                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${priorityCfg.badgeColor}`}>
-                            {priorityCfg.label.split('—')[0].trim()}
-                          </span>
-                          <span className="text-[10px] font-mono text-slate-400">
-                            {new Date(thread.lastMessageAt).toLocaleDateString([], {
-                              month: 'short',
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit',
-                            })}
-                          </span>
-                        </div>
-
-                        <div className="font-semibold text-xs text-slate-900 line-clamp-1">
-                          {thread.threadSubject}
-                        </div>
-
-                        <div className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
-                          {thread.participantEmails.join(', ')}
-                        </div>
-
-                        <div className="flex items-center justify-between mt-2 pt-1 border-t border-slate-100/80 text-[10px]">
-                          <span className="font-mono text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded">
-                            {meta?.code} {meta?.label.substring(0, 18)}...
-                          </span>
-                          {thread.draft && thread.draft.status === 'pending_approval' && (
-                            <span className="text-amber-700 bg-amber-100 font-bold px-1.5 py-0.2 rounded-full">
-                              Draft Ready
-                            </span>
-                          )}
-                          {thread.draft && thread.draft.status === 'approved' && (
-                            <span className="text-emerald-700 bg-emerald-100 font-bold px-1.5 py-0.2 rounded-full">
-                              Approved
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })
-                )}
-              </div>
+          <div className="flex-1 flex flex-col md:flex-row gap-3 md:gap-4 overflow-hidden min-w-0">
+            {/* AREA C: MESSAGE LIST */}
+            <div
+              className={`w-full md:w-80 xl:w-96 rounded-2xl border border-slate-200 overflow-hidden shadow-2xs shrink-0 ${
+                mobileScreen === 'list' || mobileScreen === 'folders' ? 'flex flex-col' : 'hidden md:flex md:flex-col'
+              }`}
+            >
+              <EmailMessageList
+                threads={filteredThreads}
+                selectedThreadId={selectedThread?.id || null}
+                onSelectThread={(id) => {
+                  setSelectedThreadId(id);
+                  setMobileScreen('detail');
+                }}
+                mailboxes={mailboxes}
+                searchQuery={searchQuery}
+                onSearchChange={setSearchQuery}
+                quickFilter={quickFilter as any}
+                onQuickFilterChange={setQuickFilter}
+                priorityFilter={priorityFilter}
+                onPriorityFilterChange={setPriorityFilter}
+                categoryFilter={categoryFilter}
+                onCategoryFilterChange={setCategoryFilter}
+                selectedMailboxId={selectedMailboxId}
+                onMailboxChange={setSelectedMailboxId}
+                onOpenFolders={() => setMobileScreen('folders')}
+              />
             </div>
 
-            {/* Right Thread Detail & Response Engine (Panel B, C, D) */}
-            {selectedThread ? (
-              <div className="flex-1 bg-white border border-slate-200 rounded-2xl flex flex-col shadow-xs overflow-hidden">
-                {/* Thread Header with Two-Way Synchronization Controls */}
-                <div className="p-4 border-b border-slate-200 bg-slate-50/50 space-y-3">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className={`text-xs font-bold px-2 py-0.5 rounded-full border ${PRIORITY_CONFIG[selectedThread.priority].badgeColor}`}>
-                          {PRIORITY_CONFIG[selectedThread.priority].label}
-                        </span>
-                        <span className="text-xs font-semibold text-slate-600 bg-slate-200/80 px-2 py-0.5 rounded-md">
-                          {EMAIL_CATEGORY_METADATA[selectedThread.classification]?.code} — {EMAIL_CATEGORY_METADATA[selectedThread.classification]?.label}
-                        </span>
-                        <button
-                          onClick={() => {
-                            setReclassifyingThreadId(selectedThread.id);
-                            setNewCategoryTarget(selectedThread.classification);
-                          }}
-                          className="text-[11px] text-teal-800 underline hover:text-teal-950 font-medium cursor-pointer"
-                          title="Correct email classification and submit evaluation feedback"
-                        >
-                          Change Classification
-                        </button>
-                      </div>
-                      <h2 className="text-base font-bold text-slate-900">{selectedThread.threadSubject}</h2>
-                      <div className="text-xs text-slate-500 mt-0.5">
-                        Mailbox: <span className="font-mono font-medium text-slate-700">{selectedThread.mailboxEmail}</span> · Assigned to: <span className="font-semibold text-slate-800">{selectedThread.assignedStaffName || 'Unassigned'}</span> · SLA Target: <span className="font-mono text-slate-700">{new Date(selectedThread.slaDeadline).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
-                      </div>
-                    </div>
-
-                    {/* Right Header Actions: CRM Link & Two-Way Sync Actions */}
-                    <div className="flex flex-wrap items-center gap-2">
-                      {selectedThread.crmLink && (
-                        <div className="bg-teal-50 border border-teal-200 px-3 py-1 rounded-xl text-xs">
-                          <span className="text-[10px] font-bold uppercase text-teal-800 block">
-                            Linked CRM ({selectedThread.crmLink.entityType})
-                          </span>
-                          <span className="font-bold text-teal-950">{selectedThread.crmLink.entityName}</span>
-                        </div>
-                      )}
-
-                      {/* Two-Way Action: Read / Unread */}
-                      <button
-                        onClick={() => handleToggleRead(selectedThread.id, selectedThread.isRead ?? true)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg border border-slate-200 bg-white hover:bg-slate-100 transition-colors text-slate-700 cursor-pointer shadow-2xs"
-                        title="Toggle Read / Unread Status (Two-way sync updates provider)"
-                      >
-                        {selectedThread.isRead ? <Eye className="w-3.5 h-3.5 text-slate-500" /> : <Mail className="w-3.5 h-3.5 text-blue-600" />}
-                        <span>{selectedThread.isRead ? 'Mark Unread' : 'Mark Read'}</span>
-                      </button>
-
-                      {/* Two-Way Action: Archive */}
-                      <button
-                        onClick={() => handleToggleArchive(selectedThread.id, selectedThread.isArchived ?? false)}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-semibold rounded-lg border border-slate-200 bg-white hover:bg-slate-100 transition-colors text-slate-700 cursor-pointer shadow-2xs"
-                        title="Archive or Unarchive thread (Provider folder reflects change)"
-                      >
-                        <Archive className="w-3.5 h-3.5 text-slate-600" />
-                        <span>{selectedThread.isArchived ? 'Unarchive' : 'Archive'}</span>
-                      </button>
-
-                      {/* Two-Way Action: Folder Move */}
-                      <div className="flex items-center gap-1 text-xs">
-                        <select
-                          value={selectedThread.folder || 'INBOX'}
-                          onChange={(e) => handleChangeFolder(selectedThread.id, e.target.value as EmailFolder)}
-                          className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-semibold text-slate-700 cursor-pointer shadow-2xs"
-                        >
-                          <option value="INBOX">Folder: Inbox</option>
-                          <option value="SENT">Folder: Sent</option>
-                          <option value="ARCHIVE">Folder: Archive</option>
-                          <option value="TRASH">Folder: Trash</option>
-                          <option value="SPAM">Folder: Spam</option>
-                          <option value="DRAFTS">Folder: Drafts</option>
-                        </select>
-                      </div>
-
-                      {/* Staff Assignment Selector (Milestone 23.05) */}
-                      <div className="flex items-center gap-1 text-xs">
-                        <UserPlus className="w-3.5 h-3.5 text-slate-400" />
-                        <select
-                          value={selectedThread.assignedStaffName || 'Unassigned'}
-                          onChange={(e) => {
-                            const staff = EMAIL_STAFF_MEMBERS.find((s) => s.name === e.target.value);
-                            if (staff) {
-                              handleAssignStaff(selectedThread.id, staff.id, staff.name);
-                            }
-                          }}
-                          className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs font-semibold text-slate-700 cursor-pointer shadow-2xs"
-                          title="Assign thread to team member"
-                        >
-                          <option value="Unassigned">Assign: Unassigned</option>
-                          {EMAIL_STAFF_MEMBERS.map((st) => (
-                            <option key={st.id} value={st.name}>
-                              Assign: {st.name}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      {/* Quick Communication Actions (Reply, Reply All, Forward, Add Task) */}
-                      <div className="flex items-center gap-1">
-                        <button
-                          onClick={() => handleReplyToThread(selectedThread)}
-                          className="p-1.5 text-slate-700 hover:text-teal-900 border border-slate-200 hover:bg-slate-50 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs"
-                          title="Reply to sender"
-                        >
-                          <Reply className="w-3.5 h-3.5 text-teal-800" />
-                          <span className="hidden sm:inline">Reply</span>
-                        </button>
-                        <button
-                          onClick={() => handleReplyToThread(selectedThread, true)}
-                          className="p-1.5 text-slate-700 hover:text-teal-900 border border-slate-200 hover:bg-slate-50 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs"
-                          title="Reply all"
-                        >
-                          <ReplyAll className="w-3.5 h-3.5 text-slate-600" />
-                          <span className="hidden sm:inline">All</span>
-                        </button>
-                        <button
-                          onClick={() => handleForwardThread(selectedThread)}
-                          className="p-1.5 text-slate-700 hover:text-teal-900 border border-slate-200 hover:bg-slate-50 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs"
-                          title="Forward thread"
-                        >
-                          <Forward className="w-3.5 h-3.5 text-slate-600" />
-                          <span className="hidden sm:inline">Fwd</span>
-                        </button>
-                        <button
-                          onClick={() => {
-                            setNewTaskTitle(`Follow up with ${selectedThread.messages[0]?.senderName || 'contact'} re: ${selectedThread.threadSubject}`);
-                            setIsNewTaskModalOpen(true);
-                          }}
-                          className="p-1.5 text-teal-900 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
-                          title="Create linked follow-up task"
-                        >
-                          <CheckSquare className="w-3.5 h-3.5 text-teal-700" />
-                          <span className="hidden sm:inline">Task</span>
-                        </button>
-                        <button
-                          onClick={() => {
-                            setCrmTargetThreadId(selectedThread.id);
-                            setCrmEntityName(selectedThread.crmLink?.entityName || '');
-                            setCrmEntityId(selectedThread.crmLink?.entityId || '');
-                            setCrmEntityType(selectedThread.crmLink?.entityType || 'donor');
-                            setIsCrmLinkModalOpen(true);
-                          }}
-                          className="p-1.5 text-emerald-900 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
-                          title={selectedThread.crmLink ? `Linked to ${selectedThread.crmLink.entityName}` : 'Link thread to CRM constituent record'}
-                        >
-                          <Users className="w-3.5 h-3.5 text-emerald-700" />
-                          <span className="hidden sm:inline">{selectedThread.crmLink ? 'CRM Linked' : 'Link CRM'}</span>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Provider Synchronization Metadata Strip */}
-                  <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-200/60 text-[11px] text-slate-500">
-                    <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-mono font-medium">
-                      <RefreshCw className="w-3 h-3 text-emerald-600" />
-                      Two-Way Synced
-                    </span>
-                    {selectedThread.isHistorical && (
-                      <span className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-800 border border-indigo-200 font-medium">
-                        <History className="w-3 h-3 text-indigo-600" />
-                        Historical Import · External Auto-Responses Suppressed
-                      </span>
-                    )}
-                    <span className="font-mono text-slate-500">
-                      Provider ID: <strong className="text-slate-700">{selectedThread.providerMessageId || selectedThread.messages[0]?.providerMessageId || 'msg-prov-auto'}</strong>
-                    </span>
-                    {selectedThread.labels && selectedThread.labels.length > 0 && (
-                      <div className="flex items-center gap-1">
-                        <span className="text-slate-400">Labels:</span>
-                        {selectedThread.labels.map((lbl) => (
-                          <span key={lbl} className="bg-slate-200/80 text-slate-700 px-1.5 py-0.2 rounded text-[10px] font-medium">
-                            {lbl}
-                          </span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                {/* Safeguarding Alert Banner if Category 01 */}
-                {selectedThread.classification === '01_safeguarding' && (
-                  <div className="bg-rose-50 border-b border-rose-200 p-4 flex items-start gap-3">
-                    <ShieldAlert className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
-                    <div>
-                      <h4 className="text-xs font-bold text-rose-900 uppercase tracking-wide">
-                        CRITICAL SAFEGUARDING & SURVIVOR ISOLATION BOUNDARY ACTIVE
-                      </h4>
-                      <p className="text-xs text-rose-800 mt-1">
-                        This correspondence involves potential domestic danger or confidential survivor support. General AI auto-replies and automated external drafts are strictly withheld per Architecture Principle 1.4. This record is escalated to Safeguarding Lead Sister Miriam K. for human trauma-informed protocol.
-                      </p>
-                    </div>
-                  </div>
-                )}
-                {/* Fundraising CRM Bridge Panel (Section 5) */}
-                {selectedThread.classification !== '01_safeguarding' && (() => {
-                  const latestMsg = selectedThread.messages[selectedThread.messages.length - 1] || selectedThread.messages[0];
-                  const senderEmail = (latestMsg?.senderEmail || '').trim().toLowerCase();
-                  const fundraisingDonors = db.getFundraisingDonors();
-                  const matchedDonor = fundraisingDonors.find(
-                    (d) => d.email.toLowerCase() === senderEmail
-                  );
-                  const linkedOpps = matchedDonor ? db.getFundraisingOpportunities().filter((o) => o.donorId === matchedDonor.id) : [];
-
-                  return (
-                    <div className="bg-teal-50/70 border-b border-teal-200 p-3 sm:p-4 text-xs">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span className="font-bold text-teal-950 flex items-center gap-1.5">
-                              <DollarSign className="w-4 h-4 text-teal-700" />
-                              Fundraising CRM & Opportunity Bridge
-                            </span>
-                            {matchedDonor ? (
-                              <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-semibold text-[10px] border border-emerald-300">
-                                Matched Contact: {matchedDonor.givingTier}
-                              </span>
-                            ) : (
-                              <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-semibold text-[10px] border border-amber-300">
-                                Unlinked / Prospective Supporter
-                              </span>
-                            )}
-                          </div>
-                          <div className="text-[11px] text-slate-600">
-                            {matchedDonor ? (
-                              <span>
-                                Linked to <strong>{matchedDonor.name}</strong> ({matchedDonor.category.replace(/_/g, ' ')}) · Lifetime Giving: <strong className="text-teal-900">${matchedDonor.lifetimeGiving.toLocaleString()}</strong> · Relationship Owner: <strong>{matchedDonor.relationshipOwner}</strong>
-                              </span>
-                            ) : (
-                              <span>
-                                Inbound correspondence from <span className="font-mono text-slate-800">{latestMsg?.senderEmail}</span> classified as <strong>{EMAIL_CATEGORY_METADATA[selectedThread.classification]?.label}</strong>.
-                              </span>
-                            )}
-                          </div>
-                          {linkedOpps.length > 0 && (
-                            <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                              <span className="text-[10px] font-semibold text-slate-500">Active Opportunities:</span>
-                              {linkedOpps.map((opp) => (
-                                <span key={opp.id} className="text-[10px] font-medium px-2 py-0.5 rounded bg-white border border-teal-200 text-teal-950">
-                                  {opp.title} (${opp.targetAmount.toLocaleString()} · {opp.status.replace(/_/g, ' ')})
-                                </span>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-
-                        <div className="flex flex-wrap items-center gap-2 shrink-0">
-                          {matchedDonor ? (
-                            <button
-                              onClick={() => {
-                                if (onOpenFundraisingCRM) {
-                                  onOpenFundraisingCRM('donors', matchedDonor.id);
-                                } else {
-                                  onViewChange('fundraising');
-                                }
-                              }}
-                              className="px-3 py-1.5 bg-[#104F57] hover:bg-[#0c3d43] text-white font-semibold text-xs rounded-lg shadow-xs flex items-center gap-1 cursor-pointer"
-                              title="Open this donor in the full Fundraising CRM workspace"
-                            >
-                              <span>View Profile in CRM →</span>
-                            </button>
-                          ) : (
-                            <button
-                              onClick={() => {
-                                const res = EmailEnterpriseService.ingestAndLinkFundraisingEmail(selectedThread, latestMsg);
-                                if (res.safeguardingQuarantined) {
-                                  setActionNotice({
-                                    type: 'warning',
-                                    message: 'VAWA SAFEGUARDING QUARANTINE: Ingestion into Fundraising CRM blocked due to confidential crisis indicators.',
-                                  });
-                                  return;
-                                }
-                                if (res.executiveGated) {
-                                  setActionNotice({
-                                    type: 'warning',
-                                    message: 'EXECUTIVE GATING: Executive mailbox correspondence held for Comfort Dondo review.',
-                                  });
-                                  return;
-                                }
-                                if (res.success) {
-                                  setActionNotice({
-                                    type: 'success',
-                                    message: `Successfully linked to Fundraising CRM: ${res.donorName} (${res.isNewDonor ? 'New Contact Created' : 'Existing Contact Updated'}). Opportunity: ${res.opportunityTitle || 'Linked'}.`,
-                                  });
-                                }
-                              }}
-                              className="px-3 py-1.5 bg-[#104F57] hover:bg-[#0c3d43] text-white font-semibold text-xs rounded-lg shadow-xs flex items-center gap-1 cursor-pointer"
-                              title="Ingest message, resolve sender identity, and create CRM opportunity"
-                            >
-                              <Plus className="w-3.5 h-3.5" />
-                              <span>Ingest into Fundraising CRM</span>
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })()}
-
-                {/* Message Stream */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/30">
-                  {selectedThread.messages.map((msg) => {
-                    const isInbound = msg.direction === 'inbound';
-                    return (
-                      <div
-                        key={msg.id}
-                        className={`rounded-2xl p-4 border ${
-                          isInbound
-                            ? 'bg-white border-slate-200 shadow-2xs mr-8'
-                            : 'bg-teal-50/50 border-teal-200 shadow-2xs ml-8'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-2 text-xs">
-                          <div className="flex items-center gap-2">
-                            <span className="font-bold text-slate-900">{msg.senderName}</span>
-                            <span className="text-slate-400 font-mono text-[11px]">&lt;{msg.senderEmail}&gt;</span>
-                            {msg.isAutoResponse && (
-                              <span className="text-[10px] font-bold bg-teal-100 text-teal-800 px-1.5 py-0.2 rounded font-mono">
-                                Auto-Response ({msg.autoResponderRuleId})
-                              </span>
-                            )}
-                          </div>
-                          <span className="text-slate-400 text-[11px] font-mono">
-                            {new Date(msg.receivedAt).toLocaleString()}
-                          </span>
-                        </div>
-                        <div className="text-xs text-slate-800 leading-relaxed whitespace-pre-wrap font-sans">
-                          {selectedThread.classification === '01_safeguarding' &&
-                          currentUser.id !== 'usr-002' &&
-                          (currentUser.role as string) !== 'safeguarding_lead' &&
-                          (currentUser.role as string) !== 'safeguarding_officer' ? (
-                            <div className="bg-rose-50 border border-rose-300 rounded-xl p-3 text-xs text-rose-950 space-y-1">
-                              <div className="flex items-center gap-1.5 font-bold text-rose-900">
-                                <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
-                                <span>CONFIDENTIAL SAFEGUARDING INTAKE — VAWA ISOLATED</span>
-                              </div>
-                              <p className="text-[11px] text-rose-800">
-                                Communication restricted to Sister Miriam K. (DEPT-SAFE). Body text has been redacted pursuant to Phumulani safeguarding invariants.
-                              </p>
-                              <div className="font-mono text-[11px] text-rose-700 bg-rose-100/60 p-2 rounded border border-rose-200 mt-1">
-                                [REDACTED PURSUANT TO VAWA SAFEGUARDING PROTOCOLS — AUTHORIZED OFFICER ACCESS ONLY]
-                              </div>
-                            </div>
-                          ) : (
-                            msg.bodyText
-                          )}
-                        </div>
-
-                        {/* Attachments Section */}
-                        {msg.attachments && msg.attachments.length > 0 && (
-                          <div className="mt-3 pt-2.5 border-t border-slate-100 space-y-1.5">
-                            <span className="text-[11px] font-bold text-slate-600 flex items-center gap-1">
-                              <Paperclip className="w-3.5 h-3.5 text-slate-500" />
-                              Secure Attachments ({msg.attachments.length}):
-                            </span>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                              {msg.attachments.map((att) => (
-                                <div
-                                  key={att.id}
-                                  className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200 text-xs"
-                                >
-                                  <div className="flex items-center gap-2 min-w-0">
-                                    <FileText className="w-4 h-4 text-teal-800 shrink-0" />
-                                    <div className="min-w-0">
-                                      <p className="font-semibold text-slate-900 truncate">{att.filename}</p>
-                                      <p className="text-[10px] text-slate-400 font-mono">
-                                        {(att.sizeBytes / 1024).toFixed(1)} KB · {att.mimeType}
-                                      </p>
-                                    </div>
-                                  </div>
-                                  <span
-                                    className={`text-[9px] font-bold px-1.5 py-0.5 rounded font-mono uppercase ${
-                                      att.scanStatus === 'clean' || !att.isQuarantined
-                                        ? 'bg-emerald-100 text-emerald-800'
-                                        : 'bg-rose-100 text-rose-800'
-                                    }`}
-                                  >
-                                    {att.scanStatus === 'clean' || !att.isQuarantined ? 'Scanned Safe' : 'Quarantined'}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Staff Private Collaboration: Internal Notes Box (Milestone 23.05) */}
-                <div className="border-t border-amber-200/80 bg-amber-50/50 p-3.5 space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Lock className="w-4 h-4 text-amber-700" />
-                      <span className="text-xs font-bold text-amber-950 uppercase tracking-wide">
-                        Private Internal Staff Notes
-                      </span>
-                      <span className="text-[10px] font-mono font-semibold bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-full">
-                        Internal Only · Never Dispatched Externally
-                      </span>
-                    </div>
-                    <span className="text-[10px] text-amber-800 font-mono font-semibold">
-                      {selectedThread.internalNotes?.length || 0} Notes
-                    </span>
-                  </div>
-
-                  {/* List of Existing Notes */}
-                  {selectedThread.internalNotes && selectedThread.internalNotes.length > 0 && (
-                    <div className="space-y-1.5 max-h-36 overflow-y-auto">
-                      {selectedThread.internalNotes.map((note) => (
-                        <div
-                          key={note.id}
-                          className="bg-white border border-amber-200 rounded-xl p-2.5 text-xs shadow-2xs"
-                        >
-                          <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 mb-1">
-                            <span className="font-bold text-slate-900">{note.authorName}</span>
-                            <span>{new Date(note.createdAt).toLocaleString()}</span>
-                          </div>
-                          <p className="text-slate-800 font-sans leading-relaxed whitespace-pre-wrap">
-                            {note.text}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Add New Note Input */}
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      placeholder="Add confidential internal note for team members..."
-                      value={newInternalNote}
-                      onChange={(e) => setNewInternalNote(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                          e.preventDefault();
-                          handleAddInternalNote(selectedThread.id);
-                        }
-                      }}
-                      className="flex-1 bg-white border border-amber-300 rounded-xl px-3 py-1.5 text-xs text-slate-800 placeholder:text-amber-800/50 focus:outline-hidden focus:border-amber-600"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => handleAddInternalNote(selectedThread.id)}
-                      className="px-3 py-1.5 bg-amber-700 hover:bg-amber-800 text-white rounded-xl text-xs font-bold transition-all shadow-2xs shrink-0 cursor-pointer"
-                    >
-                      Add Note
-                    </button>
-                  </div>
-                </div>
-
-                {/* AI RESPONSE ENGINE & APPROVAL BAR (Panel C & D) */}
-                {selectedThread.classification !== '01_safeguarding' && (
-                  <div className="border-t border-slate-200 bg-white p-4 space-y-3">
-                    {/* Draft Status / Tone Controls */}
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-teal-800" />
-                        <span className="text-xs font-bold text-slate-900">AI Response Engine (A02 Email Manager)</span>
-                        {selectedThread.draft && (
-                          <span
-                            className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
-                              selectedThread.draft.status === 'approved'
-                                ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                                : selectedThread.draft.status === 'sent'
-                                ? 'bg-blue-100 text-blue-800'
-                                : 'bg-amber-100 text-amber-800 border border-amber-300'
-                            }`}
-                          >
-                            Status: {selectedThread.draft.status.replace('_', ' ')}
-                          </span>
-                        )}
-                      </div>
-
-                      {/* 9 Tone Selector */}
-                      <div className="flex items-center gap-1.5 text-xs">
-                        <span className="text-slate-500 font-medium">Response Tone:</span>
-                        <select
-                          value={selectedDraftTone}
-                          onChange={(e) => setSelectedDraftTone(e.target.value as ResponseToneStyle)}
-                          className="bg-slate-100 border border-slate-200 rounded-lg p-1 text-xs font-semibold text-slate-800"
-                        >
-                          <option value="professional">Professional</option>
-                          <option value="formal">Formal</option>
-                          <option value="warm_welcoming">Warm & Welcoming</option>
-                          <option value="executive">Executive</option>
-                          <option value="donor_appreciation">Donor Appreciation</option>
-                          <option value="partnership_development">Partnership Development</option>
-                          <option value="grant_correspondence">Grant Correspondence</option>
-                          <option value="volunteer_coordination">Volunteer Coordination</option>
-                          <option value="community_engagement">Community Engagement</option>
-                        </select>
-                        <button
-                          onClick={() => handleGenerateDraft(selectedThread, selectedDraftTone)}
-                          className="px-2.5 py-1 bg-teal-50 text-teal-900 hover:bg-teal-100 border border-teal-200 rounded-lg font-bold text-xs flex items-center gap-1 cursor-pointer"
-                        >
-                          <Sparkles className="w-3 h-3 text-teal-700" />
-                          <span>{selectedThread.draft ? 'Regenerate Draft' : 'Generate Draft'}</span>
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* AI Rewrite Actions Toolbar (Milestone 23.04) */}
-                    {selectedThread.draft && (
-                      <div className="flex flex-wrap items-center justify-between gap-2 p-2 bg-teal-50/70 border border-teal-200/80 rounded-xl">
-                        <div className="flex items-center gap-1.5 text-xs">
-                          <Sparkles className="w-3.5 h-3.5 text-teal-800" />
-                          <span className="font-bold text-teal-950 text-[11px]">AI Rewrite:</span>
-                          <div className="flex items-center gap-1 flex-wrap">
-                            {[
-                              { action: 'shorten', label: 'Shorten' },
-                              { action: 'expand', label: 'Expand' },
-                              { action: 'formal', label: 'Formal' },
-                              { action: 'warm', label: 'Warm Sisterhood' },
-                              { action: 'executive', label: 'Executive' },
-                              { action: 'clarity', label: 'Fix Clarity' },
-                            ].map((btn) => (
-                              <button
-                                key={btn.action}
-                                type="button"
-                                onClick={() => handleAIRewrite(btn.action as EmailAIRewriteAction)}
-                                className="px-2 py-0.5 rounded-lg bg-white border border-teal-200 text-teal-900 hover:bg-teal-100 text-[10px] font-semibold transition-colors cursor-pointer shadow-2xs"
-                              >
-                                {btn.label}
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setTargetTemplateInsert('draft');
-                            setIsTemplateModalOpen(true);
-                          }}
-                          className="px-2.5 py-1 bg-white border border-indigo-200 hover:bg-indigo-50 text-indigo-900 rounded-lg text-[10px] font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
-                        >
-                          <FileText className="w-3 h-3 text-indigo-600" />
-                          <span>Insert Template...</span>
-                        </button>
-                      </div>
-                    )}
-
-                    {/* Active Draft Box */}
-                    {selectedThread.draft && (
-                      <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
-                        {/* Prominent Safety Watermark */}
-                        {selectedThread.draft.status !== 'approved' && selectedThread.draft.status !== 'sent' && (
-                          <div className="bg-rose-50 border-2 border-dashed border-rose-400 text-rose-900 rounded-xl p-2.5 text-xs font-mono font-bold flex items-center justify-between shadow-2xs">
-                            <div className="flex items-center gap-2">
-                              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
-                              <span>AI_DRAFT — NOT APPROVED — NOT SENT</span>
-                            </div>
-                            <span className="text-[10px] font-sans uppercase font-semibold text-rose-700 bg-rose-100 px-2 py-0.5 rounded border border-rose-200">
-                              Requires Human Co-Signature
-                            </span>
-                          </div>
-                        )}
-
-                        <div className="flex items-center justify-between text-xs border-b border-slate-200 pb-1.5">
-                          <div>
-                            <span className="font-semibold text-slate-700">Recipient:</span>{' '}
-                            <span className="font-mono text-slate-900">{selectedThread.draft.recipientEmail}</span>
-                          </div>
-                          <div className="text-[11px] text-slate-500">
-                            Confidence: <span className="font-bold text-teal-800">{selectedThread.draft.confidenceScore}%</span> · Tone: <span className="font-semibold capitalize">{selectedThread.draft.toneStyle.replace('_', ' ')}</span>
-                          </div>
-                        </div>
-
-                        {/* Verified Context Summary */}
-                        <div className="bg-emerald-50/60 border border-emerald-200/80 rounded-lg px-2.5 py-1.5 text-[11px] text-emerald-900 flex items-start gap-1.5">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 shrink-0 mt-0.5" />
-                          <span><strong>Verified Context Grounding:</strong> {selectedThread.draft.verifiedContextSummary}</span>
-                        </div>
-
-                        {/* Draft Content (View / Edit) */}
-                        {isEditingDraft ? (
-                          <textarea
-                            rows={6}
-                            value={draftEditContent}
-                            onChange={(e) => setDraftEditContent(e.target.value)}
-                            className="w-full text-xs font-sans p-2.5 bg-white border border-teal-500 rounded-lg focus:outline-hidden"
-                          />
-                        ) : (
-                          <div className="text-xs text-slate-800 whitespace-pre-wrap bg-white p-3 border border-slate-200 rounded-lg max-h-48 overflow-y-auto">
-                            {selectedThread.draft.proposedBody}
-                          </div>
-                        )}
-
-                        {/* Action Buttons: Edit, Save, Approve, Reject, Send */}
-                        <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
-                          <div className="flex items-center gap-2">
-                            {isEditingDraft ? (
-                              <button
-                                onClick={() => {
-                                  if (selectedThread.draft) {
-                                    db.saveEmailDraft(selectedThread.id, {
-                                      ...selectedThread.draft,
-                                      proposedBody: draftEditContent,
-                                      status: 'pending_approval',
-                                    });
-                                  }
-                                  setIsEditingDraft(false);
-                                }}
-                                className="px-3 py-1 bg-teal-800 text-white rounded-lg text-xs font-bold cursor-pointer"
-                              >
-                                Save Changes
-                              </button>
-                            ) : (
-                              <button
-                                onClick={() => {
-                                  setDraftEditContent(selectedThread.draft?.proposedBody || '');
-                                  setIsEditingDraft(true);
-                                }}
-                                className="px-3 py-1 border border-slate-200 hover:bg-slate-100 rounded-lg text-xs font-semibold text-slate-700 flex items-center gap-1 cursor-pointer"
-                              >
-                                <Edit3 className="w-3 h-3" />
-                                <span>Edit Draft</span>
-                              </button>
-                            )}
-
-                            {selectedThread.draft.status !== 'approved' && selectedThread.draft.status !== 'sent' && (
-                              <div className="flex items-center gap-1.5 flex-wrap">
-                                <button
-                                  onClick={() => handleApproveDraft(selectedThread.id)}
-                                  className="px-3 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-xs cursor-pointer"
-                                  title="Approve draft and bind to current version"
-                                >
-                                  <ThumbsUp className="w-3 h-3" />
-                                  <span>Approve Draft</span>
-                                </button>
-                                <button
-                                  onClick={() => handleRequestChanges(selectedThread.id)}
-                                  className="px-2.5 py-1 text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer"
-                                  title="Request staff modifications before re-review"
-                                >
-                                  <RotateCcw className="w-3 h-3" />
-                                  <span>Request Changes</span>
-                                </button>
-                                <button
-                                  onClick={() => handleReturnToDraft(selectedThread.id)}
-                                  className="px-2.5 py-1 text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer"
-                                  title="Return to drafting stage"
-                                >
-                                  <FileCheck className="w-3 h-3" />
-                                  <span>Return to Draft</span>
-                                </button>
-                                <button
-                                  onClick={() => handleRejectDraft(selectedThread.id)}
-                                  className="px-2.5 py-1 text-rose-700 hover:bg-rose-50 border border-rose-200 rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer"
-                                  title="Reject proposed draft"
-                                >
-                                  <ThumbsDown className="w-3 h-3" />
-                                  <span>Reject</span>
-                                </button>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Send Button: strictly enabled only if approved */}
-                          <div>
-                            {selectedThread.draft.status === 'approved' ? (
-                              <button
-                                onClick={() => handleSendApprovedEmail(selectedThread.id)}
-                                className="px-4 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-sm cursor-pointer"
-                              >
-                                <Send className="w-3.5 h-3.5" />
-                                <span>SEND APPROVED EMAIL</span>
-                              </button>
-                            ) : selectedThread.draft.status === 'sent' ? (
-                              <span className="text-xs font-bold text-emerald-800 flex items-center gap-1">
-                                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                                <span>Dispatched to Recipient</span>
-                              </span>
-                            ) : (
-                              <span className="text-[11px] text-slate-400 font-medium italic">
-                                Human approval required before sending
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="flex-1 bg-white border border-slate-200 rounded-2xl flex items-center justify-center p-8 text-slate-400">
-                Select a thread to view details and response recommendations.
-              </div>
-            )}
+            {/* AREA D: MESSAGE READING PANEL */}
+            <div
+              className={`flex-1 overflow-hidden min-w-0 ${
+                mobileScreen === 'detail' ? 'flex flex-col' : 'hidden md:flex md:flex-col'
+              }`}
+            >
+              <EmailReadingPane
+                thread={selectedThread || null}
+                currentUser={currentUser}
+                onBackToList={() => setMobileScreen('list')}
+                onReply={handleReplyToThread}
+                onForward={handleForwardThread}
+                onToggleRead={handleToggleRead}
+                onToggleArchive={handleToggleArchive}
+                onChangeFolder={handleChangeFolder}
+                onAssignStaff={handleAssignStaff}
+                onOpenCrmLinkModal={(th) => {
+                  setCrmTargetThreadId(th.id);
+                  setCrmEntityName(th.crmLink?.entityName || '');
+                  setCrmEntityId(th.crmLink?.entityId || '');
+                  setCrmEntityType(th.crmLink?.entityType || 'donor');
+                  setIsCrmLinkModalOpen(true);
+                }}
+                onOpenNewTaskModal={(th) => {
+                  setNewTaskTitle(`Follow up with ${th.messages[0]?.senderName || 'contact'} re: ${th.threadSubject}`);
+                  setIsNewTaskModalOpen(true);
+                }}
+                onReclassify={(th) => {
+                  setReclassifyingThreadId(th.id);
+                  setNewCategoryTarget(th.classification);
+                }}
+                onAddInternalNote={handleAddInternalNote}
+                onGenerateDraft={handleGenerateDraft}
+                onAIRewrite={handleAIRewrite}
+                onInsertTemplate={() => {
+                  setTargetTemplateInsert('draft');
+                  setIsTemplateModalOpen(true);
+                }}
+                onSaveDraft={(threadId, updatedBody) => {
+                  if (selectedThread?.draft) {
+                    db.saveEmailDraft(threadId, {
+                      ...selectedThread.draft,
+                      proposedBody: updatedBody,
+                      status: 'pending_approval',
+                    });
+                  }
+                  setIsEditingDraft(false);
+                }}
+                onApproveDraft={handleApproveDraft}
+                onRequestChanges={handleRequestChanges}
+                onReturnToDraft={handleReturnToDraft}
+                onRejectDraft={handleRejectDraft}
+                onSendApprovedEmail={handleSendApprovedEmail}
+                onIngestFundraising={(th, msg) => {
+                  const res = EmailEnterpriseService.ingestAndLinkFundraisingEmail(th, msg);
+                  if (res.safeguardingQuarantined) {
+                    setActionNotice({
+                      type: 'warning',
+                      message: 'VAWA SAFEGUARDING QUARANTINE: Ingestion into Fundraising CRM blocked due to confidential crisis indicators.',
+                    });
+                    return;
+                  }
+                  if (res.executiveGated) {
+                    setActionNotice({
+                      type: 'warning',
+                      message: 'EXECUTIVE GATING: Executive mailbox correspondence held for Comfort Dondo review.',
+                    });
+                    return;
+                  }
+                  if (res.success) {
+                    setActionNotice({
+                      type: 'success',
+                      message: `Successfully linked to Fundraising CRM: ${res.donorName} (${res.isNewDonor ? 'New Contact Created' : 'Existing Contact Updated'}). Opportunity: ${res.opportunityTitle || 'Linked'}.`,
+                    });
+                  }
+                }}
+                onOpenFundraisingCRM={onOpenFundraisingCRM ? onOpenFundraisingCRM : (tab, id) => onViewChange('fundraising')}
+              />
+            </div>
           </div>
         )}
 

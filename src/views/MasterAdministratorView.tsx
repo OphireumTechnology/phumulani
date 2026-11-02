@@ -147,7 +147,31 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
   const [activeModule, setActiveModule] = useState<string>(initialTab);
   const [fundraisingSubRoute, setFundraisingSubRoute] = useState<FundraisingSubRoute>('command-center');
   const [fundraisingSelectedDonorId, setFundraisingSelectedDonorId] = useState<string | null>(null);
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('phumulani_master_admin_sidebar_collapsed');
+      return saved !== null ? saved === 'true' : initialTab === 'email_command_center';
+    } catch {
+      return initialTab === 'email_command_center';
+    }
+  });
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('phumulani_master_admin_sidebar_collapsed', String(next));
+      } catch {}
+      return next;
+    });
+  };
+
+  // Automatically collapse Master Admin sidebar when navigating to Email Command Center
+  useEffect(() => {
+    if (activeModule === 'email_command_center') {
+      setIsSidebarCollapsed(true);
+    }
+  }, [activeModule]);
   const [searchQuery, setSearchQuery] = useState('');
   const [userRoleFilter, setUserRoleFilter] = useState<string>('all');
   const [probeReport, setProbeReport] = useState<SystemVerificationProbeReport | null>(null);
@@ -341,9 +365,11 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
         <div className="px-4 py-2.5 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <button
-              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-              className="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
-              title="Toggle Navigation Sidebar"
+              onClick={toggleSidebar}
+              className="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+              title={isSidebarCollapsed ? "Expand Navigation Sidebar" : "Collapse Navigation Sidebar"}
+              aria-label="Toggle Navigation Sidebar"
+              aria-expanded={!isSidebarCollapsed}
             >
               <Layers className="w-5 h-5 text-teal-800" />
             </button>
@@ -351,9 +377,25 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
               <span className="font-serif font-bold text-slate-900 text-base tracking-tight">
                 Phumulani Master Administrator
               </span>
-              <span className="text-[10px] font-mono font-bold bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full uppercase tracking-wider">
-                PLATFORM_SUPER_ADMIN
-              </span>
+              {activeModule === 'email_command_center' && (
+                <>
+                  <span className="text-slate-400 font-normal">/</span>
+                  <span className="font-semibold text-teal-900 text-xs bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-md">
+                    Email Command Center
+                  </span>
+                  <button
+                    onClick={() => setActiveModule('overview')}
+                    className="text-[11px] font-semibold text-teal-800 hover:text-teal-950 underline ml-1 cursor-pointer"
+                  >
+                    (Return to Overview)
+                  </button>
+                </>
+              )}
+              {activeModule !== 'email_command_center' && (
+                <span className="text-[10px] font-mono font-bold bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                  PLATFORM_SUPER_ADMIN
+                </span>
+              )}
             </div>
           </div>
 
@@ -476,7 +518,13 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
         {/* LEFT ENTERPRISE SIDEBAR */}
         <aside
           className={`bg-white border-r border-slate-200 transition-all duration-200 flex flex-col shrink-0 ${
-            isSidebarCollapsed ? 'w-16' : 'w-64'
+            activeModule === 'email_command_center'
+              ? isSidebarCollapsed
+                ? 'w-0 overflow-hidden border-r-0 opacity-0 pointer-events-none'
+                : 'w-64'
+              : isSidebarCollapsed
+              ? 'w-16'
+              : 'w-64'
           }`}
         >
           <div className="p-3 border-b border-slate-100 flex items-center justify-between">

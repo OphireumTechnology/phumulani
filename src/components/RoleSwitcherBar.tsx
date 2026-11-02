@@ -97,249 +97,268 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
     DEVELOPER: 'Senior Engineer',
   };
 
-  const [isCollapsed, setIsCollapsed] = React.useState(false);
+  const [isCollapsed, setIsCollapsed] = React.useState<boolean>(() => {
+    try {
+      const saved = localStorage.getItem('phumulani_demo_toolbar_collapsed');
+      return saved !== null ? saved === 'true' : true;
+    } catch {
+      return true;
+    }
+  });
 
-  if (isCollapsed) {
-    return (
-      <div className="bg-slate-900/90 text-white text-[11px] py-1 px-4 border-b border-slate-800 flex items-center justify-between no-print z-50">
-        <div className="flex items-center gap-2 text-amber-400 font-semibold">
-          <Sparkles className="w-3 h-3" />
-          <span>DEMO MODE ACTIVE</span>
-          <span className="text-slate-400 font-normal hidden sm:inline">
-            · Simulating: {currentUser.name} ({roleLabels[currentUser.role] || currentUser.role})
-          </span>
-        </div>
-        <button
-          onClick={() => setIsCollapsed(false)}
-          className="text-slate-300 hover:text-white underline text-[11px] cursor-pointer"
-        >
-          Expand Demo Controls ▾
-        </button>
-      </div>
-    );
-  }
+  const toggleCollapsed = () => {
+    setIsCollapsed((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('phumulani_demo_toolbar_collapsed', String(next));
+      } catch {}
+      return next;
+    });
+  };
 
   return (
-    <div className="bg-slate-950 text-white text-xs py-1.5 px-3 sm:px-4 border-b border-slate-800 flex flex-wrap items-center justify-between gap-2 sm:gap-3 no-print z-50 w-full min-w-0">
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3 min-w-0 w-full sm:w-auto">
-        <div className="flex items-center gap-1.5 font-bold tracking-wide text-amber-400 min-w-0">
-          <Sparkles className="w-3.5 h-3.5 shrink-0" />
-          <span className="truncate text-[11px] sm:text-xs">DEMO SIMULATION TOOLBAR</span>
-        </div>
-        <span className="text-slate-600 hidden sm:inline">|</span>
-        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 max-w-full">
-          <label htmlFor="role-simulation-select" className="text-slate-400 text-[11px] cursor-pointer shrink-0">
-            Role Simulation:
-          </label>
-          <select
-            id="role-simulation-select"
-            aria-label="Role Simulation"
-            value={currentUser.id}
-            onChange={(e) => handleUserSelect(e.target.value)}
-            className="bg-slate-800 text-slate-100 border border-slate-700 rounded px-2 py-0.5 text-xs focus:ring-1 focus:ring-amber-400 outline-none font-medium cursor-pointer w-full max-w-[150px] min-w-0 truncate"
+    <div className="bg-slate-950 text-white text-xs border-b border-slate-800 no-print z-50 w-full transition-all">
+      {/* COMPACT SINGLE CONTROL BAR */}
+      <div className="py-1 px-3 sm:px-4 flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2 min-w-0">
+          <button
+            onClick={toggleCollapsed}
+            aria-expanded={!isCollapsed}
+            aria-controls="demo-tools-panel"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-amber-300 font-bold text-[11px] border border-amber-400/30 transition-colors cursor-pointer shrink-0"
+            title="Toggle Demo Simulation Tools"
           >
-            {users.map((u) => (
-              <option key={u.id} value={u.id}>
-                {u.name} — {roleLabels[u.role] || u.role}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="hidden lg:flex items-center gap-1 text-slate-400 bg-slate-900 px-2 py-0.5 rounded border border-slate-800 text-[11px]">
-          <Shield className="w-3 h-3 text-emerald-400" />
-          <span>Simulated MFA: {currentUser.mfaEnabled ? 'Enforced' : 'Standard'}</span>
-        </div>
-      </div>
+            <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <span>Demo Tools</span>
+            <span className="text-[10px] text-amber-300/80">{isCollapsed ? '▼' : '▲'}</span>
+          </button>
 
-      <div className="hidden sm:flex items-center gap-2 min-w-0 overflow-x-auto py-1">
-        <button
-          onClick={handleResetData}
-          className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded border transition-colors text-[11px] cursor-pointer ${
-            resetStatus === 'confirming'
-              ? 'bg-rose-900 border-rose-500 text-rose-100 font-bold animate-pulse'
-              : resetStatus === 'done'
-              ? 'bg-emerald-900 border-emerald-500 text-emerald-100 font-bold'
-              : 'bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border-slate-700'
-          }`}
-          title="Restore baseline test records"
-        >
-          <RefreshCw className={`w-3 h-3 ${resetStatus === 'done' ? 'text-emerald-400 rotate-180' : 'text-slate-400'}`} />
-          <span>
-            {resetStatus === 'confirming'
-              ? 'Click to Confirm Reset'
-              : resetStatus === 'done'
-              ? 'Reset Complete!'
-              : 'Reset Demo Data'}
+          <span className="text-slate-400 text-[11px] truncate hidden sm:inline">
+            <span className="text-slate-500">Current Role:</span>{' '}
+            <strong className="text-slate-200">{currentUser.name}</strong> ({roleLabels[currentUser.role] || currentUser.role})
           </span>
-        </button>
+        </div>
 
-        <button
-          onClick={() => onViewChange('public')}
-          className={`flex items-center gap-1 px-2 py-0.5 rounded transition-colors text-[11px] font-semibold ${
-            activeView === 'public'
-              ? 'bg-slate-200 text-slate-950 border border-white'
-              : 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700'
-          }`}
-          title="Public Website"
-        >
-          <span>Public Website</span>
-        </button>
-
-        <button
-          onClick={() => onViewChange('community')}
-          className={`flex items-center gap-1 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
-            activeView === 'community'
-              ? 'bg-teal-400 text-slate-950 border border-teal-300'
-              : 'bg-slate-800 text-teal-300 hover:text-white border border-teal-500/40'
-          }`}
-          title="Community Member Portal"
-        >
-          <span>Community Member</span>
-        </button>
-
-        <button
-          onClick={() => onViewChange('community')}
-          className={`flex items-center gap-1 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
-            activeView === 'community'
-              ? 'bg-emerald-400 text-slate-950 border border-emerald-300'
-              : 'bg-slate-800 text-emerald-300 hover:text-white border border-emerald-500/40'
-          }`}
-          title="Volunteer Portal"
-        >
-          <span>Volunteer</span>
-        </button>
-
-        <button
-          onClick={() => onViewChange('donor')}
-          className={`flex items-center gap-1 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
-            activeView === 'donor'
-              ? 'bg-purple-400 text-slate-950 border border-purple-300'
-              : 'bg-slate-800 text-purple-300 hover:text-white border border-purple-500/40'
-          }`}
-          title="Donor & Sponsor Portal"
-        >
-          <span>Donor</span>
-        </button>
-
-        <button
-          onClick={() => onViewChange('staff')}
-          className={`flex items-center gap-1 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
-            activeView === 'staff'
-              ? 'bg-sky-400 text-slate-950 border border-sky-300'
-              : 'bg-slate-800 text-sky-300 hover:text-white border border-sky-500/40'
-          }`}
-          title="Staff Command Center"
-        >
-          <span>Staff</span>
-        </button>
-
-        <button
-          onClick={() => onViewChange('master-admin')}
-          className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
-            activeView === 'master-admin'
-              ? 'bg-amber-400 text-slate-950 border border-amber-300'
-              : 'bg-slate-800 text-amber-300 hover:text-white border border-amber-500/40'
-          }`}
-          title="Master Administrator Command Dashboard (/admin/master)"
-        >
-          <Shield className="w-3 h-3 text-amber-400" />
-          <span>Master Admin</span>
-        </button>
-
-        <button
-          onClick={() => onViewChange('email-command')}
-          className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
-            activeView === 'email-command'
-              ? 'bg-teal-400 text-slate-950 border border-teal-300'
-              : 'bg-slate-800 text-teal-300 hover:text-white border border-teal-500/40'
-          }`}
-          title="Master Email Administration (/admin/master/email)"
-        >
-          <Mail className="w-3 h-3 text-teal-400" />
-          <span>Email Admin</span>
-        </button>
-
-        <button
-          onClick={() => onViewChange('client-development')}
-          className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
-            activeView === 'client-development'
-              ? 'bg-amber-400 text-slate-950 border border-amber-300'
-              : 'bg-slate-800 text-amber-300 hover:text-white border border-amber-500/40'
-          }`}
-          title="Client Development Transparency Portal (/client/project-dashboard)"
-        >
-          <Sparkles className="w-3 h-3 text-amber-400" />
-          <span>Client Portal</span>
-        </button>
-
-        <button
-          onClick={() => onViewChange('development-ops')}
-          className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
-            activeView === 'development-ops'
-              ? 'bg-teal-400 text-slate-950 border border-teal-300'
-              : 'bg-slate-800 text-teal-300 hover:text-white border border-teal-500/40'
-          }`}
-          title="Development Operations Hub (/admin/master/development)"
-        >
-          <span>Dev Ops</span>
-        </button>
-
-        <button
-          onClick={() => onViewChange('fundraising')}
-          className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
-            activeView === 'fundraising'
-              ? 'bg-teal-400 text-slate-950 border border-teal-300'
-              : 'bg-slate-800 text-teal-300 hover:text-white border border-teal-500/40'
-          }`}
-          title="Enterprise Fundraising CRM & Donor Intelligence (/admin/master/fundraising)"
-        >
-          <span>Fundraising CRM</span>
-        </button>
-
-        <button
-          onClick={() => onViewChange('email-command')}
-          className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] font-bold ${
-            activeView === 'email-command'
-              ? 'bg-emerald-400 text-slate-950 border border-emerald-300'
-              : 'bg-slate-800 text-emerald-300 hover:text-white border border-emerald-500/40'
-          }`}
-          title="Enterprise AI Email Command Center (/admin/master/email)"
-        >
-          <span>Email Command</span>
-        </button>
-
-        <button
-          onClick={() => onViewChange('production-status')}
-          className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] ${
-            activeView === 'production-status'
-              ? 'bg-teal-500/20 text-teal-300 border border-teal-500/40'
-              : 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700'
-          }`}
-          title="Section 16 Live Production Component Status"
-        >
-          <span>Live Status</span>
-        </button>
-
-        <button
-          onClick={() => onViewChange('readiness')}
-          className={`flex items-center gap-1.5 px-2 py-0.5 rounded transition-colors text-[11px] ${
-            activeView === 'readiness'
-              ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-              : 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700'
-          }`}
-        >
-          <UserCheck className="w-3 h-3 text-amber-400" />
-          <span>12 Gates</span>
-        </button>
-
-        <button
-          onClick={() => setIsCollapsed(true)}
-          className="text-slate-400 hover:text-white text-xs px-1.5 py-0.5 hover:bg-slate-800 rounded ml-1"
-          title="Minimize toolbar"
-        >
-          ▴ Hide
-        </button>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-[10px] text-slate-500 font-mono hidden md:inline">
+            SIMULATION MODE
+          </span>
+          <button
+            onClick={toggleCollapsed}
+            className="text-slate-400 hover:text-slate-200 text-[11px] underline cursor-pointer"
+          >
+            {isCollapsed ? 'Expand Controls' : 'Hide Controls'}
+          </button>
+        </div>
       </div>
+
+      {/* EXPANDABLE SIMULATION PANEL */}
+      {!isCollapsed && (
+        <div
+          id="demo-tools-panel"
+          className="border-t border-slate-800 bg-slate-900/95 py-2.5 px-3 sm:px-4 flex flex-col gap-2.5 animate-fadeIn"
+        >
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-slate-800/80">
+            {/* Role Simulation Selector */}
+            <div className="flex items-center gap-2 min-w-0">
+              <label htmlFor="role-simulation-select" className="text-slate-400 text-[11px] font-semibold shrink-0">
+                Simulate Role:
+              </label>
+              <select
+                id="role-simulation-select"
+                aria-label="Role Simulation"
+                value={currentUser.id}
+                onChange={(e) => handleUserSelect(e.target.value)}
+                className="bg-slate-800 text-slate-100 border border-slate-700 rounded px-2.5 py-1 text-xs focus:ring-1 focus:ring-amber-400 outline-none font-medium cursor-pointer max-w-[260px] truncate"
+              >
+                {users.map((u) => (
+                  <option key={u.id} value={u.id}>
+                    {u.name} — {roleLabels[u.role] || u.role}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 text-slate-300 bg-slate-800 px-2.5 py-1 rounded border border-slate-700 text-[11px]">
+                <Shield className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Simulated MFA: {currentUser.mfaEnabled ? 'Enforced' : 'Standard'}</span>
+              </div>
+
+              <button
+                onClick={handleResetData}
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded border transition-colors text-[11px] cursor-pointer ${
+                  resetStatus === 'confirming'
+                    ? 'bg-rose-900 border-rose-500 text-rose-100 font-bold animate-pulse'
+                    : resetStatus === 'done'
+                    ? 'bg-emerald-900 border-emerald-500 text-emerald-100 font-bold'
+                    : 'bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border-slate-700'
+                }`}
+                title="Restore baseline test records"
+              >
+                <RefreshCw className={`w-3 h-3 ${resetStatus === 'done' ? 'text-emerald-400 rotate-180' : 'text-slate-400'}`} />
+                <span>
+                  {resetStatus === 'confirming'
+                    ? 'Click to Confirm Reset'
+                    : resetStatus === 'done'
+                    ? 'Reset Complete!'
+                    : 'Reset Demo Data'}
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* Quick Portal Switchers */}
+          <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto py-0.5">
+            <span className="text-[10px] font-mono uppercase text-slate-500 font-bold mr-1 shrink-0">
+              Portals:
+            </span>
+
+            <button
+              onClick={() => onViewChange('public')}
+              className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-colors ${
+                activeView === 'public'
+                  ? 'bg-slate-200 text-slate-950 border border-white'
+                  : 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700'
+              }`}
+            >
+              Public Website
+            </button>
+
+            <button
+              onClick={() => onViewChange('community')}
+              className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
+                activeView === 'community'
+                  ? 'bg-teal-400 text-slate-950 border border-teal-300'
+                  : 'bg-slate-800 text-teal-300 hover:text-white border border-teal-500/40'
+              }`}
+            >
+              Community Member
+            </button>
+
+            <button
+              onClick={() => onViewChange('community')}
+              className="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-800 text-emerald-300 hover:text-white border border-emerald-500/40 transition-colors"
+            >
+              Volunteer
+            </button>
+
+            <button
+              onClick={() => onViewChange('donor')}
+              className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
+                activeView === 'donor'
+                  ? 'bg-purple-400 text-slate-950 border border-purple-300'
+                  : 'bg-slate-800 text-purple-300 hover:text-white border border-purple-500/40'
+              }`}
+            >
+              Donor
+            </button>
+
+            <button
+              onClick={() => onViewChange('staff')}
+              className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
+                activeView === 'staff'
+                  ? 'bg-sky-400 text-slate-950 border border-sky-300'
+                  : 'bg-slate-800 text-sky-300 hover:text-white border border-sky-500/40'
+              }`}
+            >
+              Staff
+            </button>
+
+            <button
+              onClick={() => onViewChange('master-admin')}
+              className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
+                activeView === 'master-admin'
+                  ? 'bg-amber-400 text-slate-950 border border-amber-300'
+                  : 'bg-slate-800 text-amber-300 hover:text-white border border-amber-500/40'
+              }`}
+            >
+              <Shield className="w-3 h-3 text-amber-400" />
+              <span>Master Admin</span>
+            </button>
+
+            <button
+              onClick={() => onViewChange('email-command')}
+              className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
+                activeView === 'email-command'
+                  ? 'bg-teal-400 text-slate-950 border border-teal-300'
+                  : 'bg-slate-800 text-teal-300 hover:text-white border border-teal-500/40'
+              }`}
+            >
+              <Mail className="w-3 h-3 text-teal-400" />
+              <span>Email Admin</span>
+            </button>
+
+            <button
+              onClick={() => onViewChange('client-development')}
+              className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
+                activeView === 'client-development'
+                  ? 'bg-amber-400 text-slate-950 border border-amber-300'
+                  : 'bg-slate-800 text-amber-300 hover:text-white border border-amber-500/40'
+              }`}
+            >
+              <Sparkles className="w-3 h-3 text-amber-400" />
+              <span>Client Portal</span>
+            </button>
+
+            <button
+              onClick={() => onViewChange('development-ops')}
+              className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
+                activeView === 'development-ops'
+                  ? 'bg-teal-400 text-slate-950 border border-teal-300'
+                  : 'bg-slate-800 text-teal-300 hover:text-white border border-teal-500/40'
+              }`}
+            >
+              DevOps
+            </button>
+
+            <button
+              onClick={() => onViewChange('fundraising')}
+              className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
+                activeView === 'fundraising'
+                  ? 'bg-teal-400 text-slate-950 border border-teal-300'
+                  : 'bg-slate-800 text-teal-300 hover:text-white border border-teal-500/40'
+              }`}
+            >
+              Fundraising CRM
+            </button>
+
+            <button
+              onClick={() => onViewChange('email-command')}
+              className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
+                activeView === 'email-command'
+                  ? 'bg-emerald-400 text-slate-950 border border-emerald-300'
+                  : 'bg-slate-800 text-emerald-300 hover:text-white border border-emerald-500/40'
+              }`}
+            >
+              Email Command
+            </button>
+
+            <button
+              onClick={() => onViewChange('production-status')}
+              className={`px-2 py-0.5 rounded text-[11px] transition-colors ${
+                activeView === 'production-status'
+                  ? 'bg-teal-500/20 text-teal-300 border border-teal-500/40'
+                  : 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700'
+              }`}
+            >
+              Live Status
+            </button>
+
+            <button
+              onClick={() => onViewChange('readiness')}
+              className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] transition-colors ${
+                activeView === 'readiness'
+                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
+                  : 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700'
+              }`}
+            >
+              <UserCheck className="w-3 h-3 text-amber-400" />
+              <span>12 Gates</span>
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
