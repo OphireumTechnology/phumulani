@@ -1,0 +1,28 @@
+{
+  "id": "DOC-MET-001",
+  "title": "Phumulani Verified Beneficiary Service Delivery & Operational Metrics",
+  "category": "BENEFICIARY_METRIC",
+  "summary": "Verified counts of individuals served, housing nights provided, food boxes delivered, and youth enrolled during the current program cycle.",
+  "content": "During the rolling 12-month evaluation cycle ending Q3 2026, Phumulani achieved the following verified service outcomes across the Twin Cities metropolitan area: (1) 482 distinct immigrant and refugee survivors received trauma-informed crisis intervention, safety planning, and sisterhood support. (2) 1,420 emergency and transitional lodging nights were provided through the Healing Homes initiative with 0% forced evictions. (3) 89 women completed economic self-reliance lab cohorts, with 68 achieving verifiable living-wage job placement or micro-enterprise launches. (4) 340 culturally appropriate food and emergency essential hampers were distributed to families in distress. (5) 124 immigrant youth participated in after-school leadership, academic mentoring, and cultural grounding sessions.",
+  "keyFacts": [
+    "482 distinct immigrant and refugee survivors served across programs.",
+    "1,420 emergency and transitional lodging nights funded and provided.",
+    "89 women completed Economic Self-Reliance cohorts; 68 achieved employment or launched micro-enterprises.",
+    "340 emergency food and essential supply care packages distributed.",
+    "124 youth supported through leadership mentoring cohorts.",
+    "0 instances of survivor PII compromise or unauthorized disclosure."
+  ],
+  "metadata": {
+    "sourceDocumentId": "DOC-MET-001",
+    "institutionalApprovalStatus": "APPROVED",
+    "recordOwner": "Sister Miriam K. (Director of Community Impact)",
+    "approvalDate": "2026-10-05",
+    "effectiveDate": "2026-10-01",
+    "lastVerificationDate": "2026-10-25",
+    "reviewExpirationDate": "2027-04-01",
+    "accessClassification": "DONOR_FACING",
+    "evidenceReference": "Hennepin County Quarterly Service Verification Ledger Q3-2026",
+    "isDemoData": false
+  },
+  "tags": ["metrics", "outcomes", "beneficiaries", "survivors", "housing-nights", "youth"]
+}

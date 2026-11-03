@@ -172,6 +172,13 @@ export interface FundraisingForecastItem {
   forecastAssumptions: string[];
   dataFreshnessTimestamp: string;
   isPledgeIncludedAsSettled: false; // Must ALWAYS be false
+  sourceDocumentId?: string;
+  institutionalApprovalStatus?: 'APPROVED' | 'PENDING_REVIEW' | 'DRAFT' | 'SIMULATED_DEMO';
+  recordOwner?: string;
+  approvalDate?: string;
+  lastVerificationDate?: string;
+  isSimulatedProjection?: boolean;
+  financialClassification?: 'SETTLED_ACTUAL' | 'CONFIRMED_COMMITMENT' | 'PENDING_APPLICATION' | 'PIPELINE_OPPORTUNITY' | 'ANALYTICAL_PROJECTION';
 }
 
 export interface GrantPrioritizationRank {
@@ -186,6 +193,12 @@ export interface GrantPrioritizationRank {
   priorityTier: 'TIER_1_TOP_PRIORITY' | 'TIER_2_HIGH' | 'TIER_3_OPPORTUNISTIC';
   recommendedLeadAgentId: string; // e.g. 'FUND-AI-002'
   stewardedStaffId: string;
+  sourceDocumentId?: string;
+  institutionalApprovalStatus?: 'APPROVED' | 'PENDING_REVIEW' | 'DRAFT' | 'SIMULATED_DEMO';
+  recordOwner?: string;
+  approvalDate?: string;
+  lastVerificationDate?: string;
+  isSimulatedOpportunity?: boolean;
 }
 
 // =============================================================================

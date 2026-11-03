@@ -1,0 +1,28 @@
+{
+  "id": "DOC-GOV-001",
+  "title": "Phumulani Board Governance, Executive Leadership & Operational Roles",
+  "category": "GOVERNANCE_LEADERSHIP",
+  "summary": "Verified biographical sketches, fiduciary oversight structure, and officer assignments for Phumulani's governing board and executive staff.",
+  "content": "Phumulani is governed by an independent Board of Directors committed to rigorous fiduciary compliance, ethical stewardship, and community accountability. Executive leadership is spearheaded by Comfort Dondo, Founder and Executive Director, an acclaimed community advocate with over 15 years of grassroots mobilization and immigrant rights leadership in Minnesota. Safeguarding operations are supervised by Sister Miriam K., Safeguarding and Trauma Care Lead. Operations and volunteer coordination are led by Marcus Chen. Fiduciary and financial compliance is overseen by Board Treasurer Eric Kowalski, CPA. Legal compliance and VAWA safeguarding counsel are provided by external advisory partners. The board maintains 100% independent non-compensated governance, meeting quarterly with formal minute approval.",
+  "keyFacts": [
+    "Executive Director: Comfort Dondo (Founder, 15+ years immigrant rights leadership).",
+    "Safeguarding & Trauma Care Lead: Sister Miriam K.",
+    "Operations & Community Mobilization: Marcus Chen.",
+    "Board Treasurer: Eric Kowalski, CPA (Independent Fiduciary Oversight).",
+    "Board composition: 100% independent, uncompensated, community-reflective members.",
+    "Formal quarterly board review and financial reconciliation protocol."
+  ],
+  "metadata": {
+    "sourceDocumentId": "DOC-GOV-001",
+    "institutionalApprovalStatus": "APPROVED",
+    "recordOwner": "Board Governance Committee (Secretary M. Chen)",
+    "approvalDate": "2026-04-10",
+    "effectiveDate": "2026-01-01",
+    "lastVerificationDate": "2026-09-30",
+    "reviewExpirationDate": "2027-04-10",
+    "accessClassification": "PUBLIC",
+    "evidenceReference": "Phumulani Articles of Incorporation & Annual Governance Filing 2026",
+    "isDemoData": false
+  },
+  "tags": ["governance", "leadership", "comfort-dondo", "board", "officers", "fiduciary"]
+}

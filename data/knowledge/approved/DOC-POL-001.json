@@ -1,0 +1,27 @@
+{
+  "id": "DOC-POL-001",
+  "title": "Phumulani Institutional Operating Policies, Gift Acceptance & Safeguarding Governance",
+  "category": "INSTITUTIONAL_POLICY",
+  "summary": "Mandatory organizational policies covering gift acceptance, 15% de minimis indirect cost caps, anti-commercial contamination, and statutory VAWA privacy.",
+  "content": "Phumulani enforces four foundational institutional policies across all fundraising, technology, and operations: (1) Gift Acceptance & Pledges: Donations are recorded as Unrestricted or Restricted. Unsettled pledges are maintained strictly in pipeline records and are NEVER booked as settled cash. (2) Indirect Cost Rate Cap: In compliance with federal grant guidelines and institutional stewardship principles, indirect administrative cost rates in proposals and budgets are capped at 15% de minimis. (3) Anti-Commercial Contamination: Phumulani maintains absolute 0% inclusion or endorsement of commercial tax software (e.g., TaxGuard) or non-approved third-party commercial data harvesting. (4) Statutory VAWA Privacy: Under 34 U.S.C. 12291(b)(2), survivor personally identifiable information (PII) is barred from public, donor, or commercial disclosure, including all prompt engineering and external AI pipelines.",
+  "keyFacts": [
+    "Pledges and pipeline leads are strictly separated from settled cash accounts.",
+    "Indirect cost rate strictly capped at 15% de minimis across all funding requests.",
+    "Zero commercial tax preparation or commercial data software contamination.",
+    "Absolute statutory compliance with VAWA § 1367 confidentiality mandates.",
+    "Dual human authorization required for all outbound grants and solicitation submissions."
+  ],
+  "metadata": {
+    "sourceDocumentId": "DOC-POL-001",
+    "institutionalApprovalStatus": "APPROVED",
+    "recordOwner": "Board Governance & Audit Committee",
+    "approvalDate": "2026-06-01",
+    "effectiveDate": "2026-06-01",
+    "lastVerificationDate": "2026-10-22",
+    "reviewExpirationDate": "2027-06-01",
+    "accessClassification": "PUBLIC",
+    "evidenceReference": "Phumulani Policy Manual Vol. 4 § 1.01-1.04; 34 U.S.C. 12291(b)(2)",
+    "isDemoData": false
+  },
+  "tags": ["policy", "gift-acceptance", "indirect-cap", "vawa-1367", "compliance", "anti-contamination"]
+}

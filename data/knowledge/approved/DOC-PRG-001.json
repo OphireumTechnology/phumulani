@@ -1,0 +1,29 @@
+{
+  "id": "DOC-PRG-001",
+  "title": "Phumulani Five Core Community Programs & Verified Objectives",
+  "category": "PROGRAM_OBJECTIVE",
+  "summary": "Detailed specifications, approved annual budgets, and verified programmatic objectives for Phumulani's 5 core service pipelines.",
+  "content": "Phumulani delivers services across five rigorously evaluated program pipelines: (1) Healing Sisterhood Circles (PROG-001, $85,000 budget): culturally attuned trauma recovery, peer support circles, and mental wellness workshops in Somali, Amharic, Oromo, Spanish, and English. (2) Healing Homes Transitional Housing (PROG-002, $125,000 budget): safe, confidential emergency lodging, transitional housing stipends, and rapid rehousing support. (3) Economic Self-Reliance Lab (PROG-003, $95,000 budget): financial literacy, micro-enterprise coaching, digital skills, and vocational navigation. (4) Education & Workforce Pathways (PROG-004, $75,000 budget): adult continuing education, GED support, accredited credential stipends, and ESL courses. (5) Youth Leadership & Mentorship (PROG-005, $60,000 budget): after-school academic tutoring, cross-cultural youth mentorship, and leadership camps.",
+  "keyFacts": [
+    "PROG-001: Healing Sisterhood Circles — Approved Direct Budget: $85,000.",
+    "PROG-002: Healing Homes Transitional Housing — Approved Direct Budget: $125,000.",
+    "PROG-003: Economic Self-Reliance Lab — Approved Direct Budget: $95,000.",
+    "PROG-004: Education & Workforce Pathways — Approved Direct Budget: $75,000.",
+    "PROG-005: Youth Leadership & Mentorship — Approved Direct Budget: $60,000.",
+    "Indirect cost rate strictly capped at the 15% de minimis federal standard.",
+    "All program participation adheres to voluntary trauma-informed empowerment principles."
+  ],
+  "metadata": {
+    "sourceDocumentId": "DOC-PRG-001",
+    "institutionalApprovalStatus": "APPROVED",
+    "recordOwner": "Sister Miriam K. & Program Directors Committee",
+    "approvalDate": "2026-02-01",
+    "effectiveDate": "2026-02-01",
+    "lastVerificationDate": "2026-10-15",
+    "reviewExpirationDate": "2027-02-01",
+    "accessClassification": "DONOR_FACING",
+    "evidenceReference": "Phumulani Board Program Charter Resolution 2026-02; Hennepin County Community Contract",
+    "isDemoData": false
+  },
+  "tags": ["programs", "sisterhood", "housing", "economic-empowerment", "workforce", "youth"]
+}

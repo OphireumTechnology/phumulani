@@ -1,0 +1,27 @@
+{
+  "id": "DOC-FND-001",
+  "title": "Phumulani AI Community Platform — Institutional Mission & Charter",
+  "category": "FOUNDATION_OVERVIEW",
+  "summary": "Official 501(c)(3) mission statement, founding purpose, core values, and community charter for Phumulani in Minneapolis, Minnesota.",
+  "content": "Phumulani is a Minnesota-based 501(c)(3) community benefit organization dedicated to providing comprehensive, culturally attuned support, emergency shelter, economic self-reliance, and holistic healing for immigrant, refugee, and BIPOC survivors of domestic and gender-based violence. Founded under the leadership of Executive Director Comfort Dondo, Phumulani pairs compassionate, trauma-informed human casework with state-of-the-art ethical AI tools. Our mission is to restore dignity, cultivate sustainable independence, and break generational cycles of trauma and poverty through community-led empowerment.",
+  "keyFacts": [
+    "IRS 501(c)(3) tax-exempt public charity headquartered in Minneapolis, Minnesota.",
+    "Founded by Executive Director Comfort Dondo to serve East African, West African, Southeast Asian, and Latin American immigrant communities.",
+    "Operates with zero commercial tax preparation or TaxGuard software contamination.",
+    "Strictly governed by federal VAWA Section 1367 confidentiality mandates.",
+    "All donor contributions are tax-deductible to the fullest extent permitted by law."
+  ],
+  "metadata": {
+    "sourceDocumentId": "DOC-FND-001",
+    "institutionalApprovalStatus": "APPROVED",
+    "recordOwner": "Comfort Dondo (Executive Director)",
+    "approvalDate": "2026-01-15",
+    "effectiveDate": "2026-01-15",
+    "lastVerificationDate": "2026-10-01",
+    "reviewExpirationDate": "2027-01-15",
+    "accessClassification": "PUBLIC",
+    "evidenceReference": "MN Secretary of State Non-Profit Filing #1084291; IRS Letter 947",
+    "isDemoData": false
+  },
+  "tags": ["mission", "governance", "501c3", "immigrant", "refugee", "survivor-support"]
+}

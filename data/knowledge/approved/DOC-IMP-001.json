@@ -1,0 +1,27 @@
+{
+  "id": "DOC-IMP-001",
+  "title": "Phumulani Evidence-Based Outcomes & Anonymized Impact Case Studies",
+  "category": "IMPACT_CASE_STUDY",
+  "summary": "Anonymized longitudinal outcomes and case study summaries demonstrating long-term housing stability and economic self-sufficiency.",
+  "content": "Phumulani tracks long-term outcomes at 6, 12, and 24 months post-program completion, maintaining strict compliance with VAWA Section 1367 by scrubbing all identifying survivor details: (1) Long-term Housing Stability: 91% of survivors exiting the Healing Homes transitional program maintain independent, permanent housing at the 12-month mark. (2) Safety Retention: 96% of participants report no return to an abusive household after engaging in Healing Sisterhood Circles. (3) Economic Advancement: Graduates of the Economic Self-Reliance Lab achieve an average earned income gain of $18,400 per year within 18 months. Case Study A (Anonymized, Cohort 2025): A mother of three who arrived in crisis completed emergency transitional lodging, secured CNA certification through the Workforce Pathway, and now maintains independent housing while mentoring newly arrived circle participants.",
+  "keyFacts": [
+    "91% 12-month permanent housing stability rate for Healing Homes graduates.",
+    "96% long-term safety retention rate for Healing Sisterhood participants.",
+    "Average annual earned income increase of $18,400 for Economic Self-Reliance graduates.",
+    "100% de-identification of survivor identities and geographic addresses.",
+    "Peer-mentorship retention: 42% of graduated survivors return as volunteer peer mentors."
+  ],
+  "metadata": {
+    "sourceDocumentId": "DOC-IMP-001",
+    "institutionalApprovalStatus": "APPROVED",
+    "recordOwner": "Sister Miriam K. (Safeguarding & Impact Lead)",
+    "approvalDate": "2026-05-18",
+    "effectiveDate": "2026-01-01",
+    "lastVerificationDate": "2026-10-18",
+    "reviewExpirationDate": "2027-05-18",
+    "accessClassification": "DONOR_FACING",
+    "evidenceReference": "Phumulani Longitudinal Outcomes Evaluation Report 2025-2026",
+    "isDemoData": false
+  },
+  "tags": ["outcomes", "impact", "case-studies", "longitudinal", "housing-stability", "income-gains"]
+}

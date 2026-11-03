@@ -54,6 +54,7 @@ import {
 import { phumulaniAiAgentService } from './src/services/phumulaniAiAgentService';
 import { localInferenceAdapter } from './src/services/localInferenceAdapter';
 import { calendarIntegrationService } from './src/services/calendarIntegrationService';
+import { localKnowledgeRetrievalService } from './src/services/localKnowledgeRetrievalService';
 
 dotenv.config();
 
@@ -5613,6 +5614,30 @@ app.post('/api/phumulani-ai/calendar/schedule', async (req: Request, res: Respon
   } catch (err: any) {
     res.status(400).json({ success: false, error: err.message });
   }
+});
+
+// -----------------------------------------------------------------------------
+// LOCAL KNOWLEDGE RETRIEVAL & AUDIT APIS (MILESTONES 1 & 2)
+// -----------------------------------------------------------------------------
+app.get('/api/phumulani-ai/knowledge/status', (_req: Request, res: Response) => {
+  res.json({ success: true, status: localKnowledgeRetrievalService.getKnowledgeStatus() });
+});
+
+app.get('/api/phumulani-ai/knowledge/documents', (_req: Request, res: Response) => {
+  res.json({ success: true, documents: localKnowledgeRetrievalService.getAllApprovedDocuments() });
+});
+
+app.post('/api/phumulani-ai/knowledge/query', (req: Request, res: Response) => {
+  try {
+    const result = localKnowledgeRetrievalService.queryVerifiedKnowledge(req.body);
+    res.json({ success: true, result });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/phumulani-ai/knowledge/financial-breakdown', (_req: Request, res: Response) => {
+  res.json({ success: true, financialBreakdown: localKnowledgeRetrievalService.getAuditedFinancialBreakdown() });
 });
 
 // -----------------------------------------------------------------------------

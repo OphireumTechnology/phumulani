@@ -1,0 +1,166 @@
+{
+  "lastIndexedAt": "2026-11-03T13:09:43.738Z",
+  "totalApprovedRecords": 8,
+  "documents": [
+    {
+      "id": "DOC-FIN-001",
+      "title": "Phumulani FY2026 Institutional Budget Summary & Revenue Classification",
+      "category": "BUDGET_FINANCIAL",
+      "sourceDocumentId": "DOC-FIN-001",
+      "recordOwner": "Finance Committee & Board Treasurer (E. Kowalski, CPA)",
+      "approvalDate": "2026-03-15",
+      "effectiveDate": "2026-01-01",
+      "accessClassification": "DONOR_FACING",
+      "evidenceReference": "FY2025 Form 990 / Independent Financial Review Ledger Ref #GL-2026-OCT",
+      "keyFactsCount": 7,
+      "tags": [
+        "budget",
+        "finances",
+        "settled-cash",
+        "pipeline",
+        "grants",
+        "indirect-rate"
+      ]
+    },
+    {
+      "id": "DOC-FND-001",
+      "title": "Phumulani AI Community Platform — Institutional Mission & Charter",
+      "category": "FOUNDATION_OVERVIEW",
+      "sourceDocumentId": "DOC-FND-001",
+      "recordOwner": "Comfort Dondo (Executive Director)",
+      "approvalDate": "2026-01-15",
+      "effectiveDate": "2026-01-15",
+      "accessClassification": "PUBLIC",
+      "evidenceReference": "MN Secretary of State Non-Profit Filing #1084291; IRS Letter 947",
+      "keyFactsCount": 5,
+      "tags": [
+        "mission",
+        "governance",
+        "501c3",
+        "immigrant",
+        "refugee",
+        "survivor-support"
+      ]
+    },
+    {
+      "id": "DOC-GEO-001",
+      "title": "Phumulani Geographic Focus, Demographic Context & Service Territory",
+      "category": "FOUNDATION_OVERVIEW",
+      "sourceDocumentId": "DOC-GEO-001",
+      "recordOwner": "Outreach & Community Partnerships Lead",
+      "approvalDate": "2026-03-01",
+      "effectiveDate": "2026-01-01",
+      "accessClassification": "DONOR_FACING",
+      "evidenceReference": "Metropolitan Council Twin Cities Demographic Review & Phumulani Client Intake Registry 2026",
+      "keyFactsCount": 5,
+      "tags": [
+        "geography",
+        "demographics",
+        "hennepin-county",
+        "twin-cities",
+        "immigrant",
+        "languages"
+      ]
+    },
+    {
+      "id": "DOC-GOV-001",
+      "title": "Phumulani Board Governance, Executive Leadership & Operational Roles",
+      "category": "GOVERNANCE_LEADERSHIP",
+      "sourceDocumentId": "DOC-GOV-001",
+      "recordOwner": "Board Governance Committee (Secretary M. Chen)",
+      "approvalDate": "2026-04-10",
+      "effectiveDate": "2026-01-01",
+      "accessClassification": "PUBLIC",
+      "evidenceReference": "Phumulani Articles of Incorporation & Annual Governance Filing 2026",
+      "keyFactsCount": 6,
+      "tags": [
+        "governance",
+        "leadership",
+        "comfort-dondo",
+        "board",
+        "officers",
+        "fiduciary"
+      ]
+    },
+    {
+      "id": "DOC-IMP-001",
+      "title": "Phumulani Evidence-Based Outcomes & Anonymized Impact Case Studies",
+      "category": "IMPACT_CASE_STUDY",
+      "sourceDocumentId": "DOC-IMP-001",
+      "recordOwner": "Sister Miriam K. (Safeguarding & Impact Lead)",
+      "approvalDate": "2026-05-18",
+      "effectiveDate": "2026-01-01",
+      "accessClassification": "DONOR_FACING",
+      "evidenceReference": "Phumulani Longitudinal Outcomes Evaluation Report 2025-2026",
+      "keyFactsCount": 5,
+      "tags": [
+        "outcomes",
+        "impact",
+        "case-studies",
+        "longitudinal",
+        "housing-stability",
+        "income-gains"
+      ]
+    },
+    {
+      "id": "DOC-MET-001",
+      "title": "Phumulani Verified Beneficiary Service Delivery & Operational Metrics",
+      "category": "BENEFICIARY_METRIC",
+      "sourceDocumentId": "DOC-MET-001",
+      "recordOwner": "Sister Miriam K. (Director of Community Impact)",
+      "approvalDate": "2026-10-05",
+      "effectiveDate": "2026-10-01",
+      "accessClassification": "DONOR_FACING",
+      "evidenceReference": "Hennepin County Quarterly Service Verification Ledger Q3-2026",
+      "keyFactsCount": 6,
+      "tags": [
+        "metrics",
+        "outcomes",
+        "beneficiaries",
+        "survivors",
+        "housing-nights",
+        "youth"
+      ]
+    },
+    {
+      "id": "DOC-POL-001",
+      "title": "Phumulani Institutional Operating Policies, Gift Acceptance & Safeguarding Governance",
+      "category": "INSTITUTIONAL_POLICY",
+      "sourceDocumentId": "DOC-POL-001",
+      "recordOwner": "Board Governance & Audit Committee",
+      "approvalDate": "2026-06-01",
+      "effectiveDate": "2026-06-01",
+      "accessClassification": "PUBLIC",
+      "evidenceReference": "Phumulani Policy Manual Vol. 4 § 1.01-1.04; 34 U.S.C. 12291(b)(2)",
+      "keyFactsCount": 5,
+      "tags": [
+        "policy",
+        "gift-acceptance",
+        "indirect-cap",
+        "vawa-1367",
+        "compliance",
+        "anti-contamination"
+      ]
+    },
+    {
+      "id": "DOC-PRG-001",
+      "title": "Phumulani Five Core Community Programs & Verified Objectives",
+      "category": "PROGRAM_OBJECTIVE",
+      "sourceDocumentId": "DOC-PRG-001",
+      "recordOwner": "Sister Miriam K. & Program Directors Committee",
+      "approvalDate": "2026-02-01",
+      "effectiveDate": "2026-02-01",
+      "accessClassification": "DONOR_FACING",
+      "evidenceReference": "Phumulani Board Program Charter Resolution 2026-02; Hennepin County Community Contract",
+      "keyFactsCount": 7,
+      "tags": [
+        "programs",
+        "sisterhood",
+        "housing",
+        "economic-empowerment",
+        "workforce",
+        "youth"
+      ]
+    }
+  ]
+}

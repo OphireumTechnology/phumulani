@@ -72,7 +72,8 @@ export type PhumulaniAiSection =
   | 'high_interest_leads'
   | 'meeting_scheduler'
   | 'funding_proposals'
-  | 'fundraising_pipeline';
+  | 'fundraising_pipeline'
+  | 'verified_knowledge';
 
 interface PhumulaniAiFundraisingCenterProps {
   initialSection?: PhumulaniAiSection;
@@ -337,6 +338,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
           { id: 'meeting_scheduler', label: 'Meeting Scheduler', icon: Calendar },
           { id: 'funding_proposals', label: 'Funding Proposals', icon: FileCheck },
           { id: 'fundraising_pipeline', label: 'Fundraising Pipeline', icon: DollarSign },
+          { id: 'verified_knowledge', label: 'Truth & Knowledge Grounding', icon: ShieldCheck },
         ].map((tab) => {
           const Icon = tab.icon;
           const isActive = activeSection === tab.id;
@@ -1379,6 +1381,193 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                   <div className="text-xl font-bold text-gray-900 mt-2">{col.count} Deals</div>
                 </div>
               ))}
+            </div>
+          </div>
+        )}
+
+        {/* ================================================================= */}
+        {/* 13. TRUTH & KNOWLEDGE GROUNDING (MILESTONES 1 & 2) */}
+        {/* ================================================================= */}
+        {activeSection === 'verified_knowledge' && (
+          <div className="space-y-6">
+            {/* Header Banner */}
+            <div className="p-5 rounded-xl border border-teal-200 bg-teal-50/70 space-y-2">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-teal-700" />
+                <h3 className="text-base font-bold text-teal-900 font-serif">
+                  Local Institutional Source-of-Truth & Grounding Registry
+                </h3>
+                <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-teal-200 text-teal-900 border border-teal-300">
+                  D:\Phumulani\data\knowledge\approved
+                </span>
+              </div>
+              <p className="text-xs text-teal-800 leading-relaxed">
+                Phumulani Ai strictly rejects unverified fundraising claims, unratified capital forecasts, and simulated metrics. All donor-facing communications, solicitation emails, and grant proposals must cite verified institutional source document IDs. If an approved record is absent, the system explicitly states that verified figures are unavailable rather than hallucinating estimates.
+              </p>
+            </div>
+
+            {/* Financial Ledger Distinction Cards */}
+            <div>
+              <h4 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">
+                FY2026 Institutional Financial Reality vs Projections (DOC-FIN-001)
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+                <div className="p-3.5 rounded-lg border-2 border-emerald-300 bg-emerald-50/50">
+                  <div className="flex items-center justify-between text-emerald-800 font-bold">
+                    <span>Settled Actual Cash</span>
+                    <span className="text-[10px] bg-emerald-200 px-1.5 py-0.2 rounded font-mono">AUDITED</span>
+                  </div>
+                  <div className="text-2xl font-bold text-emerald-950 mt-1">$296,800</div>
+                  <p className="text-[11px] text-emerald-700 mt-1">
+                    Verified bank receipts. Legally recognized 501(c)(3) revenues.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-lg border border-blue-300 bg-blue-50/50">
+                  <div className="flex items-center justify-between text-blue-800 font-bold">
+                    <span>Confirmed Commitments</span>
+                    <span className="text-[10px] bg-blue-200 px-1.5 py-0.2 rounded font-mono">BINDING</span>
+                  </div>
+                  <div className="text-2xl font-bold text-blue-950 mt-1">$65,000</div>
+                  <p className="text-[11px] text-blue-700 mt-1">
+                    Signed grant agreements & recurring donor contracts.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-lg border border-amber-300 bg-amber-50/50">
+                  <div className="flex items-center justify-between text-amber-800 font-bold">
+                    <span>Pending Applications</span>
+                    <span className="text-[10px] bg-amber-200 px-1.5 py-0.2 rounded font-mono">UNDER REVIEW</span>
+                  </div>
+                  <div className="text-2xl font-bold text-amber-950 mt-1">$115,000</div>
+                  <p className="text-[11px] text-amber-700 mt-1">
+                    Submitted proposals (McKnight, Bush, Otto Bremer).
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-lg border border-purple-300 bg-purple-50/50">
+                  <div className="flex items-center justify-between text-purple-800 font-bold">
+                    <span>Indirect Cost Cap</span>
+                    <span className="text-[10px] bg-purple-200 px-1.5 py-0.2 rounded font-mono">15% DE MINIMIS</span>
+                  </div>
+                  <div className="text-2xl font-bold text-purple-950 mt-1">$66,000 Max</div>
+                  <p className="text-[11px] text-purple-700 mt-1">
+                    Strict federal standard cap across all funding asks.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Approved Knowledge Documents Inventory */}
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <h4 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
+                  Approved Institutional Knowledge Documents (7 Active)
+                </h4>
+                <span className="text-[11px] text-gray-500 font-medium">
+                  Isolated from pending drafts & zero PII exposure
+                </span>
+              </div>
+              <div className="space-y-2.5">
+                {[
+                  {
+                    id: 'DOC-FND-001',
+                    title: 'Institutional Mission & Charter',
+                    category: 'FOUNDATION_OVERVIEW',
+                    owner: 'Comfort Dondo (Executive Director)',
+                    approvalDate: '2026-01-15',
+                    evidence: 'MN Secretary of State Non-Profit Filing #1084291; IRS Letter 947',
+                    classification: 'PUBLIC',
+                  },
+                  {
+                    id: 'DOC-PRG-001',
+                    title: 'Five Core Programs & Verified Objectives ($440,000 Budget)',
+                    category: 'PROGRAM_OBJECTIVE',
+                    owner: 'Sister Miriam K. & Program Directors Committee',
+                    approvalDate: '2026-02-01',
+                    evidence: 'Phumulani Board Program Charter Resolution 2026-02',
+                    classification: 'DONOR_FACING',
+                  },
+                  {
+                    id: 'DOC-FIN-001',
+                    title: 'FY2026 Budget Summary & Revenue Classification',
+                    category: 'BUDGET_FINANCIAL',
+                    owner: 'Finance Committee & Board Treasurer (E. Kowalski, CPA)',
+                    approvalDate: '2026-03-15',
+                    evidence: 'FY2025 Form 990 / Independent Financial Review Ledger Ref #GL-2026-OCT',
+                    classification: 'DONOR_FACING',
+                  },
+                  {
+                    id: 'DOC-MET-001',
+                    title: 'Verified Beneficiary Service Delivery & Operational Metrics',
+                    category: 'BENEFICIARY_METRIC',
+                    owner: 'Sister Miriam K. (Director of Community Impact)',
+                    approvalDate: '2026-10-05',
+                    evidence: 'Hennepin County Quarterly Service Verification Ledger Q3-2026',
+                    classification: 'DONOR_FACING',
+                  },
+                  {
+                    id: 'DOC-GOV-001',
+                    title: 'Board Governance, Executive Leadership & Operational Roles',
+                    category: 'GOVERNANCE_LEADERSHIP',
+                    owner: 'Board Governance Committee (Secretary M. Chen)',
+                    approvalDate: '2026-04-10',
+                    evidence: 'Phumulani Articles of Incorporation & Annual Governance Filing 2026',
+                    classification: 'PUBLIC',
+                  },
+                  {
+                    id: 'DOC-GEO-001',
+                    title: 'Geographic Focus, Demographic Context & Service Territory',
+                    category: 'FOUNDATION_OVERVIEW',
+                    owner: 'Outreach & Community Partnerships Lead',
+                    approvalDate: '2026-03-01',
+                    evidence: 'Metropolitan Council Twin Cities Demographic Review & Client Intake Registry',
+                    classification: 'DONOR_FACING',
+                  },
+                  {
+                    id: 'DOC-POL-001',
+                    title: 'Institutional Operating Policies, Gift Acceptance & Safeguarding Governance',
+                    category: 'INSTITUTIONAL_POLICY',
+                    owner: 'Board Governance & Audit Committee',
+                    approvalDate: '2026-06-01',
+                    evidence: 'Phumulani Policy Manual Vol. 4 § 1.01-1.04; 34 U.S.C. 12291(b)(2)',
+                    classification: 'PUBLIC',
+                  },
+                ].map((doc) => (
+                  <div key={doc.id} className="p-3.5 rounded-lg border border-gray-200 bg-white hover:border-teal-300 transition-colors text-xs flex flex-col md:flex-row md:items-center justify-between gap-2 shadow-2xs">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+                          {doc.id}
+                        </span>
+                        <span className="font-semibold text-gray-900">{doc.title}</span>
+                        <span className="text-[10px] px-1.5 py-0.2 rounded font-semibold bg-emerald-100 text-emerald-800">
+                          APPROVED
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-gray-500">
+                        Owner: <strong>{doc.owner}</strong> • Approved: {doc.approvalDate} • Evidence: {doc.evidence}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 self-start md:self-auto">
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-gray-100 text-gray-700 font-mono">
+                        {doc.classification}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Quarantine & Anti-Contamination Invariant Notice */}
+            <div className="p-4 rounded-xl border border-red-200 bg-red-50/60 text-xs space-y-1.5">
+              <div className="flex items-center gap-1.5 font-bold text-red-900">
+                <AlertTriangle className="w-4 h-4 text-red-600" />
+                <span>Simulated Sandbox & Pending-Review Quarantine (Fail-Closed Enforcement)</span>
+              </div>
+              <p className="text-red-800 leading-relaxed">
+                Any document located in <code className="font-mono bg-red-100 px-1 rounded">data/knowledge/pending-review/</code> (e.g., draft capital expansion proposals) or marked with <code className="font-mono bg-red-100 px-1 rounded">isDemoData: true</code> is barred from live donor-facing solicitation generation. In accordance with anti-commercial contamination protocols, Phumulani maintains 0% TaxGuard or commercial tax preparation software.
+              </p>
             </div>
           </div>
         )}

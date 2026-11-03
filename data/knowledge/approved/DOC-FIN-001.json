@@ -1,0 +1,29 @@
+{
+  "id": "DOC-FIN-001",
+  "title": "Phumulani FY2026 Institutional Budget Summary & Revenue Classification",
+  "category": "BUDGET_FINANCIAL",
+  "summary": "Audited institutional budget summary, showing verified settled revenues, confirmed multi-year commitments, pending applications, and pipeline opportunities.",
+  "content": "For Fiscal Year 2026, Phumulani operates under a board-approved operating expenditure budget of $440,000 across its five core direct programs plus approved operational administrative costs. In accordance with strict nonprofit accounting standards: (1) Settled Actual Revenue received and verified in bank accounts is $296,800. (2) Confirmed Written Commitments (legally binding pledges/contracts) total $65,000. (3) Pending Grant Applications under active foundation review total $115,000. (4) Pipeline Inquiries (unsolicited or uncommitted discussions) total $45,000. Pledges, pending grants, and pipeline opportunities are NEVER counted as settled cash in financial audits. Indirect cost rate is capped at 15% ($66,000 total across organizational base).",
+  "keyFacts": [
+    "Approved Operating Expenditure Budget: $440,000 total across 5 core programs.",
+    "Settled Actual Cash Revenue (Audited): $296,800.",
+    "Confirmed Written Commitments: $65,000.",
+    "Pending Foundation Grant Applications: $115,000.",
+    "Pipeline Inquiries (Uncommitted): $45,000.",
+    "Total Indirect Cost Rate: Capped at 15% ($66,000 allowable indirect pool).",
+    "Pledges and pipeline leads are strictly excluded from settled balance sheet receipts."
+  ],
+  "metadata": {
+    "sourceDocumentId": "DOC-FIN-001",
+    "institutionalApprovalStatus": "APPROVED",
+    "recordOwner": "Finance Committee & Board Treasurer (E. Kowalski, CPA)",
+    "approvalDate": "2026-03-15",
+    "effectiveDate": "2026-01-01",
+    "lastVerificationDate": "2026-10-20",
+    "reviewExpirationDate": "2026-12-31",
+    "accessClassification": "DONOR_FACING",
+    "evidenceReference": "FY2025 Form 990 / Independent Financial Review Ledger Ref #GL-2026-OCT",
+    "isDemoData": false
+  },
+  "tags": ["budget", "finances", "settled-cash", "pipeline", "grants", "indirect-rate"]
+}
