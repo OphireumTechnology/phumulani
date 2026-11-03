@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-11-02T14:30:15.030Z",
+  "savedAt": "2026-11-03T01:56:28.352Z",
   "connections": [
     {
       "id": "conn-google-info_phumulani_org",
@@ -15,7 +15,7 @@
       "lastSuccessfulSyncAt": "2026-11-02T01:58:59.607Z",
       "lastError": null,
       "incomingMessageCount": 42,
-      "outgoingMessageCount": 31,
+      "outgoingMessageCount": 33,
       "syncFailureCount": 0,
       "credentialExpiresAt": "2026-12-02T03:58:59.607Z",
       "credentialWarning": false,
@@ -104,7 +104,7 @@
         }
       ],
       "createdAt": "2026-10-26T03:58:59.607Z",
-      "updatedAt": "2026-11-02T14:30:15.028Z"
+      "updatedAt": "2026-11-03T01:56:28.348Z"
     },
     {
       "id": "conn-google-director_phumulani_org",
@@ -1300,9 +1300,200 @@
       "updatedAt": "2026-11-02T14:30:15.026Z",
       "syncCursor": "1004848",
       "cursorType": "GMAIL_HISTORY_ID"
+    },
+    {
+      "id": "conn-google-caseworker_pretoria_phumulani_org-mw01e87l",
+      "emailAddress": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "displayName": "Pretoria Casework Desk",
+      "accountOwner": "Pretoria Operations Staff",
+      "department": "Casework & Outreach",
+      "authMethod": "OAUTH2",
+      "authStatus": "REVOKED",
+      "connectionHealth": "REVOKED",
+      "lastSyncAt": "2026-11-03T01:56:28.308Z",
+      "lastSuccessfulSyncAt": "2026-11-03T01:56:28.308Z",
+      "lastError": null,
+      "incomingMessageCount": 0,
+      "outgoingMessageCount": 0,
+      "syncFailureCount": 0,
+      "credentialExpiresAt": "2026-12-03T01:56:28.343Z",
+      "credentialWarning": false,
+      "sendingPermission": "DISARMED_STAGING",
+      "syncStatus": "SYNC_COMPLETE",
+      "folders": [
+        "INBOX",
+        "Sent",
+        "Drafts",
+        "Trash"
+      ],
+      "folderInspection": [],
+      "isInstitutionalMailbox": true,
+      "safeguardingClassification": "GENERAL",
+      "currentEvidence": {
+        "state": "REVOKED",
+        "timestamp": "2026-11-03T01:56:28.344Z",
+        "roundTripLatencyMs": 0,
+        "tlsVersion": "N/A",
+        "cipherSuite": "N/A",
+        "dnsResolution": "RESOLVED_OK",
+        "diagnosticsDetail": "Token credentials securely revoked and purged for caseworker.pretoria@phumulani.org."
+      },
+      "evidenceHistory": [
+        {
+          "state": "REVOKED",
+          "timestamp": "2026-11-03T01:56:28.344Z",
+          "roundTripLatencyMs": 0,
+          "tlsVersion": "N/A",
+          "cipherSuite": "N/A",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Token credentials securely revoked and purged for caseworker.pretoria@phumulani.org."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-03T01:56:28.343Z",
+          "roundTripLatencyMs": 44,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "tokenExpiryIso": "2026-12-03T01:56:28.343Z",
+          "diagnosticsDetail": "Token refreshed successfully via secure refresh grant for caseworker.pretoria@phumulani.org."
+        },
+        {
+          "state": "TOKEN_EXPIRED",
+          "timestamp": "2026-11-03T01:56:28.343Z",
+          "roundTripLatencyMs": 0,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "tokenExpiryIso": "2026-11-03T00:56:28.343Z",
+          "diagnosticsDetail": "Token expiration detected for caseworker.pretoria@phumulani.org. Reauthorization required."
+        },
+        {
+          "state": "AUTHORIZED",
+          "timestamp": "2026-11-03T01:56:28.306Z",
+          "roundTripLatencyMs": 45,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Initial configuration registered for caseworker.pretoria@phumulani.org [Provider: GOOGLE]."
+        }
+      ],
+      "createdAt": "2026-11-03T01:56:28.306Z",
+      "updatedAt": "2026-11-03T01:56:28.344Z",
+      "syncCursor": "1004848",
+      "cursorType": "GMAIL_HISTORY_ID"
     }
   ],
   "auditEvents": [
+    {
+      "id": "aud-1793670988351",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mw01e88t",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_RECONNECTED",
+      "actorName": "Administrator",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-03T01:56:28.351Z",
+      "details": "Account reconnected: e2e.test.liaison@zoho.com (Status: CONNECTED)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1793670988351",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mw01e88t",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_DISCONNECTED",
+      "actorName": "Administrator",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-03T01:56:28.351Z",
+      "details": "Account disconnected: e2e.test.liaison@zoho.com",
+      "status": "warning"
+    },
+    {
+      "id": "aud-1793670988350",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mw01e88t",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-03T01:56:28.350Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1793670988349",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mw01e88t",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Quality Assurance Lead",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-03T01:56:28.349Z",
+      "details": "Account registered: e2e.test.liaison@zoho.com [Provider: ZOHO, Auth: OAUTH2, Status: CONNECTED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1793670988348",
+      "connectionId": "conn-google-info_phumulani_org",
+      "mailboxEmail": "info@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "DISPATCH_SENT",
+      "actorName": "Dr. Zanele Khumalo (Executive Director)",
+      "actorRole": "EXECUTIVE_APPROVER",
+      "timestamp": "2026-11-03T01:56:28.348Z",
+      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1793670988348",
+      "status": "success"
+    },
+    {
+      "id": "aud-1793670988347",
+      "connectionId": "conn-google-info_phumulani_org",
+      "mailboxEmail": "info@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "DISPATCH_SENT",
+      "actorName": "Dr. Zanele Khumalo (Executive Director)",
+      "actorRole": "EXECUTIVE_APPROVER",
+      "timestamp": "2026-11-03T01:56:28.347Z",
+      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1793670988347",
+      "status": "success"
+    },
+    {
+      "id": "aud-1793670988344",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mw01e87l",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "TOKEN_REVOKED",
+      "actorName": "SecurityAdministrator",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-03T01:56:28.344Z",
+      "details": "Access credentials revoked and purged from vault: caseworker.pretoria@phumulani.org",
+      "status": "warning"
+    },
+    {
+      "id": "aud-1793670988344",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mw01e87l",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "TOKEN_REFRESHED",
+      "actorName": "TokenRefreshDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-03T01:56:28.343Z",
+      "details": "Token refreshed and expiry extended for caseworker.pretoria@phumulani.org",
+      "status": "success"
+    },
+    {
+      "id": "aud-1793670988306",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mw01e87l",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Pretoria Operations Staff",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-03T01:56:28.306Z",
+      "details": "Account registered: caseworker.pretoria@phumulani.org [Provider: GOOGLE, Auth: OAUTH2, Status: AUTHORIZED]",
+      "status": "success"
+    },
     {
       "id": "aud-1793629815030",
       "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvzcvqpg",
