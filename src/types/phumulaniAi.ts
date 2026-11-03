@@ -31,6 +31,8 @@ export interface ModelHealthStatus {
   quantizationType?: string;
   lastChecked: string;
   details: string;
+  canonicalSystemPrompt?: string;
+  metrics?: GatewayInferenceMetrics;
 }
 
 export type ProspectType =

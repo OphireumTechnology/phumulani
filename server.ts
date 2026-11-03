@@ -51,8 +51,8 @@ import {
   emailHealthService,
   emailRecoveryService,
 } from './src/email';
-import { phumulaniAiAgentService } from './src/services/phumulaniAiAgentService';
-import { localInferenceAdapter } from './src/services/localInferenceAdapter';
+import { phumulaniAiAgentService, APPROVED_COMMUNITY_PROGRAMS } from './src/services/phumulaniAiAgentService';
+import { localInferenceAdapter, PHUMULANI_AI_SYSTEM_PROMPT } from './src/services/localInferenceAdapter';
 import { calendarIntegrationService } from './src/services/calendarIntegrationService';
 import { localKnowledgeRetrievalService } from './src/services/localKnowledgeRetrievalService';
 
@@ -5392,7 +5392,126 @@ app.get('/api/admin/email/audit', (req: Request, res: Response) => {
 
 // -----------------------------------------------------------------------------
 // PHASE 65 — PHUMULANI AI LOCAL LLM & AUTONOMOUS FUNDRAISING AGENT API ROUTES
+// Milestone 4: Cryptographic Session Authentication, Zero-Trust Role Derivation,
+// Email Command Center Intelligence & Institutional Knowledge Integrity
 // -----------------------------------------------------------------------------
+
+interface AuthenticatedPhumulaniContext {
+  session: UserSession;
+  role: StaffRole;
+  userEmail: string;
+}
+
+/**
+ * M4 Authentication & Authorization Gate:
+ * - Derives role strictly from cryptographically validated server sessions (authSecurityService).
+ * - Never trusts client-supplied X-User-Role or client-declared roles.
+ * - Enforces 401 for missing/invalid/expired sessions.
+ * - Enforces 403 for unauthorized roles or missing executive approval permissions.
+ */
+function authenticatePhumulaniSession(
+  req: Request,
+  res: Response,
+  options?: {
+    allowedRoles?: string[];
+    requireExecutiveApproval?: boolean;
+    allowPublicRead?: boolean;
+  }
+): AuthenticatedPhumulaniContext | null {
+  const session = getSessionFromReq(req);
+
+  // If public reading is allowed and no session is provided, default to public role
+  if (!session && options?.allowPublicRead) {
+    return {
+      session: {
+        sessionId: 'public-anonymous',
+        userId: 'anonymous-public-user',
+        userEmail: 'public@community.phumulani.org',
+        role: 'visitor',
+        createdAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 3600000).toISOString(),
+      },
+      role: 'visitor',
+      userEmail: 'public@community.phumulani.org',
+    };
+  }
+
+  if (!session) {
+    res.status(401).json({
+      success: false,
+      error: 'Unauthorized: Valid server authentication session token required in Authorization header.',
+      code: 'UNAUTHENTICATED',
+    });
+    return null;
+  }
+
+  // Derive role strictly from server-validated session, ignoring any client header
+  const role = session.role;
+  const roleLower = (role as string).toLowerCase();
+
+  // If executive director / board approval is required
+  if (options?.requireExecutiveApproval) {
+    const execRoles = [
+      'master_admin',
+      'executive_director',
+      'finance_director',
+      'grants_director',
+      'development_director',
+      'board_member',
+    ];
+    if (!execRoles.some((r) => r.toLowerCase() === roleLower)) {
+      res.status(403).json({
+        success: false,
+        error: `Forbidden: Consequential action requires executive director or board authorization. Role '${role}' lacks approval permissions.`,
+        code: 'FORBIDDEN_EXECUTIVE_APPROVAL_REQUIRED',
+      });
+      return null;
+    }
+  }
+
+  // Specific role restrictions
+  if (options?.allowedRoles && options.allowedRoles.length > 0) {
+    const isAllowed = options.allowedRoles.some((r) => r.toLowerCase() === roleLower);
+    if (!isAllowed) {
+      res.status(403).json({
+        success: false,
+        error: `Forbidden: Role '${role}' lacks permission for this endpoint.`,
+        code: 'FORBIDDEN_ROLE_UNAUTHORIZED',
+      });
+      return null;
+    }
+  }
+
+  // Standard whitelist: Only staff, caseworkers, coordinators, and leadership may manage fundraising operations
+  const staffRoleWhiteList = [
+    'master_admin',
+    'executive_director',
+    'finance_director',
+    'grants_director',
+    'programs_director',
+    'volunteer_coordinator',
+    'development_director',
+    'safeguarding_lead',
+    'safeguarding_officer',
+    'board_member',
+    'staff',
+    'caseworker',
+  ];
+  if (!options?.allowPublicRead && !staffRoleWhiteList.some((r) => r.toLowerCase() === roleLower)) {
+    res.status(403).json({
+      success: false,
+      error: `Forbidden: Role '${role}' is not authorized to access internal fundraising operations.`,
+      code: 'FORBIDDEN_STAFF_REQUIRED',
+    });
+    return null;
+  }
+
+  return {
+    session,
+    role,
+    userEmail: session.userEmail || session.email || 'staff@phumulani.org',
+  };
+}
 
 app.get('/api/phumulani-ai/health', async (_req: Request, res: Response) => {
   try {
@@ -5403,11 +5522,16 @@ app.get('/api/phumulani-ai/health', async (_req: Request, res: Response) => {
   }
 });
 
-app.get('/api/phumulani-ai/policy', (_req: Request, res: Response) => {
+app.get('/api/phumulani-ai/policy', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
   res.json({ success: true, policy: phumulaniAiAgentService.getPolicyConfig() });
 });
 
 app.post('/api/phumulani-ai/policy/autonomy-level', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res, { requireExecutiveApproval: true });
+  if (!auth) return;
+
   const { level } = req.body;
   if (![1, 2, 3, 4].includes(level)) {
     return res.status(400).json({ success: false, error: 'Autonomy level must be 1, 2, 3, or 4.' });
@@ -5416,7 +5540,10 @@ app.post('/api/phumulani-ai/policy/autonomy-level', (req: Request, res: Response
   res.json({ success: true, policy });
 });
 
-app.get('/api/phumulani-ai/gateway/status', async (_req: Request, res: Response) => {
+app.get('/api/phumulani-ai/gateway/status', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   const health = await localInferenceAdapter.checkHealth();
   const metrics = localInferenceAdapter.getMetrics();
   res.json({
@@ -5428,11 +5555,15 @@ app.get('/api/phumulani-ai/gateway/status', async (_req: Request, res: Response)
       modelId: health.modelId,
       latencyMs: health.latencyMs,
       metrics,
+      canonicalSystemPrompt: PHUMULANI_AI_SYSTEM_PROMPT,
     },
   });
 });
 
-app.get('/api/phumulani-ai/gateway/metrics', (_req: Request, res: Response) => {
+app.get('/api/phumulani-ai/gateway/metrics', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   res.json({ success: true, metrics: localInferenceAdapter.getMetrics() });
 });
 
@@ -5442,7 +5573,15 @@ app.post('/api/phumulani-ai/gateway/inference', async (req: Request, res: Respon
     if (!prompt) return res.status(400).json({ success: false, error: 'Prompt is required.' });
 
     const authHeader = req.headers.authorization;
-    if (process.env.PHUMULANI_GATEWAY_TOKEN && authHeader !== `Bearer ${process.env.PHUMULANI_GATEWAY_TOKEN}`) {
+    let isAuthenticated = false;
+    if (process.env.PHUMULANI_GATEWAY_TOKEN && authHeader === `Bearer ${process.env.PHUMULANI_GATEWAY_TOKEN}`) {
+      isAuthenticated = true;
+    } else {
+      const session = getSessionFromReq(req);
+      if (session) isAuthenticated = true;
+    }
+
+    if (!isAuthenticated) {
       return res.status(401).json({ success: false, error: 'Unauthorized gateway access.' });
     }
 
@@ -5462,12 +5601,18 @@ app.post('/api/phumulani-ai/gateway/inference', async (req: Request, res: Respon
   }
 });
 
-app.get('/api/phumulani-ai/prospects', async (_req: Request, res: Response) => {
+app.get('/api/phumulani-ai/prospects', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   await phumulaniAiAgentService.initialize();
   res.json({ success: true, prospects: phumulaniAiAgentService.getProspects() });
 });
 
 app.post('/api/phumulani-ai/prospects', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   try {
     const prospect = await phumulaniAiAgentService.addProspect(req.body);
     res.json({ success: true, prospect });
@@ -5477,6 +5622,9 @@ app.post('/api/phumulani-ai/prospects', async (req: Request, res: Response) => {
 });
 
 app.post('/api/phumulani-ai/prospects/:id/match', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   try {
     const matches = phumulaniAiAgentService.matchProspectToPrograms(req.params.id);
     res.json({ success: true, matches });
@@ -5485,14 +5633,40 @@ app.post('/api/phumulani-ai/prospects/:id/match', (req: Request, res: Response) 
   }
 });
 
-app.get('/api/phumulani-ai/campaigns', async (_req: Request, res: Response) => {
+app.post('/api/phumulani-ai/prospects/:id/opt-out', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
+  try {
+    await phumulaniAiAgentService.updateProspect(req.params.id, {
+      optOut: true,
+      interestScore: 0,
+      status: 'opted_out',
+    });
+    const haltedCount = phumulaniAiAgentService.haltAllFollowUpsOnOptOut(req.params.id);
+    res.json({ success: true, haltedCount });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/phumulani-ai/campaigns', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   await phumulaniAiAgentService.initialize();
   res.json({ success: true, campaigns: phumulaniAiAgentService.getCampaigns() });
 });
 
 app.post('/api/phumulani-ai/campaigns', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   try {
-    const campaign = await phumulaniAiAgentService.generateCampaign(req.body);
+    const campaign = await phumulaniAiAgentService.generateCampaign({
+      ...req.body,
+      createdBy: auth.session.name || auth.userEmail,
+    });
     res.json({ success: true, campaign });
   } catch (err: any) {
     res.status(400).json({ success: false, error: err.message });
@@ -5500,10 +5674,13 @@ app.post('/api/phumulani-ai/campaigns', async (req: Request, res: Response) => {
 });
 
 app.post('/api/phumulani-ai/campaigns/:id/approve', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res, { requireExecutiveApproval: true });
+  if (!auth) return;
+
   try {
     const approved = await phumulaniAiAgentService.approveCampaign(
       req.params.id,
-      req.body.approvedBy || 'Staff Director'
+      auth.session.name || auth.userEmail
     );
     if (!approved) return res.status(404).json({ success: false, error: 'Campaign not found' });
     res.json({ success: true, campaign: approved });
@@ -5513,6 +5690,9 @@ app.post('/api/phumulani-ai/campaigns/:id/approve', async (req: Request, res: Re
 });
 
 app.post('/api/phumulani-ai/classify-email', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   try {
     const result = phumulaniAiAgentService.classifyIncomingEmail(req.body);
     res.json({ success: true, classification: result });
@@ -5522,6 +5702,9 @@ app.post('/api/phumulani-ai/classify-email', (req: Request, res: Response) => {
 });
 
 app.post('/api/phumulani-ai/analyze-interest', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   try {
     const result = phumulaniAiAgentService.analyzeDonorInterest(req.body);
     res.json({ success: true, interestScore: result });
@@ -5530,12 +5713,18 @@ app.post('/api/phumulani-ai/analyze-interest', (req: Request, res: Response) => 
   }
 });
 
-app.get('/api/phumulani-ai/reply-drafts', async (_req: Request, res: Response) => {
+app.get('/api/phumulani-ai/reply-drafts', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   await phumulaniAiAgentService.initialize();
   res.json({ success: true, drafts: phumulaniAiAgentService.getReplyDrafts() });
 });
 
 app.post('/api/phumulani-ai/reply-drafts', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   try {
     const draft = await phumulaniAiAgentService.generateReplyDraft(req.body);
     res.json({ success: true, draft });
@@ -5544,12 +5733,18 @@ app.post('/api/phumulani-ai/reply-drafts', async (req: Request, res: Response) =
   }
 });
 
-app.get('/api/phumulani-ai/follow-ups', async (_req: Request, res: Response) => {
+app.get('/api/phumulani-ai/follow-ups', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   await phumulaniAiAgentService.initialize();
   res.json({ success: true, followUps: phumulaniAiAgentService.getFollowUps() });
 });
 
 app.post('/api/phumulani-ai/follow-ups', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   try {
     const item = await phumulaniAiAgentService.scheduleFollowUp(req.body);
     res.json({ success: true, followUp: item });
@@ -5559,6 +5754,9 @@ app.post('/api/phumulani-ai/follow-ups', async (req: Request, res: Response) => 
 });
 
 app.post('/api/phumulani-ai/follow-ups/:prospectId/cancel-on-reply', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   const cancelled = phumulaniAiAgentService.cancelPendingFollowUpsOnReply(
     req.params.prospectId,
     req.body.reason || 'Prospect replied to correspondence'
@@ -5566,19 +5764,31 @@ app.post('/api/phumulani-ai/follow-ups/:prospectId/cancel-on-reply', (req: Reque
   res.json({ success: true, cancelledCount: cancelled });
 });
 
-app.get('/api/phumulani-ai/high-interest-leads', async (_req: Request, res: Response) => {
+app.get('/api/phumulani-ai/high-interest-leads', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   await phumulaniAiAgentService.initialize();
   res.json({ success: true, leads: phumulaniAiAgentService.getHighInterestLeads() });
 });
 
-app.get('/api/phumulani-ai/proposals', async (_req: Request, res: Response) => {
+app.get('/api/phumulani-ai/proposals', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   await phumulaniAiAgentService.initialize();
   res.json({ success: true, proposals: phumulaniAiAgentService.getProposals() });
 });
 
 app.post('/api/phumulani-ai/proposals', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   try {
-    const proposal = await phumulaniAiAgentService.generateFundingProposal(req.body);
+    const proposal = await phumulaniAiAgentService.generateFundingProposal({
+      ...req.body,
+      author: auth.session.name || auth.userEmail,
+    });
     res.json({ success: true, proposal });
   } catch (err: any) {
     res.status(400).json({ success: false, error: err.message });
@@ -5586,12 +5796,18 @@ app.post('/api/phumulani-ai/proposals', async (req: Request, res: Response) => {
 });
 
 app.get('/api/phumulani-ai/calendar/status', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   const provider = (req.query.provider as 'google' | 'microsoft') || 'google';
   const status = await calendarIntegrationService.getConnectionStatus(provider);
   res.json({ success: true, status });
 });
 
 app.get('/api/phumulani-ai/calendar/slots', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   try {
     const slots = await calendarIntegrationService.getAvailableSlots({
       staffEmail: (req.query.staffEmail as string) || 'director@phumulani.org',
@@ -5608,6 +5824,9 @@ app.get('/api/phumulani-ai/calendar/slots', async (req: Request, res: Response) 
 });
 
 app.post('/api/phumulani-ai/calendar/schedule', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   try {
     const result = await calendarIntegrationService.scheduleMeeting(req.body);
     res.json(result);
@@ -5616,28 +5835,146 @@ app.post('/api/phumulani-ai/calendar/schedule', async (req: Request, res: Respon
   }
 });
 
-// -----------------------------------------------------------------------------
-// LOCAL KNOWLEDGE RETRIEVAL & AUDIT APIS (MILESTONES 1 & 2)
-// -----------------------------------------------------------------------------
-app.get('/api/phumulani-ai/knowledge/status', (_req: Request, res: Response) => {
-  res.json({ success: true, status: localKnowledgeRetrievalService.getKnowledgeStatus() });
+app.get('/api/phumulani-ai/programs', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res, { allowPublicRead: true });
+  if (!auth) return;
+
+  res.json({
+    success: true,
+    programs: APPROVED_COMMUNITY_PROGRAMS.map((p) => ({
+      id: p.id,
+      title: p.title,
+      category: p.category,
+      annualBudget: p.annualBudget,
+      geographicFocus: p.geographicFocus,
+      objectives: p.objectives,
+    })),
+  });
 });
 
-app.get('/api/phumulani-ai/knowledge/documents', (_req: Request, res: Response) => {
-  res.json({ success: true, documents: localKnowledgeRetrievalService.getAllApprovedDocuments() });
+app.get('/api/phumulani-ai/calendar/bookings', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
+  res.json({ success: true, bookings: calendarIntegrationService.getBookings() });
 });
 
-app.post('/api/phumulani-ai/knowledge/query', (req: Request, res: Response) => {
+// -----------------------------------------------------------------------------
+// MILESTONE 4: EMAIL COMMAND CENTER THREAD INTELLIGENCE & CRM APIS
+// -----------------------------------------------------------------------------
+
+app.get('/api/phumulani-ai/threads/:id/context', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   try {
-    const result = localKnowledgeRetrievalService.queryVerifiedKnowledge(req.body);
+    const context = phumulaniAiAgentService.getThreadContext(req.params.id);
+    if (!context.thread) {
+      return res.status(404).json({ success: false, error: 'Email thread not found.' });
+    }
+    res.json({ success: true, context });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/phumulani-ai/threads/:id/process', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
+  try {
+    const result = await phumulaniAiAgentService.processThreadWithAi(req.params.id, auth.session);
+    res.json(result);
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/phumulani-ai/outreach/duplicate-check', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
+  const email = req.query.email as string;
+  const programId = req.query.programId as string | undefined;
+  if (!email) {
+    return res.status(400).json({ success: false, error: 'Email query parameter is required.' });
+  }
+  const result = phumulaniAiAgentService.checkDuplicateOutreach(email, programId);
+  res.json({ success: true, check: result });
+});
+
+app.post('/api/phumulani-ai/crm/action', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
+  try {
+    const { donorId, actionType, details } = req.body;
+    if (!donorId || !actionType) {
+      return res.status(400).json({ success: false, error: 'donorId and actionType are required.' });
+    }
+    const result = phumulaniAiAgentService.recordAuthenticatedCrmAction({
+      donorId,
+      actionType,
+      details: details || 'Authenticated staff CRM update.',
+      actorSession: auth.session,
+    });
     res.json({ success: true, result });
   } catch (err: any) {
     res.status(400).json({ success: false, error: err.message });
   }
 });
 
-app.get('/api/phumulani-ai/knowledge/financial-breakdown', (_req: Request, res: Response) => {
+// -----------------------------------------------------------------------------
+// LOCAL KNOWLEDGE RETRIEVAL & AUDIT APIS (MILESTONES 1, 2, 3, & 4)
+// Grounded in Authenticated Sessions & Zero Client Role Trust
+// -----------------------------------------------------------------------------
+app.get('/api/phumulani-ai/knowledge/status', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res, { allowPublicRead: true });
+  if (!auth) return;
+  res.json({ success: true, status: localKnowledgeRetrievalService.getKnowledgeStatus() });
+});
+
+app.get('/api/phumulani-ai/knowledge/documents', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res, { allowPublicRead: true });
+  if (!auth) return;
+
+  // Derives role strictly from authenticated server-side session (ignoring forged headers)
+  const verifiedRole = auth.role;
+  const allDocs = localKnowledgeRetrievalService.getAllApprovedDocuments();
+  const filtered = allDocs.filter((d) =>
+    localKnowledgeRetrievalService.isAccessPermittedByRole(d.metadata.accessClassification, verifiedRole)
+  );
+  res.json({ success: true, documents: filtered, authorizedRole: verifiedRole });
+});
+
+app.post('/api/phumulani-ai/knowledge/query', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res, { allowPublicRead: true });
+  if (!auth) return;
+
+  try {
+    // Derives userRole strictly from authenticated server-side session
+    const result = localKnowledgeRetrievalService.queryVerifiedKnowledge({
+      ...req.body,
+      userRole: auth.role,
+    });
+    res.json({ success: true, result });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/phumulani-ai/knowledge/financial-breakdown', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+
   res.json({ success: true, financialBreakdown: localKnowledgeRetrievalService.getAuditedFinancialBreakdown() });
+});
+
+app.get('/api/phumulani-ai/knowledge/audit-report', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res, { requireExecutiveApproval: true });
+  if (!auth) return;
+
+  res.json({ success: true, auditReport: localKnowledgeRetrievalService.getSourceApprovalAuditReport() });
 });
 
 // -----------------------------------------------------------------------------

@@ -197,7 +197,7 @@ export async function runMasterFundraisingAcceptanceSuite(): Promise<{
       durationMinutes: 30,
     });
     const validSlot = slots.find((s) => s.isAvailable);
-    const bookingTime = new Date(Date.now() + 86400000 * 300 + Math.floor(Math.random() * 20000000));
+    const bookingTime = new Date(Date.now() + 86400000 * 800 + Math.floor(Math.random() * 500000000));
     const booking = await calendarIntegrationService.scheduleMeeting({
       prospectId,
       prospectName: 'Sarah Lindstrom',

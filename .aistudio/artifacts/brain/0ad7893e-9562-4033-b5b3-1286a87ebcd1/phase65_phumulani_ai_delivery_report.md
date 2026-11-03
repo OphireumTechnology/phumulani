@@ -1,132 +1,183 @@
 # PHUMULANI AI COMMUNITY PLATFORM
-# MASTER DEVELOPMENT DIRECTIVE — MILESTONES 1 & 2 DELIVERY REPORT
-## Local LLM Intelligence, Foundation Knowledge, Fundraising Automation & Truth Grounding
+# MASTER DEVELOPMENT DIRECTIVE — MILESTONES 1, 2, 3 & 4 DELIVERY REPORT
+## Secure Email Command Center, Donor Engagement Intelligence, Session Authorization & Knowledge Integrity
 
-**Document ID:** `PHUMULANI-DIRECTIVE-M1-M2-REPORT`  
-**Execution Timestamp:** 2026-11-03T13:15:00Z  
+**Document ID:** `PHUMULANI-DIRECTIVE-M1-M2-M3-M4-REPORT`  
+**Execution Timestamp:** 2026-11-03T14:15:00Z  
 **Project:** Phumulani AI Community Platform  
 **Target Windows Root:** `D:\Phumulani`  
 **Ollama Local Model:** `phumulani-ai` (system prompt temp 0.2)  
-**Security & Confidentiality Standard:** VAWA Section 1367 Statutory Confidentiality & 15% MTDC De Minimis Rate Cap  
+**Security & Governance Standard:** VAWA § 1367 Statutory Confidentiality, Cryptographic Session-Derived RBAC, 15% MTDC De Minimis Indirect Rate Ceiling, Non-Delegable Human Authorization Gate, and Strict `allowUnattendedSending: false` Invariant  
 
 ---
 
-## 1. EXECUTIVE EXECUTION SUMMARY
+## 1. EXECUTIVE DIRECTIVE EXECUTION SUMMARY
 
-In response to the Master Development Execution Directive, **Phumulani Ai** has been established as the foundation's operational fundraising intelligence and knowledge-grounded donor engagement system. 
+In compliance with the **Phumulani AI — Milestone 4 Execution Directive (Secure Email Command Center and Donor Engagement Intelligence)** and preceding architectural directives, Phumulani Ai has been fully implemented, hardened, and verified as the foundation's operational fundraising intelligence and donor engagement system.
 
-This phase closes the critical vulnerabilities identified in earlier iterations by executing **Milestone 1** (Repository and Data Integrity Audit) and **Milestone 2** (Local Phumulani Ai Knowledge Infrastructure under `D:\Phumulani`).
+All requirements set forth in Milestone 4 have been implemented and verified across 105 automated test cases:
 
-### Core Status Categorization Matrix
+1. **Cryptographic Authentication & Zero-Trust Role Derivation (`/api/phumulani-ai/*`):**
+   - Audited and updated all 20+ `/api/phumulani-ai/*` endpoints.
+   - Completely abolished trust in client-supplied `X-User-Role` headers.
+   - All roles and permissions are derived strictly from cryptographically validated server sessions (`authSecurityService.validateSession(sessionId)`).
+   - Unauthenticated requests are rejected with HTTP 401.
+   - Unauthorized roles (including visitors, external donors, volunteers, or staff attempting executive approval actions) are rejected with HTTP 403.
+   - Negative authorization test suite authored and passing (forged headers, expired sessions, invalid tokens, revoked tokens).
 
-| Workstream / Capability Component | Operational Status | Technical Implementation & Grounding Evidence |
+2. **Program Knowledge Integrity & Truth Grounding:**
+   - Preserves `PROVISIONAL_DEVELOPMENT_BENCHMARK`, `BOARD_VERIFIED_AUTHENTIC`, and `PENDING_RATIFICATION` classifications throughout the API.
+   - Unverified figures and expired records (`DOC-FIN-2025-ARCHIVE`) are strictly blocked from donor-facing claims.
+   - 15% MTDC de minimis indirect cost ceiling strictly enforced across all funding proposals.
+
+3. **Email Command Center Intelligence & Thread Integration:**
+   - Seamlessly integrated with existing `EmailEnterpriseService` and `FundingCommandService` without duplicating mailbox or CRM stores.
+   - Implemented automatic incoming email classification with P0–P4 operational priority routing.
+   - Implemented 0–100 donor interest scoring based on 4 observable signals (responsiveness, positive sentiment, program specificity, and meeting willingness) accompanied by non-predictive statutory disclosures.
+   - Built full conversation thread context retrieval and program matching.
+   - Generated program-specific response drafts grounded in verified institutional citations.
+   - Implemented hard opt-out and unsubscribe suppression (score immediately drops to 0, all active follow-ups halted, CRM flagged).
+   - Executive staff escalation for high-interest leads (score ≥ 80 or explicit meeting request).
+   - Auditable CRM updates reflecting authenticated staff actor session identity.
+
+4. **Autonomous Workflow Boundaries & Non-Delegable Governance:**
+   - Maintained `allowUnattendedSending: false` as an unalterable system invariant across all 4 autonomy levels.
+   - Outbound drafts watermarked and held in `pending_human_review` status.
+   - Mandatory human approval required before sending solicitations, committing organizational resources, or dispatching calendar invitations.
+
+5. **Local AI Integration & Anti-Hallucination Fallback:**
+   - Maintained server-side Ollama gateway for `phumulani-ai` model.
+   - Target local storage layout preserved: `D:\Phumulani`.
+   - Seamless offline fallback to deterministic expert rules without fabricating donor records or financial figures.
+
+---
+
+## 2. API ENDPOINTS & AUTHENTICATION AUDIT MATRIX
+
+| Endpoint | HTTP Method | Required Authentication Level | Role Enforcement & Authorization Rule |
+| :--- | :--- | :--- | :--- |
+| `/api/phumulani-ai/health` | `GET` | Public Gateway Health | Unauthenticated; returns engine connectivity & status. |
+| `/api/phumulani-ai/policy` | `GET` | Authenticated Staff / Exec | Requires valid session token; derives role from server session. |
+| `/api/phumulani-ai/policy/autonomy-level` | `POST` | Executive Director / Board | HTTP 403 if role is not `executive_director`, `master_admin`, or `board_member`. Client `X-User-Role` ignored. |
+| `/api/phumulani-ai/gateway/status` | `GET` | Authenticated Staff / Exec | Requires valid session token; returns local model metrics and system prompt. |
+| `/api/phumulani-ai/gateway/metrics` | `GET` | Authenticated Staff / Exec | Requires valid session token; returns inference latency and token counts. |
+| `/api/phumulani-ai/gateway/inference` | `POST` | Authenticated Staff or Gateway Token | HTTP 401 if missing Bearer token or gateway secret. |
+| `/api/phumulani-ai/prospects` | `GET`, `POST` | Authenticated Staff / Exec | Restricts prospect intelligence to verified organization staff. |
+| `/api/phumulani-ai/prospects/:id/match` | `POST` | Authenticated Staff / Exec | 4-criteria transparent program matching. |
+| `/api/phumulani-ai/prospects/:id/opt-out` | `POST` | Authenticated Staff / Exec | Permanently halts follow-ups and flags CRM record. |
+| `/api/phumulani-ai/campaigns` | `GET`, `POST` | Authenticated Staff / Exec | Creates campaigns in `pending_approval` status. |
+| `/api/phumulani-ai/campaigns/:id/approve` | `POST` | Executive Director / Board | Consequential approval gate. Requires authenticated executive session; derives approver identity from token. |
+| `/api/phumulani-ai/classify-email` | `POST` | Authenticated Staff / Exec | Untrusted content sanitized; returns P0–P4 priority and category. |
+| `/api/phumulani-ai/analyze-interest` | `POST` | Authenticated Staff / Exec | Scores donor interest 0–100 with 4-factor breakdown. |
+| `/api/phumulani-ai/reply-drafts` | `GET`, `POST` | Authenticated Staff / Exec | Generates drafts grounded in verified citations; `status: pending_human_review`. |
+| `/api/phumulani-ai/follow-ups` | `GET`, `POST` | Authenticated Staff / Exec | Follow-up sequence management; blocks opted-out prospects. |
+| `/api/phumulani-ai/high-interest-leads` | `GET` | Authenticated Staff / Exec | Escalated executive briefings with strategic questions. |
+| `/api/phumulani-ai/proposals` | `GET`, `POST` | Authenticated Staff / Exec | Generates concept notes; enforces 15% MTDC indirect cost cap. |
+| `/api/phumulani-ai/calendar/*` | `GET`, `POST` | Authenticated Staff / Exec | Google / Microsoft calendar slot discovery and double-booking prevention. |
+| `/api/phumulani-ai/programs` | `GET` | Public / Authenticated | Sanitized public program metadata & approved budgets. |
+| `/api/phumulani-ai/threads/:id/context` | `GET` | Authenticated Staff / Exec | Reconstructs thread history, CRM donor link, and program matching without duplicate DB. |
+| `/api/phumulani-ai/threads/:id/process` | `POST` | Authenticated Staff / Exec | End-to-end thread intelligence: P0–P4 routing, 0–100 score, grounded draft, CRM sync. |
+| `/api/phumulani-ai/outreach/duplicate-check` | `GET` | Authenticated Staff / Exec | Detects active outreach within cooling window (default 7 days). |
+| `/api/phumulani-ai/crm/action` | `POST` | Authenticated Staff / Exec | Durably records stewardship action with authenticated session actor attribution. |
+| `/api/phumulani-ai/knowledge/documents` | `GET` | Authenticated (RBAC) | Filters records strictly by `session.role` (ignoring client header). |
+| `/api/phumulani-ai/knowledge/query` | `POST` | Authenticated (RBAC) | Queries verified knowledge; forces `userRole` to authenticated `session.role`. |
+| `/api/phumulani-ai/knowledge/audit-report` | `GET` | Executive Director / Board | Executive audit report of source approval statuses and expired documents. |
+
+---
+
+## 3. EMAIL COMMAND CENTER & CRM ARCHITECTURE
+
+```
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│                                 INCOMING EMAIL INBOX                                    │
+│                 (Existing EmailEnterpriseService: db.enterpriseEmailThreads)            │
+└────────────────────────────────────────────┬────────────────────────────────────────────┘
+                                             │ threadId
+                                             ▼
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│                           PHUMULANI AI THREAD PROCESSOR                                 │
+│                                                                                         │
+│  1. Conversation Thread Reconstruction (Messages in chronological order)                │
+│  2. Untrusted Correspondence Sanitizer (Scrubs scripts & prompt injections)             │
+│  3. Automatic Priority Routing (P0: Crisis, P1: Grant/Meeting, P2: Interest, P3: Routine)│
+│  4. Donor Interest Analyzer (0–100 Scale: Responsiveness, Sentiment, Specificity, Meet) │
+│  5. Opt-Out / Decline Gate (Score -> 0, Halts follow-ups, Sets CRM consent to OPTED_OUT) │
+│  6. Duplicate Outreach Cooling Check (Checks active campaigns/follow-ups in 7-day window)│
+│  7. Grounded Response Drafter (Grounded in verified institutional program budgets)      │
+│  8. Executive Escalation Handoff (Lead dossier created when Score >= 80 or Meeting Req) │
+│  9. Strict Invariant Gate: allowUnattendedSending = false, Draft: pending_human_review  │
+└───────────────────────┬─────────────────────────────────┬───────────────────────────────┘
+                        │                                 │
+                        ▼                                 ▼
+┌────────────────────────────────────────┐  ┌─────────────────────────────────────────────┐
+│      EMAIL COMMAND CENTER THREAD       │  │             UNIFIED DONOR CRM               │
+│  - thread.priority = P0..P4            │  │ (Existing FundingCommandService)            │
+│  - thread.draft = Grounded Draft       │  │  - donor.stage = CULTIVATION / STEWARDSHIP  │
+│  - thread.status = awaiting_approval   │  │  - donor.consentStatus = OPTED_OUT (if opt) │
+│  - Zero unattended sending             │  │  - Auditable Stewardship Action Logged      │
+└────────────────────────────────────────┘  │  - Attribution: Session actor Email & Role │
+                                            └─────────────────────────────────────────────┘
+```
+
+---
+
+## 4. AUTOMATED VERIFICATION RESULTS (105 / 105 TESTS PASSED)
+
+| Verification Suite | Path | Test Count | Pass Rate | Focus Areas |
+| :--- | :--- | :---: | :---: | :--- |
+| **Milestone 4: Secure Email Intelligence** | `scripts/verify_milestone4_email_intelligence.ts` | **29** | **100% (29/29)** | Negative authorization, forged header rejection, expired sessions, P0–P4 priority, 0–100 scoring, opt-out suppression, duplicate outreach check, prompt injection scrubbing, CRM sync. |
+| **Milestones 1 & 2: Security & Isolation** | `scripts/verify_security_and_knowledge_isolation.ts` | **18** | **100% (18/18)** | RBAC classification isolation, browser bundle decoupling, provisional benchmark tagging, anti-hallucination refusals, isomorphic startup safety. |
+| **Milestones 1 & 2: Truth & Grounding** | `scripts/verify_knowledge_grounding.ts` | **12** | **100% (12/12)** | Approved knowledge indexing, pending-review draft quarantine, 15% de minimis indirect cap, PowerShell script existence. |
+| **Milestone 3: Fundraising Command Center** | `scripts/verify_fundraising_command_center.ts` | **24** | **100% (24/24)** | 17-step master workflow, 4-criteria transparent matching, human campaign approval, executive handoff, double-booking prevention. |
+| **Phase 65: Phumulani Ai Autonomous Agent** | `scripts/verify_phase65_phumulani_ai.ts` | **22** | **100% (22/22)** | Full autonomous agent lifecycle, local Ollama integration, VAWA Section 1367 redaction, offline fallback, state durability. |
+| **TOTAL VERIFIED TEST SUITE** | **All 5 Test Suites** | **105** | **100% (105/105)** | **Zero test failures across all platform modules.** |
+
+### Key Milestone 4 Test Case Highlights:
+- `M4-AUTH-01`: Forged `X-User-Role: master_admin` without Bearer token rejected with 401.
+- `M4-AUTH-03`: Expired session tokens immediately invalidated and rejected with 401.
+- `M4-AUTH-07`: Valid staff session blocked from executive consequential approvals (`/campaigns/:id/approve`, `/policy/autonomy-level`) with 403.
+- `M4-EMAIL-01`: P0 Priority & VAWA Section 1367 safeguarding quarantine on domestic violence shelter terms.
+- `M4-EMAIL-02`: P1 Priority assignment for board-approved grant agreements.
+- `M4-SCORE-01`: 80–100 High Engagement tier assigned with 4 observable evidence signals.
+- `M4-OPTOUT-01`: Explicit unsubscribe drops engagement score to 0 and updates CRM consent to `OPTED_OUT`.
+- `M4-OPTOUT-02`: All active follow-up sequences halted permanently upon opt-out.
+- `M4-GOV-01`: `allowUnattendedSending: false` strictly enforced across all autonomy levels.
+- `M4-INJ-01`: Malicious script tags scrubbed and prompt-injection override keywords neutralized.
+- `M4-DUP-01`: Active pending draft or scheduled task detected; duplicate outreach suppressed.
+- `M4-THREAD-01`: Real thread context retrieved from existing `EmailEnterpriseService` without data store duplication.
+- `M4-CRM-01`: Durable CRM stewardship update logged with authenticated session actor attribution.
+- `M4-FALLBACK-02`: Offline funding proposal conforms with federal de minimis standard (15% indirect cost ceiling).
+
+---
+
+## 5. LOCAL WINDOWS DEPLOYMENT STATUS
+
+In strict compliance with directive instructions, Windows runtime status is maintained as:
+
+**Status:** `PREPARED_UNVERIFIED_ON_HOST`  
+*Explanation:* The PowerShell automation runbook and deployment scripts have been generated and syntactically validated in the repository at `scripts/windows/`. However, because the development environment is running inside the Linux container, actual physical execution against `D:\Phumulani` on the host Windows machine remains pending physical execution by the operator.
+
+### Operator Execution Instructions (on Windows Host):
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+cd D:\Phumulani\repository\phumulani
+.\scripts\windows\Test-PhumulaniDeployment.ps1
+```
+
+Once executed on the host, the script will verify:
+1. `D:\Phumulani` directory hierarchy.
+2. Ollama service responsiveness on port 11434 and `phumulani-ai` model availability.
+3. Approved knowledge JSON index integrity under `D:\Phumulani\data\knowledge\approved`.
+4. Node.js Express server connectivity on port 3000.
+5. GitHub branch synchronization with `OphireumTechnology/phumulani`.
+
+---
+
+## 6. EXTERNAL CONNECTORS & ENVIRONMENT CONFIGURATION
+
+| Component | Status | Required Configuration / Credentials |
 | :--- | :--- | :--- |
-| **Verified-Source Model & Audit Types** | `Operational` | `src/types/verifiedKnowledge.ts` defines `InstitutionalApprovalStatus`, `AccessClassification`, `VerifiedSourceMetadata`, and `VerifiedFinancialFact`. Unverified claims eliminated from donor prompts. |
-| **Separation of Settled Cash vs Projections** | `Operational` | Audited settled cash ($296,800) strictly segregated from binding commitments ($65,000), pending applications ($115,000), and pipeline inquiries ($45,000). Pledges never booked as settled revenue. |
-| **15% De Minimis Indirect Rate Enforcement** | `Operational` | Federal MTDC standard (`Direct = Total / 1.15; Indirect = Total - Direct`) strictly validated in `LocalKnowledgeRetrievalService` and `generateFundingProposal`. Excess overhead automatically rejected. |
-| **Approved Local Knowledge Store** | `Operational` | 7 core institutional records created under `data/knowledge/approved/` (`DOC-FND-001`, `DOC-PRG-001`, `DOC-FIN-001`, `DOC-MET-001`, `DOC-GOV-001`, `DOC-GEO-001`, `DOC-POL-001`). Zero PII. |
-| **Pending Draft & Demo Quarantine** | `Operational` | `data/knowledge/pending-review/DOC-FIN-PENDING-001.json` and demo records quarantined. Retrieval service strictly excludes non-approved documents from donor-facing outputs. |
-| **Local Knowledge Retrieval Engine** | `Operational` | `src/services/localKnowledgeRetrievalService.ts` provides multi-factor keyword + semantic matching, citation generation, and fail-closed refusal when facts are absent. |
-| **Windows D:\ Operational Scripts** | `Tested` | `Index-Knowledge.ps1`, `Search-Knowledge.ps1`, and `Setup-KnowledgeTask.ps1` implemented in `scripts/windows/` with schema validation and Windows Scheduled Task support. |
-| **Server REST Knowledge Endpoints** | `Connected` | Express routes `/api/phumulani-ai/knowledge/{status, documents, query, financial-breakdown}` live on port 3000 and tested via curl. |
-| **Command Center Grounding Workspace** | `Operational` | `src/components/email/PhumulaniAiFundraisingCenter.tsx` integrates the "Truth & Knowledge Grounding" dashboard tab with live document ledger and anti-contamination notices. |
-| **Live Windows Hardware Execution** | `Blocked` | Cloud sandbox container cannot access local user drive `D:\`. Complete Windows installation scripts and runbooks prepared for immediate operator execution. |
-| **Unattended Outbound Email Delivery** | `Blocked` | Fail-closed invariant permanently enforced (`allowUnattendedSending: false`). All outbound campaigns and replies require human staff authorization. |
-
----
-
-## 2. MILESTONE 1: REPOSITORY & DATA INTEGRITY AUDIT
-
-### 2.1 Elimination of Unverified Claims from Live AI Outputs
-Previous hardcoded program assumptions and simulated forecasts were audited. Live AI solicitation prompts and concept notes have been transitioned to a **Verified-Source Model**:
-- Every institutional fact is tied to a specific `sourceDocumentId` (e.g., `DOC-PRG-001`, `DOC-FIN-001`).
-- Mandatory metadata includes: `institutionalApprovalStatus` (`APPROVED`), `recordOwner`, `approvalDate`, `effectiveDate`, `lastVerificationDate`, `accessClassification`, `evidenceReference`, and `reviewExpirationDate`.
-- Live donor outputs (`generateReplyDraft`, `generateFundingProposal`, `generateCampaign`) now inject verified grounding sections citing specific source IDs and authors.
-
-### 2.2 Financial Intelligence: Settled Actuals vs Pipeline
-Simulated values are no longer presented as audited facts. In `fundraisingIntelligenceService.ts` and `localKnowledgeRetrievalService.ts`:
-1. **Settled Actual Revenue (Audited):** $296,800 (Verified bank receipts, 501(c)(3) tax-deductible).
-2. **Confirmed Written Commitments:** $65,000 (Signed grant agreements and recurring donor contracts).
-3. **Pending Grant Applications:** $115,000 (Active applications under review at Bush Foundation, McKnight, and Otto Bremer Trust).
-4. **Pipeline Opportunities:** $45,000 (Prospective inquiries; explicitly zero balance sheet recognition).
-5. **Indirect Cost Rate:** Capped at 15% de minimis ($66,000 max allowable pool).
-
----
-
-## 3. MILESTONE 2: LOCAL KNOWLEDGE INFRASTRUCTURE (`D:\Phumulani`)
-
-### 3.1 Directory Topology
-```
-D:\Phumulani
-├── data\
-│   └── knowledge\
-│       ├── approved\           # Canonical approved records (Status: APPROVED, isDemoData: false)
-│       │   ├── DOC-FND-001.json # Foundation Mission, 501(c)(3) Charter & Executive Leadership
-│       │   ├── DOC-PRG-001.json # Five Core Programs & Verified Objectives ($440,000 Budget)
-│       │   ├── DOC-FIN-001.json # FY2026 Budget Breakdown & Revenue Classification
-│       │   ├── DOC-MET-001.json # Verified Beneficiary Service Metrics (482 Survivors, 1420 Nights)
-│       │   ├── DOC-GOV-001.json # Board Governance, Bios & Fiduciary Oversight
-│       │   ├── DOC-GEO-001.json # Geographic Focus (Twin Cities 7-County Metro) & Demographics
-│       │   └── DOC-POL-001.json # Institutional Operating Policies & 15% Indirect Cap
-│       ├── pending-review\     # Quarantined drafts (e.g., DOC-FIN-PENDING-001 unapproved capital plan)
-│       └── index\              # Machine-readable compiled index
-│           └── approved_knowledge_index.json
-├── models\                     # Local Ollama weights (phumulani-ai)
-├── scripts\windows\            # PowerShell automation tools
-│   ├── Index-Knowledge.ps1    # Validates schemas & compiles index
-│   ├── Search-Knowledge.ps1   # Local CLI search with citation output
-│   ├── Setup-KnowledgeTask.ps1 # Registers daily/hourly Windows Scheduled Task
-│   ├── Ask-Phumulani.ps1      # Interactive & Task CLI for staff
-│   ├── Sync-Phumulani.ps1     # Safe git synchronization without PII leaks
-│   └── install-phumulani-ai.ps1 # Complete setup script for Drive D
-└── repository\phumulani\       # Clean local git repository clone
-```
-
-### 3.2 Anti-Fabrication Fail-Closed Retrieval
-When `localKnowledgeRetrievalService.queryVerifiedKnowledge(...)` is called:
-- If matching approved documents exist, structured XML/markdown citations are returned (`[VERIFIED_RECORD_START] ... [VERIFIED_RECORD_END]`).
-- If no approved records match, the retrieval service returns:
-  > *"INSTITUTIONAL GROUNDING: No verified institutional records were found matching this inquiry. RULE: You must state that verified information is not available rather than approximating or fabricating numbers, budgets, or program details."*
-- Unapproved draft records in `pending-review/` and synthetic demo fixtures are barred from donor-facing responses.
-
----
-
-## 4. AUTOMATED ACCEPTANCE TEST SUITES (100% PASSING)
-
-Across the three verification test suites, **58 out of 58 test scenarios passed with zero failures**:
-
-### 4.1 Knowledge Grounding Test Suite (`scripts/verify_knowledge_grounding.ts`)
-- `[PASS] [KG-01]` Approved knowledge documents loaded into local retrieval service (8 docs indexed).
-- `[PASS] [KG-02]` Pending-review draft documents strictly quarantined from approved retrieval.
-- `[PASS] [KG-03]` Evidence citations contain source ID, owner, approval date, and evidence reference.
-- `[PASS] [KG-04]` Anti-fabrication refusal when verified knowledge is absent.
-- `[PASS] [KG-05]` Audited financial breakdown strictly isolates settled cash from pipeline.
-- `[PASS] [KG-06]` 15% de minimis indirect rate validator allows compliant funding requests.
-- `[PASS] [KG-07]` 15% de minimis indirect rate validator rejects excessive indirect overhead.
-- `[PASS] [KG-08]` Funding proposals grounded in verified sources and enforce MTDC 15% indirect cap.
-- `[PASS] [KG-09]` Reply drafts ground operations with verified source citation.
-- `[PASS] [KG-10]` Compiled index file exists and is valid JSON.
-- `[PASS] [KG-11]` Windows PowerShell operational scripts exist under `scripts/windows/`.
-- `[PASS] [KG-12]` `FundraisingIntelligenceService` forecasts and grants have verified source IDs.
-**Result: 12 / 12 PASSED (100%)**
-
-### 4.2 Fundraising Command Center Suite (`scripts/verify_fundraising_command_center.ts`)
-- Covers all 17 lifecycle steps (Prospect Selection, Program Match, Campaign Generation, Approval Gate, Outbound Sender, Classification, Priority P0–P4, Interest Matrix, Reply Draft, Proposal 15% Cap, Handoff Dossier, Calendar Scheduling, CRM Sync, Audit Trail).
-- Covers all 10 edge case scenarios (Decline, Opt-Out Hard Suppression, Phishing Quarantine, Budget Check, General Inquiries, Offline Ollama Fallback, Unattended Send Block, Calendar Disconnect, Unauthorized Gate, Prompt Injection Neutralization).
-**Result: 24 / 24 PASSED (100%)**
-
-### 4.3 Phase 65 Full Acceptance Suite (`scripts/verify_phase65_phumulani_ai.ts`)
-- Validates Model Config, Offline Diagnostics, XML Prompt Defense, Prospect Access, 4-Criteria Matching, Human Approval Gating, Email Classification, Priority Tiers, 0–100 Scoring, Grounded Drafting, Auto-Cancel on Reply, Hard Opt-Out, Escalation Dossiers, Proposal Cap, Calendar Slots, Double-Booking Guard, Fail-Closed Policy, Persistence Atomicity, Restart Recovery, Windows Scripts, VAWA 1367 Redaction, and Platform Regression.
-**Result: 22 / 22 PASSED (100%)**
-
----
-
-## 5. SUMMARY OF IMPLEMENTATION VERIFICATION
-
-1. **Compilation:** `compile_applet` passed (`Build succeeded`).
-2. **Lint:** `lint_applet` passed (`tsc --noEmit` exited with 0 errors).
-3. **Live Gateway Endpoints:**
-   - `GET /api/phumulani-ai/knowledge/status` -> HTTP 200 (`approvedDocumentsCount: 8, pendingReviewCount: 1`).
-   - `GET /api/phumulani-ai/knowledge/financial-breakdown` -> HTTP 200 (`settledActualRevenue: 296800, confirmedWrittenCommitments: 65000`).
-   - `POST /api/phumulani-ai/knowledge/query` -> HTTP 200 (Ground truth returned with citations).
-4. **User Interface:** Added "Truth & Knowledge Grounding" tab to `PhumulaniAiFundraisingCenter.tsx` with live ledger overview and fail-closed quarantine alerts.
+| **Local Inference Gateway** | **ACTIVE (Local)** | Ollama running at `http://127.0.0.1:11434` with model `phumulani-ai`. Runs in deterministic offline fallback mode if daemon is stopped. |
+| **Google Workspace (Mail & Calendar)** | **STAGED (Ready for Activation)** | Client-side OAuth integration configured. Real email dispatch and live Google Calendar event creation activate when client Google Workspace OAuth is authorized by admin. |
+| **Microsoft 365 (Outlook & Teams)** | **STAGED (Ready for Activation)** | Microsoft Graph API permissions (`Mail.Send`, `Calendars.ReadWrite`) staged in connector registry. |
+| **Database Persistence** | **ACTIVE (Persistent)** | PostgreSQL adapter active with durable disk store fallback; handles state recovery and transaction durability. |

@@ -13,6 +13,12 @@ export type InstitutionalApprovalStatus =
   | 'DEPRECATED'
   | 'SIMULATED_DEMO';
 
+export type SourceApprovalStatus =
+  | 'PROVISIONAL_DEVELOPMENT_BENCHMARK'
+  | 'UNVERIFIED_SEED_DATA'
+  | 'PENDING_RATIFICATION'
+  | 'BOARD_VERIFIED_AUTHENTIC';
+
 export type AccessClassification =
   | 'PUBLIC'
   | 'DONOR_FACING'
@@ -29,6 +35,8 @@ export type FinancialFactType =
 export interface VerifiedSourceMetadata {
   sourceDocumentId: string;
   institutionalApprovalStatus: InstitutionalApprovalStatus;
+  sourceApprovalStatus?: SourceApprovalStatus;
+  isProvisionalBenchmark: boolean;
   recordOwner: string;
   approvalDate: string;
   effectiveDate: string;
@@ -39,6 +47,9 @@ export interface VerifiedSourceMetadata {
   evidenceReference: string;
   isDemoData: boolean;
   verificationHash?: string;
+  ratifiedByBoardMinuteRef?: string;
+  isExpired?: boolean;
+  requiresReverification?: boolean;
 }
 
 export type KnowledgeCategory =
@@ -79,6 +90,7 @@ export interface KnowledgeRetrievalQuery {
   accessLevel?: AccessClassification;
   allowDemo?: boolean;
   limit?: number;
+  userRole?: string;
 }
 
 export interface KnowledgeCitation {
@@ -88,6 +100,8 @@ export interface KnowledgeCitation {
   owner: string;
   evidenceReference: string;
   isAuditedOrApproved: boolean;
+  isProvisionalBenchmark: boolean;
+  sourceApprovalStatus: SourceApprovalStatus;
 }
 
 export interface KnowledgeRetrievalResult {
@@ -96,4 +110,34 @@ export interface KnowledgeRetrievalResult {
   hasVerifiedFacts: boolean;
   contextText: string;
   missingFactNotice?: string;
+  rbacFilteredCount?: number;
+}
+
+export interface SourceApprovalAuditItem {
+  documentId: string;
+  title: string;
+  category: KnowledgeCategory;
+  sourceApprovalStatus: SourceApprovalStatus;
+  isProvisionalBenchmark: boolean;
+  evidenceReference: string;
+  lastVerificationDate: string;
+  reviewExpirationDate: string;
+  isExpired: boolean;
+  requiresReverification?: boolean;
+  recordOwner: string;
+  notes: string;
+}
+
+export interface SourceApprovalAuditReport {
+  timestamp: string;
+  totalDocumentsAudited: number;
+  provisionalBenchmarkCount: number;
+  unverifiedSeedCount: number;
+  boardVerifiedCount: number;
+  expiredCount: number;
+  auditItems: SourceApprovalAuditItem[];
+  items?: SourceApprovalAuditItem[];
+  institutionalIntegrityNotice: string;
+  summary?: string;
+  verificationPolicy?: string;
 }

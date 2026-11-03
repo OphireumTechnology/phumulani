@@ -24,6 +24,12 @@ import { localInferenceAdapter, PHUMULANI_AI_SYSTEM_PROMPT } from './localInfere
 import { calendarIntegrationService } from './calendarIntegrationService';
 import { PostgresPersistenceAdapter } from './postgresPersistenceAdapter';
 import { localKnowledgeRetrievalService } from './localKnowledgeRetrievalService';
+import { EmailEnterpriseService } from './emailEnterpriseService';
+import { FundingCommandService } from './fundingCommandService';
+import { db } from './db';
+import type { UserSession } from './authSecurityService';
+import type { EnterpriseEmailThread, EmailPriorityLevel, EmailClassificationCategory } from '../types/emailEnterprise';
+import type { UnifiedDonorProfile, DonorStewardshipAction } from '../types/fundingCommand';
 
 // Approved Phumulani Community Programs Knowledge Base
 export const APPROVED_COMMUNITY_PROGRAMS = [
@@ -1224,6 +1230,380 @@ grants@phumulani.org`;
         break;
     }
     return { ...this.policyConfig };
+  }
+
+  // ---------------------------------------------------------------------------
+  // 10. MILESTONE 4: SECURE EMAIL COMMAND CENTER & DONOR CRM INTELLIGENCE
+  // ---------------------------------------------------------------------------
+
+  /**
+   * M4: Duplicate Outreach Prevention Engine
+   * Detects active campaigns, scheduled follow-ups, or recent outreach within the cooling window (default 7 days).
+   */
+  public checkDuplicateOutreach(
+    contactEmail: string,
+    programId?: string,
+    coolingWindowDays = 7
+  ): {
+    isDuplicate: boolean;
+    reason?: string;
+    existingEntityId?: string;
+    existingType?: 'campaign' | 'draft' | 'follow_up';
+    daysSinceLastOutreach?: number;
+  } {
+    const emailNorm = contactEmail.trim().toLowerCase();
+    const now = Date.now();
+    const windowMs = coolingWindowDays * 24 * 3600 * 1000;
+
+    // 1. Check existing scheduled follow-ups
+    const activeFollowUp = this.followUps.find(
+      (f) =>
+        f.prospectEmail.toLowerCase() === emailNorm &&
+        (f.status === 'scheduled' || f.status === 'ready_for_review') &&
+        (!programId || f.programId === programId)
+    );
+    if (activeFollowUp) {
+      return {
+        isDuplicate: true,
+        reason: `Active follow-up task ${activeFollowUp.id} is already scheduled for ${contactEmail} (due ${activeFollowUp.dueDate}). Duplicate outreach suppressed.`,
+        existingEntityId: activeFollowUp.id,
+        existingType: 'follow_up',
+      };
+    }
+
+    // 2. Check pending drafts
+    const pendingDraft = this.replyDrafts.find(
+      (d) =>
+        d.prospectEmail.toLowerCase() === emailNorm &&
+        d.approvalStatus === 'pending_human_review' &&
+        (!programId || d.programId === programId)
+    );
+    if (pendingDraft) {
+      return {
+        isDuplicate: true,
+        reason: `Pending reply draft ${pendingDraft.id} is already awaiting human review for ${contactEmail}.`,
+        existingEntityId: pendingDraft.id,
+        existingType: 'draft',
+      };
+    }
+
+    // 3. Check campaigns targeting this prospect within the cooling window
+    const prospect = this.prospects.find((p) => p.contactEmail.toLowerCase() === emailNorm);
+    if (prospect) {
+      const recentCampaign = this.campaigns.find(
+        (c) =>
+          c.prospectIds.includes(prospect.id) &&
+          (!programId || c.targetProgramId === programId) &&
+          now - new Date(c.createdAt).getTime() < windowMs
+      );
+      if (recentCampaign) {
+        const daysAgo = Math.round((now - new Date(recentCampaign.createdAt).getTime()) / (24 * 3600 * 1000));
+        return {
+          isDuplicate: true,
+          reason: `Campaign "${recentCampaign.title}" was prepared ${daysAgo} days ago for this prospect. Cooling-off period enforced.`,
+          existingEntityId: recentCampaign.id,
+          existingType: 'campaign',
+          daysSinceLastOutreach: daysAgo,
+        };
+      }
+    }
+
+    return { isDuplicate: false };
+  }
+
+  /**
+   * M4: Conversation Thread Context Retrieval
+   * Reconstructs complete conversation history, linked CRM donor entity, and verified institutional grounding.
+   */
+  public getThreadContext(threadId: string): {
+    thread: EnterpriseEmailThread | null;
+    donor: UnifiedDonorProfile | null;
+    matchedProgram: typeof APPROVED_COMMUNITY_PROGRAMS[0];
+    verifiedCitations: any[];
+    messageCount: number;
+    combinedText: string;
+  } {
+    const emailService = EmailEnterpriseService.getInstance();
+    const thread = emailService.getConversationById(threadId) || null;
+    const fundingService = FundingCommandService.getInstance();
+
+    let donor: UnifiedDonorProfile | null = null;
+    if (thread) {
+      // Find donor by CRM link or participant email
+      if (thread.crmLink?.entityId) {
+        donor = fundingService.getDonor(thread.crmLink.entityId) || null;
+      }
+      if (!donor && thread.participantEmails?.length) {
+        donor =
+          fundingService
+            .getDonors()
+            .find((d) => thread.participantEmails.some((e) => d.email?.toLowerCase() === e.toLowerCase())) || null;
+      }
+    }
+
+    // Combine message thread body in chronological order with sanitization
+    const messages = thread?.messages || [];
+    const combinedText = messages
+      .map((m) => `[${m.direction.toUpperCase()} | ${m.senderName} <${m.senderEmail}> | ${m.receivedAt}]\n${EmailEnterpriseService.sanitizeUntrustedContent(m.bodyText)}`)
+      .join('\n\n---\n\n');
+
+    // Program matching
+    let matchedProgram = APPROVED_COMMUNITY_PROGRAMS[0];
+    const textLower = (combinedText + ' ' + (thread?.threadSubject || '')).toLowerCase();
+    for (const prog of APPROVED_COMMUNITY_PROGRAMS) {
+      if (
+        textLower.includes(prog.title.toLowerCase()) ||
+        prog.focusAreas.some((fa) => textLower.includes(fa.toLowerCase()))
+      ) {
+        matchedProgram = prog;
+        break;
+      }
+    }
+
+    // Retrieve verified knowledge citations
+    const knowledge = localKnowledgeRetrievalService.queryVerifiedKnowledge({
+      query: `${matchedProgram.title} budget outcomes`,
+      programId: matchedProgram.id,
+      accessLevel: 'DONOR_FACING',
+      limit: 2,
+    });
+
+    return {
+      thread,
+      donor,
+      matchedProgram,
+      verifiedCitations: knowledge.citations,
+      messageCount: messages.length,
+      combinedText,
+    };
+  }
+
+  /**
+   * M4: End-to-End Thread Intelligence Processor
+   * Combines incoming classification, priority routing (P0-P4), 0-100 interest scoring,
+   * opt-out suppression, human-in-the-loop draft generation, and auditable CRM updates.
+   */
+  public async processThreadWithAi(
+    threadId: string,
+    actorSession?: UserSession
+  ): Promise<{
+    success: boolean;
+    threadId: string;
+    classification: EmailClassificationResult;
+    interestScore: DonorInterestScore;
+    draft?: AiReplyDraft;
+    isOptOut: boolean;
+    isEscalated: boolean;
+    lead?: HighInterestLead;
+    crmActionRecorded: boolean;
+    error?: string;
+  }> {
+    await this.initialize();
+    const emailService = EmailEnterpriseService.getInstance();
+    const thread = emailService.getConversationById(threadId);
+    if (!thread) {
+      throw new Error(`Email thread ${threadId} not found in enterprise mailbox.`);
+    }
+
+    const { combinedText, matchedProgram, donor } = this.getThreadContext(threadId);
+    const latestInbound = [...(thread.messages || [])]
+      .reverse()
+      .find((m) => m.direction === 'inbound') || thread.messages?.[0];
+
+    const senderEmail = latestInbound?.senderEmail || thread.participantEmails[0] || 'donor@example.org';
+    const senderName = latestInbound?.senderName || 'Donor Contact';
+    const emailSubject = thread.threadSubject;
+    const emailBody = latestInbound?.bodyText || combinedText;
+
+    // 1. Automatic Email Priority & Category Classification (P0-P4)
+    const classification = this.classifyIncomingEmail({
+      emailSubject,
+      emailBody,
+      senderEmail,
+    });
+
+    // Map priority P0-P4 to thread priority
+    thread.priority = classification.priority as EmailPriorityLevel;
+
+    // 2. Associate or Create Prospect Record
+    let existingProspect = this.prospects.find((p) => p.contactEmail.toLowerCase() === senderEmail.toLowerCase());
+    if (!existingProspect) {
+      existingProspect = {
+        id: `PROSP-${Date.now().toString().slice(-4)}`,
+        organizationName: donor?.organizationName || donor?.name || senderName,
+        contactName: senderName,
+        contactEmail: senderEmail,
+        contactTitle: 'Funder / Donor Representative',
+        prospectType: 'foundation',
+        estimatedCapacity: donor?.largestGift || donor?.lifetimeGiving || 25000,
+        areasOfInterest: matchedProgram.focusAreas,
+        geographicFocus: 'Minnesota',
+        status: 'solicited',
+        matchScore: 85,
+        matchedProgramId: matchedProgram.id,
+        matchedProgramName: matchedProgram.title,
+        interestScore: 0,
+        optOut: false,
+        assignedStaffId: 'staff-dev-01',
+        assignedStaffName: 'Development Officer',
+        notes: 'Associated from incoming email thread in Email Command Center.',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      this.prospects.push(existingProspect);
+    }
+    const prospect: ProspectProfile = existingProspect;
+
+    // 3. Donor Interest Scoring (0 - 100 Scale)
+    const interestScore = this.analyzeDonorInterest({
+      prospectId: prospect.id,
+      emailBody,
+      emailSubject,
+    });
+
+    let draft: AiReplyDraft | undefined = undefined;
+    let lead: HighInterestLead | undefined = undefined;
+    let isEscalated = false;
+
+    // 4. Opt-Out & Decline Suppression
+    if (classification.isOptOut) {
+      this.haltAllFollowUpsOnOptOut(prospect.id);
+      prospect.optOut = true;
+      prospect.status = 'opted_out';
+      prospect.interestScore = 0;
+
+      // Update CRM donor record if present
+      if (donor) {
+        donor.consentStatus = 'OPTED_OUT';
+        donor.stage = 'LAPSED';
+      }
+
+      // Log auditable CRM stewardship action
+      db.logAudit({
+        actorId: actorSession?.userEmail || 'phumulani-ai@phumulani.org',
+        actorName: actorSession?.name || 'Phumulani AI Engine',
+        actorRole: actorSession?.role || 'staff',
+        action: 'DONOR_OPT_OUT_SUPPRESSED',
+        resource: `donor_crm:${prospect.id}`,
+        details: `Opt-out detected in thread ${threadId}. Suppressed all future solicitation outreach.`,
+      });
+
+      return {
+        success: true,
+        threadId,
+        classification,
+        interestScore,
+        isOptOut: true,
+        isEscalated: false,
+        crmActionRecorded: true,
+      };
+    }
+
+    // 5. Duplicate Outreach Prevention
+    const duplicateCheck = this.checkDuplicateOutreach(senderEmail, matchedProgram.id);
+    if (!duplicateCheck.isDuplicate) {
+      // 6. Generate Response Draft Grounded in Verified Program Records
+      draft = await this.generateReplyDraft({
+        incomingEmailId: latestInbound?.id || threadId,
+        incomingEmailSubject: emailSubject,
+        incomingEmailBody: emailBody,
+        prospectId: prospect.id,
+        programId: matchedProgram.id,
+        tone: 'professional',
+      });
+
+      // Strict Invariant: Draft requires human review; no unattended sending
+      draft.approvalStatus = 'pending_human_review';
+
+      // Update thread draft in Email Enterprise service
+      thread.draft = {
+        id: draft.id,
+        threadId: thread.id,
+        inReplyToMessageId: latestInbound?.id || '',
+        suggestedSubject: draft.suggestedSubject,
+        recipientEmail: senderEmail,
+        proposedBody: draft.suggestedBody,
+        toneStyle: 'grant_correspondence',
+        verifiedContextSummary: `Grounded in ${matchedProgram.title} ($${matchedProgram.annualBudget.toLocaleString()}) via verified institutional records.`,
+        requiredStaffAction: 'Staff or Executive review and authorized dispatch required.',
+        confidenceScore: Math.round(classification.confidence * 100),
+        status: 'pending_approval',
+        generatedByAgent: 'Phumulani Ai (Autonomous Fundraising Agent)',
+        requestedByStaff: actorSession?.name || 'Staff User',
+        createdAt: new Date().toISOString(),
+      };
+    } else if (duplicateCheck.existingType === 'draft') {
+      draft = this.replyDrafts.find((d) => d.id === duplicateCheck.existingEntityId);
+    }
+
+    // 7. Executive Staff Escalation for High-Interest Conversations (score >= 80 or meeting signal)
+    if (interestScore.score >= 80 || classification.hasMeetingSignal) {
+      lead = await this.escalateHighInterestLead({
+        prospectId: prospect.id,
+        emailSubject,
+        emailBody,
+        interestScore: interestScore.score,
+        meetingRequested: classification.hasMeetingSignal,
+        reasonForEscalation: classification.hasMeetingSignal
+          ? 'Explicit meeting or call requested by funder'
+          : `High interest score of ${interestScore.score}/100 with confirmed program alignment`,
+      });
+      isEscalated = true;
+      thread.status = 'awaiting_approval';
+    }
+
+    // 8. Auditable CRM Update
+    db.logAudit({
+      actorId: actorSession?.userEmail || 'staff@phumulani.org',
+      actorName: actorSession?.name || 'Staff Member',
+      actorRole: actorSession?.role || 'staff',
+      action: 'AI_EMAIL_CLASSIFICATION_AND_CRM_SYNC',
+      resource: `email_thread:${threadId}`,
+      details: `Classified thread ${threadId} as ${classification.priority} (${classification.category}). Interest Score: ${interestScore.score}/100. Grounded draft ${draft?.id || 'none'} prepared for human review.`,
+    });
+
+    return {
+      success: true,
+      threadId,
+      classification,
+      interestScore,
+      draft,
+      isOptOut: false,
+      isEscalated,
+      lead,
+      crmActionRecorded: true,
+    };
+  }
+
+  /**
+   * M4: Authenticated CRM Action Recorder
+   * Durably logs staff actions on donor records with cryptographic session attribution.
+   */
+  public recordAuthenticatedCrmAction(params: {
+    donorId: string;
+    actionType: string;
+    details: string;
+    actorSession: UserSession;
+  }): { success: boolean; auditId: string } {
+    const fundingService = FundingCommandService.getInstance();
+    const donor = fundingService.getDonor(params.donorId);
+
+    const auditId = `audit-crm-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+    db.logAudit({
+      actorId: params.actorSession.userEmail || params.actorSession.email || 'staff@phumulani.org',
+      actorName: params.actorSession.name || 'Staff Member',
+      actorRole: params.actorSession.role,
+      action: params.actionType,
+      resource: `donor_crm:${params.donorId}`,
+      details: params.details,
+    });
+
+    if (donor) {
+      donor.updatedAt = new Date().toISOString();
+      donor.engagementLogCount = (donor.engagementLogCount || 0) + 1;
+    }
+
+    return { success: true, auditId };
   }
 }
 

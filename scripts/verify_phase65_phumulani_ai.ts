@@ -354,7 +354,7 @@ export async function runPhase65AcceptanceTests(): Promise<{
       durationMinutes: 30,
     });
     // Use a fresh, dynamically unique future time slot to prevent cross-run persistence collision
-    const uniqueFutureOffset = 86400000 * 200 + Math.floor(Math.random() * 50000000);
+    const uniqueFutureOffset = 86400000 * 3000 + Math.floor(Math.random() * 5000000000);
     const testSlotStart = new Date(Date.now() + uniqueFutureOffset);
     const testSlotEnd = new Date(testSlotStart.getTime() + 30 * 60000);
 
@@ -389,7 +389,7 @@ export async function runPhase65AcceptanceTests(): Promise<{
       'TEST-P65-16',
       'Double-Booking Prevention & Real Scheduling Enforcement',
       passed,
-      `First booking succeeded; second conflicting booking correctly blocked: "${book2.error}"`
+      `b1: success=${book1.success}, err=${book1.error} | b2: success=${book2.success}, err=${book2.error}`
     );
   } catch (err: any) {
     record('TEST-P65-16', 'Double-Booking Prevention', false, err.message);

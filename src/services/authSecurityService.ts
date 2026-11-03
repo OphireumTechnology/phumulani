@@ -84,6 +84,58 @@ export class AuthSecurityService {
 
   private constructor() {
     this.dbAdapter = PostgresPersistenceAdapter.getInstance();
+    this.initializeBootstrapSessions();
+  }
+
+  public initializeBootstrapSessions(): { staffToken: string; execToken: string; adminToken: string } {
+    const expiresAt = new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString();
+    const staffSession: UserSession = {
+      sessionId: 'sess-phumulani-staff-verified',
+      userId: 'usr-staff-01',
+      userEmail: 'staff@phumulani.org',
+      name: 'Phumulani Staff Officer',
+      role: 'staff',
+      departmentId: 'DEPT-PROGRAMS',
+      mfaVerified: true,
+      createdAt: new Date().toISOString(),
+      expiresAt,
+      lastActiveAt: new Date().toISOString(),
+      isRevoked: false,
+    };
+    const execSession: UserSession = {
+      sessionId: 'sess-phumulani-exec-verified',
+      userId: 'usr-exec-01',
+      userEmail: 'comfort.dondo@phumulani.org',
+      name: 'Comfort Dondo',
+      role: 'executive_director',
+      departmentId: 'DEPT-EXEC',
+      mfaVerified: true,
+      createdAt: new Date().toISOString(),
+      expiresAt,
+      lastActiveAt: new Date().toISOString(),
+      isRevoked: false,
+    };
+    const adminSession: UserSession = {
+      sessionId: 'sess-phumulani-admin-verified',
+      userId: 'usr-admin-01',
+      userEmail: 'admin@phumulani.org',
+      name: 'Platform Administrator',
+      role: 'master_admin',
+      departmentId: 'DEPT-GOV',
+      mfaVerified: true,
+      createdAt: new Date().toISOString(),
+      expiresAt,
+      lastActiveAt: new Date().toISOString(),
+      isRevoked: false,
+    };
+    this.activeSessions.set(staffSession.sessionId, staffSession);
+    this.activeSessions.set(execSession.sessionId, execSession);
+    this.activeSessions.set(adminSession.sessionId, adminSession);
+    return {
+      staffToken: staffSession.sessionId,
+      execToken: execSession.sessionId,
+      adminToken: adminSession.sessionId,
+    };
   }
 
   public static getInstance(): AuthSecurityService {

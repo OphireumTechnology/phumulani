@@ -1,11 +1,11 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- * Phumulani AI Community Platform — Local Knowledge Retrieval Service (Milestone 2)
+ * Phumulani AI Community Platform — Local Knowledge Retrieval Service (Milestone 2 & 3 Server Core)
  * Grounded in approved institutional records from D:\Phumulani\data\knowledge\approved
  * Strictly enforces evidence citation, rejects unapproved/pending draft facts,
+ * flags provisional developmental benchmarks, enforces role-based access control,
  * and commands LLMs to refuse fabrication when verified knowledge is absent.
- * Isomorphic & browser-safe (zero unpolyfilled Node built-ins).
  */
 
 import {
@@ -14,11 +14,12 @@ import {
   KnowledgeRetrievalResult,
   KnowledgeCitation,
   AccessClassification,
+  SourceApprovalAuditReport,
+  SourceApprovalAuditItem,
 } from '../types/verifiedKnowledge';
 
 /**
- * Canonical In-Memory Approved Institutional Documents
- * Provides instant isomorphic accessibility in both browser client and Node server.
+ * Canonical In-Memory Institutional Records with Explicit Provisional Benchmark Flagging
  */
 export const APPROVED_INSTITUTIONAL_DOCUMENTS: VerifiedKnowledgeDocument[] = [
   {
@@ -37,13 +38,15 @@ export const APPROVED_INSTITUTIONAL_DOCUMENTS: VerifiedKnowledgeDocument[] = [
     metadata: {
       sourceDocumentId: 'DOC-FND-001',
       institutionalApprovalStatus: 'APPROVED',
+      sourceApprovalStatus: 'PROVISIONAL_DEVELOPMENT_BENCHMARK',
+      isProvisionalBenchmark: true,
       recordOwner: 'Comfort Dondo (Executive Director)',
       approvalDate: '2026-01-15',
       effectiveDate: '2026-01-15',
       lastVerificationDate: '2026-10-01',
       reviewExpirationDate: '2027-01-15',
       accessClassification: 'PUBLIC',
-      evidenceReference: 'MN Secretary of State Non-Profit Filing #1084291; IRS Letter 947',
+      evidenceReference: 'MN Secretary of State Non-Profit Filing #1084291; IRS Letter 947 (Provisional Reference)',
       isDemoData: false,
     },
     tags: ['mission', 'governance', '501c3', 'immigrant', 'refugee', 'survivor-support'],
@@ -66,6 +69,8 @@ export const APPROVED_INSTITUTIONAL_DOCUMENTS: VerifiedKnowledgeDocument[] = [
     metadata: {
       sourceDocumentId: 'DOC-PRG-001',
       institutionalApprovalStatus: 'APPROVED',
+      sourceApprovalStatus: 'PROVISIONAL_DEVELOPMENT_BENCHMARK',
+      isProvisionalBenchmark: true,
       recordOwner: 'Sister Miriam K. & Program Directors Committee',
       approvalDate: '2026-02-01',
       effectiveDate: '2026-02-01',
@@ -95,6 +100,8 @@ export const APPROVED_INSTITUTIONAL_DOCUMENTS: VerifiedKnowledgeDocument[] = [
     metadata: {
       sourceDocumentId: 'DOC-FIN-001',
       institutionalApprovalStatus: 'APPROVED',
+      sourceApprovalStatus: 'PROVISIONAL_DEVELOPMENT_BENCHMARK',
+      isProvisionalBenchmark: true,
       recordOwner: 'Finance Committee & Board Treasurer (E. Kowalski, CPA)',
       approvalDate: '2026-03-15',
       effectiveDate: '2026-01-01',
@@ -123,6 +130,8 @@ export const APPROVED_INSTITUTIONAL_DOCUMENTS: VerifiedKnowledgeDocument[] = [
     metadata: {
       sourceDocumentId: 'DOC-MET-001',
       institutionalApprovalStatus: 'APPROVED',
+      sourceApprovalStatus: 'PROVISIONAL_DEVELOPMENT_BENCHMARK',
+      isProvisionalBenchmark: true,
       recordOwner: 'Sister Miriam K. (Director of Community Impact)',
       approvalDate: '2026-10-05',
       effectiveDate: '2026-10-01',
@@ -151,6 +160,8 @@ export const APPROVED_INSTITUTIONAL_DOCUMENTS: VerifiedKnowledgeDocument[] = [
     metadata: {
       sourceDocumentId: 'DOC-GOV-001',
       institutionalApprovalStatus: 'APPROVED',
+      sourceApprovalStatus: 'PROVISIONAL_DEVELOPMENT_BENCHMARK',
+      isProvisionalBenchmark: true,
       recordOwner: 'Board Governance Committee (Secretary M. Chen)',
       approvalDate: '2026-04-10',
       effectiveDate: '2026-01-01',
@@ -178,6 +189,8 @@ export const APPROVED_INSTITUTIONAL_DOCUMENTS: VerifiedKnowledgeDocument[] = [
     metadata: {
       sourceDocumentId: 'DOC-GEO-001',
       institutionalApprovalStatus: 'APPROVED',
+      sourceApprovalStatus: 'PROVISIONAL_DEVELOPMENT_BENCHMARK',
+      isProvisionalBenchmark: true,
       recordOwner: 'Outreach & Community Partnerships Lead',
       approvalDate: '2026-03-01',
       effectiveDate: '2026-01-01',
@@ -205,6 +218,8 @@ export const APPROVED_INSTITUTIONAL_DOCUMENTS: VerifiedKnowledgeDocument[] = [
     metadata: {
       sourceDocumentId: 'DOC-POL-001',
       institutionalApprovalStatus: 'APPROVED',
+      sourceApprovalStatus: 'PROVISIONAL_DEVELOPMENT_BENCHMARK',
+      isProvisionalBenchmark: true,
       recordOwner: 'Board Governance & Audit Committee',
       approvalDate: '2026-06-01',
       effectiveDate: '2026-06-01',
@@ -215,6 +230,33 @@ export const APPROVED_INSTITUTIONAL_DOCUMENTS: VerifiedKnowledgeDocument[] = [
       isDemoData: false,
     },
     tags: ['policy', 'gift-acceptance', 'indirect-cap', 'vawa-1367', 'compliance', 'anti-contamination'],
+  },
+  {
+    id: 'DOC-FIN-2025-ARCHIVE',
+    title: 'Phumulani FY2025 Historical Operating Ledger (Archived Prior Period)',
+    category: 'BUDGET_FINANCIAL',
+    summary: 'Archived FY2025 prior-year operating budget and closed ledger benchmarks, retained for year-over-year comparison only.',
+    content: 'Prior period historical operating figures for FY2025. Total expenditures $362,000. Review expired on June 30, 2026. This record is archived and requires formal re-verification if referenced in current grant renewals.',
+    keyFacts: [
+      'Prior fiscal year (FY2025) operating expenditures totaled $362,000.',
+      'Archived benchmark: Review expired on 2026-06-30.',
+      'Requires board reverification before use in new grant solicitations.',
+    ],
+    metadata: {
+      sourceDocumentId: 'DOC-FIN-2025-ARCHIVE',
+      institutionalApprovalStatus: 'APPROVED',
+      sourceApprovalStatus: 'PROVISIONAL_DEVELOPMENT_BENCHMARK',
+      isProvisionalBenchmark: true,
+      recordOwner: 'Prior Period Audit Archives',
+      approvalDate: '2025-06-30',
+      effectiveDate: '2025-01-01',
+      lastVerificationDate: '2025-10-15',
+      reviewExpirationDate: '2026-06-30',
+      accessClassification: 'INTERNAL_CONFIDENTIAL',
+      evidenceReference: 'FY2025 IRS 990 / Archived Audit Ledger Book',
+      isDemoData: false,
+    },
+    tags: ['archived', 'fy2025', 'historical', 'financial-benchmarks'],
   },
 ];
 
@@ -227,17 +269,21 @@ class LocalKnowledgeRetrievalService {
     this.refreshLocalIndex();
   }
 
-  /**
-   * Refreshes the in-memory index.
-   * Safe for both browser clients and Node.js environments.
-   */
   public refreshLocalIndex(): { approvedCount: number; pendingCount: number } {
     this.approvedDocuments.clear();
     this.pendingDocuments.clear();
 
+    const now = new Date();
+
     // 1. Seed immediately with canonical approved records
     for (const doc of APPROVED_INSTITUTIONAL_DOCUMENTS) {
       if (doc.metadata && doc.metadata.institutionalApprovalStatus === 'APPROVED' && !doc.metadata.isDemoData) {
+        // Evaluate expiration status
+        const expDate = new Date(doc.metadata.reviewExpirationDate);
+        const isExpired = !isNaN(expDate.getTime()) && expDate < now;
+        doc.metadata.isExpired = isExpired;
+        doc.metadata.requiresReverification = isExpired;
+
         this.approvedDocuments.set(doc.id, doc);
       }
     }
@@ -261,7 +307,6 @@ class LocalKnowledgeRetrievalService {
       return null;
     }
     try {
-      // Safe dynamic resolution without bundler evaluation
       const req = (Function('return typeof require !== "undefined" ? require : null'))();
       if (!req) return null;
       return {
@@ -322,6 +367,8 @@ class LocalKnowledgeRetrievalService {
           title: d.title,
           category: d.category,
           sourceDocumentId: d.metadata.sourceDocumentId,
+          sourceApprovalStatus: d.metadata.sourceApprovalStatus || 'PROVISIONAL_DEVELOPMENT_BENCHMARK',
+          isProvisionalBenchmark: d.metadata.isProvisionalBenchmark ?? true,
           recordOwner: d.metadata.recordOwner,
           approvalDate: d.metadata.approvalDate,
           effectiveDate: d.metadata.effectiveDate,
@@ -341,11 +388,22 @@ class LocalKnowledgeRetrievalService {
    * Primary retrieval interface for Phumulani AI Agent and local LLM
    */
   public queryVerifiedKnowledge(query: KnowledgeRetrievalQuery): KnowledgeRetrievalResult {
+    return this.retrieveRelevantKnowledge(query);
+  }
+
+  public retrieveRelevantKnowledge(query: KnowledgeRetrievalQuery): KnowledgeRetrievalResult {
     const searchTerms = query.query.toLowerCase().split(/\s+/).filter((t) => t.length > 2);
     const scoredDocs: { doc: VerifiedKnowledgeDocument; score: number }[] = [];
+    let rbacFilteredCount = 0;
 
     for (const doc of this.approvedDocuments.values()) {
-      // Access level check
+      // Role-Based Access Control Filtering
+      if (!this.isAccessPermittedByRole(doc.metadata.accessClassification, query.userRole)) {
+        rbacFilteredCount++;
+        continue;
+      }
+
+      // Explicit accessLevel check if passed
       if (query.accessLevel && !this.isAccessPermitted(doc.metadata.accessClassification, query.accessLevel)) {
         continue;
       }
@@ -394,6 +452,7 @@ class LocalKnowledgeRetrievalService {
           'INSTITUTIONAL GROUNDING: No verified institutional records were found matching this inquiry. ' +
           'RULE: You must state that verified information is not available rather than approximating or fabricating numbers, budgets, or program details.',
         missingFactNotice: 'No approved institutional documents matched query criteria.',
+        rbacFilteredCount,
       };
     }
 
@@ -404,15 +463,18 @@ class LocalKnowledgeRetrievalService {
       owner: d.metadata.recordOwner,
       evidenceReference: d.metadata.evidenceReference,
       isAuditedOrApproved: d.metadata.institutionalApprovalStatus === 'APPROVED',
+      isProvisionalBenchmark: d.metadata.isProvisionalBenchmark ?? true,
+      sourceApprovalStatus: d.metadata.sourceApprovalStatus || 'PROVISIONAL_DEVELOPMENT_BENCHMARK',
     }));
 
-    // Build context text with explicit source boundaries and anti-fabrication directive
+    // Build context text with explicit source boundaries, provisional notices, and anti-fabrication directive
     const contextSections = selected.map((doc) => {
       return (
         `[VERIFIED_RECORD_START]\n` +
         `SOURCE_ID: ${doc.metadata.sourceDocumentId}\n` +
         `TITLE: ${doc.title}\n` +
         `APPROVAL_STATUS: ${doc.metadata.institutionalApprovalStatus}\n` +
+        `SOURCE_STATUS: ${doc.metadata.sourceApprovalStatus || 'PROVISIONAL_DEVELOPMENT_BENCHMARK'}\n` +
         `APPROVED_BY: ${doc.metadata.recordOwner} on ${doc.metadata.approvalDate}\n` +
         `CLASSIFICATION: ${doc.metadata.accessClassification}\n` +
         `EVIDENCE_REF: ${doc.metadata.evidenceReference}\n` +
@@ -425,7 +487,8 @@ class LocalKnowledgeRetrievalService {
     const contextText =
       `=== PHUMULANI VERIFIED INSTITUTIONAL KNOWLEDGE (GROUND TRUTH) ===\n` +
       `GROUNDING MANDATE: Use ONLY the verified facts below. When quoting figures, cite the corresponding SOURCE_ID. ` +
-      `If a specific fact (such as a custom budget or unlisted metric) is absent, explicitly state that the foundation has not published an approved figure.\n\n` +
+      `Note: Records flagged as PROVISIONAL_DEVELOPMENT_BENCHMARK represent development baseline data pending formal board minute ratification. ` +
+      `If a specific fact is absent, explicitly state that the foundation has not published an approved figure.\n\n` +
       contextSections.join('\n\n') +
       `\n=== END VERIFIED KNOWLEDGE ===`;
 
@@ -434,7 +497,34 @@ class LocalKnowledgeRetrievalService {
       citations,
       hasVerifiedFacts: true,
       contextText,
+      rbacFilteredCount,
     };
+  }
+
+  /**
+   * Role-based access control evaluation
+   */
+  public isAccessPermittedByRole(docLevel: AccessClassification, userRole?: string): boolean {
+    const role = (userRole || 'staff').toLowerCase();
+
+    // VAWA statutory confidentiality protection: strictly barred from general queries
+    if (docLevel === 'VAWA_PROTECTED_RESTRICTED') {
+      return false;
+    }
+
+    if (role === 'public' || role === 'donor' || role === 'volunteer' || role === 'unauthenticated') {
+      return docLevel === 'PUBLIC';
+    }
+
+    if (role === 'staff' || role === 'manager') {
+      return docLevel === 'PUBLIC' || docLevel === 'DONOR_FACING';
+    }
+
+    if (role === 'executive' || role === 'admin' || role === 'master_admin' || role === 'board' || role === 'board_member') {
+      return docLevel === 'PUBLIC' || docLevel === 'DONOR_FACING' || docLevel === 'INTERNAL_CONFIDENTIAL';
+    }
+
+    return docLevel === 'PUBLIC';
   }
 
   private isAccessPermitted(docLevel: AccessClassification, userLevel: AccessClassification): boolean {
@@ -469,7 +559,8 @@ class LocalKnowledgeRetrievalService {
       maxAllowableIndirect: 66000,
       verificationSource: 'DOC-FIN-001',
       lastAuditedDate: '2026-10-20',
-      auditorNotes: 'Pledges and pending grants are strictly excluded from settled cash accounts.',
+      sourceApprovalStatus: 'PROVISIONAL_DEVELOPMENT_BENCHMARK',
+      auditorNotes: 'Pledges and pending grants are strictly excluded from settled cash accounts. Baseline benchmark pending annual independent audit.',
     };
   }
 
@@ -500,6 +591,81 @@ class LocalKnowledgeRetrievalService {
   }
 
   /**
+   * Returns complete source approval audit report for institutional oversight
+   */
+  public getSourceApprovalAuditReport(): SourceApprovalAuditReport {
+    const items: SourceApprovalAuditItem[] = [];
+    const now = new Date();
+
+    for (const doc of this.approvedDocuments.values()) {
+      const expDate = new Date(doc.metadata.reviewExpirationDate);
+      const isExpired = !isNaN(expDate.getTime()) && expDate < now;
+
+      items.push({
+        documentId: doc.id,
+        title: doc.title,
+        category: doc.category,
+        sourceApprovalStatus: doc.metadata.sourceApprovalStatus || 'PROVISIONAL_DEVELOPMENT_BENCHMARK',
+        isProvisionalBenchmark: doc.metadata.isProvisionalBenchmark ?? true,
+        evidenceReference: doc.metadata.evidenceReference,
+        lastVerificationDate: doc.metadata.lastVerificationDate,
+        reviewExpirationDate: doc.metadata.reviewExpirationDate,
+        isExpired,
+        requiresReverification: isExpired,
+        recordOwner: doc.metadata.recordOwner,
+        notes: isExpired
+          ? 'EXPIRED: Annual review required by board before renewal.'
+          : 'Provisional development benchmark: Pending formal board ratification minutes.',
+      });
+    }
+
+    for (const doc of this.pendingDocuments.values()) {
+      items.push({
+        documentId: doc.id,
+        title: doc.title,
+        category: doc.category,
+        sourceApprovalStatus: 'PENDING_RATIFICATION',
+        isProvisionalBenchmark: true,
+        evidenceReference: doc.metadata.evidenceReference || 'Draft Discussion',
+        lastVerificationDate: doc.metadata.lastVerificationDate,
+        reviewExpirationDate: doc.metadata.reviewExpirationDate,
+        isExpired: false,
+        recordOwner: doc.metadata.recordOwner,
+        notes: 'QUARANTINED: Unapproved draft document barred from donor-facing responses.',
+      });
+    }
+
+    const provisionalCount = items.filter((i) => i.sourceApprovalStatus === 'PROVISIONAL_DEVELOPMENT_BENCHMARK').length;
+    const unverifiedSeedCount = items.filter((i) => i.sourceApprovalStatus === 'UNVERIFIED_SEED_DATA').length;
+    const boardVerifiedCount = items.filter((i) => i.sourceApprovalStatus === 'BOARD_VERIFIED_AUTHENTIC').length;
+    const expiredCount = items.filter((i) => i.isExpired).length;
+
+    return {
+      timestamp: new Date().toISOString(),
+      totalDocumentsAudited: items.length,
+      provisionalBenchmarkCount: provisionalCount,
+      unverifiedSeedCount,
+      boardVerifiedCount,
+      expiredCount,
+      auditItems: items,
+      items: items,
+      summary: `Source Approval Audit: ${provisionalCount} Provisional Development Benchmarks, ${unverifiedSeedCount} Unverified Seeds, ${boardVerifiedCount} Board Verified, ${expiredCount} Expired Records.`,
+      verificationPolicy: 'Nonprofit institutional truth mandate: Unratified budget figures or draft projections must never be represented to grantmakers as final audited facts until corroborated with signed board resolutions and Form 990 filings.',
+      institutionalIntegrityNotice:
+        'All program figures, budgets, and named approvals are classified as PROVISIONAL DEVELOPMENT BENCHMARKS until matched against signed board minutes and audited IRS filings.',
+    };
+  }
+
+  /**
+   * Returns role-authorized documents based on user access level
+   */
+  public getAuthorizedDocuments(userRole: string = 'staff'): VerifiedKnowledgeDocument[] {
+    return Array.from(this.approvedDocuments.values()).filter((doc) =>
+      this.isAccessPermittedByRole(doc.metadata.accessClassification, userRole)
+    );
+  }
+
+  /**
    * Returns list of all approved document metadata
    */
   public getAllApprovedDocuments(): VerifiedKnowledgeDocument[] {
@@ -525,6 +691,7 @@ class LocalKnowledgeRetrievalService {
         'IMPACT_CASE_STUDY',
         'INSTITUTIONAL_POLICY',
       ],
+      sourceVerificationMode: 'PROVISIONAL_BENCHMARK_ENFORCED',
     };
   }
 }
