@@ -41,6 +41,7 @@ import {
 import { EmailEnterpriseService } from '../services/emailEnterpriseService';
 import { googleWorkspaceAdapter } from '../services/googleWorkspaceAdapter';
 import { UniversalEmailConnections } from '../components/email/UniversalEmailConnections';
+import { PhumulaniAiFundraisingCenter } from '../components/email/PhumulaniAiFundraisingCenter';
 import { EmailCompactHeader } from '../components/email/EmailCompactHeader';
 import { EmailSummaryStrip } from '../components/email/EmailSummaryStrip';
 import { EmailSidebar } from '../components/email/EmailSidebar';
@@ -145,7 +146,8 @@ export type EmailCommandCenterTab =
   | 'fundraising'
   | 'partnerships'
   | 'setup_wizard'
-  | 'universal_connectors';
+  | 'universal_connectors'
+  | 'phumulani_ai';
 
 interface EmailCommandCenterViewProps {
   currentUser: User;
@@ -3150,6 +3152,15 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {activeTab === 'universal_connectors' && (
           <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5">
             <UniversalEmailConnections />
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* TAB: PHUMULANI AI — LOCAL LLM & AUTONOMOUS FUNDRAISING (PHASE 65)         */}
+        {/* ========================================================================= */}
+        {activeTab === 'phumulani_ai' && (
+          <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5">
+            <PhumulaniAiFundraisingCenter onNavigateTab={(t) => setActiveTab(t as any)} />
           </div>
         )}
 

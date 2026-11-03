@@ -51,6 +51,9 @@ import {
   emailHealthService,
   emailRecoveryService,
 } from './src/email';
+import { phumulaniAiAgentService } from './src/services/phumulaniAiAgentService';
+import { localInferenceAdapter } from './src/services/localInferenceAdapter';
+import { calendarIntegrationService } from './src/services/calendarIntegrationService';
 
 dotenv.config();
 
@@ -5387,6 +5390,177 @@ app.get('/api/admin/email/audit', (req: Request, res: Response) => {
 });
 
 // -----------------------------------------------------------------------------
+// PHASE 65 — PHUMULANI AI LOCAL LLM & AUTONOMOUS FUNDRAISING AGENT API ROUTES
+// -----------------------------------------------------------------------------
+
+app.get('/api/phumulani-ai/health', async (_req: Request, res: Response) => {
+  try {
+    const health = await localInferenceAdapter.checkHealth();
+    res.json({ success: true, health });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/phumulani-ai/policy', (_req: Request, res: Response) => {
+  res.json({ success: true, policy: phumulaniAiAgentService.getPolicyConfig() });
+});
+
+app.get('/api/phumulani-ai/prospects', async (_req: Request, res: Response) => {
+  await phumulaniAiAgentService.initialize();
+  res.json({ success: true, prospects: phumulaniAiAgentService.getProspects() });
+});
+
+app.post('/api/phumulani-ai/prospects', async (req: Request, res: Response) => {
+  try {
+    const prospect = await phumulaniAiAgentService.addProspect(req.body);
+    res.json({ success: true, prospect });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/phumulani-ai/prospects/:id/match', (req: Request, res: Response) => {
+  try {
+    const matches = phumulaniAiAgentService.matchProspectToPrograms(req.params.id);
+    res.json({ success: true, matches });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/phumulani-ai/campaigns', async (_req: Request, res: Response) => {
+  await phumulaniAiAgentService.initialize();
+  res.json({ success: true, campaigns: phumulaniAiAgentService.getCampaigns() });
+});
+
+app.post('/api/phumulani-ai/campaigns', async (req: Request, res: Response) => {
+  try {
+    const campaign = await phumulaniAiAgentService.generateCampaign(req.body);
+    res.json({ success: true, campaign });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/phumulani-ai/campaigns/:id/approve', async (req: Request, res: Response) => {
+  try {
+    const approved = await phumulaniAiAgentService.approveCampaign(
+      req.params.id,
+      req.body.approvedBy || 'Staff Director'
+    );
+    if (!approved) return res.status(404).json({ success: false, error: 'Campaign not found' });
+    res.json({ success: true, campaign: approved });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/phumulani-ai/classify-email', (req: Request, res: Response) => {
+  try {
+    const result = phumulaniAiAgentService.classifyIncomingEmail(req.body);
+    res.json({ success: true, classification: result });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/phumulani-ai/analyze-interest', (req: Request, res: Response) => {
+  try {
+    const result = phumulaniAiAgentService.analyzeDonorInterest(req.body);
+    res.json({ success: true, interestScore: result });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/phumulani-ai/reply-drafts', async (_req: Request, res: Response) => {
+  await phumulaniAiAgentService.initialize();
+  res.json({ success: true, drafts: phumulaniAiAgentService.getReplyDrafts() });
+});
+
+app.post('/api/phumulani-ai/reply-drafts', async (req: Request, res: Response) => {
+  try {
+    const draft = await phumulaniAiAgentService.generateReplyDraft(req.body);
+    res.json({ success: true, draft });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/phumulani-ai/follow-ups', async (_req: Request, res: Response) => {
+  await phumulaniAiAgentService.initialize();
+  res.json({ success: true, followUps: phumulaniAiAgentService.getFollowUps() });
+});
+
+app.post('/api/phumulani-ai/follow-ups', async (req: Request, res: Response) => {
+  try {
+    const item = await phumulaniAiAgentService.scheduleFollowUp(req.body);
+    res.json({ success: true, followUp: item });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/phumulani-ai/follow-ups/:prospectId/cancel-on-reply', (req: Request, res: Response) => {
+  const cancelled = phumulaniAiAgentService.cancelPendingFollowUpsOnReply(
+    req.params.prospectId,
+    req.body.reason || 'Prospect replied to correspondence'
+  );
+  res.json({ success: true, cancelledCount: cancelled });
+});
+
+app.get('/api/phumulani-ai/high-interest-leads', async (_req: Request, res: Response) => {
+  await phumulaniAiAgentService.initialize();
+  res.json({ success: true, leads: phumulaniAiAgentService.getHighInterestLeads() });
+});
+
+app.get('/api/phumulani-ai/proposals', async (_req: Request, res: Response) => {
+  await phumulaniAiAgentService.initialize();
+  res.json({ success: true, proposals: phumulaniAiAgentService.getProposals() });
+});
+
+app.post('/api/phumulani-ai/proposals', async (req: Request, res: Response) => {
+  try {
+    const proposal = await phumulaniAiAgentService.generateFundingProposal(req.body);
+    res.json({ success: true, proposal });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/phumulani-ai/calendar/status', async (req: Request, res: Response) => {
+  const provider = (req.query.provider as 'google' | 'microsoft') || 'google';
+  const status = await calendarIntegrationService.getConnectionStatus(provider);
+  res.json({ success: true, status });
+});
+
+app.get('/api/phumulani-ai/calendar/slots', async (req: Request, res: Response) => {
+  try {
+    const slots = await calendarIntegrationService.getAvailableSlots({
+      staffEmail: (req.query.staffEmail as string) || 'director@phumulani.org',
+      staffName: (req.query.staffName as string) || 'Comfort Dondo',
+      startDate: (req.query.startDate as string) || new Date().toISOString(),
+      daysCount: parseInt(req.query.daysCount as string, 10) || 5,
+      durationMinutes: parseInt(req.query.durationMinutes as string, 10) || 30,
+      timeZone: (req.query.timeZone as string) || 'America/Chicago',
+    });
+    res.json({ success: true, slots });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/phumulani-ai/calendar/schedule', async (req: Request, res: Response) => {
+  try {
+    const result = await calendarIntegrationService.scheduleMeeting(req.body);
+    res.json(result);
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// -----------------------------------------------------------------------------
 // VITE SPA DEV MIDDLEWARE / STATIC SERVING
 // -----------------------------------------------------------------------------
 
@@ -5419,6 +5593,14 @@ async function startServer() {
     }
   } catch (workErr) {
     console.warn('[Phumulani Platform] Background worker recovery notice:', workErr);
+  }
+
+  try {
+    await phumulaniAiAgentService.initialize();
+    await calendarIntegrationService.initialize();
+    console.log('[Phumulani Platform] Phumulani Ai agent & calendar integration services initialized.');
+  } catch (aiErr) {
+    console.warn('[Phumulani Platform] Phumulani Ai initialization notice:', aiErr);
   }
 
   if (process.env.NODE_ENV !== 'production') {

@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-11-03T05:17:27.773Z",
+  "savedAt": "2026-11-03T06:28:04.467Z",
   "checkpoints": {
     "conn-test-sync-engine": [
       {
@@ -138,6 +138,19 @@
     ],
     "conn-google-donations_phumulani_org": [
       {
+        "checkpointId": "chk-gmail-1793687284466",
+        "connectionId": "conn-google-donations_phumulani_org",
+        "mailboxEmail": "donations@phumulani.org",
+        "cursorType": "GMAIL_HISTORY_ID",
+        "cursorValue": "1004834",
+        "previousCursorValue": "1004820",
+        "messagesProcessed": 0,
+        "duplicatesSkipped": 2,
+        "syncType": "INCREMENTAL",
+        "status": "COMPLETED",
+        "timestamp": "2026-11-03T06:28:04.466Z"
+      },
+      {
         "checkpointId": "chk-gmail-1793683047773",
         "connectionId": "conn-google-donations_phumulani_org",
         "mailboxEmail": "donations@phumulani.org",
@@ -171,6 +184,18 @@
     "ZOHO:uid-412"
   ],
   "auditLogs": [
+    {
+      "id": "aud-sync-1793687284466-dpa0",
+      "connectionId": "conn-google-donations_phumulani_org",
+      "mailboxEmail": "donations@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "SYNC_CHECKPOINT_CREATED",
+      "actorName": "UniversalSyncDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-03T06:28:04.466Z",
+      "details": "Incremental sync completed: 0 imported, 2 duplicates skipped. Cursor: 1004834",
+      "status": "success"
+    },
     {
       "id": "aud-sync-1793683047773-22gj",
       "connectionId": "conn-google-donations_phumulani_org",

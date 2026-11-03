@@ -138,6 +138,27 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
 
           {(groupOpen.everyday || isCollapsed) && (
             <div className="space-y-0.5">
+              {/* Phumulani Ai (Phase 65) */}
+              <button
+                onClick={() => onTabSelect('phumulani_ai')}
+                title="Phumulani Ai — Local LLM & Autonomous Fundraising"
+                className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                  activeTab === 'phumulani_ai'
+                    ? 'bg-[#104F57] text-white shadow-2xs'
+                    : 'text-teal-900 bg-teal-50/80 hover:bg-teal-100/80 border border-teal-200/60'
+                }`}
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <Sparkles className={`w-4 h-4 shrink-0 ${activeTab === 'phumulani_ai' ? 'text-teal-200' : 'text-teal-700'}`} />
+                  {!isCollapsed && <span className="truncate font-bold">Phumulani Ai</span>}
+                </div>
+                {!isCollapsed && (
+                  <span className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded ${activeTab === 'phumulani_ai' ? 'bg-teal-900 text-teal-100' : 'bg-teal-700 text-white'}`}>
+                    LOCAL
+                  </span>
+                )}
+              </button>
+
               {/* Inbox / All Mailboxes */}
               <button
                 onClick={() => onTabSelect('all_mailboxes')}
