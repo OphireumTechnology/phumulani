@@ -46,7 +46,7 @@ export async function runPhase65AcceptanceTests(): Promise<{
     const passed =
       config.endpoint === 'http://127.0.0.1:11434' &&
       config.backend === 'ollama' &&
-      config.modelId.includes('llama3.2') &&
+      (config.modelId === 'phumulani-ai' || config.modelId.includes('llama3.2')) &&
       config.temperature <= 0.3; // High factual discipline
     record(
       'TEST-P65-01',
@@ -353,9 +353,9 @@ export async function runPhase65AcceptanceTests(): Promise<{
       daysCount: 1,
       durationMinutes: 30,
     });
-    // Use a fresh future time slot to prevent cross-run persistence collision
-    const testSlotStart = new Date(Date.now() + 86400000 * 60 + Math.floor(Math.random() * 100000));
-    testSlotStart.setHours(14, 0, 0, 0);
+    // Use a fresh, dynamically unique future time slot to prevent cross-run persistence collision
+    const uniqueFutureOffset = 86400000 * 200 + Math.floor(Math.random() * 50000000);
+    const testSlotStart = new Date(Date.now() + uniqueFutureOffset);
     const testSlotEnd = new Date(testSlotStart.getTime() + 30 * 60000);
 
     // First booking

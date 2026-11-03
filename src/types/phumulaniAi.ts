@@ -46,6 +46,7 @@ export type ProspectEngagementStatus =
   | 'campaign_queued'
   | 'solicited'
   | 'replied'
+  | 'qualified'
   | 'meeting_scheduled'
   | 'proposal_submitted'
   | 'funded'
@@ -207,6 +208,8 @@ export interface HighInterestLead {
   meetingRequested: boolean;
   assignedRepresentativeId: string;
   assignedRepresentativeName: string;
+  assignedStaffEmail?: string;
+  assignedStaffName?: string;
   briefingDossier: {
     executiveSummary: string;
     givingCapacityEstimate: number;
@@ -273,7 +276,11 @@ export interface CalendarMeetingBooking {
   createdAt: string;
 }
 
+export type AutonomyLevel = 1 | 2 | 3 | 4;
+
 export interface AutonomousPolicyConfig {
+  autonomyLevel: AutonomyLevel;
+  autonomyLevelLabel: string;
   allowAutonomousClassification: boolean;
   allowAutonomousDrafting: boolean;
   allowAutonomousFollowUpRecommendations: boolean;
@@ -282,4 +289,15 @@ export interface AutonomousPolicyConfig {
   requireProposalDirectorApproval: true;
   maxDailyDrafts: number;
   rateLimitPerHour: number;
+}
+
+export interface GatewayInferenceMetrics {
+  totalRequests: number;
+  successfulRequests: number;
+  fallbackRequests: number;
+  promptInjectionBlocks: number;
+  averageLatencyMs: number;
+  lastLatencyMs: number;
+  lastActiveBackend: string;
+  uptimeSeconds: number;
 }

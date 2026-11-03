@@ -1,15 +1,16 @@
 # ==============================================================================
 # Phumulani AI Community Platform — Windows Local LLM & Application Installer
 # Phase 65: Phumulani Ai Autonomous Fundraising Agent & Local Runtime Environment
-# Target Root: D:\PhumulaniAI
+# Target Root: D:\Phumulani
 # ==============================================================================
 
 [CmdletBinding()]
 param(
-    [string]$TargetRoot = "D:\PhumulaniAI",
+    [string]$TargetRoot = "D:\Phumulani",
     [string]$RepoUrl = "https://github.com/OphireumTechnology/phumulani.git",
     [string]$Branch = "main",
-    [string]$PreferredModel = "llama3.2:3b",
+    [string]$PreferredModel = "phumulani-ai",
+    [string]$BaseModel = "llama3.2:3b",
     [switch]$SkipModelDownload = $false
 )
 
@@ -198,19 +199,26 @@ if (-not (Test-Path $envPath)) {
 Write-Host "`n[8/13] Checking Local LLM Model ($PreferredModel)..." -ForegroundColor Green
 if ($hasOllama -and -not $SkipModelDownload) {
     $existingModels = ollama list 2>&1
-    if ($existingModels -match $PreferredModel.Split(':')[0]) {
-        Write-Host "  Model $PreferredModel is already downloaded and ready in Ollama!" -ForegroundColor Green
+    if ($existingModels -match "phumulani-ai") {
+        Write-Host "  Model phumulani-ai is already created and ready in Ollama!" -ForegroundColor Green
     } else {
-        Write-Host "  Model $PreferredModel is not yet installed." -ForegroundColor Yellow
-        Write-Host "  Model Profile: Meta Llama 3.2 3B Instruct" -ForegroundColor White
+        Write-Host "  Base Model Profile: Meta Llama 3.2 3B Instruct ($BaseModel)" -ForegroundColor White
         Write-Host "  Download Size: ~2.0 GB | Recommended RAM: 6–8 GB | License: Llama 3.2 Community" -ForegroundColor Gray
-        $pullResponse = Read-Host "  Would you like to pull $PreferredModel now via Ollama? (Y/N)"
+        $pullResponse = Read-Host "  Would you like to pull $BaseModel and create $PreferredModel now via Ollama? (Y/N)"
         if ($pullResponse -match "^[Yy]") {
-            Write-Host "  Pulling $PreferredModel from Ollama library..." -ForegroundColor Cyan
-            ollama pull $PreferredModel
-            Write-Host "  Model download completed successfully!" -ForegroundColor Green
+            Write-Host "  Pulling $BaseModel from Ollama library..." -ForegroundColor Cyan
+            ollama pull $BaseModel
+            Write-Host "  Base model download completed successfully!" -ForegroundColor Green
+
+            $modelfile = "$repoPath\scripts\windows\Modelfile.phumulani-ai"
+            if (Test-Path $modelfile) {
+                Write-Host "  Creating custom agent model: $PreferredModel from Modelfile..." -ForegroundColor Cyan
+                ollama create $PreferredModel -f $modelfile
+                Write-Host "  Model $PreferredModel created successfully!" -ForegroundColor Green
+            }
         } else {
-            Write-Host "  Model download skipped. You can run 'ollama pull $PreferredModel' at any time." -ForegroundColor Yellow
+            Write-Host "  Model download skipped. You can create it at any time with:" -ForegroundColor Yellow
+            Write-Host "  ollama pull $BaseModel; ollama create phumulani-ai -f `"$repoPath\scripts\windows\Modelfile.phumulani-ai`"" -ForegroundColor Gray
         }
     }
 }
@@ -242,7 +250,11 @@ Write-Host "  INSTALLATION AND PREPARATION COMPLETED SUCCESSFULLY!              
 Write-Host "====================================================================" -ForegroundColor Cyan
 Write-Host "To start the Phumulani AI system on Windows:" -ForegroundColor White
 Write-Host "  powershell -ExecutionPolicy Bypass -File `"$TargetRoot\scripts\start-phumulani-ai.ps1`"" -ForegroundColor Yellow
+Write-Host "`nTo chat or test tasks in the Phumulani CLI shell:" -ForegroundColor White
+Write-Host "  powershell -ExecutionPolicy Bypass -File `"$TargetRoot\scripts\Ask-Phumulani.ps1`" -Interactive" -ForegroundColor Yellow
+Write-Host "  powershell -ExecutionPolicy Bypass -File `"$TargetRoot\scripts\Ask-Phumulani.ps1`" -Task `"Analyze a donor reply`"" -ForegroundColor Yellow
 Write-Host "`nTo check system status & diagnostics:" -ForegroundColor White
 Write-Host "  powershell -ExecutionPolicy Bypass -File `"$TargetRoot\scripts\check-phumulani-ai.ps1`"" -ForegroundColor Yellow
 Write-Host "`nTo synchronize code with GitHub safely:" -ForegroundColor White
-Write-Host "  powershell -ExecutionPolicy Bypass -File `"$TargetRoot\scripts\sync-phumulani-github.ps1`"" -ForegroundColor Yellow
+Write-Host "  powershell -ExecutionPolicy Bypass -File `"$TargetRoot\scripts\Sync-Phumulani.ps1`"" -ForegroundColor Yellow
+

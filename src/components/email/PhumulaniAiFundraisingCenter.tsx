@@ -52,6 +52,9 @@ import {
   CalendarMeetingSlot,
   CalendarMeetingBooking,
   ModelHealthStatus,
+  AutonomousPolicyConfig,
+  AutonomyLevel,
+  GatewayInferenceMetrics,
 } from '../../types/phumulaniAi';
 import { phumulaniAiAgentService, APPROVED_COMMUNITY_PROGRAMS } from '../../services/phumulaniAiAgentService';
 import { localInferenceAdapter, PHUMULANI_AI_SYSTEM_PROMPT } from '../../services/localInferenceAdapter';
@@ -114,6 +117,10 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
   const [proposalAmount, setProposalAmount] = useState(45000);
   const [proposalNotice, setProposalNotice] = useState<string | null>(null);
 
+  // Policy & Autonomy Controls State
+  const [policy, setPolicy] = useState<AutonomousPolicyConfig | null>(null);
+  const [metrics, setMetrics] = useState<GatewayInferenceMetrics | null>(null);
+
   // Load All Data
   const refreshData = async () => {
     await phumulaniAiAgentService.initialize();
@@ -126,6 +133,8 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
     setHighInterestLeads(phumulaniAiAgentService.getHighInterestLeads());
     setProposals(phumulaniAiAgentService.getProposals());
     setScheduledBookings(calendarIntegrationService.getBookings());
+    setPolicy(phumulaniAiAgentService.getPolicyConfig());
+    setMetrics(localInferenceAdapter.getMetrics());
 
     // Matches for currently selected prospect
     if (selectedProspectId) {
@@ -137,6 +146,11 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
     const h = await localInferenceAdapter.checkHealth();
     setHealthStatus(h);
     setIsLoadingHealth(false);
+  };
+
+  const handleAutonomyChange = (lvl: AutonomyLevel) => {
+    const updated = phumulaniAiAgentService.setAutonomyLevel(lvl);
+    setPolicy(updated);
   };
 
   useEffect(() => {
@@ -246,38 +260,65 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
           </div>
         </div>
 
-        {/* Local Runtime Indicator */}
-        <div className="flex items-center gap-3 bg-black/20 px-3.5 py-1.5 rounded-lg border border-white/10 text-xs">
-          <div className="flex items-center gap-1.5">
-            <Cpu className="w-3.5 h-3.5 text-teal-300" />
-            <span className="text-teal-200 font-medium">Inference:</span>
-            <span className="font-semibold text-white">
-              {healthStatus?.backend === 'ollama' ? 'Ollama Local' : 'Hybrid Deterministic Engine'}
-            </span>
+        {/* Autonomy Level & Local Runtime Controls */}
+        <div className="flex flex-wrap items-center gap-2.5 text-xs">
+          {/* Autonomy Selector */}
+          <div className="flex items-center gap-1.5 bg-black/25 px-2.5 py-1 rounded-lg border border-teal-300/30">
+            <Shield className="w-3.5 h-3.5 text-teal-300" />
+            <span className="text-teal-200 font-medium">Autonomy:</span>
+            <select
+              value={policy?.autonomyLevel || 2}
+              onChange={(e) => handleAutonomyChange(parseInt(e.target.value, 10) as AutonomyLevel)}
+              className="bg-teal-900/80 text-white font-semibold text-xs rounded px-1.5 py-0.5 border border-teal-400/40 focus:outline-none cursor-pointer"
+            >
+              <option value={1}>Level 1: Analyze Only</option>
+              <option value={2}>Level 2: Draft & Recommend</option>
+              <option value={3}>Level 3: Approved Automation</option>
+              <option value={4}>Level 4: Human-Controlled Actions</option>
+            </select>
           </div>
-          <span className="text-teal-400/50">|</span>
-          <div className="flex items-center gap-1.5">
-            <div
-              className={`w-2 h-2 rounded-full ${
-                healthStatus?.status === 'healthy'
-                  ? 'bg-emerald-400 animate-pulse'
-                  : healthStatus?.status === 'degraded'
-                  ? 'bg-amber-400'
-                  : 'bg-teal-300'
-              }`}
-            />
-            <span className="text-teal-100">
-              {healthStatus?.status === 'healthy' ? 'Ollama Online' : 'Active / Failover Ready'}
-            </span>
+
+          {/* Local Runtime Indicator */}
+          <div className="flex items-center gap-2 bg-black/20 px-3 py-1 rounded-lg border border-white/10">
+            <div className="flex items-center gap-1.5">
+              <Cpu className="w-3.5 h-3.5 text-teal-300" />
+              <span className="text-teal-200 font-medium">Model:</span>
+              <span className="font-semibold text-white">
+                {healthStatus?.backend === 'ollama' ? 'phumulani-ai' : 'Local Fallback'}
+              </span>
+            </div>
+            <span className="text-teal-400/50">|</span>
+            <div className="flex items-center gap-1.5">
+              <div
+                className={`w-2 h-2 rounded-full ${
+                  healthStatus?.status === 'healthy'
+                    ? 'bg-emerald-400 animate-pulse'
+                    : healthStatus?.status === 'degraded'
+                    ? 'bg-amber-400'
+                    : 'bg-teal-300'
+                }`}
+              />
+              <span className="text-teal-100">
+                {healthStatus?.status === 'healthy' ? 'Ollama Online' : 'Failover Ready'}
+              </span>
+            </div>
+            {metrics && (
+              <>
+                <span className="text-teal-400/50">|</span>
+                <span className="text-teal-200" title="Average inference latency">
+                  {metrics.averageLatencyMs || healthStatus?.latencyMs || 0}ms
+                </span>
+              </>
+            )}
+            <button
+              onClick={refreshData}
+              disabled={isLoadingHealth}
+              className="p-1 text-teal-200 hover:text-white transition-colors cursor-pointer"
+              title="Refresh AI health status and metrics"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${isLoadingHealth ? 'animate-spin' : ''}`} />
+            </button>
           </div>
-          <button
-            onClick={refreshData}
-            disabled={isLoadingHealth}
-            className="p-1 text-teal-200 hover:text-white transition-colors"
-            title="Refresh AI health status"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${isLoadingHealth ? 'animate-spin' : ''}`} />
-          </button>
         </div>
       </div>
 

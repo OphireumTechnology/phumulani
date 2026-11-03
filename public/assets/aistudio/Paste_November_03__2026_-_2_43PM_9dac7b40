@@ -1,0 +1,776 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+## MASTER DEVELOPMENT DIRECTIVE — PHUMULANI AI FUNDRAISING EMAIL COMMAND CENTER
+
+**Project:** Phumulani AI Community Platform  
+**AI Agent Name:** Phumulani Ai  
+**Development Environment:** Google AI Studio  
+**GitHub Repository:** `https://github.com/OphireumTechnology/phumulani`  
+**Local Repository:** `D:\Phumulani\repository\phumulani`  
+**Local LLM:** `phumulani-ai` via Ollama  
+**Local AI Root:** `D:\Phumulani`  
+**Priority:** CRITICAL — CORE FUNDRAISING OPERATIONS
+
+---
+
+# 1. PRIMARY DEVELOPMENT OBJECTIVE
+
+Google AI Studio must prioritize the development, integration, testing, and operational readiness of the existing **Email Command Center**, powered by the local LLM named **Phumulani Ai**.
+
+The objective is to transform the Email Command Center into an intelligent fundraising operations platform capable of:
+
+1. Managing and classifying incoming and outgoing emails.
+2. Identifying priority messages and prospective donor opportunities.
+3. Matching potential funders with verified Phumulani programs and projects.
+4. Generating personalized fundraising solicitation emails.
+5. Coordinating authorized fundraising campaigns.
+6. Analyzing donor replies and identifying funding interest.
+7. Producing tailored responses and follow-up recommendations.
+8. Preparing follow-up drafts based on the donor's demonstrated interests.
+9. Generating program-specific concept notes and funding proposals.
+10. Escalating highly interested donors to authorized human fundraising personnel.
+11. Coordinating calendar meeting requests and confirmed appointments.
+12. Updating the donor CRM and fundraising pipeline with verified activities.
+13. Maintaining a complete, auditable history of fundraising engagement.
+
+**The ultimate business objective is to increase qualified donor leads, develop credible funding relationships, and secure support for approved Phumulani programs.**
+
+Do not build a disconnected demonstration system. Integrate these capabilities into the existing Email Command Center, donor database, fundraising workflows, CRM, AI agent architecture, and institutional authorization framework.
+
+# 2. NON-NEGOTIABLE DEVELOPMENT RULES
+
+Before implementing new features:
+
+- Inspect the existing repository and current Email Command Center.
+- Identify and reuse existing services, database tables, components, routes, integrations, and agent infrastructure.
+- Preserve all existing functioning modules.
+- Do not duplicate fundraising, email, donor, CRM, or calendar systems.
+- Do not overwrite working configurations or credentials.
+- Do not replace real operational data with demonstration records.
+- Do not delete or reset donor databases.
+- Maintain the existing security, safeguarding, RBAC, and audit controls.
+- Do not declare a feature operational without actual integration and acceptance tests.
+- Document any missing credentials, deployment dependencies, or incomplete integrations.
+
+Implement the system incrementally and preserve backward compatibility.
+
+# 3. PHUMULANI AI — LOCAL LLM ARCHITECTURE
+
+Use the locally installed Ollama model:
+
+`phumulani-ai`
+
+The LLM must remain on the authorized local Windows machine under the Phumulani Drive D environment.
+
+### Required local paths
+
+```text
+D:\Phumulani\
+    config\
+    models\
+    runtime\
+    scripts\
+    logs\
+    data\
+    backups\
+    repository\
+        phumulani\
+```
+
+The local inference endpoint is:
+
+```text
+http://127.0.0.1:11434
+```
+
+The model must be accessible through a secured application-side AI gateway.
+
+### Architectural requirements
+
+Create or extend an AI inference service that:
+
+- Communicates with Ollama through its supported API.
+- Verifies the configured model is installed and available.
+- Supports chat history and structured responses.
+- Retrieves verified program information before generating donor-facing content.
+- Supports timeout, retry, and failure handling.
+- Records non-sensitive inference metrics.
+- Implements request validation and access controls.
+- Prevents unauthorized access to the local model.
+- Supports human approval workflows.
+- Provides clear error states when the local model is offline.
+
+**Important:** Google AI Studio cannot directly access a Windows user's Drive D or localhost unless a compatible local runtime or secure connector is explicitly installed and configured.
+
+If the application is hosted remotely, design a secure, authenticated connectivity solution between the hosted backend and the local AI gateway. Do not expose Ollama's unauthenticated port directly to the public internet.
+
+The local Ollama model is the preferred inference engine for this workflow. Any alternative provider must be explicitly configured and authorized.
+
+# 4. EMAIL COMMAND CENTER — INTELLIGENT EMAIL MANAGEMENT
+
+Enhance the existing Email Command Center to support automatic email analysis.
+
+Every incoming email must be evaluated for:
+
+- Sender identity and known CRM relationship.
+- Email purpose.
+- Program or project relevance.
+- Funding opportunity.
+- Proposal request.
+- Meeting request.
+- Donor interest.
+- Follow-up requirements.
+- Urgency and deadlines.
+- Potential fraud or phishing.
+- Opt-out or communication preferences.
+
+### Classification categories
+
+Implement at least:
+
+- New donor prospect
+- Existing donor
+- Funding inquiry
+- Positive funding interest
+- Proposal request
+- Grant opportunity
+- Partnership opportunity
+- Meeting request
+- Follow-up required
+- Funding decline
+- Unsubscribe or opt-out
+- General correspondence
+- Suspicious email
+- Internal operational email
+
+Allow staff to correct classifications and use those corrections in future evaluation.
+
+# 5. EMAIL PRIORITY INTELLIGENCE
+
+Implement a consistent priority system.
+
+| Priority | Definition |
+|---|---|
+| P0 | Critical security, safeguarding, or compliance escalation |
+| P1 | Explicit funding interest, proposal request, or urgent funding deadline |
+| P2 | Relevant donor engagement requiring follow-up |
+| P3 | Routine correspondence |
+| P4 | Low-priority notifications |
+
+The system must show:
+
+- Priority level.
+- Reason for priority.
+- Relevant supporting email evidence.
+- Recommended response deadline.
+- Responsible staff member.
+- Current handling status.
+
+Priority must be based on message content and operational rules, not merely positive language.
+
+# 6. DONOR PROSPECT DATABASE INTEGRATION
+
+Connect the Email Command Center to the existing fundraising and donor prospect database.
+
+For each prospect, use authorized, verified information including:
+
+- Organization or funder name.
+- Contact person and role.
+- Verified email address.
+- Funding interests.
+- Geographic or thematic funding priorities.
+- Grant eligibility requirements.
+- Historical interactions.
+- Previously funded programs, where documented.
+- Current fundraising pipeline stage.
+- Communication preferences and suppression status.
+- Assigned relationship manager.
+
+Never invent prospect details or funding priorities.
+
+Prevent duplicate prospect records and duplicate outreach.
+
+Do not send unsolicited mass emails without applicable consent, lawful basis, deliverability controls, and compliance review.
+
+# 7. PROGRAM-TO-FUNDER MATCHING ENGINE
+
+Create an intelligent matching system between verified Phumulani programs and prospective donors.
+
+The engine must analyze:
+
+1. Approved program objectives.
+2. Verified target beneficiaries.
+3. Approved program budgets.
+4. Funding gaps.
+5. Geographic relevance.
+6. Funder eligibility criteria.
+7. Thematic funding priorities.
+8. Historical funding preferences.
+9. Grant application requirements.
+10. Program implementation readiness.
+
+Generate a transparent **Program–Funder Match Score** between 0 and 100.
+
+For each match, display:
+
+- Funder name.
+- Recommended program.
+- Match score.
+- Supporting evidence.
+- Eligibility concerns.
+- Missing information.
+- Recommended outreach strategy.
+
+Do not use unverified program information.
+
+If no approved program documentation is available, identify the missing information rather than inventing a program.
+
+# 8. AI-GENERATED FUNDRAISING SOLICITATION EMAILS
+
+Phumulani Ai must generate high-quality fundraising solicitation drafts tailored to the prospective donor and the selected program.
+
+Each email should contain:
+
+- A relevant subject line.
+- Personalized greeting.
+- Context for the outreach.
+- Verified description of the selected program.
+- Alignment with the funder's documented priorities.
+- Specific funding requirement, when approved.
+- Credible explanation of intended outcomes.
+- Appropriate invitation to discuss participation.
+- Professional closing.
+- Authorized organizational contact details.
+
+The system must support:
+
+- Individual personalized solicitation drafts.
+- Campaign-specific email templates.
+- Different relationship stages.
+- Alternative email subject lines.
+- Tone adjustment.
+- Human editing and approval.
+- Duplicate prevention.
+- Communication suppression controls.
+- Approved send scheduling.
+
+The AI must not invent impact statistics, partnerships, beneficiary numbers, program budgets, or donor commitments.
+
+Initial solicitation messages must require authorized human approval before dispatch.
+
+# 9. FUNDRAISING CAMPAIGN ORCHESTRATION
+
+Create or extend the fundraising campaign management capability.
+
+Each campaign must connect:
+
+- Approved program or project.
+- Funding objective.
+- Authorized budget.
+- Target donor segments.
+- Eligible prospect records.
+- Outreach schedule.
+- Personalized email drafts.
+- Approval status.
+- Delivery status.
+- Reply status.
+- Engagement analysis.
+- Follow-up tasks.
+- Proposal requests.
+- Meeting outcomes.
+- Fundraising pipeline progression.
+
+Provide an operational dashboard showing:
+
+- Prospects identified.
+- Qualified prospects.
+- Drafts awaiting approval.
+- Emails sent.
+- Delivery failures.
+- Replies received.
+- Positive responses.
+- Proposal requests.
+- Meetings requested.
+- Meetings confirmed.
+- Funding opportunities advanced.
+- Verified funding commitments.
+
+Never represent a prospect, meeting, proposal, or anticipated donation as secured funding.
+
+# 10. AUTONOMOUS DONOR RESPONSE INTELLIGENCE
+
+Implement Phumulani Ai as an intelligent agent capable of monitoring authorized incoming email events and preparing context-aware responses.
+
+For every donor reply, the agent must:
+
+1. Retrieve the email and relevant conversation history.
+2. Identify the prospect's CRM record.
+3. Classify the message.
+4. Determine operational priority.
+5. Detect questions, concerns, objections, and requests.
+6. Identify which approved programs are relevant.
+7. Assess engagement interest.
+8. Prepare a personalized response.
+9. Recommend the next engagement step.
+10. Create an approval task or execute only an explicitly authorized low-risk action.
+11. Update the CRM through controlled application services.
+12. Preserve an auditable activity record.
+
+The agent should maintain continuity across email threads without repeating previously answered questions.
+
+### Autonomy controls
+
+Implement configurable levels:
+
+**Level 1 — Analyze only:** Classification, summaries, scores, and recommendations.
+
+**Level 2 — Draft and recommend:** Prepare personalized messages and follow-up tasks for human review.
+
+**Level 3 — Approved workflow automation:** Execute narrowly scoped, preapproved actions such as internal reminders or approved acknowledgements, with suppression checks, rate limits, audit logging, and escalation.
+
+**Level 4 — Human-controlled consequential actions:** Initial solicitation, substantive donor commitments, funding proposals, sensitive correspondence, and meeting confirmation remain subject to appropriate authorization.
+
+Do not allow the AI to bypass approval rules by chaining together multiple low-risk actions.
+
+# 11. DONOR INTEREST SCORING
+
+Create an explainable donor engagement scoring engine.
+
+**Score range: 0–100.**
+
+The score measures observable engagement, not the statistical probability of funding.
+
+### Suggested interpretation
+
+| Score | Interpretation | Recommended action |
+|---|---|---|
+| 0–19 | No meaningful engagement or negative response | Review suppression or close opportunity |
+| 20–39 | Limited interest | Monitor or conduct permitted follow-up |
+| 40–59 | Developing interest | Provide relevant approved information |
+| 60–79 | Strong interest | Prepare tailored materials and staff engagement |
+| 80–100 | Very strong expressed interest | Prioritize proposal and human handoff |
+
+These are initial policy thresholds and must be evaluated against real operational outcomes.
+
+The score must consider:
+
+- Explicit statements of interest.
+- Requests for a concept note.
+- Requests for budgets.
+- Requests for a meeting.
+- Questions about eligibility.
+- Relevant documented past interactions.
+- Funding timelines.
+- Requests for additional documentation.
+- Explicit declines.
+- Unsubscribe requests.
+
+Every score must include:
+
+- Supporting evidence.
+- Confidence or uncertainty.
+- Date of assessment.
+- Reason for changes from previous scores.
+- Recommended next action.
+
+Staff must be able to override scores with a documented reason.
+
+# 12. PERSONALIZED FOLLOW-UP AGENT
+
+Develop a follow-up agent that adapts to each donor's actual communication.
+
+Examples:
+
+- A donor asks about implementation: prepare a verified implementation summary.
+- A donor requests financial details: prepare an approved budget explanation.
+- A donor asks about impact: retrieve approved monitoring and evaluation evidence.
+- A donor expresses concern: acknowledge the concern and prepare a factual response.
+- A donor requests a meeting: initiate human handoff and calendar coordination.
+- A donor declines: update the pipeline appropriately and respect their decision.
+- A donor opts out: suppress further solicitation immediately.
+
+Follow-up recommendations must consider:
+
+- Previous messages.
+- Communication preferences.
+- The donor's requested timeline.
+- Existing commitments.
+- Authorized campaign rules.
+- Applicable privacy and anti-spam requirements.
+
+Do not implement aggressive, repetitive, or manipulative follow-up sequences.
+
+# 13. AUTOMATED CONCEPT NOTE AND PROPOSAL GENERATION
+
+When donor interest reaches an appropriate threshold or the donor explicitly requests a proposal, Phumulani Ai must prepare a tailored proposal draft.
+
+Use only approved source material.
+
+Required proposal sections:
+
+1. Executive summary.
+2. Organizational introduction.
+3. Program background.
+4. Problem statement.
+5. Program objectives.
+6. Target participants.
+7. Planned activities.
+8. Implementation approach.
+9. Expected outcomes.
+10. Monitoring and evaluation.
+11. Sustainability.
+12. Approved budget.
+13. Funding request.
+14. Partnership opportunities.
+15. Contact and next steps.
+
+Include references to the underlying approved program records.
+
+If required information is missing, flag the section for completion.
+
+The agent must not fabricate financial figures, outcomes, beneficiaries, or institutional commitments.
+
+All donor-facing proposals require authorized review before transmission.
+
+# 14. HUMAN FUNDRAISING HANDOFF
+
+When a prospect expresses strong interest, requests a meeting, or requires a substantive funding discussion, the system must escalate to an authorized human fundraising officer.
+
+Generate a donor briefing containing:
+
+- Donor organization.
+- Contact details from the CRM.
+- Relevant program.
+- Conversation summary.
+- Interest score and supporting evidence.
+- Specific questions raised.
+- Requested documents.
+- Recommended discussion topics.
+- Potential eligibility concerns.
+- Next steps.
+
+Create a clearly assigned task for the fundraising officer.
+
+Do not mark a handoff as completed until the responsible person or system confirms it.
+
+# 15. CALENDAR AND MEETING COORDINATION
+
+Integrate the existing calendar infrastructure or an approved calendar provider.
+
+Required capabilities:
+
+- Retrieve actual authorized staff availability.
+- Respect time zones and working hours.
+- Identify suitable meeting windows.
+- Draft meeting invitations.
+- Route invitations for approval where required.
+- Create calendar events only through authorized calendar APIs.
+- Detect scheduling conflicts.
+- Associate meetings with CRM opportunities.
+- Record confirmations, cancellations, and rescheduling.
+
+Never invent availability or claim that a meeting is booked without a successful provider response.
+
+The intended workflow is:
+
+**Donor expresses interest → AI prepares briefing → staff handoff → verified calendar availability → authorized invitation → confirmed meeting → CRM update.**
+
+# 16. EMAIL COMMAND CENTER USER INTERFACE
+
+Preserve and enhance the existing interface.
+
+Add or improve the following operational views:
+
+### AI Priority Inbox
+Sorted email queue with classification, urgency, engagement score, and next action.
+
+### Fundraising Campaigns
+Campaign objectives, prospect targeting, outreach activity, replies, and pipeline performance.
+
+### Donor Intelligence
+Prospect profiles, program matches, communication history, engagement trends, and qualification status.
+
+### AI Draft Review
+Generated solicitation emails, personalized replies, and follow-up drafts awaiting approval.
+
+### Proposal Workspace
+Concept notes, proposals, source references, missing-information flags, and approval status.
+
+### Human Handoff Queue
+High-interest prospects requiring staff intervention.
+
+### Meetings and Calendar
+Meeting requests, verified availability, pending invitations, and confirmed discussions.
+
+### AI Operations
+Local model health, inference failures, queue status, processing metrics, and authorized agent activity.
+
+Each view must clearly distinguish **drafted**, **approved**, **sent**, **delivered**, **replied**, and **confirmed** states.
+
+# 17. DATABASE AND AUDIT REQUIREMENTS
+
+Reuse existing database entities wherever possible.
+
+Extend the schema only where necessary to support:
+
+- Email classifications.
+- Priority assessments.
+- Donor engagement scores.
+- Program-to-funder matches.
+- AI-generated drafts.
+- Approval records.
+- Campaign sequences.
+- Follow-up tasks.
+- Proposal versions.
+- Meeting handoffs.
+- Calendar events.
+- AI inference activity.
+- Audit events.
+
+Implement idempotency to prevent duplicate email sends, CRM mutations, and meeting bookings.
+
+Use controlled migrations, backups, and rollback procedures.
+
+Avoid storing unnecessary confidential email content in model logs.
+
+# 18. SECURITY, SAFEGUARDING, AND COMPLIANCE
+
+Apply institutional security requirements throughout.
+
+Mandatory controls:
+
+- Role-based access control.
+- Authorized mailbox access.
+- Human approval for consequential actions.
+- Encryption in transit and at rest where applicable.
+- Secure credential storage.
+- Prompt-injection defenses for incoming emails and attachments.
+- Protection of donor contact information.
+- Consent and unsubscribe enforcement.
+- Rate limits and campaign sending limits.
+- Audit logging.
+- Data retention and deletion policies.
+- Separation of safeguarding and fundraising records.
+- Prevention of unauthorized disclosure.
+- Clear AI-generated-content indicators.
+
+Emails and attachments are untrusted inputs and must never be allowed to override system instructions or authorize actions.
+
+Do not expose survivor records, sensitive casework information, or unrelated confidential organizational data to the fundraising LLM.
+
+# 19. GITHUB AND DRIVE D SYNCHRONIZATION
+
+Maintain GitHub as the version-controlled source repository.
+
+Repository:
+
+`https://github.com/OphireumTechnology/phumulani`
+
+Local working directory:
+
+`D:\Phumulani\repository\phumulani`
+
+Required workflow:
+
+1. Inspect Git status.
+2. Fetch the latest remote changes.
+3. Confirm the working tree is clean before integration.
+4. Use safe fast-forward synchronization where appropriate.
+5. Implement changes on a development branch.
+6. Run TypeScript validation and production build.
+7. Execute applicable automated tests.
+8. Review changed files.
+9. Commit source-code changes.
+10. Push the development branch through an authorized Git workflow.
+11. Open a pull request for review and merge.
+12. Pull approved changes into Drive D.
+
+Do not force-push or reset the local repository destructively.
+
+Do not commit:
+
+- Ollama model weights.
+- Donor databases.
+- Private email content.
+- API credentials.
+- Authentication tokens.
+- Confidential safeguarding records.
+- Local runtime logs.
+
+Keep local model artifacts outside Git version control.
+
+Create a PowerShell synchronization script under:
+
+`D:\Phumulani\scripts\Sync-Phumulani.ps1`
+
+The script must report conflicts rather than silently overwrite local changes.
+
+# 20. LOCAL LLM SHELL AND OPERATIONS
+
+Preserve and enhance:
+
+`D:\Phumulani\scripts\Ask-Phumulani.ps1`
+
+Provide a local operational interface for:
+
+- Chatting with Phumulani Ai.
+- Testing fundraising email generation.
+- Analyzing hypothetical donor replies.
+- Checking model health.
+- Measuring inference latency.
+- Inspecting model configuration.
+- Testing structured JSON responses.
+- Reviewing error logs.
+- Validating connectivity to the application gateway.
+
+Support:
+
+```powershell
+ollama run phumulani-ai
+```
+
+and:
+
+```powershell
+& "D:\Phumulani\scripts\Ask-Phumulani.ps1" `
+    -Task "Analyze a hypothetical donor reply and draft a response."
+```
+
+Do not represent the local shell as connected to live mail or CRM until those integrations are implemented and tested.
+
+# 21. IMPLEMENTATION PHASES
+
+Execute development in the following order.
+
+### Phase A — Existing System Reconciliation
+
+Audit the Email Command Center, fundraising database, donor CRM, AI agent services, calendar integrations, and security architecture.
+
+Deliver a verified component inventory and gap analysis.
+
+### Phase B — Local LLM Gateway
+
+Connect the application backend to the local Ollama model through a secure, authenticated gateway.
+
+Deliver successful health checks, inference tests, structured output validation, and failure handling.
+
+### Phase C — AI Inbox Intelligence
+
+Implement email classification, priority ranking, summaries, donor-interest detection, and staff review.
+
+Deliver tests using representative sanitized email scenarios.
+
+### Phase D — Fundraising Knowledge and Matching
+
+Connect approved program data and donor prospect information to the matching engine.
+
+Deliver evidence-based program–funder recommendations with source references.
+
+### Phase E — Solicitation and Campaign Management
+
+Implement personalized solicitation drafting, campaign targeting, approval queues, sending controls, and tracking.
+
+Deliver verified draft-to-approval-to-send workflows.
+
+### Phase F — Donor Reply and Follow-Up Agents
+
+Implement conversation-aware reply drafting, interest scoring, controlled follow-up, CRM updates, and escalation.
+
+Deliver end-to-end donor conversation tests.
+
+### Phase G — Proposals and Human Handoff
+
+Implement verified proposal generation, staff briefing, handoff tasks, and approval controls.
+
+Deliver a complete high-interest donor escalation scenario.
+
+### Phase H — Calendar Integration
+
+Connect verified staff availability and authorized meeting creation.
+
+Deliver conflict detection and actual provider-confirmed meeting tests.
+
+### Phase I — Operational Acceptance
+
+Execute comprehensive security, integration, regression, performance, and user-acceptance testing.
+
+Deliver a production-readiness report.
+
+# 22. REQUIRED END-TO-END ACCEPTANCE SCENARIO
+
+Use a fictional, sanitized donor prospect and approved test program.
+
+The system must demonstrate:
+
+1. A prospect is selected from the donor CRM.
+2. An approved program is matched using verified criteria.
+3. Phumulani Ai drafts a personalized solicitation email.
+4. An authorized staff member approves the draft.
+5. The email is dispatched through an authorized test mailbox.
+6. A simulated donor reply arrives expressing interest.
+7. The Email Command Center classifies it as funding interest.
+8. The message is assigned appropriate priority.
+9. The AI generates an evidence-based engagement score.
+10. A tailored response is drafted.
+11. The donor requests a concept note and meeting.
+12. The AI generates a proposal draft using verified test data.
+13. The fundraising officer receives a complete handoff briefing.
+14. Calendar availability is retrieved from the test calendar.
+15. A meeting invitation is created through an authorized test workflow.
+16. The CRM reflects the verified activity.
+17. Every consequential action is recorded in the audit trail.
+
+Verify that duplicate events do not create duplicate sends or meetings.
+
+Also test:
+
+- Donor declines.
+- Donor unsubscribes.
+- Suspicious email.
+- Missing program budget.
+- Unknown donor.
+- Offline Ollama model.
+- Failed email delivery.
+- Unavailable calendar.
+- Unauthorized user.
+- Prompt injection in an incoming message.
+
+# 23. REQUIRED DEVELOPMENT REPORTING
+
+After each implementation phase, provide:
+
+- Existing functionality inspected.
+- Components reused.
+- Files changed.
+- Database changes.
+- API endpoints implemented.
+- Tests executed.
+- Actual test results.
+- Security controls verified.
+- Outstanding integration dependencies.
+- Known limitations.
+- Git branch and commit references.
+- Next implementation steps.
+
+Use precise status labels:
+
+**Implemented / Tested / Connected / Operational / Blocked**
+
+Do not use "complete" or "live" for capabilities that are only mocked, documented, or partially integrated.
+
+# 24. FINAL EXECUTION DIRECTIVE
+
+**Google AI Studio: Begin immediately with Phase A and Phase B.**
+
+Prioritize the existing Email Command Center and integrate the locally hosted Phumulani Ai LLM as the fundraising intelligence engine.
+
+The system must support the full donor engagement lifecycle:
+
+**Prospect discovery → Program matching → Personalized solicitation → Authorized email dispatch → Donor reply analysis → Interest scoring → Tailored follow-up → Proposal generation → Human fundraising handoff → Calendar meeting → CRM tracking.**
+
+Preserve the existing platform architecture, institutional data, security controls, and operational workflows.
+
+Use real integrations where authorized and available. Where local machine access, credentials, or external services are unavailable, implement the necessary integration interfaces and clearly report the remaining setup requirements.
+
+The final deliverable is an operational, secure, auditable, AI-assisted fundraising Email Command Center powered by **Phumulani Ai**, not merely an AI chat demonstration.
+
+**Start by inspecting the current repository and report the verified implementation gaps before making changes.**

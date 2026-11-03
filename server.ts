@@ -5406,6 +5406,61 @@ app.get('/api/phumulani-ai/policy', (_req: Request, res: Response) => {
   res.json({ success: true, policy: phumulaniAiAgentService.getPolicyConfig() });
 });
 
+app.post('/api/phumulani-ai/policy/autonomy-level', (req: Request, res: Response) => {
+  const { level } = req.body;
+  if (![1, 2, 3, 4].includes(level)) {
+    return res.status(400).json({ success: false, error: 'Autonomy level must be 1, 2, 3, or 4.' });
+  }
+  const policy = phumulaniAiAgentService.setAutonomyLevel(level as 1 | 2 | 3 | 4);
+  res.json({ success: true, policy });
+});
+
+app.get('/api/phumulani-ai/gateway/status', async (_req: Request, res: Response) => {
+  const health = await localInferenceAdapter.checkHealth();
+  const metrics = localInferenceAdapter.getMetrics();
+  res.json({
+    success: true,
+    gateway: {
+      status: health.status,
+      activeBackend: health.backend,
+      endpoint: health.endpoint,
+      modelId: health.modelId,
+      latencyMs: health.latencyMs,
+      metrics,
+    },
+  });
+});
+
+app.get('/api/phumulani-ai/gateway/metrics', (_req: Request, res: Response) => {
+  res.json({ success: true, metrics: localInferenceAdapter.getMetrics() });
+});
+
+app.post('/api/phumulani-ai/gateway/inference', async (req: Request, res: Response) => {
+  try {
+    const { prompt, options, requireJson, schemaDescription, fallbackValue } = req.body;
+    if (!prompt) return res.status(400).json({ success: false, error: 'Prompt is required.' });
+
+    const authHeader = req.headers.authorization;
+    if (process.env.PHUMULANI_GATEWAY_TOKEN && authHeader !== `Bearer ${process.env.PHUMULANI_GATEWAY_TOKEN}`) {
+      return res.status(401).json({ success: false, error: 'Unauthorized gateway access.' });
+    }
+
+    if (requireJson) {
+      const result = await localInferenceAdapter.generateStructuredJson(
+        prompt,
+        schemaDescription || 'JSON Object',
+        fallbackValue || {}
+      );
+      return res.json({ success: true, result, metrics: localInferenceAdapter.getMetrics() });
+    }
+
+    const text = await localInferenceAdapter.generateText(prompt, options);
+    res.json({ success: true, text, metrics: localInferenceAdapter.getMetrics() });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 app.get('/api/phumulani-ai/prospects', async (_req: Request, res: Response) => {
   await phumulaniAiAgentService.initialize();
   res.json({ success: true, prospects: phumulaniAiAgentService.getProspects() });

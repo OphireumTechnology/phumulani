@@ -5,7 +5,7 @@
 
 [CmdletBinding()]
 param(
-    [string]$TargetRoot = "D:\PhumulaniAI",
+    [string]$TargetRoot = "D:\Phumulani",
     [int]$AppPort = 3000
 )
 

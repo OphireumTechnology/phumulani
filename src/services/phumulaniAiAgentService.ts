@@ -232,6 +232,8 @@ export class PhumulaniAiAgentService {
   private proposalDrafts: FundingProposalDraft[] = [];
 
   private policyConfig: AutonomousPolicyConfig = {
+    autonomyLevel: 2,
+    autonomyLevelLabel: 'Level 2 — Draft and recommend (Prepare personalized messages and follow-up tasks for human review)',
     allowAutonomousClassification: true,
     allowAutonomousDrafting: true,
     allowAutonomousFollowUpRecommendations: true,
@@ -513,7 +515,33 @@ ${sender}`;
       };
     }
 
-    // 2. OPT-OUT DETECTION
+    // 2. PHISHING & MALICIOUS / SPAM QUARANTINE
+    const spamKeywords = [
+      'verify banking',
+      'click here to verify',
+      'click this link immediately',
+      'million dollar',
+      'lottery',
+      'crypto',
+      'wire transfer pending',
+      'urgent: click',
+    ];
+    const isSpam = spamKeywords.some((kw) => lowerBody.includes(kw) || lowerSubject.includes(kw));
+    if (isSpam) {
+      return {
+        priority: 'P4',
+        priorityLabel: 'P4 - Spam / Phishing Quarantine',
+        category: 'SPAM_OR_SUSPICIOUS',
+        confidence: 0.98,
+        reasoning: 'Suspicious financial markers or credential verification request detected.',
+        isSafeguardingCrisis: false,
+        isOptOut: false,
+        hasMeetingSignal: false,
+        hasFundingSignal: false,
+      };
+    }
+
+    // 3. OPT-OUT DETECTION
     const optOutKeywords = ['unsubscribe', 'remove me', 'do not email', 'not interested', 'stop sending', 'take me off'];
     const isOptOut = optOutKeywords.some((kw) => lowerBody.includes(kw) || lowerSubject.includes(kw));
 
@@ -531,7 +559,33 @@ ${sender}`;
       };
     }
 
-    // 3. P1: URGENT FUNDING OPPORTUNITY, PROPOSAL REQUEST, OR EXPLICIT MEETING REQUEST
+    // 4. FORMAL DECLINE DETECTION
+    const declineKeywords = [
+      'unable to fund',
+      'cannot fund',
+      'not able to support',
+      'unable to support',
+      'decline',
+      'declined',
+      'not moving forward',
+      'no funding available',
+    ];
+    const isDecline = declineKeywords.some((kw) => lowerBody.includes(kw) || lowerSubject.includes(kw));
+    if (isDecline) {
+      return {
+        priority: 'P3',
+        priorityLabel: 'P3 - Funding Decline Acknowledgment',
+        category: 'FUNDING_DECLINE',
+        confidence: 0.95,
+        reasoning: 'Funder communicated a formal decline of funding request.',
+        isSafeguardingCrisis: false,
+        isOptOut: false,
+        hasMeetingSignal: false,
+        hasFundingSignal: false,
+      };
+    }
+
+    // 5. P1: URGENT FUNDING OPPORTUNITY, PROPOSAL REQUEST, OR EXPLICIT MEETING REQUEST
     const meetingKeywords = [
       'schedule a call',
       'set up a meeting',
@@ -543,6 +597,7 @@ ${sender}`;
       'submit a proposal',
       'rfp invitation',
       'want to meet',
+      'let us meet',
       'schedule a',
       'meeting',
       'discuss funding',
@@ -551,20 +606,36 @@ ${sender}`;
       'awarded a grant',
       'funding approved',
       'grant agreement',
-      'wire transfer',
       'pledge of $',
       'contribution of $',
       'board approved grant',
+      'grant proposal',
+      'submitting a $',
+      'submit a $',
+      'grant application',
+      'grant opportunity',
+      'interested in funding',
+      'funding interest',
+      'request for $',
+      'invite phumulani to submit',
+      'funding phumulani',
     ];
 
     const hasMeetingSignal = meetingKeywords.some((kw) => lowerBody.includes(kw) || lowerSubject.includes(kw));
     const hasFundingSignal = fundingKeywords.some((kw) => lowerBody.includes(kw) || lowerSubject.includes(kw));
 
     if (hasMeetingSignal || hasFundingSignal) {
+      let category = 'HIGH_INTEREST_MEETING_REQUEST';
+      if (hasFundingSignal && hasMeetingSignal) {
+        category = 'QUALIFIED_INTEREST_INQUIRY';
+      } else if (hasFundingSignal) {
+        category = lowerBody.includes('awarded') ? 'GRANT_AWARD_CONFIRMATION' : 'QUALIFIED_INTEREST_INQUIRY';
+      }
+
       return {
         priority: 'P1',
         priorityLabel: 'P1 - Urgent Funding / Meeting Escalation',
-        category: hasFundingSignal ? 'GRANT_AWARD_CONFIRMATION' : 'HIGH_INTEREST_MEETING_REQUEST',
+        category,
         confidence: 0.92,
         reasoning: hasFundingSignal
           ? 'Explicit grant award or financial contribution signals detected.'
@@ -689,14 +760,30 @@ ${sender}`;
     }
 
     // Specificity / Program Inquiry (+20)
-    const lower = params.emailBody.toLowerCase();
-    if (lower.includes('budget') || lower.includes('outcomes') || lower.includes('transitional housing') || lower.includes('healing')) {
+    const lower = (params.emailBody + ' ' + params.emailSubject).toLowerCase();
+    if (
+      lower.includes('budget') ||
+      lower.includes('outcomes') ||
+      lower.includes('transitional housing') ||
+      lower.includes('healing') ||
+      lower.includes('grant') ||
+      lower.includes('proposal') ||
+      lower.includes('funding') ||
+      lower.includes('$')
+    ) {
       score += 20;
       signals.push('Specific inquiry regarding program details, outcomes, or financial allocation');
     }
 
     // Positive sentiment (+10)
-    if (lower.includes('impressive') || lower.includes('excited') || lower.includes('aligns with our') || lower.includes('congratulations')) {
+    if (
+      lower.includes('impressive') ||
+      lower.includes('excited') ||
+      lower.includes('interested') ||
+      lower.includes('aligns with our') ||
+      lower.includes('congratulations') ||
+      lower.includes('delighted')
+    ) {
       score += 10;
       signals.push('Highly positive alignment with funder mission statements');
     }
@@ -724,10 +811,13 @@ ${sender}`;
       tierLabel = '0–19: No Demonstrated Engagement';
     }
 
-    // Update prospect interest score
+    // Update prospect interest score and qualified status
     if (prospect) {
       prospect.interestScore = score;
-      this.updateProspect(prospect.id, { interestScore: score }).catch(() => {});
+      if (score >= 60) {
+        prospect.status = 'qualified';
+      }
+      this.updateProspect(prospect.id, { interestScore: score, status: prospect.status }).catch(() => {});
     }
 
     // Trigger high-interest escalation if score >= 80 or meeting signal
@@ -766,16 +856,21 @@ ${sender}`;
 
   public async generateReplyDraft(params: {
     incomingEmailId: string;
-    incomingEmailSubject: string;
-    incomingEmailBody: string;
+    incomingEmailSubject?: string;
+    incomingEmailBody?: string;
+    incomingSubject?: string;
+    incomingBody?: string;
+    threadId?: string;
     prospectId: string;
+    programId?: string;
     tone?: 'professional' | 'warm' | 'visionary' | 'stewardship';
   }): Promise<AiReplyDraft> {
     await this.initialize();
     const prospect = this.getProspectById(params.prospectId);
     if (!prospect) throw new Error(`Prospect ${params.prospectId} not found.`);
 
-    const program = APPROVED_COMMUNITY_PROGRAMS.find((p) => p.id === prospect.matchedProgramId) || APPROVED_COMMUNITY_PROGRAMS[0];
+    const effectiveProgId = params.programId || prospect.matchedProgramId;
+    const program = APPROVED_COMMUNITY_PROGRAMS.find((p) => p.id === effectiveProgId) || APPROVED_COMMUNITY_PROGRAMS[0];
 
     // Check for opt-out guard
     if (prospect.optOut) {
@@ -785,9 +880,8 @@ ${sender}`;
     const tone = params.tone || 'professional';
     const draftId = `DRAFT-${Date.now().toString().slice(-4)}`;
 
-    const suggestedSubject = params.incomingEmailSubject.startsWith('Re:')
-      ? params.incomingEmailSubject
-      : `Re: ${params.incomingEmailSubject}`;
+    const rawSubject = params.incomingEmailSubject || params.incomingSubject || 'Partnership Discussion';
+    const suggestedSubject = rawSubject.startsWith('Re:') ? rawSubject : `Re: ${rawSubject}`;
 
     const suggestedBody = `Dear ${prospect.contactName},
 
@@ -961,7 +1055,7 @@ grants@phumulani.org`;
       budgetBreakdown: [
         { item: 'Direct Programmatic Operations & Participant Support', amount: directCosts, isDirect: true },
         { item: 'Program Personnel & Case Coordination', amount: Math.round(directCosts * 0.4), isDirect: true },
-        { item: 'Administrative & Financial Oversight (15% De Minimis)', amount: indirectCosts, isDirect: false },
+        { item: 'Indirect Administrative & Financial Oversight (15% De Minimis)', amount: indirectCosts, isDirect: false },
       ],
       complianceNotes: 'Budget conforms with standard non-profit accounting principles. Zero unallowable expenses included.',
       status: 'draft_ai',
@@ -986,19 +1080,25 @@ grants@phumulani.org`;
 
   public async escalateHighInterestLead(params: {
     prospectId: string;
-    emailSubject: string;
-    emailBody: string;
-    interestScore: number;
-    meetingRequested: boolean;
+    emailSubject?: string;
+    emailBody?: string;
+    interestScore?: number;
+    meetingRequested?: boolean;
+    reasonForEscalation?: string;
   }): Promise<HighInterestLead> {
     await this.initialize();
     const prospect = this.getProspectById(params.prospectId);
     if (!prospect) throw new Error(`Prospect ${params.prospectId} not found.`);
 
+    const score = params.interestScore ?? prospect.interestScore ?? 85;
+    const meetingReq = params.meetingRequested ?? true;
+
     const existing = this.highInterestLeads.find((l) => l.prospectId === params.prospectId);
     if (existing) {
-      existing.interestScore = params.interestScore;
-      existing.meetingRequested = params.meetingRequested;
+      existing.interestScore = score;
+      existing.meetingRequested = meetingReq;
+      existing.assignedStaffEmail = 'director@phumulani.org';
+      existing.assignedStaffName = prospect.assignedStaffName || 'Comfort Dondo';
       return existing;
     }
 
@@ -1010,12 +1110,14 @@ grants@phumulani.org`;
       prospectName: prospect.contactName,
       organization: prospect.organizationName,
       contactEmail: prospect.contactEmail,
-      interestScore: params.interestScore,
+      interestScore: score,
       sourceEmailId: `em-${Date.now()}`,
       receivedAt: new Date().toISOString(),
-      meetingRequested: params.meetingRequested,
-      assignedRepresentativeId: prospect.assignedStaffId,
-      assignedRepresentativeName: prospect.assignedStaffName,
+      meetingRequested: meetingReq,
+      assignedRepresentativeId: prospect.assignedStaffId || 'staff-exec-01',
+      assignedRepresentativeName: prospect.assignedStaffName || 'Comfort Dondo',
+      assignedStaffEmail: 'director@phumulani.org',
+      assignedStaffName: prospect.assignedStaffName || 'Comfort Dondo',
       briefingDossier: {
         executiveSummary: `${prospect.organizationName} has shown high responsiveness to Phumulani's ${prospect.matchedProgramName || 'community programs'}.`,
         givingCapacityEstimate: prospect.estimatedCapacity,
@@ -1046,6 +1148,33 @@ grants@phumulani.org`;
   }
 
   public getPolicyConfig(): AutonomousPolicyConfig {
+    return { ...this.policyConfig };
+  }
+
+  public setAutonomyLevel(level: 1 | 2 | 3 | 4): AutonomousPolicyConfig {
+    this.policyConfig.autonomyLevel = level;
+    switch (level) {
+      case 1:
+        this.policyConfig.autonomyLevelLabel = 'Level 1 — Analyze only (Classification, summaries, scores, recommendations)';
+        this.policyConfig.allowAutonomousDrafting = false;
+        this.policyConfig.allowAutonomousFollowUpRecommendations = false;
+        break;
+      case 2:
+        this.policyConfig.autonomyLevelLabel = 'Level 2 — Draft and recommend (Prepare personalized messages and follow-up tasks for human review)';
+        this.policyConfig.allowAutonomousDrafting = true;
+        this.policyConfig.allowAutonomousFollowUpRecommendations = true;
+        break;
+      case 3:
+        this.policyConfig.autonomyLevelLabel = 'Level 3 — Approved workflow automation (Execute preapproved tasks with rate limits)';
+        this.policyConfig.allowAutonomousDrafting = true;
+        this.policyConfig.allowAutonomousFollowUpRecommendations = true;
+        break;
+      case 4:
+        this.policyConfig.autonomyLevelLabel = 'Level 4 — Human-controlled consequential actions (All proposals and solicitations require authorization)';
+        this.policyConfig.allowAutonomousDrafting = true;
+        this.policyConfig.allowAutonomousFollowUpRecommendations = true;
+        break;
+    }
     return { ...this.policyConfig };
   }
 }
