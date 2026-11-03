@@ -1,0 +1,1049 @@
+# PHUMULANI AI COMMUNITY PLATFORM
+# PHASE 62 — MASTER PRODUCTION EMAIL INTEGRATION AND LIVE OPERATIONS DIRECTIVE
+
+**Project:** Phumulani AI Community Platform  
+**Repository:** `OphireumTechnology/phumulani`  
+**Development Environment:** Google AI Studio — Node.js 22, Express, React, Vite  
+**Primary Module:** `/admin/master/email`  
+**Development Objective:** Transform the existing AI Email Command Center into a fully functional, secure, provider-independent institutional email management system, ready for real-world operation and controlled production activation.
+
+---
+
+## 1. PRIMARY EXECUTION INSTRUCTION
+
+You are the principal full-stack engineer, email integration architect, security engineer, database architect, UX designer, and quality assurance lead for the Phumulani AI Community Platform.
+
+**IMPLEMENT THE APPLICATION CODE. DO NOT MERELY PRODUCE A PLAN, DOCUMENTATION, OR MOCKUP.**
+
+Inspect the current repository, reuse working modules, implement missing production functionality, test the actual application, and synchronize the verified changes using the native Google AI Studio ↔ GitHub integration.
+
+The outcome must be a real email command system capable of:
+
+1. Connecting authorized organizational email accounts.
+2. Receiving real incoming emails.
+3. Sending real outgoing emails after human approval.
+4. Synchronizing Inbox, Sent, Drafts, Archive, and relevant provider folders.
+5. Managing multiple accounts from a unified staff dashboard.
+6. Supporting Google Workspace, Microsoft 365, and standards-based IMAP/SMTP email services.
+7. Supporting future email addresses and domains without changing application code.
+8. Maintaining persistent email history, conversation assignments, approval decisions, delivery status, and audit records.
+9. Recovering safely from provider outages, expired tokens, duplicate deliveries, and synchronization failures.
+10. Protecting confidential survivor correspondence from general AI access, cross-mailbox exposure, and unauthorized disclosure.
+
+Do not claim that real connectivity exists until authenticated provider calls and real message exchange have been verified.
+
+**Production activation must remain blocked until the required credentials, institutional authorizations, security controls, and acceptance tests are complete.**
+
+---
+
+## 2. NON-NEGOTIABLE SOURCE CONTROL AND APPLICATION PROTECTION
+
+Before making changes:
+
+- Inspect the latest GitHub `main` revision and its CI status.
+- Reconcile the Google AI Studio workspace against the actual remote repository.
+- Preserve all existing functional application modules.
+- Preserve `package-lock.json` as the authoritative npm dependency lockfile.
+- Do not introduce `bun.lock`, `yarn.lock`, or `pnpm-lock.yaml`.
+- Do not delete `src/views`, `src/services`, `src/types`, `src/utils`, `server.ts`, `tsconfig.json`, or `vite.config.ts`.
+- Do not overwrite the existing email system with a simplified demonstration.
+- Do not commit OAuth credentials, refresh tokens, database secrets, email contents, or runtime database snapshots.
+
+Add CI checks to detect accidental deletion of critical source directories, required configuration files, and the npm lockfile.
+
+Use a development branch and draft pull request where supported. Do not overwrite a newer remote revision or merge unreviewed production changes.
+
+**Required result:** A working email implementation that does not break the five existing Phumulani applications.
+
+---
+
+## 3. BUILD A UNIVERSAL EMAIL CONNECTOR ARCHITECTURE
+
+Implement a modular email provider framework.
+
+Suggested directory structure:
+
+```text
+src/
+  email/
+    connectors/
+      EmailConnector.ts
+      GmailConnector.ts
+      Microsoft365Connector.ts
+      ImapSmtpConnector.ts
+      ConnectorRegistry.ts
+      ConnectorFactory.ts
+    services/
+      MailboxConnectionService.ts
+      OAuthService.ts
+      EmailSyncService.ts
+      EmailDispatchService.ts
+      EmailThreadService.ts
+      EmailAttachmentService.ts
+      EmailApprovalService.ts
+      EmailAuditService.ts
+      EmailHealthService.ts
+      EmailRecoveryService.ts
+    types/
+      EmailProvider.ts
+      EmailConnection.ts
+      EmailMessage.ts
+      EmailThread.ts
+      EmailDelivery.ts
+```
+
+Adapt these paths to the existing codebase rather than duplicating existing services.
+
+Create a common connector contract supporting the following operations:
+
+```typescript
+interface EmailConnector {
+  connect(): Promise<ConnectionResult>;
+
+  verifyConnection(): Promise<ConnectionHealth>;
+
+  listFolders(): Promise<EmailFolder[]>;
+
+  listMessages(
+    options: MessageQueryOptions
+  ): Promise<EmailMessagePage>;
+
+  getMessage(
+    providerMessageId: string
+  ): Promise<EmailMessage>;
+
+  syncMessages(
+    cursor?: string
+  ): Promise<SyncResult>;
+
+  sendMessage(
+    message: ApprovedOutboundMessage
+  ): Promise<SendResult>;
+
+  saveDraft(
+    message: EmailDraft
+  ): Promise<DraftResult>;
+
+  markRead(
+    messageId: string,
+    read: boolean
+  ): Promise<void>;
+
+  moveMessage(
+    messageId: string,
+    destinationFolder: string
+  ): Promise<void>;
+
+  disconnect(): Promise<void>;
+}
+```
+
+This interface is a design target. Adapt its types and optional capabilities to provider limitations.
+
+The application must identify unsupported operations explicitly instead of pretending every provider supports identical functionality.
+
+Use server-side provider adapters. Never put OAuth client secrets, SMTP passwords, or access tokens into the React browser bundle.
+
+---
+
+## 4. CONNECTOR A — GOOGLE WORKSPACE AND GMAIL
+
+Implement real Gmail API integration using Google OAuth 2.0 Authorization Code flow with PKCE where applicable.
+
+Required functionality:
+
+- Secure OAuth authorization initiation.
+- CSRF state validation and replay prevention.
+- Exact redirect URI validation.
+- Secure authorization code exchange.
+- Encrypted token storage.
+- Refresh token lifecycle management.
+- Provider identity verification.
+- Minimum necessary Gmail API scopes.
+- Mailbox connection verification.
+- Inbox and Sent message retrieval.
+- Historical import.
+- Incremental synchronization using Gmail history IDs.
+- Cursor expiration recovery.
+- Message threading.
+- Label mapping.
+- Attachment retrieval under authorization.
+- Draft creation.
+- Human-approved message sending.
+- Provider error classification.
+- Token revocation and account disconnection.
+
+Do not request domain-wide delegation or administrator-level permissions unless there is a documented institutional requirement and explicit approval.
+
+The application must support OAuth authorization for individual Gmail accounts and organizational Workspace accounts, subject to Google consent and provider policies.
+
+If a Google Workspace administrator has not authorized the integration, display:
+
+`AUTHORIZATION_REQUIRED`
+
+Do not display `CONNECTED` merely because an email address is present in the mailbox registry.
+
+---
+
+## 5. CONNECTOR B — MICROSOFT 365 AND OUTLOOK
+
+Implement Microsoft identity platform OAuth 2.0 integration with Microsoft Graph.
+
+Support organizational Microsoft 365 mailboxes and eligible Outlook accounts according to their permitted account types and consent requirements.
+
+Required functionality:
+
+- Microsoft OAuth authorization.
+- PKCE and state verification.
+- Account and tenant identity validation.
+- Appropriate delegated Mail permissions.
+- Secure token refresh.
+- Microsoft Graph message retrieval.
+- Folder enumeration.
+- Delta synchronization.
+- Thread and conversation mapping.
+- Attachment handling.
+- Draft creation.
+- Sending authorized messages.
+- Connection revocation.
+- Permission and consent diagnostics.
+
+Do not silently grant application-wide access to every mailbox in a tenant.
+
+Use delegated access by default. Any application permissions require a separately reviewed institutional authorization process.
+
+---
+
+## 6. CONNECTOR C — STANDARD IMAP AND SMTP
+
+Implement a standards-based connector for email providers that support IMAP and SMTP.
+
+This must accommodate future organizational addresses hosted by compatible providers, including custom-domain mailboxes.
+
+Required configuration:
+
+```typescript
+type ImapSmtpConfiguration = {
+  emailAddress: string;
+  displayName: string;
+
+  imapHost: string;
+  imapPort: number;
+  imapSecurity: "TLS" | "STARTTLS";
+
+  smtpHost: string;
+  smtpPort: number;
+  smtpSecurity: "TLS" | "STARTTLS";
+
+  authentication:
+    | "OAUTH2"
+    | "APP_PASSWORD"
+    | "PROVIDER_SUPPORTED_PASSWORD";
+
+  enabled: boolean;
+};
+```
+
+Implement:
+
+- Secure IMAP authentication.
+- SMTP authentication.
+- TLS certificate validation.
+- Inbox and folder discovery.
+- Message retrieval.
+- UID-based incremental synchronization.
+- Message-ID-based deduplication.
+- Read/unread synchronization.
+- Sent-folder reconciliation where supported.
+- Secure outbound message submission.
+- Attachment size limits.
+- Rate limiting and retries.
+- Credential rotation.
+- Provider-specific connection testing.
+
+**Security restriction:** Reject unsafe hosts, loopback/private-network targets, metadata endpoints, and unexpected redirects in user-supplied server settings unless an administrator explicitly authorizes a trusted internal mail infrastructure. This is necessary to prevent server-side request forgery.
+
+Never disable TLS verification to make a connection pass.
+
+Do not assume every email provider permits password-based access. Show provider-specific limitations and recommend OAuth where supported.
+
+---
+
+## 7. UNIVERSAL ADD EMAIL ACCOUNT WIZARD
+
+Build an accessible, user-friendly wizard at:
+
+`/admin/master/email/settings/connections`
+
+Provide a prominent:
+
+**+ Connect Email Account**
+
+The wizard must guide authorized staff through:
+
+**Step 1 — Select Provider**
+
+- Google Workspace / Gmail
+- Microsoft 365 / Outlook
+- Other Email Provider (IMAP/SMTP)
+
+**Step 2 — Enter Account Information**
+
+- Email address
+- Display name
+- Department
+- Mailbox owner
+- Intended usage
+- Access classification
+
+**Step 3 — Authorize Connection**
+
+- Redirect to Google or Microsoft OAuth where applicable.
+- For IMAP/SMTP, display secure server settings and supported authentication methods.
+- Never ask staff to paste a Google or Microsoft account password into the application.
+
+**Step 4 — Test Connection**
+
+Perform genuine server-side authentication and connection checks.
+
+Verify:
+
+- Provider identity.
+- Mailbox ownership or delegated authorization.
+- Inbound access.
+- Outbound capability where permission has been granted.
+- Folder discovery.
+- Token or credential health.
+
+**Step 5 — Configure Permissions**
+
+- Which staff may read the mailbox?
+- Which staff may draft messages?
+- Which staff may approve outgoing messages?
+- Which staff may administer the connection?
+- Which department owns the mailbox?
+
+**Step 6 — Configure Synchronization**
+
+- Import recent email.
+- Import historical email within a defined date range.
+- Enable continuous synchronization.
+- Configure attachment handling and retention.
+
+**Step 7 — Review and Activate**
+
+Show a complete readiness checklist.
+
+Activate only the capabilities actually authorized and verified.
+
+A mailbox may be connected for inbound reading without being authorized for outbound sending.
+
+---
+
+## 8. SUPPORT UNLIMITED FUTURE MAILBOX REGISTRATION SUBJECT TO CAPACITY
+
+Do not hardcode the platform to only eight or ten email addresses.
+
+Preserve the existing canonical organizational mailbox inventory, but move connection registration into a database-driven model.
+
+Each registered mailbox must have:
+
+```typescript
+type RegisteredMailbox = {
+  id: string;
+  emailAddress: string;
+  displayName: string;
+  providerType: string;
+  departmentId: string;
+  ownerUserId: string;
+  accessClassification: string;
+  connectionStatus: string;
+  inboundStatus: string;
+  outboundStatus: string;
+  lastSuccessfulSyncAt?: string;
+  lastConnectionCheckAt?: string;
+  createdAt: string;
+  updatedAt: string;
+};
+```
+
+Additional accounts must be addable through the administration interface without modifying the source code.
+
+Enforce practical capacity controls, provider quotas, and administrative authorization.
+
+Allow future support for multiple domains, but never automatically trust a new domain simply because it is registered.
+
+---
+
+## 9. REAL-TIME EMAIL SYNCHRONIZATION ENGINE
+
+Implement a reliable server-side synchronization service.
+
+The system must:
+
+- Fetch new messages from connected providers.
+- Persist imported messages.
+- Update existing threads.
+- Track provider message identifiers.
+- Store synchronization checkpoints.
+- Prevent duplicate imports.
+- Retry temporary provider errors.
+- Respect rate limits.
+- Recover after process restarts.
+- Detect expired tokens.
+- Report synchronization delays.
+- Preserve local staff notes and assignments.
+
+Use provider push notifications or webhooks where supported and operationally configured.
+
+Provide a polling fallback for providers without push support.
+
+Use durable background jobs or a managed worker architecture. Do not depend on an open browser tab to keep email synchronized.
+
+Ensure that multiple application instances cannot execute the same mailbox sync concurrently without coordination.
+
+A message imported from an actual provider must be marked:
+
+`LIVE_IMPORT_VERIFIED`
+
+Only after the provider response has been authenticated and persisted.
+
+---
+
+## 10. PRODUCTION EMAIL DATA MODEL
+
+Design PostgreSQL migrations for at least:
+
+```text
+email_provider_connections
+email_mailboxes
+email_mailbox_permissions
+email_oauth_credentials
+email_sync_checkpoints
+email_folders
+email_messages
+email_threads
+email_attachments
+email_drafts
+email_approvals
+email_dispatch_jobs
+email_delivery_events
+email_idempotency_records
+email_staff_assignments
+email_followup_tasks
+email_provider_errors
+email_audit_events
+email_connection_health
+email_security_quarantine
+```
+
+Reuse and migrate existing tables rather than creating conflicting duplicate schemas.
+
+Requirements:
+
+- Unique provider message identities.
+- Transaction-safe message imports.
+- Encrypted sensitive credentials.
+- Strict mailbox-level authorization.
+- Indexed thread queries.
+- Durable delivery queues.
+- Safe retention policies.
+- Database backup and recovery.
+- Explicit migration versioning.
+- Transaction rollback.
+- Idempotent migrations.
+
+Embedded JSON persistence remains acceptable for local staging tests, but must not be presented as production PostgreSQL.
+
+For real production operation, configure and verify an externally managed, durable database with backup, recovery, and access controls.
+
+---
+
+## 11. MAKE THE EMAIL COMMAND CENTER SIMPLE FOR ORDINARY STAFF
+
+Redesign `/admin/master/email` around daily staff tasks.
+
+The current system has too many visible controls, dashboards, and navigation layers.
+
+The default screen must prioritize:
+
+1. Inbox.
+2. Assigned to Me.
+3. Drafts.
+4. Awaiting Approval.
+5. Sent.
+6. Follow-Ups.
+7. Search.
+
+Move advanced capabilities into collapsible sections:
+
+- Email Templates.
+- AI Assistant.
+- Auto-Responders.
+- Analytics.
+- Provider Connections.
+- Synchronization Management.
+- Audit Logs.
+- Recovery Tools.
+- Developer Diagnostics.
+
+Show administrator-only controls only to authorized roles.
+
+### Desktop Layout
+
+**Left navigation:** Compact mailbox and folder navigation.
+
+**Center:** Searchable message list with sender, subject, priority, status, and timestamp.
+
+**Right:** Selected conversation with message content and clear Reply, Forward, Assign, Archive, and Create Task actions.
+
+### Mobile Layout
+
+Use a single-column navigation flow:
+
+Mailbox List → Message List → Message Detail.
+
+Do not shrink a three-column desktop interface onto a mobile screen.
+
+### Connection Status
+
+Display a simple status indicator for each mailbox:
+
+- Connected
+- Connecting
+- Needs Authorization
+- Syncing
+- Connection Error
+- Disconnected
+
+Detailed technical statuses should remain available in an expandable diagnostics panel.
+
+Remove unnecessary duplicate counters, excessive badges, decorative labels, and simulated operational claims from the normal staff view.
+
+---
+
+## 12. IMPLEMENT REAL EMAIL COMPOSITION AND SENDING
+
+Create a functional email composer supporting:
+
+- To.
+- CC.
+- BCC.
+- Subject.
+- Rich-text body.
+- Attachments.
+- Save Draft.
+- Reply.
+- Reply All.
+- Forward.
+- Send for Approval.
+- Authorized Send.
+
+Use the existing human Quad-Action workflow:
+
+- APPROVE
+- EDIT_AND_APPROVE
+- REJECT
+- ESCALATE_RETURN
+
+Do not allow AI agents to approve their own drafts.
+
+Any material change after approval must invalidate that approval.
+
+Before real dispatch, verify:
+
+1. The mailbox is authenticated.
+2. The sender has permission.
+3. The message has valid recipients.
+4. Required approval is current.
+5. The recipient is authorized under the applicable pilot policy.
+6. The message is not blocked by safeguarding restrictions.
+7. The dispatch has a valid idempotency key.
+8. The production sending gate is enabled through an authorized process.
+
+A successful provider API response must not automatically be reported as confirmed recipient delivery.
+
+Distinguish:
+
+- Submitted to provider.
+- Accepted by provider.
+- Confirmed by provider evidence where available.
+- Failed or bounced.
+- Delivery status unknown.
+
+Implement bounce and delivery reconciliation where supported.
+
+---
+
+## 13. CONTROLLED LIVE ACTIVATION
+
+Create two separate operational modes.
+
+### STAGED_DEVELOPMENT
+
+- Uses fixtures and provider mocks.
+- Does not send real external email.
+- Does not claim real provider connections.
+- Supports safe integration testing.
+- Keeps production credentials unavailable.
+
+### CONTROLLED_LIVE_PILOT
+
+- Uses authentic provider authorization.
+- Requires explicit institutional approval.
+- Restricts permitted mailboxes.
+- Restricts outbound recipients.
+- Records every actual dispatch.
+- Supports immediate emergency shutdown.
+
+Begin with the existing designated pilot mailbox:
+
+`donations@phumulani.org`
+
+However, do not assume that the address is currently authorized or that the organization controls it until the OAuth identity and institutional permissions have been verified.
+
+Required activation gates:
+
+1. Genuine provider credentials are configured.
+2. Organizational mailbox ownership is verified.
+3. Appropriate administrator consent is recorded.
+4. External database persistence is verified.
+5. Secret storage and rotation are configured.
+6. Security review has passed.
+7. Approved pilot recipients are configured.
+8. Human executive authorization is recorded.
+9. The emergency kill switch has been tested.
+10. Actual provider connectivity and inbound import have been verified.
+
+**Never automatically activate real sending merely because code compiles or automated tests pass.**
+
+The system must refuse production activation when mandatory evidence is missing.
+
+---
+
+## 14. SECURITY, PRIVACY AND SAFEGUARDING
+
+Preserve the restricted survivor-services security boundary.
+
+For `safeguarding@phumulani.org` and Category 01 confidential communications:
+
+- No general AI access.
+- No automatic drafting.
+- No auto-responses.
+- No general CRM linking.
+- No global search indexing.
+- No ordinary staff visibility.
+- No unauthorized exports.
+- No cross-mailbox recovery operations.
+- No logging of survivor message contents.
+- No exposure in analytics or monitoring dashboards.
+
+Implement server-side access enforcement, not merely hidden buttons.
+
+Maintain separate encryption keys, access policies, audit scopes, and storage boundaries appropriate to the sensitivity of survivor records.
+
+Do not claim a physical air gap unless the deployed infrastructure actually provides and verifies that isolation.
+
+Ensure any applicable VAWA confidentiality requirements are reviewed by qualified institutional counsel rather than treating automated tests as proof of legal compliance.
+
+Additional security requirements:
+
+- Encrypted OAuth tokens.
+- Encrypted provider credentials.
+- Strong session management.
+- MFA for privileged administrators.
+- CSRF protection.
+- Anti-IDOR authorization.
+- MIME sanitization.
+- Attachment malware scanning.
+- HTML content sanitization.
+- Prompt injection resistance.
+- Safe external link handling.
+- Rate limiting.
+- Audit logging.
+- Secret rotation.
+- Emergency credential revocation.
+- Safe Exit continuity.
+
+---
+
+## 15. AI-ASSISTED EMAIL OPERATIONS
+
+Preserve the existing AI workforce and email drafting capabilities.
+
+AI may assist with:
+
+- Non-sensitive email classification.
+- Priority recommendations.
+- Thread summaries.
+- Draft suggestions.
+- Tone adjustments.
+- Translation.
+- Follow-up reminders.
+- Duplicate detection.
+- Staff workload insights.
+
+AI must not:
+
+- Send email independently.
+- Approve its own drafts.
+- Override mailbox permissions.
+- Access Category 01 survivor correspondence.
+- Expose confidential information to unauthorized model providers.
+- Invent provider delivery confirmations.
+- Make unauthorized financial commitments.
+- Automatically send donation receipts for unsettled pledges.
+
+Every AI-generated draft must remain editable and attributable to its human reviewer.
+
+---
+
+## 16. CONNECTION HEALTH AND ADMINISTRATOR OPERATIONS
+
+Implement an operational dashboard showing:
+
+- Provider.
+- Mailbox address.
+- Connection state.
+- Last successful authentication.
+- Last successful sync.
+- Number of pending sync jobs.
+- Number of failed dispatches.
+- Token expiration warnings.
+- Provider rate-limit warnings.
+- Connection errors.
+- Recovery options.
+
+Provide administrator actions:
+
+- Test Connection.
+- Reauthorize Account.
+- Refresh Connection.
+- Pause Synchronization.
+- Resume Synchronization.
+- Rebuild Sync Checkpoint.
+- Reconcile Sent Messages.
+- Disconnect Account.
+- Revoke Credentials.
+
+All actions must be role-gated, audited, and protected against cross-mailbox access.
+
+Destructive recovery must require confirmation, preserve evidence, and support rollback where technically possible.
+
+---
+
+## 17. API ENDPOINTS
+
+Implement or reconcile the following API routes with the existing Express backend:
+
+```text
+GET    /api/admin/email/connections
+POST   /api/admin/email/connections
+GET    /api/admin/email/connections/:id
+POST   /api/admin/email/connections/:id/test
+POST   /api/admin/email/connections/:id/sync
+POST   /api/admin/email/connections/:id/pause
+POST   /api/admin/email/connections/:id/resume
+DELETE /api/admin/email/connections/:id
+
+GET    /api/admin/email/oauth/google/start
+GET    /api/admin/email/oauth/google/callback
+
+GET    /api/admin/email/oauth/microsoft/start
+GET    /api/admin/email/oauth/microsoft/callback
+
+GET    /api/admin/email/mailboxes
+GET    /api/admin/email/mailboxes/:id/folders
+GET    /api/admin/email/mailboxes/:id/messages
+GET    /api/admin/email/messages/:id
+
+POST   /api/admin/email/drafts
+POST   /api/admin/email/drafts/:id/submit
+POST   /api/admin/email/approvals/:id/review
+POST   /api/admin/email/dispatch/:id/send
+
+GET    /api/admin/email/health
+GET    /api/admin/email/audit
+```
+
+All sensitive routes require authenticated server-side authorization.
+
+Use opaque identifiers and avoid exposing mailbox secrets or internal provider tokens.
+
+Do not add duplicate endpoints if equivalent routes already exist.
+
+---
+
+## 18. AUTOMATED VERIFICATION AND REAL-WORLD ACCEPTANCE
+
+Build a dedicated Phase 62 test suite.
+
+### Connector Tests
+
+- Google OAuth success and failure.
+- Microsoft OAuth success and failure.
+- IMAP authentication.
+- SMTP authentication.
+- Invalid credentials.
+- Expired tokens.
+- Provider permission denial.
+- Network timeout.
+- TLS validation failure.
+- Provider rate limiting.
+- Unauthorized mailbox access.
+
+### Synchronization Tests
+
+- Initial import.
+- Incremental import.
+- Message deduplication.
+- Cursor recovery.
+- Concurrent sync protection.
+- Restart recovery.
+- Folder mapping.
+- Thread reconstruction.
+- Attachment sanitization.
+
+### Dispatch Tests
+
+- Human-approved send.
+- Unapproved send blocked.
+- AI self-approval blocked.
+- Duplicate send blocked.
+- Recipient allowlist enforced.
+- Material edit invalidates approval.
+- Provider rejection handled.
+- Ambiguous response reconciled.
+- Emergency shutdown blocks dispatch.
+
+### Security Tests
+
+- Cross-mailbox IDOR blocked.
+- Token leakage prevented.
+- Malicious HTML sanitized.
+- Unsafe IMAP/SMTP endpoints rejected.
+- Safeguarding messages excluded from general AI.
+- Unauthorized recovery blocked.
+- Audit records remain intact.
+
+### Browser Tests
+
+Verify the actual Email Command Center using Playwright on desktop and mobile.
+
+Test:
+
+- Connecting a new mailbox.
+- Navigating Inbox.
+- Reading a message.
+- Replying.
+- Saving a draft.
+- Requesting approval.
+- Reviewing approval.
+- Searching messages.
+- Switching mailboxes.
+- Viewing connection status.
+- Disconnecting a mailbox.
+
+### Real Provider Acceptance
+
+When credentials and authorization become available, execute a controlled live test with approved test accounts:
+
+1. Connect the real mailbox.
+2. Receive an actual test email.
+3. Verify its persisted message identity.
+4. Reply after human approval.
+5. Verify provider acceptance.
+6. Verify arrival at the approved recipient account.
+7. Restart the backend.
+8. Confirm message history and connection state persist.
+9. Test token refresh.
+10. Test emergency shutdown.
+
+Record the provider, timestamps, test mailbox, sanitized evidence, and actual result.
+
+Do not substitute fixture tests for live acceptance.
+
+---
+
+## 19. GITHUB ACTIONS AND DEPLOYMENT SAFETY
+
+Run:
+
+```bash
+npm ci
+npx tsc --noEmit
+npm run lint
+npm run build
+```
+
+Run the existing verification suites and configured Playwright tests.
+
+Add a new CI guard for:
+
+- Missing package-lock.json.
+- Missing required source directories.
+- Missing TypeScript configuration.
+- Missing Vite configuration.
+- Unexpected deletion of critical files.
+- Secret leakage.
+- Unreviewed production configuration changes.
+
+CI must never dispatch real emails.
+
+Use dedicated test credentials or mocked providers in automated pipelines.
+
+Remember that GitHub Pages hosts static assets; a production Express API, OAuth callback service, durable background worker, and PostgreSQL database require an appropriate separately deployed backend infrastructure.
+
+Do not describe a successful GitHub Pages deployment as proof that the email backend is live.
+
+Synchronize code through the native Google AI Studio GitHub integration.
+
+After synchronization, report:
+
+- Development branch.
+- Remote commit SHA.
+- Changed files.
+- CI run URL.
+- CI conclusion.
+- Deployment status.
+- External provider connection status.
+
+---
+
+## 20. REQUIRED DOCUMENTATION
+
+Create:
+
+```text
+docs/development/phase62-source-reconciliation.md
+docs/development/phase62-email-connector-architecture.md
+docs/development/phase62-google-workspace-setup.md
+docs/development/phase62-microsoft365-setup.md
+docs/development/phase62-imap-smtp-setup.md
+docs/development/phase62-email-command-center-ux.md
+docs/development/phase62-postgresql-persistence.md
+docs/development/phase62-security-and-safeguarding.md
+docs/development/phase62-live-pilot-activation.md
+docs/development/phase62-test-evidence.md
+docs/development/phase62-operational-runbook.md
+```
+
+Document the real configuration requirements for each provider, including redirect URIs, scopes, credentials, mailbox permissions, and troubleshooting procedures.
+
+Never include actual secrets in documentation.
+
+---
+
+## 21. FINAL DELIVERY REPORT
+
+Produce:
+
+**PHUMULANI PHASE 62 — PRODUCTION EMAIL COMMAND CENTER DELIVERY REPORT**
+
+Include:
+
+### Source Control
+- Starting remote SHA.
+- Ending remote SHA.
+- Branch.
+- GitHub synchronization status.
+- Lockfile integrity.
+- CI URL and conclusion.
+
+### Email Connectors
+- Google Workspace implementation status.
+- Microsoft 365 implementation status.
+- IMAP/SMTP implementation status.
+- Provider-specific capabilities and limitations.
+- Real authentication status.
+- Connected mailbox count.
+- Unconnected mailbox count.
+
+### Live Email Operations
+- Real messages imported.
+- Real messages sent.
+- Real messages received by test recipients.
+- Sync failures.
+- Token refresh results.
+- Delivery reconciliation results.
+
+### Database
+- Embedded staging status.
+- External PostgreSQL connection status.
+- Migration status.
+- Restart recovery.
+- Backup and restore evidence.
+
+### Security
+- RBAC and anti-IDOR results.
+- Safeguarding isolation tests.
+- Secret storage verification.
+- Emergency shutdown verification.
+- Independent review status.
+
+### Quality
+- TypeScript result.
+- Lint result.
+- Build result.
+- Unit test results.
+- Integration test results.
+- Playwright tests discovered, executed, passed, and failed.
+- Real provider acceptance results.
+
+### Production Readiness
+- What is fully implemented.
+- What is tested only with fixtures.
+- What is connected to a real provider.
+- What requires external credentials.
+- What requires institutional consent.
+- What remains blocked.
+- Whether live sending is authorized.
+
+Use explicit evidence categories:
+
+`CODE_IMPLEMENTED`  
+`FIXTURE_VERIFIED`  
+`PROVIDER_AUTHENTICATED`  
+`LIVE_IMPORT_VERIFIED`  
+`LIVE_SEND_VERIFIED`  
+`PRODUCTION_AUTHORIZED`
+
+Never report one category as another.
+
+---
+
+## 22. FINAL EXECUTION ORDER
+
+Execute in this order:
+
+**Stage 1:** Protect and reconcile the repository.
+
+**Stage 2:** Implement the universal connector framework.
+
+**Stage 3:** Implement Google Workspace and Microsoft 365 OAuth adapters.
+
+**Stage 4:** Implement secure IMAP/SMTP connectivity.
+
+**Stage 5:** Implement the Add Email Account wizard.
+
+**Stage 6:** Implement real synchronization and durable email persistence.
+
+**Stage 7:** Implement human-approved outbound sending and delivery reconciliation.
+
+**Stage 8:** Simplify the Email Command Center for ordinary staff.
+
+**Stage 9:** Implement connection health, recovery, security, and safeguarding protections.
+
+**Stage 10:** Execute automated and browser verification.
+
+**Stage 11:** Prepare the controlled real-provider pilot, identifying external prerequisites.
+
+**Stage 12:** Synchronize verified changes to GitHub and provide the complete evidence-backed delivery report.
+
+Do not stop after implementing a UI or creating documentation.
+
+**THE SUCCESS CONDITION IS A REAL, SECURE, MULTI-PROVIDER EMAIL COMMAND CENTER THAT CAN CONNECT AUTHORIZED EMAIL ACCOUNTS, RECEIVE AND SYNCHRONIZE ACTUAL MESSAGES, AND SEND HUMAN-APPROVED EMAILS WHEN INSTITUTIONAL PRODUCTION AUTHORIZATION HAS BEEN GRANTED.**
+
+If credentials or approvals are unavailable, complete the implementation and tests, leave live operations blocked, and identify the exact remaining external actions.
+
+**BEGIN PHASE 62 IMPLEMENTATION NOW.**

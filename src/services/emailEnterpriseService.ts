@@ -67,6 +67,29 @@ export interface FundraisingEmailIngestionResult {
 }
 
 export class EmailEnterpriseService {
+  private static instance: EmailEnterpriseService;
+
+  public static getInstance(): EmailEnterpriseService {
+    if (!EmailEnterpriseService.instance) {
+      EmailEnterpriseService.instance = new EmailEnterpriseService();
+    }
+    return EmailEnterpriseService.instance;
+  }
+
+  public getConversations(options?: { folder?: string; limit?: number; page?: number; search?: string }) {
+    const threads = db.getState().enterpriseEmailThreads || [];
+    const limit = options?.limit || 20;
+    return {
+      conversations: threads.slice(0, limit),
+      total: threads.length,
+    };
+  }
+
+  public getConversationById(id: string) {
+    const threads = db.getState().enterpriseEmailThreads || [];
+    return threads.find((t) => t.id === id);
+  }
+
   /**
    * M49.09 & M49.18: Untrusted Content Sanitizer & Prompt-Injection Neutralizer.
    * Treats all incoming email bodies, subjects, and headers as untrusted external data.

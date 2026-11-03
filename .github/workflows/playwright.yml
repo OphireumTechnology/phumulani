@@ -23,11 +23,18 @@ jobs:
       - name: Checkout Codebase
         uses: actions/checkout@v4
 
-      - name: Guard required npm lockfile before Node setup
+      - name: Guard required npm lockfile, source directories & configuration files
         shell: bash
         run: |
+          echo "=== VERIFYING REPOSITORY INTEGRITY & GUARDS ==="
+          # 1. Prohibit foreign lockfiles
+          if [ -f bun.lock ] || [ -f bun.lockb ] || [ -f yarn.lock ] || [ -f pnpm-lock.yaml ]; then
+            echo "::error::Foreign lockfile detected (bun.lock/yarn.lock/pnpm-lock.yaml). Phumulani standardizes exclusively on package-lock.json."
+            exit 1
+          fi
+          # 2. Require tracked package-lock.json
           if [ ! -s package-lock.json ]; then
-            echo "::error file=package-lock.json::Required tracked npm lockfile is missing. Google AI Studio sync must preserve package-lock.json; restore it from the last passing commit."
+            echo "::error file=package-lock.json::Required tracked npm lockfile is missing. Google AI Studio sync must preserve package-lock.json."
             exit 1
           fi
           if ! git ls-files --error-unmatch package-lock.json >/dev/null 2>&1; then
@@ -35,7 +42,22 @@ jobs:
             exit 1
           fi
           node -e "const fs=require('fs');const p=JSON.parse(fs.readFileSync('package-lock.json','utf8'));if(!p.lockfileVersion||!p.packages)process.exit(1)"
-          echo "Required tracked npm lockfile is present and structurally valid."
+          echo "Canonical package-lock.json is present, tracked, and structurally valid."
+          # 3. Guard essential source directories
+          for dir in src/views src/services src/types src/email src/components; do
+            if [ ! -d "$dir" ]; then
+              echo "::error::Critical source directory $dir is missing. Aborting CI."
+              exit 1
+            fi
+          done
+          # 4. Guard essential configuration files
+          for file in tsconfig.json vite.config.ts server.ts; do
+            if [ ! -s "$file" ]; then
+              echo "::error::Critical configuration file $file is missing. Aborting CI."
+              exit 1
+            fi
+          done
+          echo "All critical source directories and configuration files verified present."
 
       - name: Setup Node.js Runtime (v22)
         uses: actions/setup-node@v4
@@ -63,10 +85,12 @@ jobs:
           echo "=== CI STAGE 3: APPLICATION BUNDLE BUILD ==="
           npm run build
 
-      # CI Stage 4 — Full regression suite (688 tests)
-      - name: CI Stage 4 — Full Regression Suite & Persistence Integrity
+      # CI Stage 4 — Phase 62 Email & Full Regression Suites
+      - name: CI Stage 4 — Phase 62 Production Email & Authoritative Regression Suites
         run: |
-          echo "=== CI STAGE 4: AUTHORITATIVE REGRESSION SUITE (688 TESTS) ==="
+          echo "=== CI STAGE 4A: PHASE 62 PRODUCTION EMAIL INTEGRATION SUITE (35 TESTS) ==="
+          npx tsx scripts/verify_phase62_production_email.ts
+          echo "=== CI STAGE 4B: AUTHORITATIVE REGRESSION SUITE (706 TESTS) ==="
           npx tsx scripts/verify_suite.ts
 
   # CI STAGES 5 - 9: BROWSER TEST DISCOVERY & CROSS-BROWSER MATRIX
@@ -86,11 +110,15 @@ jobs:
       - name: Checkout Codebase
         uses: actions/checkout@v4
 
-      - name: Guard required npm lockfile before Node setup
+      - name: Guard required npm lockfile, source directories & configuration files
         shell: bash
         run: |
+          if [ -f bun.lock ] || [ -f bun.lockb ] || [ -f yarn.lock ] || [ -f pnpm-lock.yaml ]; then
+            echo "::error::Foreign lockfile detected. Only package-lock.json is permitted."
+            exit 1
+          fi
           if [ ! -s package-lock.json ]; then
-            echo "::error file=package-lock.json::Required tracked npm lockfile is missing. Google AI Studio sync must preserve package-lock.json; restore it from the last passing commit."
+            echo "::error file=package-lock.json::Required tracked npm lockfile is missing."
             exit 1
           fi
           if ! git ls-files --error-unmatch package-lock.json >/dev/null 2>&1; then

@@ -23,6 +23,12 @@ export const UniversalEmailConnections: React.FC = () => {
   const [connections, setConnections] = useState<EmailConnectionRecord[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'info' | 'error' } | null>(null);
+
+  const showToast = (message: string, type: 'success' | 'info' | 'error' = 'info') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 4000);
+  };
 
   // Wizard State
   const [isWizardOpen, setIsWizardOpen] = useState<boolean>(false);
@@ -198,11 +204,12 @@ export const UniversalEmailConnections: React.FC = () => {
         await fetchConnections();
         setIsWizardOpen(false);
         resetWizard();
+        showToast('Connection successfully registered and vaulted.', 'success');
       } else {
-        alert(data.error || 'Failed to save connection');
+        showToast(data.error || 'Failed to save connection', 'error');
       }
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : 'Error saving connection');
+      showToast(err instanceof Error ? err.message : 'Error saving connection', 'error');
     } finally {
       setIsSaving(false);
     }
@@ -224,12 +231,13 @@ export const UniversalEmailConnections: React.FC = () => {
       const res = await fetch(`/api/admin/email/connectors/${id}/sync`, { method: 'POST' });
       const data = await res.json();
       if (data.success) {
+        showToast('Synchronization completed successfully.', 'success');
         fetchConnections();
       } else {
-        alert(`Sync Notice: ${data.error || 'Sync could not complete'}`);
+        showToast(`Sync Notice: ${data.error || 'Sync could not complete'}`, 'info');
       }
     } catch (err: unknown) {
-      alert(`Sync error: ${err instanceof Error ? err.message : String(err)}`);
+      showToast(`Sync error: ${err instanceof Error ? err.message : String(err)}`, 'error');
     }
   };
 
@@ -238,11 +246,11 @@ export const UniversalEmailConnections: React.FC = () => {
       const res = await fetch(`/api/admin/email/connectors/${id}/verify`, { method: 'POST' });
       const data = await res.json();
       if (data.success && data.health) {
-        alert(`Health Check: ${data.health.status} (${data.health.roundTripLatencyMs}ms) - ${data.health.tlsVersion}`);
+        showToast(`Health Check: ${data.health.status} (${data.health.roundTripLatencyMs}ms) - ${data.health.tlsVersion}`, 'info');
         fetchConnections();
       }
     } catch (err: unknown) {
-      alert(`Health check failed: ${err instanceof Error ? err.message : String(err)}`);
+      showToast(`Health check failed: ${err instanceof Error ? err.message : String(err)}`, 'error');
     }
   };
 
@@ -251,25 +259,24 @@ export const UniversalEmailConnections: React.FC = () => {
       const res = await fetch(`/api/admin/email/connectors/${id}/refresh-token`, { method: 'POST' });
       const data = await res.json();
       if (data.success) {
-        alert('Token refreshed successfully. Credentials extended for 30 days.');
+        showToast('Token refreshed successfully. Credentials extended for 30 days.', 'success');
         fetchConnections();
       }
     } catch (err) {
-      alert('Failed to refresh token: ' + String(err));
+      showToast('Failed to refresh token: ' + String(err), 'error');
     }
   };
 
   const handleRevokeToken = async (id: string) => {
-    if (!confirm('Are you sure you want to revoke this connection and purge vaulted credentials?')) return;
     try {
       const res = await fetch(`/api/admin/email/connectors/${id}/revoke`, { method: 'POST' });
       const data = await res.json();
       if (data.success) {
-        alert('Credentials revoked and vault purged.');
+        showToast('Credentials revoked and vault purged.', 'info');
         fetchConnections();
       }
     } catch (err) {
-      alert('Revocation error: ' + String(err));
+      showToast('Revocation error: ' + String(err), 'error');
     }
   };
 
@@ -284,7 +291,7 @@ export const UniversalEmailConnections: React.FC = () => {
         });
       }
     } catch (err) {
-      alert('Failed to inspect folders: ' + String(err));
+      showToast('Failed to inspect folders: ' + String(err), 'error');
     }
   };
 
@@ -299,7 +306,7 @@ export const UniversalEmailConnections: React.FC = () => {
         });
       }
     } catch (err) {
-      alert('Failed to load evidence: ' + String(err));
+      showToast('Failed to load evidence: ' + String(err), 'error');
     }
   };
 
@@ -323,7 +330,7 @@ export const UniversalEmailConnections: React.FC = () => {
         });
       }
     } catch (err) {
-      alert('AI triage failed: ' + String(err));
+      showToast('AI triage failed: ' + String(err), 'error');
     }
   };
 
@@ -334,23 +341,24 @@ export const UniversalEmailConnections: React.FC = () => {
       const res = await fetch(`/api/admin/email/connectors/${conn.id}/${action}`, { method: 'POST' });
       const data = await res.json();
       if (data.success) {
+        showToast(`Mailbox ${conn.emailAddress} is now ${isDisconnected ? 'connected' : 'disconnected'}.`, 'info');
         fetchConnections();
       }
     } catch (err: unknown) {
-      alert(`Error toggling connection state: ${err instanceof Error ? err.message : String(err)}`);
+      showToast(`Error toggling connection state: ${err instanceof Error ? err.message : String(err)}`, 'error');
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to remove this email connection?')) return;
     try {
       const res = await fetch(`/api/admin/email/connectors/${id}`, { method: 'DELETE' });
       const data = await res.json();
       if (data.success) {
+        showToast('Connection successfully removed.', 'info');
         fetchConnections();
       }
     } catch (err: unknown) {
-      alert(`Delete error: ${err instanceof Error ? err.message : String(err)}`);
+      showToast(`Delete error: ${err instanceof Error ? err.message : String(err)}`, 'error');
     }
   };
 
