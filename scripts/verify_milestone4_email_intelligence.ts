@@ -71,7 +71,7 @@ async function runMilestone4Suite() {
     'M4-AUTH-01',
     'Authentication',
     'Reject forged X-User-Role: master_admin header when no valid session token exists',
-    !forgedValidation.valid && (forgedValidation.error?.includes('missing'),
+    !forgedValidation.valid && forgedValidation.error?.includes('missing') === true,
     `Validation result: valid=${forgedValidation.valid}, error="${forgedValidation.error}"`
   );
 
@@ -82,7 +82,7 @@ async function runMilestone4Suite() {
     'M4-AUTH-02',
     'Authentication',
     'Reject invalid / synthetic session tokens by default',
-    !bogusValidation.valid && (bogusValidation.error?.includes('not found'),
+    !bogusValidation.valid && bogusValidation.error?.includes('not found') === true,
     `Validation result: valid=${bogusValidation.valid}, error="${bogusValidation.error}"`
   );
 
@@ -101,7 +101,7 @@ async function runMilestone4Suite() {
     'M4-AUTH-03',
     'Authentication',
     'Reject expired session tokens and invalidate active session cache',
-    !expiredValidation.valid && (expiredValidation.error?.includes('expired'),
+    !expiredValidation.valid && expiredValidation.error?.includes('expired') === true,
     `Expired session validation: valid=${expiredValidation.valid}, error="${expiredValidation.error}"`
   );
 
