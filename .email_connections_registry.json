@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-11-03T06:28:04.467Z",
+  "savedAt": "2026-11-05T14:19:30.848Z",
   "connections": [
     {
       "id": "conn-google-donations_phumulani_org",
@@ -11,11 +11,11 @@
       "authMethod": "OAUTH2",
       "authStatus": "CONNECTED",
       "connectionHealth": "HEALTHY",
-      "lastSyncAt": "2026-11-03T06:28:04.466Z",
-      "lastSuccessfulSyncAt": "2026-11-03T06:28:04.466Z",
+      "lastSyncAt": "2026-11-05T14:19:30.846Z",
+      "lastSuccessfulSyncAt": "2026-11-05T14:19:30.846Z",
       "lastError": null,
       "incomingMessageCount": 42,
-      "outgoingMessageCount": 19,
+      "outgoingMessageCount": 22,
       "syncFailureCount": 0,
       "credentialExpiresAt": "2026-12-03T05:16:30.375Z",
       "credentialWarning": false,
@@ -103,7 +103,7 @@
         }
       ],
       "createdAt": "2026-10-27T05:16:30.375Z",
-      "updatedAt": "2026-11-03T06:28:04.467Z"
+      "updatedAt": "2026-11-05T14:19:30.848Z"
     },
     {
       "id": "conn-google-info_phumulani_org",

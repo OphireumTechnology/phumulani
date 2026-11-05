@@ -1094,6 +1094,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         onBackToMasterAdmin={onBackToMasterAdmin ? onBackToMasterAdmin : () => onViewChange('master-admin')}
         onOpenSettings={() => setActiveTab('settings')}
         onOpenAuditLogs={() => setIsAuditLogsModalOpen(true)}
+        onOpenManageAccounts={() => setActiveTab('universal_connectors')}
       />
 
       {/* Action Notice Alert */}
@@ -1221,6 +1222,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 selectedMailboxId={selectedMailboxId}
                 onMailboxChange={setSelectedMailboxId}
                 onOpenFolders={() => setMobileScreen('folders')}
+                onOpenManageAccounts={() => setActiveTab('universal_connectors')}
               />
             </div>
 
@@ -3151,7 +3153,14 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* ========================================================================= */}
         {activeTab === 'universal_connectors' && (
           <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5">
-            <UniversalEmailConnections />
+            <UniversalEmailConnections
+              selectedMailboxId={selectedMailboxId}
+              onSelectActiveMailbox={(mailboxEmail, mailboxId) => {
+                setSelectedMailboxId(mailboxId);
+                setActiveTab('all_mailboxes');
+              }}
+              onClose={() => setActiveTab('all_mailboxes')}
+            />
           </div>
         )}
 

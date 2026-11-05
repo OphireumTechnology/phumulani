@@ -21,6 +21,7 @@ import {
   CheckCircle2,
   X,
   ExternalLink,
+  Settings,
 } from 'lucide-react';
 import { User } from '../../types';
 import { ConnectedMailbox } from '../../types/emailEnterprise';
@@ -39,6 +40,7 @@ interface EmailCompactHeaderProps {
   onBackToMasterAdmin?: () => void;
   onOpenSettings?: () => void;
   onOpenAuditLogs?: () => void;
+  onOpenManageAccounts?: () => void;
   isSyncing?: boolean;
 }
 
@@ -56,6 +58,7 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
   onBackToMasterAdmin,
   onOpenSettings,
   onOpenAuditLogs,
+  onOpenManageAccounts,
   isSyncing = false,
 }) => {
   const [isOverflowOpen, setIsOverflowOpen] = useState(false);
@@ -112,6 +115,21 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
               ))}
             </select>
           </div>
+
+          {/* STAGE 1: Visible Manage Email Accounts Button Beside Mailbox Selector */}
+          {onOpenManageAccounts && (
+            <button
+              id="btn-manage-email-accounts"
+              onClick={onOpenManageAccounts}
+              className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg border border-teal-300 bg-teal-50/90 hover:bg-teal-100 text-teal-900 transition-colors cursor-pointer shrink-0 shadow-2xs"
+              title="Manage Email Accounts, Connections & Official Provider Authorization"
+              aria-label="Manage Email Accounts"
+            >
+              <Settings className="w-3.5 h-3.5 text-teal-700 shrink-0" />
+              <span className="hidden sm:inline">Manage Email Accounts</span>
+              <span className="sm:hidden">Accounts</span>
+            </button>
+          )}
         </div>
 
         {/* Center: Search Field */}

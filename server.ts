@@ -5128,8 +5128,10 @@ app.post('/api/admin/email/connections/:id/pause', (req: Request, res: Response)
     if (!conn) {
       return res.status(404).json({ success: false, error: 'Connection not found.' });
     }
-    conn.syncStatus = 'SYNC_IDLE';
-    res.json({ success: true, message: `Synchronization paused for ${conn.emailAddress}.` });
+    conn.syncStatus = 'SYNC_PAUSED' as any;
+    (conn as any).metadata = { ...((conn as any).metadata || {}), paused: true };
+    connectorRegistry.updateConnection(conn.id, { syncStatus: 'SYNC_PAUSED' as any });
+    res.json({ success: true, message: `Synchronization paused for ${conn.emailAddress}.`, syncStatus: 'SYNC_PAUSED' });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -5142,7 +5144,50 @@ app.post('/api/admin/email/connections/:id/resume', (req: Request, res: Response
       return res.status(404).json({ success: false, error: 'Connection not found.' });
     }
     conn.syncStatus = 'SYNC_COMPLETE';
-    res.json({ success: true, message: `Synchronization resumed for ${conn.emailAddress}.` });
+    (conn as any).metadata = { ...((conn as any).metadata || {}), paused: false };
+    connectorRegistry.updateConnection(conn.id, { syncStatus: 'SYNC_COMPLETE' });
+    res.json({ success: true, message: `Synchronization resumed for ${conn.emailAddress}.`, syncStatus: 'SYNC_COMPLETE' });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.patch('/api/admin/email/connections/:id', (req: Request, res: Response) => {
+  try {
+    const updated = connectorRegistry.updateConnection(req.params.id, req.body);
+    if (!updated) {
+      return res.status(404).json({ success: false, error: 'Connection not found.' });
+    }
+    res.json({ success: true, connection: updated });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/connections/:id/reauthorize', (req: Request, res: Response) => {
+  try {
+    const conn = connectorRegistry.getConnection(req.params.id);
+    if (!conn) {
+      return res.status(404).json({ success: false, error: 'Connection not found.' });
+    }
+    const redirectUri = `${req.protocol}://${req.get('host')}/api/admin/email/oauth/${conn.provider === 'MICROSOFT' ? 'microsoft' : 'google'}/callback`;
+    let oauthInfo = null;
+    if (conn.provider === 'GOOGLE') {
+      oauthInfo = oAuthService.initiateGoogleOAuth(redirectUri, conn.emailAddress);
+    } else if (conn.provider === 'MICROSOFT') {
+      oauthInfo = oAuthService.initiateMicrosoftOAuth(redirectUri, conn.emailAddress);
+    }
+    connectorRegistry.updateConnection(conn.id, {
+      authStatus: 'AUTHORIZATION_REQUIRED',
+      connectionHealth: 'DEGRADED',
+      credentialWarning: true,
+    });
+    res.json({
+      success: true,
+      message: `Reauthorization initiated for ${conn.emailAddress}.`,
+      oauth: oauthInfo,
+      connection: connectorRegistry.getConnection(req.params.id),
+    });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -5165,8 +5210,25 @@ app.get('/api/admin/email/oauth/google/start', (req: Request, res: Response) => 
   try {
     const redirectUri = (req.query.redirectUri as string) || `${req.protocol}://${req.get('host')}/api/admin/email/oauth/google/callback`;
     const mailboxEmail = req.query.email as string | undefined;
-    const { authUrl, stateId } = oAuthService.initiateGoogleOAuth(redirectUri, mailboxEmail);
-    res.json({ success: true, authUrl, stateId, redirectUri });
+    const { authUrl, stateId, codeChallenge, codeVerifier } = oAuthService.initiateGoogleOAuth(redirectUri, mailboxEmail);
+    res.json({
+      success: true,
+      authUrl,
+      stateId,
+      redirectUri,
+      provider: 'GOOGLE',
+      clientId: process.env.GOOGLE_WORKSPACE_CLIENT_ID || 'phumulani-google-client-staged.apps.googleusercontent.com',
+      codeChallenge,
+      codeVerifier,
+      scopes: [
+        'openid',
+        'email',
+        'profile',
+        'https://www.googleapis.com/auth/gmail.readonly',
+        'https://www.googleapis.com/auth/gmail.send',
+        'https://www.googleapis.com/auth/gmail.modify',
+      ],
+    });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -5185,11 +5247,25 @@ app.get('/api/admin/email/oauth/google/callback', (req: Request, res: Response) 
     if (!val.valid) {
       return res.status(400).json({ success: false, error: val.error });
     }
+    const targetEmail = val.state?.mailboxEmail || 'donations@phumulani.org';
+    const conns = connectorRegistry.getAllConnections();
+    const matched = conns.find(
+      (c) => c.emailAddress.toLowerCase() === targetEmail.toLowerCase() || c.provider === 'GOOGLE'
+    );
+    if (matched) {
+      connectorRegistry.updateConnection(matched.id, {
+        authStatus: 'CONNECTED',
+        connectionHealth: 'HEALTHY',
+        credentialWarning: false,
+        lastError: null,
+      });
+    }
     res.json({
       success: true,
       message: 'Google Workspace authorization code successfully validated and exchanged.',
       provider: 'GOOGLE',
-      mailboxEmail: val.state?.mailboxEmail || 'donations@phumulani.org',
+      mailboxEmail: targetEmail,
+      connectedId: matched?.id,
     });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
@@ -5200,8 +5276,19 @@ app.get('/api/admin/email/oauth/microsoft/start', (req: Request, res: Response) 
   try {
     const redirectUri = (req.query.redirectUri as string) || `${req.protocol}://${req.get('host')}/api/admin/email/oauth/microsoft/callback`;
     const mailboxEmail = req.query.email as string | undefined;
-    const { authUrl, stateId } = oAuthService.initiateMicrosoftOAuth(redirectUri, mailboxEmail);
-    res.json({ success: true, authUrl, stateId, redirectUri });
+    const { authUrl, stateId, codeChallenge, codeVerifier } = oAuthService.initiateMicrosoftOAuth(redirectUri, mailboxEmail);
+    res.json({
+      success: true,
+      authUrl,
+      stateId,
+      redirectUri,
+      provider: 'MICROSOFT',
+      clientId: process.env.MICROSOFT_GRAPH_CLIENT_ID || 'phumulani-msft-client-staged-id',
+      tenantId: process.env.MICROSOFT_TENANT_ID || 'common',
+      codeChallenge,
+      codeVerifier,
+      scopes: ['openid', 'profile', 'offline_access', 'Mail.Read', 'Mail.ReadWrite', 'Mail.Send'],
+    });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -5220,11 +5307,61 @@ app.get('/api/admin/email/oauth/microsoft/callback', (req: Request, res: Respons
     if (!val.valid) {
       return res.status(400).json({ success: false, error: val.error });
     }
+    const targetEmail = val.state?.mailboxEmail || 'partnerships@phumulani.org';
+    const conns = connectorRegistry.getAllConnections();
+    const matched = conns.find(
+      (c) => c.emailAddress.toLowerCase() === targetEmail.toLowerCase() || c.provider === 'MICROSOFT'
+    );
+    if (matched) {
+      connectorRegistry.updateConnection(matched.id, {
+        authStatus: 'CONNECTED',
+        connectionHealth: 'HEALTHY',
+        credentialWarning: false,
+        lastError: null,
+      });
+    }
     res.json({
       success: true,
       message: 'Microsoft 365 authorization code successfully validated and exchanged.',
       provider: 'MICROSOFT',
-      mailboxEmail: val.state?.mailboxEmail || 'partnerships@phumulani.org',
+      mailboxEmail: targetEmail,
+      connectedId: matched?.id,
+    });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Direct OAuth code exchange verification endpoint
+app.post('/api/admin/email/oauth/exchange', (req: Request, res: Response) => {
+  try {
+    const { state, code, provider, mailboxEmail } = req.body;
+    if (!state || !code) {
+      return res.status(400).json({ success: false, error: 'Missing state or authorization code parameter.' });
+    }
+    const val = oAuthService.validateCallback(state as string, code as string);
+    if (!val.valid) {
+      return res.status(400).json({ success: false, error: val.error });
+    }
+    const targetEmail = mailboxEmail || val.state?.mailboxEmail || (provider === 'MICROSOFT' ? 'partnerships@phumulani.org' : 'donations@phumulani.org');
+    const conns = connectorRegistry.getAllConnections();
+    const matched = conns.find(
+      (c) => c.emailAddress.toLowerCase() === targetEmail.toLowerCase()
+    );
+    if (matched) {
+      connectorRegistry.updateConnection(matched.id, {
+        authStatus: 'CONNECTED',
+        connectionHealth: 'HEALTHY',
+        credentialWarning: false,
+        lastError: null,
+      });
+    }
+    res.json({
+      success: true,
+      message: 'Provider authorization code successfully validated and credentials stored.',
+      provider: provider || val.state?.provider || 'GOOGLE',
+      mailboxEmail: targetEmail,
+      connectedId: matched?.id,
     });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });

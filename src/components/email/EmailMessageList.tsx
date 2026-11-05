@@ -43,6 +43,7 @@ interface EmailMessageListProps {
   onMailboxChange: (m: string) => void;
   className?: string;
   onOpenFolders?: () => void;
+  onOpenManageAccounts?: () => void;
 }
 
 export const EmailMessageList: React.FC<EmailMessageListProps> = ({
@@ -62,6 +63,7 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
   onMailboxChange,
   className = '',
   onOpenFolders,
+  onOpenManageAccounts,
 }) => {
   const [isAdvancedFiltersOpen, setIsAdvancedFiltersOpen] = useState(false);
 
@@ -196,11 +198,34 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
       {/* Message List Rows (Area C) */}
       <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
         {threads.length === 0 ? (
-          <div className="p-8 text-center text-slate-400 text-xs">
-            <Inbox className="w-8 h-8 mx-auto mb-2 opacity-40 text-slate-400" />
-            <p className="font-semibold text-slate-600">No messages found</p>
-            <p className="text-[11px] text-slate-400 mt-1">Try adjusting search query or active filter.</p>
-          </div>
+          mailboxes.length === 0 ? (
+            <div className="p-8 text-center text-slate-500 text-xs flex flex-col items-center justify-center h-full">
+              <Inbox className="w-10 h-10 mx-auto mb-3 text-slate-400" />
+              <p className="font-bold text-slate-800 text-sm">No email accounts connected.</p>
+              <p className="text-xs text-slate-600 mt-1 max-w-xs text-center">
+                Connect an email account to start managing your messages.
+              </p>
+              {onOpenManageAccounts && (
+                <button
+                  onClick={onOpenManageAccounts}
+                  className="mt-4 px-3.5 py-1.5 text-xs font-semibold bg-[#104F57] hover:bg-teal-900 text-white rounded-lg transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Inbox className="w-3.5 h-3.5" />
+                  <span>Connect an Email Account</span>
+                </button>
+              )}
+            </div>
+          ) : (
+            <div className="p-8 text-center text-slate-400 text-xs flex flex-col items-center justify-center h-full">
+              <Inbox className="w-8 h-8 mx-auto mb-2 opacity-40 text-slate-400" />
+              <p className="font-semibold text-slate-700">Inbox is empty</p>
+              <p className="text-[11px] text-slate-400 mt-1">
+                {searchQuery || priorityFilter !== 'all' || categoryFilter !== 'all'
+                  ? 'No messages matched your active search or filters.'
+                  : 'There are no messages in this connected mailbox.'}
+              </p>
+            </div>
+          )
         ) : (
           threads.map((thread) => {
             const isSelected = thread.id === selectedThreadId;
