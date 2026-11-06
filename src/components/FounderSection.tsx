@@ -158,6 +158,45 @@ export const FounderSection: React.FC = () => {
           </div>
         </div>
 
+        {/* 2.5 Executive Leadership in Action & Policy Advocacy */}
+        <div className="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden shadow-sm grid grid-cols-1 lg:grid-cols-12 items-center">
+          <div className="lg:col-span-7 relative aspect-[16/9] lg:aspect-auto lg:h-full bg-slate-100 overflow-hidden">
+            <SafeImage
+              src="/media/phumulani/founder-legacy/leadership.jpg"
+              fallbackSrc="/media/founder/comfort-dondo-community-circle.svg"
+              fallbackType="leadership"
+              alt="Comfort Dondo leading community organizers and advocates around a conference table in Minneapolis"
+              className="w-full h-full object-cover min-h-[280px]"
+              loading="lazy"
+            />
+          </div>
+          <div className="lg:col-span-5 p-6 sm:p-8 space-y-4">
+            <div className="text-xs font-bold text-[#104F57] uppercase tracking-wider">
+              Community Leadership in Action
+            </div>
+            <h3 className="font-serif text-2xl font-bold text-slate-900 leading-snug">
+              Grassroots Advocacy &amp; Systemic Reform
+            </h3>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Beyond direct crisis intervention, Comfort Dondo mobilizes grassroots leaders, faith coalitions, and civic partners across the Twin Cities to dismantle barriers in domestic violence statutes and expand culturally specific protections.
+            </p>
+            <div className="space-y-2 pt-2 border-t border-slate-200 text-xs text-slate-700">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Minnesota Coalition for Battered Women &amp; Violence Free MN</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Hennepin County Immigrant Domestic Violence Taskforce</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>Bilingual advocacy training for community ambassadors</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* 3. Original Video Preservation: Founder Interview */}
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2 border-b border-slate-200 pb-3">

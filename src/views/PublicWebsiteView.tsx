@@ -271,16 +271,19 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
             <div className="lg:col-span-5">
               <div className="bg-white rounded-2xl border border-teal-200/90 shadow-xl overflow-hidden relative space-y-4">
                 {/* Community Gathering Hero Image */}
-                <div className="relative aspect-[16/10] bg-slate-100 overflow-hidden border-b border-teal-100">
-                  <SafeImage
-                    src="/images/homepage/community-hero.svg"
-                    fallbackSrc="/media/homepage/community-hero-healing.svg"
-                    fallbackType="hero"
-                    alt="Authentic community sisterhood gathering at Phumulani Community Center"
-                    className="w-full h-full object-cover"
-                    loading="eager"
-                  />
-                  <div className="absolute bottom-2.5 left-2.5 bg-slate-900/80 backdrop-blur-xs text-white px-3 py-1 rounded-full text-[10px] font-bold border border-white/20 flex items-center gap-1.5">
+                <div className="relative aspect-[16/10] bg-slate-100 overflow-hidden border-b border-teal-100 group">
+                  <picture>
+                    <source media="(min-width: 1024px)" srcSet="/media/phumulani/home/hero-desktop.jpg" />
+                    <SafeImage
+                      src="/media/phumulani/home/hero.jpg"
+                      fallbackSrc="/images/homepage/community-hero.svg"
+                      fallbackType="hero"
+                      alt="Joyful African mother in teal and purple patterned wrap holding two smiling children in a sunny Minnesota park with Minneapolis skyline in background"
+                      className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+                      loading="eager"
+                    />
+                  </picture>
+                  <div className="absolute bottom-2.5 left-2.5 bg-slate-900/85 backdrop-blur-xs text-white px-3 py-1 rounded-full text-[10px] font-bold border border-white/20 flex items-center gap-1.5 shadow-sm">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                     <span>Culturally Grounded Sanctuary</span>
                   </div>
@@ -384,16 +387,43 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {programs.map((prog) => {
-            const programIllustrations: Record<string, string> = {
-              advocacy: '/images/programs/legal-protection-advocacy.svg',
-              workforce: '/images/programs/education-workforce.svg',
-              financial_literacy: '/images/programs/economic-empowerment.svg',
-              mentorship: '/images/programs/youth-mentorship.svg',
-              housing: '/images/programs/healing-homes-housing.svg',
-              entrepreneurship: '/images/programs/economic-empowerment.svg',
+            const programPhotos: Record<string, { src: string; fallback: string; alt: string }> = {
+              advocacy: {
+                src: '/media/phumulani/programs/safety-protection.jpg',
+                fallback: '/images/programs/legal-protection-advocacy.svg',
+                alt: 'Culturally grounded tea healing circle and trauma-informed survivor advocacy in Minnesota',
+              },
+              housing: {
+                src: '/media/phumulani/programs/housing-stability.jpg',
+                fallback: '/images/programs/healing-homes-housing.svg',
+                alt: 'Joyful immigrant mother and daughter arriving at their new safe Minnesota apartment home',
+              },
+              financial_literacy: {
+                src: '/media/phumulani/programs/economic-empowerment.jpg',
+                fallback: '/images/programs/economic-empowerment.svg',
+                alt: 'African immigrant women collaborating on financial planning and entrepreneurship with mentor',
+              },
+              workforce: {
+                src: '/media/phumulani/programs/education-workforce.jpg',
+                fallback: '/images/programs/education-workforce.svg',
+                alt: 'African immigrant woman completing career workforce skills training in computer lab',
+              },
+              mentorship: {
+                src: '/media/phumulani/programs/youth-mentorship.jpg',
+                fallback: '/images/programs/youth-mentorship.svg',
+                alt: 'Young African immigrant girls engaged in uplifting youth mentorship and sisterhood',
+              },
+              entrepreneurship: {
+                src: '/media/phumulani/programs/economic-empowerment.jpg',
+                fallback: '/images/programs/economic-empowerment.svg',
+                alt: 'Immigrant women entrepreneurship lab and small business launch coaching in Minneapolis',
+              },
             };
-            const imageSrc = programIllustrations[prog.slug] || '/images/programs/community-wellness.svg';
-            const legacyFallback = `/media/programs/${prog.slug === 'advocacy' ? 'legal-protection-advocacy' : prog.slug === 'workforce' ? 'workforce-resume-coaching' : 'tea-healing-circles'}.svg`;
+            const progMedia = programPhotos[prog.slug] || {
+              src: '/media/phumulani/programs/safety-protection.jpg',
+              fallback: '/images/programs/community-wellness.svg',
+              alt: prog.name,
+            };
 
             return (
               <div
@@ -403,11 +433,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 {/* Authentic Program Artwork */}
                 <div className="aspect-[4/3] w-full bg-slate-100 overflow-hidden border-b border-slate-100">
                   <SafeImage
-                    src={imageSrc}
-                    fallbackSrc={legacyFallback}
+                    src={progMedia.src}
+                    fallbackSrc={progMedia.fallback}
                     fallbackType="program"
                     fallbackText={prog.name}
-                    alt={prog.name}
+                    alt={progMedia.alt}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
                   />
@@ -524,6 +554,28 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
             </div>
 
             <div className="lg:col-span-7 space-y-6">
+              {/* Community Solidarity Hero Visual */}
+              <div className="relative rounded-2xl overflow-hidden border border-teal-200/90 shadow-md aspect-[16/9] group">
+                <SafeImage
+                  src="/media/phumulani/about/community-solidarity.jpg"
+                  fallbackSrc="/images/homepage/community-hero.svg"
+                  fallbackType="hero"
+                  alt="Multi-generational African immigrant women standing together in unified solidarity by a Minnesota lake"
+                  className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/20 to-transparent flex items-end p-5">
+                  <div>
+                    <span className="text-amber-300 font-bold text-[11px] uppercase tracking-wider">
+                      Sisterhood &amp; Shared Strength
+                    </span>
+                    <h3 className="font-serif text-white text-lg sm:text-xl font-bold mt-0.5">
+                      Rooted in Heritage. Unified in Healing.
+                    </h3>
+                  </div>
+                </div>
+              </div>
+
               <div className="text-xs font-bold text-[#104F57] uppercase tracking-wider">
                 Organizational Heritage
               </div>
@@ -634,6 +686,36 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
           </button>
         </div>
 
+        {/* Featured Volunteer Action Banner */}
+        <div className="mb-8 rounded-2xl overflow-hidden border border-teal-200/90 shadow-sm bg-gradient-to-r from-teal-950 via-[#104F57] to-[#1a5b64] text-white grid grid-cols-1 lg:grid-cols-12 items-center">
+          <div className="lg:col-span-7 relative aspect-[16/9] lg:aspect-auto lg:h-full bg-slate-900 overflow-hidden">
+            <SafeImage
+              src="/media/phumulani/get-involved/volunteers.jpg"
+              fallbackSrc="/images/volunteers/volunteer-engagement.svg"
+              fallbackType="volunteer"
+              alt="Diverse community volunteers joyfully collaborating and packing care kits at Phumulani Community Center"
+              className="w-full h-full object-cover min-h-[260px]"
+              loading="lazy"
+            />
+          </div>
+          <div className="lg:col-span-5 p-6 sm:p-8 space-y-3">
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-amber-300 uppercase tracking-wider">
+              <Users className="w-4 h-4 text-amber-300" />
+              <span>Community In Action</span>
+            </div>
+            <h3 className="font-serif text-2xl font-bold text-white">
+              Every Hour Contributed Creates Safety
+            </h3>
+            <p className="text-xs sm:text-sm text-teal-100/90 leading-relaxed">
+              Our volunteers package dignity kits, accompany survivors to court appointments, mentor youth, and host bilingual conversation circles. Join over 120 active volunteers across the Twin Cities.
+            </p>
+            <div className="pt-2 text-xs text-amber-300 font-semibold flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4" />
+              <span>Orientation &amp; trauma-informed training provided</span>
+            </div>
+          </div>
+        </div>
+
         {submittedAppId && (
           <div className="mb-6 p-4 bg-emerald-50 border border-emerald-200 rounded-xl flex items-center justify-between text-xs text-emerald-900">
             <div className="flex items-center gap-2">
@@ -718,6 +800,24 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               <p className="text-sm text-slate-300 leading-relaxed">
                 100% of community contributions go directly to survivor safety funds, security deposits, workforce training, and educational mentorship. All gifts are processed through verified banking gateways with immediate tax receipts.
               </p>
+
+              {/* Community Celebration & Gratitude Visual */}
+              <div className="relative rounded-xl overflow-hidden border border-slate-700 shadow-md aspect-[16/9] group">
+                <SafeImage
+                  src="/media/phumulani/donations/impact-gathering.jpg"
+                  fallbackSrc="/images/events/community-celebration.svg"
+                  fallbackType="event"
+                  alt="Warm community celebration banquet in deep teal and gold candlelight celebrating survivor resilience"
+                  className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent flex items-end p-4">
+                  <div className="text-xs">
+                    <span className="text-amber-400 font-bold uppercase tracking-wider text-[10px]">Your Impact In Action</span>
+                    <div className="font-serif text-white font-bold text-sm sm:text-base">Families Rebuilding with Dignity &amp; Joy</div>
+                  </div>
+                </div>
+              </div>
 
               {/* Active Campaigns List */}
               <div className="space-y-4 pt-2">
@@ -933,16 +1033,25 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {events.map((evt) => {
             const isFull = evt.registeredCount >= evt.capacity;
-            const eventIllustrations: Record<string, string> = {
-              'evt-1': '/images/events/career-pathways-showcase.svg',
-              'evt-2': '/images/events/healing-sisterhood-banquet.svg',
-              'evt-3': '/images/events/community-supply-distribution.svg',
+            const eventPhotos: Record<string, { src: string; fallback: string }> = {
+              'evt-1': {
+                src: '/media/phumulani/programs/education-workforce.jpg',
+                fallback: '/images/events/career-pathways-showcase.svg',
+              },
+              'evt-2': {
+                src: '/media/phumulani/events/annual-gala.jpg',
+                fallback: '/images/events/healing-sisterhood-banquet.svg',
+              },
+              'evt-3': {
+                src: '/media/phumulani/get-involved/volunteers.jpg',
+                fallback: '/images/events/community-supply-distribution.svg',
+              },
             };
-            const eventImg =
-              eventIllustrations[evt.id] ||
-              (evt.category === 'Workforce'
-                ? '/images/events/career-pathways-showcase.svg'
-                : '/images/events/community-celebration.svg');
+            const eventImgConfig =
+              eventPhotos[evt.id] || {
+                src: '/media/phumulani/events/annual-gala.jpg',
+                fallback: '/images/events/community-celebration.svg',
+              };
 
             return (
               <div
@@ -951,8 +1060,8 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               >
                 <div className="aspect-[16/9] w-full bg-slate-100 overflow-hidden border-b border-slate-100">
                   <SafeImage
-                    src={eventImg}
-                    fallbackSrc="/media/events/healing-sisterhood-banquet.svg"
+                    src={eventImgConfig.src}
+                    fallbackSrc={eventImgConfig.fallback}
                     fallbackType="event"
                     fallbackText={evt.title}
                     alt={evt.title}
@@ -1521,6 +1630,24 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                     <div className="text-slate-600">General Outreach: <code>info@phumulani.org</code></div>
                     <div className="text-slate-600">Donations &amp; Grants: <code>donations@phumulani.org</code></div>
                     <div className="text-slate-600">Confidential Safeguarding: <code>safeguarding@phumulani.org</code></div>
+                  </div>
+                </div>
+
+                {/* Peaceful Lake Sanctuary Visual */}
+                <div className="relative rounded-2xl overflow-hidden border border-teal-200/90 shadow-2xs aspect-[16/9] group">
+                  <SafeImage
+                    src="/media/phumulani/contact/lake-haven.jpg"
+                    fallbackSrc="/images/homepage/community-hero.svg"
+                    fallbackType="generic"
+                    alt="Tranquil Minnesota lake sanctuary at dawn with lavender reflections, representing peace, rest, and hope"
+                    className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/20 to-transparent flex items-end p-4">
+                    <div className="text-white text-xs">
+                      <span className="text-amber-300 font-bold uppercase tracking-wider text-[10px]">A Place of Rest</span>
+                      <div className="font-serif font-bold text-sm">Phumulani — Rooted in Peace &amp; Sisterhood</div>
+                    </div>
                   </div>
                 </div>
               </div>
