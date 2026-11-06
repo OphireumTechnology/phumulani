@@ -28,6 +28,7 @@ import {
 
 import { NotificationCenterModal } from './NotificationCenterModal';
 import { operationalEventService } from '../services/operationalEventService';
+import { PhumulaniLogo } from './branding/PhumulaniLogo';
 
 export interface PortalNavItem {
   id: string;
@@ -248,17 +249,20 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
           {/* Sidebar Top: Portal Identity */}
           <div className="p-4 border-b border-slate-100">
             {!isSidebarCollapsed ? (
-              <div>
-                <div className="font-serif font-bold text-sm text-[#104F57] leading-tight">
-                  {portalTitle}
-                </div>
-                <div className="text-[10px] text-slate-400 font-medium truncate mt-0.5">
-                  {portalSubtitle}
+              <div className="flex items-start gap-2.5">
+                <PhumulaniLogo variant="mark" size={32} className="shrink-0 mt-0.5" />
+                <div className="min-w-0 flex-1">
+                  <div className="font-heading font-bold text-sm text-[#006D6F] leading-tight truncate">
+                    {portalTitle}
+                  </div>
+                  <div className="text-[10px] text-slate-500 font-sans truncate mt-0.5">
+                    {portalSubtitle}
+                  </div>
                 </div>
               </div>
             ) : (
-              <div className="w-8 h-8 rounded-lg bg-[#104F57] text-white flex items-center justify-center font-serif text-sm font-bold mx-auto">
-                P
+              <div className="flex justify-center" title={portalTitle}>
+                <PhumulaniLogo variant="mark" size={32} />
               </div>
             )}
           </div>
@@ -342,12 +346,15 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
             />
             <div className="relative w-72 bg-white h-full shadow-2xl flex flex-col z-10">
               <div className="p-4 border-b border-slate-100 flex items-center justify-between">
-                <div>
-                  <div className="font-serif font-bold text-sm text-[#104F57]">
-                    {portalTitle}
-                  </div>
-                  <div className="text-[10px] text-slate-400">
-                    {currentUser.name} ({currentUser.role})
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <PhumulaniLogo variant="mark" size={28} className="shrink-0" />
+                  <div className="min-w-0">
+                    <div className="font-heading font-bold text-sm text-[#006D6F] truncate">
+                      {portalTitle}
+                    </div>
+                    <div className="text-[10px] text-slate-500 font-sans truncate">
+                      {currentUser.name} ({currentUser.role})
+                    </div>
                   </div>
                 </div>
                 <button

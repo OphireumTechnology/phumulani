@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 40" width="100%" height="40" preserveAspectRatio="none">
+  <defs>
+    <pattern id="africanMosaic" width="80" height="40" patternUnits="userSpaceOnUse">
+      <!-- Background Cream Base -->
+      <rect width="80" height="40" fill="#FFF7E6" />
+      
+      <!-- Top/Bottom Teal Border Accents -->
+      <rect x="0" y="0" width="80" height="2" fill="#006D6F" />
+      <rect x="0" y="38" width="80" height="2" fill="#006D6F" />
+
+      <!-- Diamond Mosaic Unit 1 (0 to 40) -->
+      <!-- Outer Orange Diamond -->
+      <polygon points="20,3 37,20 20,37 3,20" fill="#F05A28" />
+      <!-- Middle Gold Diamond -->
+      <polygon points="20,7 33,20 20,33 7,20" fill="#F4B400" />
+      <!-- Inner Teal Diamond -->
+      <polygon points="20,11 29,20 20,29 11,20" fill="#006D6F" />
+      <!-- Center Cream Core -->
+      <circle cx="20" cy="20" r="3.5" fill="#FFF7E6" />
+
+      <!-- Side Triangle Chevrons Left (Hope Green) -->
+      <polygon points="0,3 8,11 0,19" fill="#7A9B29" />
+      <polygon points="0,21 8,29 0,37" fill="#C62828" />
+
+      <!-- Side Triangle Chevrons Right (Heritage Red & Green) -->
+      <polygon points="40,3 32,11 40,19" fill="#C62828" />
+      <polygon points="40,21 32,29 40,37" fill="#7A9B29" />
+
+      <!-- Top & Bottom Accent Chevrons -->
+      <polygon points="12,0 20,6 28,0" fill="#006D6F" />
+      <polygon points="12,40 20,34 28,40" fill="#006D6F" />
+
+      <!-- Diamond Mosaic Unit 2 (40 to 80) -->
+      <!-- Outer Teal Diamond -->
+      <polygon points="60,3 77,20 60,37 43,20" fill="#006D6F" />
+      <!-- Middle Orange Diamond -->
+      <polygon points="60,7 73,20 60,33 47,20" fill="#F05A28" />
+      <!-- Inner Gold Diamond -->
+      <polygon points="60,11 69,20 60,29 51,20" fill="#F4B400" />
+      <!-- Center Green Core -->
+      <circle cx="60" cy="20" r="3.5" fill="#7A9B29" />
+
+      <!-- Chevrons Left (Orange / Green) -->
+      <polygon points="40,3 48,11 40,19" fill="#F05A28" />
+      <polygon points="40,21 48,29 40,37" fill="#F4B400" />
+
+      <!-- Chevrons Right (Gold / Orange) -->
+      <polygon points="80,3 72,11 80,19" fill="#F4B400" />
+      <polygon points="80,21 72,29 80,37" fill="#F05A28" />
+
+      <!-- Top & Bottom Accents -->
+      <polygon points="52,0 60,6 68,0" fill="#C62828" />
+      <polygon points="52,40 60,34 68,40" fill="#C62828" />
+    </pattern>
+  </defs>
+  <rect width="100%" height="40" fill="url(#africanMosaic)" />
+</svg>

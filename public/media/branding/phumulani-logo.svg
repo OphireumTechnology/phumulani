@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#104F57" />
+      <stop offset="100%" stop-color="#082b30" />
+    </linearGradient>
+    <linearGradient id="sunGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" stop-color="#D67C35" />
+      <stop offset="100%" stop-color="#F9A825" />
+    </linearGradient>
+    <linearGradient id="embraceGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F3EAF4" />
+      <stop offset="100%" stop-color="#FFFFFF" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <!-- Circular Base Badge -->
+  <circle cx="256" cy="256" r="240" fill="url(#bgGrad)" />
+  <circle cx="256" cy="256" r="232" fill="none" stroke="#D67C35" stroke-width="3" stroke-dasharray="8 6" opacity="0.6" />
+
+  <!-- Radiating Dawn of Hope / Rest -->
+  <g opacity="0.18">
+    <path d="M256 70 L256 120" stroke="#F9A825" stroke-width="6" stroke-linecap="round" />
+    <path d="M125 125 L160 160" stroke="#F9A825" stroke-width="6" stroke-linecap="round" />
+    <path d="M70 256 L120 256" stroke="#F9A825" stroke-width="6" stroke-linecap="round" />
+    <path d="M387 125 L352 160" stroke="#F9A825" stroke-width="6" stroke-linecap="round" />
+    <path d="M442 256 L392 256" stroke="#F9A825" stroke-width="6" stroke-linecap="round" />
+  </g>
+
+  <!-- Rising Sun of Healing (Phumulani - Peace and Rest) -->
+  <circle cx="256" cy="210" r="85" fill="url(#sunGrad)" filter="url(#shadow)" />
+
+  <!-- Embracing Sisterhood & Protective Sanctuary Silhouette -->
+  <!-- Center Woman Figure (Healing & Dignity) -->
+  <circle cx="256" cy="180" r="26" fill="url(#embraceGrad)" />
+  <!-- Side Figures Embraced -->
+  <circle cx="205" cy="205" r="20" fill="#E8F3F1" opacity="0.95" />
+  <circle cx="307" cy="205" r="20" fill="#E8F3F1" opacity="0.95" />
+
+  <!-- Embracing Arms & Flowing Protective Robes / Wings of Sanctuary -->
+  <path d="M165 340 C175 260 215 240 256 240 C297 240 337 260 347 340 C310 365 200 365 165 340 Z" fill="#FFFFFF" />
+  <path d="M150 330 C160 250 190 240 225 248 C195 285 180 325 165 350 C155 345 152 338 150 330 Z" fill="#F3EAF4" />
+  <path d="M362 330 C352 250 322 240 287 248 C317 285 332 325 347 350 C357 345 360 338 362 330 Z" fill="#F3EAF4" />
+
+  <!-- Safe Harbor Wave of Restoration -->
+  <path d="M110 380 C180 340 332 340 402 380 C360 410 152 410 110 380 Z" fill="#D67C35" opacity="0.9" />
+
+  <!-- Text Arc: PHUMULANI -->
+  <text x="256" y="445" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="800" font-size="28" fill="#FFFFFF" letter-spacing="4" text-anchor="middle">
+    PHUMULANI
+  </text>
+  <text x="256" y="475" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="600" font-size="13" fill="#E8F3F1" letter-spacing="2" text-anchor="middle" opacity="0.9">
+    REST · HEALING · AUTONOMY
+  </text>
+</svg>

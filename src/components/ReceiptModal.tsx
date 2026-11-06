@@ -7,6 +7,8 @@
 import React from 'react';
 import { Donation } from '../types';
 import { X, Printer, CheckCircle2, ShieldCheck, Download } from 'lucide-react';
+import { PhumulaniLogo } from './branding/PhumulaniLogo';
+import { BrandPatternDivider } from './branding/BrandPatternDivider';
 
 interface ReceiptModalProps {
   donation: Donation | null;
@@ -24,10 +26,10 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ donation, onClose })
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl max-w-xl w-full border border-slate-200 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Actions Bar */}
-        <div className="bg-slate-100 p-3 flex items-center justify-between border-b border-slate-200 no-print">
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-700">
-            <ShieldCheck className="w-4 h-4 text-[#104F57]" />
-            <span>Verified 501(c)(3) Tax Receipt #{donation.receiptNumber}</span>
+        <div className="bg-[#FFF7E6] p-3 flex items-center justify-between border-b border-amber-200/70 no-print">
+          <div className="flex items-center gap-2 text-xs font-semibold text-[#006D6F]">
+            <ShieldCheck className="w-4 h-4 text-[#006D6F]" />
+            <span className="font-heading">Verified 501(c)(3) Tax Receipt #{donation.receiptNumber}</span>
           </div>
           <div className="flex items-center gap-2">
             <button
@@ -51,7 +53,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ donation, onClose })
           {/* Header */}
           <div className="flex justify-between items-start border-b border-slate-200 pb-6">
             <div>
-              <div className="font-serif text-2xl font-bold text-[#104F57]">PHUMULANI</div>
+              <PhumulaniLogo variant="full" className="h-10 w-auto mb-2" />
               <div className="text-xs text-slate-500 mt-1">
                 A 501(c)(3) Non-Profit Public Charity Organization<br />
                 EIN: 82-4190823 · Minnesota, USA<br />
@@ -59,9 +61,9 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ donation, onClose })
               </div>
             </div>
             <div className="text-right">
-              <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-md">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                <span>TAX-DEDUCTIBLE GIFT</span>
+              <span className="inline-flex items-center gap-1 text-xs font-semibold text-[#006D6F] bg-teal-50 border border-teal-200 px-2.5 py-1 rounded-md">
+                <CheckCircle2 className="w-3.5 h-3.5 text-[#7A9B29]" />
+                <span className="font-heading">TAX-DEDUCTIBLE GIFT</span>
               </span>
               <div className="text-xs text-slate-500 mt-2">
                 Receipt Date: {new Date(donation.createdAt).toLocaleDateString()}
@@ -91,7 +93,7 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ donation, onClose })
             </div>
             <div className="flex justify-between py-1 border-b border-slate-200">
               <span className="text-slate-500">Designated Campaign:</span>
-              <span className="font-medium text-[#104F57]">{donation.campaignTitle}</span>
+              <span className="font-medium text-[#006D6F]">{donation.campaignTitle}</span>
             </div>
             <div className="flex justify-between py-1 border-b border-slate-200">
               <span className="text-slate-500">Payment Method:</span>
@@ -102,8 +104,8 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ donation, onClose })
               <span className="capitalize text-slate-800">{donation.frequency.replace('_', ' ')}</span>
             </div>
             <div className="flex justify-between items-center pt-2">
-              <span className="text-sm font-bold text-slate-800">Total Gift Amount:</span>
-              <span className="text-xl font-bold text-[#104F57]">${donation.amount.toLocaleString()}.00 USD</span>
+              <span className="text-sm font-bold text-slate-800 font-heading">Total Gift Amount:</span>
+              <span className="text-xl font-extrabold text-[#006D6F] font-heading">${donation.amount.toLocaleString()}.00 USD</span>
             </div>
           </div>
 

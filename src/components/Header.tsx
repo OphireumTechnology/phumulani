@@ -7,6 +7,8 @@
 import React, { useState, useEffect } from 'react';
 import { User } from '../types';
 import { SafeImage } from './SafeImage';
+import { PhumulaniLogo } from './branding/PhumulaniLogo';
+import { BrandPatternDivider } from './branding/BrandPatternDivider';
 import {
   ShieldAlert,
   Globe,
@@ -139,11 +141,11 @@ export const Header: React.FC<HeaderProps> = ({
           LEVEL 2: SAFETY & ACCESSIBILITY BAR
           Compact, non-overlapping, with prominent Safe Exit
           ======================================================== */}
-      <div className="bg-[#104F57] text-white py-1.5 px-4 text-xs max-w-full overflow-hidden">
+      <div className="bg-[#006D6F] text-white py-1.5 px-4 text-xs max-w-full overflow-hidden">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-1 sm:gap-4 min-w-0">
           <div className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
             <ShieldAlert className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-            <span className="text-[11px] text-slate-100 truncate">
+            <span className="text-[11px] text-teal-50 truncate font-lato">
               For your safety: Use <strong>Safe Exit</strong> or press <kbd className="bg-teal-900 px-1 py-0.2 rounded text-[10px] border border-teal-700">ESC</kbd> twice.
             </span>
           </div>
@@ -173,7 +175,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Quick Safe Exit Button */}
             <button
               onClick={handleSafeExit}
-              className="bg-rose-700 hover:bg-rose-800 text-white font-bold px-2.5 py-0.5 rounded text-[11px] transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
+              className="bg-rose-700 hover:bg-rose-800 text-white font-bold px-2.5 py-0.5 rounded text-[11px] transition-colors flex items-center gap-1 shadow-xs cursor-pointer font-heading"
               title="Instant safe exit to Weather.com (replaces browser history)"
             >
               <span>SAFE EXIT</span>
@@ -183,6 +185,9 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
       </div>
 
+      {/* African Geometric Mosaic Pattern Accent Ribbon */}
+      <BrandPatternDivider height={4} />
+
       {/* ========================================================
           LEVEL 3: MAIN WEBSITE NAVIGATION
           Height: 76px, Max-width: 1280px (max-w-7xl)
@@ -190,77 +195,68 @@ export const Header: React.FC<HeaderProps> = ({
           ======================================================== */}
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between gap-1 sm:gap-3 h-19 min-w-0">
-          {/* LEFT: Official Phumulani Logo */}
+          {/* LEFT: Official Phumulani Mosaic USA Logo */}
           <button
             onClick={() => {
               onViewChange('public');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="flex items-center gap-1 sm:gap-3 min-w-0 text-left group cursor-pointer focus-visible:outline-2 focus-visible:outline-[#104F57]"
+            className="flex items-center gap-1 sm:gap-2 min-w-0 text-left group cursor-pointer focus-visible:outline-2 focus-visible:outline-[#006D6F] py-1"
+            aria-label="Phumulani Home"
           >
-            <SafeImage
-              src="/images/branding/phumulani-logo.svg"
-              fallbackSrc="/media/branding/phumulani-logo-primary.svg"
-              fallbackType="logo"
-              alt="Phumulani Organization Logo"
-              className="w-8 h-8 sm:w-10 sm:h-10 object-contain rounded-lg shadow-xs group-hover:scale-105 transition-transform shrink-0"
+            <PhumulaniLogo
+              variant="full"
+              className="h-10 sm:h-12 w-auto max-w-[190px] min-[400px]:max-w-[230px] sm:max-w-[280px] object-contain transition-transform group-hover:scale-[1.02]"
+              alt="Phumulani — The voice of immigrants and refugees in America"
             />
-            <div>
-              <div className="font-serif text-sm min-[360px]:text-base sm:text-xl font-bold text-[#104F57] tracking-tight group-hover:text-[#633C69] transition-colors leading-none">
-                PHUMULANI
-              </div>
-              <div className="text-[10px] tracking-wider uppercase text-slate-500 font-semibold mt-1 hidden sm:block">
-                MN African Women Against Violence
-              </div>
-            </div>
           </button>
 
           {/* CENTER: Main Website Navigation (Desktop) */}
-          <nav className="hidden lg:flex items-center gap-5 text-[13px] font-semibold text-slate-700">
+          <nav className="hidden lg:flex items-center gap-5 text-[13px] font-semibold text-slate-700 font-heading">
             <button
               onClick={() => {
                 onViewChange('public');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className={`hover:text-[#104F57] transition-colors cursor-pointer pb-0.5 ${
-                activeView === 'public' ? 'text-[#104F57] border-b-2 border-[#104F57]' : ''
+              className={`hover:text-[#006D6F] transition-colors cursor-pointer pb-0.5 ${
+                activeView === 'public' ? 'text-[#006D6F] border-b-2 border-[#006D6F]' : ''
               }`}
             >
               Home
             </button>
             <button
               onClick={() => navigateToSection('founder-section')}
-              className="hover:text-[#104F57] text-[#633C69] font-bold transition-colors cursor-pointer"
+              className="hover:text-[#006D6F] text-[#F05A28] font-bold transition-colors cursor-pointer"
             >
               Founder &amp; Legacy
             </button>
             <button
               onClick={() => navigateToSection('programs-section')}
-              className="hover:text-[#104F57] transition-colors cursor-pointer"
+              className="hover:text-[#006D6F] transition-colors cursor-pointer"
             >
               Programs
             </button>
             <button
               onClick={() => navigateToSection('get-involved-section')}
-              className="hover:text-[#104F57] transition-colors cursor-pointer"
+              className="hover:text-[#006D6F] transition-colors cursor-pointer"
             >
               Get Involved
             </button>
             <button
               onClick={() => navigateToSection('about-section')}
-              className="hover:text-[#104F57] transition-colors cursor-pointer"
+              className="hover:text-[#006D6F] transition-colors cursor-pointer"
             >
               About
             </button>
             <button
               onClick={() => navigateToSection('events-section')}
-              className="hover:text-[#104F57] transition-colors cursor-pointer"
+              className="hover:text-[#006D6F] transition-colors cursor-pointer"
             >
               Events
             </button>
             <button
               onClick={() => navigateToSection('contact-section')}
-              className="hover:text-[#104F57] transition-colors cursor-pointer"
+              className="hover:text-[#006D6F] transition-colors cursor-pointer"
             >
               Contact
             </button>
@@ -271,7 +267,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Get Help Accent Button */}
             <button
               onClick={() => navigateToSection('get-help-section')}
-              className="flex items-center gap-1 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 px-1.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer"
+              className="flex items-center gap-1 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200 px-1.5 sm:px-3 py-1.5 sm:py-2 rounded-lg text-xs font-bold transition-colors cursor-pointer font-heading"
               title="Discreet support routing & emergency help"
               aria-label="Get Help"
             >
@@ -279,10 +275,10 @@ export const Header: React.FC<HeaderProps> = ({
               <span className="hidden xs:inline">Get Help</span>
             </button>
 
-            {/* Donate CTA Button */}
+            {/* Donate CTA Button in Ubuntu Orange */}
             <button
               onClick={() => navigateToSection('donate-section')}
-              className="flex items-center gap-1 bg-[#D67C35] hover:bg-[#c26d2c] text-white px-1.5 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs font-bold shadow-xs transition-colors cursor-pointer"
+              className="flex items-center gap-1 bg-[#F05A28] hover:bg-[#d94819] text-white px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs font-bold shadow-xs transition-colors cursor-pointer font-heading tracking-wide"
               aria-label="Donate"
             >
               <Heart className="w-3.5 h-3.5 fill-white/20" />
