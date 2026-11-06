@@ -213,10 +213,10 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
   };
 
   return (
-    <div className="space-y-16 pb-20 font-sans">
+    <div className="space-y-16 pb-20 font-sans min-w-0 overflow-x-clip">
       {/* 1. HERO BANNER - OFFICIAL BRAND IDENTITY GUIDELINES */}
       <section className="bg-gradient-to-b from-[#FFF7E6] via-white to-[#FFF7E6]/40 pt-8 sm:pt-12 pb-14 sm:pb-18 border-b border-teal-100/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-w-0">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* LEFT COLUMN: Mission & Headline (~58%) */}
             <div className="lg:col-span-7 space-y-6">
