@@ -194,25 +194,25 @@ export const Header: React.FC<HeaderProps> = ({
           Left: Logo | Center: Navigation | Right: Actions
           ======================================================== */}
       <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between gap-1 sm:gap-3 h-19 min-w-0">
+        <div className="flex items-center justify-between gap-1 sm:gap-3 h-19 min-w-0 w-full">
           {/* LEFT: Official Phumulani Mosaic USA Logo */}
           <button
             onClick={() => {
               onViewChange('public');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="flex items-center gap-1 sm:gap-2 min-w-0 flex-1 lg:flex-none text-left group cursor-pointer focus-visible:outline-2 focus-visible:outline-[#006D6F] py-1"
+            className="flex items-center gap-1 sm:gap-2 min-w-0 flex-1 xl:flex-none text-left group cursor-pointer focus-visible:outline-2 focus-visible:outline-[#006D6F] py-1"
             aria-label="Phumulani Home"
           >
             <PhumulaniLogo
               variant="full"
-              className="h-10 sm:h-12 w-auto max-w-full min-w-0 max-w-[150px] min-[400px]:max-w-[190px] sm:max-w-[230px] lg:max-w-[280px] object-contain transition-transform group-hover:scale-[1.02]"
+              className="h-10 sm:h-12 w-auto max-w-full min-w-0 max-w-[120px] min-[400px]:max-w-[170px] sm:max-w-[230px] xl:max-w-[210px] 2xl:max-w-[260px] object-contain transition-transform group-hover:scale-[1.02]"
               alt="Phumulani — The voice of immigrants and refugees in America"
             />
           </button>
 
           {/* CENTER: Main Website Navigation (Desktop) */}
-          <nav className="hidden lg:flex items-center gap-5 text-[13px] font-semibold text-slate-700 font-heading">
+          <nav className="hidden xl:flex items-center gap-3 2xl:gap-5 text-[12px] 2xl:text-[13px] font-semibold text-slate-700 font-heading whitespace-nowrap">
             <button
               onClick={() => {
                 onViewChange('public');
@@ -350,7 +350,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Mobile Drawer Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-1.5 sm:p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100"
+              className="xl:hidden p-1.5 sm:p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100"
               aria-label="Toggle Navigation Menu"
               aria-expanded={mobileMenuOpen}
               aria-controls="public-mobile-navigation"
@@ -363,7 +363,7 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* MOBILE DRAWER */}
       {mobileMenuOpen && (
-        <nav id="public-mobile-navigation" aria-label="Mobile website and portal navigation" className="lg:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-4 shadow-xl">
+        <nav id="public-mobile-navigation" aria-label="Mobile website and portal navigation" className="xl:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-4 shadow-xl">
           <div className="font-bold text-xs text-slate-400 uppercase tracking-wider">
             Main Navigation
           </div>
