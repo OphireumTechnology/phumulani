@@ -201,12 +201,12 @@ export const Header: React.FC<HeaderProps> = ({
               onViewChange('public');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="flex items-center gap-1 sm:gap-2 min-w-0 text-left group cursor-pointer focus-visible:outline-2 focus-visible:outline-[#006D6F] py-1"
+            className="flex items-center gap-1 sm:gap-2 min-w-0 flex-1 lg:flex-none text-left group cursor-pointer focus-visible:outline-2 focus-visible:outline-[#006D6F] py-1"
             aria-label="Phumulani Home"
           >
             <PhumulaniLogo
               variant="full"
-              className="h-10 sm:h-12 w-auto max-w-[190px] min-[400px]:max-w-[230px] sm:max-w-[280px] object-contain transition-transform group-hover:scale-[1.02]"
+              className="h-10 sm:h-12 w-auto max-w-full min-w-0 max-w-[150px] min-[400px]:max-w-[190px] sm:max-w-[230px] lg:max-w-[280px] object-contain transition-transform group-hover:scale-[1.02]"
               alt="Phumulani — The voice of immigrants and refugees in America"
             />
           </button>
