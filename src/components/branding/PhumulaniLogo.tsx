@@ -32,6 +32,7 @@ export const PhumulaniLogo: React.FC<PhumulaniLogoProps> = ({
   alt = 'Phumulani — The voice of immigrants and refugees in America',
   onClick,
 }) => {
+  const [useFallback, setUseFallback] = useState(false);
   const [hasError, setHasError] = useState(false);
   const effectiveHeight = height ?? size;
   const effectiveWidth = width ?? (variant === 'mark' ? size : undefined);
@@ -80,11 +81,11 @@ export const PhumulaniLogo: React.FC<PhumulaniLogoProps> = ({
 
   return (
     <img
-      src={src}
+      src={useFallback ? fallbackSrc : src}
       onError={() => {
-        // Try fallback directory
-        if (src !== fallbackSrc) {
-          src = fallbackSrc;
+        // A local variable change does not update the rendered image source.
+        if (!useFallback) {
+          setUseFallback(true);
         } else {
           setHasError(true);
         }
