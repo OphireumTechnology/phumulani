@@ -17,10 +17,10 @@ export const Footer: React.FC<FooterProps> = ({ onViewChange, onOpenMediaRegistr
       {/* Emergency Hotline Bar */}
       <div className="bg-[#003D3F] text-white py-3 px-4 border-b border-[#003234]">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 font-heading">
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2 min-w-0">
             <Phone className="w-4 h-4 text-[#F4B400]" />
-            <span className="font-semibold text-white">Immediate Domestic Violence Support:</span>
-            <span className="text-teal-100">Minnesota Day One Crisis Line: <strong className="text-white">1-866-223-1111</strong> (Call or Text 24/7)</span>
+            <span className="font-semibold text-white break-words">Immediate Domestic Violence Support:</span>
+            <span className="text-teal-100 min-w-0 break-words">Minnesota Day One Crisis Line: <strong className="text-white">1-866-223-1111</strong> (Call or Text 24/7)</span>
           </div>
           <button
             onClick={() => window.location.replace('https://weather.com')}
@@ -32,7 +32,7 @@ export const Footer: React.FC<FooterProps> = ({ onViewChange, onOpenMediaRegistr
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 min-w-0">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Col 1: Brand & Mission */}
           <div className="space-y-4">

@@ -128,18 +128,18 @@ export const WebsiteConciergeModal: React.FC = () => {
   return (
     <>
       {/* Floating Launcher Button */}
-      <div className="fixed bottom-6 right-6 z-40 no-print">
+      <div className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-40 no-print max-w-[calc(100vw-1.5rem)] translate-x-0">
         {!isOpen && (
           <button
             onClick={() => setIsOpen(true)}
-            className="flex items-center gap-2 bg-[#104F57] hover:bg-[#0c3e44] text-white px-4 py-3 rounded-full shadow-xl hover:shadow-2xl transition-all cursor-pointer group border-2 border-white focus:outline-hidden focus:ring-2 focus:ring-teal-400"
+            className="flex items-center gap-2 max-w-full bg-[#104F57] hover:bg-[#0c3e44] text-white px-2 sm:px-4 py-2.5 sm:py-3 rounded-full shadow-xl hover:shadow-2xl transition-all cursor-pointer group border-2 border-white focus:outline-hidden focus:ring-2 focus:ring-teal-400"
             aria-label="Open Website Concierge"
           >
             <div className="relative">
               <Bot className="w-5 h-5 text-amber-300 group-hover:scale-110 transition-transform" />
               <span className="absolute -top-1 -right-1 w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
             </div>
-            <span className="font-semibold text-xs tracking-wide">Ask Concierge (A10)</span>
+            <span className="font-semibold text-xs tracking-wide hidden min-[400px]:inline">Ask Concierge (A10)</span>
           </button>
         )}
       </div>
@@ -150,7 +150,7 @@ export const WebsiteConciergeModal: React.FC = () => {
           role="dialog"
           aria-labelledby="concierge-dialog-title"
           aria-modal="true"
-          className="fixed bottom-6 right-6 z-50 w-96 max-w-[calc(100vw-2rem)] h-[580px] bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-200 no-print"
+          className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-50 w-96 max-w-[calc(100vw-1.5rem)] h-[580px] bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-200 no-print"
         >
           {/* Header */}
           <div className="bg-[#104F57] text-white p-3.5 flex items-center justify-between">

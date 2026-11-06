@@ -43,19 +43,32 @@ test.describe('M41.11 — Public accessibility and mobile smoke checks', () => {
       const dimensions = await page.evaluate(() => ({
         documentWidth: document.documentElement.scrollWidth,
         viewportWidth: document.documentElement.clientWidth,
+        // Include container widths and minimum-size constraints: document overflow can
+        // occur even when no individual element's rectangle exceeds the viewport.
         overflowingElements: Array.from(document.querySelectorAll('body *'))
-          .filter((element) => {
+          .map((element) => {
             const rect = element.getBoundingClientRect();
             const style = getComputedStyle(element);
-            return style.display !== 'none' && style.visibility !== 'hidden' &&
-              (rect.right > document.documentElement.clientWidth + 1 || rect.left < -1);
+            return { element, rect, style };
           })
-          .slice(0, 12)
-          .map((element) => ({
+          .filter(({ element, rect, style }) => {
+            if (style.display === 'none' || style.visibility === 'hidden') return false;
+            return rect.right > document.documentElement.clientWidth + 1 ||
+              rect.left < -1 ||
+              (element.scrollWidth > element.clientWidth + 1 &&
+                element.scrollWidth >= document.documentElement.scrollWidth - 1 &&
+                style.overflowX !== 'auto' && style.overflowX !== 'scroll');
+          })
+          .slice(0, 20)
+          .map(({ element, rect, style }) => ({
             tag: element.tagName,
             className: typeof element.className === 'string' ? element.className.slice(0, 140) : '',
-            right: Math.round(element.getBoundingClientRect().right),
-            left: Math.round(element.getBoundingClientRect().left),
+            right: Math.round(rect.right),
+            left: Math.round(rect.left),
+            clientWidth: element.clientWidth,
+            scrollWidth: element.scrollWidth,
+            minWidth: style.minWidth,
+            overflowX: style.overflowX,
           })),
       }));
       expect.soft(dimensions.documentWidth, `overflow at ${width}px: ${JSON.stringify(dimensions.overflowingElements)}`)
