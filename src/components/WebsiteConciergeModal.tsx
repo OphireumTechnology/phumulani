@@ -128,7 +128,7 @@ export const WebsiteConciergeModal: React.FC = () => {
   return (
     <>
       {/* Floating Launcher Button */}
-      <div className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-40 no-print max-w-[calc(100vw-1.5rem)]">
+      <div className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-40 no-print max-w-[calc(100vw-1.5rem)] translate-x-0">
         {!isOpen && (
           <button
             onClick={() => setIsOpen(true)}
