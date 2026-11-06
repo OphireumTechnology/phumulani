@@ -220,13 +220,13 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* LEFT COLUMN: Mission & Headline (~58%) */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2.5 text-xs font-semibold text-[#006D6F] bg-white border border-teal-200 px-3.5 py-1.5 rounded-full shadow-2xs">
+              <div className="flex items-center gap-2.5 max-w-full text-xs font-semibold text-[#006D6F] bg-white border border-teal-200 px-3.5 py-1.5 rounded-xl sm:rounded-full shadow-2xs">
                 <PhumulaniLogoMark className="w-4 h-4 shrink-0" />
-                <span className="font-heading tracking-wide uppercase text-[11px]">MINNESOTA 501(C)(3) · THE VOICE OF IMMIGRANTS &amp; REFUGEES</span>
+                <span className="font-heading tracking-wide uppercase text-[10px] sm:text-[11px] leading-snug min-w-0 break-words">MINNESOTA 501(C)(3) · THE VOICE OF IMMIGRANTS &amp; REFUGEES</span>
               </div>
 
               {/* Exact wording with responsive clamp and brand colors */}
-              <h1 className="font-heading font-extrabold text-[#006D6F] tracking-tight leading-[1.08] text-[clamp(2.25rem,4.2vw,4.25rem)] max-w-[1050px] m-0">
+              <h1 className="font-heading font-extrabold text-[#006D6F] tracking-tight leading-[1.08] text-[clamp(1.85rem,4.2vw,4.25rem)] max-w-[1050px] min-w-0 break-words m-0">
                 <span className="block">Empowering Immigrant &amp; Refugee Survivors</span>
                 <span className="block text-[#F05A28] mt-1 sm:mt-2">Toward Healing &amp; Autonomy</span>
               </h1>
