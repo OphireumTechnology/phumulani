@@ -35,7 +35,7 @@ test.describe('M41.11 — Public accessibility and mobile smoke checks', () => {
   });
 
   test('essential homepage content reflows without horizontal overflow', async ({ page }) => {
-    for (const width of [320, 375, 393, 430, 768, 1024]) {
+    for (const width of [320, 375, 390, 393, 430, 768, 1024, 1280, 1440, 1920]) {
       await page.setViewportSize({ width, height: 851 });
       await page.goto('/');
       await expect(page.locator('header')).toBeVisible();
@@ -73,6 +73,48 @@ test.describe('M41.11 — Public accessibility and mobile smoke checks', () => {
       }));
       expect.soft(dimensions.documentWidth, `overflow at ${width}px: ${JSON.stringify(dimensions.overflowingElements)}`)
         .toBeLessThanOrEqual(dimensions.viewportWidth + 1);
+    }
+  });
+
+  test('header logo and hero badge do not overlap and maintain independent geometry', async ({ page }) => {
+    await page.goto('/');
+    const headerLogo = page.locator('header img[alt*="Phumulani"]').first();
+    const heroBadge = page.locator('span:has-text("MINNESOTA 501(C)(3)")').first();
+
+    await expect(headerLogo).toBeVisible();
+    await expect(heroBadge).toBeVisible();
+
+    const logoBox = await headerLogo.boundingBox();
+    const badgeBox = await heroBadge.boundingBox();
+
+    expect(logoBox).not.toBeNull();
+    expect(badgeBox).not.toBeNull();
+
+    if (logoBox && badgeBox) {
+      // Badge must be rendered strictly below the header logo (no negative margin or overlapping collision)
+      expect(badgeBox.y).toBeGreaterThanOrEqual(logoBox.y + logoBox.height - 2);
+    }
+  });
+
+  test('hero heading and right-column cards do not collide or clip', async ({ page }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto('/');
+
+    const heading = page.locator('h1').first();
+    const heroImage = page.locator('img[alt*="Joyful African mother"]').first();
+
+    await expect(heading).toBeVisible();
+    await expect(heroImage).toBeVisible();
+
+    const headingBox = await heading.boundingBox();
+    const imageBox = await heroImage.boundingBox();
+
+    expect(headingBox).not.toBeNull();
+    expect(imageBox).not.toBeNull();
+
+    if (headingBox && imageBox) {
+      // In 2-column desktop layout (1440px), the left column heading right edge should not overlap image left edge
+      expect(headingBox.x + headingBox.width).toBeLessThanOrEqual(imageBox.x + 30);
     }
   });
 

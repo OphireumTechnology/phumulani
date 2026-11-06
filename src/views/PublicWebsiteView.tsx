@@ -43,7 +43,6 @@ import {
 
 import { FounderSection } from '../components/FounderSection';
 import { SafeImage } from '../components/SafeImage';
-import { PhumulaniLogo, PhumulaniLogoMark, PhumulaniLogoFull } from '../components/branding/PhumulaniLogo';
 import { BrandPatternDivider } from '../components/branding/BrandPatternDivider';
 
 interface PublicWebsiteViewProps {
@@ -220,8 +219,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* LEFT COLUMN: Mission & Headline (~58%) */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="flex items-center gap-2.5 max-w-full text-xs font-semibold text-[#006D6F] bg-white border border-teal-200 px-3.5 py-1.5 rounded-xl sm:rounded-full shadow-2xs">
-                <PhumulaniLogoMark className="w-4 h-4 shrink-0" />
+              <div className="inline-flex items-center max-w-full text-xs font-semibold text-[#006D6F] bg-white border border-teal-200 px-3.5 py-1.5 rounded-xl sm:rounded-full shadow-2xs">
                 <span className="font-heading tracking-wide uppercase text-[10px] sm:text-[11px] leading-snug min-w-0 break-words">MINNESOTA 501(C)(3) · THE VOICE OF IMMIGRANTS &amp; REFUGEES</span>
               </div>
 

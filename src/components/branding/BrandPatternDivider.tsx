@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import { getAssetUrl } from '../../utils/assetPath';
 
 export interface BrandPatternDividerProps {
   className?: string;
@@ -20,6 +21,8 @@ export const BrandPatternDivider: React.FC<BrandPatternDividerProps> = ({
 }) => {
   const heightStyle = typeof height === 'number' ? `${height}px` : height;
 
+  const patternUrl = getAssetUrl('images/branding/phumulani-pattern.svg');
+
   if (variant === 'ribbon') {
     return (
       <div
@@ -31,7 +34,7 @@ export const BrandPatternDivider: React.FC<BrandPatternDividerProps> = ({
         <div
           className="w-full h-full african-mosaic-pattern"
           style={{
-            backgroundImage: `url('/images/branding/phumulani-pattern.svg')`,
+            backgroundImage: `url('${patternUrl}')`,
             backgroundRepeat: 'repeat-x',
             backgroundSize: 'auto 100%',
           }}
@@ -50,7 +53,7 @@ export const BrandPatternDivider: React.FC<BrandPatternDividerProps> = ({
       <div
         className="w-full h-full african-mosaic-pattern"
         style={{
-          backgroundImage: `url('/images/branding/phumulani-pattern.svg')`,
+          backgroundImage: `url('${patternUrl}')`,
           backgroundRepeat: 'repeat-x',
           backgroundSize: 'auto 100%',
           opacity: variant === 'subtle' ? 0.75 : 1,

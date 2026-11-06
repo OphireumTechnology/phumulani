@@ -5082,10 +5082,10 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
       {isComposeOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-fadeIn">
-            <div className="bg-[#104F57] text-white px-5 py-3 flex items-center justify-between">
+            <div className="bg-[#006D6F] text-white px-5 py-3 flex items-center justify-between font-heading">
               <div className="flex items-center gap-2">
                 <Send className="w-4 h-4" />
-                <h3 className="font-serif font-bold text-sm">Compose New Enterprise Email</h3>
+                <h3 className="font-bold text-sm">Compose Authorized Email</h3>
               </div>
               <button
                 onClick={() => setIsComposeOpen(false)}
@@ -5098,31 +5098,43 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             <form onSubmit={handleSendComposedEmail} className="p-5 space-y-3 text-xs">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-600 mb-1">From Mailbox:</label>
-                  <select
-                    value={composeMailbox}
-                    onChange={(e) => setComposeMailbox(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-mono text-xs"
-                  >
-                    {mailboxes.map((mbx) => (
-                      <option key={mbx.id} value={mbx.email}>
-                        {mbx.email} ({mbx.displayName})
-                      </option>
-                    ))}
-                  </select>
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1 font-heading">
+                    From (Authorized Mailbox):
+                  </label>
+                  <div className="w-full bg-slate-100 border border-slate-200 rounded-lg p-2 font-mono text-xs text-slate-800 flex items-center justify-between">
+                    <span className="font-bold">info@phumulani.org</span>
+                    <span className="text-[10px] bg-teal-100 text-[#006D6F] px-1.5 py-0.5 rounded font-bold">Official Sole Mailbox</span>
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-600 mb-1">To Recipient Email:</label>
-                  <input
-                    type="email"
-                    required
-                    placeholder="recipient@organization.org"
-                    value={composeRecipient}
-                    onChange={(e) => setComposeRecipient(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs"
-                  />
+                  <label className="block text-[11px] font-bold text-slate-600 mb-1 font-heading">
+                    Operational Category:
+                  </label>
+                  <select
+                    value={composeMailbox}
+                    onChange={(e) => setComposeMailbox(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-medium text-slate-700"
+                  >
+                    <option value="info@phumulani.org">General Inquiries &amp; Community</option>
+                    <option value="info@phumulani.org">Development &amp; Donor Engagement</option>
+                    <option value="info@phumulani.org">Institutional Grants &amp; Compliance</option>
+                    <option value="info@phumulani.org">Corporate &amp; Academic Partnerships</option>
+                    <option value="info@phumulani.org">Executive &amp; Governance Stewardship</option>
+                  </select>
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-[11px] font-bold text-slate-600 mb-1 font-heading">To Recipient Email:</label>
+                <input
+                  type="email"
+                  required
+                  placeholder="recipient@organization.org"
+                  value={composeRecipient}
+                  onChange={(e) => setComposeRecipient(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs"
+                />
               </div>
 
               <div>

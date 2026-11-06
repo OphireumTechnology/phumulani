@@ -43,26 +43,33 @@ export const Footer: React.FC<FooterProps> = ({ onViewChange, onOpenMediaRegistr
                 alt="Phumulani — The voice of immigrants and refugees in America"
               />
             </div>
-            <p className="text-teal-100/90 text-xs leading-relaxed font-lato">
-              Empowering immigrant and refugee survivors of domestic violence and systemic harm in Minnesota through holistic healing, legal advocacy, financial independence, and community mentorship.
+            <p className="text-teal-100/90 text-xs leading-relaxed font-sans">
+              Phumulani is a Zulu word meaning &quot;lover of peace&quot;. Empowering immigrant and refugee survivors through trauma-informed healing, culturally grounded advocacy, stable housing, and economic independence.
             </p>
-            <div className="text-[11px] text-[#F4B400] font-semibold font-heading">
-              Founder &amp; CEO: Comfort Dondo
+            <div className="space-y-1 text-[11px] text-teal-100/90 font-sans">
+              <div className="text-[#F4B400] font-semibold font-heading">
+                Comfort Dondo, Founder &amp; Executive Director
+              </div>
+              <div>Phone: <a href="tel:6122519421" className="text-white hover:underline">612-251-9421</a></div>
+              <div>Inquiries: <a href="mailto:info@phumulani.org" className="text-white hover:underline">info@phumulani.org</a></div>
+              <div>Minneapolis–Saint Paul, Minnesota</div>
             </div>
           </div>
 
-          {/* Col 2: Programs */}
+          {/* Col 2: Programs from phumulani.org */}
           <div>
             <div className="text-[#F4B400] font-bold mb-3 tracking-wider uppercase text-[11px] font-heading">
-              Our Programs
+              Verified Programs
             </div>
-            <ul className="space-y-2 text-teal-100/85">
-              <li>Survivor Advocacy &amp; Legal Support</li>
+            <ul className="space-y-2 text-teal-100/85 font-sans">
+              <li>Trauma-Informed Healing &amp; Wellness</li>
+              <li>Case Management &amp; Legal Advocacy</li>
+              <li>Safe Housing &amp; The Healing Home</li>
               <li>Workforce &amp; Career Pathways</li>
-              <li>Financial Literacy &amp; Micro-Grants</li>
-              <li>Youth &amp; Sisterhood Mentorship</li>
-              <li>Housing Stability & Relocation</li>
-              <li>Immigrant Women Entrepreneurship</li>
+              <li>Financial Literacy &amp; Coaching</li>
+              <li>Women Entrepreneurship (Funding-Dependent Microloans)</li>
+              <li>Youth Leadership &amp; Mentoring</li>
+              <li>Community Outreach &amp; Ubuntu Support</li>
             </ul>
           </div>
 

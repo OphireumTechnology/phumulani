@@ -292,7 +292,7 @@ export const Header: React.FC<HeaderProps> = ({
                 className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200 transition-colors cursor-pointer"
                 title="Access Portals & Staff Command"
               >
-                <LogIn className="w-3.5 h-3.5 text-[#104F57]" />
+                <LogIn className="w-3.5 h-3.5 text-[#006D6F]" />
                 <span>Portals</span>
                 <ChevronDown className="w-3 h-3 text-slate-400" />
               </button>
@@ -313,14 +313,14 @@ export const Header: React.FC<HeaderProps> = ({
                           setPortalsDropdownOpen(false);
                         }}
                         className={`w-full text-left px-3 py-2 flex items-start gap-2.5 hover:bg-slate-50 transition-colors cursor-pointer ${
-                          isActive ? 'bg-teal-50 border-l-2 border-[#104F57]' : ''
+                          isActive ? 'bg-teal-50 border-l-2 border-[#006D6F]' : ''
                         }`}
                       >
-                        <div className={`p-1 rounded mt-0.5 ${isActive ? 'bg-[#104F57] text-white' : 'bg-slate-100 text-slate-600'}`}>
+                        <div className={`p-1 rounded mt-0.5 ${isActive ? 'bg-[#006D6F] text-white' : 'bg-slate-100 text-slate-600'}`}>
                           <Icon className="w-3.5 h-3.5" />
                         </div>
                         <div>
-                          <div className={`text-xs font-semibold ${isActive ? 'text-[#104F57]' : 'text-slate-800'}`}>
+                          <div className={`text-xs font-semibold ${isActive ? 'text-[#006D6F]' : 'text-slate-800'}`}>
                             {portal.label}
                           </div>
                           <div className="text-[10px] text-slate-500 line-clamp-1">{portal.desc}</div>
@@ -424,7 +424,7 @@ export const Header: React.FC<HeaderProps> = ({
                     setMobileMenuOpen(false);
                   }}
                   className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-left ${
-                    activeView === p.id ? 'bg-[#104F57] text-white' : 'text-slate-700 hover:bg-slate-100'
+                    activeView === p.id ? 'bg-[#006D6F] text-white' : 'text-slate-700 hover:bg-slate-100'
                   }`}
                 >
                   <Icon className="w-4 h-4" />

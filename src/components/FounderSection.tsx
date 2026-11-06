@@ -11,7 +11,6 @@ import { PHUMULANI_MEDIA_INVENTORY, getMediaById } from '../services/mediaInvent
 import { VideoEmbedPlayer } from './VideoEmbedPlayer';
 import { SafeImage } from './SafeImage';
 import { BrandPatternDivider } from './branding/BrandPatternDivider';
-import { PhumulaniLogoMark } from './branding/PhumulaniLogo';
 
 export const FounderSection: React.FC = () => {
   const [selectedBook, setSelectedBook] = useState<'facing' | 'sacred' | 'gift' | null>(null);

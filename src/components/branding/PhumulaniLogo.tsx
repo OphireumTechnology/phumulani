@@ -7,6 +7,7 @@
  */
 
 import React, { useState } from 'react';
+import { getAssetUrl } from '../../utils/assetPath';
 
 export type LogoVariant = 'full' | 'emblem' | 'mark' | 'horizontal';
 
@@ -37,20 +38,23 @@ export const PhumulaniLogo: React.FC<PhumulaniLogoProps> = ({
   const effectiveHeight = height ?? size;
   const effectiveWidth = width ?? (variant === 'mark' ? size : undefined);
 
-  // Asset mapping based on variant
-  let src = '/images/branding/phumulani-logo-primary.png';
-  let fallbackSrc = '/media/branding/phumulani-logo-primary.png';
+  // Asset mapping based on variant with base-path safety
+  let rawSrc = 'images/branding/phumulani-logo-primary.png';
+  let rawFallbackSrc = 'media/branding/phumulani-logo-primary.png';
   let aspectRatio = 'aspect-[2131/556]';
 
   if (variant === 'emblem') {
-    src = '/images/branding/phumulani-logo-emblem.png';
-    fallbackSrc = '/media/branding/phumulani-logo-emblem.png';
+    rawSrc = 'images/branding/phumulani-logo-emblem.png';
+    rawFallbackSrc = 'media/branding/phumulani-logo-emblem.png';
     aspectRatio = 'aspect-[861/556]';
   } else if (variant === 'mark') {
-    src = '/images/branding/phumulani-logo-mark.png';
-    fallbackSrc = '/media/branding/phumulani-logo-mark.png';
+    rawSrc = 'images/branding/phumulani-logo-mark.png';
+    rawFallbackSrc = 'media/branding/phumulani-logo-mark.png';
     aspectRatio = 'aspect-square';
   }
+
+  const src = getAssetUrl(rawSrc);
+  const fallbackSrc = getAssetUrl(rawFallbackSrc);
 
   // Fallback rendering if asset fails
   if (hasError) {
