@@ -72,6 +72,15 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
   const [unreadCount, setUnreadCount] = useState(0);
 
   React.useEffect(() => {
+    if (!mobileSidebarOpen) return;
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMobileSidebarOpen(false);
+    };
+    document.addEventListener('keydown', onEscape);
+    return () => document.removeEventListener('keydown', onEscape);
+  }, [mobileSidebarOpen]);
+
+  React.useEffect(() => {
     let isMounted = true;
     const fetchUnread = async () => {
       try {
@@ -131,6 +140,8 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
             onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
             className="md:hidden p-1.5 rounded-lg text-slate-600 hover:bg-slate-100"
             aria-label="Toggle Navigation Sidebar"
+            aria-expanded={mobileSidebarOpen}
+            aria-controls="portal-mobile-sidebar"
           >
             {mobileSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -344,7 +355,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
               className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs"
               onClick={() => setMobileSidebarOpen(false)}
             />
-            <div className="relative w-72 bg-white h-full shadow-2xl flex flex-col z-10">
+            <nav id="portal-mobile-sidebar" aria-label="Mobile portal navigation" className="relative w-72 max-w-[calc(100vw-1rem)] bg-white h-full shadow-2xl flex flex-col z-10">
               <div className="p-4 border-b border-slate-100 flex items-center justify-between">
                 <div className="flex items-center gap-2.5 min-w-0">
                   <PhumulaniLogo variant="mark" size={28} className="shrink-0" />
@@ -360,6 +371,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
                 <button
                   onClick={() => setMobileSidebarOpen(false)}
                   className="p-1 text-slate-500"
+                  aria-label="Close mobile portal navigation"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -404,11 +416,11 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
                   </div>
                 ))}
               </div>
-            </div>
+            </nav>
           </div>
         )}
 
-        {/* PORTAL MAIN CONTENT VIEW */}
+        {/* PORTAL MAIN CONTENT VIEW */
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           {children}
         </main>
