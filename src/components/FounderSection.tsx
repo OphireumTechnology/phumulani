@@ -96,7 +96,6 @@ export const FounderSection: React.FC = () => {
               <div className="relative rounded-2xl overflow-hidden shadow-md border border-[#E5E7EB] bg-white group">
                 <SafeImage
                   src={FOUNDER_IMAGE}
-                  fallbackSrc="/images/leadership/comfort-dondo.svg"
                   fallbackType="founder"
                   initials="CD"
                   alt="Phumulani Foundation Founder — Official Corporate Portrait"
