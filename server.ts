@@ -542,6 +542,9 @@ app.post('/api/intake/restricted', async (req: Request, res: Response) => {
       message: 'Your request has been encrypted and securely routed to our authorized Safeguarding Officers.',
     });
   } catch (err: any) {
+    if (err?.message === 'SAFEGUARDING_KEY_UNAVAILABLE') {
+      return res.status(503).json({ success: false, error: 'Confidential intake is temporarily unavailable. Please use the published emergency support contacts.' });
+    }
     console.error('[Safeguarding Firewall] Error processing confidential intake:', err?.message || err);
     res.status(500).json({
       success: false,
