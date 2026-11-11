@@ -103,7 +103,7 @@ test.describe('M38.03 — Public Website Journeys', () => {
     await expect(headerLogo).toBeVisible();
 
     // 2. Verify Homepage Hero Image
-    const heroImage = page.locator('img[alt*="Joyful African mother"], img[alt*="community sisterhood"], [role="img"][aria-label*="Community Sanctuary"]').first();
+    const heroImage = page.locator('img[alt*="Three empowered women from diverse immigrant and refugee backgrounds"]').first();
     await expect(heroImage).toBeVisible();
     // Verify the new photographic hero actually decoded, not just rendered a broken frame.
     if (await heroImage.evaluate((element) => element.tagName.toLowerCase() === 'img')) {
