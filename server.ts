@@ -515,6 +515,7 @@ app.post('/api/intake/restricted', async (req: Request, res: Response) => {
 
     const anonymousCode = `SAFE-${Date.now().toString().slice(-6)}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
     const encrypted = encryptSafeguardingData(notes.trim());
+    const encryptedContactTime = encryptSafeguardingData(typeof safeTimeToContact === 'string' ? safeTimeToContact.trim() : '');
 
     const intakeRecord = {
       id: anonymousCode,
@@ -522,7 +523,10 @@ app.post('/api/intake/restricted', async (req: Request, res: Response) => {
       urgency_level: urgencyLevel,
       preferred_contact_method: preferredContactMethod,
       language_needed: languageNeeded,
-      safe_time_to_contact: safeTimeToContact.trim(),
+      safe_time_to_contact: '', // Legacy field intentionally blank; new records encrypt contact-time preferences.
+      safe_time_ciphertext: encryptedContactTime.ciphertext,
+      safe_time_iv: encryptedContactTime.iv,
+      safe_time_auth_tag: encryptedContactTime.authTag,
       ciphertext: encrypted.ciphertext,
       iv: encrypted.iv,
       auth_tag: encrypted.authTag,
@@ -538,8 +542,8 @@ app.post('/api/intake/restricted', async (req: Request, res: Response) => {
       success: true,
       anonymousCode,
       urgencyLevel,
-      status: 'SECURELY_ROUTED',
-      message: 'Your request has been encrypted and securely routed to our authorized Safeguarding Officers.',
+      status: 'RECEIVED_ENCRYPTED',
+      message: 'Your confidential request has been securely recorded. This confirmation does not guarantee that an officer has reviewed it.',
     });
   } catch (err: any) {
     if (err?.message === 'SAFEGUARDING_KEY_UNAVAILABLE') {
@@ -584,7 +588,9 @@ app.get('/api/intake/restricted', async (req: Request, res: Response) => {
         urgencyLevel: r.urgency_level,
         preferredContactMethod: r.preferred_contact_method,
         languageNeeded: r.language_needed,
-        safeTimeToContact: r.safe_time_to_contact,
+        safeTimeToContact: r.safe_time_ciphertext && r.safe_time_iv && r.safe_time_auth_tag
+          ? decryptSafeguardingData(r.safe_time_ciphertext, r.safe_time_iv, r.safe_time_auth_tag)
+          : (r.safe_time_to_contact || ''),
         decryptedNotes,
         status: r.status,
         createdAt: r.created_at,
