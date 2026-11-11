@@ -92,7 +92,7 @@ test.describe('PHUMULANI-PUBLIC-100 — Public Website & Safeguarding Suite', ()
     expect(resJson.routedTo).toContain('programs@phumulani.org');
 
     // Verify UI confirmation
-    await expect(page.locator(`text=Inquiry Delivered: ${resJson.trackingId}`)).toBeVisible();
+    await expect(page.locator(`text=Inquiry Recorded: ${resJson.trackingId}`)).toBeVisible();
   });
 
   test('05: Confidential safeguarding intake securely encrypts and stores request', async ({ page }) => {
