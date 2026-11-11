@@ -333,7 +333,7 @@ export const Header: React.FC<HeaderProps> = ({
               {/* In-App Notification Center Bell */}
               <button
                 onClick={() => setNotificationModalOpen(true)}
-                className="hidden sm:flex h-10 w-10 relative items-center justify-center rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-[#E5E7EB] transition-colors cursor-pointer"
+                className="flex h-10 w-10 shrink-0 relative items-center justify-center rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-[#E5E7EB] transition-colors cursor-pointer"
                 title="Open Notification Center"
                 aria-label="Open Notification Center"
               >
