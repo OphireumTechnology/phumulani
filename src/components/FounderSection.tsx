@@ -11,6 +11,8 @@ import { PHUMULANI_MEDIA_INVENTORY, getMediaById } from '../services/mediaInvent
 import { VideoEmbedPlayer } from './VideoEmbedPlayer';
 import { SafeImage } from './SafeImage';
 
+const FOUNDER_IMAGE = `${import.meta.env.BASE_URL}images/leadership/phumulani-founder-official.png`;
+
 export const FounderSection: React.FC = () => {
   const [selectedBook, setSelectedBook] = useState<'facing' | 'sacred' | 'gift' | null>(null);
 
@@ -25,6 +27,7 @@ export const FounderSection: React.FC = () => {
       year: '2021',
       cover: '/images/publications/facing-the-giants-cover.svg',
       legacyCover: '/media/publications/facing-the-giants-cover.svg',
+      editorialImage: '/images/publications/facing-the-giants-editorial.webp',
       tag: 'Solo Memoir & Survivor Guide',
       synopsis:
         'In "Facing the Giants", Comfort Dondo recounts her personal journey moving from Zimbabwe to the United States at age 17, surviving childhood trauma and domestic violence, and confronting the towering "giants" of systemic isolation, legal intimidation, and cultural silence. The memoir provides a compassionate, practical roadmap for women seeking autonomy, safety, and renewed spiritual faith.',
@@ -41,6 +44,7 @@ export const FounderSection: React.FC = () => {
       year: '2023',
       cover: '/images/publications/sacred-promise-cover.svg',
       legacyCover: '/media/publications/sacred-promise-cover.svg',
+      editorialImage: '/images/publications/sacred-promise-editorial.webp',
       tag: 'International Bestseller',
       synopsis:
         'Compiled by global educator Dr. Tererai Trent and published by Women Changing the World Press, "Sacred Promise" gathers authentic accounts from visionary women worldwide. Comfort Dondo’s chapter details the foundational promise she made to herself while rebuilding her life in Minnesota—a promise that blossomed into Phumulani: Minnesota African Women Against Violence.',
@@ -57,6 +61,7 @@ export const FounderSection: React.FC = () => {
       year: 'Forthcoming',
       cover: '/images/publications/the-gift-in-pain-cover.svg',
       legacyCover: '/media/publications/the-gift-in-pain-cover.svg',
+      editorialImage: '/images/publications/the-gift-in-pain-editorial.webp',
       tag: 'Advance Announcement',
       synopsis:
         'Comfort Dondo’s forthcoming work explores post-traumatic growth, community-led shelter innovations, and the structural methodology behind Phumulani’s six core programs. It examines how collective healing circles and economic independence break the intergenerational cycle of gender-based violence in immigrant diaspora communities.',
@@ -68,7 +73,7 @@ export const FounderSection: React.FC = () => {
   ];
 
   return (
-    <section id="founder-section" className="space-y-16 py-14 border-t border-[#E5E7EB] bg-white">
+    <section id="founder-section" className="space-y-16 py-14 border-t border-[#E5E7EB] bg-white scroll-mt-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14">
         {/* 1. Header with Brand Badge */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
@@ -87,16 +92,17 @@ export const FounderSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           {/* Left: Authentic Executive Portrait */}
           <div className="lg:col-span-5 flex justify-center">
-            <div className="relative max-w-sm sm:max-w-md w-full">
-              <div className="relative rounded-xl overflow-hidden shadow-sm border border-[#E5E7EB] bg-white">
+            <div className="relative max-w-[520px] w-full">
+              <div className="relative rounded-2xl overflow-hidden shadow-md border border-[#E5E7EB] bg-white group">
                 <SafeImage
-                  src="/images/leadership/comfort-dondo.svg"
-                  fallbackSrc="/media/founder/comfort-dondo-official-portrait.svg"
+                  src={FOUNDER_IMAGE}
+                  fallbackSrc="/images/leadership/comfort-dondo.svg"
                   fallbackType="founder"
                   initials="CD"
-                  alt="Comfort Dondo, Founder and Executive Director of Phumulani"
-                  className="w-full h-auto object-cover aspect-[4/5]"
+                  alt="Phumulani Foundation Founder — Official Corporate Portrait"
+                  className="founder-portrait w-full h-auto object-contain rounded-t-2xl"
                   loading="lazy"
+                  decoding="async"
                 />
                 <div className="p-4 bg-[#FAF8F3] border-t border-[#E5E7EB] text-center">
                   <div className="font-heading font-bold text-base text-[#14213D]">Comfort Dondo</div>
@@ -271,31 +277,82 @@ export const FounderSection: React.FC = () => {
             {publications.map((book) => (
               <div
                 key={book.id}
-                className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl hover:border-teal-300 transition-all flex flex-col group"
+                className="bg-white rounded-2xl border border-slate-200/90 hover:border-amber-400/50 overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 flex flex-col group"
               >
-                {/* Book Cover Frame */}
-                <div className="relative bg-slate-900 aspect-[2/3] overflow-hidden flex items-center justify-center p-3">
+                {/* Luxury Showcase Frame: Editorial Photographic Environment + 3D Hardcover Book Mockup */}
+                <div className="relative h-80 sm:h-88 md:h-80 lg:h-88 overflow-hidden bg-slate-950 flex items-center justify-center p-4 select-none">
+                  {/* Editorial Background Photography */}
                   <SafeImage
-                    src={book.cover}
-                    fallbackSrc={book.legacyCover}
+                    src={book.editorialImage}
+                    fallbackSrc={book.cover}
                     fallbackType="publication"
-                    fallbackText={book.title}
-                    alt={book.title}
-                    className="w-full h-full object-contain rounded-md shadow-lg transform group-hover:scale-105 transition-transform duration-300"
+                    alt={`${book.title} Editorial Atmosphere`}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-108 brightness-[0.72] group-hover:brightness-[0.82]"
                     loading="lazy"
+                    decoding="async"
                   />
-                  <div className="absolute top-4 right-4 bg-black/70 backdrop-blur-xs text-[#F4B400] px-2.5 py-1 rounded text-[10px] font-bold border border-[#F4B400]/40 font-heading">
-                    {book.tag}
+
+                  {/* Elegant Cinematic Vignette & Lighting Gradients */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-slate-950/20" />
+                  <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-transparent to-slate-950/80 pointer-events-none" />
+
+                  {/* Top Badges */}
+                  <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5">
+                    <span className="bg-slate-950/80 backdrop-blur-md text-slate-200 text-[10px] font-mono px-2 py-0.5 rounded border border-white/15 shadow-sm">
+                      {book.year}
+                    </span>
+                  </div>
+
+                  <div className="absolute top-3 right-3 z-10">
+                    <div className="bg-slate-950/85 backdrop-blur-md text-[#F4B400] px-2.5 py-1 rounded-md text-[10px] font-bold border border-[#F4B400]/40 font-heading tracking-wide shadow-md flex items-center gap-1">
+                      <Sparkles className="w-2.5 h-2.5" />
+                      <span>{book.tag}</span>
+                    </div>
+                  </div>
+
+                  {/* Realistic 3D Hardcover Book Mockup (Displaying Authentic Official Cover) */}
+                  <div className="relative z-10 w-36 sm:w-40 md:w-36 lg:w-40 aspect-[2/3] transition-all duration-400 ease-out transform group-hover:-translate-y-2 group-hover:scale-105 group-hover:rotate-1">
+                    {/* Soft Ambient Shadow on Editorial Floor */}
+                    <div className="absolute -bottom-3 left-2 right-2 h-4 bg-black/80 blur-md rounded-full transform scale-x-95" />
+
+                    {/* Hardcover Book Container with Realistic Binding & Bevel */}
+                    <div className="relative w-full h-full rounded-r-md rounded-l-xs overflow-hidden shadow-[0_16px_36px_rgba(0,0,0,0.7),-6px_0_12px_rgba(0,0,0,0.5)] border-t border-b border-r border-amber-200/40 bg-slate-900 flex">
+                      {/* Realistic Book Spine Highlight & Left Binding Crease */}
+                      <div className="w-2.5 shrink-0 bg-gradient-to-r from-black/80 via-white/20 to-black/60 shadow-[inset_1px_0_1px_rgba(255,255,255,0.25)] border-r border-black/40 z-10" />
+
+                      {/* Authentic Original Book Cover (Fully Legible & Preserved) */}
+                      <div className="flex-1 relative overflow-hidden bg-slate-950">
+                        <SafeImage
+                          src={book.cover}
+                          fallbackSrc={book.legacyCover}
+                          fallbackType="publication"
+                          fallbackText={book.title}
+                          alt={`${book.title} Official Publication Cover`}
+                          className="w-full h-full object-cover object-center"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                        {/* Subtle Gilded Edge Reflection */}
+                        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-amber-200/10 pointer-events-none" />
+                      </div>
+
+                      {/* Subtle Realistic Page Block Edge (Right-side paper rim) */}
+                      <div className="w-1 shrink-0 bg-gradient-to-l from-amber-100/90 to-amber-50/50 border-l border-black/20" />
+                    </div>
                   </div>
                 </div>
 
-                {/* Details */}
-                <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+                {/* Subtle Gold Divider */}
+                <div className="h-0.5 w-full bg-gradient-to-r from-transparent via-amber-400/40 to-transparent" />
+
+                {/* Publication Details */}
+                <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4 bg-white">
                   <div className="space-y-1.5">
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider font-mono">
-                      {book.year} Publication
-                    </span>
-                    <h4 className="font-heading text-lg font-bold text-slate-900 group-hover:text-[#006D6F] transition-colors">
+                    <div className="flex items-center justify-between text-[11px] font-heading">
+                      <span className="text-[#006D6F] font-semibold">{book.tag}</span>
+                      <span className="text-slate-400 font-mono text-[10px]">{book.year} Publication</span>
+                    </div>
+                    <h4 className="font-heading text-lg font-bold text-slate-900 group-hover:text-[#006D6F] transition-colors leading-snug">
                       {book.title}
                     </h4>
                     <p className="text-xs text-[#7A9B29] font-medium font-heading">
@@ -306,15 +363,15 @@ export const FounderSection: React.FC = () => {
                     </p>
                   </div>
 
-                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                  <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
                     <button
                       onClick={() => setSelectedBook(book.id)}
-                      className="text-xs font-bold text-[#006D6F] hover:text-[#004A4C] flex items-center gap-1 cursor-pointer font-heading"
+                      className="text-xs font-bold text-[#006D6F] hover:text-[#004A4C] flex items-center gap-1 cursor-pointer font-heading group/btn"
                     >
                       <span>Read Excerpts &amp; Details</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
+                      <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-0.5" />
                     </button>
-                    <span className="text-[11px] text-slate-400">By Comfort Dondo</span>
+                    <span className="text-[11px] text-slate-400 font-medium">By Comfort Dondo</span>
                   </div>
                 </div>
               </div>
@@ -378,14 +435,30 @@ export const FounderSection: React.FC = () => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center">
                     <div className="sm:col-span-4 flex justify-center">
-                      <SafeImage
-                        src={book.cover}
-                        fallbackSrc={book.legacyCover}
-                        fallbackType="publication"
-                        fallbackText={book.title}
-                        alt={book.title}
-                        className="w-40 h-auto rounded-lg shadow-md"
-                      />
+                      <div className="relative w-full max-w-[200px] aspect-[3/4] rounded-xl overflow-hidden p-3 bg-slate-950 flex items-center justify-center border border-slate-200 shadow-lg">
+                        <SafeImage
+                          src={book.editorialImage}
+                          fallbackSrc={book.cover}
+                          fallbackType="publication"
+                          alt=""
+                          className="absolute inset-0 w-full h-full object-cover opacity-50 brightness-75"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent" />
+                        <div className="relative z-10 w-28 aspect-[2/3] rounded-r-md rounded-l-xs overflow-hidden shadow-2xl border border-amber-200/40 bg-slate-900 flex">
+                          <div className="w-2 shrink-0 bg-gradient-to-r from-black/80 via-white/20 to-black/60 border-r border-black/40" />
+                          <div className="flex-1 relative overflow-hidden bg-slate-950">
+                            <SafeImage
+                              src={book.cover}
+                              fallbackSrc={book.legacyCover}
+                              fallbackType="publication"
+                              fallbackText={book.title}
+                              alt={book.title}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                          <div className="w-1 shrink-0 bg-amber-100/80 border-l border-black/20" />
+                        </div>
+                      </div>
                     </div>
                     <div className="sm:col-span-8 space-y-3 text-xs sm:text-sm text-slate-700 leading-relaxed font-sans">
                       <p>{book.synopsis}</p>

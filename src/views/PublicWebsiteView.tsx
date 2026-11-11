@@ -44,6 +44,9 @@ import {
 import { FounderSection } from '../components/FounderSection';
 import { SafeImage } from '../components/SafeImage';
 
+const FOUNDER_IMAGE = `${import.meta.env.BASE_URL}images/leadership/phumulani-founder-official.png`;
+const HERO_IMAGE = `${import.meta.env.BASE_URL}images/home/phumulani-homepage-hero.webp`;
+
 interface PublicWebsiteViewProps {
   currentUser: User;
   onViewChange: (view: string) => void;
@@ -272,18 +275,19 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
             {/* RIGHT COLUMN: Official Photography & Founder Spotlight Card (~42%) */}
             <div className="lg:col-span-5">
-              <div className="bg-white rounded-xl border border-[#E5E7EB] shadow-sm overflow-hidden">
+              <div className="bg-white rounded-2xl border border-[#E5E7EB] shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
                 {/* Official Community Hero Photography */}
-                <div className="relative aspect-[16/10] bg-slate-100 overflow-hidden border-b border-[#E5E7EB]">
+                <div className="relative aspect-[4/3] bg-slate-900 overflow-hidden border-b border-[#E5E7EB]">
                   <SafeImage
-                    src="/images/branding/phumulani-hero-family.png"
-                    fallbackSrc="/images/homepage/community-hero.svg"
+                    src={HERO_IMAGE}
+                    fallbackSrc="/media/homepage/phumulani-homepage-hero.webp"
                     fallbackType="hero"
-                    alt="Joyful African mother in traditional headwrap smiling warmly and embracing her two children against the Minneapolis skyline and Stone Arch Bridge"
-                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-[1.01]"
+                    alt="Three empowered women from diverse immigrant and refugee backgrounds standing in solidarity in a sunlit community center overlooking the Minneapolis skyline"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-[1.01]"
                     loading="eager"
                   />
-                  <div className="absolute bottom-3 left-3 bg-[#14213D]/85 backdrop-blur-xs text-white px-3 py-1 rounded-md text-[11px] font-heading font-medium tracking-wide">
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent pointer-events-none" />
+                  <div className="absolute bottom-3 left-3 bg-[#14213D]/90 backdrop-blur-md text-white px-3 py-1 rounded-md text-[11px] font-heading font-semibold tracking-wide border border-white/15 shadow-sm">
                     Culturally Grounded Sanctuary
                   </div>
                 </div>
@@ -293,12 +297,14 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
                     <div className="flex items-center gap-3">
                       <SafeImage
-                        src="/images/leadership/comfort-dondo.svg"
-                        fallbackSrc="/media/founder/comfort-dondo-official-portrait.svg"
+                        src={FOUNDER_IMAGE}
+                        fallbackSrc="/images/leadership/comfort-dondo.svg"
                         fallbackType="founder"
                         initials="CD"
-                        alt="Comfort Dondo, Founder of Phumulani"
-                        className="w-12 h-12 rounded-lg object-cover border border-[#E5E7EB] shrink-0"
+                        alt="Phumulani Foundation Founder — Official Corporate Portrait"
+                        className="w-12 h-12 rounded-lg object-contain bg-white border border-[#E5E7EB] shrink-0"
+                        loading="lazy"
+                        decoding="async"
                       />
                       <div>
                         <div className="font-heading font-bold text-base text-[#14213D]">Comfort Dondo</div>
@@ -438,7 +444,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       <FounderSection />
 
       {/* 3. SIX CORE PROGRAMS */}
-      <section id="programs-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="programs-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-28">
         <div className="space-y-3 text-center max-w-2xl mx-auto mb-10">
           <div className="text-xs font-bold text-[#006D6F] font-heading uppercase tracking-wider">
             What We Do
@@ -563,19 +569,21 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       </section>
 
       {/* 4. FOUNDER STORY & ABOUT PHUMULANI */}
-      <section id="about-section" className="bg-[#FFF7E6] py-16 border-y border-amber-200/80">
+      <section id="about-section" className="bg-[#FAF8F3] py-16 border-y border-[#E5E7EB] scroll-mt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-5 space-y-4">
               <div className="bg-white rounded-2xl p-6 border border-amber-200/90 shadow-md space-y-4">
                 <div className="flex items-center gap-4">
                   <SafeImage
-                    src="/images/leadership/comfort-dondo.svg"
-                    fallbackSrc="/media/founder/comfort-dondo-official-portrait.svg"
+                    src={FOUNDER_IMAGE}
+                    fallbackSrc="/images/leadership/comfort-dondo.svg"
                     fallbackType="founder"
                     initials="CD"
-                    alt="Comfort Dondo, Founder of Phumulani"
-                    className="w-20 h-20 rounded-2xl object-cover border-2 border-[#006D6F] shadow-md shrink-0"
+                    alt="Phumulani Foundation Founder — Official Corporate Portrait"
+                    className="w-20 h-20 rounded-2xl object-contain bg-white border-2 border-[#006D6F] shadow-md shrink-0"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div>
                     <div className="font-heading text-2xl font-bold text-slate-900 leading-tight">
@@ -731,7 +739,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       </section>
 
       {/* 5. GET INVOLVED / VOLUNTEER OPPORTUNITIES */}
-      <section id="get-involved-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="get-involved-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-28">
         <div id="volunteer-section" className="relative -top-24"></div>
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
           <div>
@@ -849,7 +857,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       </section>
 
       {/* 6. DONATION & FUNDRAISING (HOSTED CHECKOUT SIMULATOR) */}
-      <section id="donate-section" className="bg-[#004A4C] text-white py-16 relative overflow-hidden border-t border-teal-800">
+      <section id="donate-section" className="bg-[#004A4C] text-white py-16 relative overflow-hidden border-t border-teal-800 scroll-mt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Column: Campaigns & Impact */}
@@ -1071,7 +1079,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       </section>
 
       {/* 7. COMMUNITY EVENTS CALENDAR */}
-      <section id="events-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="events-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-28">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
           <div>
             <div className="text-xs font-bold font-heading text-[#006D6F] uppercase tracking-wider">Gathering &amp; Growth</div>
@@ -1195,7 +1203,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       </section>
 
       {/* 8. DISCREET GET HELP HUB & SAFE EXIT (SECTION 4.2 & 6.5) */}
-      <section id="get-help-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="get-help-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-28">
         <div className="bg-rose-50/70 border-2 border-rose-200 rounded-2xl p-6 sm:p-10 shadow-sm">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <div className="lg:col-span-5 space-y-4">
@@ -1656,7 +1664,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       </section>
 
       {/* 13. CONTACT INFORMATION & SECURE INQUIRY (#contact-section) */}
-      <section id="contact-section" className="bg-[#FFF7E6]/70 py-16 border-t border-amber-200/70">
+      <section id="contact-section" className="bg-[#FFF7E6]/70 py-16 border-t border-amber-200/70 scroll-mt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             <div className="lg:col-span-5 space-y-6">

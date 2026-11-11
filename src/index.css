@@ -95,6 +95,16 @@
   background: #94a3b8;
 }
 
+/* Executive Founder Portrait */
+.founder-portrait {
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
 /* Print styling for receipts & impact reports */
 @media print {
   body {

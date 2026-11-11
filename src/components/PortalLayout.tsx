@@ -4,7 +4,7 @@
  * Unified Portal Layout with Collapsible Role-Aware Left Sidebar (Section 8)
  */
 
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { User } from '../types';
 import {
   Globe,
@@ -70,8 +70,27 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
   const [portalsDropdownOpen, setPortalsDropdownOpen] = useState(false);
   const [notificationModalOpen, setNotificationModalOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const portalsDropdownRef = useRef<HTMLDivElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
+    if (!portalsDropdownOpen) return;
+    const handleClickOutside = (e: MouseEvent) => {
+      if (portalsDropdownRef.current && !portalsDropdownRef.current.contains(e.target as Node)) {
+        setPortalsDropdownOpen(false);
+      }
+    };
+    const onEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setPortalsDropdownOpen(false);
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('keydown', onEscape);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('keydown', onEscape);
+    };
+  }, [portalsDropdownOpen]);
+
+  useEffect(() => {
     if (!mobileSidebarOpen) return;
     const onEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setMobileSidebarOpen(false);
@@ -186,17 +205,23 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
           </button>
 
           {/* Portal Switcher Dropdown */}
-          <div className="relative">
+          <div className="relative" ref={portalsDropdownRef}>
             <button
               onClick={() => setPortalsDropdownOpen(!portalsDropdownOpen)}
-              className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200 transition-colors cursor-pointer"
+              aria-haspopup="menu"
+              aria-expanded={portalsDropdownOpen}
+              className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#006D6F]"
             >
               <span>Portals</span>
-              <ChevronDown className="w-3 h-3 text-slate-400" />
+              <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform ${portalsDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {portalsDropdownOpen && (
-              <div className="absolute right-0 mt-1.5 w-64 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-50">
+              <div
+                role="menu"
+                aria-label="Switch Portal"
+                className="absolute right-0 mt-1.5 w-64 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100"
+              >
                 <div className="px-3 py-1 text-[10px] uppercase font-bold text-slate-400">
                   Switch Portal
                 </div>
@@ -205,15 +230,16 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
                   return (
                     <button
                       key={p.id}
+                      role="menuitem"
                       onClick={() => {
                         onViewChange(p.id);
                         setPortalsDropdownOpen(false);
                       }}
-                      className={`w-full text-left px-3 py-1.5 text-xs flex items-center gap-2 hover:bg-slate-50 transition-colors ${
+                      className={`w-full text-left px-3 py-2 text-xs flex items-center gap-2 hover:bg-slate-50 transition-colors cursor-pointer ${
                         p.id === portalId ? 'font-bold text-[#006D6F] bg-teal-50/70 font-heading' : 'text-slate-700 font-sans'
                       }`}
                     >
-                      <Icon className="w-3.5 h-3.5" />
+                      <Icon className="w-3.5 h-3.5 shrink-0" />
                       <span>{p.label}</span>
                     </button>
                   );
@@ -377,6 +403,20 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
                 </button>
               </div>
 
+              {/* Quick Return to Public Website */}
+              <div className="p-3 border-b border-slate-100">
+                <button
+                  onClick={() => {
+                    onViewChange('public');
+                    setMobileSidebarOpen(false);
+                  }}
+                  className="min-h-[44px] w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-teal-50 hover:bg-teal-100 text-[#006D6F] font-heading font-semibold text-xs transition-colors cursor-pointer"
+                >
+                  <ArrowLeft className="w-4 h-4 shrink-0" />
+                  <span>Return to Public Website</span>
+                </button>
+              </div>
+
               <div className="flex-1 overflow-y-auto p-3 space-y-4">
                 {navGroups.map((group, gIdx) => (
                   <div key={gIdx} className="space-y-1">
@@ -395,14 +435,14 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
                             onSelectNavItem(item.id);
                             setMobileSidebarOpen(false);
                           }}
-                          className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-heading font-semibold ${
+                          className={`min-h-[44px] w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-heading font-semibold transition-colors cursor-pointer ${
                             isActive
                               ? 'bg-[#006D6F] text-white shadow-xs'
                               : 'text-slate-600 hover:bg-slate-50'
                           }`}
                         >
                           <div className="flex items-center gap-2">
-                            {Icon && <Icon className="w-4 h-4" />}
+                            {Icon && <Icon className="w-4 h-4 shrink-0" />}
                             <span>{item.label}</span>
                           </div>
                           {item.badge !== undefined && (

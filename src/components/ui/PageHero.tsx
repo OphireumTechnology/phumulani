@@ -9,6 +9,8 @@ import React from 'react';
 import { Heart, Users, LifeBuoy } from 'lucide-react';
 import { SafeImage } from '../SafeImage';
 
+const FOUNDER_IMAGE = `${import.meta.env.BASE_URL}images/leadership/phumulani-founder-official.png`;
+
 export interface PageHeroProps {
   headline?: string;
   supportingHeadline?: string;
@@ -29,9 +31,9 @@ export const PageHero: React.FC<PageHeroProps> = ({
   onDonateClick,
   onVolunteerClick,
   onHelpClick,
-  imageSrc = '/images/branding/phumulani-hero-family.png',
-  fallbackImageSrc = '/images/homepage/community-hero.svg',
-  imageAlt = 'Joyful African mother in traditional headwrap smiling warmly and embracing her two children against the Minneapolis skyline and Stone Arch Bridge',
+  imageSrc = '/images/home/phumulani-homepage-hero.webp',
+  fallbackImageSrc = '/media/homepage/phumulani-homepage-hero.webp',
+  imageAlt = 'Three empowered women from diverse immigrant and refugee backgrounds standing in solidarity in a sunlit community center overlooking the Minneapolis skyline',
   className = '',
 }) => {
   return (
@@ -111,12 +113,14 @@ export const PageHero: React.FC<PageHeroProps> = ({
                 <div className="flex items-center justify-between border-b border-slate-100 pb-3">
                   <div className="flex items-center gap-3">
                     <SafeImage
-                      src="/images/leadership/comfort-dondo.svg"
-                      fallbackSrc="/media/founder/comfort-dondo-official-portrait.svg"
+                      src={FOUNDER_IMAGE}
+                      fallbackSrc="/images/leadership/comfort-dondo.svg"
                       fallbackType="founder"
                       fallbackText="Comfort Dondo"
-                      alt="Comfort Dondo, Executive Director & Founder of Phumulani"
-                      className="w-12 h-12 rounded-full object-cover border-2 border-[#006D6F] shadow-xs"
+                      alt="Phumulani Foundation Founder — Official Corporate Portrait"
+                      className="w-12 h-12 rounded-full object-contain bg-white border-2 border-[#006D6F] shadow-xs"
+                      loading="lazy"
+                      decoding="async"
                     />
                     <div>
                       <div className="font-heading font-bold text-sm text-slate-900 leading-tight">
