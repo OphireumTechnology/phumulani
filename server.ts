@@ -416,6 +416,312 @@ app.post('/api/payments/webhook', async (req: Request, res: Response) => {
   }
 });
 
+// -----------------------------------------------------------------------------
+// BLOCK 01: PLEDGE RECORDING WHEN GATEWAY UNCONFIGURED
+// -----------------------------------------------------------------------------
+app.post('/api/payments/pledge', async (req: Request, res: Response) => {
+  try {
+    const { donorName, donorEmail, amountDollars, campaignId, campaignTitle, frequency = 'one_time', isAnonymous = false, notes = '' } = req.body;
+
+    if (!donorEmail || !donorEmail.includes('@')) {
+      return res.status(400).json({ success: false, error: 'A valid email address is required for pledge confirmation.' });
+    }
+    const amount = Number(amountDollars);
+    if (!amount || amount < 1) {
+      return res.status(400).json({ success: false, error: 'Pledge amount must be at least $1.00.' });
+    }
+
+    const pledgeReference = `PLG-${new Date().getFullYear()}-${Date.now().toString(36).toUpperCase()}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
+    const pledgeRecord = {
+      id: pledgeReference,
+      donor_name: isAnonymous ? 'Anonymous Supporter' : (donorName || 'Generous Supporter'),
+      donor_email: donorEmail,
+      amount_dollars: amount,
+      frequency,
+      campaign_id: campaignId || 'unrestricted',
+      campaign_title: campaignTitle || 'General Community Support',
+      is_anonymous: !!isAnonymous,
+      notes: (notes || '').slice(0, 500),
+      status: 'PENDING_VERIFICATION',
+      created_at: new Date().toISOString(),
+      receipt_issued: false,
+    };
+
+    await dbAdapter.insert('donations', pledgeRecord);
+
+    logAudit({
+      agentId: 'A07',
+      action: 'pledge:record',
+      requesterRole: 'public_visitor',
+      status: 'allowed',
+    });
+
+    res.json({
+      success: true,
+      pledgeReference,
+      status: 'PENDING_VERIFICATION',
+      message: 'Your pledge has been securely recorded. An official 501(c)(3) tax receipt is legally issued only after funds settlement.',
+      receiptIssued: false,
+    });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// -----------------------------------------------------------------------------
+// BLOCK 02: CONFIDENTIAL RESTRICTED INTAKE WITH AES-256-GCM ENCRYPTION
+// -----------------------------------------------------------------------------
+const ENCRYPTION_SECRET = process.env.SAFEGUARDING_MASTER_KEY || 'phumulani-safe-guarding-master-key-2026';
+const DERIVED_KEY = crypto.scryptSync(ENCRYPTION_SECRET, 'phumulani-salt-vawa', 32);
+
+function encryptSafeguardingData(plaintext: string): { ciphertext: string; iv: string; authTag: string } {
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv('aes-256-gcm', DERIVED_KEY, iv);
+  let encrypted = cipher.update(plaintext, 'utf8', 'hex');
+  encrypted += cipher.final('hex');
+  const authTag = cipher.getAuthTag().toString('hex');
+  return {
+    ciphertext: encrypted,
+    iv: iv.toString('hex'),
+    authTag,
+  };
+}
+
+function decryptSafeguardingData(ciphertext: string, ivHex: string, authTagHex: string): string {
+  const decipher = crypto.createDecipheriv('aes-256-gcm', DERIVED_KEY, Buffer.from(ivHex, 'hex'));
+  decipher.setAuthTag(Buffer.from(authTagHex, 'hex'));
+  let decrypted = decipher.update(ciphertext, 'hex', 'utf8');
+  decrypted += decipher.final('utf8');
+  return decrypted;
+}
+
+app.post('/api/intake/restricted', async (req: Request, res: Response) => {
+  try {
+    const { urgencyLevel = 'within_24h', preferredContactMethod = 'safe_email', languageNeeded = 'English', safeTimeToContact = '', notes = '' } = req.body;
+
+    if (!notes || notes.trim().length < 3) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please provide brief safe contact information or general assistance need.',
+      });
+    }
+
+    const anonymousCode = `SAFE-${Date.now().toString().slice(-6)}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
+    const encrypted = encryptSafeguardingData(notes.trim());
+
+    const intakeRecord = {
+      id: anonymousCode,
+      anonymous_code: anonymousCode,
+      urgency_level: urgencyLevel,
+      preferred_contact_method: preferredContactMethod,
+      language_needed: languageNeeded,
+      safe_time_to_contact: safeTimeToContact.trim(),
+      ciphertext: encrypted.ciphertext,
+      iv: encrypted.iv,
+      auth_tag: encrypted.authTag,
+      status: 'RECEIVED_ENCRYPTED',
+      quarantined_vawa: true,
+      created_at: new Date().toISOString(),
+    };
+
+    await dbAdapter.insert('survivors_isolated', intakeRecord);
+    console.log(`[Safeguarding Firewall] Confidential intake ${anonymousCode} received and encrypted (AES-256-GCM). Zero plaintext logged.`);
+
+    res.json({
+      success: true,
+      anonymousCode,
+      urgencyLevel,
+      status: 'SECURELY_ROUTED',
+      message: 'Your request has been encrypted and securely routed to our authorized Safeguarding Officers.',
+    });
+  } catch (err: any) {
+    console.error('[Safeguarding Firewall] Error processing confidential intake:', err?.message || err);
+    res.status(500).json({
+      success: false,
+      error: 'An unexpected error occurred. For immediate safety assistance, please call the Minnesota Day One Crisis Line at 1-866-223-1111 (24/7).',
+    });
+  }
+});
+
+app.get('/api/intake/restricted', async (req: Request, res: Response) => {
+  try {
+    const session = getSessionFromReq(req);
+    if (!session) {
+      return res.status(401).json({ success: false, error: 'Authentication required.' });
+    }
+
+    const authorizedRoles = ['safeguarding_officer', 'safeguarding_lead', 'executive_director', 'master_admin'];
+    if (!authorizedRoles.includes(session.role)) {
+      return res.status(403).json({
+        success: false,
+        error: 'Forbidden. Strictly restricted to authorized safeguarding personnel under VAWA policy.',
+      });
+    }
+
+    const rawRecords = await dbAdapter.select<any>('survivors_isolated');
+    const decryptedList = rawRecords.map((r: any) => {
+      let decryptedNotes = '[Decryption Unavailable]';
+      if (r.ciphertext && r.iv && r.auth_tag) {
+        try {
+          decryptedNotes = decryptSafeguardingData(r.ciphertext, r.iv, r.auth_tag);
+        } catch {
+          decryptedNotes = '[Decryption Tag Mismatch]';
+        }
+      }
+      return {
+        id: r.id,
+        anonymousCode: r.anonymous_code || r.id,
+        urgencyLevel: r.urgency_level,
+        preferredContactMethod: r.preferred_contact_method,
+        languageNeeded: r.language_needed,
+        safeTimeToContact: r.safe_time_to_contact,
+        decryptedNotes,
+        status: r.status,
+        createdAt: r.created_at,
+      };
+    });
+
+    res.json({ success: true, count: decryptedList.length, intakes: decryptedList });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// -----------------------------------------------------------------------------
+// BLOCK 03: VERIFIED CONTACT FORM SUBMISSION & ROUTING
+// -----------------------------------------------------------------------------
+const contactRateLimits = new Map<string, { count: number; firstAt: number }>();
+
+app.post('/api/contact/submit', async (req: Request, res: Response) => {
+  try {
+    const clientIp = req.ip || (req.headers['x-forwarded-for'] as string) || 'local';
+    const { name, email, department = 'General Inquiries', subject, message } = req.body;
+
+    const now = Date.now();
+    const rate = contactRateLimits.get(clientIp);
+    if (rate && now - rate.firstAt < 15 * 60 * 1000) {
+      if (rate.count >= 5) {
+        return res.status(429).json({
+          success: false,
+          error: 'Rate limit exceeded. Please wait a few minutes before submitting another inquiry.',
+        });
+      }
+      rate.count += 1;
+    } else {
+      contactRateLimits.set(clientIp, { count: 1, firstAt: now });
+    }
+
+    if (!name || typeof name !== 'string' || name.trim().length < 2) {
+      return res.status(400).json({ success: false, error: 'Full name (at least 2 characters) is required.' });
+    }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      return res.status(400).json({ success: false, error: 'A valid email address is required.' });
+    }
+    if (!subject || typeof subject !== 'string' || subject.trim().length < 3) {
+      return res.status(400).json({ success: false, error: 'Inquiry subject (at least 3 characters) is required.' });
+    }
+    if (!message || typeof message !== 'string' || message.trim().length < 10) {
+      return res.status(400).json({ success: false, error: 'Inquiry message (at least 10 characters) is required.' });
+    }
+
+    const departmentMailboxMap: Record<string, string> = {
+      'General Inquiries': 'info@phumulani.org',
+      'Community Programs & Cohorts': 'programs@phumulani.org',
+      'Volunteer Onboarding': 'volunteers@phumulani.org',
+      'Donor Relations & Giving': 'donations@phumulani.org',
+      'Media & Press Coordination': 'press@phumulani.org',
+    };
+    const routedMailbox = departmentMailboxMap[department] || 'info@phumulani.org';
+
+    const trackingId = `INQ-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`;
+    const inquiryRecord = {
+      id: trackingId,
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      department,
+      routed_to_mailbox: routedMailbox,
+      subject: subject.trim(),
+      message: message.trim(),
+      status: 'RECEIVED',
+      created_at: new Date().toISOString(),
+    };
+
+    await dbAdapter.insert('contact_inquiries', inquiryRecord);
+
+    logAudit({
+      agentId: 'A02',
+      action: 'contact:submit',
+      requesterRole: 'public_visitor',
+      status: 'allowed',
+    });
+
+    console.log(`[Contact Delivery] Inquiry ${trackingId} routed to ${routedMailbox} from ${email}`);
+
+    res.json({
+      success: true,
+      trackingId,
+      routedTo: routedMailbox,
+      createdAt: inquiryRecord.created_at,
+      message: 'Your inquiry has been received and routed to our team.',
+    });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// -----------------------------------------------------------------------------
+// BLOCK 04: VERIFIED RESOURCE DOWNLOAD CATALOG
+// -----------------------------------------------------------------------------
+app.get('/api/resources/catalog', (_req: Request, res: Response) => {
+  const catalog = [
+    {
+      id: 'res-ofp-001',
+      title: 'Order for Protection (OFP) Step-by-Step Navigator',
+      category: 'legal',
+      filename: 'order-for-protection-navigator.pdf',
+      downloadUrl: '/resources/order-for-protection-navigator.pdf',
+      fileSize: '2.3 KB',
+      format: 'PDF',
+      description: 'Clear instructions for filing an OFP in Minnesota district courts without filing fees under Minn. Stat. § 518B.01.',
+      statutoryReference: 'Minn. Stat. § 518B.01',
+    },
+    {
+      id: 'res-lease-002',
+      title: 'Minnesota Safe Lease Termination & Deposit Rights',
+      category: 'housing',
+      filename: 'minnesota-safe-lease-termination-toolkit.pdf',
+      downloadUrl: '/resources/minnesota-safe-lease-termination-toolkit.pdf',
+      fileSize: '2.2 KB',
+      format: 'PDF',
+      description: 'How Minnesota Statute 504B.206 protects domestic abuse survivors who need to break a lease safely without financial penalty.',
+      statutoryReference: 'Minn. Stat. § 504B.206',
+    },
+    {
+      id: 'res-tea-003',
+      title: 'Sisterhood Tea Healing Circle Facilitation Manual',
+      category: 'healing',
+      filename: 'tea-healing-circle-facilitation-manual.pdf',
+      downloadUrl: '/resources/tea-healing-circle-facilitation-manual.pdf',
+      fileSize: '2.4 KB',
+      format: 'PDF',
+      description: 'Trauma-informed guidance for hosting culturally grounded healing circles in community centers, mosques, and churches.',
+      methodology: 'Tea Healing Circle Model by Comfort Dondo',
+    },
+    {
+      id: 'res-safe-004',
+      title: 'Survivor Safety Planning & Digital Confidentiality Guide',
+      category: 'legal',
+      filename: 'survivor-safety-planning-guide.pdf',
+      downloadUrl: '/resources/survivor-safety-planning-guide.pdf',
+      fileSize: '2.2 KB',
+      format: 'PDF',
+      description: 'Actionable steps for discreet communications, tech safety, protective relocation, and day-one emergency protocols.',
+    },
+  ];
+
+  res.json({ success: true, count: catalog.length, resources: catalog });
+});
+
 // =============================================================================
 // M41.08: AUTHORITATIVE REPORTING API ENDPOINTS
 // =============================================================================
