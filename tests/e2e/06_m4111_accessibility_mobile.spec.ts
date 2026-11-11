@@ -101,7 +101,7 @@ test.describe('M41.11 — Public accessibility and mobile smoke checks', () => {
     await page.goto('/');
 
     const heading = page.locator('h1').first();
-    const heroImage = page.locator('img[alt*="Joyful African mother"]').first();
+    const heroImage = page.locator('img[alt*="Three empowered women from diverse immigrant and refugee backgrounds"]').first();
 
     await expect(heading).toBeVisible();
     await expect(heroImage).toBeVisible();
