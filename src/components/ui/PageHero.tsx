@@ -9,7 +9,7 @@ import React from 'react';
 import { Heart, Users, LifeBuoy } from 'lucide-react';
 import { SafeImage } from '../SafeImage';
 
-const FOUNDER_IMAGE = `${import.meta.env.BASE_URL}images/leadership/phumulani-founder-official.png`;
+const FOUNDER_IMAGE = '/images/leadership/phumulani-founder-official.png';
 
 export interface PageHeroProps {
   headline?: string;
@@ -114,13 +114,15 @@ export const PageHero: React.FC<PageHeroProps> = ({
                   <div className="flex items-center gap-3">
                     <SafeImage
                       src={FOUNDER_IMAGE}
-                      fallbackSrc="/images/leadership/comfort-dondo.svg"
                       fallbackType="founder"
                       fallbackText="Comfort Dondo"
+                      initials="CD"
                       alt="Phumulani Foundation Founder — Official Corporate Portrait"
                       className="w-12 h-12 rounded-full object-contain bg-white border-2 border-[#006D6F] shadow-xs"
                       loading="lazy"
                       decoding="async"
+                      width={1254}
+                      height={1254}
                     />
                     <div>
                       <div className="font-heading font-bold text-sm text-slate-900 leading-tight">

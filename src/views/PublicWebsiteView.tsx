@@ -44,8 +44,8 @@ import {
 import { FounderSection } from '../components/FounderSection';
 import { SafeImage } from '../components/SafeImage';
 
-const FOUNDER_IMAGE = `${import.meta.env.BASE_URL}images/leadership/phumulani-founder-official.png`;
-const HERO_IMAGE = `${import.meta.env.BASE_URL}images/home/phumulani-homepage-hero.webp`;
+const FOUNDER_IMAGE = '/images/leadership/phumulani-founder-official.png';
+const HERO_IMAGE = '/images/home/phumulani-homepage-hero.webp';
 
 interface PublicWebsiteViewProps {
   currentUser: User;
@@ -298,13 +298,14 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                     <div className="flex items-center gap-3">
                       <SafeImage
                         src={FOUNDER_IMAGE}
-                        fallbackSrc="/images/leadership/comfort-dondo.svg"
                         fallbackType="founder"
                         initials="CD"
                         alt="Phumulani Foundation Founder — Official Corporate Portrait"
                         className="w-12 h-12 rounded-lg object-contain bg-white border border-[#E5E7EB] shrink-0"
                         loading="lazy"
                         decoding="async"
+                        width={1254}
+                        height={1254}
                       />
                       <div>
                         <div className="font-heading font-bold text-base text-[#14213D]">Comfort Dondo</div>
@@ -577,13 +578,14 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 <div className="flex items-center gap-4">
                   <SafeImage
                     src={FOUNDER_IMAGE}
-                    fallbackSrc="/images/leadership/comfort-dondo.svg"
                     fallbackType="founder"
                     initials="CD"
                     alt="Phumulani Foundation Founder — Official Corporate Portrait"
                     className="w-20 h-20 rounded-2xl object-contain bg-white border-2 border-[#006D6F] shadow-md shrink-0"
                     loading="lazy"
                     decoding="async"
+                    width={1254}
+                    height={1254}
                   />
                   <div>
                     <div className="font-heading text-2xl font-bold text-slate-900 leading-tight">

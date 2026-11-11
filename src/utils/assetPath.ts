@@ -14,9 +14,6 @@ export function getAssetUrl(path: string | undefined | null): string {
     return path;
   }
 
-  // Strip leading slash
-  const cleanPath = path.replace(/^\/+/, '');
-
   // Vite sets import.meta.env.BASE_URL according to the `base` option in vite.config.ts
   let baseUrl = '/';
   try {
@@ -36,5 +33,17 @@ export function getAssetUrl(path: string | undefined | null): string {
   }
 
   const prefix = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  const cleanBase = prefix.replace(/^\/+/, '').replace(/\/+$/, '');
+
+  // Strip leading slash
+  let cleanPath = path.replace(/^\/+/, '');
+
+  // Idempotency: if cleanPath already begins with cleanBase or 'phumulani/', strip it
+  if (cleanBase && cleanPath.startsWith(`${cleanBase}/`)) {
+    cleanPath = cleanPath.slice(cleanBase.length + 1);
+  } else if (cleanPath.startsWith('phumulani/')) {
+    cleanPath = cleanPath.slice('phumulani/'.length);
+  }
+
   return `${prefix}${cleanPath}`;
 }

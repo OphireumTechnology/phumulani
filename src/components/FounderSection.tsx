@@ -11,7 +11,7 @@ import { PHUMULANI_MEDIA_INVENTORY, getMediaById } from '../services/mediaInvent
 import { VideoEmbedPlayer } from './VideoEmbedPlayer';
 import { SafeImage } from './SafeImage';
 
-const FOUNDER_IMAGE = `${import.meta.env.BASE_URL}images/leadership/phumulani-founder-official.png`;
+const FOUNDER_IMAGE = '/images/leadership/phumulani-founder-official.png';
 
 export const FounderSection: React.FC = () => {
   const [selectedBook, setSelectedBook] = useState<'facing' | 'sacred' | 'gift' | null>(null);
@@ -96,13 +96,14 @@ export const FounderSection: React.FC = () => {
               <div className="relative rounded-2xl overflow-hidden shadow-md border border-[#E5E7EB] bg-white group">
                 <SafeImage
                   src={FOUNDER_IMAGE}
-                  fallbackSrc="/images/leadership/comfort-dondo.svg"
                   fallbackType="founder"
                   initials="CD"
                   alt="Phumulani Foundation Founder — Official Corporate Portrait"
                   className="founder-portrait w-full h-auto object-contain rounded-t-2xl"
                   loading="lazy"
                   decoding="async"
+                  width={1254}
+                  height={1254}
                 />
                 <div className="p-4 bg-[#FAF8F3] border-t border-[#E5E7EB] text-center">
                   <div className="font-heading font-bold text-base text-[#14213D]">Comfort Dondo</div>
