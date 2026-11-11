@@ -298,7 +298,6 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                     <div className="flex items-center gap-3">
                       <SafeImage
                         src={FOUNDER_IMAGE}
-                        fallbackSrc="/images/leadership/comfort-dondo.svg"
                         fallbackType="founder"
                         initials="CD"
                         alt="Phumulani Foundation Founder — Official Corporate Portrait"
@@ -577,7 +576,6 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 <div className="flex items-center gap-4">
                   <SafeImage
                     src={FOUNDER_IMAGE}
-                    fallbackSrc="/images/leadership/comfort-dondo.svg"
                     fallbackType="founder"
                     initials="CD"
                     alt="Phumulani Foundation Founder — Official Corporate Portrait"
