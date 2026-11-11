@@ -36,5 +36,11 @@ export function getAssetUrl(path: string | undefined | null): string {
   }
 
   const prefix = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
+  // Callers may already pass a Vite BASE_URL-prefixed asset path.
+  // Avoid generating /phumulani/phumulani/... on GitHub Pages.
+  const normalizedBase = prefix.replace(/^\/+|\/+$/g, '');
+  if (normalizedBase && (cleanPath === normalizedBase || cleanPath.startsWith(`${normalizedBase}/`))) {
+    return `/${cleanPath}`;
+  }
   return `${prefix}${cleanPath}`;
 }
