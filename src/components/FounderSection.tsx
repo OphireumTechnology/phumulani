@@ -379,22 +379,24 @@ export const FounderSection: React.FC = () => {
           </div>
         </div>
 
-        {/* 5. Authentic Community Circle Spotlight */}
+        {/* 5. Authentic Community Circle Spotlight — The Tea Healing Circle Model */}
         <div className="bg-[#FFF7E6]/70 rounded-2xl border border-amber-200/80 p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-7 rounded-xl overflow-hidden shadow-lg border border-amber-200 bg-white">
+          <div className="lg:col-span-7 rounded-xl overflow-hidden shadow-sm border border-amber-200/70 bg-white aspect-[16/9] relative">
             <SafeImage
-              src="/images/homepage/community-hero.svg"
-              fallbackSrc="/media/founder/comfort-dondo-community-circle.svg"
+              src="/images/programs/tea-healing-circle-premium.webp"
+              fallbackSrc="/images/homepage/community-hero.svg"
               fallbackType="hero"
-              alt="Comfort Dondo facilitating authentic community healing circle in Brooklyn Park"
-              className="w-full h-auto object-cover"
+              alt="Illustrative scene of women sharing tea and supportive conversation in a welcoming community space."
+              className="w-full h-full object-cover"
               loading="lazy"
+              width={1376}
+              height={768}
             />
           </div>
           <div className="lg:col-span-5 space-y-4">
-            <span className="text-[11px] font-bold text-[#006D6F] bg-white border border-teal-200 px-3 py-1 rounded-full uppercase tracking-wider font-heading">
+            <div className="text-[11px] font-bold text-[#006D6F] uppercase tracking-wider font-heading">
               Cultural Healing Methodology
-            </span>
+            </div>
             <h3 className="font-heading text-2xl font-bold text-slate-900">
               The Tea Healing Circle Model
             </h3>

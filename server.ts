@@ -6157,6 +6157,9 @@ async function startServer() {
     console.warn('[Phumulani Platform] Phumulani Ai initialization notice:', aiErr);
   }
 
+  const publicDir = path.resolve(process.cwd(), 'public');
+  app.use(express.static(publicDir));
+
   if (process.env.NODE_ENV !== 'production') {
     const isHmrDisabled = process.env.DISABLE_HMR !== 'false' && process.env.DISABLE_HMR !== '0';
     const vite = await createViteServer({
