@@ -471,12 +471,19 @@ app.post('/api/payments/pledge', async (req: Request, res: Response) => {
 // -----------------------------------------------------------------------------
 // BLOCK 02: CONFIDENTIAL RESTRICTED INTAKE WITH AES-256-GCM ENCRYPTION
 // -----------------------------------------------------------------------------
-const ENCRYPTION_SECRET = process.env.SAFEGUARDING_MASTER_KEY || 'phumulani-safe-guarding-master-key-2026';
-const DERIVED_KEY = crypto.scryptSync(ENCRYPTION_SECRET, 'phumulani-salt-vawa', 32);
+const SAFEGUARDING_KEY = process.env.SAFEGUARDING_MASTER_KEY;
+// Never fall back to a known encryption key for confidential survivor records.
+// Intake must remain unavailable until an independently managed secret is configured.
+function getSafeguardingKey(): Buffer {
+  if (!SAFEGUARDING_KEY || SAFEGUARDING_KEY.length < 32) {
+    throw new Error('SAFEGUARDING_KEY_UNAVAILABLE');
+  }
+  return crypto.scryptSync(SAFEGUARDING_KEY, 'phumulani-salt-vawa', 32);
+}
 
 function encryptSafeguardingData(plaintext: string): { ciphertext: string; iv: string; authTag: string } {
   const iv = crypto.randomBytes(12);
-  const cipher = crypto.createCipheriv('aes-256-gcm', DERIVED_KEY, iv);
+  const cipher = crypto.createCipheriv('aes-256-gcm', getSafeguardingKey(), iv);
   let encrypted = cipher.update(plaintext, 'utf8', 'hex');
   encrypted += cipher.final('hex');
   const authTag = cipher.getAuthTag().toString('hex');
@@ -488,7 +495,7 @@ function encryptSafeguardingData(plaintext: string): { ciphertext: string; iv: s
 }
 
 function decryptSafeguardingData(ciphertext: string, ivHex: string, authTagHex: string): string {
-  const decipher = crypto.createDecipheriv('aes-256-gcm', DERIVED_KEY, Buffer.from(ivHex, 'hex'));
+  const decipher = crypto.createDecipheriv('aes-256-gcm', getSafeguardingKey(), Buffer.from(ivHex, 'hex'));
   decipher.setAuthTag(Buffer.from(authTagHex, 'hex'));
   let decrypted = decipher.update(ciphertext, 'hex', 'utf8');
   decrypted += decipher.final('utf8');
