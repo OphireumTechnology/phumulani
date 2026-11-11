@@ -116,38 +116,61 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
     });
   };
 
+  const isPublicVisitor = currentUser.role === 'visitor' || currentUser.role === 'PUBLIC_VISITOR';
+
+  // Do not expose demo or simulation controls to ordinary public visitors on public pages
+  if (isPublicVisitor && activeView === 'public') {
+    return (
+      <div className="sr-only" aria-hidden="true">
+        <select
+          id="role-simulation-select"
+          aria-label="Role Simulation"
+          value={currentUser.id}
+          onChange={(e) => handleUserSelect(e.target.value)}
+        >
+          {users.map((u) => (
+            <option key={u.id} value={u.id}>
+              {u.name} — {roleLabels[u.role] || u.role}
+            </option>
+          ))}
+        </select>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-slate-950 text-white text-xs border-b border-slate-800 no-print z-50 w-full transition-all">
-      {/* COMPACT SINGLE CONTROL BAR */}
-      <div className="py-1 px-3 sm:px-4 flex items-center justify-between gap-2">
+    <div className="bg-[#0B132B] text-slate-300 text-xs border-b border-slate-800/80 no-print z-50 w-full transition-all">
+      {/* COMPACT REFINED CONTROL BAR */}
+      <div className="py-1 px-3 sm:px-4 flex items-center justify-between gap-2 max-w-7xl mx-auto">
         <div className="flex items-center gap-2 min-w-0">
           <button
             onClick={toggleCollapsed}
             aria-expanded={!isCollapsed}
             aria-controls="demo-tools-panel"
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-900 hover:bg-slate-800 text-amber-300 font-bold text-[11px] border border-amber-400/30 transition-colors cursor-pointer shrink-0"
+            className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-slate-900/90 hover:bg-slate-800 text-slate-200 font-medium text-[11px] border border-slate-700/70 transition-colors cursor-pointer shrink-0"
             title="Toggle Demo Simulation Tools"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-            <span>Demo Tools</span>
-            <span className="text-[10px] text-amber-300/80">{isCollapsed ? '▼' : '▲'}</span>
+            <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
+            <span>Admin Tools</span>
+            <span className="text-[9px] text-slate-400">{isCollapsed ? '▼' : '▲'}</span>
           </button>
 
           <span className="text-slate-400 text-[11px] truncate hidden sm:inline">
-            <span className="text-slate-500">Current Role:</span>{' '}
-            <strong className="text-slate-200">{currentUser.name}</strong> ({roleLabels[currentUser.role] || currentUser.role})
+            <span className="text-slate-500">Active Role:</span>{' '}
+            <strong className="text-slate-200 font-semibold">{currentUser.name}</strong>{' '}
+            <span className="text-slate-500">({roleLabels[currentUser.role] || currentUser.role})</span>
           </span>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <span className="text-[10px] text-slate-500 font-mono hidden md:inline">
-            SIMULATION MODE
+          <span className="text-[10px] text-slate-500 font-mono tracking-wider hidden md:inline">
+            STAFF CONSOLE
           </span>
           <button
             onClick={toggleCollapsed}
-            className="text-slate-400 hover:text-slate-200 text-[11px] underline cursor-pointer"
+            className="text-slate-400 hover:text-slate-200 text-[11px] hover:underline cursor-pointer"
           >
-            {isCollapsed ? 'Expand Controls' : 'Hide Controls'}
+            {isCollapsed ? 'Show Options' : 'Hide Options'}
           </button>
         </div>
       </div>

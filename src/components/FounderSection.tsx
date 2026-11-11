@@ -10,7 +10,6 @@ import { BookOpen, Film, Heart, Shield, Award, Sparkles, ChevronRight, CheckCirc
 import { PHUMULANI_MEDIA_INVENTORY, getMediaById } from '../services/mediaInventory';
 import { VideoEmbedPlayer } from './VideoEmbedPlayer';
 import { SafeImage } from './SafeImage';
-import { BrandPatternDivider } from './branding/BrandPatternDivider';
 
 export const FounderSection: React.FC = () => {
   const [selectedBook, setSelectedBook] = useState<'facing' | 'sacred' | 'gift' | null>(null);
@@ -69,19 +68,17 @@ export const FounderSection: React.FC = () => {
   ];
 
   return (
-    <section id="founder-section" className="space-y-16 py-12 border-t border-teal-100 bg-white">
-      <BrandPatternDivider height={8} className="mb-8" />
+    <section id="founder-section" className="space-y-16 py-14 border-t border-[#E5E7EB] bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14">
         {/* 1. Header with Brand Badge */}
         <div className="text-center max-w-3xl mx-auto space-y-3">
-          <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#006D6F] bg-[#FFF7E6] px-3.5 py-1.5 rounded-full border border-amber-200">
-            <Sparkles className="w-3.5 h-3.5 text-[#F05A28]" />
-            <span className="font-heading font-semibold uppercase tracking-wider text-[11px]">ORGANIZATIONAL FOUNDER &amp; AUTHENTIC HERITAGE</span>
+          <div className="inline-flex items-center gap-2 text-xs font-semibold text-[#006D6F] tracking-wider uppercase font-heading">
+            <span>Organizational Founder &amp; Authentic Heritage</span>
           </div>
-          <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#006D6F]">
+          <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#14213D]">
             Comfort Dondo — Founder of Phumulani
           </h2>
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-sans">
+          <p className="text-[#475569] text-sm sm:text-base leading-relaxed font-sans max-w-2xl mx-auto">
             Survivor, community builder, author, and public policy advocate dedicated to ensuring that no African immigrant or refugee woman walks the path of healing alone.
           </p>
         </div>
@@ -90,24 +87,23 @@ export const FounderSection: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
           {/* Left: Authentic Executive Portrait */}
           <div className="lg:col-span-5 flex justify-center">
-            <div className="relative group max-w-sm sm:max-w-md w-full">
-              <div className="absolute -inset-2 bg-gradient-to-r from-[#006D6F] via-[#7A9B29] to-[#F05A28] rounded-3xl blur-lg opacity-25 group-hover:opacity-40 transition duration-500" />
-              <div className="relative rounded-2xl overflow-hidden shadow-2xl border-2 border-slate-200/90 bg-white">
+            <div className="relative max-w-sm sm:max-w-md w-full">
+              <div className="relative rounded-xl overflow-hidden shadow-sm border border-[#E5E7EB] bg-white">
                 <SafeImage
                   src="/images/leadership/comfort-dondo.svg"
                   fallbackSrc="/media/founder/comfort-dondo-official-portrait.svg"
                   fallbackType="founder"
                   initials="CD"
                   alt="Comfort Dondo, Founder and Executive Director of Phumulani"
-                  className="w-full h-auto object-cover aspect-[4/5] transform hover:scale-[1.02] transition-transform duration-300"
+                  className="w-full h-auto object-cover aspect-[4/5]"
                   loading="lazy"
                 />
-                <div className="p-4 bg-[#FFF7E6]/70 border-t border-amber-200/60 text-center">
-                  <div className="font-heading font-bold text-base text-slate-900">Comfort Dondo</div>
+                <div className="p-4 bg-[#FAF8F3] border-t border-[#E5E7EB] text-center">
+                  <div className="font-heading font-bold text-base text-[#14213D]">Comfort Dondo</div>
                   <div className="text-xs text-[#006D6F] font-semibold mt-0.5">
                     Founder &amp; Executive Director · Phumulani
                   </div>
-                  <div className="text-[11px] text-slate-500 mt-1">
+                  <div className="text-[11px] text-[#475569] mt-1">
                     Zimbabwean-born · Minneapolis, MN · Est. 2017
                   </div>
                 </div>
@@ -117,9 +113,9 @@ export const FounderSection: React.FC = () => {
 
           {/* Right: Authentic Founding Story & Mission */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="bg-[#FFF7E6] border-l-4 border-[#006D6F] p-5 rounded-r-xl shadow-2xs">
-              <Quote className="w-6 h-6 text-[#006D6F] mb-2 opacity-60" />
-              <p className="font-quote text-base sm:text-lg text-slate-800 italic leading-relaxed">
+            <div className="bg-[#FAF8F3] border border-[#E5E7EB] p-5 sm:p-6 rounded-xl shadow-2xs">
+              <Quote className="w-6 h-6 text-[#006D6F] mb-2 opacity-70" />
+              <p className="font-serif text-base sm:text-lg text-[#14213D] italic leading-relaxed">
                 "In Zulu, <em>Phumulani</em> means 'to rest' or 'peace'. When I fled violence as an immigrant mother in Minnesota, I realized that surviving is not enough. Survivors need a place of true spiritual rest, familiar meals, cultural sisterhood, and real economic keys to rebuild their lives."
               </p>
               <div className="text-xs font-bold text-[#006D6F] font-heading mt-3 tracking-wide">
@@ -127,7 +123,7 @@ export const FounderSection: React.FC = () => {
               </div>
             </div>
 
-            <div className="space-y-4 text-xs sm:text-sm text-slate-700 leading-relaxed font-sans">
+            <div className="space-y-4 text-xs sm:text-sm text-[#475569] leading-relaxed font-sans">
               <p>
                 Comfort Dondo arrived in the United States from Zimbabwe at age 17. After experiencing childhood trauma and domestic violence, she turned to mainstream shelter systems—only to find profound cultural and linguistic gaps. Traditional crisis facilities often lacked familiar foods, cultural understanding of immigration dependencies, or trauma support that honored the sacred traditions of African women.
               </p>
@@ -141,20 +137,20 @@ export const FounderSection: React.FC = () => {
 
             {/* Core Values Pillars */}
             <div className="grid grid-cols-3 gap-3 pt-2">
-              <div className="bg-[#FFF7E6]/60 p-3.5 rounded-xl border border-amber-200/70 text-center">
+              <div className="bg-[#FAF8F3] p-3.5 rounded-lg border border-[#E5E7EB] text-center">
                 <Shield className="w-5 h-5 text-[#006D6F] mx-auto mb-1.5" />
-                <div className="font-heading font-bold text-xs text-slate-900">Rest &amp; Refuge</div>
-                <div className="text-[10px] text-slate-600 mt-0.5">Culturally safe shelter</div>
+                <div className="font-heading font-bold text-xs text-[#14213D]">Rest &amp; Refuge</div>
+                <div className="text-[10px] text-[#475569] mt-0.5">Culturally safe shelter</div>
               </div>
-              <div className="bg-[#FFF7E6]/60 p-3.5 rounded-xl border border-amber-200/70 text-center">
+              <div className="bg-[#FAF8F3] p-3.5 rounded-lg border border-[#E5E7EB] text-center">
                 <Heart className="w-5 h-5 text-[#7A9B29] mx-auto mb-1.5" />
-                <div className="font-heading font-bold text-xs text-slate-900">Sisterhood</div>
-                <div className="text-[10px] text-slate-600 mt-0.5">Tea Healing Circles</div>
+                <div className="font-heading font-bold text-xs text-[#14213D]">Sisterhood</div>
+                <div className="text-[10px] text-[#475569] mt-0.5">Tea Healing Circles</div>
               </div>
-              <div className="bg-[#FFF7E6]/60 p-3.5 rounded-xl border border-amber-200/70 text-center">
+              <div className="bg-[#FAF8F3] p-3.5 rounded-lg border border-[#E5E7EB] text-center">
                 <Award className="w-5 h-5 text-[#F05A28] mx-auto mb-1.5" />
-                <div className="font-heading font-bold text-xs text-slate-900">Autonomy</div>
-                <div className="text-[10px] text-slate-600 mt-0.5">Workforce &amp; LLC grants</div>
+                <div className="font-heading font-bold text-xs text-[#14213D]">Autonomy</div>
+                <div className="text-[10px] text-[#475569] mt-0.5">Workforce &amp; LLC grants</div>
               </div>
             </div>
           </div>
@@ -355,8 +351,6 @@ export const FounderSection: React.FC = () => {
           </div>
         </div>
       </div>
-
-      <BrandPatternDivider height={8} className="mt-8" />
 
       {/* Book Excerpt Modal */}
       {selectedBook && (

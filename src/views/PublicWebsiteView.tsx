@@ -43,7 +43,6 @@ import {
 
 import { FounderSection } from '../components/FounderSection';
 import { SafeImage } from '../components/SafeImage';
-import { BrandPatternDivider } from '../components/branding/BrandPatternDivider';
 
 interface PublicWebsiteViewProps {
   currentUser: User;
@@ -213,36 +212,37 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
   return (
     <div className="space-y-16 pb-20 font-sans min-w-0 overflow-x-clip">
-      {/* 1. HERO BANNER - OFFICIAL BRAND IDENTITY GUIDELINES */}
-      <section className="bg-gradient-to-b from-[#FFF7E6] via-white to-[#FFF7E6]/40 pt-8 sm:pt-12 pb-14 sm:pb-18 border-b border-teal-100/80">
+      {/* 1. HERO BANNER - ELEGANT NONPROFIT REFINEMENT */}
+      <section className="bg-[#FAF8F3] pt-10 sm:pt-14 pb-14 sm:pb-18 border-b border-[#E5E7EB]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-w-0">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* LEFT COLUMN: Mission & Headline (~58%) */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center max-w-full text-xs font-semibold text-[#006D6F] bg-white border border-teal-200 px-3.5 py-1.5 rounded-xl sm:rounded-full shadow-2xs">
-                <span className="font-heading tracking-wide uppercase text-[10px] sm:text-[11px] leading-snug min-w-0 break-words">MINNESOTA 501(C)(3) · THE VOICE OF IMMIGRANTS &amp; REFUGEES</span>
+              <div className="flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-[#006D6F]">
+                <span>Minnesota 501(c)(3)</span>
+                <span aria-hidden="true" className="text-slate-300">·</span>
+                <span>The Voice of Immigrants &amp; Refugees</span>
               </div>
 
-              {/* Exact wording with responsive clamp and brand colors */}
-              <h1 className="font-heading font-extrabold text-[#006D6F] tracking-tight leading-[1.08] text-[clamp(1.85rem,4.2vw,4.25rem)] max-w-[1050px] min-w-0 break-words m-0">
-                <span className="block">Empowering Immigrant &amp; Refugee Survivors</span>
-                <span className="block text-[#F05A28] mt-1 sm:mt-2">Toward Healing &amp; Autonomy</span>
+              {/* Exact wording with responsive typography and balanced breaks */}
+              <h1 className="font-heading font-extrabold text-[#14213D] tracking-tight leading-[1.12] text-3xl sm:text-4xl lg:text-5xl xl:text-[3.25rem] max-w-2xl text-balance">
+                Empowering Immigrant &amp; Refugee Survivors{' '}
+                <span className="text-[#006D6F]">Toward Healing</span>{' '}
+                <span className="text-[#F05A28]">&amp; Autonomy</span>
               </h1>
 
-              {/* Official Mission Statement from Brand Identity Guide */}
-              <div className="border-l-4 border-[#F05A28] pl-4 py-1 bg-white/70 rounded-r-lg">
-                <p className="text-base sm:text-lg text-slate-700 leading-relaxed font-sans font-normal max-w-2xl">
-                  To empower immigrant and refugee survivors through culturally specific advocacy, safety, housing stability, education, and economic opportunity.
-                </p>
-              </div>
+              {/* Official Mission Statement */}
+              <p className="text-base sm:text-lg text-[#475569] leading-relaxed font-sans font-normal max-w-2xl">
+                To empower immigrant and refugee survivors through culturally specific advocacy, safety, housing stability, education, and economic opportunity.
+              </p>
 
               {/* Standardized 3 CTA Buttons with consistent heights and 44px+ touch targets */}
-              <div className="flex flex-wrap items-center gap-3 pt-2">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2">
                 <button
                   onClick={() => {
                     document.getElementById('donate-section')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="min-h-[44px] h-12 bg-[#F05A28] hover:bg-[#d94819] text-white px-5 rounded-lg text-xs sm:text-sm font-heading font-bold shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#F05A28]"
+                  className="min-h-[44px] h-12 bg-[#F05A28] hover:bg-[#D94819] text-white px-5 sm:px-6 rounded-lg text-xs sm:text-sm font-heading font-bold shadow-xs hover:shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#F05A28]"
                 >
                   <Heart className="w-4 h-4 fill-white/20" />
                   <span>Support Our Mission</span>
@@ -252,7 +252,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   onClick={() => {
                     document.getElementById('get-involved-section')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="min-h-[44px] h-12 bg-white hover:bg-[#FFF7E6] text-[#006D6F] border-2 border-[#006D6F] px-5 rounded-lg text-xs sm:text-sm font-heading font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#006D6F]"
+                  className="min-h-[44px] h-12 bg-white hover:bg-slate-50 text-[#006D6F] border border-[#006D6F] px-5 sm:px-6 rounded-lg text-xs sm:text-sm font-heading font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#006D6F]"
                 >
                   <Users className="w-4 h-4 text-[#006D6F]" />
                   <span>Become a Volunteer or Mentor</span>
@@ -262,36 +262,35 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   onClick={() => {
                     document.getElementById('get-help-section')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="min-h-[44px] h-12 bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-300 px-4 rounded-lg text-xs sm:text-sm font-heading font-bold transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-rose-500"
+                  className="min-h-[44px] h-12 bg-rose-50 hover:bg-rose-100 text-[#C62828] border border-rose-200 px-4 sm:px-5 rounded-lg text-xs sm:text-sm font-heading font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-rose-500"
                 >
-                  <LifeBuoy className="w-4 h-4 text-rose-600" />
+                  <LifeBuoy className="w-4 h-4 text-[#C62828]" />
                   <span>Need Help? Safe Routing</span>
                 </button>
               </div>
             </div>
 
-            {/* RIGHT COLUMN: Official Photography & Founder Spotlight (~42%) */}
+            {/* RIGHT COLUMN: Official Photography & Founder Spotlight Card (~42%) */}
             <div className="lg:col-span-5">
-              <div className="bg-white rounded-2xl border border-teal-200/90 shadow-xl overflow-hidden relative space-y-4">
-                {/* Official Community Hero Photography from Reference A */}
-                <div className="relative aspect-[16/10] bg-slate-100 overflow-hidden border-b border-teal-100 group">
+              <div className="bg-white rounded-xl border border-[#E5E7EB] shadow-sm overflow-hidden">
+                {/* Official Community Hero Photography */}
+                <div className="relative aspect-[16/10] bg-slate-100 overflow-hidden border-b border-[#E5E7EB]">
                   <SafeImage
                     src="/images/branding/phumulani-hero-family.png"
                     fallbackSrc="/images/homepage/community-hero.svg"
                     fallbackType="hero"
                     alt="Joyful African mother in traditional headwrap smiling warmly and embracing her two children against the Minneapolis skyline and Stone Arch Bridge"
-                    className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+                    className="w-full h-full object-cover transition-transform duration-500 hover:scale-[1.01]"
                     loading="eager"
                   />
-                  <div className="absolute bottom-2.5 left-2.5 bg-[#006D6F]/90 backdrop-blur-xs text-white px-3 py-1 rounded-full text-[10px] font-heading font-bold border border-white/20 flex items-center gap-1.5 shadow-sm">
-                    <span className="w-2 h-2 rounded-full bg-[#7A9B29] animate-pulse" />
-                    <span>Culturally Grounded Sanctuary</span>
+                  <div className="absolute bottom-3 left-3 bg-[#14213D]/85 backdrop-blur-xs text-white px-3 py-1 rounded-md text-[11px] font-heading font-medium tracking-wide">
+                    Culturally Grounded Sanctuary
                   </div>
                 </div>
 
-                <div className="p-5 sm:p-6 space-y-4 pt-1">
+                <div className="p-5 sm:p-6 space-y-4">
                   {/* Founder Identification */}
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                  <div className="flex items-center justify-between border-b border-[#E5E7EB] pb-3">
                     <div className="flex items-center gap-3">
                       <SafeImage
                         src="/images/leadership/comfort-dondo.svg"
@@ -299,45 +298,45 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                         fallbackType="founder"
                         initials="CD"
                         alt="Comfort Dondo, Founder of Phumulani"
-                        className="w-12 h-12 rounded-xl object-cover border-2 border-[#006D6F] shadow-sm shrink-0"
+                        className="w-12 h-12 rounded-lg object-cover border border-[#E5E7EB] shrink-0"
                       />
                       <div>
-                        <div className="font-heading font-bold text-base text-slate-900">Comfort Dondo</div>
-                        <div className="text-[11px] text-[#006D6F] font-semibold font-heading">Founder &amp; Executive Director</div>
+                        <div className="font-heading font-bold text-base text-[#14213D]">Comfort Dondo</div>
+                        <div className="text-xs text-[#006D6F] font-semibold font-heading">Founder &amp; Executive Director</div>
                       </div>
                     </div>
                     <button
                       onClick={() => {
                         document.getElementById('founder-section')?.scrollIntoView({ behavior: 'smooth' });
                       }}
-                      className="text-xs font-bold font-heading text-[#F05A28] hover:underline flex items-center gap-0.5 cursor-pointer"
+                      className="text-xs font-semibold font-heading text-[#F05A28] hover:text-[#D94819] hover:underline flex items-center gap-0.5 cursor-pointer"
                     >
                       <span>Story &amp; Video</span>
                       <ChevronRight className="w-3.5 h-3.5" />
                     </button>
                   </div>
 
-                  <p className="text-xs text-slate-600 leading-relaxed italic font-quote">
+                  <p className="text-xs sm:text-[13px] text-[#475569] leading-relaxed font-serif italic">
                     "Healing is finding the community, protection, and economic independence to stand tall again. At Phumulani, every survivor is met with trauma-informed care and unwavering sisterhood."
                   </p>
 
                   <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="bg-[#FFF7E6]/70 p-2.5 rounded-xl border border-amber-200/60">
-                      <div className="font-heading text-lg font-bold text-[#006D6F]">1,450+</div>
-                      <div className="text-[10px] text-slate-600">Survivors &amp; Families</div>
+                    <div className="bg-[#FAF8F3] p-3 rounded-lg border border-[#E5E7EB]">
+                      <div className="font-heading text-lg font-bold text-[#006D6F] tabular-nums">1,450+</div>
+                      <div className="text-[11px] text-[#475569] mt-0.5">Survivors &amp; Families</div>
                     </div>
-                    <div className="bg-[#FFF7E6]/70 p-2.5 rounded-xl border border-amber-200/60">
-                      <div className="font-heading text-lg font-bold text-[#F05A28]">$480k+</div>
-                      <div className="text-[10px] text-slate-600">Emergency Housing Aid</div>
+                    <div className="bg-[#FAF8F3] p-3 rounded-lg border border-[#E5E7EB]">
+                      <div className="font-heading text-lg font-bold text-[#F05A28] tabular-nums">$480k+</div>
+                      <div className="text-[11px] text-[#475569] mt-0.5">Emergency Housing Aid</div>
                     </div>
                   </div>
 
-                  <div className="p-2.5 bg-teal-50/80 border border-teal-200 rounded-xl flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2">
+                  <div className="p-2.5 bg-slate-50 border border-[#E5E7EB] rounded-lg flex items-center justify-between text-xs">
+                    <div className="flex items-center gap-2 text-[#14213D]">
                       <ShieldCheck className="w-4 h-4 text-[#006D6F]" />
-                      <span className="font-semibold font-heading text-teal-950 text-[11px]">Strict Survivor Confidentiality</span>
+                      <span className="font-medium text-[11px]">Strict Survivor Confidentiality</span>
                     </div>
-                    <span className="text-[9px] text-[#006D6F] font-mono font-bold">VAWA § 1367</span>
+                    <span className="text-[10px] text-[#006D6F] font-mono font-semibold">VAWA § 1367</span>
                   </div>
                 </div>
               </div>
@@ -345,9 +344,6 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
           </div>
         </div>
       </section>
-
-      {/* BRAND PATTERN ACCENT DIVIDER */}
-      <BrandPatternDivider height={10} />
 
       {/* 1.5 OFFICIAL CORE VALUES (FROM BRAND IDENTITY GUIDE REFERENCE A) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -853,9 +849,8 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       </section>
 
       {/* 6. DONATION & FUNDRAISING (HOSTED CHECKOUT SIMULATOR) */}
-      <section id="donate-section" className="bg-[#004A4C] text-white py-16 relative overflow-hidden">
-        <BrandPatternDivider height={8} className="absolute top-0 left-0 right-0 opacity-80" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4">
+      <section id="donate-section" className="bg-[#004A4C] text-white py-16 relative overflow-hidden border-t border-teal-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Column: Campaigns & Impact */}
             <div className="lg:col-span-6 space-y-6">

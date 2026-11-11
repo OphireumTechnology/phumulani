@@ -1,7 +1,6 @@
 import React from 'react';
 import { ShieldCheck, Heart, Phone, ExternalLink, LifeBuoy } from 'lucide-react';
 import { PhumulaniLogo } from './branding/PhumulaniLogo';
-import { BrandPatternDivider } from './branding/BrandPatternDivider';
 
 interface FooterProps {
   onViewChange: (view: string) => void;
@@ -11,8 +10,6 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({ onViewChange, onOpenMediaRegistry }) => {
   return (
     <footer className="bg-[#004A4C] text-slate-200 border-t border-[#00383A] text-xs no-print font-lato">
-      {/* African Geometric Mosaic Pattern Accent Ribbon */}
-      <BrandPatternDivider height={6} />
 
       {/* Emergency Hotline Bar */}
       <div className="bg-[#003D3F] text-white py-3 px-4 border-b border-[#003234]">

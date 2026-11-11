@@ -39,7 +39,7 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F9FA] text-[#263238] selection:bg-teal-100 selection:text-teal-900">
+    <div className="min-h-screen flex flex-col bg-white text-[#14213D] selection:bg-teal-100 selection:text-teal-900">
       {/* 0. ACCESSIBILITY: SKIP TO MAIN CONTENT ANCHOR (WCAG 2.2 AA) */}
       <a
         href="#main-content"
