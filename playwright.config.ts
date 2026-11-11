@@ -55,6 +55,9 @@ export default defineConfig({
     },
   ],
   webServer: {
+    // Test-only key: enables the encryption integration test without a production secret.
+    // Never use this deterministic fixture in any deployed environment.
+    env: { SAFEGUARDING_MASTER_KEY: 'playwright-test-only-key-not-for-production-2026' },
     command: 'npm run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
