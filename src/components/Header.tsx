@@ -204,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <PhumulaniLogo
                 variant="full"
-                className="h-11 sm:h-12 w-auto max-w-[170px] min-[400px]:max-w-[210px] sm:max-w-[250px] object-contain transition-transform duration-200 group-hover:scale-[1.01]"
+                className="h-11 sm:h-12 w-auto max-w-[120px] min-[400px]:max-w-[170px] min-[480px]:max-w-[210px] sm:max-w-[250px] object-contain transition-transform duration-200 group-hover:scale-[1.01]"
                 alt="Phumulani — The voice of immigrants and refugees in America"
               />
             </button>
@@ -261,11 +261,11 @@ export const Header: React.FC<HeaderProps> = ({
             </nav>
 
             {/* RIGHT: Primary Action Group with Uniform Height */}
-            <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
+            <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
               {/* Get Help Accent Button */}
               <button
                 onClick={() => navigateToSection('get-help-section')}
-                className="h-10 flex items-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-[#C62828] border border-rose-200 px-3 sm:px-3.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer font-heading shadow-2xs"
+                className="hidden min-[400px]:flex h-10 items-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-[#C62828] border border-rose-200 px-3 sm:px-3.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer font-heading shadow-2xs"
                 title="Discreet support routing & emergency help"
                 aria-label="Get Help"
               >
@@ -333,7 +333,7 @@ export const Header: React.FC<HeaderProps> = ({
               {/* In-App Notification Center Bell */}
               <button
                 onClick={() => setNotificationModalOpen(true)}
-                className="h-10 w-10 relative flex items-center justify-center rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-[#E5E7EB] transition-colors cursor-pointer"
+                className="hidden sm:flex h-10 w-10 relative items-center justify-center rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-[#E5E7EB] transition-colors cursor-pointer"
                 title="Open Notification Center"
                 aria-label="Open Notification Center"
               >
