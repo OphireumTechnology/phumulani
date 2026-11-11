@@ -191,8 +191,8 @@ export const Header: React.FC<HeaderProps> = ({
           Left: Logo | Center: Navigation | Right: Aligned Actions
           ======================================================== */}
       <div className="bg-white border-b border-[#E5E7EB]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4 h-20 min-w-0 w-full">
+        <div className="max-w-7xl mx-auto px-2 min-[400px]:px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between gap-1 min-[400px]:gap-2 lg:gap-4 h-20 min-w-0 w-full">
             {/* LEFT: Official Phumulani Mosaic USA Logo */}
             <button
               onClick={() => {
@@ -204,7 +204,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <PhumulaniLogo
                 variant="full"
-                className="h-11 sm:h-12 w-auto max-w-[120px] min-[400px]:max-w-[170px] min-[480px]:max-w-[210px] sm:max-w-[250px] object-contain transition-transform duration-200 group-hover:scale-[1.01]"
+                className="h-11 sm:h-12 w-auto max-w-[100px] min-[400px]:max-w-[145px] min-[480px]:max-w-[210px] sm:max-w-[250px] object-contain transition-transform duration-200 group-hover:scale-[1.01]"
                 alt="Phumulani — The voice of immigrants and refugees in America"
               />
             </button>
@@ -348,7 +348,7 @@ export const Header: React.FC<HeaderProps> = ({
               {/* Mobile Drawer Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="xl:hidden h-10 w-10 flex items-center justify-center text-slate-700 hover:text-slate-900 rounded-lg hover:bg-slate-100 transition-colors"
+                className="xl:hidden h-10 w-10 shrink-0 flex items-center justify-center text-slate-700 hover:text-slate-900 rounded-lg hover:bg-slate-100 transition-colors"
                 aria-label="Toggle Navigation Menu"
                 aria-expanded={mobileMenuOpen}
                 aria-controls="public-mobile-navigation"
