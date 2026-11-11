@@ -1957,9 +1957,9 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               {contactSubmittedCode ? (
                 <div className="p-6 bg-teal-50 border border-teal-200 rounded-xl text-center space-y-3">
                   <CheckCircle2 className="w-8 h-8 text-[#006D6F] mx-auto" />
-                  <div className="font-heading text-lg font-bold text-teal-950">Inquiry Delivered: {contactSubmittedCode}</div>
+                  <div className="font-heading text-lg font-bold text-teal-950">Inquiry Recorded: {contactSubmittedCode}</div>
                   <p className="text-xs text-slate-600 max-w-md mx-auto font-sans leading-relaxed">
-                    Thank you for reaching out. Your inquiry has been routed to <strong>{contactRoutedTo || 'our team'}</strong>. A coordinator will reply within 1 business day.
+                    Thank you for reaching out. Your inquiry has been recorded for <strong>{contactRoutedTo || 'our team'}</strong>. Automatic email delivery and response time are not yet confirmed.
                   </p>
                   <button
                     onClick={() => {
