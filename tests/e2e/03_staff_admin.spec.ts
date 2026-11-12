@@ -106,15 +106,18 @@ test.describe('M38.05 — Staff & Administration Journeys', () => {
 
     // Test Master Admin Reporting Tab
     await navigateToPortal(page, 'master-admin');
-    const reportingNav = page.locator('button:has-text("Authoritative Reporting (M41.08)"), button:has-text("Reporting")').filter({ visible: true }).first();
-    if (await reportingNav.isVisible()) {
-      await reportingNav.click();
-      // M41.08 renders the integrated reporting dashboard, not the overview's
-      // separate 'Separation of Duties Status' card.
-      const reportingTab = page.getByTestId('m4108-reporting-tab');
-      await expect(reportingTab).toBeVisible();
-      await expect(reportingTab.getByRole('heading', { name: 'Staff, Executive & Board Reporting Integration' })).toBeVisible();
+    // Choose the exact M41.08 module. The previous /Reporting/ fallback
+    // could click unrelated reporting views and still run M41.08 assertions.
+    const reportingNav = page.getByRole('button', { name: /51 Authoritative Reporting \\(M41\\.08\\)/i });
+    const sidebarToggle = page.getByRole('button', { name: 'Toggle Navigation Sidebar' });
+    if (!(await reportingNav.isVisible()) && await sidebarToggle.isVisible()) {
+      await sidebarToggle.click();
     }
+    await expect(reportingNav).toBeVisible();
+    await reportingNav.click();
+    const reportingTab = page.getByTestId('m4108-reporting-tab');
+    await expect(reportingTab).toBeVisible();
+    await expect(reportingTab.getByRole('heading', { name: 'Staff, Executive & Board Reporting Integration' })).toBeVisible();
 
     // Test Staff Command Center Reports Tab
     await page.goto('/');
