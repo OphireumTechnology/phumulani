@@ -642,7 +642,7 @@ app.post('/api/contact/submit', async (req: Request, res: Response) => {
       routed_to_mailbox: routedMailbox,
       subject: subject.trim(),
       message: message.trim(),
-      status: 'RECEIVED',
+      status: 'RECEIVED_NOT_EMAILED',
       created_at: new Date().toISOString(),
     };
 
@@ -655,14 +655,14 @@ app.post('/api/contact/submit', async (req: Request, res: Response) => {
       status: 'allowed',
     });
 
-    console.log(`[Contact Delivery] Inquiry ${trackingId} routed to ${routedMailbox} from ${email}`);
+    console.log(`[Contact Intake] Inquiry ${trackingId} stored for department ${department}; outbound email delivery not yet configured.`);
 
     res.json({
       success: true,
       trackingId,
       routedTo: routedMailbox,
       createdAt: inquiryRecord.created_at,
-      message: 'Your inquiry has been received and routed to our team.',
+      message: 'Your inquiry has been recorded. Email delivery has not yet been confirmed.',
     });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
