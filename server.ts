@@ -471,12 +471,19 @@ app.post('/api/payments/pledge', async (req: Request, res: Response) => {
 // -----------------------------------------------------------------------------
 // BLOCK 02: CONFIDENTIAL RESTRICTED INTAKE WITH AES-256-GCM ENCRYPTION
 // -----------------------------------------------------------------------------
-const ENCRYPTION_SECRET = process.env.SAFEGUARDING_MASTER_KEY || 'phumulani-safe-guarding-master-key-2026';
-const DERIVED_KEY = crypto.scryptSync(ENCRYPTION_SECRET, 'phumulani-salt-vawa', 32);
+const SAFEGUARDING_KEY = process.env.SAFEGUARDING_MASTER_KEY;
+// Never fall back to a known encryption key for confidential survivor records.
+// Intake must remain unavailable until an independently managed secret is configured.
+function getSafeguardingKey(): Buffer {
+  if (!SAFEGUARDING_KEY || SAFEGUARDING_KEY.length < 32) {
+    throw new Error('SAFEGUARDING_KEY_UNAVAILABLE');
+  }
+  return crypto.scryptSync(SAFEGUARDING_KEY, 'phumulani-salt-vawa', 32);
+}
 
 function encryptSafeguardingData(plaintext: string): { ciphertext: string; iv: string; authTag: string } {
   const iv = crypto.randomBytes(12);
-  const cipher = crypto.createCipheriv('aes-256-gcm', DERIVED_KEY, iv);
+  const cipher = crypto.createCipheriv('aes-256-gcm', getSafeguardingKey(), iv);
   let encrypted = cipher.update(plaintext, 'utf8', 'hex');
   encrypted += cipher.final('hex');
   const authTag = cipher.getAuthTag().toString('hex');
@@ -488,7 +495,7 @@ function encryptSafeguardingData(plaintext: string): { ciphertext: string; iv: s
 }
 
 function decryptSafeguardingData(ciphertext: string, ivHex: string, authTagHex: string): string {
-  const decipher = crypto.createDecipheriv('aes-256-gcm', DERIVED_KEY, Buffer.from(ivHex, 'hex'));
+  const decipher = crypto.createDecipheriv('aes-256-gcm', getSafeguardingKey(), Buffer.from(ivHex, 'hex'));
   decipher.setAuthTag(Buffer.from(authTagHex, 'hex'));
   let decrypted = decipher.update(ciphertext, 'hex', 'utf8');
   decrypted += decipher.final('utf8');
@@ -508,6 +515,7 @@ app.post('/api/intake/restricted', async (req: Request, res: Response) => {
 
     const anonymousCode = `SAFE-${Date.now().toString().slice(-6)}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
     const encrypted = encryptSafeguardingData(notes.trim());
+    const encryptedContactTime = encryptSafeguardingData(typeof safeTimeToContact === 'string' ? safeTimeToContact.trim() : '');
 
     const intakeRecord = {
       id: anonymousCode,
@@ -515,7 +523,10 @@ app.post('/api/intake/restricted', async (req: Request, res: Response) => {
       urgency_level: urgencyLevel,
       preferred_contact_method: preferredContactMethod,
       language_needed: languageNeeded,
-      safe_time_to_contact: safeTimeToContact.trim(),
+      safe_time_to_contact: '', // Legacy field intentionally blank; new records encrypt contact-time preferences.
+      safe_time_ciphertext: encryptedContactTime.ciphertext,
+      safe_time_iv: encryptedContactTime.iv,
+      safe_time_auth_tag: encryptedContactTime.authTag,
       ciphertext: encrypted.ciphertext,
       iv: encrypted.iv,
       auth_tag: encrypted.authTag,
@@ -531,10 +542,13 @@ app.post('/api/intake/restricted', async (req: Request, res: Response) => {
       success: true,
       anonymousCode,
       urgencyLevel,
-      status: 'SECURELY_ROUTED',
-      message: 'Your request has been encrypted and securely routed to our authorized Safeguarding Officers.',
+      status: 'RECEIVED_ENCRYPTED',
+      message: 'Your confidential request has been securely recorded. This confirmation does not guarantee that an officer has reviewed it.',
     });
   } catch (err: any) {
+    if (err?.message === 'SAFEGUARDING_KEY_UNAVAILABLE') {
+      return res.status(503).json({ success: false, error: 'Confidential intake is temporarily unavailable. Please use the published emergency support contacts.' });
+    }
     console.error('[Safeguarding Firewall] Error processing confidential intake:', err?.message || err);
     res.status(500).json({
       success: false,
@@ -574,7 +588,9 @@ app.get('/api/intake/restricted', async (req: Request, res: Response) => {
         urgencyLevel: r.urgency_level,
         preferredContactMethod: r.preferred_contact_method,
         languageNeeded: r.language_needed,
-        safeTimeToContact: r.safe_time_to_contact,
+        safeTimeToContact: r.safe_time_ciphertext && r.safe_time_iv && r.safe_time_auth_tag
+          ? decryptSafeguardingData(r.safe_time_ciphertext, r.safe_time_iv, r.safe_time_auth_tag)
+          : (r.safe_time_to_contact || ''),
         decryptedNotes,
         status: r.status,
         createdAt: r.created_at,
