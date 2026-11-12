@@ -21,6 +21,13 @@ async function navigateToPortal(page: any, portalRole: 'community' | 'staff' | '
     'master-admin': 'u-master-admin',
   };
   const roleSwitcher = page.locator('select#role-simulation-select');
+  // The seeded admin session starts with Admin Tools collapsed. Expand it
+  // through the real UI rather than bypassing access controls or injecting state.
+  if (await roleSwitcher.count() === 0) {
+    const adminTools = page.getByRole('button', { name: /Admin Tools/i });
+    await expect(adminTools).toBeVisible();
+    await adminTools.click();
+  }
   await expect(roleSwitcher).toHaveCount(1);
   await roleSwitcher.selectOption(userIdByPortal[portalRole], { force: true });
   // RoleSwitcherBar auto-navigates to the assigned portal for these identities.
