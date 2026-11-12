@@ -108,7 +108,7 @@ test.describe('M38.05 — Staff & Administration Journeys', () => {
     await navigateToPortal(page, 'master-admin');
     // Choose the exact M41.08 module. The previous /Reporting/ fallback
     // could click unrelated reporting views and still run M41.08 assertions.
-    const reportingNav = page.getByRole('button', { name: /51 Authoritative Reporting \\(M41\\.08\\)/i });
+    const reportingNav = page.getByRole('button', { name: /51 Authoritative Reporting \(M41\.08\)/i });
     const sidebarToggle = page.getByRole('button', { name: 'Toggle Navigation Sidebar' });
     if (!(await reportingNav.isVisible()) && await sidebarToggle.isVisible()) {
       await sidebarToggle.click();
