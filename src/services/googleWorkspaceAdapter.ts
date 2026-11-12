@@ -693,28 +693,27 @@ export class GoogleWorkspaceAdapter {
       };
     }
 
-    // In STAGED_DEVELOPMENT, store simulated tokens securely in internal vault
-    const expiresIn = 3600;
-    const expiresAt = Date.now() + expiresIn * 1000;
-    this.secureTokenVault.set(session.mailboxEmail.toLowerCase(), {
-      accessToken: `gw_acc_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`,
-      refreshToken: `gw_ref_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`,
-      expiresAt,
-    });
-
-    // Clean up consumed state
+    // SECURITY: A valid PKCE state and a plausible authorization code are not
+    // proof of a successful OAuth token exchange with Google. Do not mint local
+    // placeholder credentials or report a mailbox as connected.
+    // A separate server-side provider exchange, token validation and mailbox
+    // identity verification must be implemented before live authorization.
     this.activeOAuthStates.delete(state);
-
-    // Update mailbox state
-    this.updateMailboxStatus(session.mailboxEmail, 'AUTHORIZED');
-    this.logSyncEvent(session.mailboxEmail, 'OAUTH_TOKEN_EXCHANGED', `OAuth code exchanged successfully for ${session.mailboxEmail}.`, 'success');
-
+    this.secureTokenVault.delete(session.mailboxEmail.toLowerCase());
+    this.updateMailboxStatus(session.mailboxEmail, 'AUTHORIZATION_REQUIRED');
+    this.logSyncEvent(
+      session.mailboxEmail,
+      'OAUTH_PROVIDER_EXCHANGE_REQUIRED',
+      'OAuth callback rejected: live provider token exchange and mailbox identity verification are not implemented.',
+      'warning',
+    );
     return {
-      success: true,
+      success: false,
       mailboxEmail: session.mailboxEmail,
-      status: 'AUTHORIZED',
-      tokenType: 'Bearer',
-      expiresIn,
+      status: 'AUTHORIZATION_REQUIRED',
+      tokenType: '',
+      expiresIn: 0,
+      error: 'Live Google OAuth token exchange is not implemented. Reconnect using a verified server-side provider integration.',
     };
   }
 
@@ -731,23 +730,19 @@ export class GoogleWorkspaceAdapter {
       return { success: false, error: 'REFRESH TOKEN INVALID: Malformed or missing refresh token.' };
     }
 
-    // Locate vault entry
+    // SECURITY: Refresh tokens must be exchanged with the actual provider.
+    // Never mint synthetic access tokens or accept plausible-looking tokens.
+    // Until a server-side Google token refresh implementation is integrated,
+    // fail closed and require a new verified authorization.
     for (const [email, tokens] of this.secureTokenVault.entries()) {
       if (tokens.refreshToken === refreshToken) {
-        const newAccessToken = `gw_acc_refreshed_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
-        tokens.accessToken = newAccessToken;
-        tokens.expiresAt = Date.now() + 3600 * 1000;
-        this.logSyncEvent(email, 'TOKEN_REFRESH_SUCCESS', `Access token refreshed successfully for ${email}.`, 'success');
-        return { success: true, accessToken: newAccessToken, expiresIn: 3600 };
+        this.secureTokenVault.delete(email);
+        this.updateMailboxStatus(email, 'REAUTHORIZATION_REQUIRED');
+        this.logSyncEvent(email, 'TOKEN_REFRESH_PROVIDER_REQUIRED', 'Provider refresh unavailable; reauthorization required.', 'warning');
+        return { success: false, error: 'Live provider token refresh is not implemented. Reauthorization required.' };
       }
     }
-
-    // In staged simulation, accept valid-format tokens and issue refresh
-    return {
-      success: true,
-      accessToken: `gw_acc_refreshed_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`,
-      expiresIn: 3600,
-    };
+    return { success: false, error: 'Refresh token not recognized or provider verification unavailable.' };
   }
 
   /**
