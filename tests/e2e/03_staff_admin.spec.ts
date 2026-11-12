@@ -109,7 +109,11 @@ test.describe('M38.05 — Staff & Administration Journeys', () => {
     const reportingNav = page.locator('button:has-text("Authoritative Reporting (M41.08)"), button:has-text("Reporting")').filter({ visible: true }).first();
     if (await reportingNav.isVisible()) {
       await reportingNav.click();
-      await expect(page.locator('text=Separation of Duties').first()).toBeVisible();
+      // M41.08 renders the integrated reporting dashboard, not the overview's
+      // separate 'Separation of Duties Status' card.
+      const reportingTab = page.getByTestId('m4108-reporting-tab');
+      await expect(reportingTab).toBeVisible();
+      await expect(reportingTab.getByRole('heading', { name: 'Staff, Executive & Board Reporting Integration' })).toBeVisible();
     }
 
     // Test Staff Command Center Reports Tab
