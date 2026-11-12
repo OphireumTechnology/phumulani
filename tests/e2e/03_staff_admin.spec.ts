@@ -10,66 +10,41 @@ import { test, expect } from '@playwright/test';
  * Helper to navigate to a portal across desktop and mobile viewports
  */
 async function navigateToPortal(page: any, portalRole: 'community' | 'staff' | 'donor' | 'volunteer' | 'master-admin') {
-  const desktopSelectors: Record<string, string> = {
-    community: 'button:has-text("Community Member")',
-    volunteer: 'button:has-text("Volunteer")',
-    donor: 'button:has-text("Donor")',
-    staff: 'button:has-text("Staff")',
-    'master-admin': 'button:has-text("Master Admin")',
+  // The public visitor's demo toolbar is intentionally screen-reader-only.
+  // E2E tests explicitly select a seeded, non-production demo identity first.
+  // Selecting an identity is test setup; it does not grant server credentials.
+  const userIdByPortal: Record<string, string> = {
+    community: 'u-comm-member',
+    volunteer: 'u-vol-applicant',
+    donor: 'u-donor',
+    staff: 'u-staff',
+    'master-admin': 'u-master-admin',
   };
-
-  const desktopBtn = page.locator(desktopSelectors[portalRole]).first();
-  if (await desktopBtn.isVisible()) {
-    await desktopBtn.click();
-    return;
+  const roleSwitcher = page.locator('select#role-simulation-select');
+  // The seeded admin session starts with Admin Tools collapsed. Expand it
+  // through the real UI rather than bypassing access controls or injecting state.
+  if (await roleSwitcher.count() === 0) {
+    const adminTools = page.getByRole('button', { name: /Admin Tools/i });
+    await expect(adminTools).toBeVisible();
+    await adminTools.click();
   }
-
-  // Mobile flow: open mobile navigation menu from header if on public website
-  const menuToggle = page.locator('button[aria-label*="Toggle Navigation Menu"]');
-  if (await menuToggle.isVisible()) {
-    await menuToggle.click();
-    const mobileLinkMap: Record<string, string> = {
-      community: 'button:has-text("Community & Volunteer Hub")',
-      volunteer: 'button:has-text("Community & Volunteer Hub")',
-      donor: 'button:has-text("Donor & Sponsor Portal")',
-      staff: 'button:has-text("Staff Command Center")',
-      'master-admin': 'button:has-text("Master Administrator")',
-    };
-    const mobileLink = page.locator(mobileLinkMap[portalRole]).first();
-    await expect(mobileLink).toBeVisible();
-    await mobileLink.click();
-    return;
-  }
-
-  // Inside a portal on mobile: use the Portals dropdown in PortalLayout
-  const portalsDropdown = page.locator('button:has-text("Portals")').first();
-  if (await portalsDropdown.isVisible()) {
-    await portalsDropdown.click();
-    const dropdownLinkMap: Record<string, string> = {
-      community: 'button:has-text("Community & Volunteer Hub")',
-      volunteer: 'button:has-text("Community & Volunteer Hub")',
-      donor: 'button:has-text("Donor & Sponsor Portal")',
-      staff: 'button:has-text("Staff Command Center")',
-      'master-admin': 'button:has-text("Master Administrator")',
-    };
-    const dropLink = page.locator(dropdownLinkMap[portalRole]).first();
-    if (await dropLink.isVisible()) {
-      await dropLink.click();
-      return;
-    }
-  }
-
-  // Role simulation select dropdown in RoleSwitcherBar
-  const selectEl = page.locator('select#role-simulation-select, select[aria-label="Role Simulation"]').first();
-  if (await selectEl.isVisible()) {
-    const roleOptMap: Record<string, RegExp> = {
-      community: /Community Member/i,
-      volunteer: /Volunteer/i,
-      donor: /Donor/i,
-      staff: /Staff/i,
-      'master-admin': /Master Admin/i,
-    };
-    await selectEl.selectOption({ label: roleOptMap[portalRole] });
+  await expect(roleSwitcher).toHaveCount(1);
+  await roleSwitcher.selectOption(userIdByPortal[portalRole], { force: true });
+  // RoleSwitcherBar auto-navigates to the assigned portal for these identities.
+  // Assert the destination loaded, not merely that a generic main element exists.
+  const expectedHeading = portalRole === 'community' || portalRole === 'volunteer'
+    ? /Community Member.*Self-Service Portal/i
+    : portalRole === 'staff'
+      ? /Staff|Operations|Command/i
+      : portalRole === 'master-admin'
+        ? /Master Admin|Administration|Command Center/i
+        : /Donor|Sponsor/i;
+  if (portalRole === 'master-admin') {
+    // MasterAdministratorView renders its identity in the top header span,
+    // not inside a main h1/h2 element.
+    await expect(page.locator('header').getByText('Phumulani Master Administrator', { exact: true })).toBeVisible();
+  } else {
+    await expect(page.locator('main h1, main h2').filter({ hasText: expectedHeading }).first()).toBeVisible();
   }
 }
 
@@ -131,13 +106,21 @@ test.describe('M38.05 — Staff & Administration Journeys', () => {
 
     // Test Master Admin Reporting Tab
     await navigateToPortal(page, 'master-admin');
-    const reportingNav = page.locator('button:has-text("Authoritative Reporting (M41.08)"), button:has-text("Reporting")').filter({ visible: true }).first();
-    if (await reportingNav.isVisible()) {
-      await reportingNav.click();
-      await expect(page.locator('text=Separation of Duties').first()).toBeVisible();
+    // Choose the exact M41.08 module. The previous /Reporting/ fallback
+    // could click unrelated reporting views and still run M41.08 assertions.
+    const reportingNav = page.getByRole('button', { name: /51 Authoritative Reporting \(M41\.08\)/i });
+    const sidebarToggle = page.getByRole('button', { name: 'Toggle Navigation Sidebar' });
+    if (!(await reportingNav.isVisible()) && await sidebarToggle.isVisible()) {
+      await sidebarToggle.click();
     }
+    await expect(reportingNav).toBeVisible();
+    await reportingNav.click();
+    const reportingTab = page.getByTestId('m4108-reporting-tab');
+    await expect(reportingTab).toBeVisible();
+    await expect(reportingTab.getByRole('heading', { name: 'Staff, Executive & Board Reporting Integration' })).toBeVisible();
 
     // Test Staff Command Center Reports Tab
+    await page.goto('/');
     await navigateToPortal(page, 'staff');
     await selectPortalTab(page, 'button:has-text("Reports"), button:has-text("Staff Operations Report")');
     await expect(page.locator('body')).toBeVisible();
