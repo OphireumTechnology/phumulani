@@ -23,11 +23,15 @@ async function navigateToPortal(page: any, portalRole: 'community' | 'staff' | '
   await expect(roleSwitcher).toHaveCount(1);
   await roleSwitcher.selectOption(userIdByPortal[portalRole], { force: true });
   // RoleSwitcherBar auto-navigates to the assigned portal for these identities.
-  if (portalRole === 'donor') {
-    await expect(page.getByText('Donor', { exact: false }).first()).toBeVisible();
-  } else {
-    await expect(page.locator('main').first()).toBeVisible();
-  }
+  // Assert the destination loaded, not merely that a generic main element exists.
+  const expectedHeading = portalRole === 'community' || portalRole === 'volunteer'
+    ? /Community Member.*Self-Service Portal/i
+    : portalRole === 'staff'
+      ? /Staff|Operations|Command/i
+      : portalRole === 'master-admin'
+        ? /Master Admin|Administration|Command Center/i
+        : /Donor|Sponsor/i;
+  await expect(page.locator('main h1, main h2').filter({ hasText: expectedHeading }).first()).toBeVisible();
 }
 
 /**
