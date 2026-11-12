@@ -18,10 +18,12 @@ export const AdvancedReportingExportsTab: React.FC<Props> = ({ currentUser }) =>
   const [selectedDomain, setSelectedDomain] = useState<ReportExportDomain>('COMMUNITY_OPERATIONS');
   const [selectedFormat, setSelectedFormat] = useState<'CSV' | 'PRINT_HTML'>('CSV');
   const [exportNotice, setExportNotice] = useState<string | null>(null);
+  const [exportError, setExportError] = useState<string | null>(null);
   const [auditLogs, setAuditLogs] = useState<ExportAuditLog[]>(phase34Service.getExportAudits());
 
   const handleExport = () => {
     try {
+      setExportError(null);
       const result = phase34Service.executeAuthorizedDataExport(
         selectedDomain,
         selectedFormat,
@@ -42,7 +44,7 @@ export const AdvancedReportingExportsTab: React.FC<Props> = ({ currentUser }) =>
       setAuditLogs([...phase34Service.getExportAudits()]);
       setTimeout(() => setExportNotice(null), 4000);
     } catch (err: any) {
-      alert(err.message);
+      setExportError(err.message);
     }
   };
 
@@ -84,6 +86,22 @@ export const AdvancedReportingExportsTab: React.FC<Props> = ({ currentUser }) =>
       {exportNotice && (
         <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-800 text-xs font-semibold">
           {exportNotice}
+        </div>
+      )}
+
+      {exportError && (
+        <div
+          role="alert"
+          className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-800 text-xs font-semibold flex items-center justify-between gap-2"
+        >
+          <span>{exportError}</span>
+          <button
+            type="button"
+            onClick={() => setExportError(null)}
+            className="text-rose-700 hover:text-rose-900 font-bold cursor-pointer"
+          >
+            Dismiss
+          </button>
         </div>
       )}
 

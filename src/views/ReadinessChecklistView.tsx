@@ -31,7 +31,7 @@ import {
 } from 'lucide-react';
 import { PortalLayout } from '../components/PortalLayout';
 import { getDatabaseMetadata, generateDatabaseBackupJson } from '../db/databaseDefinition';
-import { AutomatedTestRunner, TestSuiteSummary } from '../services/automatedTestRunner';
+import type { TestSuiteSummary } from '../services/automatedTestRunner';
 
 interface ReadinessChecklistViewProps {
   currentUser: User;
@@ -394,6 +394,7 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
   const runAcceptanceTests = async () => {
     setIsRunningTests(true);
     try {
+      const { AutomatedTestRunner } = await import('../services/automatedTestRunner');
       const summary = await AutomatedTestRunner.runAllTests();
       setTestSummary(summary);
       if (summary.failed === 0) {

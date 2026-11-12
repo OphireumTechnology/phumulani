@@ -18,12 +18,14 @@ export const BoardGovernanceCalendarTab: React.FC<Props> = ({ currentUser }) => 
   const [events, setEvents] = useState<BoardComplianceEvent[]>(phase34Service.getBoardComplianceEvents());
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
   const [evidenceNote, setEvidenceNote] = useState('');
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   const handleComplete = (id: string) => {
     if (!evidenceNote.trim()) {
-      alert('Please provide human sign-off evidence or meeting minutes citation.');
+      setValidationError('Please provide human sign-off evidence or meeting minutes citation.');
       return;
     }
+    setValidationError(null);
     phase34Service.completeGovernanceEvent(id, evidenceNote, currentUser.name);
     setEvents([...phase34Service.getBoardComplianceEvents()]);
     setSelectedEventId(null);
@@ -48,6 +50,22 @@ export const BoardGovernanceCalendarTab: React.FC<Props> = ({ currentUser }) => 
           </p>
         </div>
       </div>
+
+      {validationError && (
+        <div
+          role="alert"
+          className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-800 text-xs font-semibold flex items-center justify-between gap-2"
+        >
+          <span>{validationError}</span>
+          <button
+            type="button"
+            onClick={() => setValidationError(null)}
+            className="text-rose-700 hover:text-rose-900 font-bold cursor-pointer"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
 
       {/* Events Roster */}
       <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">

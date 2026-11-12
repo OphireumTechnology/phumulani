@@ -5883,7 +5883,7 @@ app.get('/api/admin/email/oauth/google/start', requireSessionMiddleware(PRIVILEG
     }
     const redirectUri = (req.query.redirectUri as string) || `${req.protocol}://${req.get('host')}/api/admin/email/oauth/google/callback`;
     const mailboxEmail = req.query.email as string | undefined;
-    const { authUrl, stateId, codeChallenge, codeVerifier } = oAuthService.initiateGoogleOAuth(redirectUri, mailboxEmail);
+    const { authUrl, stateId, codeChallenge } = oAuthService.initiateGoogleOAuth(redirectUri, mailboxEmail);
     res.json({
       success: true,
       authUrl,
@@ -5892,7 +5892,6 @@ app.get('/api/admin/email/oauth/google/start', requireSessionMiddleware(PRIVILEG
       provider: 'GOOGLE',
       clientId: process.env.GOOGLE_WORKSPACE_CLIENT_ID!.trim(),
       codeChallenge,
-      codeVerifier,
       scopes: [
         'openid',
         'email',
@@ -5979,7 +5978,7 @@ app.get('/api/admin/email/oauth/microsoft/start', requireSessionMiddleware(PRIVI
     }
     const redirectUri = (req.query.redirectUri as string) || `${req.protocol}://${req.get('host')}/api/admin/email/oauth/microsoft/callback`;
     const mailboxEmail = req.query.email as string | undefined;
-    const { authUrl, stateId, codeChallenge, codeVerifier } = oAuthService.initiateMicrosoftOAuth(redirectUri, mailboxEmail);
+    const { authUrl, stateId, codeChallenge } = oAuthService.initiateMicrosoftOAuth(redirectUri, mailboxEmail);
     res.json({
       success: true,
       authUrl,
@@ -5989,7 +5988,6 @@ app.get('/api/admin/email/oauth/microsoft/start', requireSessionMiddleware(PRIVI
       clientId: process.env.MICROSOFT_GRAPH_CLIENT_ID!.trim(),
       tenantId: process.env.MICROSOFT_TENANT_ID || 'common',
       codeChallenge,
-      codeVerifier,
       scopes: ['openid', 'profile', 'offline_access', 'Mail.Read', 'Mail.ReadWrite', 'Mail.Send'],
     });
   } catch (err: any) {

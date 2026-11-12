@@ -18,18 +18,20 @@ export const VolunteerSchedulingTab: React.FC<Props> = ({ currentUser }) => {
   const [shifts, setShifts] = useState<VolunteerShiftOpportunity[]>(phase34Service.getVolunteerShifts());
   const [selectedShiftId, setSelectedShiftId] = useState<string>(shifts[0]?.id || '');
   const [actionNotice, setActionNotice] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const activeShift = shifts.find((s) => s.id === selectedShiftId) || shifts[0];
   const matchScores = phase34Service.getShiftMatchScores(activeShift?.id || '');
 
   const handleApproveMatch = (volunteerId: string) => {
     try {
+      setActionError(null);
       phase34Service.approveVolunteerShiftMatch(volunteerId, activeShift.id, currentUser.name);
       setShifts([...phase34Service.getVolunteerShifts()]);
       setActionNotice(`Supervisor approval recorded for ${volunteerId}. Clearance verified.`);
       setTimeout(() => setActionNotice(null), 3000);
     } catch (err: any) {
-      alert(err.message);
+      setActionError(err.message);
     }
   };
 
@@ -55,6 +57,22 @@ export const VolunteerSchedulingTab: React.FC<Props> = ({ currentUser }) => {
       {actionNotice && (
         <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-800 text-xs font-semibold">
           {actionNotice}
+        </div>
+      )}
+
+      {actionError && (
+        <div
+          role="alert"
+          className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-rose-800 text-xs font-semibold flex items-center justify-between gap-2"
+        >
+          <span>{actionError}</span>
+          <button
+            type="button"
+            onClick={() => setActionError(null)}
+            className="text-rose-700 hover:text-rose-900 font-bold cursor-pointer"
+          >
+            Dismiss
+          </button>
         </div>
       )}
 

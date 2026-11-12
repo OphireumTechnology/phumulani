@@ -60,6 +60,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
   const [executionResult, setExecutionResult] = useState<any | null>(null);
   const [isExecuting, setIsExecuting] = useState(false);
   const [actionMessage, setActionMessage] = useState<{ text: string; type: 'success' | 'error' } | null>(null);
+  const [confirmHalt, setConfirmHalt] = useState(false);
 
   // Cross-division handoff state
   const [handoffSource, setHandoffSource] = useState('ORG-AI-012');
@@ -86,11 +87,10 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
   };
 
   const handleEmergencyHalt = async () => {
-    if (confirm('CRITICAL ACTION: Halt all 36 AI workforce agents immediately?')) {
-      await unifiedAiWorkforceService.emergencyHaltAllAgents(currentUserRole);
-      setActionMessage({ text: 'EMERGENCY HALT ACTIVATED: All 36 agents paused.', type: 'error' });
-      refreshData();
-    }
+    setConfirmHalt(false);
+    await unifiedAiWorkforceService.emergencyHaltAllAgents(currentUserRole);
+    setActionMessage({ text: 'EMERGENCY HALT ACTIVATED: All 36 agents paused.', type: 'error' });
+    refreshData();
   };
 
   const handleResumeAll = async () => {
@@ -226,9 +226,25 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Resume All 36 Agents</span>
               </button>
+            ) : confirmHalt ? (
+              <div className="inline-flex items-center gap-1.5 bg-rose-950/90 border border-rose-500/60 px-2.5 py-1 rounded-lg">
+                <span className="text-[11px] font-semibold text-rose-200">Halt all 36 agents?</span>
+                <button
+                  onClick={handleEmergencyHalt}
+                  className="px-2 py-0.5 bg-rose-600 hover:bg-rose-500 text-white text-[11px] font-bold rounded cursor-pointer"
+                >
+                  Confirm
+                </button>
+                <button
+                  onClick={() => setConfirmHalt(false)}
+                  className="px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-200 text-[11px] font-medium rounded cursor-pointer"
+                >
+                  Cancel
+                </button>
+              </div>
             ) : (
               <button
-                onClick={handleEmergencyHalt}
+                onClick={() => setConfirmHalt(true)}
                 className="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-lg shadow-xs flex items-center gap-1.5 transition-all"
               >
                 <Power className="w-3.5 h-3.5" />

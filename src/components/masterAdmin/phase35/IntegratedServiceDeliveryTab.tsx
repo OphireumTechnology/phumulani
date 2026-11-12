@@ -62,6 +62,7 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
   const [resCode, setResCode] = useState<ServiceResolutionCode>('RESOLVED_FULFILLED');
   const [resSummary, setResSummary] = useState('');
   const [actionFeedback, setActionFeedback] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   // Workflow state
   const [workflows, setWorkflows] = useState<CrossDepartmentWorkflowInstance[]>(
@@ -120,6 +121,7 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
   const handleStatusChange = () => {
     if (!selectedReq) return;
     try {
+      setActionError(null);
       const updated = phase35Service.transitionServiceRequestStatus(
         selectedReq.id,
         newStatus,
@@ -133,13 +135,14 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
       setActionFeedback(`Request ${selectedReq.trackingReference} transitioned to ${newStatus}`);
       setTimeout(() => setActionFeedback(null), 3000);
     } catch (err: any) {
-      alert(err.message);
+      setActionError(err.message);
     }
   };
 
   const handleAssign = () => {
     if (!selectedReq) return;
     try {
+      setActionError(null);
       const updated = phase35Service.assignServiceRequest(
         selectedReq.id,
         assignDept,
@@ -152,13 +155,14 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
       setActionFeedback(`Request assigned to ${assignStaff} (${assignDept})`);
       setTimeout(() => setActionFeedback(null), 3000);
     } catch (err: any) {
-      alert(err.message);
+      setActionError(err.message);
     }
   };
 
   const handleAddNote = () => {
     if (!selectedReq || !internalNote.trim()) return;
     try {
+      setActionError(null);
       phase35Service.addRoleBasedStaffNote(
         selectedReq.id,
         'Staff Member',
@@ -171,13 +175,14 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
       setActionFeedback('Role-based staff note appended successfully');
       setTimeout(() => setActionFeedback(null), 3000);
     } catch (err: any) {
-      alert(err.message);
+      setActionError(err.message);
     }
   };
 
   const handleResolve = () => {
     if (!selectedReq || !resSummary.trim()) return;
     try {
+      setActionError(null);
       const updated = phase35Service.resolveServiceRequest(
         selectedReq.id,
         resCode,
@@ -191,51 +196,55 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
       setActionFeedback(`Request marked RESOLVED with code ${resCode}`);
       setTimeout(() => setActionFeedback(null), 3000);
     } catch (err: any) {
-      alert(err.message);
+      setActionError(err.message);
     }
   };
 
   const handleAdvanceWorkflow = (wfId: string) => {
     try {
+      setActionError(null);
       phase35Service.advanceWorkflowStep(wfId, 'Staff Coordinator', 'staff');
       refreshAll();
       setActionFeedback('Workflow step advanced successfully');
       setTimeout(() => setActionFeedback(null), 3000);
     } catch (err: any) {
-      alert(err.message);
+      setActionError(err.message);
     }
   };
 
   const handleVerifyVolunteerClearance = (volId: string) => {
     try {
+      setActionError(null);
       phase35Service.verifyVolunteerClearance(volId, 'David Mwangi', 'Volunteer Coordinator');
       refreshAll();
       setActionFeedback('Volunteer clearance verified by human supervisor');
       setTimeout(() => setActionFeedback(null), 3000);
     } catch (err: any) {
-      alert(err.message);
+      setActionError(err.message);
     }
   };
 
   const handleApproveThankYou = (stewId: string) => {
     try {
+      setActionError(null);
       phase35Service.approveThankYouLetter(stewId, 'Comfort Dondo', 'executive_director');
       refreshAll();
       setActionFeedback('Stewardship thank-you letter approved');
       setTimeout(() => setActionFeedback(null), 3000);
     } catch (err: any) {
-      alert(err.message);
+      setActionError(err.message);
     }
   };
 
   const handleApproveAiTask = (execId: string) => {
     try {
+      setActionError(null);
       phase35Service.approveAiTaskOutput(execId, 'Comfort Dondo', 'executive_director');
       refreshAll();
       setActionFeedback('AI task recommendation verified and co-signed');
       setTimeout(() => setActionFeedback(null), 3000);
     } catch (err: any) {
-      alert(err.message);
+      setActionError(err.message);
     }
   };
 
@@ -273,6 +282,22 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
           <div className="mt-4 p-3 bg-teal-500/20 border border-teal-400/40 rounded-xl text-teal-100 text-sm flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-teal-300" />
             {actionFeedback}
+          </div>
+        )}
+
+        {actionError && (
+          <div
+            role="alert"
+            className="mt-4 p-3 bg-rose-950/70 border border-rose-400/50 rounded-xl text-rose-100 text-sm flex items-center justify-between gap-2"
+          >
+            <span>{actionError}</span>
+            <button
+              type="button"
+              onClick={() => setActionError(null)}
+              className="px-2 py-0.5 rounded bg-rose-900/80 hover:bg-rose-800 text-xs font-bold cursor-pointer"
+            >
+              Dismiss
+            </button>
           </div>
         )}
 

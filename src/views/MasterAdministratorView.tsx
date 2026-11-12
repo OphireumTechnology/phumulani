@@ -5,68 +5,69 @@
  * Grounded in Master Directive Phase 8: Live Production Activation & Enterprise Control
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { db } from '../services/db';
 import { User, UserRole, SystemSettingItem } from '../types';
 import { ProductionHealthService, SystemVerificationProbeReport } from '../services/productionHealthService';
-import { AutomatedTestRunner, TestSuiteSummary } from '../services/automatedTestRunner';
+import type { TestSuiteSummary } from '../services/automatedTestRunner';
 import { EnvironmentService } from '../services/environmentService';
-import { EmailCommandCenterView } from './EmailCommandCenterView';
-import { FundraisingCommandCenterView } from './FundraisingCommandCenterView';
-import { DevelopmentOperationsView } from './DevelopmentOperationsView';
-import { ExecutiveOverviewTab } from '../components/masterAdmin/ExecutiveOverviewTab';
-import { StaffManagementTab } from '../components/masterAdmin/StaffManagementTab';
-import { RbacPermissionsTab } from '../components/masterAdmin/RbacPermissionsTab';
-import { DepartmentManagementTab } from '../components/masterAdmin/DepartmentManagementTab';
-import { TaskManagementTab } from '../components/masterAdmin/TaskManagementTab';
-import { ExecutiveDecisionTab } from '../components/masterAdmin/ExecutiveDecisionTab';
-import { VolunteerManagementTab } from '../components/masterAdmin/VolunteerManagementTab';
-import { GrantManagementTab } from '../components/masterAdmin/GrantManagementTab';
-import { PartnershipManagementTab } from '../components/masterAdmin/PartnershipManagementTab';
-import { OrganizationalAnalyticsTab } from '../components/masterAdmin/OrganizationalAnalyticsTab';
-import { CommunityProgramsDashboardTab } from '../components/masterAdmin/CommunityProgramsDashboardTab';
-import { CommunityOutreachTab } from '../components/masterAdmin/CommunityOutreachTab';
-import { GeneralServiceRequestsTab } from '../components/masterAdmin/GeneralServiceRequestsTab';
-import { ReferralPartnerTab } from '../components/masterAdmin/ReferralPartnerTab';
-import { VolunteerDeploymentTab } from '../components/masterAdmin/VolunteerDeploymentTab';
-import { CommunityEventsTab } from '../components/masterAdmin/CommunityEventsTab';
-import { ProgramResourcesTab } from '../components/masterAdmin/ProgramResourcesTab';
-import { ProgramImpactTab } from '../components/masterAdmin/ProgramImpactTab';
-import { ProgramAiIntelligenceModal } from '../components/masterAdmin/ProgramAiIntelligenceModal';
-import { FundingCommandCenterTab } from '../components/masterAdmin/funding/FundingCommandCenterTab';
-import { GrantOpportunityRegistryTab } from '../components/masterAdmin/funding/GrantOpportunityRegistryTab';
-import { GrantDevelopmentWorkspaceTab } from '../components/masterAdmin/funding/GrantDevelopmentWorkspaceTab';
-import { DonorCrmCommandTab } from '../components/masterAdmin/funding/DonorCrmCommandTab';
-import { FundraisingPipelinesTab } from '../components/masterAdmin/funding/FundraisingPipelinesTab';
-import { RestrictedFundsTab } from '../components/masterAdmin/funding/RestrictedFundsTab';
-import { FunderReportingTab } from '../components/masterAdmin/funding/FunderReportingTab';
-import { FundingCalendarTab } from '../components/masterAdmin/funding/FundingCalendarTab';
-import { OperationsCommandCenterTab } from '../components/masterAdmin/operations/OperationsCommandCenterTab';
-import { InternalNotificationsTab } from '../components/masterAdmin/operations/InternalNotificationsTab';
-import { UnifiedAiWorkforceView } from '../components/masterAdmin/UnifiedAiWorkforceView';
-import { ContentManagementTab } from '../components/masterAdmin/ContentManagementTab';
-import { UnifiedCommunityOperationsCenter } from '../components/masterAdmin/operations/UnifiedCommunityOperationsCenter';
-import { ExecutiveIntelligenceDashboard } from '../components/masterAdmin/ExecutiveIntelligenceDashboard';
-import { BoardGovernancePortalTab } from '../components/masterAdmin/BoardGovernancePortalTab';
-import { CommunityEngagementTab } from '../components/masterAdmin/CommunityEngagementTab';
-import { TrainingKnowledgeCenterTab } from '../components/masterAdmin/TrainingKnowledgeCenterTab';
-import { WorkflowAutomationEngineTab } from '../components/masterAdmin/WorkflowAutomationEngineTab';
-import { UnifiedOperationalSearchTab } from '../components/masterAdmin/phase34/UnifiedOperationalSearchTab';
-import { CommunityResourceDirectoryTab } from '../components/masterAdmin/phase34/CommunityResourceDirectoryTab';
-import { ServiceRequestOptimizationTab } from '../components/masterAdmin/phase34/ServiceRequestOptimizationTab';
-import { ProgramCapacityPlanningTab } from '../components/masterAdmin/phase34/ProgramCapacityPlanningTab';
-import { VolunteerSchedulingTab } from '../components/masterAdmin/phase34/VolunteerSchedulingTab';
-import { FundraisingIntelligenceTab } from '../components/masterAdmin/phase34/FundraisingIntelligenceTab';
-import { AiWorkforceEvaluationTab } from '../components/masterAdmin/phase34/AiWorkforceEvaluationTab';
-import { IntegratedReportingTab } from '../components/masterAdmin/IntegratedReportingTab';
-import { KnowledgeSearchTab } from '../components/masterAdmin/phase34/KnowledgeSearchTab';
-import { ExecutiveScenarioPlanningTab } from '../components/masterAdmin/phase34/ExecutiveScenarioPlanningTab';
-import { BoardGovernanceCalendarTab } from '../components/masterAdmin/phase34/BoardGovernanceCalendarTab';
-import { AdvancedReportingExportsTab } from '../components/masterAdmin/phase34/AdvancedReportingExportsTab';
-import { CommunityFeedbackIntelligenceTab } from '../components/masterAdmin/phase34/CommunityFeedbackIntelligenceTab';
-import { MobileAccessibilityAuditTab } from '../components/masterAdmin/phase34/MobileAccessibilityAuditTab';
-import { IntegratedServiceDeliveryTab } from '../components/masterAdmin/phase35/IntegratedServiceDeliveryTab';
-import { PlatformReliabilityAuditTab } from '../components/masterAdmin/phase36/PlatformReliabilityAuditTab';
+
+const EmailCommandCenterView = React.lazy(() => import('./EmailCommandCenterView').then((m) => ({ default: m.EmailCommandCenterView })));
+const FundraisingCommandCenterView = React.lazy(() => import('./FundraisingCommandCenterView').then((m) => ({ default: m.FundraisingCommandCenterView })));
+const DevelopmentOperationsView = React.lazy(() => import('./DevelopmentOperationsView').then((m) => ({ default: m.DevelopmentOperationsView })));
+const ExecutiveOverviewTab = React.lazy(() => import('../components/masterAdmin/ExecutiveOverviewTab').then((m) => ({ default: m.ExecutiveOverviewTab })));
+const StaffManagementTab = React.lazy(() => import('../components/masterAdmin/StaffManagementTab').then((m) => ({ default: m.StaffManagementTab })));
+const RbacPermissionsTab = React.lazy(() => import('../components/masterAdmin/RbacPermissionsTab').then((m) => ({ default: m.RbacPermissionsTab })));
+const DepartmentManagementTab = React.lazy(() => import('../components/masterAdmin/DepartmentManagementTab').then((m) => ({ default: m.DepartmentManagementTab })));
+const TaskManagementTab = React.lazy(() => import('../components/masterAdmin/TaskManagementTab').then((m) => ({ default: m.TaskManagementTab })));
+const ExecutiveDecisionTab = React.lazy(() => import('../components/masterAdmin/ExecutiveDecisionTab').then((m) => ({ default: m.ExecutiveDecisionTab })));
+const VolunteerManagementTab = React.lazy(() => import('../components/masterAdmin/VolunteerManagementTab').then((m) => ({ default: m.VolunteerManagementTab })));
+const GrantManagementTab = React.lazy(() => import('../components/masterAdmin/GrantManagementTab').then((m) => ({ default: m.GrantManagementTab })));
+const PartnershipManagementTab = React.lazy(() => import('../components/masterAdmin/PartnershipManagementTab').then((m) => ({ default: m.PartnershipManagementTab })));
+const OrganizationalAnalyticsTab = React.lazy(() => import('../components/masterAdmin/OrganizationalAnalyticsTab').then((m) => ({ default: m.OrganizationalAnalyticsTab })));
+const CommunityProgramsDashboardTab = React.lazy(() => import('../components/masterAdmin/CommunityProgramsDashboardTab').then((m) => ({ default: m.CommunityProgramsDashboardTab })));
+const CommunityOutreachTab = React.lazy(() => import('../components/masterAdmin/CommunityOutreachTab').then((m) => ({ default: m.CommunityOutreachTab })));
+const GeneralServiceRequestsTab = React.lazy(() => import('../components/masterAdmin/GeneralServiceRequestsTab').then((m) => ({ default: m.GeneralServiceRequestsTab })));
+const ReferralPartnerTab = React.lazy(() => import('../components/masterAdmin/ReferralPartnerTab').then((m) => ({ default: m.ReferralPartnerTab })));
+const VolunteerDeploymentTab = React.lazy(() => import('../components/masterAdmin/VolunteerDeploymentTab').then((m) => ({ default: m.VolunteerDeploymentTab })));
+const CommunityEventsTab = React.lazy(() => import('../components/masterAdmin/CommunityEventsTab').then((m) => ({ default: m.CommunityEventsTab })));
+const ProgramResourcesTab = React.lazy(() => import('../components/masterAdmin/ProgramResourcesTab').then((m) => ({ default: m.ProgramResourcesTab })));
+const ProgramImpactTab = React.lazy(() => import('../components/masterAdmin/ProgramImpactTab').then((m) => ({ default: m.ProgramImpactTab })));
+const ProgramAiIntelligenceModal = React.lazy(() => import('../components/masterAdmin/ProgramAiIntelligenceModal').then((m) => ({ default: m.ProgramAiIntelligenceModal })));
+const FundingCommandCenterTab = React.lazy(() => import('../components/masterAdmin/funding/FundingCommandCenterTab').then((m) => ({ default: m.FundingCommandCenterTab })));
+const GrantOpportunityRegistryTab = React.lazy(() => import('../components/masterAdmin/funding/GrantOpportunityRegistryTab').then((m) => ({ default: m.GrantOpportunityRegistryTab })));
+const GrantDevelopmentWorkspaceTab = React.lazy(() => import('../components/masterAdmin/funding/GrantDevelopmentWorkspaceTab').then((m) => ({ default: m.GrantDevelopmentWorkspaceTab })));
+const DonorCrmCommandTab = React.lazy(() => import('../components/masterAdmin/funding/DonorCrmCommandTab').then((m) => ({ default: m.DonorCrmCommandTab })));
+const FundraisingPipelinesTab = React.lazy(() => import('../components/masterAdmin/funding/FundraisingPipelinesTab').then((m) => ({ default: m.FundraisingPipelinesTab })));
+const RestrictedFundsTab = React.lazy(() => import('../components/masterAdmin/funding/RestrictedFundsTab').then((m) => ({ default: m.RestrictedFundsTab })));
+const FunderReportingTab = React.lazy(() => import('../components/masterAdmin/funding/FunderReportingTab').then((m) => ({ default: m.FunderReportingTab })));
+const FundingCalendarTab = React.lazy(() => import('../components/masterAdmin/funding/FundingCalendarTab').then((m) => ({ default: m.FundingCalendarTab })));
+const OperationsCommandCenterTab = React.lazy(() => import('../components/masterAdmin/operations/OperationsCommandCenterTab').then((m) => ({ default: m.OperationsCommandCenterTab })));
+const InternalNotificationsTab = React.lazy(() => import('../components/masterAdmin/operations/InternalNotificationsTab').then((m) => ({ default: m.InternalNotificationsTab })));
+const UnifiedAiWorkforceView = React.lazy(() => import('../components/masterAdmin/UnifiedAiWorkforceView').then((m) => ({ default: m.UnifiedAiWorkforceView })));
+const ContentManagementTab = React.lazy(() => import('../components/masterAdmin/ContentManagementTab').then((m) => ({ default: m.ContentManagementTab })));
+const UnifiedCommunityOperationsCenter = React.lazy(() => import('../components/masterAdmin/operations/UnifiedCommunityOperationsCenter').then((m) => ({ default: m.UnifiedCommunityOperationsCenter })));
+const ExecutiveIntelligenceDashboard = React.lazy(() => import('../components/masterAdmin/ExecutiveIntelligenceDashboard').then((m) => ({ default: m.ExecutiveIntelligenceDashboard })));
+const BoardGovernancePortalTab = React.lazy(() => import('../components/masterAdmin/BoardGovernancePortalTab').then((m) => ({ default: m.BoardGovernancePortalTab })));
+const CommunityEngagementTab = React.lazy(() => import('../components/masterAdmin/CommunityEngagementTab').then((m) => ({ default: m.CommunityEngagementTab })));
+const TrainingKnowledgeCenterTab = React.lazy(() => import('../components/masterAdmin/TrainingKnowledgeCenterTab').then((m) => ({ default: m.TrainingKnowledgeCenterTab })));
+const WorkflowAutomationEngineTab = React.lazy(() => import('../components/masterAdmin/WorkflowAutomationEngineTab').then((m) => ({ default: m.WorkflowAutomationEngineTab })));
+const UnifiedOperationalSearchTab = React.lazy(() => import('../components/masterAdmin/phase34/UnifiedOperationalSearchTab').then((m) => ({ default: m.UnifiedOperationalSearchTab })));
+const CommunityResourceDirectoryTab = React.lazy(() => import('../components/masterAdmin/phase34/CommunityResourceDirectoryTab').then((m) => ({ default: m.CommunityResourceDirectoryTab })));
+const ServiceRequestOptimizationTab = React.lazy(() => import('../components/masterAdmin/phase34/ServiceRequestOptimizationTab').then((m) => ({ default: m.ServiceRequestOptimizationTab })));
+const ProgramCapacityPlanningTab = React.lazy(() => import('../components/masterAdmin/phase34/ProgramCapacityPlanningTab').then((m) => ({ default: m.ProgramCapacityPlanningTab })));
+const VolunteerSchedulingTab = React.lazy(() => import('../components/masterAdmin/phase34/VolunteerSchedulingTab').then((m) => ({ default: m.VolunteerSchedulingTab })));
+const FundraisingIntelligenceTab = React.lazy(() => import('../components/masterAdmin/phase34/FundraisingIntelligenceTab').then((m) => ({ default: m.FundraisingIntelligenceTab })));
+const AiWorkforceEvaluationTab = React.lazy(() => import('../components/masterAdmin/phase34/AiWorkforceEvaluationTab').then((m) => ({ default: m.AiWorkforceEvaluationTab })));
+const IntegratedReportingTab = React.lazy(() => import('../components/masterAdmin/IntegratedReportingTab').then((m) => ({ default: m.IntegratedReportingTab })));
+const KnowledgeSearchTab = React.lazy(() => import('../components/masterAdmin/phase34/KnowledgeSearchTab').then((m) => ({ default: m.KnowledgeSearchTab })));
+const ExecutiveScenarioPlanningTab = React.lazy(() => import('../components/masterAdmin/phase34/ExecutiveScenarioPlanningTab').then((m) => ({ default: m.ExecutiveScenarioPlanningTab })));
+const BoardGovernanceCalendarTab = React.lazy(() => import('../components/masterAdmin/phase34/BoardGovernanceCalendarTab').then((m) => ({ default: m.BoardGovernanceCalendarTab })));
+const AdvancedReportingExportsTab = React.lazy(() => import('../components/masterAdmin/phase34/AdvancedReportingExportsTab').then((m) => ({ default: m.AdvancedReportingExportsTab })));
+const CommunityFeedbackIntelligenceTab = React.lazy(() => import('../components/masterAdmin/phase34/CommunityFeedbackIntelligenceTab').then((m) => ({ default: m.CommunityFeedbackIntelligenceTab })));
+const MobileAccessibilityAuditTab = React.lazy(() => import('../components/masterAdmin/phase34/MobileAccessibilityAuditTab').then((m) => ({ default: m.MobileAccessibilityAuditTab })));
+const IntegratedServiceDeliveryTab = React.lazy(() => import('../components/masterAdmin/phase35/IntegratedServiceDeliveryTab').then((m) => ({ default: m.IntegratedServiceDeliveryTab })));
+const PlatformReliabilityAuditTab = React.lazy(() => import('../components/masterAdmin/phase36/PlatformReliabilityAuditTab').then((m) => ({ default: m.PlatformReliabilityAuditTab })));
 import {
   Compass,
   Download,
@@ -234,6 +235,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
   const handleRunAcceptanceTests = async () => {
     setIsRunningTests(true);
     try {
+      const { AutomatedTestRunner } = await import('../services/automatedTestRunner');
       const summary = await AutomatedTestRunner.runAllTests();
       setTestSummary(summary);
       setActionNotice({
@@ -598,6 +600,13 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
               : 'p-6 sm:p-8 max-w-7xl'
           }`}
         >
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center py-20 text-xs font-semibold text-slate-500">
+                Loading administration module...
+              </div>
+            }
+          >
           {/* ============================================================ */}
           {/* MODULE: ENTERPRISE FUNDRAISING & DONOR INTELLIGENCE          */}
           {/* ============================================================ */}
@@ -2329,6 +2338,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
               </div>
             </div>
           )}
+          </Suspense>
         </main>
       </div>
 
@@ -2461,12 +2471,16 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
       )}
 
       {/* PHASE 25 AI PROGRAM INTELLIGENCE MODAL */}
-      <ProgramAiIntelligenceModal
-        isOpen={isProgramAiModalOpen}
-        onClose={() => setIsProgramAiModalOpen(false)}
-        programId={selectedProgramAiId}
-        currentUserRole={currentUser.role}
-      />
+      {isProgramAiModalOpen && (
+        <Suspense fallback={null}>
+          <ProgramAiIntelligenceModal
+            isOpen={isProgramAiModalOpen}
+            onClose={() => setIsProgramAiModalOpen(false)}
+            programId={selectedProgramAiId}
+            currentUserRole={currentUser.role}
+          />
+        </Suspense>
+      )}
     </div>
   );
 };

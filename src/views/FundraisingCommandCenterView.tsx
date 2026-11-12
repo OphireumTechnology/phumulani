@@ -30,7 +30,7 @@ import {
   OpportunityStatus,
 } from '../types/fundraising';
 import { FundraisingService, FundraisingKPIOverview } from '../services/fundraisingService';
-import { AutomatedTestRunner, TestSuiteSummary } from '../services/automatedTestRunner';
+import type { TestSuiteSummary } from '../services/automatedTestRunner';
 import {
   Sparkles,
   DollarSign,
@@ -312,6 +312,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
   const handleRunAllTests = async () => {
     setIsRunningTests(true);
     try {
+      const { AutomatedTestRunner } = await import('../services/automatedTestRunner');
       const summary = await AutomatedTestRunner.runAllTests();
       setTestSummary(summary);
       notify(`Test suite complete: ${summary.passed}/${summary.total} tests passed in ${summary.durationMs}ms`);

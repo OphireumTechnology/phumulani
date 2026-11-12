@@ -90,6 +90,7 @@ export const MealCommandCenter: React.FC = () => {
 
   // Report export preview
   const [exportPreviewHtml, setExportPreviewHtml] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
     refreshAllData();
@@ -110,22 +111,24 @@ export const MealCommandCenter: React.FC = () => {
 
   const handleVerifyOutput = (outputId: string) => {
     try {
+      setActionError(null);
       mealService.verifyOutput(outputId, true, 'Verified by Master Administrator with signed roster', {
         role: 'EXECUTIVE_DIRECTOR',
         name: 'Comfort Dondo',
       });
       refreshAllData();
     } catch (err: any) {
-      alert(`Verification error: ${err.message}`);
+      setActionError(`Verification error: ${err.message}`);
     }
   };
 
   const handleExecutiveApproveReport = (reportId: string) => {
     try {
+      setActionError(null);
       mealService.executiveApproveReport(reportId, { role: 'EXECUTIVE_DIRECTOR', name: 'Comfort Dondo' });
       refreshAllData();
     } catch (err: any) {
-      alert(`Approval error: ${err.message}`);
+      setActionError(`Approval error: ${err.message}`);
     }
   };
 
@@ -222,6 +225,24 @@ export const MealCommandCenter: React.FC = () => {
             </button>
           </div>
         </div>
+
+        {/* Inline Action Error Banner */}
+        {actionError && (
+          <div
+            role="alert"
+            className="mt-4 p-3 rounded-xl bg-rose-950/70 border border-rose-500/50 text-rose-100 text-xs flex items-center justify-between gap-3"
+          >
+            <span className="font-medium">{actionError}</span>
+            <button
+              type="button"
+              onClick={() => setActionError(null)}
+              className="px-2 py-0.5 rounded bg-rose-900/80 hover:bg-rose-800 text-rose-100 font-bold cursor-pointer"
+              aria-label="Dismiss error"
+            >
+              Dismiss
+            </button>
+          </div>
+        )}
 
         {/* PROGRAM SELECTOR & NAVIGATION TABS */}
         <div className="mt-6 pt-4 border-t border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-3">
