@@ -39,7 +39,13 @@ async function navigateToPortal(page: any, portalRole: 'community' | 'staff' | '
       : portalRole === 'master-admin'
         ? /Master Admin|Administration|Command Center/i
         : /Donor|Sponsor/i;
-  await expect(page.locator('main h1, main h2').filter({ hasText: expectedHeading }).first()).toBeVisible();
+  if (portalRole === 'master-admin') {
+    // MasterAdministratorView renders its identity in the top header span,
+    // not inside a main h1/h2 element.
+    await expect(page.locator('header').getByText('Phumulani Master Administrator', { exact: true })).toBeVisible();
+  } else {
+    await expect(page.locator('main h1, main h2').filter({ hasText: expectedHeading }).first()).toBeVisible();
+  }
 }
 
 /**
