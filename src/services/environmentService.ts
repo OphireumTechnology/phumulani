@@ -28,11 +28,21 @@ export interface PhumulaniEnvironmentConfig {
 }
 
 export class EnvironmentService {
-  private static operationalMode: PhumulaniOperationalMode = 'PRODUCTION_ONLY';
+  private static operationalMode: PhumulaniOperationalMode = 'STAGED_DEVELOPMENT';
 
   public static getOperationalMode(): PhumulaniOperationalMode {
     if (typeof process !== 'undefined' && process.env?.PHUMULANI_OPERATIONAL_MODE) {
-      return (process.env.PHUMULANI_OPERATIONAL_MODE.trim() as PhumulaniOperationalMode) || this.operationalMode;
+      const val = process.env.PHUMULANI_OPERATIONAL_MODE.trim();
+      if (val === 'PRODUCTION_ONLY' || val === 'STAGED_DEVELOPMENT') {
+        return val;
+      }
+    }
+    if (
+      typeof process !== 'undefined' &&
+      process.env?.NODE_ENV === 'production' &&
+      Boolean(process.env?.DATABASE_URL?.trim())
+    ) {
+      return 'PRODUCTION_ONLY';
     }
     return this.operationalMode;
   }
@@ -93,7 +103,9 @@ export class EnvironmentService {
   }
 
   public static getPaymentProviderStatus(): 'CONNECTED' | 'NOT_CONNECTED' | 'STAGED_PENDING_AUTH' {
-    // If no live merchant API credentials exist, report truthfully
+    if (typeof process !== 'undefined' && Boolean(process.env?.STRIPE_SECRET_KEY?.trim())) {
+      return 'CONNECTED';
+    }
     return 'NOT_CONNECTED';
   }
 
@@ -103,10 +115,11 @@ export class EnvironmentService {
     PAYMENT_GATEWAY: 'NOT_CONNECTED' | 'CONNECTED';
     LIVE_EMAIL_SYNCHRONIZATION: 'NOT_ACTIVATED' | 'ACTIVATED';
   } {
+    const hasDatabaseUrl = typeof process !== 'undefined' && Boolean(process.env?.DATABASE_URL?.trim());
     return {
-      POSTGRESQL: 'NOT_CONNECTED',
+      POSTGRESQL: hasDatabaseUrl ? 'CONNECTED' : 'NOT_CONNECTED',
       GOOGLE_WORKSPACE: 'AUTHORIZATION_REQUIRED',
-      PAYMENT_GATEWAY: 'NOT_CONNECTED',
+      PAYMENT_GATEWAY: this.getPaymentProviderStatus() === 'CONNECTED' ? 'CONNECTED' : 'NOT_CONNECTED',
       LIVE_EMAIL_SYNCHRONIZATION: 'NOT_ACTIVATED',
     };
   }

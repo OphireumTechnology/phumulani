@@ -937,7 +937,7 @@ export class MasterAdminService {
         auditLogEntriesCount: auditCount,
       },
       infrastructureStatus: {
-        postgresql: process.env.DATABASE_URL ? 'CONNECTED' : 'NOT_CONNECTED',
+        postgresql: typeof process !== 'undefined' && process.env?.DATABASE_URL ? 'CONNECTED' : 'NOT_CONNECTED',
         googleWorkspace: 'AUTHORIZATION_REQUIRED',
         paymentGateway: 'NOT_CONNECTED',
         realEmailRetrieval: 'NOT_ACTIVATED',

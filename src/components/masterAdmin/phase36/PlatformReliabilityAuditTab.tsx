@@ -486,7 +486,7 @@ export const PlatformReliabilityAuditTab: React.FC = () => {
             <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-center">
               <div className="text-xs text-slate-500">Current Provider Status</div>
               <div className="text-xs font-mono font-bold text-teal-800 mt-2">
-                {process.env.GEMINI_API_KEY ? 'LIVE_GEMINI_CONNECTED' : 'FALLBACK_DETERMINISTIC'}
+                {typeof process !== 'undefined' && process.env?.GEMINI_API_KEY ? 'LIVE_GEMINI_CONNECTED' : 'FALLBACK_DETERMINISTIC'}
               </div>
               <div className="text-[10px] text-slate-400 mt-0.5">Truth-in-monitoring</div>
             </div>

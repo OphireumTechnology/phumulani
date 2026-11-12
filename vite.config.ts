@@ -26,6 +26,7 @@ export default defineConfig(() => {
       // HMR is disabled in AI Studio container environments via DISABLE_HMR env var.
       // Defaults safely to true (disabled) to eliminate WebSocket errors and prevent reload cascades during agent edits.
       hmr: process.env.DISABLE_HMR === 'false' || process.env.DISABLE_HMR === '0' ? true : false,
+      ws: process.env.DISABLE_HMR === 'false' || process.env.DISABLE_HMR === '0' ? undefined : (false as const),
       // Disable file watching when DISABLE_HMR is active (or by default in container) to conserve CPU
       watch: process.env.DISABLE_HMR === 'false' || process.env.DISABLE_HMR === '0' ? {} : null,
     },

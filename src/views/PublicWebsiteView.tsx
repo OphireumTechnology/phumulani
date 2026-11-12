@@ -169,10 +169,12 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       });
   }, []);
 
+  const isVisitor = currentUser.role === 'visitor' || currentUser.role === 'PUBLIC_VISITOR';
+
   // Event RSVP Modal
   const [selectedEvent, setSelectedEvent] = useState<EventItem | null>(null);
-  const [rsvpName, setRsvpName] = useState(currentUser.name);
-  const [rsvpEmail, setRsvpEmail] = useState(currentUser.email);
+  const [rsvpName, setRsvpName] = useState(isVisitor ? '' : currentUser.name);
+  const [rsvpEmail, setRsvpEmail] = useState(isVisitor ? '' : currentUser.email);
   const [rsvpPhone, setRsvpPhone] = useState('');
   const [rsvpFeedback, setRsvpFeedback] = useState<{ status: 'confirmed' | 'waitlist'; message: string } | null>(null);
 
@@ -187,8 +189,8 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
   const [helpSubmittedCode, setHelpSubmittedCode] = useState<string | null>(null);
 
   // General Contact Form State
-  const [contactName, setContactName] = useState(currentUser.name || '');
-  const [contactEmail, setContactEmail] = useState(currentUser.email || '');
+  const [contactName, setContactName] = useState(isVisitor ? '' : (currentUser.name || ''));
+  const [contactEmail, setContactEmail] = useState(isVisitor ? '' : (currentUser.email || ''));
   const [contactDepartment, setContactDepartment] = useState('General Inquiries');
   const [contactSubject, setContactSubject] = useState('');
   const [contactMessage, setContactMessage] = useState('');
@@ -196,6 +198,22 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
   const [contactError, setContactError] = useState<string | null>(null);
   const [contactRoutedTo, setContactRoutedTo] = useState<string | null>(null);
   const [contactSubmittedCode, setContactSubmittedCode] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!selectedCampaignId && campaigns.length > 0) {
+      setSelectedCampaignId(campaigns[0].id);
+    }
+  }, [campaigns, selectedCampaignId]);
+
+  useEffect(() => {
+    const visitor = currentUser.role === 'visitor' || currentUser.role === 'PUBLIC_VISITOR';
+    if (!visitor) {
+      setContactName((prev) => prev || currentUser.name || '');
+      setContactEmail((prev) => prev || currentUser.email || '');
+      setRsvpName((prev) => prev || currentUser.name || '');
+      setRsvpEmail((prev) => prev || currentUser.email || '');
+    }
+  }, [currentUser.id, currentUser.role, currentUser.name, currentUser.email]);
 
   // Resources Category Filter
   const [resourceFilter, setResourceFilter] = useState<'all' | 'legal' | 'housing' | 'healing' | 'workforce'>('all');
@@ -1602,7 +1620,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       </section>
 
       {/* 9. MISSION, VISION & CORE VALUES (#mission-section) */}
-      <section id="mission-section" className="bg-gradient-to-b from-white to-[#FFF7E6]/50 py-16 border-t border-teal-100">
+      <section id="mission-section" className="bg-gradient-to-b from-white to-[#FFF7E6]/50 py-16 border-t border-teal-100 scroll-mt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <div className="text-center max-w-3xl mx-auto space-y-3">
             <div className="inline-flex items-center gap-1.5 text-xs font-bold font-heading text-[#006D6F] bg-teal-50 border border-teal-200 px-3 py-1 rounded-full uppercase tracking-wider">
@@ -1662,7 +1680,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       </section>
 
       {/* 10. STRATEGIC PARTNERSHIPS & ALLIANCES (#partnerships-section) */}
-      <section id="partnerships-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <section id="partnerships-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 scroll-mt-28">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 gap-4">
           <div>
             <div className="text-xs font-bold font-heading text-[#006D6F] uppercase tracking-wider">Collective Power</div>
@@ -1741,7 +1759,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       </section>
 
       {/* 11. NEWS, COMMUNITY BULLETINS & PUBLICATIONS (#news-section) */}
-      <section id="news-section" className="bg-[#FFF7E6]/50 py-16 border-y border-amber-200/60">
+      <section id="news-section" className="bg-[#FFF7E6]/50 py-16 border-y border-amber-200/60 scroll-mt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
             <div>
@@ -1817,7 +1835,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       </section>
 
       {/* 12. SURVIVOR RIGHTS & COMMUNITY RESOURCES (#resources-section) */}
-      <section id="resources-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-8">
+      <section id="resources-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-8 scroll-mt-28">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
           <div>
             <div className="text-xs font-bold font-heading text-[#006D6F] uppercase tracking-wider">Self-Advocacy &amp; Guidance</div>
@@ -1911,7 +1929,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   <PhoneCall className="w-4 h-4 text-[#006D6F] shrink-0 mt-0.5" />
                   <div>
                     <div className="font-bold font-heading text-slate-900">Phone Communications</div>
-                    <div className="text-slate-600">General Admin: (612) 555-0199 (Mon–Fri 9am–5pm)</div>
+                    <div className="text-slate-600">General Admin: <a href="tel:6122519421" className="text-[#006D6F] font-semibold hover:underline">612-251-9421</a> (Mon–Fri 9am–5pm)</div>
                     <div className="text-rose-700 font-semibold font-heading mt-0.5">24/7 Day One Crisis Line: 1-866-223-1111</div>
                   </div>
                 </div>
@@ -2072,7 +2090,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       </section>
 
       {/* 14. PRIVACY NOTICE & SAFEGUARDING (#privacy-section) */}
-      <section id="privacy-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-6">
+      <section id="privacy-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-6 scroll-mt-28">
         <div className="border-b border-slate-200 pb-4">
           <div className="text-xs font-bold font-heading text-[#006D6F] uppercase tracking-wider">Compliance &amp; Ethics</div>
           <h2 className="font-heading text-3xl font-extrabold text-slate-900">
@@ -2117,7 +2135,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       </section>
 
       {/* 15. ACCESSIBILITY STATEMENT (#accessibility-section) */}
-      <section id="accessibility-section" className="bg-slate-900 text-white py-16">
+      <section id="accessibility-section" className="bg-slate-900 text-white py-16 scroll-mt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="border-b border-slate-800 pb-4">
             <div className="text-xs font-bold text-teal-300 uppercase tracking-wider">Universal Design</div>

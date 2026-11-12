@@ -80,7 +80,7 @@ export class AuthSecurityService {
   private dbAdapter: PostgresPersistenceAdapter;
   private activeSessions: Map<string, UserSession> = new Map();
   private failedAttempts: Map<string, { count: number; lockedUntil: number }> = new Map();
-  private tempMfaSessions: Map<string, { userId: string; email: string; role: StaffRole; departmentId: string; expiresAt: number }> = new Map();
+  private tempMfaSessions: Map<string, { userId: string; email: string; role: StaffRole; departmentId: string; expectedCode?: string; expiresAt: number }> = new Map();
 
   private constructor() {
     this.dbAdapter = PostgresPersistenceAdapter.getInstance();
@@ -360,11 +360,26 @@ export class AuthSecurityService {
       return { success: false, error: 'MFA challenge expired. Please authenticate again.' };
     }
 
-    const isTotp = /^\d{6}$/.test(code.trim());
-    const isBackupCode = /^[a-zA-Z0-9]{8,12}$/.test(code.trim());
+    const trimmedCode = code.trim();
+    const isTotp = /^\d{6}$/.test(trimmedCode);
+    const isBackupCode = /^[a-zA-Z0-9]{8,12}$/.test(trimmedCode);
 
     if (!isTotp && !isBackupCode) {
       return { success: false, error: 'Invalid MFA verification code format.' };
+    }
+
+    const isProdOnly =
+      typeof process !== 'undefined' && process.env?.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_ONLY';
+
+    if (temp.expectedCode) {
+      const a = Buffer.from(trimmedCode);
+      const b = Buffer.from(temp.expectedCode);
+      if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+        return { success: false, error: 'MFA verification code does not match challenge.' };
+      }
+    } else if (isProdOnly) {
+      this.tempMfaSessions.delete(tempToken);
+      return { success: false, error: 'MFA verification failed: server-issued TOTP challenge secret missing.' };
     }
 
     this.tempMfaSessions.delete(tempToken);
@@ -383,13 +398,23 @@ export class AuthSecurityService {
   /**
    * Initiates an MFA challenge for privileged roles.
    */
-  public createMfaChallenge(user: { id: string; email: string; role: StaffRole; departmentId: string }): string {
+  public createMfaChallenge(user: {
+    id: string;
+    email: string;
+    role: StaffRole;
+    departmentId: string;
+    expectedCode?: string;
+  }): string {
     const tempToken = `mfa_chal_${crypto.randomBytes(24).toString('hex')}`;
+    const isProdOnly =
+      typeof process !== 'undefined' && process.env?.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_ONLY';
+    const expectedCode = user.expectedCode || (isProdOnly ? String(crypto.randomInt(100000, 999999)) : undefined);
     this.tempMfaSessions.set(tempToken, {
       userId: user.id,
       email: user.email,
       role: user.role,
       departmentId: user.departmentId,
+      expectedCode,
       expiresAt: Date.now() + 5 * 60 * 1000,
     });
     return tempToken;

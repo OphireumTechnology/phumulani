@@ -457,22 +457,50 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
   }, [threads, autoRules, donors, pipeline, grants, followUps]);
 
   // Handle Sync Mailbox
-  const handleSyncMailbox = (mbxId: string) => {
+  const handleSyncMailbox = async (mbxId: string) => {
+    const target = mailboxes.find((m) => m.id === mbxId);
     db.syncMailbox(mbxId);
+    let backendSynced = false;
+    try {
+      const res = await fetch(`/api/admin/email/mailboxes/${encodeURIComponent(mbxId)}/sync`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (res.ok) backendSynced = true;
+    } catch {
+      // Staged offline fallback
+    }
     refreshSyncState();
+    const isLiveOAuth = target?.authStatus === 'authorized';
     setActionNotice({
-      type: 'success',
-      message: `Mailbox successfully synchronized with production identity gateway. 0 transmission errors.`,
+      type: isLiveOAuth ? 'success' : 'warning',
+      message: isLiveOAuth
+        ? `Mailbox ${target?.email || mbxId} synchronized${backendSynced ? ' via backend gateway' : ''}.`
+        : `Staged local sync recorded for ${target?.email || mbxId}. Live provider OAuth authorization is still required before external inbox retrieval.`,
     });
     setTimeout(() => setActionNotice(null), 5000);
   };
 
-  const handleVerifyMailbox = (mbxId: string) => {
+  const handleVerifyMailbox = async (mbxId: string) => {
+    const target = mailboxes.find((m) => m.id === mbxId);
     db.syncMailbox(mbxId);
+    let gatewayStatus = 'UNKNOWN';
+    try {
+      const res = await fetch('/api/admin/email/google-workspace/status');
+      if (res.ok) {
+        const data = await res.json();
+        gatewayStatus = data.status || 'AUTHORIZATION_REQUIRED';
+      }
+    } catch {
+      gatewayStatus = 'UNREACHABLE';
+    }
     refreshSyncState();
+    const isLiveOAuth = target?.authStatus === 'authorized' && gatewayStatus === 'CONNECTED';
     setActionNotice({
-      type: 'success',
-      message: `Mailbox connection verified for ${mbxId}. Provider API authenticated, 0 errors.`,
+      type: isLiveOAuth ? 'success' : 'warning',
+      message: isLiveOAuth
+        ? `Mailbox connection verified for ${target?.email || mbxId}. Live provider OAuth active.`
+        : `Verification check for ${target?.email || mbxId}: Gateway status is ${gatewayStatus}. Live provider OAuth authorization required.`,
     });
     setTimeout(() => setActionNotice(null), 5000);
   };
@@ -1541,8 +1569,32 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
                         <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl">
                           <span className="text-[10px] text-slate-400 block font-mono">PROVIDER ERRORS</span>
-                          <span className="font-bold text-emerald-800 truncate block">0 Errors</span>
-                          <span className="text-[10px] text-slate-500 font-mono">Health: 100%</span>
+                          {(() => {
+                            const errCount =
+                              (mbx.authFailures || 0) +
+                              (mbx.failedJobs || 0) +
+                              (mbx.currentErrors?.length || 0);
+                            const healthLabel =
+                              mbx.status === 'DISCONNECTED' || mbx.status === 'disconnected'
+                                ? 'Disconnected'
+                                : errCount > 0
+                                ? 'Degraded'
+                                : mbx.authStatus === 'authorized'
+                                ? 'Live Verified'
+                                : 'Staged (OAuth Req)';
+                            return (
+                              <>
+                                <span
+                                  className={`font-bold truncate block ${
+                                    errCount > 0 ? 'text-rose-700' : 'text-slate-900'
+                                  }`}
+                                >
+                                  {errCount} {errCount === 1 ? 'Error' : 'Errors'}
+                                </span>
+                                <span className="text-[10px] text-slate-500 font-mono">{healthLabel}</span>
+                              </>
+                            );
+                          })()}
                         </div>
 
                         <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl">
@@ -1682,46 +1734,80 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 text-xs">
-                    <tr className="hover:bg-slate-50/50">
-                      <td className="p-2.5 font-mono font-bold text-slate-900">info@phumulani.org</td>
-                      <td className="p-2.5 font-semibold text-slate-700">DEPT-OPS / Community</td>
-                      <td className="p-2.5 text-slate-600">Front Desk & Sister Miriam K.</td>
-                      <td className="p-2.5 text-slate-600">Safeguarding (01), Community Programs (15, 16), General (23)</td>
-                      <td className="p-2.5"><span className="px-2 py-0.5 rounded-full bg-rose-100 text-rose-800 font-bold font-mono text-[10px]">P0 / P3</span></td>
-                      <td className="p-2.5"><span className="text-emerald-700 font-semibold font-mono text-[11px]">CONNECTED</span></td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50">
-                      <td className="p-2.5 font-mono font-bold text-slate-900">donations@phumulani.org</td>
-                      <td className="p-2.5 font-semibold text-slate-700">DEPT-DEV / Stewardship</td>
-                      <td className="p-2.5 text-slate-600">David Mwangi, CPA</td>
-                      <td className="p-2.5 text-slate-600">Major Donors (04), Individual Gifts (05), Campaigns (10)</td>
-                      <td className="p-2.5"><span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold font-mono text-[10px]">P2 / P3</span></td>
-                      <td className="p-2.5"><span className="text-emerald-700 font-semibold font-mono text-[11px]">CONNECTED</span></td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50">
-                      <td className="p-2.5 font-mono font-bold text-slate-900">executive@phumulani.org</td>
-                      <td className="p-2.5 font-semibold text-slate-700">DEPT-EXEC / Leadership</td>
-                      <td className="p-2.5 text-slate-600">Comfort Dondo</td>
-                      <td className="p-2.5 text-slate-600">Executive (02), Board (03), Legal (20), Media (18)</td>
-                      <td className="p-2.5"><span className="px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 font-bold font-mono text-[10px]">P1</span></td>
-                      <td className="p-2.5"><span className="text-emerald-700 font-semibold font-mono text-[11px]">CONNECTED</span></td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50">
-                      <td className="p-2.5 font-mono font-bold text-slate-900">grants@phumulani.org</td>
-                      <td className="p-2.5 font-semibold text-slate-700">DEPT-PROG / Institutional</td>
-                      <td className="p-2.5 text-slate-600">Dr. Elena Rostova</td>
-                      <td className="p-2.5 text-slate-600">Foundation Grants (07), Government Funding (08)</td>
-                      <td className="p-2.5"><span className="px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 font-bold font-mono text-[10px]">P1</span></td>
-                      <td className="p-2.5"><span className="text-emerald-700 font-semibold font-mono text-[11px]">CONNECTED</span></td>
-                    </tr>
-                    <tr className="hover:bg-slate-50/50">
-                      <td className="p-2.5 font-mono font-bold text-slate-900">partnerships@phumulani.org</td>
-                      <td className="p-2.5 font-semibold text-slate-700">DEPT-DEV / Corporate CSR</td>
-                      <td className="p-2.5 text-slate-600">Lead Staff</td>
-                      <td className="p-2.5 text-slate-600">Corporate Sponsorships (06), CSR (12), Alliances (11)</td>
-                      <td className="p-2.5"><span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold font-mono text-[10px]">P2</span></td>
-                      <td className="p-2.5"><span className="text-emerald-700 font-semibold font-mono text-[11px]">CONNECTED</span></td>
-                    </tr>
+                    {[
+                      {
+                        email: 'info@phumulani.org',
+                        dept: 'DEPT-OPS / Community',
+                        lead: 'Front Desk & Sister Miriam K.',
+                        cats: 'Safeguarding (01), Community Programs (15, 16), General (23)',
+                        priority: 'P0 / P3',
+                        priorityClass: 'bg-rose-100 text-rose-800',
+                      },
+                      {
+                        email: 'donations@phumulani.org',
+                        dept: 'DEPT-DEV / Stewardship',
+                        lead: 'David Mwangi, CPA',
+                        cats: 'Major Donors (04), Individual Gifts (05), Campaigns (10)',
+                        priority: 'P2 / P3',
+                        priorityClass: 'bg-amber-100 text-amber-800',
+                      },
+                      {
+                        email: 'executive@phumulani.org',
+                        dept: 'DEPT-EXEC / Leadership',
+                        lead: 'Comfort Dondo',
+                        cats: 'Executive (02), Board (03), Legal (20), Media (18)',
+                        priority: 'P1',
+                        priorityClass: 'bg-orange-100 text-orange-800',
+                      },
+                      {
+                        email: 'grants@phumulani.org',
+                        dept: 'DEPT-PROG / Institutional',
+                        lead: 'Dr. Elena Rostova',
+                        cats: 'Foundation Grants (07), Government Funding (08)',
+                        priority: 'P1',
+                        priorityClass: 'bg-orange-100 text-orange-800',
+                      },
+                      {
+                        email: 'partnerships@phumulani.org',
+                        dept: 'DEPT-DEV / Corporate CSR',
+                        lead: 'Lead Staff',
+                        cats: 'Corporate Sponsorships (06), CSR (12), Alliances (11)',
+                        priority: 'P2',
+                        priorityClass: 'bg-amber-100 text-amber-800',
+                      },
+                    ].map((row) => {
+                      const matched = mailboxes.find((m) => m.email === row.email);
+                      const liveAuth = matched?.authStatus === 'authorized';
+                      const rawState = matched?.connectionState || matched?.status || 'NOT_CONFIGURED';
+                      const label =
+                        rawState === 'DISCONNECTED' || rawState === 'disconnected'
+                          ? 'DISCONNECTED'
+                          : liveAuth
+                          ? 'CONNECTED (LIVE OAUTH)'
+                          : `${String(rawState).toUpperCase()} (STAGED)`;
+                      const badgeCls =
+                        rawState === 'DISCONNECTED' || rawState === 'disconnected'
+                          ? 'text-slate-600'
+                          : liveAuth
+                          ? 'text-emerald-700'
+                          : 'text-amber-800';
+                      return (
+                        <tr key={row.email} className="hover:bg-slate-50/50">
+                          <td className="p-2.5 font-mono font-bold text-slate-900">{row.email}</td>
+                          <td className="p-2.5 font-semibold text-slate-700">{row.dept}</td>
+                          <td className="p-2.5 text-slate-600">{row.lead}</td>
+                          <td className="p-2.5 text-slate-600">{row.cats}</td>
+                          <td className="p-2.5">
+                            <span className={`px-2 py-0.5 rounded-full font-bold font-mono text-[10px] ${row.priorityClass}`}>
+                              {row.priority}
+                            </span>
+                          </td>
+                          <td className="p-2.5">
+                            <span className={`${badgeCls} font-semibold font-mono text-[11px]`}>{label}</span>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -1840,8 +1926,19 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   <span>SLA Adherence</span>
                   <Clock className="w-3.5 h-3.5 text-indigo-600" />
                 </div>
-                <div className="text-xl font-bold font-serif text-teal-800">99.2%</div>
-                <div className="text-[10px] text-slate-400 mt-0.5">Avg: 1.4h across P0-P4</div>
+                {(() => {
+                  const slaStats = threads.map((t) => EmailEnterpriseService.calculateSlaStatus(t));
+                  const onTrack = slaStats.filter((s) => s.status !== 'BREACHED').length;
+                  const pct = threads.length > 0 ? ((onTrack / threads.length) * 100).toFixed(1) : '100.0';
+                  return (
+                    <>
+                      <div className="text-xl font-bold font-serif text-teal-800">{pct}%</div>
+                      <div className="text-[10px] text-slate-400 mt-0.5">
+                        Avg: {analytics.avgResponseTimeHours}h across P0-P4
+                      </div>
+                    </>
+                  );
+                })()}
               </div>
             </div>
 
@@ -1875,9 +1972,27 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full font-bold bg-amber-100 text-amber-900 border border-amber-300">
-                          AUTHORIZATION_REQUIRED
-                        </span>
+                        {(() => {
+                          const isLiveAuth = mbx.authStatus === 'authorized';
+                          const rawStatus = String(mbx.connectionState || mbx.status || 'AUTHORIZATION_REQUIRED').toUpperCase();
+                          const badgeLabel =
+                            rawStatus === 'DISCONNECTED' || rawStatus === 'ERROR'
+                              ? rawStatus
+                              : isLiveAuth
+                              ? rawStatus
+                              : 'AUTHORIZATION_REQUIRED';
+                          const badgeStyle =
+                            rawStatus === 'DISCONNECTED' || rawStatus === 'ERROR'
+                              ? 'bg-slate-100 text-slate-700 border-slate-300'
+                              : isLiveAuth
+                              ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                              : 'bg-amber-100 text-amber-900 border-amber-300';
+                          return (
+                            <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold border ${badgeStyle}`}>
+                              {badgeLabel}
+                            </span>
+                          );
+                        })()}
                         <button
                           onClick={() => {
                             setSelectedMailboxId(mbx.id);
@@ -1960,10 +2075,24 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     <span className="font-mono text-[10px] font-bold bg-teal-100 text-teal-900 border border-teal-300 px-2 py-0.5 rounded-full uppercase">
                       /admin/master/email/synchronization
                     </span>
-                    <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                      5 Connected Mailboxes · Provider Authoritative
-                    </span>
+                    {(() => {
+                      const activeCount = mailboxes.filter(
+                        (m) => m.status === 'CONNECTED' || m.status === 'connected' || m.status === 'SYNCING' || m.status === 'syncing'
+                      ).length;
+                      const liveCount = mailboxes.filter((m) => m.authStatus === 'authorized').length;
+                      return (
+                        <span
+                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 border ${
+                            liveCount > 0
+                              ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                              : 'bg-amber-100 text-amber-900 border-amber-300'
+                          }`}
+                        >
+                          <CheckCircle2 className={`w-3 h-3 ${liveCount > 0 ? 'text-emerald-600' : 'text-amber-700'}`} />
+                          {activeCount} / {mailboxes.length} Mailboxes Active · {liveCount > 0 ? 'Provider OAuth Active' : 'OAuth Authorization Required (Staged)'}
+                        </span>
+                      );
+                    })()}
                   </div>
                   <h3 className="text-base font-bold text-slate-900">
                     Enterprise Email Synchronization Command Center
@@ -1978,9 +2107,13 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     onClick={() => {
                       mailboxes.forEach((m) => db.syncMailbox(m.id));
                       refreshSyncState();
+                      const liveCount = mailboxes.filter((m) => m.authStatus === 'authorized').length;
                       setActionNotice({
-                        type: 'success',
-                        message: 'All 5 mailboxes verified against provider gateways. Zero transmission failures.',
+                        type: liveCount === mailboxes.length ? 'success' : 'warning',
+                        message:
+                          liveCount === mailboxes.length
+                            ? `All ${mailboxes.length} mailboxes verified against provider gateways.`
+                            : `Verified ${mailboxes.length} staged mailboxes. ${mailboxes.length - liveCount} mailbox(es) require live OAuth 2.0 authorization.`,
                       });
                       setTimeout(() => setActionNotice(null), 5000);
                     }}
@@ -2056,44 +2189,52 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 </div>
               </div>
 
-              {/* Readiness Checklist Grid (5 Canonical Items) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                  <span className="text-[10px] text-slate-400 font-mono block">GCP PROJECT ID</span>
-                  <div className="font-mono font-bold text-slate-900 truncate">phumulani-ai-community</div>
-                  <div className="text-[11px] text-emerald-800 font-semibold flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                    <span>Configured & Verified</span>
-                  </div>
-                </div>
+              {/* Readiness Checklist Grid (Driven by googleWorkspaceAdapter.getStatus()) */}
+              {(() => {
+                const gwStatus = googleWorkspaceAdapter.getStatus();
+                const isLive = gwStatus.status === 'CONNECTED';
+                return (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+                      <span className="text-[10px] text-slate-400 font-mono block">GCP PROJECT CONFIG</span>
+                      <div className="font-mono font-bold text-slate-900 truncate">phumulani-ai-community</div>
+                      <div className={`text-[11px] font-semibold flex items-center gap-1 ${isLive ? 'text-emerald-800' : 'text-amber-800'}`}>
+                        <CheckCircle2 className={`w-3 h-3 ${isLive ? 'text-emerald-600' : 'text-amber-600'}`} />
+                        <span>{isLive ? 'Live Project Connected' : `Staged (${gwStatus.status})`}</span>
+                      </div>
+                    </div>
 
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                  <span className="text-[10px] text-slate-400 font-mono block">AUTHORIZED REDIRECT URI</span>
-                  <div className="font-mono font-bold text-slate-900 truncate">https://phumulani.org/oauth2callback</div>
-                  <div className="text-[11px] text-emerald-800 font-semibold flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                    <span>Exact Match Enforced</span>
-                  </div>
-                </div>
+                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+                      <span className="text-[10px] text-slate-400 font-mono block">AUTHORIZED REDIRECT URI</span>
+                      <div className="font-mono font-bold text-slate-900 truncate">/api/admin/email/oauth/google/callback</div>
+                      <div className={`text-[11px] font-semibold flex items-center gap-1 ${isLive ? 'text-emerald-800' : 'text-amber-800'}`}>
+                        <CheckCircle2 className={`w-3 h-3 ${isLive ? 'text-emerald-600' : 'text-amber-600'}`} />
+                        <span>{isLive ? 'Exact Match Verified' : 'Admin OAuth Consent Pending'}</span>
+                      </div>
+                    </div>
 
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                  <span className="text-[10px] text-slate-400 font-mono block">LEAST-PRIVILEGE SCOPES</span>
-                  <div className="font-mono font-bold text-slate-900">5 Scopes (gmail.send/read/mod)</div>
-                  <div className="text-[11px] text-emerald-800 font-semibold flex items-center gap-1">
-                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                    <span>No Excessive Access</span>
-                  </div>
-                </div>
+                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+                      <span className="text-[10px] text-slate-400 font-mono block">LEAST-PRIVILEGE SCOPES</span>
+                      <div className="font-mono font-bold text-slate-900">
+                        {gwStatus.scopesConfigured.length} Scopes Configured
+                      </div>
+                      <div className="text-[11px] text-emerald-800 font-semibold flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                        <span>Policy Constrained</span>
+                      </div>
+                    </div>
 
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                  <span className="text-[10px] text-slate-400 font-mono block">OUTBOUND PILOT GUARD</span>
-                  <div className="font-mono font-bold text-slate-900">@phumulani.org Restricted</div>
-                  <div className="text-[11px] text-amber-800 font-semibold flex items-center gap-1">
-                    <ShieldCheck className="w-3 h-3 text-amber-600" />
-                    <span>External Leak Blocked</span>
+                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+                      <span className="text-[10px] text-slate-400 font-mono block">OUTBOUND PILOT GUARD</span>
+                      <div className="font-mono font-bold text-slate-900">@phumulani.org Restricted</div>
+                      <div className="text-[11px] text-amber-800 font-semibold flex items-center gap-1">
+                        <ShieldCheck className="w-3 h-3 text-amber-600" />
+                        <span>External Leak Blocked</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
+                );
+              })()}
 
               {/* Diagnostic Test Results Banner (if run) */}
               {workspaceDiagResult && (
@@ -2238,7 +2379,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         <div className="bg-slate-50 p-2 rounded-xl border border-slate-100">
                           <span className="text-[10px] text-slate-400 block">Total Imported</span>
                           <span className="font-bold text-slate-900 text-sm">
-                            {mbx.totalImportedMessages?.toLocaleString() ?? '1,250'} msgs
+                            {(mbx.totalImportedMessages ?? mbx.totalThreads ?? 0).toLocaleString()} msgs
                           </span>
                         </div>
 
@@ -2256,14 +2397,20 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         <div className="bg-slate-50 p-2 rounded-xl border border-slate-100">
                           <span className="text-[10px] text-slate-400 block">Last Successful Sync</span>
                           <span className="font-mono text-[11px] text-slate-700">
-                            {mbx.lastSyncAt ? new Date(mbx.lastSyncAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Just now'}
+                            {mbx.lastSyncedAt || mbx.lastSyncAt
+                              ? new Date(mbx.lastSyncedAt || mbx.lastSyncAt!).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                              : 'Not synced'}
                           </span>
                         </div>
 
                         <div className="bg-slate-50 p-2 rounded-xl border border-slate-100">
                           <span className="text-[10px] text-slate-400 block">Next Scheduled</span>
                           <span className="font-mono text-[11px] text-slate-700">
-                            In 4 minutes
+                            {mbx.nextScheduledSync
+                              ? new Date(mbx.nextScheduledSync).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                              : mbx.status === 'DISCONNECTED' || mbx.status === 'disconnected'
+                              ? 'Paused'
+                              : 'Manual / Staged'}
                           </span>
                         </div>
                       </div>

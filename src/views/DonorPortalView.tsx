@@ -47,6 +47,7 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
   const [activeTab, setActiveTab] = useState<'overview' | 'history' | 'pledges' | 'sponsorships' | 'tax_statement'>('overview');
   const [sponsorshipFeedback, setSponsorshipFeedback] = useState<string | null>(null);
   const [pledgeFeedback, setPledgeFeedback] = useState<string | null>(null);
+  const [pledgeError, setPledgeError] = useState<string | null>(null);
 
   // Initial baseline segregated pledges matching $125,000 unearned pipeline
   const [pledges, setPledges] = useState<PledgeIntention[]>([
@@ -109,9 +110,10 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
   const handleRegisterPledge = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newPledgeAcknowledged) {
-      alert('Please acknowledge that pledge intentions are segregated and do not generate an IRS tax receipt until settled.');
+      setPledgeError('Please acknowledge that pledge intentions are segregated and do not generate an IRS tax receipt until settled.');
       return;
     }
+    setPledgeError(null);
     const selectedCamp = campaigns.find((c) => c.id === newPledgeCampaign) || campaigns[0];
     const newId = `PLG-2026-${String(pledges.length + 1).padStart(3, '0')}`;
     const annualInstallment = Math.round(newPledgeAmount / Math.max(1, newPledgeDuration));
@@ -648,6 +650,12 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
                   </span>
                 </label>
               </div>
+
+              {pledgeError && (
+                <div className="md:col-span-2 p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs font-medium text-rose-700">
+                  {pledgeError}
+                </div>
+              )}
 
               <div className="md:col-span-2 pt-2">
                 <button

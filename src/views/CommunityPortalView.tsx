@@ -91,7 +91,7 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
   const [activeTab, setActiveTab] = useState<CommunityPortalTab>('overview');
 
   // Member Profile State
-  const [memberPhone, setMemberPhone] = useState(currentUser.phoneNumber || '612-555-0188');
+  const [memberPhone, setMemberPhone] = useState(currentUser.phoneNumber || '');
   const [memberLanguage, setMemberLanguage] = useState('English');
   const [memberContactPref, setMemberContactPref] = useState<'email' | 'phone' | 'signal'>('email');
   const [memberAccommodations, setMemberAccommodations] = useState('Wheelchair accessible venues, prayer space');

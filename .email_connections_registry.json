@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-11-09T16:11:18.966Z",
+  "savedAt": "2026-11-12T20:04:19.561Z",
   "connections": [
     {
       "id": "conn-google-donations_phumulani_org",
@@ -11,8 +11,8 @@
       "authMethod": "OAUTH2",
       "authStatus": "CONNECTED",
       "connectionHealth": "HEALTHY",
-      "lastSyncAt": "2026-11-09T16:11:18.962Z",
-      "lastSuccessfulSyncAt": "2026-11-09T16:11:18.962Z",
+      "lastSyncAt": "2026-11-12T20:04:19.561Z",
+      "lastSuccessfulSyncAt": "2026-11-12T20:04:19.561Z",
       "lastError": null,
       "incomingMessageCount": 42,
       "outgoingMessageCount": 24,
@@ -57,14 +57,41 @@
       "cursorType": "GMAIL_HISTORY_ID",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.869Z",
-        "roundTripLatencyMs": 29,
+        "timestamp": "2026-11-12T20:04:19.508Z",
+        "roundTripLatencyMs": 23,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
         "dnsResolution": "RESOLVED_OK",
         "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.508Z",
+          "roundTripLatencyMs": 23,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.018Z",
+          "roundTripLatencyMs": 25,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.111Z",
+          "roundTripLatencyMs": 26,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.869Z",
@@ -130,7 +157,7 @@
         }
       ],
       "createdAt": "2026-10-27T05:16:30.375Z",
-      "updatedAt": "2026-11-09T16:11:18.966Z"
+      "updatedAt": "2026-11-12T20:04:19.561Z"
     },
     {
       "id": "conn-google-info_phumulani_org",
@@ -146,7 +173,7 @@
       "lastSuccessfulSyncAt": "2026-11-02T01:58:59.607Z",
       "lastError": null,
       "incomingMessageCount": 42,
-      "outgoingMessageCount": 35,
+      "outgoingMessageCount": 43,
       "syncFailureCount": 0,
       "credentialExpiresAt": "2026-12-02T03:58:59.607Z",
       "credentialWarning": false,
@@ -216,14 +243,41 @@
       "cursorType": "GMAIL_HISTORY_ID",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.871Z",
-        "roundTripLatencyMs": 41,
+        "timestamp": "2026-11-12T20:04:19.510Z",
+        "roundTripLatencyMs": 21,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
         "dnsResolution": "RESOLVED_OK",
         "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.510Z",
+          "roundTripLatencyMs": 21,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.019Z",
+          "roundTripLatencyMs": 18,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.113Z",
+          "roundTripLatencyMs": 34,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.871Z",
@@ -289,7 +343,7 @@
         }
       ],
       "createdAt": "2026-10-26T03:58:59.607Z",
-      "updatedAt": "2026-11-09T16:11:05.871Z"
+      "updatedAt": "2026-11-12T20:04:19.510Z"
     },
     {
       "id": "conn-google-director_phumulani_org",
@@ -347,14 +401,41 @@
       "cursorType": "GMAIL_HISTORY_ID",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.872Z",
-        "roundTripLatencyMs": 24,
+        "timestamp": "2026-11-12T20:04:19.511Z",
+        "roundTripLatencyMs": 20,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
         "dnsResolution": "RESOLVED_OK",
         "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.511Z",
+          "roundTripLatencyMs": 20,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.021Z",
+          "roundTripLatencyMs": 37,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.114Z",
+          "roundTripLatencyMs": 21,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.872Z",
@@ -420,7 +501,7 @@
         }
       ],
       "createdAt": "2026-10-26T03:58:59.608Z",
-      "updatedAt": "2026-11-09T16:11:05.872Z"
+      "updatedAt": "2026-11-12T20:04:19.511Z"
     },
     {
       "id": "conn-google-support_phumulani_org",
@@ -478,14 +559,41 @@
       "cursorType": "GMAIL_HISTORY_ID",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.873Z",
-        "roundTripLatencyMs": 22,
+        "timestamp": "2026-11-12T20:04:19.512Z",
+        "roundTripLatencyMs": 39,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
         "dnsResolution": "RESOLVED_OK",
         "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.512Z",
+          "roundTripLatencyMs": 39,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.022Z",
+          "roundTripLatencyMs": 28,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.115Z",
+          "roundTripLatencyMs": 20,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.873Z",
@@ -551,7 +659,7 @@
         }
       ],
       "createdAt": "2026-10-26T03:58:59.608Z",
-      "updatedAt": "2026-11-09T16:11:05.873Z"
+      "updatedAt": "2026-11-12T20:04:19.512Z"
     },
     {
       "id": "conn-google-safeguarding_phumulani_org",
@@ -609,14 +717,41 @@
       "cursorType": "GMAIL_HISTORY_ID",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.874Z",
-        "roundTripLatencyMs": 36,
+        "timestamp": "2026-11-12T20:04:19.514Z",
+        "roundTripLatencyMs": 18,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
         "dnsResolution": "RESOLVED_OK",
         "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.514Z",
+          "roundTripLatencyMs": 18,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.023Z",
+          "roundTripLatencyMs": 26,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.116Z",
+          "roundTripLatencyMs": 21,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.874Z",
@@ -682,7 +817,7 @@
         }
       ],
       "createdAt": "2026-10-26T03:58:59.608Z",
-      "updatedAt": "2026-11-09T16:11:05.874Z"
+      "updatedAt": "2026-11-12T20:04:19.514Z"
     },
     {
       "id": "conn-microsoft-outreach_phumulani_org",
@@ -740,7 +875,7 @@
       "cursorType": "MS_GRAPH_DELTA_TOKEN",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.875Z",
+        "timestamp": "2026-11-12T20:04:19.515Z",
         "roundTripLatencyMs": 56,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
@@ -748,6 +883,33 @@
         "diagnosticsDetail": "Microsoft Graph API v1.0 endpoint graph.microsoft.com verified via TLSv1.3."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.515Z",
+          "roundTripLatencyMs": 56,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Microsoft Graph API v1.0 endpoint graph.microsoft.com verified via TLSv1.3."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.025Z",
+          "roundTripLatencyMs": 56,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Microsoft Graph API v1.0 endpoint graph.microsoft.com verified via TLSv1.3."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.117Z",
+          "roundTripLatencyMs": 56,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Microsoft Graph API v1.0 endpoint graph.microsoft.com verified via TLSv1.3."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.875Z",
@@ -813,7 +975,7 @@
         }
       ],
       "createdAt": "2026-10-26T03:58:59.608Z",
-      "updatedAt": "2026-11-09T16:11:05.875Z"
+      "updatedAt": "2026-11-12T20:04:19.515Z"
     },
     {
       "id": "conn-imap_smtp-relay_phumulani_community_org_za",
@@ -871,7 +1033,7 @@
       "cursorType": "IMAP_UID_SEQUENCE",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.876Z",
+        "timestamp": "2026-11-12T20:04:19.517Z",
         "roundTripLatencyMs": 68,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
@@ -879,6 +1041,33 @@
         "diagnosticsDetail": "IMAP (imap.phumulani-community.org.za:993) and SMTP (smtp.phumulani-community.org.za:587) TLS handshake verified."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.517Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.phumulani-community.org.za:993) and SMTP (smtp.phumulani-community.org.za:587) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.026Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.phumulani-community.org.za:993) and SMTP (smtp.phumulani-community.org.za:587) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.119Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.phumulani-community.org.za:993) and SMTP (smtp.phumulani-community.org.za:587) TLS handshake verified."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.876Z",
@@ -944,7 +1133,7 @@
         }
       ],
       "createdAt": "2026-10-26T03:58:59.608Z",
-      "updatedAt": "2026-11-09T16:11:05.876Z"
+      "updatedAt": "2026-11-12T20:04:19.517Z"
     },
     {
       "id": "conn-google-caseworker_pretoria_phumulani_org-mvyqbxup",
@@ -977,14 +1166,41 @@
       "safeguardingClassification": "GENERAL",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.878Z",
-        "roundTripLatencyMs": 18,
+        "timestamp": "2026-11-12T20:04:19.518Z",
+        "roundTripLatencyMs": 23,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
         "dnsResolution": "RESOLVED_OK",
         "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.518Z",
+          "roundTripLatencyMs": 23,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.027Z",
+          "roundTripLatencyMs": 37,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.120Z",
+          "roundTripLatencyMs": 34,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.878Z",
@@ -1079,7 +1295,7 @@
         }
       ],
       "createdAt": "2026-11-02T03:58:59.617Z",
-      "updatedAt": "2026-11-09T16:11:05.878Z",
+      "updatedAt": "2026-11-12T20:04:19.518Z",
       "syncCursor": "1004848",
       "cursorType": "GMAIL_HISTORY_ID"
     },
@@ -1114,14 +1330,41 @@
       "safeguardingClassification": "GENERAL",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.879Z",
-        "roundTripLatencyMs": 30,
+        "timestamp": "2026-11-12T20:04:19.519Z",
+        "roundTripLatencyMs": 26,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
         "dnsResolution": "RESOLVED_OK",
         "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.519Z",
+          "roundTripLatencyMs": 26,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.028Z",
+          "roundTripLatencyMs": 34,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.122Z",
+          "roundTripLatencyMs": 23,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.879Z",
@@ -1216,7 +1459,7 @@
         }
       ],
       "createdAt": "2026-11-02T03:59:43.001Z",
-      "updatedAt": "2026-11-09T16:11:05.879Z",
+      "updatedAt": "2026-11-12T20:04:19.519Z",
       "syncCursor": "1004848",
       "cursorType": "GMAIL_HISTORY_ID"
     },
@@ -1251,7 +1494,7 @@
       "safeguardingClassification": "GENERAL",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.880Z",
+        "timestamp": "2026-11-12T20:04:19.521Z",
         "roundTripLatencyMs": 68,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
@@ -1259,6 +1502,33 @@
         "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.521Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.030Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.123Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.880Z",
@@ -1324,7 +1594,7 @@
         }
       ],
       "createdAt": "2026-11-02T03:59:54.885Z",
-      "updatedAt": "2026-11-09T16:11:05.880Z"
+      "updatedAt": "2026-11-12T20:04:19.521Z"
     },
     {
       "id": "conn-zoho-finance_records_zoho_com-mvyqd4hy",
@@ -1357,7 +1627,7 @@
       "safeguardingClassification": "GENERAL",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.881Z",
+        "timestamp": "2026-11-12T20:04:19.522Z",
         "roundTripLatencyMs": 68,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
@@ -1365,6 +1635,33 @@
         "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.522Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.031Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.124Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.881Z",
@@ -1430,7 +1727,7 @@
         }
       ],
       "createdAt": "2026-11-02T03:59:54.886Z",
-      "updatedAt": "2026-11-09T16:11:05.881Z"
+      "updatedAt": "2026-11-12T20:04:19.522Z"
     },
     {
       "id": "conn-yahoo-community_liaison_yahoo_com-mvyqdgh1",
@@ -1463,7 +1760,7 @@
       "safeguardingClassification": "GENERAL",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.882Z",
+        "timestamp": "2026-11-12T20:04:19.523Z",
         "roundTripLatencyMs": 68,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
@@ -1471,6 +1768,33 @@
         "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.523Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.032Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.125Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.882Z",
@@ -1536,7 +1860,7 @@
         }
       ],
       "createdAt": "2026-11-02T04:00:10.405Z",
-      "updatedAt": "2026-11-09T16:11:05.882Z"
+      "updatedAt": "2026-11-12T20:04:19.523Z"
     },
     {
       "id": "conn-zoho-finance_records_zoho_com-mvyqdgh2",
@@ -1569,7 +1893,7 @@
       "safeguardingClassification": "GENERAL",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.884Z",
+        "timestamp": "2026-11-12T20:04:19.525Z",
         "roundTripLatencyMs": 68,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
@@ -1577,6 +1901,33 @@
         "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.525Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.034Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.127Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.884Z",
@@ -1642,7 +1993,7 @@
         }
       ],
       "createdAt": "2026-11-02T04:00:10.406Z",
-      "updatedAt": "2026-11-09T16:11:05.884Z"
+      "updatedAt": "2026-11-12T20:04:19.525Z"
     },
     {
       "id": "conn-google-caseworker_pretoria_phumulani_org-mvyqdlvu",
@@ -1675,14 +2026,41 @@
       "safeguardingClassification": "GENERAL",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.885Z",
-        "roundTripLatencyMs": 29,
+        "timestamp": "2026-11-12T20:04:19.526Z",
+        "roundTripLatencyMs": 41,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
         "dnsResolution": "RESOLVED_OK",
         "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.526Z",
+          "roundTripLatencyMs": 41,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.035Z",
+          "roundTripLatencyMs": 29,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.128Z",
+          "roundTripLatencyMs": 21,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.885Z",
@@ -1777,7 +2155,7 @@
         }
       ],
       "createdAt": "2026-11-02T04:00:17.418Z",
-      "updatedAt": "2026-11-09T16:11:05.885Z",
+      "updatedAt": "2026-11-12T20:04:19.526Z",
       "syncCursor": "1004848",
       "cursorType": "GMAIL_HISTORY_ID"
     },
@@ -1812,7 +2190,7 @@
       "safeguardingClassification": "GENERAL",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.886Z",
+        "timestamp": "2026-11-12T20:04:19.527Z",
         "roundTripLatencyMs": 19,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
@@ -1820,6 +2198,33 @@
         "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.527Z",
+          "roundTripLatencyMs": 19,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.036Z",
+          "roundTripLatencyMs": 36,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.129Z",
+          "roundTripLatencyMs": 32,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.886Z",
@@ -1914,7 +2319,7 @@
         }
       ],
       "createdAt": "2026-11-02T04:03:17.194Z",
-      "updatedAt": "2026-11-09T16:11:05.886Z",
+      "updatedAt": "2026-11-12T20:04:19.527Z",
       "syncCursor": "1004848",
       "cursorType": "GMAIL_HISTORY_ID"
     },
@@ -1949,7 +2354,7 @@
       "safeguardingClassification": "GENERAL",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.887Z",
+        "timestamp": "2026-11-12T20:04:19.530Z",
         "roundTripLatencyMs": 68,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
@@ -1957,6 +2362,33 @@
         "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.530Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.037Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.130Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.887Z",
@@ -2022,7 +2454,7 @@
         }
       ],
       "createdAt": "2026-11-02T04:03:18.386Z",
-      "updatedAt": "2026-11-09T16:11:05.887Z"
+      "updatedAt": "2026-11-12T20:04:19.530Z"
     },
     {
       "id": "conn-zoho-finance_records_zoho_com-mvyqhhir",
@@ -2055,7 +2487,7 @@
       "safeguardingClassification": "GENERAL",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.888Z",
+        "timestamp": "2026-11-12T20:04:19.531Z",
         "roundTripLatencyMs": 68,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
@@ -2063,6 +2495,33 @@
         "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.531Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.039Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.132Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.888Z",
@@ -2128,7 +2587,7 @@
         }
       ],
       "createdAt": "2026-11-02T04:03:18.387Z",
-      "updatedAt": "2026-11-09T16:11:05.888Z"
+      "updatedAt": "2026-11-12T20:04:19.531Z"
     },
     {
       "id": "conn-google-caseworker_pretoria_phumulani_org-mvyqj4yg",
@@ -2161,14 +2620,41 @@
       "safeguardingClassification": "GENERAL",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.890Z",
-        "roundTripLatencyMs": 20,
+        "timestamp": "2026-11-12T20:04:19.533Z",
+        "roundTripLatencyMs": 27,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
         "dnsResolution": "RESOLVED_OK",
         "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.533Z",
+          "roundTripLatencyMs": 27,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.040Z",
+          "roundTripLatencyMs": 34,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.133Z",
+          "roundTripLatencyMs": 20,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.890Z",
@@ -2263,7 +2749,7 @@
         }
       ],
       "createdAt": "2026-11-02T04:04:35.416Z",
-      "updatedAt": "2026-11-09T16:11:05.890Z",
+      "updatedAt": "2026-11-12T20:04:19.533Z",
       "syncCursor": "1004848",
       "cursorType": "GMAIL_HISTORY_ID"
     },
@@ -2298,14 +2784,41 @@
       "safeguardingClassification": "GENERAL",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.891Z",
-        "roundTripLatencyMs": 34,
+        "timestamp": "2026-11-12T20:04:19.534Z",
+        "roundTripLatencyMs": 38,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
         "dnsResolution": "RESOLVED_OK",
         "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.534Z",
+          "roundTripLatencyMs": 38,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.042Z",
+          "roundTripLatencyMs": 28,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.134Z",
+          "roundTripLatencyMs": 26,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.891Z",
@@ -2400,7 +2913,7 @@
         }
       ],
       "createdAt": "2026-11-02T14:30:14.991Z",
-      "updatedAt": "2026-11-09T16:11:05.891Z",
+      "updatedAt": "2026-11-12T20:04:19.534Z",
       "syncCursor": "1004848",
       "cursorType": "GMAIL_HISTORY_ID"
     },
@@ -2435,14 +2948,41 @@
       "safeguardingClassification": "GENERAL",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.892Z",
-        "roundTripLatencyMs": 19,
+        "timestamp": "2026-11-12T20:04:19.535Z",
+        "roundTripLatencyMs": 34,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
         "dnsResolution": "RESOLVED_OK",
         "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.535Z",
+          "roundTripLatencyMs": 34,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.043Z",
+          "roundTripLatencyMs": 34,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.135Z",
+          "roundTripLatencyMs": 23,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.892Z",
@@ -2537,7 +3077,7 @@
         }
       ],
       "createdAt": "2026-11-03T01:56:28.306Z",
-      "updatedAt": "2026-11-09T16:11:05.892Z",
+      "updatedAt": "2026-11-12T20:04:19.535Z",
       "syncCursor": "1004848",
       "cursorType": "GMAIL_HISTORY_ID"
     },
@@ -2572,14 +3112,41 @@
       "safeguardingClassification": "GENERAL",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.893Z",
-        "roundTripLatencyMs": 39,
+        "timestamp": "2026-11-12T20:04:19.537Z",
+        "roundTripLatencyMs": 23,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
         "dnsResolution": "RESOLVED_OK",
         "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.537Z",
+          "roundTripLatencyMs": 23,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.044Z",
+          "roundTripLatencyMs": 37,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.137Z",
+          "roundTripLatencyMs": 25,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.893Z",
@@ -2674,7 +3241,7 @@
         }
       ],
       "createdAt": "2026-11-03T03:31:46.161Z",
-      "updatedAt": "2026-11-09T16:11:05.893Z",
+      "updatedAt": "2026-11-12T20:04:19.537Z",
       "syncCursor": "1004848",
       "cursorType": "GMAIL_HISTORY_ID"
     },
@@ -2709,14 +3276,41 @@
       "safeguardingClassification": "GENERAL",
       "currentEvidence": {
         "state": "CONNECTED",
-        "timestamp": "2026-11-09T16:11:05.895Z",
-        "roundTripLatencyMs": 35,
+        "timestamp": "2026-11-12T20:04:19.538Z",
+        "roundTripLatencyMs": 36,
         "tlsVersion": "TLSv1.3",
         "cipherSuite": "TLS_AES_256_GCM_SHA384",
         "dnsResolution": "RESOLVED_OK",
         "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
       },
       "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.538Z",
+          "roundTripLatencyMs": 36,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.046Z",
+          "roundTripLatencyMs": 21,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:50:30.138Z",
+          "roundTripLatencyMs": 18,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
         {
           "state": "CONNECTED",
           "timestamp": "2026-11-09T16:11:05.895Z",
@@ -2782,10 +3376,2519 @@
         }
       ],
       "createdAt": "2026-11-03T05:16:30.533Z",
-      "updatedAt": "2026-11-09T16:11:05.895Z"
+      "updatedAt": "2026-11-12T20:04:19.538Z"
+    },
+    {
+      "id": "conn-yahoo-community_liaison_yahoo_com-mwdyqs4x",
+      "emailAddress": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "displayName": "Yahoo Community Liaison Mailbox",
+      "accountOwner": "Bongani Sithole",
+      "department": "Community Engagement",
+      "authMethod": "APP_PASSWORD",
+      "authStatus": "CONNECTED",
+      "connectionHealth": "HEALTHY",
+      "lastSyncAt": null,
+      "lastSuccessfulSyncAt": null,
+      "lastError": null,
+      "incomingMessageCount": 0,
+      "outgoingMessageCount": 1,
+      "syncFailureCount": 0,
+      "credentialExpiresAt": "2026-12-12T19:51:01.617Z",
+      "credentialWarning": false,
+      "sendingPermission": "DISARMED_STAGING",
+      "syncStatus": "SYNC_IDLE",
+      "folders": [
+        "INBOX",
+        "Sent",
+        "Drafts",
+        "Trash"
+      ],
+      "folderInspection": [],
+      "isInstitutionalMailbox": false,
+      "safeguardingClassification": "GENERAL",
+      "currentEvidence": {
+        "state": "CONNECTED",
+        "timestamp": "2026-11-12T20:04:19.539Z",
+        "roundTripLatencyMs": 68,
+        "tlsVersion": "TLSv1.3",
+        "cipherSuite": "TLS_AES_256_GCM_SHA384",
+        "dnsResolution": "RESOLVED_OK",
+        "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+      },
+      "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.539Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.047Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:51:01.617Z",
+          "roundTripLatencyMs": 45,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Initial configuration registered for community.liaison@yahoo.com [Provider: YAHOO]."
+        }
+      ],
+      "createdAt": "2026-11-12T19:51:01.617Z",
+      "updatedAt": "2026-11-12T20:04:19.539Z"
+    },
+    {
+      "id": "conn-zoho-finance_records_zoho_com-mwdyqs4y",
+      "emailAddress": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "displayName": "Zoho Institutional Records",
+      "accountOwner": "Finance Team",
+      "department": "Finance",
+      "authMethod": "OAUTH2",
+      "authStatus": "CONNECTED",
+      "connectionHealth": "HEALTHY",
+      "lastSyncAt": null,
+      "lastSuccessfulSyncAt": null,
+      "lastError": null,
+      "incomingMessageCount": 0,
+      "outgoingMessageCount": 0,
+      "syncFailureCount": 0,
+      "credentialExpiresAt": "2026-12-12T19:51:01.618Z",
+      "credentialWarning": false,
+      "sendingPermission": "DISARMED_STAGING",
+      "syncStatus": "SYNC_IDLE",
+      "folders": [
+        "INBOX",
+        "Sent",
+        "Drafts",
+        "Trash"
+      ],
+      "folderInspection": [],
+      "isInstitutionalMailbox": false,
+      "safeguardingClassification": "GENERAL",
+      "currentEvidence": {
+        "state": "CONNECTED",
+        "timestamp": "2026-11-12T20:04:19.541Z",
+        "roundTripLatencyMs": 68,
+        "tlsVersion": "TLSv1.3",
+        "cipherSuite": "TLS_AES_256_GCM_SHA384",
+        "dnsResolution": "RESOLVED_OK",
+        "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+      },
+      "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.541Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.049Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+        },
+        {
+          "state": "AUTHORIZED",
+          "timestamp": "2026-11-12T19:51:01.618Z",
+          "roundTripLatencyMs": 45,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Initial configuration registered for finance.records@zoho.com [Provider: ZOHO]."
+        }
+      ],
+      "createdAt": "2026-11-12T19:51:01.618Z",
+      "updatedAt": "2026-11-12T20:04:19.541Z"
+    },
+    {
+      "id": "conn-google-caseworker_pretoria_phumulani_org-mwdyqt5y",
+      "emailAddress": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "displayName": "Pretoria Casework Desk",
+      "accountOwner": "Pretoria Operations Staff",
+      "department": "Casework & Outreach",
+      "authMethod": "OAUTH2",
+      "authStatus": "CONNECTED",
+      "connectionHealth": "HEALTHY",
+      "lastSyncAt": "2026-11-12T19:51:02.956Z",
+      "lastSuccessfulSyncAt": "2026-11-12T19:51:02.956Z",
+      "lastError": null,
+      "incomingMessageCount": 0,
+      "outgoingMessageCount": 0,
+      "syncFailureCount": 0,
+      "credentialExpiresAt": "2026-12-12T19:51:02.993Z",
+      "credentialWarning": false,
+      "sendingPermission": "DISARMED_STAGING",
+      "syncStatus": "SYNC_COMPLETE",
+      "folders": [
+        "INBOX",
+        "Sent",
+        "Drafts",
+        "Trash"
+      ],
+      "folderInspection": [],
+      "isInstitutionalMailbox": true,
+      "safeguardingClassification": "GENERAL",
+      "currentEvidence": {
+        "state": "CONNECTED",
+        "timestamp": "2026-11-12T20:04:19.542Z",
+        "roundTripLatencyMs": 37,
+        "tlsVersion": "TLSv1.3",
+        "cipherSuite": "TLS_AES_256_GCM_SHA384",
+        "dnsResolution": "RESOLVED_OK",
+        "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+      },
+      "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.542Z",
+          "roundTripLatencyMs": 37,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.050Z",
+          "roundTripLatencyMs": 29,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "REVOKED",
+          "timestamp": "2026-11-12T19:51:02.995Z",
+          "roundTripLatencyMs": 0,
+          "tlsVersion": "N/A",
+          "cipherSuite": "N/A",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Token credentials securely revoked and purged for caseworker.pretoria@phumulani.org."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:51:02.993Z",
+          "roundTripLatencyMs": 44,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "tokenExpiryIso": "2026-12-12T19:51:02.993Z",
+          "diagnosticsDetail": "Token refreshed successfully via secure refresh grant for caseworker.pretoria@phumulani.org."
+        },
+        {
+          "state": "TOKEN_EXPIRED",
+          "timestamp": "2026-11-12T19:51:02.992Z",
+          "roundTripLatencyMs": 0,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "tokenExpiryIso": "2026-11-12T18:51:02.992Z",
+          "diagnosticsDetail": "Token expiration detected for caseworker.pretoria@phumulani.org. Reauthorization required."
+        },
+        {
+          "state": "AUTHORIZED",
+          "timestamp": "2026-11-12T19:51:02.950Z",
+          "roundTripLatencyMs": 45,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Initial configuration registered for caseworker.pretoria@phumulani.org [Provider: GOOGLE]."
+        }
+      ],
+      "createdAt": "2026-11-12T19:51:02.950Z",
+      "updatedAt": "2026-11-12T20:04:19.542Z",
+      "syncCursor": "1004848",
+      "cursorType": "GMAIL_HISTORY_ID"
+    },
+    {
+      "id": "conn-yahoo-community_liaison_yahoo_com-mwdyr8tr",
+      "emailAddress": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "displayName": "Yahoo Community Liaison Mailbox",
+      "accountOwner": "Bongani Sithole",
+      "department": "Community Engagement",
+      "authMethod": "APP_PASSWORD",
+      "authStatus": "CONNECTED",
+      "connectionHealth": "HEALTHY",
+      "lastSyncAt": null,
+      "lastSuccessfulSyncAt": null,
+      "lastError": null,
+      "incomingMessageCount": 0,
+      "outgoingMessageCount": 1,
+      "syncFailureCount": 0,
+      "credentialExpiresAt": "2026-12-12T19:51:23.247Z",
+      "credentialWarning": false,
+      "sendingPermission": "DISARMED_STAGING",
+      "syncStatus": "SYNC_IDLE",
+      "folders": [
+        "INBOX",
+        "Sent",
+        "Drafts",
+        "Trash"
+      ],
+      "folderInspection": [],
+      "isInstitutionalMailbox": false,
+      "safeguardingClassification": "GENERAL",
+      "currentEvidence": {
+        "state": "CONNECTED",
+        "timestamp": "2026-11-12T20:04:19.543Z",
+        "roundTripLatencyMs": 68,
+        "tlsVersion": "TLSv1.3",
+        "cipherSuite": "TLS_AES_256_GCM_SHA384",
+        "dnsResolution": "RESOLVED_OK",
+        "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+      },
+      "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.543Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.052Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:51:23.247Z",
+          "roundTripLatencyMs": 45,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Initial configuration registered for community.liaison@yahoo.com [Provider: YAHOO]."
+        }
+      ],
+      "createdAt": "2026-11-12T19:51:23.247Z",
+      "updatedAt": "2026-11-12T20:04:19.543Z"
+    },
+    {
+      "id": "conn-zoho-finance_records_zoho_com-mwdyr8tt",
+      "emailAddress": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "displayName": "Zoho Institutional Records",
+      "accountOwner": "Finance Team",
+      "department": "Finance",
+      "authMethod": "OAUTH2",
+      "authStatus": "CONNECTED",
+      "connectionHealth": "HEALTHY",
+      "lastSyncAt": null,
+      "lastSuccessfulSyncAt": null,
+      "lastError": null,
+      "incomingMessageCount": 0,
+      "outgoingMessageCount": 0,
+      "syncFailureCount": 0,
+      "credentialExpiresAt": "2026-12-12T19:51:23.249Z",
+      "credentialWarning": false,
+      "sendingPermission": "DISARMED_STAGING",
+      "syncStatus": "SYNC_IDLE",
+      "folders": [
+        "INBOX",
+        "Sent",
+        "Drafts",
+        "Trash"
+      ],
+      "folderInspection": [],
+      "isInstitutionalMailbox": false,
+      "safeguardingClassification": "GENERAL",
+      "currentEvidence": {
+        "state": "CONNECTED",
+        "timestamp": "2026-11-12T20:04:19.544Z",
+        "roundTripLatencyMs": 68,
+        "tlsVersion": "TLSv1.3",
+        "cipherSuite": "TLS_AES_256_GCM_SHA384",
+        "dnsResolution": "RESOLVED_OK",
+        "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+      },
+      "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.544Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.053Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+        },
+        {
+          "state": "AUTHORIZED",
+          "timestamp": "2026-11-12T19:51:23.249Z",
+          "roundTripLatencyMs": 45,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Initial configuration registered for finance.records@zoho.com [Provider: ZOHO]."
+        }
+      ],
+      "createdAt": "2026-11-12T19:51:23.249Z",
+      "updatedAt": "2026-11-12T20:04:19.544Z"
+    },
+    {
+      "id": "conn-google-caseworker_pretoria_phumulani_org-mwdyr9pr",
+      "emailAddress": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "displayName": "Pretoria Casework Desk",
+      "accountOwner": "Pretoria Operations Staff",
+      "department": "Casework & Outreach",
+      "authMethod": "OAUTH2",
+      "authStatus": "CONNECTED",
+      "connectionHealth": "HEALTHY",
+      "lastSyncAt": "2026-11-12T19:51:24.404Z",
+      "lastSuccessfulSyncAt": "2026-11-12T19:51:24.404Z",
+      "lastError": null,
+      "incomingMessageCount": 0,
+      "outgoingMessageCount": 0,
+      "syncFailureCount": 0,
+      "credentialExpiresAt": "2026-12-12T19:51:24.439Z",
+      "credentialWarning": false,
+      "sendingPermission": "DISARMED_STAGING",
+      "syncStatus": "SYNC_COMPLETE",
+      "folders": [
+        "INBOX",
+        "Sent",
+        "Drafts",
+        "Trash"
+      ],
+      "folderInspection": [],
+      "isInstitutionalMailbox": true,
+      "safeguardingClassification": "GENERAL",
+      "currentEvidence": {
+        "state": "CONNECTED",
+        "timestamp": "2026-11-12T20:04:19.546Z",
+        "roundTripLatencyMs": 38,
+        "tlsVersion": "TLSv1.3",
+        "cipherSuite": "TLS_AES_256_GCM_SHA384",
+        "dnsResolution": "RESOLVED_OK",
+        "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+      },
+      "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.546Z",
+          "roundTripLatencyMs": 38,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.054Z",
+          "roundTripLatencyMs": 31,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "REVOKED",
+          "timestamp": "2026-11-12T19:51:24.441Z",
+          "roundTripLatencyMs": 0,
+          "tlsVersion": "N/A",
+          "cipherSuite": "N/A",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Token credentials securely revoked and purged for caseworker.pretoria@phumulani.org."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:51:24.439Z",
+          "roundTripLatencyMs": 44,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "tokenExpiryIso": "2026-12-12T19:51:24.439Z",
+          "diagnosticsDetail": "Token refreshed successfully via secure refresh grant for caseworker.pretoria@phumulani.org."
+        },
+        {
+          "state": "TOKEN_EXPIRED",
+          "timestamp": "2026-11-12T19:51:24.437Z",
+          "roundTripLatencyMs": 0,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "tokenExpiryIso": "2026-11-12T18:51:24.437Z",
+          "diagnosticsDetail": "Token expiration detected for caseworker.pretoria@phumulani.org. Reauthorization required."
+        },
+        {
+          "state": "AUTHORIZED",
+          "timestamp": "2026-11-12T19:51:24.399Z",
+          "roundTripLatencyMs": 45,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Initial configuration registered for caseworker.pretoria@phumulani.org [Provider: GOOGLE]."
+        }
+      ],
+      "createdAt": "2026-11-12T19:51:24.399Z",
+      "updatedAt": "2026-11-12T20:04:19.546Z",
+      "syncCursor": "1004848",
+      "cursorType": "GMAIL_HISTORY_ID"
+    },
+    {
+      "id": "conn-yahoo-community_liaison_yahoo_com-mwdyxh8v",
+      "emailAddress": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "displayName": "Yahoo Community Liaison Mailbox",
+      "accountOwner": "Bongani Sithole",
+      "department": "Community Engagement",
+      "authMethod": "APP_PASSWORD",
+      "authStatus": "CONNECTED",
+      "connectionHealth": "HEALTHY",
+      "lastSyncAt": null,
+      "lastSuccessfulSyncAt": null,
+      "lastError": null,
+      "incomingMessageCount": 0,
+      "outgoingMessageCount": 1,
+      "syncFailureCount": 0,
+      "credentialExpiresAt": "2026-12-12T19:56:14.095Z",
+      "credentialWarning": false,
+      "sendingPermission": "DISARMED_STAGING",
+      "syncStatus": "SYNC_IDLE",
+      "folders": [
+        "INBOX",
+        "Sent",
+        "Drafts",
+        "Trash"
+      ],
+      "folderInspection": [],
+      "isInstitutionalMailbox": false,
+      "safeguardingClassification": "GENERAL",
+      "currentEvidence": {
+        "state": "CONNECTED",
+        "timestamp": "2026-11-12T20:04:19.547Z",
+        "roundTripLatencyMs": 68,
+        "tlsVersion": "TLSv1.3",
+        "cipherSuite": "TLS_AES_256_GCM_SHA384",
+        "dnsResolution": "RESOLVED_OK",
+        "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+      },
+      "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.547Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.055Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:14.095Z",
+          "roundTripLatencyMs": 45,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Initial configuration registered for community.liaison@yahoo.com [Provider: YAHOO]."
+        }
+      ],
+      "createdAt": "2026-11-12T19:56:14.095Z",
+      "updatedAt": "2026-11-12T20:04:19.547Z"
+    },
+    {
+      "id": "conn-zoho-finance_records_zoho_com-mwdyxh8x",
+      "emailAddress": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "displayName": "Zoho Institutional Records",
+      "accountOwner": "Finance Team",
+      "department": "Finance",
+      "authMethod": "OAUTH2",
+      "authStatus": "CONNECTED",
+      "connectionHealth": "HEALTHY",
+      "lastSyncAt": null,
+      "lastSuccessfulSyncAt": null,
+      "lastError": null,
+      "incomingMessageCount": 0,
+      "outgoingMessageCount": 0,
+      "syncFailureCount": 0,
+      "credentialExpiresAt": "2026-12-12T19:56:14.097Z",
+      "credentialWarning": false,
+      "sendingPermission": "DISARMED_STAGING",
+      "syncStatus": "SYNC_IDLE",
+      "folders": [
+        "INBOX",
+        "Sent",
+        "Drafts",
+        "Trash"
+      ],
+      "folderInspection": [],
+      "isInstitutionalMailbox": false,
+      "safeguardingClassification": "GENERAL",
+      "currentEvidence": {
+        "state": "CONNECTED",
+        "timestamp": "2026-11-12T20:04:19.549Z",
+        "roundTripLatencyMs": 68,
+        "tlsVersion": "TLSv1.3",
+        "cipherSuite": "TLS_AES_256_GCM_SHA384",
+        "dnsResolution": "RESOLVED_OK",
+        "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+      },
+      "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.549Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.057Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+        },
+        {
+          "state": "AUTHORIZED",
+          "timestamp": "2026-11-12T19:56:14.097Z",
+          "roundTripLatencyMs": 45,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Initial configuration registered for finance.records@zoho.com [Provider: ZOHO]."
+        }
+      ],
+      "createdAt": "2026-11-12T19:56:14.097Z",
+      "updatedAt": "2026-11-12T20:04:19.549Z"
+    },
+    {
+      "id": "conn-google-caseworker_pretoria_phumulani_org-mwdyxhxc",
+      "emailAddress": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "displayName": "Pretoria Casework Desk",
+      "accountOwner": "Pretoria Operations Staff",
+      "department": "Casework & Outreach",
+      "authMethod": "OAUTH2",
+      "authStatus": "CONNECTED",
+      "connectionHealth": "HEALTHY",
+      "lastSyncAt": "2026-11-12T19:56:14.981Z",
+      "lastSuccessfulSyncAt": "2026-11-12T19:56:14.981Z",
+      "lastError": null,
+      "incomingMessageCount": 0,
+      "outgoingMessageCount": 0,
+      "syncFailureCount": 0,
+      "credentialExpiresAt": "2026-12-12T19:56:15.016Z",
+      "credentialWarning": false,
+      "sendingPermission": "DISARMED_STAGING",
+      "syncStatus": "SYNC_COMPLETE",
+      "folders": [
+        "INBOX",
+        "Sent",
+        "Drafts",
+        "Trash"
+      ],
+      "folderInspection": [],
+      "isInstitutionalMailbox": true,
+      "safeguardingClassification": "GENERAL",
+      "currentEvidence": {
+        "state": "CONNECTED",
+        "timestamp": "2026-11-12T20:04:19.550Z",
+        "roundTripLatencyMs": 24,
+        "tlsVersion": "TLSv1.3",
+        "cipherSuite": "TLS_AES_256_GCM_SHA384",
+        "dnsResolution": "RESOLVED_OK",
+        "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+      },
+      "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.550Z",
+          "roundTripLatencyMs": 24,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:16.058Z",
+          "roundTripLatencyMs": 30,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "REVOKED",
+          "timestamp": "2026-11-12T19:56:15.017Z",
+          "roundTripLatencyMs": 0,
+          "tlsVersion": "N/A",
+          "cipherSuite": "N/A",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Token credentials securely revoked and purged for caseworker.pretoria@phumulani.org."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T19:56:15.016Z",
+          "roundTripLatencyMs": 44,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "tokenExpiryIso": "2026-12-12T19:56:15.016Z",
+          "diagnosticsDetail": "Token refreshed successfully via secure refresh grant for caseworker.pretoria@phumulani.org."
+        },
+        {
+          "state": "TOKEN_EXPIRED",
+          "timestamp": "2026-11-12T19:56:15.015Z",
+          "roundTripLatencyMs": 0,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "tokenExpiryIso": "2026-11-12T18:56:15.015Z",
+          "diagnosticsDetail": "Token expiration detected for caseworker.pretoria@phumulani.org. Reauthorization required."
+        },
+        {
+          "state": "AUTHORIZED",
+          "timestamp": "2026-11-12T19:56:14.976Z",
+          "roundTripLatencyMs": 45,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Initial configuration registered for caseworker.pretoria@phumulani.org [Provider: GOOGLE]."
+        }
+      ],
+      "createdAt": "2026-11-12T19:56:14.976Z",
+      "updatedAt": "2026-11-12T20:04:19.550Z",
+      "syncCursor": "1004848",
+      "cursorType": "GMAIL_HISTORY_ID"
+    },
+    {
+      "id": "conn-yahoo-community_liaison_yahoo_com-mwdz7u53",
+      "emailAddress": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "displayName": "Yahoo Community Liaison Mailbox",
+      "accountOwner": "Bongani Sithole",
+      "department": "Community Engagement",
+      "authMethod": "APP_PASSWORD",
+      "authStatus": "CONNECTED",
+      "connectionHealth": "HEALTHY",
+      "lastSyncAt": null,
+      "lastSuccessfulSyncAt": null,
+      "lastError": null,
+      "incomingMessageCount": 0,
+      "outgoingMessageCount": 1,
+      "syncFailureCount": 0,
+      "credentialExpiresAt": "2026-12-12T20:04:17.367Z",
+      "credentialWarning": false,
+      "sendingPermission": "DISARMED_STAGING",
+      "syncStatus": "SYNC_IDLE",
+      "folders": [
+        "INBOX",
+        "Sent",
+        "Drafts",
+        "Trash"
+      ],
+      "folderInspection": [],
+      "isInstitutionalMailbox": false,
+      "safeguardingClassification": "GENERAL",
+      "currentEvidence": {
+        "state": "CONNECTED",
+        "timestamp": "2026-11-12T20:04:19.551Z",
+        "roundTripLatencyMs": 68,
+        "tlsVersion": "TLSv1.3",
+        "cipherSuite": "TLS_AES_256_GCM_SHA384",
+        "dnsResolution": "RESOLVED_OK",
+        "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+      },
+      "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.551Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imap.mail.yahoo.com:993) and SMTP (smtp.mail.yahoo.com:465) TLS handshake verified."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:17.367Z",
+          "roundTripLatencyMs": 45,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Initial configuration registered for community.liaison@yahoo.com [Provider: YAHOO]."
+        }
+      ],
+      "createdAt": "2026-11-12T20:04:17.367Z",
+      "updatedAt": "2026-11-12T20:04:19.551Z"
+    },
+    {
+      "id": "conn-zoho-finance_records_zoho_com-mwdz7u55",
+      "emailAddress": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "displayName": "Zoho Institutional Records",
+      "accountOwner": "Finance Team",
+      "department": "Finance",
+      "authMethod": "OAUTH2",
+      "authStatus": "CONNECTED",
+      "connectionHealth": "HEALTHY",
+      "lastSyncAt": null,
+      "lastSuccessfulSyncAt": null,
+      "lastError": null,
+      "incomingMessageCount": 0,
+      "outgoingMessageCount": 0,
+      "syncFailureCount": 0,
+      "credentialExpiresAt": "2026-12-12T20:04:17.369Z",
+      "credentialWarning": false,
+      "sendingPermission": "DISARMED_STAGING",
+      "syncStatus": "SYNC_IDLE",
+      "folders": [
+        "INBOX",
+        "Sent",
+        "Drafts",
+        "Trash"
+      ],
+      "folderInspection": [],
+      "isInstitutionalMailbox": false,
+      "safeguardingClassification": "GENERAL",
+      "currentEvidence": {
+        "state": "CONNECTED",
+        "timestamp": "2026-11-12T20:04:19.552Z",
+        "roundTripLatencyMs": 68,
+        "tlsVersion": "TLSv1.3",
+        "cipherSuite": "TLS_AES_256_GCM_SHA384",
+        "dnsResolution": "RESOLVED_OK",
+        "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+      },
+      "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.552Z",
+          "roundTripLatencyMs": 68,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "IMAP (imappro.zoho.com:993) and SMTP (smtppro.zoho.com:465) TLS handshake verified."
+        },
+        {
+          "state": "AUTHORIZED",
+          "timestamp": "2026-11-12T20:04:17.369Z",
+          "roundTripLatencyMs": 45,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Initial configuration registered for finance.records@zoho.com [Provider: ZOHO]."
+        }
+      ],
+      "createdAt": "2026-11-12T20:04:17.369Z",
+      "updatedAt": "2026-11-12T20:04:19.552Z"
+    },
+    {
+      "id": "conn-google-caseworker_pretoria_phumulani_org-mwdz7ux4",
+      "emailAddress": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "displayName": "Pretoria Casework Desk",
+      "accountOwner": "Pretoria Operations Staff",
+      "department": "Casework & Outreach",
+      "authMethod": "OAUTH2",
+      "authStatus": "CONNECTED",
+      "connectionHealth": "HEALTHY",
+      "lastSyncAt": "2026-11-12T20:04:18.379Z",
+      "lastSuccessfulSyncAt": "2026-11-12T20:04:18.379Z",
+      "lastError": null,
+      "incomingMessageCount": 0,
+      "outgoingMessageCount": 0,
+      "syncFailureCount": 0,
+      "credentialExpiresAt": "2026-12-12T20:04:18.415Z",
+      "credentialWarning": false,
+      "sendingPermission": "DISARMED_STAGING",
+      "syncStatus": "SYNC_COMPLETE",
+      "folders": [
+        "INBOX",
+        "Sent",
+        "Drafts",
+        "Trash"
+      ],
+      "folderInspection": [],
+      "isInstitutionalMailbox": true,
+      "safeguardingClassification": "GENERAL",
+      "currentEvidence": {
+        "state": "CONNECTED",
+        "timestamp": "2026-11-12T20:04:19.554Z",
+        "roundTripLatencyMs": 21,
+        "tlsVersion": "TLSv1.3",
+        "cipherSuite": "TLS_AES_256_GCM_SHA384",
+        "dnsResolution": "RESOLVED_OK",
+        "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+      },
+      "evidenceHistory": [
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:19.554Z",
+          "roundTripLatencyMs": 21,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Gmail REST API endpoints verified via TLSv1.3 (HEALTHY)."
+        },
+        {
+          "state": "REVOKED",
+          "timestamp": "2026-11-12T20:04:18.416Z",
+          "roundTripLatencyMs": 0,
+          "tlsVersion": "N/A",
+          "cipherSuite": "N/A",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Token credentials securely revoked and purged for caseworker.pretoria@phumulani.org."
+        },
+        {
+          "state": "CONNECTED",
+          "timestamp": "2026-11-12T20:04:18.415Z",
+          "roundTripLatencyMs": 44,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "tokenExpiryIso": "2026-12-12T20:04:18.415Z",
+          "diagnosticsDetail": "Token refreshed successfully via secure refresh grant for caseworker.pretoria@phumulani.org."
+        },
+        {
+          "state": "TOKEN_EXPIRED",
+          "timestamp": "2026-11-12T20:04:18.413Z",
+          "roundTripLatencyMs": 0,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "tokenExpiryIso": "2026-11-12T19:04:18.413Z",
+          "diagnosticsDetail": "Token expiration detected for caseworker.pretoria@phumulani.org. Reauthorization required."
+        },
+        {
+          "state": "AUTHORIZED",
+          "timestamp": "2026-11-12T20:04:18.376Z",
+          "roundTripLatencyMs": 45,
+          "tlsVersion": "TLSv1.3",
+          "cipherSuite": "TLS_AES_256_GCM_SHA384",
+          "dnsResolution": "RESOLVED_OK",
+          "diagnosticsDetail": "Initial configuration registered for caseworker.pretoria@phumulani.org [Provider: GOOGLE]."
+        }
+      ],
+      "createdAt": "2026-11-12T20:04:18.376Z",
+      "updatedAt": "2026-11-12T20:04:19.554Z",
+      "syncCursor": "1004848",
+      "cursorType": "GMAIL_HISTORY_ID"
     }
   ],
   "auditEvents": [
+    {
+      "id": "aud-1794513859554",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdz7ux4",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.554Z",
+      "details": "Health check: HEALTHY (21ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859552",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mwdz7u55",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.552Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859551",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mwdz7u53",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.551Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859550",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdyxhxc",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.550Z",
+      "details": "Health check: HEALTHY (24ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859549",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mwdyxh8x",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.549Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859547",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mwdyxh8v",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.547Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859546",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdyr9pr",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.546Z",
+      "details": "Health check: HEALTHY (38ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859544",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mwdyr8tt",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.544Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859543",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mwdyr8tr",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.543Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859542",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdyqt5y",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.542Z",
+      "details": "Health check: HEALTHY (37ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859541",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mwdyqs4y",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.541Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859539",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mwdyqs4x",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.539Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859538",
+      "connectionId": "conn-google-pilot_test_donations_phumulani_org-mw08jh6t",
+      "mailboxEmail": "pilot-test-donations@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.538Z",
+      "details": "Health check: HEALTHY (36ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859537",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mw04ss4x",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.537Z",
+      "details": "Health check: HEALTHY (23ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859535",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mw01e87l",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.535Z",
+      "details": "Health check: HEALTHY (34ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859534",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvzcvqof",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.534Z",
+      "details": "Health check: HEALTHY (38ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859533",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqj4yg",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.533Z",
+      "details": "Health check: HEALTHY (27ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859531",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mvyqhhir",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.531Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859530",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mvyqhhiq",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.530Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859527",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqhglm",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.527Z",
+      "details": "Health check: HEALTHY (19ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859526",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqdlvu",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.526Z",
+      "details": "Health check: HEALTHY (41ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859525",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mvyqdgh2",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.525Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859523",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mvyqdgh1",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.523Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859522",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mvyqd4hy",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.522Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859521",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mvyqd4hx",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.521Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859519",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqcvbt",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.519Z",
+      "details": "Health check: HEALTHY (26ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859518",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqbxup",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.518Z",
+      "details": "Health check: HEALTHY (23ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859517",
+      "connectionId": "conn-imap_smtp-relay_phumulani_community_org_za",
+      "mailboxEmail": "relay@phumulani-community.org.za",
+      "provider": "IMAP_SMTP",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.517Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859515",
+      "connectionId": "conn-microsoft-outreach_phumulani_org",
+      "mailboxEmail": "outreach@phumulani.org",
+      "provider": "MICROSOFT",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.515Z",
+      "details": "Health check: HEALTHY (56ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859514",
+      "connectionId": "conn-google-safeguarding_phumulani_org",
+      "mailboxEmail": "safeguarding@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.514Z",
+      "details": "Health check: HEALTHY (18ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859512",
+      "connectionId": "conn-google-support_phumulani_org",
+      "mailboxEmail": "support@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.512Z",
+      "details": "Health check: HEALTHY (39ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859511",
+      "connectionId": "conn-google-director_phumulani_org",
+      "mailboxEmail": "director@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.511Z",
+      "details": "Health check: HEALTHY (20ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859510",
+      "connectionId": "conn-google-info_phumulani_org",
+      "mailboxEmail": "info@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.510Z",
+      "details": "Health check: HEALTHY (21ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513859508",
+      "connectionId": "conn-google-donations_phumulani_org",
+      "mailboxEmail": "donations@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:19.508Z",
+      "details": "Health check: HEALTHY (23ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513858432",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdz7uyh",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_RECONNECTED",
+      "actorName": "Administrator",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T20:04:18.432Z",
+      "details": "Account reconnected: e2e.test.liaison@zoho.com (Status: CONNECTED)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513858431",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdz7uyh",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_DISCONNECTED",
+      "actorName": "Administrator",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T20:04:18.431Z",
+      "details": "Account disconnected: e2e.test.liaison@zoho.com",
+      "status": "warning"
+    },
+    {
+      "id": "aud-1794513858428",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdz7uyh",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:18.428Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513858425",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdz7uyh",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Quality Assurance Lead",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T20:04:18.425Z",
+      "details": "Account registered: e2e.test.liaison@zoho.com [Provider: ZOHO, Auth: OAUTH2, Status: CONNECTED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513858423",
+      "connectionId": "conn-google-info_phumulani_org",
+      "mailboxEmail": "info@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "DISPATCH_SENT",
+      "actorName": "Dr. Zanele Khumalo (Executive Director)",
+      "actorRole": "EXECUTIVE_APPROVER",
+      "timestamp": "2026-11-12T20:04:18.423Z",
+      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1794513858422",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513858421",
+      "connectionId": "conn-google-info_phumulani_org",
+      "mailboxEmail": "info@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "DISPATCH_SENT",
+      "actorName": "Dr. Zanele Khumalo (Executive Director)",
+      "actorRole": "EXECUTIVE_APPROVER",
+      "timestamp": "2026-11-12T20:04:18.421Z",
+      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1794513858420",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513858416",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdz7ux4",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "TOKEN_REVOKED",
+      "actorName": "SecurityAdministrator",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T20:04:18.416Z",
+      "details": "Access credentials revoked and purged from vault: caseworker.pretoria@phumulani.org",
+      "status": "warning"
+    },
+    {
+      "id": "aud-1794513858415",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdz7ux4",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "TOKEN_REFRESHED",
+      "actorName": "TokenRefreshDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T20:04:18.415Z",
+      "details": "Token refreshed and expiry extended for caseworker.pretoria@phumulani.org",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513858376",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdz7ux4",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Pretoria Operations Staff",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T20:04:18.376Z",
+      "details": "Account registered: caseworker.pretoria@phumulani.org [Provider: GOOGLE, Auth: OAUTH2, Status: AUTHORIZED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513857369",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mwdz7u55",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Finance Team",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T20:04:17.369Z",
+      "details": "Account registered: finance.records@zoho.com [Provider: ZOHO, Auth: OAUTH2, Status: CONNECTED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513857367",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mwdz7u53",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Bongani Sithole",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T20:04:17.367Z",
+      "details": "Account registered: community.liaison@yahoo.com [Provider: YAHOO, Auth: APP_PASSWORD, Status: CONNECTED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376058",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdyxhxc",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.058Z",
+      "details": "Health check: HEALTHY (30ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376057",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mwdyxh8x",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.057Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376055",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mwdyxh8v",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.055Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376054",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdyr9pr",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.054Z",
+      "details": "Health check: HEALTHY (31ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376053",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mwdyr8tt",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.053Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376052",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mwdyr8tr",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.052Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376050",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdyqt5y",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.050Z",
+      "details": "Health check: HEALTHY (29ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376049",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mwdyqs4y",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.049Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376047",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mwdyqs4x",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.047Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376046",
+      "connectionId": "conn-google-pilot_test_donations_phumulani_org-mw08jh6t",
+      "mailboxEmail": "pilot-test-donations@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.046Z",
+      "details": "Health check: HEALTHY (21ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376044",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mw04ss4x",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.044Z",
+      "details": "Health check: HEALTHY (37ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376043",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mw01e87l",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.043Z",
+      "details": "Health check: HEALTHY (34ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376042",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvzcvqof",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.042Z",
+      "details": "Health check: HEALTHY (28ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376040",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqj4yg",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.040Z",
+      "details": "Health check: HEALTHY (34ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376039",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mvyqhhir",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.039Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376037",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mvyqhhiq",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.037Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376036",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqhglm",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.036Z",
+      "details": "Health check: HEALTHY (36ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376035",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqdlvu",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.035Z",
+      "details": "Health check: HEALTHY (29ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376034",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mvyqdgh2",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.034Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376032",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mvyqdgh1",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.032Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376031",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mvyqd4hy",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.031Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376030",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mvyqd4hx",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.030Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376028",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqcvbt",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.028Z",
+      "details": "Health check: HEALTHY (34ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376027",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqbxup",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.027Z",
+      "details": "Health check: HEALTHY (37ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376026",
+      "connectionId": "conn-imap_smtp-relay_phumulani_community_org_za",
+      "mailboxEmail": "relay@phumulani-community.org.za",
+      "provider": "IMAP_SMTP",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.026Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376025",
+      "connectionId": "conn-microsoft-outreach_phumulani_org",
+      "mailboxEmail": "outreach@phumulani.org",
+      "provider": "MICROSOFT",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.025Z",
+      "details": "Health check: HEALTHY (56ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376023",
+      "connectionId": "conn-google-safeguarding_phumulani_org",
+      "mailboxEmail": "safeguarding@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.023Z",
+      "details": "Health check: HEALTHY (26ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376022",
+      "connectionId": "conn-google-support_phumulani_org",
+      "mailboxEmail": "support@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.022Z",
+      "details": "Health check: HEALTHY (28ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376021",
+      "connectionId": "conn-google-director_phumulani_org",
+      "mailboxEmail": "director@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.021Z",
+      "details": "Health check: HEALTHY (37ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376019",
+      "connectionId": "conn-google-info_phumulani_org",
+      "mailboxEmail": "info@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.019Z",
+      "details": "Health check: HEALTHY (18ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513376018",
+      "connectionId": "conn-google-donations_phumulani_org",
+      "mailboxEmail": "donations@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:16.018Z",
+      "details": "Health check: HEALTHY (25ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513375032",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdyxhyq",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_RECONNECTED",
+      "actorName": "Administrator",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:56:15.032Z",
+      "details": "Account reconnected: e2e.test.liaison@zoho.com (Status: CONNECTED)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513375030",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdyxhyq",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_DISCONNECTED",
+      "actorName": "Administrator",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:56:15.030Z",
+      "details": "Account disconnected: e2e.test.liaison@zoho.com",
+      "status": "warning"
+    },
+    {
+      "id": "aud-1794513375029",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdyxhyq",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:15.029Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513375026",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdyxhyq",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Quality Assurance Lead",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:56:15.026Z",
+      "details": "Account registered: e2e.test.liaison@zoho.com [Provider: ZOHO, Auth: OAUTH2, Status: CONNECTED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513375024",
+      "connectionId": "conn-google-info_phumulani_org",
+      "mailboxEmail": "info@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "DISPATCH_SENT",
+      "actorName": "Dr. Zanele Khumalo (Executive Director)",
+      "actorRole": "EXECUTIVE_APPROVER",
+      "timestamp": "2026-11-12T19:56:15.024Z",
+      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1794513375023",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513375023",
+      "connectionId": "conn-google-info_phumulani_org",
+      "mailboxEmail": "info@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "DISPATCH_SENT",
+      "actorName": "Dr. Zanele Khumalo (Executive Director)",
+      "actorRole": "EXECUTIVE_APPROVER",
+      "timestamp": "2026-11-12T19:56:15.023Z",
+      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1794513375021",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513375017",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdyxhxc",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "TOKEN_REVOKED",
+      "actorName": "SecurityAdministrator",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:56:15.017Z",
+      "details": "Access credentials revoked and purged from vault: caseworker.pretoria@phumulani.org",
+      "status": "warning"
+    },
+    {
+      "id": "aud-1794513375016",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdyxhxc",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "TOKEN_REFRESHED",
+      "actorName": "TokenRefreshDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:56:15.016Z",
+      "details": "Token refreshed and expiry extended for caseworker.pretoria@phumulani.org",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513374977",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdyxhxc",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Pretoria Operations Staff",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:56:14.976Z",
+      "details": "Account registered: caseworker.pretoria@phumulani.org [Provider: GOOGLE, Auth: OAUTH2, Status: AUTHORIZED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513374097",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mwdyxh8x",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Finance Team",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:56:14.097Z",
+      "details": "Account registered: finance.records@zoho.com [Provider: ZOHO, Auth: OAUTH2, Status: CONNECTED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513374095",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mwdyxh8v",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Bongani Sithole",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:56:14.095Z",
+      "details": "Account registered: community.liaison@yahoo.com [Provider: YAHOO, Auth: APP_PASSWORD, Status: CONNECTED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513084462",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdyr9r9",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_RECONNECTED",
+      "actorName": "Administrator",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:51:24.462Z",
+      "details": "Account reconnected: e2e.test.liaison@zoho.com (Status: CONNECTED)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513084461",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdyr9r9",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_DISCONNECTED",
+      "actorName": "Administrator",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:51:24.461Z",
+      "details": "Account disconnected: e2e.test.liaison@zoho.com",
+      "status": "warning"
+    },
+    {
+      "id": "aud-1794513084459",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdyr9r9",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:51:24.459Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513084454",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdyr9r9",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Quality Assurance Lead",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:51:24.453Z",
+      "details": "Account registered: e2e.test.liaison@zoho.com [Provider: ZOHO, Auth: OAUTH2, Status: CONNECTED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513084449",
+      "connectionId": "conn-google-info_phumulani_org",
+      "mailboxEmail": "info@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "DISPATCH_SENT",
+      "actorName": "Dr. Zanele Khumalo (Executive Director)",
+      "actorRole": "EXECUTIVE_APPROVER",
+      "timestamp": "2026-11-12T19:51:24.449Z",
+      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1794513084447",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513084446",
+      "connectionId": "conn-google-info_phumulani_org",
+      "mailboxEmail": "info@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "DISPATCH_SENT",
+      "actorName": "Dr. Zanele Khumalo (Executive Director)",
+      "actorRole": "EXECUTIVE_APPROVER",
+      "timestamp": "2026-11-12T19:51:24.446Z",
+      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1794513084445",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513084441",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdyr9pr",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "TOKEN_REVOKED",
+      "actorName": "SecurityAdministrator",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:51:24.441Z",
+      "details": "Access credentials revoked and purged from vault: caseworker.pretoria@phumulani.org",
+      "status": "warning"
+    },
+    {
+      "id": "aud-1794513084439",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdyr9pr",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "TOKEN_REFRESHED",
+      "actorName": "TokenRefreshDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:51:24.439Z",
+      "details": "Token refreshed and expiry extended for caseworker.pretoria@phumulani.org",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513084400",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdyr9pr",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Pretoria Operations Staff",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:51:24.399Z",
+      "details": "Account registered: caseworker.pretoria@phumulani.org [Provider: GOOGLE, Auth: OAUTH2, Status: AUTHORIZED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513083249",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mwdyr8tt",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Finance Team",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:51:23.249Z",
+      "details": "Account registered: finance.records@zoho.com [Provider: ZOHO, Auth: OAUTH2, Status: CONNECTED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513083247",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mwdyr8tr",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Bongani Sithole",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:51:23.247Z",
+      "details": "Account registered: community.liaison@yahoo.com [Provider: YAHOO, Auth: APP_PASSWORD, Status: CONNECTED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513063013",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdyqt7i",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_RECONNECTED",
+      "actorName": "Administrator",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:51:03.013Z",
+      "details": "Account reconnected: e2e.test.liaison@zoho.com (Status: CONNECTED)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513063011",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdyqt7i",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_DISCONNECTED",
+      "actorName": "Administrator",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:51:03.011Z",
+      "details": "Account disconnected: e2e.test.liaison@zoho.com",
+      "status": "warning"
+    },
+    {
+      "id": "aud-1794513063010",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdyqt7i",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:51:03.010Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513063006",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdyqt7i",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Quality Assurance Lead",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:51:03.006Z",
+      "details": "Account registered: e2e.test.liaison@zoho.com [Provider: ZOHO, Auth: OAUTH2, Status: CONNECTED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513063004",
+      "connectionId": "conn-google-info_phumulani_org",
+      "mailboxEmail": "info@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "DISPATCH_SENT",
+      "actorName": "Dr. Zanele Khumalo (Executive Director)",
+      "actorRole": "EXECUTIVE_APPROVER",
+      "timestamp": "2026-11-12T19:51:03.004Z",
+      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1794513063003",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513063002",
+      "connectionId": "conn-google-info_phumulani_org",
+      "mailboxEmail": "info@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "DISPATCH_SENT",
+      "actorName": "Dr. Zanele Khumalo (Executive Director)",
+      "actorRole": "EXECUTIVE_APPROVER",
+      "timestamp": "2026-11-12T19:51:03.002Z",
+      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1794513063000",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513062995",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdyqt5y",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "TOKEN_REVOKED",
+      "actorName": "SecurityAdministrator",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:51:02.995Z",
+      "details": "Access credentials revoked and purged from vault: caseworker.pretoria@phumulani.org",
+      "status": "warning"
+    },
+    {
+      "id": "aud-1794513062993",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdyqt5y",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "TOKEN_REFRESHED",
+      "actorName": "TokenRefreshDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:51:02.993Z",
+      "details": "Token refreshed and expiry extended for caseworker.pretoria@phumulani.org",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513062950",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdyqt5y",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Pretoria Operations Staff",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:51:02.950Z",
+      "details": "Account registered: caseworker.pretoria@phumulani.org [Provider: GOOGLE, Auth: OAUTH2, Status: AUTHORIZED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513061618",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mwdyqs4y",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Finance Team",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:51:01.618Z",
+      "details": "Account registered: finance.records@zoho.com [Provider: ZOHO, Auth: OAUTH2, Status: CONNECTED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513061617",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mwdyqs4x",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "ACCOUNT_CONNECTED",
+      "actorName": "Bongani Sithole",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T19:51:01.617Z",
+      "details": "Account registered: community.liaison@yahoo.com [Provider: YAHOO, Auth: APP_PASSWORD, Status: CONNECTED]",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030138",
+      "connectionId": "conn-google-pilot_test_donations_phumulani_org-mw08jh6t",
+      "mailboxEmail": "pilot-test-donations@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.138Z",
+      "details": "Health check: HEALTHY (18ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030137",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mw04ss4x",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.137Z",
+      "details": "Health check: HEALTHY (25ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030135",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mw01e87l",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.135Z",
+      "details": "Health check: HEALTHY (23ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030134",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvzcvqof",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.134Z",
+      "details": "Health check: HEALTHY (26ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030133",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqj4yg",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.133Z",
+      "details": "Health check: HEALTHY (20ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030132",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mvyqhhir",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.132Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030130",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mvyqhhiq",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.130Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030129",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqhglm",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.129Z",
+      "details": "Health check: HEALTHY (32ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030128",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqdlvu",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.128Z",
+      "details": "Health check: HEALTHY (21ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030127",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mvyqdgh2",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.127Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030125",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mvyqdgh1",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.125Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030124",
+      "connectionId": "conn-zoho-finance_records_zoho_com-mvyqd4hy",
+      "mailboxEmail": "finance.records@zoho.com",
+      "provider": "ZOHO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.124Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030123",
+      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mvyqd4hx",
+      "mailboxEmail": "community.liaison@yahoo.com",
+      "provider": "YAHOO",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.123Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030122",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqcvbt",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.122Z",
+      "details": "Health check: HEALTHY (23ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030120",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqbxup",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.120Z",
+      "details": "Health check: HEALTHY (34ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030119",
+      "connectionId": "conn-imap_smtp-relay_phumulani_community_org_za",
+      "mailboxEmail": "relay@phumulani-community.org.za",
+      "provider": "IMAP_SMTP",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.119Z",
+      "details": "Health check: HEALTHY (68ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030117",
+      "connectionId": "conn-microsoft-outreach_phumulani_org",
+      "mailboxEmail": "outreach@phumulani.org",
+      "provider": "MICROSOFT",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.117Z",
+      "details": "Health check: HEALTHY (56ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030116",
+      "connectionId": "conn-google-safeguarding_phumulani_org",
+      "mailboxEmail": "safeguarding@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.116Z",
+      "details": "Health check: HEALTHY (21ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030115",
+      "connectionId": "conn-google-support_phumulani_org",
+      "mailboxEmail": "support@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.115Z",
+      "details": "Health check: HEALTHY (20ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030114",
+      "connectionId": "conn-google-director_phumulani_org",
+      "mailboxEmail": "director@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.114Z",
+      "details": "Health check: HEALTHY (21ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030113",
+      "connectionId": "conn-google-info_phumulani_org",
+      "mailboxEmail": "info@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.113Z",
+      "details": "Health check: HEALTHY (34ms)",
+      "status": "success"
+    },
+    {
+      "id": "aud-1794513030111",
+      "connectionId": "conn-google-donations_phumulani_org",
+      "mailboxEmail": "donations@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "CONNECTION_VERIFIED",
+      "actorName": "HealthCheckDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T19:50:30.111Z",
+      "details": "Health check: HEALTHY (26ms)",
+      "status": "success"
+    },
     {
       "id": "aud-1794240665895",
       "connectionId": "conn-google-pilot_test_donations_phumulani_org-mw08jh6t",
@@ -4812,510 +7915,6 @@
       "actorRole": "ADMINISTRATOR",
       "timestamp": "2026-11-02T04:04:35.416Z",
       "details": "Account registered: caseworker.pretoria@phumulani.org [Provider: GOOGLE, Auth: OAUTH2, Status: AUTHORIZED]",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592198387",
-      "connectionId": "conn-zoho-finance_records_zoho_com-mvyqhhir",
-      "mailboxEmail": "finance.records@zoho.com",
-      "provider": "ZOHO",
-      "action": "ACCOUNT_CONNECTED",
-      "actorName": "Finance Team",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T04:03:18.387Z",
-      "details": "Account registered: finance.records@zoho.com [Provider: ZOHO, Auth: OAUTH2, Status: CONNECTED]",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592198387",
-      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mvyqhhiq",
-      "mailboxEmail": "community.liaison@yahoo.com",
-      "provider": "YAHOO",
-      "action": "ACCOUNT_CONNECTED",
-      "actorName": "Bongani Sithole",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T04:03:18.386Z",
-      "details": "Account registered: community.liaison@yahoo.com [Provider: YAHOO, Auth: APP_PASSWORD, Status: CONNECTED]",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592197241",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvyqhgmu",
-      "mailboxEmail": "e2e.test.liaison@zoho.com",
-      "provider": "ZOHO",
-      "action": "ACCOUNT_RECONNECTED",
-      "actorName": "Administrator",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T04:03:17.241Z",
-      "details": "Account reconnected: e2e.test.liaison@zoho.com (Status: CONNECTED)",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592197240",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvyqhgmu",
-      "mailboxEmail": "e2e.test.liaison@zoho.com",
-      "provider": "ZOHO",
-      "action": "ACCOUNT_DISCONNECTED",
-      "actorName": "Administrator",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T04:03:17.240Z",
-      "details": "Account disconnected: e2e.test.liaison@zoho.com",
-      "status": "warning"
-    },
-    {
-      "id": "aud-1793592197240",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvyqhgmu",
-      "mailboxEmail": "e2e.test.liaison@zoho.com",
-      "provider": "ZOHO",
-      "action": "CONNECTION_VERIFIED",
-      "actorName": "HealthCheckDaemon",
-      "actorRole": "SYSTEM_SCHEDULER",
-      "timestamp": "2026-11-02T04:03:17.240Z",
-      "details": "Health check: HEALTHY (68ms)",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592197238",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvyqhgmu",
-      "mailboxEmail": "e2e.test.liaison@zoho.com",
-      "provider": "ZOHO",
-      "action": "ACCOUNT_CONNECTED",
-      "actorName": "Quality Assurance Lead",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T04:03:17.238Z",
-      "details": "Account registered: e2e.test.liaison@zoho.com [Provider: ZOHO, Auth: OAUTH2, Status: CONNECTED]",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592197237",
-      "connectionId": "conn-google-info_phumulani_org",
-      "mailboxEmail": "info@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "DISPATCH_SENT",
-      "actorName": "Dr. Zanele Khumalo (Executive Director)",
-      "actorRole": "EXECUTIVE_APPROVER",
-      "timestamp": "2026-11-02T04:03:17.237Z",
-      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1793592197236",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592197236",
-      "connectionId": "conn-google-info_phumulani_org",
-      "mailboxEmail": "info@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "DISPATCH_SENT",
-      "actorName": "Dr. Zanele Khumalo (Executive Director)",
-      "actorRole": "EXECUTIVE_APPROVER",
-      "timestamp": "2026-11-02T04:03:17.236Z",
-      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1793592197235",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592197232",
-      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqhglm",
-      "mailboxEmail": "caseworker.pretoria@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "TOKEN_REVOKED",
-      "actorName": "SecurityAdministrator",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T04:03:17.232Z",
-      "details": "Access credentials revoked and purged from vault: caseworker.pretoria@phumulani.org",
-      "status": "warning"
-    },
-    {
-      "id": "aud-1793592197231",
-      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqhglm",
-      "mailboxEmail": "caseworker.pretoria@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "TOKEN_REFRESHED",
-      "actorName": "TokenRefreshDaemon",
-      "actorRole": "SYSTEM_SCHEDULER",
-      "timestamp": "2026-11-02T04:03:17.231Z",
-      "details": "Token refreshed and expiry extended for caseworker.pretoria@phumulani.org",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592197194",
-      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqhglm",
-      "mailboxEmail": "caseworker.pretoria@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "ACCOUNT_CONNECTED",
-      "actorName": "Pretoria Operations Staff",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T04:03:17.194Z",
-      "details": "Account registered: caseworker.pretoria@phumulani.org [Provider: GOOGLE, Auth: OAUTH2, Status: AUTHORIZED]",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592017468",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvyqdlx4",
-      "mailboxEmail": "e2e.test.liaison@zoho.com",
-      "provider": "ZOHO",
-      "action": "ACCOUNT_RECONNECTED",
-      "actorName": "Administrator",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T04:00:17.468Z",
-      "details": "Account reconnected: e2e.test.liaison@zoho.com (Status: CONNECTED)",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592017467",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvyqdlx4",
-      "mailboxEmail": "e2e.test.liaison@zoho.com",
-      "provider": "ZOHO",
-      "action": "ACCOUNT_DISCONNECTED",
-      "actorName": "Administrator",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T04:00:17.467Z",
-      "details": "Account disconnected: e2e.test.liaison@zoho.com",
-      "status": "warning"
-    },
-    {
-      "id": "aud-1793592017467",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvyqdlx4",
-      "mailboxEmail": "e2e.test.liaison@zoho.com",
-      "provider": "ZOHO",
-      "action": "CONNECTION_VERIFIED",
-      "actorName": "HealthCheckDaemon",
-      "actorRole": "SYSTEM_SCHEDULER",
-      "timestamp": "2026-11-02T04:00:17.467Z",
-      "details": "Health check: HEALTHY (68ms)",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592017465",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvyqdlx4",
-      "mailboxEmail": "e2e.test.liaison@zoho.com",
-      "provider": "ZOHO",
-      "action": "ACCOUNT_CONNECTED",
-      "actorName": "Quality Assurance Lead",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T04:00:17.464Z",
-      "details": "Account registered: e2e.test.liaison@zoho.com [Provider: ZOHO, Auth: OAUTH2, Status: CONNECTED]",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592017462",
-      "connectionId": "conn-google-info_phumulani_org",
-      "mailboxEmail": "info@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "DISPATCH_SENT",
-      "actorName": "Dr. Zanele Khumalo (Executive Director)",
-      "actorRole": "EXECUTIVE_APPROVER",
-      "timestamp": "2026-11-02T04:00:17.462Z",
-      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1793592017461",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592017461",
-      "connectionId": "conn-google-info_phumulani_org",
-      "mailboxEmail": "info@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "DISPATCH_SENT",
-      "actorName": "Dr. Zanele Khumalo (Executive Director)",
-      "actorRole": "EXECUTIVE_APPROVER",
-      "timestamp": "2026-11-02T04:00:17.461Z",
-      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1793592017460",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592017456",
-      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqdlvu",
-      "mailboxEmail": "caseworker.pretoria@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "TOKEN_REVOKED",
-      "actorName": "SecurityAdministrator",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T04:00:17.456Z",
-      "details": "Access credentials revoked and purged from vault: caseworker.pretoria@phumulani.org",
-      "status": "warning"
-    },
-    {
-      "id": "aud-1793592017455",
-      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqdlvu",
-      "mailboxEmail": "caseworker.pretoria@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "TOKEN_REFRESHED",
-      "actorName": "TokenRefreshDaemon",
-      "actorRole": "SYSTEM_SCHEDULER",
-      "timestamp": "2026-11-02T04:00:17.455Z",
-      "details": "Token refreshed and expiry extended for caseworker.pretoria@phumulani.org",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592017418",
-      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqdlvu",
-      "mailboxEmail": "caseworker.pretoria@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "ACCOUNT_CONNECTED",
-      "actorName": "Pretoria Operations Staff",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T04:00:17.418Z",
-      "details": "Account registered: caseworker.pretoria@phumulani.org [Provider: GOOGLE, Auth: OAUTH2, Status: AUTHORIZED]",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592010406",
-      "connectionId": "conn-zoho-finance_records_zoho_com-mvyqdgh2",
-      "mailboxEmail": "finance.records@zoho.com",
-      "provider": "ZOHO",
-      "action": "ACCOUNT_CONNECTED",
-      "actorName": "Finance Team",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T04:00:10.406Z",
-      "details": "Account registered: finance.records@zoho.com [Provider: ZOHO, Auth: OAUTH2, Status: CONNECTED]",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793592010405",
-      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mvyqdgh1",
-      "mailboxEmail": "community.liaison@yahoo.com",
-      "provider": "YAHOO",
-      "action": "ACCOUNT_CONNECTED",
-      "actorName": "Bongani Sithole",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T04:00:10.405Z",
-      "details": "Account registered: community.liaison@yahoo.com [Provider: YAHOO, Auth: APP_PASSWORD, Status: CONNECTED]",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793591994886",
-      "connectionId": "conn-zoho-finance_records_zoho_com-mvyqd4hy",
-      "mailboxEmail": "finance.records@zoho.com",
-      "provider": "ZOHO",
-      "action": "ACCOUNT_CONNECTED",
-      "actorName": "Finance Team",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T03:59:54.886Z",
-      "details": "Account registered: finance.records@zoho.com [Provider: ZOHO, Auth: OAUTH2, Status: CONNECTED]",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793591994886",
-      "connectionId": "conn-yahoo-community_liaison_yahoo_com-mvyqd4hx",
-      "mailboxEmail": "community.liaison@yahoo.com",
-      "provider": "YAHOO",
-      "action": "ACCOUNT_CONNECTED",
-      "actorName": "Bongani Sithole",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T03:59:54.885Z",
-      "details": "Account registered: community.liaison@yahoo.com [Provider: YAHOO, Auth: APP_PASSWORD, Status: CONNECTED]",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793591983048",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvyqcvd1",
-      "mailboxEmail": "e2e.test.liaison@zoho.com",
-      "provider": "ZOHO",
-      "action": "ACCOUNT_RECONNECTED",
-      "actorName": "Administrator",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T03:59:43.048Z",
-      "details": "Account reconnected: e2e.test.liaison@zoho.com (Status: CONNECTED)",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793591983047",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvyqcvd1",
-      "mailboxEmail": "e2e.test.liaison@zoho.com",
-      "provider": "ZOHO",
-      "action": "ACCOUNT_DISCONNECTED",
-      "actorName": "Administrator",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T03:59:43.047Z",
-      "details": "Account disconnected: e2e.test.liaison@zoho.com",
-      "status": "warning"
-    },
-    {
-      "id": "aud-1793591983047",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvyqcvd1",
-      "mailboxEmail": "e2e.test.liaison@zoho.com",
-      "provider": "ZOHO",
-      "action": "CONNECTION_VERIFIED",
-      "actorName": "HealthCheckDaemon",
-      "actorRole": "SYSTEM_SCHEDULER",
-      "timestamp": "2026-11-02T03:59:43.047Z",
-      "details": "Health check: HEALTHY (68ms)",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793591983045",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvyqcvd1",
-      "mailboxEmail": "e2e.test.liaison@zoho.com",
-      "provider": "ZOHO",
-      "action": "ACCOUNT_CONNECTED",
-      "actorName": "Quality Assurance Lead",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T03:59:43.045Z",
-      "details": "Account registered: e2e.test.liaison@zoho.com [Provider: ZOHO, Auth: OAUTH2, Status: CONNECTED]",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793591983044",
-      "connectionId": "conn-google-info_phumulani_org",
-      "mailboxEmail": "info@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "DISPATCH_SENT",
-      "actorName": "Dr. Zanele Khumalo (Executive Director)",
-      "actorRole": "EXECUTIVE_APPROVER",
-      "timestamp": "2026-11-02T03:59:43.044Z",
-      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1793591983044",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793591983044",
-      "connectionId": "conn-google-info_phumulani_org",
-      "mailboxEmail": "info@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "DISPATCH_SENT",
-      "actorName": "Dr. Zanele Khumalo (Executive Director)",
-      "actorRole": "EXECUTIVE_APPROVER",
-      "timestamp": "2026-11-02T03:59:43.044Z",
-      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1793591983043",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793591983039",
-      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqcvbt",
-      "mailboxEmail": "caseworker.pretoria@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "TOKEN_REVOKED",
-      "actorName": "SecurityAdministrator",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T03:59:43.039Z",
-      "details": "Access credentials revoked and purged from vault: caseworker.pretoria@phumulani.org",
-      "status": "warning"
-    },
-    {
-      "id": "aud-1793591983038",
-      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqcvbt",
-      "mailboxEmail": "caseworker.pretoria@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "TOKEN_REFRESHED",
-      "actorName": "TokenRefreshDaemon",
-      "actorRole": "SYSTEM_SCHEDULER",
-      "timestamp": "2026-11-02T03:59:43.038Z",
-      "details": "Token refreshed and expiry extended for caseworker.pretoria@phumulani.org",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793591983001",
-      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqcvbt",
-      "mailboxEmail": "caseworker.pretoria@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "ACCOUNT_CONNECTED",
-      "actorName": "Pretoria Operations Staff",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T03:59:43.001Z",
-      "details": "Account registered: caseworker.pretoria@phumulani.org [Provider: GOOGLE, Auth: OAUTH2, Status: AUTHORIZED]",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793591939659",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvyqbxvt",
-      "mailboxEmail": "e2e.test.liaison@zoho.com",
-      "provider": "ZOHO",
-      "action": "ACCOUNT_RECONNECTED",
-      "actorName": "Administrator",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T03:58:59.659Z",
-      "details": "Account reconnected: e2e.test.liaison@zoho.com (Status: CONNECTED)",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793591939659",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvyqbxvt",
-      "mailboxEmail": "e2e.test.liaison@zoho.com",
-      "provider": "ZOHO",
-      "action": "ACCOUNT_DISCONNECTED",
-      "actorName": "Administrator",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T03:58:59.659Z",
-      "details": "Account disconnected: e2e.test.liaison@zoho.com",
-      "status": "warning"
-    },
-    {
-      "id": "aud-1793591939659",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvyqbxvt",
-      "mailboxEmail": "e2e.test.liaison@zoho.com",
-      "provider": "ZOHO",
-      "action": "CONNECTION_VERIFIED",
-      "actorName": "HealthCheckDaemon",
-      "actorRole": "SYSTEM_SCHEDULER",
-      "timestamp": "2026-11-02T03:58:59.659Z",
-      "details": "Health check: HEALTHY (68ms)",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793591939657",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mvyqbxvt",
-      "mailboxEmail": "e2e.test.liaison@zoho.com",
-      "provider": "ZOHO",
-      "action": "ACCOUNT_CONNECTED",
-      "actorName": "Quality Assurance Lead",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T03:58:59.657Z",
-      "details": "Account registered: e2e.test.liaison@zoho.com [Provider: ZOHO, Auth: OAUTH2, Status: CONNECTED]",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793591939656",
-      "connectionId": "conn-google-info_phumulani_org",
-      "mailboxEmail": "info@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "DISPATCH_SENT",
-      "actorName": "Dr. Zanele Khumalo (Executive Director)",
-      "actorRole": "EXECUTIVE_APPROVER",
-      "timestamp": "2026-11-02T03:58:59.656Z",
-      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1793591939656",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793591939656",
-      "connectionId": "conn-google-info_phumulani_org",
-      "mailboxEmail": "info@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "DISPATCH_SENT",
-      "actorName": "Dr. Zanele Khumalo (Executive Director)",
-      "actorRole": "EXECUTIVE_APPROVER",
-      "timestamp": "2026-11-02T03:58:59.656Z",
-      "details": "Dispatch completed. State: STAGED, DispatchId: disp-google-1793591939655",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793591939653",
-      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqbxup",
-      "mailboxEmail": "caseworker.pretoria@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "TOKEN_REVOKED",
-      "actorName": "SecurityAdministrator",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T03:58:59.653Z",
-      "details": "Access credentials revoked and purged from vault: caseworker.pretoria@phumulani.org",
-      "status": "warning"
-    },
-    {
-      "id": "aud-1793591939652",
-      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqbxup",
-      "mailboxEmail": "caseworker.pretoria@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "TOKEN_REFRESHED",
-      "actorName": "TokenRefreshDaemon",
-      "actorRole": "SYSTEM_SCHEDULER",
-      "timestamp": "2026-11-02T03:58:59.652Z",
-      "details": "Token refreshed and expiry extended for caseworker.pretoria@phumulani.org",
-      "status": "success"
-    },
-    {
-      "id": "aud-1793591939617",
-      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mvyqbxup",
-      "mailboxEmail": "caseworker.pretoria@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "ACCOUNT_CONNECTED",
-      "actorName": "Pretoria Operations Staff",
-      "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-02T03:58:59.617Z",
-      "details": "Account registered: caseworker.pretoria@phumulani.org [Provider: GOOGLE, Auth: OAUTH2, Status: OAUTH_AUTHORIZED]",
       "status": "success"
     }
   ]

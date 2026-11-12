@@ -278,7 +278,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
     try {
       parsedPayload = JSON.parse(taskPayloadJson);
     } catch {
-      alert('Invalid JSON in task input parameters');
+      notify('Validation error: Invalid JSON in task input parameters.');
       return;
     }
 
@@ -432,7 +432,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
   // Handle CSV/JSON Import
   const handleRunImport = () => {
     if (!importText.trim()) {
-      alert('Please enter or paste CSV/JSON donor contact records');
+      notify('Validation error: Please enter or paste CSV/JSON donor contact records.');
       return;
     }
     const currentActor = db.getState().currentUser.name;
@@ -547,7 +547,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
   // Create Opportunity Handler
   const handleCreateOpportunity = () => {
     if (!newOppTitle.trim()) {
-      alert('Please enter an opportunity title');
+      notify('Validation error: Please enter an opportunity title.');
       return;
     }
     const donor = donors.find((d) => d.id === newOppDonorId);
@@ -577,7 +577,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
   // Log Engagement Activity Handler
   const handleLogEngagementActivity = () => {
     if (!newActTitle.trim()) {
-      alert('Please enter an activity title');
+      notify('Validation error: Please enter an activity title.');
       return;
     }
     const donor = donors.find((d) => d.id === newActDonorId);
@@ -3516,7 +3516,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               <button
                 onClick={() => {
                   if (!newDonorName || !newDonorEmail) {
-                    alert('Please enter a name and email');
+                    notify('Validation error: Please enter a name and email.');
                     return;
                   }
                   const newContact: DonorContact = {

@@ -288,7 +288,7 @@ export class UnifiedAiWorkforceService {
     const kpis = this.getWorkforceKPIs();
     return {
       totalAgents: kpis.totalDistinctAgents,
-      connectedModels: process.env.GEMINI_API_KEY ? kpis.totalDistinctAgents : 0,
+      connectedModels: typeof process !== 'undefined' && process.env?.GEMINI_API_KEY ? kpis.totalDistinctAgents : 0,
       activeAgents: kpis.activeAgentsCount,
       pausedAgents: kpis.pausedAgentsCount,
       pendingApprovals: kpis.pendingApprovalsCount,

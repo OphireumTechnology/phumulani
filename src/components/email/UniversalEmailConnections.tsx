@@ -287,29 +287,37 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
   const handleTestVerify = async () => {
     setIsVerifying(true);
+    const t0 = Date.now();
     try {
       const res = await fetch('/api/admin/email/connectors/discover', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ emailAddress: wizardEmail }),
       });
-      await res.json();
+      const data = await res.json();
+      const roundTripLatencyMs = Math.max(1, Date.now() - t0);
+
+      if (!res.ok || !data?.success) {
+        throw new Error(data?.error || 'Provider discovery request failed');
+      }
+
+      const isAuthorized = selectedAuthMethod === 'OAUTH2' ? oauthVerified : true;
+      const discoveredProvider = data.discovery?.provider || selectedProvider;
 
       setVerificationHealth({
         connectionId: 'conn-verify-preview',
-        provider: selectedProvider,
+        provider: discoveredProvider,
         mailboxEmail: wizardEmail,
-        healthy: true,
-        status: 'HEALTHY',
-        roundTripLatencyMs: 48,
+        healthy: isAuthorized,
+        status: isAuthorized ? 'HEALTHY' : 'UNTESTED',
+        roundTripLatencyMs,
         lastCheckedAt: new Date().toISOString(),
-        tlsVersion: 'TLSv1.3',
-        cipherSuite: 'TLS_AES_256_GCM_SHA384',
-        dnsResolution: 'RESOLVED_OK',
-        quotaUnitsRemaining: 25000,
-        diagnosticsDetail: `Verified connection to ${selectedProvider} endpoints over TLSv1.3.`,
+        dnsResolution: data.discovery?.supported ? 'RESOLVED_OK' : 'DNS_ERROR',
+        diagnosticsDetail: isAuthorized
+          ? `Provider discovered (${discoveredProvider}) and credential check completed (${roundTripLatencyMs}ms).`
+          : `Provider discovered (${discoveredProvider}), but OAuth 2.0 authorization has not yet been completed.`,
       });
-    } catch {
+    } catch (err: unknown) {
       setVerificationHealth({
         connectionId: 'conn-verify-err',
         provider: selectedProvider,
@@ -319,7 +327,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
         roundTripLatencyMs: 0,
         lastCheckedAt: new Date().toISOString(),
         dnsResolution: 'DNS_ERROR',
-        error: 'Connection verification failed',
+        error: err instanceof Error ? err.message : 'Connection verification failed',
       });
     } finally {
       setIsVerifying(false);

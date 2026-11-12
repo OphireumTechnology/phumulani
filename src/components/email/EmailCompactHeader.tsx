@@ -169,14 +169,48 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
             </button>
           </div>
 
-          {/* Connection Status Indicator */}
-          <div
-            className="hidden xl:flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-medium"
-            title="Google Workspace & Universal Ingestion Gateway Active"
-          >
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
-            <span>Live Sync Ready</span>
-          </div>
+          {/* Connection Status Indicator (Dynamic from Mailbox State) */}
+          {(() => {
+            const liveAuthorizedCount = mailboxes.filter(
+              (m) =>
+                (m.status === 'CONNECTED' || m.status === 'connected' || m.status === 'SYNCING' || m.status === 'syncing') &&
+                m.authStatus === 'authorized'
+            ).length;
+            const activeStagedCount = mailboxes.filter(
+              (m) => m.status === 'CONNECTED' || m.status === 'connected' || m.status === 'SYNCING' || m.status === 'syncing'
+            ).length;
+            if (liveAuthorizedCount > 0) {
+              return (
+                <div
+                  className="hidden xl:flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-medium"
+                  title="Live Provider OAuth Sync Active"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                  <span>Live Sync ({liveAuthorizedCount}/{mailboxes.length})</span>
+                </div>
+              );
+            }
+            if (activeStagedCount > 0) {
+              return (
+                <div
+                  className="hidden xl:flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 text-amber-900 border border-amber-200 text-[11px] font-medium"
+                  title="Staged Sync Active — Live Provider OAuth Authorization Required"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span>Staged Sync ({activeStagedCount}/{mailboxes.length} · OAuth Req)</span>
+                </div>
+              );
+            }
+            return (
+              <div
+                className="hidden xl:flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-50 text-rose-800 border border-rose-200 text-[11px] font-medium"
+                title="No Mailboxes Currently Connected"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-600" />
+                <span>Sync Disconnected</span>
+              </div>
+            );
+          })()}
 
           {/* Notifications / Approvals Indicator */}
           {onOpenAuditLogs && (

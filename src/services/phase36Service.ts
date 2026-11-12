@@ -666,7 +666,7 @@ export class Phase36Service {
       division: agent.division,
       taskDescription: params.taskDescription,
       executionState,
-      providerStatus: process.env.GEMINI_API_KEY ? 'LIVE_GEMINI_CONNECTED' : 'FALLBACK_DETERMINISTIC',
+      providerStatus: typeof process !== 'undefined' && process.env?.GEMINI_API_KEY ? 'LIVE_GEMINI_CONNECTED' : 'FALLBACK_DETERMINISTIC',
       evidenceSourceList: [`CanonicalRegistry:${params.agentId}`, `StaffAuditTrail:${Date.now()}`],
       requiresHumanReview: requiresReview,
       humanReviewDecision: requiresReview ? 'PENDING' : 'APPROVED',
