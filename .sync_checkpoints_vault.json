@@ -1,9 +1,9 @@
 {
-  "savedAt": "2026-11-12T20:04:19.561Z",
+  "savedAt": "2026-11-12T21:31:35.007Z",
   "checkpoints": {
     "conn-test-sync-engine": [
       {
-        "checkpointId": "chk-gmail-1794513857366",
+        "checkpointId": "chk-gmail-1794519054020",
         "connectionId": "conn-test-sync-engine",
         "mailboxEmail": "info@phumulani.org",
         "cursorType": "GMAIL_HISTORY_ID",
@@ -13,13 +13,13 @@
         "duplicatesSkipped": 0,
         "syncType": "INITIAL",
         "status": "COMPLETED",
-        "timestamp": "2026-11-12T20:04:17.366Z"
+        "timestamp": "2026-11-12T21:30:54.020Z"
       }
     ],
-    "conn-google-caseworker_pretoria_phumulani_org-mwdz7ux4": [
+    "conn-google-caseworker_pretoria_phumulani_org-mwe2b8qv": [
       {
-        "checkpointId": "chk-gmail-1794513858378",
-        "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdz7ux4",
+        "checkpointId": "chk-gmail-1794519055113",
+        "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwe2b8qv",
         "mailboxEmail": "caseworker.pretoria@phumulani.org",
         "cursorType": "GMAIL_HISTORY_ID",
         "cursorValue": "1004834",
@@ -28,13 +28,13 @@
         "duplicatesSkipped": 2,
         "syncType": "INITIAL",
         "status": "COMPLETED",
-        "timestamp": "2026-11-12T20:04:18.378Z"
+        "timestamp": "2026-11-12T21:30:55.113Z"
       }
     ],
-    "conn-zoho-e2e_test_liaison_zoho_com-mwdz7uyh": [
+    "conn-zoho-e2e_test_liaison_zoho_com-mwe2b8s0": [
       {
-        "checkpointId": "chk-zoho-1794513858427",
-        "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdz7uyh",
+        "checkpointId": "chk-zoho-1794519055153",
+        "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwe2b8s0",
         "mailboxEmail": "e2e.test.liaison@zoho.com",
         "cursorType": "IMAP_UID_SEQUENCE",
         "cursorValue": "UIDVALIDITY:1730000000:UID:417",
@@ -43,22 +43,37 @@
         "duplicatesSkipped": 0,
         "syncType": "INITIAL",
         "status": "COMPLETED",
-        "timestamp": "2026-11-12T20:04:18.427Z"
+        "timestamp": "2026-11-12T21:30:55.153Z"
       }
     ],
-    "conn-google-donations_phumulani_org": [
+    "conn-google-caseworker_pretoria_phumulani_org-mwe2c3hj": [
       {
-        "checkpointId": "chk-gmail-1794513859561",
-        "connectionId": "conn-google-donations_phumulani_org",
-        "mailboxEmail": "donations@phumulani.org",
+        "checkpointId": "chk-gmail-1794519094953",
+        "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwe2c3hj",
+        "mailboxEmail": "caseworker.pretoria@phumulani.org",
         "cursorType": "GMAIL_HISTORY_ID",
         "cursorValue": "1004834",
         "previousCursorValue": "1004820",
         "messagesProcessed": 0,
         "duplicatesSkipped": 2,
-        "syncType": "INCREMENTAL",
+        "syncType": "INITIAL",
         "status": "COMPLETED",
-        "timestamp": "2026-11-12T20:04:19.561Z"
+        "timestamp": "2026-11-12T21:31:34.953Z"
+      }
+    ],
+    "conn-zoho-e2e_test_liaison_zoho_com-mwe2c3j2": [
+      {
+        "checkpointId": "chk-zoho-1794519095007",
+        "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwe2c3j2",
+        "mailboxEmail": "e2e.test.liaison@zoho.com",
+        "cursorType": "IMAP_UID_SEQUENCE",
+        "cursorValue": "UIDVALIDITY:1730000000:UID:417",
+        "previousCursorValue": "UIDVALIDITY:1730000000:UID:412",
+        "messagesProcessed": 0,
+        "duplicatesSkipped": 1,
+        "syncType": "INITIAL",
+        "status": "COMPLETED",
+        "timestamp": "2026-11-12T21:31:35.007Z"
       }
     ]
   },
@@ -69,98 +84,134 @@
   ],
   "auditLogs": [
     {
-      "id": "aud-sync-1794513859561-xctw",
-      "connectionId": "conn-google-donations_phumulani_org",
-      "mailboxEmail": "donations@phumulani.org",
-      "provider": "GOOGLE",
-      "action": "SYNC_CHECKPOINT_CREATED",
-      "actorName": "UniversalSyncDaemon",
-      "actorRole": "SYSTEM_SCHEDULER",
-      "timestamp": "2026-11-12T20:04:19.561Z",
-      "details": "Incremental sync completed: 0 imported, 2 duplicates skipped. Cursor: 1004834",
-      "status": "success"
-    },
-    {
-      "id": "aud-sync-1794513858427-hxbo",
-      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwdz7uyh",
+      "id": "aud-sync-1794519095007-mzdr",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwe2c3j2",
       "mailboxEmail": "e2e.test.liaison@zoho.com",
       "provider": "ZOHO",
       "action": "SYNC_CHECKPOINT_CREATED",
       "actorName": "UniversalSyncDaemon",
       "actorRole": "SYSTEM_SCHEDULER",
-      "timestamp": "2026-11-12T20:04:18.427Z",
-      "details": "Initial sync completed: 1 imported, 0 duplicates skipped. Cursor: UIDVALIDITY:1730000000:UID:417",
+      "timestamp": "2026-11-12T21:31:35.007Z",
+      "details": "Initial sync completed: 0 imported, 1 duplicates skipped. Cursor: UIDVALIDITY:1730000000:UID:417",
       "status": "success"
     },
     {
-      "id": "aud-rollback-1794513858381",
-      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdz7ux4",
+      "id": "aud-rollback-1794519094954",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwe2c3hj",
       "mailboxEmail": "caseworker.pretoria@phumulani.org",
       "provider": "CUSTOM",
       "action": "CURSOR_RECOVERED",
       "actorName": "SecurityAdministrator",
       "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-12T20:04:18.381Z",
-      "details": "Cursor recovered from 1004848 to checkpoint chk-gmail-1794513858378 (1004834)",
+      "timestamp": "2026-11-12T21:31:34.954Z",
+      "details": "Cursor recovered from 1004848 to checkpoint chk-gmail-1794519094953 (1004834)",
       "status": "warning"
     },
     {
-      "id": "aud-sync-1794513858379-9qdf",
-      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdz7ux4",
+      "id": "aud-sync-1794519094953-03qe",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwe2c3hj",
       "mailboxEmail": "caseworker.pretoria@phumulani.org",
       "provider": "GOOGLE",
       "action": "SYNC_CHECKPOINT_CREATED",
       "actorName": "UniversalSyncDaemon",
       "actorRole": "SYSTEM_SCHEDULER",
-      "timestamp": "2026-11-12T20:04:18.379Z",
+      "timestamp": "2026-11-12T21:31:34.953Z",
       "details": "Incremental sync completed: 0 imported, 2 duplicates skipped. Cursor: 1004848",
       "status": "success"
     },
     {
-      "id": "aud-sync-1794513858378-6aqj",
-      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwdz7ux4",
+      "id": "aud-sync-1794519094953-q4r3",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwe2c3hj",
       "mailboxEmail": "caseworker.pretoria@phumulani.org",
       "provider": "GOOGLE",
       "action": "SYNC_CHECKPOINT_CREATED",
       "actorName": "UniversalSyncDaemon",
       "actorRole": "SYSTEM_SCHEDULER",
-      "timestamp": "2026-11-12T20:04:18.378Z",
+      "timestamp": "2026-11-12T21:31:34.953Z",
       "details": "Initial sync completed: 0 imported, 2 duplicates skipped. Cursor: 1004834",
       "status": "success"
     },
     {
-      "id": "aud-rollback-1794513857366",
+      "id": "aud-sync-1794519055153-a2gk",
+      "connectionId": "conn-zoho-e2e_test_liaison_zoho_com-mwe2b8s0",
+      "mailboxEmail": "e2e.test.liaison@zoho.com",
+      "provider": "ZOHO",
+      "action": "SYNC_CHECKPOINT_CREATED",
+      "actorName": "UniversalSyncDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T21:30:55.153Z",
+      "details": "Initial sync completed: 1 imported, 0 duplicates skipped. Cursor: UIDVALIDITY:1730000000:UID:417",
+      "status": "success"
+    },
+    {
+      "id": "aud-rollback-1794519055114",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwe2b8qv",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "CUSTOM",
+      "action": "CURSOR_RECOVERED",
+      "actorName": "SecurityAdministrator",
+      "actorRole": "ADMINISTRATOR",
+      "timestamp": "2026-11-12T21:30:55.114Z",
+      "details": "Cursor recovered from 1004848 to checkpoint chk-gmail-1794519055113 (1004834)",
+      "status": "warning"
+    },
+    {
+      "id": "aud-sync-1794519055113-4xir",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwe2b8qv",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "SYNC_CHECKPOINT_CREATED",
+      "actorName": "UniversalSyncDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T21:30:55.113Z",
+      "details": "Incremental sync completed: 0 imported, 2 duplicates skipped. Cursor: 1004848",
+      "status": "success"
+    },
+    {
+      "id": "aud-sync-1794519055113-7mxh",
+      "connectionId": "conn-google-caseworker_pretoria_phumulani_org-mwe2b8qv",
+      "mailboxEmail": "caseworker.pretoria@phumulani.org",
+      "provider": "GOOGLE",
+      "action": "SYNC_CHECKPOINT_CREATED",
+      "actorName": "UniversalSyncDaemon",
+      "actorRole": "SYSTEM_SCHEDULER",
+      "timestamp": "2026-11-12T21:30:55.113Z",
+      "details": "Initial sync completed: 0 imported, 2 duplicates skipped. Cursor: 1004834",
+      "status": "success"
+    },
+    {
+      "id": "aud-rollback-1794519054021",
       "connectionId": "conn-test-sync-engine",
       "mailboxEmail": "info@phumulani.org",
       "provider": "CUSTOM",
       "action": "CURSOR_RECOVERED",
       "actorName": "SecurityAdministrator",
       "actorRole": "ADMINISTRATOR",
-      "timestamp": "2026-11-12T20:04:17.366Z",
-      "details": "Cursor recovered from 1004862 to checkpoint chk-gmail-1794513857366 (1004848)",
+      "timestamp": "2026-11-12T21:30:54.021Z",
+      "details": "Cursor recovered from 1004862 to checkpoint chk-gmail-1794519054020 (1004848)",
       "status": "warning"
     },
     {
-      "id": "aud-sync-1794513857366-tvhr",
+      "id": "aud-sync-1794519054021-0byf",
       "connectionId": "conn-test-sync-engine",
       "mailboxEmail": "info@phumulani.org",
       "provider": "GOOGLE",
       "action": "SYNC_CHECKPOINT_CREATED",
       "actorName": "UniversalSyncDaemon",
       "actorRole": "SYSTEM_SCHEDULER",
-      "timestamp": "2026-11-12T20:04:17.366Z",
+      "timestamp": "2026-11-12T21:30:54.021Z",
       "details": "Initial sync completed: 0 imported, 2 duplicates skipped. Cursor: 1004862",
       "status": "success"
     },
     {
-      "id": "aud-sync-1794513857366-m48e",
+      "id": "aud-sync-1794519054020-xl2i",
       "connectionId": "conn-test-sync-engine",
       "mailboxEmail": "info@phumulani.org",
       "provider": "GOOGLE",
       "action": "SYNC_CHECKPOINT_CREATED",
       "actorName": "UniversalSyncDaemon",
       "actorRole": "SYSTEM_SCHEDULER",
-      "timestamp": "2026-11-12T20:04:17.366Z",
+      "timestamp": "2026-11-12T21:30:54.020Z",
       "details": "Initial sync completed: 2 imported, 0 duplicates skipped. Cursor: 1004848",
       "status": "success"
     }

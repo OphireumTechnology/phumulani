@@ -7,6 +7,7 @@
  */
 
 import { db } from './db';
+import { authFetch } from './sessionTokenStore';
 
 // Curated Knowledge Base for Agent A10 (Website Concierge) and Public Assistance
 export const PHUMULANI_PUBLIC_KNOWLEDGE = `
@@ -215,10 +216,8 @@ Visit our "Our Programs" tab to explore detailed service descriptions and eligib
       };
     }
 
-    const currentUser = db.getState().currentUser;
-
     try {
-      const res = await fetch('/api/ai/email-draft', {
+      const res = await authFetch('/api/ai/email-draft', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -226,7 +225,6 @@ Visit our "Our Programs" tab to explore detailed service descriptions and eligib
           senderName,
           subject,
           toneStyle,
-          role: currentUser.role,
         }),
       });
 

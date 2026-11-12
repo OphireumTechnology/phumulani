@@ -6,6 +6,8 @@
  * Provider-agnostic architecture with truthful staged status reporting.
  */
 
+import crypto from 'crypto';
+import { EnvironmentService } from './environmentService';
 import {
   EmailDeliveryState,
   SetupWizardStatus,
@@ -693,12 +695,31 @@ export class GoogleWorkspaceAdapter {
       };
     }
 
-    // In STAGED_DEVELOPMENT, store simulated tokens securely in internal vault
+    const isProdOrPilot =
+      EnvironmentService.isProductionOnly() ||
+      process.env.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT' ||
+      process.env.NODE_ENV === 'production';
+    const hasConfiguredOAuth = Boolean(
+      process.env.GOOGLE_WORKSPACE_CLIENT_ID?.trim() && process.env.GOOGLE_WORKSPACE_CLIENT_SECRET?.trim()
+    );
+
+    if (isProdOrPilot && !hasConfiguredOAuth) {
+      return {
+        success: false,
+        mailboxEmail: session.mailboxEmail,
+        status: 'ERROR',
+        tokenType: '',
+        expiresIn: 0,
+        error: 'OAUTH_CREDENTIALS_MISSING: Live Google Workspace OAuth credentials are required in production/pilot mode.',
+      };
+    }
+
+    // Store non-production staged verification marker in STAGED_DEVELOPMENT (live HTTP exchange occurs in OAuthService)
     const expiresIn = 3600;
     const expiresAt = Date.now() + expiresIn * 1000;
     this.secureTokenVault.set(session.mailboxEmail.toLowerCase(), {
-      accessToken: `gw_acc_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`,
-      refreshToken: `gw_ref_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`,
+      accessToken: `staged_dev_grant_${crypto.randomBytes(8).toString('hex')}`,
+      refreshToken: `staged_dev_refresh_${crypto.randomBytes(8).toString('hex')}`,
       expiresAt,
     });
 
@@ -731,10 +752,21 @@ export class GoogleWorkspaceAdapter {
       return { success: false, error: 'REFRESH TOKEN INVALID: Malformed or missing refresh token.' };
     }
 
+    const isProdOrPilot =
+      EnvironmentService.isProductionOnly() ||
+      process.env.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT' ||
+      process.env.NODE_ENV === 'production';
+
     // Locate vault entry
     for (const [email, tokens] of this.secureTokenVault.entries()) {
       if (tokens.refreshToken === refreshToken) {
-        const newAccessToken = `gw_acc_refreshed_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
+        if (isProdOrPilot) {
+          return {
+            success: false,
+            error: 'LIVE_OAUTH_REFRESH_REQUIRED: Synchronous mock refresh disabled in production/pilot mode. Use OAuthService.refreshAccessToken().',
+          };
+        }
+        const newAccessToken = `staged_dev_refreshed_${crypto.randomBytes(8).toString('hex')}`;
         tokens.accessToken = newAccessToken;
         tokens.expiresAt = Date.now() + 3600 * 1000;
         this.logSyncEvent(email, 'TOKEN_REFRESH_SUCCESS', `Access token refreshed successfully for ${email}.`, 'success');
@@ -742,10 +774,17 @@ export class GoogleWorkspaceAdapter {
       }
     }
 
-    // In staged simulation, accept valid-format tokens and issue refresh
+    if (isProdOrPilot) {
+      return {
+        success: false,
+        error: 'REFRESH_TOKEN_NOT_FOUND: Unrecognized refresh token in production/pilot mode.',
+      };
+    }
+
+    // In staged unit tests ONLY, validate format
     return {
       success: true,
-      accessToken: `gw_acc_refreshed_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`,
+      accessToken: `staged_dev_refreshed_${crypto.randomBytes(8).toString('hex')}`,
       expiresIn: 3600,
     };
   }

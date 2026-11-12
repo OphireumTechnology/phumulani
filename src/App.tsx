@@ -6,6 +6,7 @@
 
 import React, { useState, useEffect, Suspense } from 'react';
 import { db } from './services/db';
+import { sessionTokenStore } from './services/sessionTokenStore';
 import { Donation, UserRole } from './types';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
@@ -55,27 +56,89 @@ const PRIVILEGED_ADMIN_VIEWS = new Set([
   'notifications',
 ]);
 
+const STAFF_ADMIN_VIEW_ROLES = new Set<string>([
+  'PLATFORM_SUPER_ADMIN',
+  'MASTER_ADMIN',
+  'super_admin',
+  'executive_director',
+  'EXECUTIVE',
+  'board_member',
+  'BOARD_MEMBER',
+  'governance_officer',
+  'finance_officer',
+  'safeguarding_officer',
+  'DEPARTMENT_MANAGER',
+  'staff',
+  'STAFF',
+  'program_manager',
+  'volunteer_coordinator',
+  'communications_officer',
+  'DEVELOPMENT_ADMIN',
+  'DEVELOPER',
+]);
+
+const COMMUNITY_AND_VOLUNTEER_ROLES = new Set<string>([
+  'community_member',
+  'COMMUNITY_MEMBER',
+  'community_advocate',
+  'volunteer',
+  'VOLUNTEER_APPLICANT',
+  'APPROVED_VOLUNTEER',
+]);
+
+const DONOR_ROLES = new Set<string>(['donor', 'DONOR', 'sponsor']);
+
+const CLIENT_DEV_ROLES = new Set<string>([
+  'CLIENT_PROJECT_ADMIN',
+  'CLIENT_PROJECT_VIEWER',
+  'CLIENT_APPROVER',
+  'PLATFORM_SUPER_ADMIN',
+  'MASTER_ADMIN',
+  'super_admin',
+  'executive_director',
+  'EXECUTIVE',
+  'DEVELOPMENT_ADMIN',
+  'DEVELOPER',
+]);
+
 function isRoleAuthorizedForView(role: UserRole, view: string): boolean {
   if (view === 'public') return true;
   if (role === 'visitor' || role === 'PUBLIC_VISITOR') {
     return false;
   }
-  if (view === 'community' || view === 'donor') {
-    return true;
+  if (view === 'community') {
+    return COMMUNITY_AND_VOLUNTEER_ROLES.has(role) || STAFF_ADMIN_VIEW_ROLES.has(role);
   }
-  if (PRIVILEGED_ADMIN_VIEWS.has(view)) {
-    return ![
-      'community_member',
-      'COMMUNITY_MEMBER',
-      'volunteer',
-      'VOLUNTEER_APPLICANT',
-      'APPROVED_VOLUNTEER',
-      'donor',
-      'DONOR',
-      'sponsor',
+  if (view === 'donor') {
+    return DONOR_ROLES.has(role) || STAFF_ADMIN_VIEW_ROLES.has(role);
+  }
+  if (view === 'client-development') {
+    return CLIENT_DEV_ROLES.has(role);
+  }
+  if (view === 'development-ops') {
+    return ['PLATFORM_SUPER_ADMIN', 'MASTER_ADMIN', 'super_admin', 'DEVELOPMENT_ADMIN', 'DEVELOPER', 'executive_director', 'EXECUTIVE'].includes(role);
+  }
+  if (view === 'master-admin' || view === 'production-status') {
+    return [
+      'PLATFORM_SUPER_ADMIN',
+      'MASTER_ADMIN',
+      'super_admin',
+      'executive_director',
+      'EXECUTIVE',
+      'board_member',
+      'BOARD_MEMBER',
+      'governance_officer',
+      'finance_officer',
+      'safeguarding_officer',
+      'DEPARTMENT_MANAGER',
+      'DEVELOPMENT_ADMIN',
+      'DEVELOPER',
     ].includes(role);
   }
-  return true;
+  if (PRIVILEGED_ADMIN_VIEWS.has(view)) {
+    return STAFF_ADMIN_VIEW_ROLES.has(role);
+  }
+  return STAFF_ADMIN_VIEW_ROLES.has(role);
 }
 
 export default function App() {
@@ -92,6 +155,11 @@ export default function App() {
     });
     return () => unsubscribe();
   }, []);
+
+  // Keep server-backed session synchronized when running in staged development
+  useEffect(() => {
+    sessionTokenStore.syncStagedPersonaSession(dbState.currentUser);
+  }, [dbState.currentUser.id, dbState.currentUser.role]);
 
   const hasViewAccess = isRoleAuthorizedForView(dbState.currentUser.role, activeView);
 

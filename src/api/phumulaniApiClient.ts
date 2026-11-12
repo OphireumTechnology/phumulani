@@ -30,6 +30,8 @@ import {
   SourceApprovalAuditReport,
 } from '../types/verifiedKnowledge';
 
+import { authFetch, sessionTokenStore } from '../services/sessionTokenStore';
+
 export interface VerifiedProgramSummary {
   id: string;
   title: string;
@@ -41,20 +43,13 @@ export interface VerifiedProgramSummary {
 
 class PhumulaniApiClient {
   private userRole: string = 'staff';
-  private authToken: string = 'sess-phumulani-staff-verified';
 
   public setUserRole(role: string) {
     this.userRole = role;
-    const execRoles = ['executive_director', 'master_admin', 'board_member', 'finance_director', 'grants_director'];
-    if (execRoles.includes(role.toLowerCase())) {
-      this.authToken = 'sess-phumulani-exec-verified';
-    } else {
-      this.authToken = 'sess-phumulani-staff-verified';
-    }
   }
 
   public setAuthToken(token: string) {
-    this.authToken = token;
+    sessionTokenStore.setAuthToken(token, this.userRole);
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
@@ -62,10 +57,8 @@ class PhumulaniApiClient {
     if (!headers.has('Content-Type') && options.method && options.method !== 'GET') {
       headers.set('Content-Type', 'application/json');
     }
-    headers.set('X-User-Role', this.userRole);
-    headers.set('Authorization', `Bearer ${this.authToken}`);
 
-    const res = await fetch(endpoint, {
+    const res = await authFetch(endpoint, {
       ...options,
       headers,
     });

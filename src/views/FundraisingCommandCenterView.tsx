@@ -7,6 +7,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { db } from '../services/db';
+import { authFetch } from '../services/sessionTokenStore';
 import {
   DonorContact,
   FundingOpportunity,
@@ -220,7 +221,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
       else if (type === 'reconciliation') body = { campaignId: campaigns[0]?.id || 'camp-capital-001' };
       else if (type === 'velocity') body = { campaignId: campaigns[0]?.id || 'camp-capital-001' };
 
-      const res = await fetch(`/api/fundraising/workflow/${type}`, {
+      const res = await authFetch(`/api/fundraising/workflow/${type}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -464,7 +465,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
     );
 
     try {
-      const res = await fetch('/api/ai/fundraising-draft', {
+      const res = await authFetch('/api/ai/fundraising-draft', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -472,7 +473,6 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
           commType: draftCommType,
           toneStyle: draftTone,
           campaignTitle: activeCamp?.title,
-          role: db.getState().currentUser.role,
         }),
       });
       if (res.ok) {

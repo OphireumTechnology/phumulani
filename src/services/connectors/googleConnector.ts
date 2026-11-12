@@ -23,6 +23,7 @@ import {
 } from '../../types/emailConnectors';
 import { PROVIDER_DESCRIPTORS } from './providerCapabilities';
 import { googleWorkspaceAdapter } from '../googleWorkspaceAdapter';
+import { EnvironmentService } from '../environmentService';
 
 export class GoogleConnector implements EmailConnector {
   public readonly provider: EmailProviderType = 'GOOGLE';
@@ -32,7 +33,7 @@ export class GoogleConnector implements EmailConnector {
 
   constructor(mailboxEmail: string = 'info@phumulani.org') {
     this.mailboxEmail = mailboxEmail;
-    this.isConnected = true;
+    this.isConnected = false;
   }
 
   public async connect(credentials?: Record<string, unknown>): Promise<ConnectionResult> {
@@ -51,15 +52,30 @@ export class GoogleConnector implements EmailConnector {
       };
     }
 
-    this.isConnected = true;
+    if (
+      credentials &&
+      (credentials.accessToken || credentials.token || (credentials.authCode && !EnvironmentService.isProductionOnly()))
+    ) {
+      this.isConnected = true;
+      return {
+        success: true,
+        connectionId,
+        provider: 'GOOGLE',
+        mailboxEmail: this.mailboxEmail,
+        status: 'AUTHORIZED',
+        details: `Google Workspace OAuth 2.0 authorization verified for ${this.mailboxEmail}.`,
+        authenticatedAt: new Date().toISOString(),
+      };
+    }
+
+    this.isConnected = false;
     return {
-      success: true,
+      success: false,
       connectionId,
       provider: 'GOOGLE',
       mailboxEmail: this.mailboxEmail,
-      status: 'AUTHORIZED',
-      details: `Google Workspace OAuth 2.0 authorization verified for ${this.mailboxEmail}.`,
-      authenticatedAt: new Date().toISOString(),
+      status: 'AUTHORIZATION_REQUIRED',
+      details: `Google Workspace OAuth 2.0 administrator consent required for ${this.mailboxEmail}.`,
     };
   }
 
@@ -77,7 +93,7 @@ export class GoogleConnector implements EmailConnector {
 
     try {
       const health = googleWorkspaceAdapter.checkConnectionHealth(this.mailboxEmail);
-      if (health.healthy) {
+      if (health.healthy && !EnvironmentService.isProductionOnly()) {
         isHealthy = true;
       }
       latencyMs = health.latencyMs || 42;

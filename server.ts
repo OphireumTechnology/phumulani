@@ -197,6 +197,8 @@ const handleHealthCheck = async (_req: Request, res: Response) => {
   const envConfig = EnvironmentService.getConfig();
   const isProdOnly = EnvironmentService.isProductionOnly();
 
+  const safeguardingStatus = getSafeguardingEncryptionStatus();
+
   const components = {
     APPLICATION: 'HEALTHY' as const,
     POSTGRESQL: dbInfo.engine === 'POSTGRESQL' ? dbInfo.databaseStatus : ('NOT_CONNECTED' as const),
@@ -208,10 +210,11 @@ const handleHealthCheck = async (_req: Request, res: Response) => {
     FUNDRAISING_CRM: 'HEALTHY' as const,
     APPROVAL_ENGINE: 'HEALTHY' as const,
     FINANCIAL_PROVIDER: EnvironmentService.getPaymentProviderStatus(),
+    SAFEGUARDING_ENCRYPTION: safeguardingStatus.ready ? ('HEALTHY' as const) : ('BLOCKED_MISSING_KEY' as const),
     SECURITY_MONITORING: 'HEALTHY' as const,
   };
 
-  const isBlocked = isProdOnly && dbInfo.databaseStatus === 'NOT_CONNECTED';
+  const isBlocked = isProdOnly && (dbInfo.databaseStatus === 'NOT_CONNECTED' || !safeguardingStatus.ready);
   const overallStatus = isBlocked ? 'BLOCKED' : 'HEALTHY';
 
   res.json({
@@ -219,7 +222,7 @@ const handleHealthCheck = async (_req: Request, res: Response) => {
     operationalMode: envConfig.operationalMode,
     applicationReadiness: dbInfo.applicationReadiness,
     service: 'Phumulani AI Community Platform',
-    version: '1.0.0-phase23',
+    version: '1.0.0-phase29',
     environment: envConfig.phumulaniEnvironment,
     timestamp: new Date().toISOString(),
     basePath: BASE_PATH,
@@ -240,15 +243,16 @@ const handleHealthCheck = async (_req: Request, res: Response) => {
     googleWorkspaceOAuth: {
       status: 'AUTHORIZATION_REQUIRED',
       connectionState: 'AUTHORIZATION_REQUIRED',
-      notice: 'Live provider requests require administrator OAuth consent. Simulated token sync active.',
+      notice: 'Live provider requests require administrator OAuth 2.0 consent and encrypted token storage.',
     },
     paymentProvider: {
       status: EnvironmentService.getPaymentProviderStatus(),
       notice: 'Live merchant provider not connected. Synthetic revenue generation is strictly disabled.',
     },
     safeguardingFirewall: {
-      status: 'ACTIVE',
-      internalSafeguardingScore: 100,
+      status: safeguardingStatus.ready ? 'ACTIVE' : 'FAIL_CLOSED_KEY_REQUIRED',
+      keySource: safeguardingStatus.keySource,
+      internalSafeguardingScore: safeguardingStatus.ready ? 100 : 0,
       complianceNotice: 'Development benchmark indicator only. Not a formal legal certification under VAWA Section 1367.',
       quarantineEnforced: true,
     },
@@ -393,6 +397,64 @@ app.post('/api/auth/logout', async (req: Request, res: Response) => {
   res.json({ success: true, message: 'Logged out successfully.' });
 });
 
+// Issue server-backed session ONLY in non-production / non-pilot staged development for UI persona switching
+app.post('/api/auth/staged-session', async (req: Request, res: Response) => {
+  if (
+    EnvironmentService.isProductionOnly() ||
+    process.env.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT' ||
+    process.env.NODE_ENV === 'production'
+  ) {
+    return res.status(403).json({
+      success: false,
+      error: 'Staged persona session issuance is disabled in production and pilot modes. Use POST /api/auth/login.',
+      code: 'PRODUCTION_AUTH_REQUIRED',
+    });
+  }
+
+  const { userId, email, name, role, department } = req.body || {};
+  const roleLower = String(role || '').toLowerCase();
+  if (!role || roleLower === 'visitor' || roleLower === 'public_visitor') {
+    return res.status(400).json({
+      success: false,
+      error: 'A non-visitor persona role is required to establish a staged session.',
+    });
+  }
+
+  const normalizedEmail = String(email || `${String(userId || roleLower).toLowerCase()}@phumulani.org`);
+  const session = await authSecurityService.createSession({
+    userId: String(userId || `usr-${roleLower}`),
+    userEmail: normalizedEmail,
+    role: role as StaffRole,
+    departmentId: String(department || 'DEPT-ADMIN'),
+    mfaVerified: ![
+      'community_member',
+      'volunteer',
+      'volunteer_applicant',
+      'approved_volunteer',
+      'donor',
+      'sponsor',
+    ].includes(roleLower),
+    ipAddress: req.ip,
+    userAgent: req.headers['user-agent'],
+  });
+  session.name = String(name || normalizedEmail);
+
+  return res.json({
+    success: true,
+    token: session.sessionId,
+    session: {
+      sessionId: session.sessionId,
+      userId: session.userId,
+      userEmail: session.userEmail,
+      name: session.name,
+      role: session.role,
+      departmentId: session.departmentId,
+      mfaVerified: session.mfaVerified,
+      expiresAt: session.expiresAt,
+    },
+  });
+});
+
 // Real Payment Gateway Endpoints
 app.get('/api/payments/config', (_req: Request, res: Response) => {
   const config = paymentProviderService.getGatewayConfig();
@@ -492,12 +554,63 @@ app.post('/api/payments/pledge', async (req: Request, res: Response) => {
 // -----------------------------------------------------------------------------
 // BLOCK 02: CONFIDENTIAL RESTRICTED INTAKE WITH AES-256-GCM ENCRYPTION
 // -----------------------------------------------------------------------------
-const ENCRYPTION_SECRET = process.env.SAFEGUARDING_MASTER_KEY || 'phumulani-safe-guarding-master-key-2026';
-const DERIVED_KEY = crypto.scryptSync(ENCRYPTION_SECRET, 'phumulani-salt-vawa', 32);
+class SafeguardingEncryptionUnavailableError extends Error {
+  public readonly code = 'SAFEGUARDING_ENCRYPTION_UNAVAILABLE';
+  constructor(message: string) {
+    super(message);
+    this.name = 'SafeguardingEncryptionUnavailableError';
+  }
+}
 
-function encryptSafeguardingData(plaintext: string): { ciphertext: string; iv: string; authTag: string } {
+let ephemeralStagedSafeguardingSecret: Buffer | null = null;
+
+function isStrictSafeguardingKeyRequired(): boolean {
+  return (
+    EnvironmentService.isProductionOnly() ||
+    process.env.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT' ||
+    process.env.NODE_ENV === 'production' ||
+    process.env.SAFEGUARDING_REQUIRE_CONFIGURED_KEY === 'true'
+  );
+}
+
+function getSafeguardingEncryptionStatus(): { ready: boolean; keySource: 'CONFIGURED_ENV' | 'STAGED_EPHEMERAL' | 'UNCONFIGURED_BLOCKED' } {
+  const configured = (process.env.SAFEGUARDING_MASTER_KEY || '').trim();
+  if (configured.length >= 32) {
+    return { ready: true, keySource: 'CONFIGURED_ENV' };
+  }
+  if (isStrictSafeguardingKeyRequired()) {
+    return { ready: false, keySource: 'UNCONFIGURED_BLOCKED' };
+  }
+  return { ready: true, keySource: 'STAGED_EPHEMERAL' };
+}
+
+function resolveSafeguardingSecretMaterial(): Buffer | string {
+  const configured = (process.env.SAFEGUARDING_MASTER_KEY || '').trim();
+  if (configured.length >= 32) {
+    return configured;
+  }
+  if (isStrictSafeguardingKeyRequired()) {
+    throw new SafeguardingEncryptionUnavailableError(
+      'SAFEGUARDING_MASTER_KEY (minimum 32 characters) is required for confidential intake encryption in production and pilot environments.'
+    );
+  }
+  if (!ephemeralStagedSafeguardingSecret) {
+    ephemeralStagedSafeguardingSecret = crypto.randomBytes(32);
+    console.warn('[Safeguarding Firewall] SAFEGUARDING_MASTER_KEY not set in STAGED_DEVELOPMENT; initialized ephemeral per-process CSPRNG encryption key.');
+  }
+  return ephemeralStagedSafeguardingSecret;
+}
+
+function encryptSafeguardingData(
+  plaintext: string,
+  aadContext: string
+): { ciphertext: string; iv: string; authTag: string; salt: string } {
+  const secret = resolveSafeguardingSecretMaterial();
+  const salt = crypto.randomBytes(16);
+  const derivedKey = crypto.scryptSync(secret, salt, 32);
   const iv = crypto.randomBytes(12);
-  const cipher = crypto.createCipheriv('aes-256-gcm', DERIVED_KEY, iv);
+  const cipher = crypto.createCipheriv('aes-256-gcm', derivedKey, iv);
+  cipher.setAAD(Buffer.from(aadContext, 'utf8'));
   let encrypted = cipher.update(plaintext, 'utf8', 'hex');
   encrypted += cipher.final('hex');
   const authTag = cipher.getAuthTag().toString('hex');
@@ -505,11 +618,22 @@ function encryptSafeguardingData(plaintext: string): { ciphertext: string; iv: s
     ciphertext: encrypted,
     iv: iv.toString('hex'),
     authTag,
+    salt: salt.toString('hex'),
   };
 }
 
-function decryptSafeguardingData(ciphertext: string, ivHex: string, authTagHex: string): string {
-  const decipher = crypto.createDecipheriv('aes-256-gcm', DERIVED_KEY, Buffer.from(ivHex, 'hex'));
+function decryptSafeguardingData(
+  ciphertext: string,
+  ivHex: string,
+  authTagHex: string,
+  saltHex: string,
+  aadContext: string
+): string {
+  const secret = resolveSafeguardingSecretMaterial();
+  const salt = Buffer.from(saltHex, 'hex');
+  const derivedKey = crypto.scryptSync(secret, salt, 32);
+  const decipher = crypto.createDecipheriv('aes-256-gcm', derivedKey, Buffer.from(ivHex, 'hex'));
+  decipher.setAAD(Buffer.from(aadContext, 'utf8'));
   decipher.setAuthTag(Buffer.from(authTagHex, 'hex'));
   let decrypted = decipher.update(ciphertext, 'hex', 'utf8');
   decrypted += decipher.final('utf8');
@@ -528,7 +652,8 @@ app.post('/api/intake/restricted', async (req: Request, res: Response) => {
     }
 
     const anonymousCode = `SAFE-${Date.now().toString().slice(-6)}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
-    const encrypted = encryptSafeguardingData(notes.trim());
+    const aadContext = `${anonymousCode}:${String(urgencyLevel)}`;
+    const encrypted = encryptSafeguardingData(notes.trim(), aadContext);
 
     const intakeRecord = {
       id: anonymousCode,
@@ -536,16 +661,23 @@ app.post('/api/intake/restricted', async (req: Request, res: Response) => {
       urgency_level: urgencyLevel,
       preferred_contact_method: preferredContactMethod,
       language_needed: languageNeeded,
-      safe_time_to_contact: safeTimeToContact.trim(),
+      safe_time_to_contact: String(safeTimeToContact || '').trim(),
       ciphertext: encrypted.ciphertext,
       iv: encrypted.iv,
       auth_tag: encrypted.authTag,
+      kdf_salt: encrypted.salt,
       status: 'RECEIVED_ENCRYPTED',
       quarantined_vawa: true,
       created_at: new Date().toISOString(),
     };
 
     await dbAdapter.insert('survivors_isolated', intakeRecord);
+    logAudit({
+      agentId: 'SAFEGUARDING_VAWA_FIREWALL',
+      action: 'restricted_intake:submitted_encrypted',
+      requesterRole: 'public_intake_anonymous',
+      status: 'allowed',
+    });
     console.log(`[Safeguarding Firewall] Confidential intake ${anonymousCode} received and encrypted (AES-256-GCM). Zero plaintext logged.`);
 
     res.json({
@@ -556,6 +688,19 @@ app.post('/api/intake/restricted', async (req: Request, res: Response) => {
       message: 'Your request has been encrypted and securely routed to our authorized Safeguarding Officers.',
     });
   } catch (err: any) {
+    if (err instanceof SafeguardingEncryptionUnavailableError) {
+      logAudit({
+        agentId: 'SAFEGUARDING_VAWA_FIREWALL',
+        action: 'restricted_intake:fail_closed_missing_key',
+        requesterRole: 'public_intake_anonymous',
+        status: 'blocked_policy',
+      });
+      return res.status(503).json({
+        success: false,
+        code: 'SAFEGUARDING_ENCRYPTION_UNAVAILABLE',
+        error: 'Confidential intake service is temporarily unavailable because production safeguarding encryption keys are not configured. For immediate safety assistance, please call the Minnesota Day One Crisis Line at 1-866-223-1111 (24/7).',
+      });
+    }
     console.error('[Safeguarding Firewall] Error processing confidential intake:', err?.message || err);
     res.status(500).json({
       success: false,
@@ -568,23 +713,54 @@ app.get('/api/intake/restricted', async (req: Request, res: Response) => {
   try {
     const session = getSessionFromReq(req);
     if (!session) {
+      logAudit({
+        agentId: 'SAFEGUARDING_VAWA_FIREWALL',
+        action: 'restricted_intake:unauthenticated_read',
+        requesterRole: 'unauthenticated',
+        status: 'blocked_policy',
+      });
       return res.status(401).json({ success: false, error: 'Authentication required.' });
     }
 
-    const authorizedRoles = ['safeguarding_officer', 'safeguarding_lead', 'executive_director', 'master_admin'];
-    if (!authorizedRoles.includes(session.role)) {
+    const authorizedRoles = ['safeguarding_officer', 'safeguarding_lead', 'executive_director', 'master_admin', 'platform_super_admin'];
+    const roleLower = String(session.role || '').toLowerCase();
+    if (!authorizedRoles.includes(roleLower)) {
+      logAudit({
+        agentId: 'SAFEGUARDING_VAWA_FIREWALL',
+        action: 'restricted_intake:unauthorized_role_read',
+        requesterRole: roleLower,
+        status: 'blocked_policy',
+      });
       return res.status(403).json({
         success: false,
         error: 'Forbidden. Strictly restricted to authorized safeguarding personnel under VAWA policy.',
       });
     }
 
+    if (isStrictSafeguardingKeyRequired() && !session.mfaVerified) {
+      logAudit({
+        agentId: 'SAFEGUARDING_VAWA_FIREWALL',
+        action: 'restricted_intake:mfa_required',
+        requesterRole: roleLower,
+        status: 'blocked_policy',
+      });
+      return res.status(403).json({
+        success: false,
+        code: 'MFA_REQUIRED',
+        error: 'MFA verification is required to decrypt confidential safeguarding intake records.',
+      });
+    }
+
+    // Fail closed if encryption key is unavailable in strict mode before querying/returning decrypted records
+    resolveSafeguardingSecretMaterial();
+
     const rawRecords = await dbAdapter.select<any>('survivors_isolated');
     const decryptedList = rawRecords.map((r: any) => {
       let decryptedNotes = '[Decryption Unavailable]';
-      if (r.ciphertext && r.iv && r.auth_tag) {
+      if (r.ciphertext && r.iv && r.auth_tag && r.kdf_salt) {
         try {
-          decryptedNotes = decryptSafeguardingData(r.ciphertext, r.iv, r.auth_tag);
+          const aadContext = `${r.anonymous_code || r.id}:${String(r.urgency_level || 'within_24h')}`;
+          decryptedNotes = decryptSafeguardingData(r.ciphertext, r.iv, r.auth_tag, r.kdf_salt, aadContext);
         } catch {
           decryptedNotes = '[Decryption Tag Mismatch]';
         }
@@ -602,8 +778,22 @@ app.get('/api/intake/restricted', async (req: Request, res: Response) => {
       };
     });
 
+    logAudit({
+      agentId: 'SAFEGUARDING_VAWA_FIREWALL',
+      action: `restricted_intake:authorized_read:${decryptedList.length}`,
+      requesterRole: roleLower,
+      status: 'allowed',
+    });
+
     res.json({ success: true, count: decryptedList.length, intakes: decryptedList });
   } catch (err: any) {
+    if (err instanceof SafeguardingEncryptionUnavailableError) {
+      return res.status(503).json({
+        success: false,
+        code: 'SAFEGUARDING_ENCRYPTION_UNAVAILABLE',
+        error: err.message,
+      });
+    }
     res.status(500).json({ success: false, error: err.message });
   }
 });
@@ -760,6 +950,89 @@ const getSessionFromReq = (req: Request): UserSession | undefined => {
     if (val.valid && val.session) return val.session;
   }
   return undefined;
+};
+
+const STAFF_ADMIN_ROLES = new Set([
+  'platform_super_admin',
+  'master_admin',
+  'super_admin',
+  'executive',
+  'executive_director',
+  'board_member',
+  'governance_officer',
+  'finance_officer',
+  'finance_director',
+  'safeguarding_officer',
+  'safeguarding_lead',
+  'department_manager',
+  'development_director',
+  'grants_director',
+  'programs_director',
+  'program_manager',
+  'volunteer_coordinator',
+  'communications_officer',
+  'caseworker',
+  'staff',
+  'development_admin',
+  'developer',
+]);
+
+const PRIVILEGED_ADMIN_ROLES = new Set([
+  'platform_super_admin',
+  'master_admin',
+  'super_admin',
+  'executive',
+  'executive_director',
+  'board_member',
+  'governance_officer',
+  'finance_officer',
+  'finance_director',
+  'safeguarding_officer',
+  'safeguarding_lead',
+  'development_admin',
+  'developer',
+]);
+
+const EXEC_APPROVER_ROLES = new Set([
+  'platform_super_admin',
+  'master_admin',
+  'super_admin',
+  'executive',
+  'executive_director',
+  'finance_officer',
+  'finance_director',
+  'safeguarding_officer',
+  'safeguarding_lead',
+]);
+
+const getAuthenticatedSession = (req: Request): UserSession | undefined => (req as any).authenticatedSession;
+
+const requireSessionMiddleware = (allowedRoles?: Set<string>) => (req: Request, res: Response, next: NextFunction) => {
+  const session = getSessionFromReq(req);
+  if (!session) {
+    return res.status(401).json({
+      success: false,
+      error: 'Unauthorized: Valid server authentication session token required in Authorization header.',
+      code: 'UNAUTHENTICATED',
+    });
+  }
+  const roleLower = String(session.role || '').toLowerCase();
+  if (allowedRoles && !allowedRoles.has(roleLower)) {
+    logAudit({
+      agentId: 'RBAC_GATEWAY',
+      action: `http:${req.method}:${req.originalUrl}`,
+      requesterRole: String(session.role),
+      status: 'blocked_policy',
+      reason: `Forbidden: role ${session.role} attempted unauthorized access to ${req.originalUrl}.`,
+    });
+    return res.status(403).json({
+      success: false,
+      error: `Forbidden: Role "${session.role}" is not authorized for this endpoint.`,
+      code: 'FORBIDDEN',
+    });
+  }
+  (req as any).authenticatedSession = session;
+  next();
 };
 
 // 1. Staff Operations Report
@@ -952,6 +1225,11 @@ app.post('/api/reports/export', (req: Request, res: Response) => {
 });
 
 // 2. Website Concierge (Agent A10) Query Endpoint
+app.use('/api/ai', (req: Request, res: Response, next: NextFunction) => {
+  if (req.path === '/concierge') return next();
+  return requireSessionMiddleware(STAFF_ADMIN_ROLES)(req, res, next);
+});
+
 app.post('/api/ai/concierge', async (req: Request, res: Response) => {
   try {
     const { question, conversationHistory = [] } = req.body;
@@ -1074,11 +1352,13 @@ Visit our "Our Programs" tab to explore detailed service descriptions and eligib
 // 3. Email Manager Draft Generator (Agent A02) Endpoint
 app.post('/api/ai/email-draft', async (req: Request, res: Response) => {
   try {
-    const { messageBody, senderName, subject, toneStyle = 'professional', role = 'staff' } = req.body;
+    const session = getAuthenticatedSession(req)!;
+    const role = String(session.role);
+    const { messageBody, senderName, subject, toneStyle = 'professional' } = req.body;
 
-    // Role-based authorization
-    const authorizedRoles = ['master_admin', 'executive_director', 'safeguarding_lead', 'community_lead', 'finance_director', 'volunteer_coordinator', 'staff'];
-    const isAuthorized = authorizedRoles.includes(role);
+    // Role-based authorization derived strictly from authenticated session
+    const authorizedRoles = ['platform_super_admin', 'master_admin', 'super_admin', 'executive', 'executive_director', 'safeguarding_lead', 'safeguarding_officer', 'community_lead', 'program_manager', 'department_manager', 'programs_director', 'grants_director', 'development_director', 'finance_director', 'finance_officer', 'volunteer_coordinator', 'communications_officer', 'caseworker', 'staff'];
+    const isAuthorized = authorizedRoles.includes(role.toLowerCase());
 
     if (!isAuthorized) {
       logAudit({
@@ -1188,10 +1468,12 @@ Requirements:
 // 4. AI Fundraising & Grant Workforce Generator Endpoint
 app.post('/api/ai/fundraising-draft', async (req: Request, res: Response) => {
   try {
-    const { donorName, commType, toneStyle = 'Executive & Visionary', role = 'staff', campaignTitle } = req.body;
+    const session = getAuthenticatedSession(req)!;
+    const role = String(session.role);
+    const { donorName, commType, toneStyle = 'Executive & Visionary', campaignTitle } = req.body;
 
-    const authorizedRoles = ['master_admin', 'executive_director', 'finance_director', 'staff'];
-    if (!authorizedRoles.includes(role)) {
+    const authorizedRoles = ['platform_super_admin', 'master_admin', 'super_admin', 'executive', 'executive_director', 'finance_director', 'finance_officer', 'development_director', 'grants_director', 'department_manager', 'communications_officer', 'staff'];
+    if (!authorizedRoles.includes(role.toLowerCase())) {
       logAudit({
         agentId: 'A07',
         action: 'fundraising:draft',
@@ -1338,7 +1620,8 @@ app.get('/api/ai/workforce/kpis', (_req: Request, res: Response) => {
 // 4. Unified Agent Execution Gateway (enforces safeguarding, permissions, approvals)
 app.post('/api/ai/workforce/execute', async (req: Request, res: Response) => {
   try {
-    const { agentId, taskTitle = 'General Task', inputPayload = {}, requesterRole = 'staff' } = req.body;
+    const session = getAuthenticatedSession(req)!;
+    const { agentId, taskTitle = 'General Task', inputPayload = {} } = req.body;
     if (!agentId) {
       return res.status(400).json({ error: 'agentId is required.' });
     }
@@ -1346,7 +1629,7 @@ app.post('/api/ai/workforce/execute', async (req: Request, res: Response) => {
       agentId,
       taskTitle,
       inputPayload,
-      requesterRole,
+      requesterRole: String(session.role),
     });
     if (result.blockedByPolicy && result.policyReason?.includes('SAFEGUARDING')) {
       return res.status(403).json(result);
@@ -1358,13 +1641,14 @@ app.post('/api/ai/workforce/execute', async (req: Request, res: Response) => {
 });
 
 // 5. Agent Lifecycle Management (ACTIVE, PAUSED, DISABLED)
-app.post('/api/ai/workforce/agents/:id/status', async (req: Request, res: Response) => {
+app.post('/api/ai/workforce/agents/:id/status', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
   try {
-    const { lifecycle, actorName = 'Admin' } = req.body;
+    const session = getAuthenticatedSession(req)!;
+    const { lifecycle } = req.body;
     if (!lifecycle) {
       return res.status(400).json({ error: 'lifecycle is required.' });
     }
-    const agent = await unifiedAiWorkforceService.setAgentLifecycle(req.params.id, lifecycle, actorName);
+    const agent = await unifiedAiWorkforceService.setAgentLifecycle(req.params.id, lifecycle, session.name || session.userEmail);
     res.json({ success: true, agent });
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -1372,29 +1656,30 @@ app.post('/api/ai/workforce/agents/:id/status', async (req: Request, res: Respon
 });
 
 // 6. Global Emergency Kill Switch
-app.post('/api/ai/workforce/emergency-shutdown', async (req: Request, res: Response) => {
-  const { actorName = 'Executive Governance' } = req.body;
-  await unifiedAiWorkforceService.emergencyHaltAllAgents(actorName);
+app.post('/api/ai/workforce/emergency-shutdown', requireSessionMiddleware(EXEC_APPROVER_ROLES), async (req: Request, res: Response) => {
+  const session = getAuthenticatedSession(req)!;
+  await unifiedAiWorkforceService.emergencyHaltAllAgents(session.name || session.userEmail);
   res.json({ success: true, message: 'All 36 AI workforce agents emergency halted.' });
 });
 
 // 7. Global Resume All Agents
-app.post('/api/ai/workforce/resume', async (req: Request, res: Response) => {
-  const { actorName = 'Executive Governance' } = req.body;
-  await unifiedAiWorkforceService.resumeAllAgents(actorName);
+app.post('/api/ai/workforce/resume', requireSessionMiddleware(EXEC_APPROVER_ROLES), async (req: Request, res: Response) => {
+  const session = getAuthenticatedSession(req)!;
+  await unifiedAiWorkforceService.resumeAllAgents(session.name || session.userEmail);
   res.json({ success: true, message: 'All 36 AI workforce agents resumed.' });
 });
 
 // 8. Cross-Division Task Handoff
 app.post('/api/ai/workforce/handoff', async (req: Request, res: Response) => {
   try {
-    const { sourceAgentId, targetAgentId, workflowId, initiatingUserId, initiatingUserRole, payload } = req.body;
+    const session = getAuthenticatedSession(req)!;
+    const { sourceAgentId, targetAgentId, workflowId, payload } = req.body;
     const handoff = await unifiedAiWorkforceService.executeCrossDivisionHandoff({
       sourceAgentId,
       targetAgentId,
       workflowId: workflowId || `wf-${Date.now()}`,
-      initiatingUserId: initiatingUserId || 'usr-system',
-      initiatingUserRole: initiatingUserRole || 'staff',
+      initiatingUserId: session.userId,
+      initiatingUserRole: String(session.role),
       payload: payload || {},
     });
     if (handoff.status === 'BLOCKED_BY_POLICY') {
@@ -1413,18 +1698,21 @@ app.get('/api/ai/workforce/approvals', (_req: Request, res: Response) => {
 });
 
 // 10. Human Decision on Pending Agent Recommendation
-app.post('/api/ai/workforce/approvals/:id/decide', async (req: Request, res: Response) => {
+app.post('/api/ai/workforce/approvals/:id/decide', requireSessionMiddleware(EXEC_APPROVER_ROLES), async (req: Request, res: Response) => {
   try {
-    const { decision, reviewerRole = 'staff', notes = '' } = req.body;
+    const session = getAuthenticatedSession(req)!;
+    const { decision, notes = '' } = req.body;
     if (!decision || (decision !== 'APPROVED' && decision !== 'REJECTED')) {
       return res.status(400).json({ error: 'decision must be APPROVED or REJECTED.' });
     }
-    const result = await unifiedAiWorkforceService.decideApproval(req.params.id, decision, reviewerRole, notes);
+    const result = await unifiedAiWorkforceService.decideApproval(req.params.id, decision, String(session.role), notes);
     res.json({ success: true, approval: result });
   } catch (err: any) {
     res.status(400).json({ error: err.message });
   }
 });
+
+app.use('/api/fundraising', requireSessionMiddleware(STAFF_ADMIN_ROLES));
 
 // 6. Agents Registry Endpoint (Existing Fundraising Agents Preserved)
 app.get('/api/fundraising/agents', (_req: Request, res: Response) => {
@@ -1455,7 +1743,9 @@ app.get('/api/fundraising/agents', (_req: Request, res: Response) => {
 app.post('/api/fundraising/execute', async (req: Request, res: Response) => {
   const t0 = Date.now();
   try {
-    const { agentId, title, inputPayload = {}, requesterRole = 'staff' } = req.body;
+    const session = getAuthenticatedSession(req)!;
+    const requesterRole = String(session.role);
+    const { agentId, title, inputPayload = {} } = req.body;
 
     if (!agentId || typeof agentId !== 'string') {
       return res.status(400).json({ error: 'agentId is required.' });
@@ -1647,8 +1937,11 @@ Output JSON: {"coordinatedAgents": ["FUND-AI-002","FUND-AI-003","FUND-AI-004","F
 });
 
 // 8. Server-Side Human Approval Endpoint
-app.post('/api/fundraising/approve', (req: Request, res: Response) => {
-  const { taskId, approverName, role = 'executive_director' } = req.body;
+app.post('/api/fundraising/approve', requireSessionMiddleware(EXEC_APPROVER_ROLES), (req: Request, res: Response) => {
+  const session = getAuthenticatedSession(req)!;
+  const role = String(session.role);
+  const { taskId, approverName } = req.body;
+  const resolvedApprover = approverName || session.name || session.userEmail;
   const authorizedApprovers = ['Comfort Dondo', 'David Mwangi, CPA', 'Sister Miriam K.', 'Dr. Elena Rostova', 'Master Administrator'];
 
   if (emergencyShutdownActive) {
@@ -1662,13 +1955,13 @@ app.post('/api/fundraising/approve', (req: Request, res: Response) => {
     return res.status(503).json({ error: 'SYSTEM EMERGENCY SHUTDOWN: Approvals suspended until emergency mode is revoked.' });
   }
 
-  if (!approverName || !authorizedApprovers.some((a) => approverName.toLowerCase().includes(a.toLowerCase()))) {
+  if (!resolvedApprover || !authorizedApprovers.some((a) => resolvedApprover.toLowerCase().includes(a.toLowerCase()))) {
     logAudit({
       agentId: 'FUND-AI-008',
       action: 'task:approve',
       requesterRole: role,
       status: 'blocked_policy',
-      reason: `Unauthorized approver "${approverName}" attempted to sign off task ${taskId}.`,
+      reason: `Unauthorized approver "${resolvedApprover}" attempted to sign off task ${taskId}.`,
     });
     return res.status(403).json({ error: 'Unauthorized approver. Formal executive or financial officer sign-off required.' });
   }
@@ -1679,7 +1972,7 @@ app.post('/api/fundraising/approve', (req: Request, res: Response) => {
   }
 
   task.status = 'approved';
-  task.approvedBy = approverName;
+  task.approvedBy = resolvedApprover;
   task.approvedAt = new Date().toISOString();
 
   logAudit({
@@ -1687,10 +1980,10 @@ app.post('/api/fundraising/approve', (req: Request, res: Response) => {
     action: 'task:approve',
     requesterRole: role,
     status: 'allowed',
-    reason: `Task ${taskId} approved by ${approverName}.`,
+    reason: `Task ${taskId} approved by ${resolvedApprover}.`,
   });
 
-  return res.json({ success: true, taskId, approvedBy: approverName, status: 'approved', contentHash: task.contentHash });
+  return res.json({ success: true, taskId, approvedBy: resolvedApprover, status: 'approved', contentHash: task.contentHash });
 });
 
 // 9. Server-Side Fail-Closed Dispatch Endpoint (Enforces Task 6 Requirements)
@@ -1814,6 +2107,8 @@ app.get('/api/fundraising/emergency-status', (_req: Request, res: Response) => {
 });
 
 // 10B. Database Persistence Diagnostics, Transactions & Concurrency Verification (Priority 2 Hardening)
+app.use('/api/database', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES));
+
 app.get('/api/database/status', async (_req: Request, res: Response) => {
   const info = dbAdapter.getConnectionInfo();
   return res.json({
@@ -2136,18 +2431,18 @@ app.get('/api/fundraising/verify-security', (_req: Request, res: Response) => {
 app.get('/api/fundraising/mailboxes', (_req: Request, res: Response) => {
   res.json({
     timestamp: new Date().toISOString(),
-    overallStatus: 'SIMULATED — LIVE OAUTH REQUIRED',
-    readinessClassification: 'INTEGRATION_COMPLETE_STAGED_READY',
-    notice: 'Live external provider requests to Google Workspace (Gmail API) require administrator OAuth consent. Simulated token sync is active for interface operations. Live historical import or external dispatch locked until live OAuth completion.',
+    overallStatus: 'AUTHORIZATION_REQUIRED',
+    readinessClassification: 'OAUTH_CONFIGURATION_AND_CONSENT_REQUIRED',
+    notice: 'Live external provider requests to Google Workspace (Gmail API) require administrator OAuth 2.0 PKCE consent and configured client credentials. Simulated token sync is disabled; historical import and external dispatch remain locked until verified live OAuth completion.',
     mailboxes: [
       {
         email: 'info@phumulani.org',
         mailboxIdentityType: 'Shared / Collaborative Google Group Mailbox',
-        oauthStatus: 'SIMULATED — LIVE OAUTH REQUIRED',
+        oauthStatus: 'AUTHORIZATION_REQUIRED',
         provider: 'Google Workspace',
         authenticated: false,
         scopeRequired: 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.modify',
-        tokenRefreshReadiness: true,
+        tokenRefreshReadiness: oAuthService.hasStoredTokens('info@phumulani.org'),
         historicalSyncReadiness: 'LOCKED_AWAITING_PROVIDER_AUTH',
         incrementalSyncReadiness: 'LOCKED_AWAITING_PROVIDER_AUTH',
         reason: 'Collaborative group identity. Requires domain-wide delegation or delegated admin consent.',
@@ -2155,11 +2450,11 @@ app.get('/api/fundraising/mailboxes', (_req: Request, res: Response) => {
       {
         email: 'donations@phumulani.org',
         mailboxIdentityType: 'Primary Workspace User Account (Development Officer)',
-        oauthStatus: 'SIMULATED — LIVE OAUTH REQUIRED',
+        oauthStatus: 'AUTHORIZATION_REQUIRED',
         provider: 'Google Workspace',
         authenticated: false,
         scopeRequired: 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send',
-        tokenRefreshReadiness: true,
+        tokenRefreshReadiness: oAuthService.hasStoredTokens('donations@phumulani.org'),
         historicalSyncReadiness: 'LOCKED_AWAITING_PROVIDER_AUTH',
         incrementalSyncReadiness: 'LOCKED_AWAITING_PROVIDER_AUTH',
         reason: 'Primary user account. Requires standard OAuth 2.0 Web Client user consent.',
@@ -2167,11 +2462,11 @@ app.get('/api/fundraising/mailboxes', (_req: Request, res: Response) => {
       {
         email: 'grants@phumulani.org',
         mailboxIdentityType: 'Primary Workspace User Account (Institutional Grants Lead)',
-        oauthStatus: 'SIMULATED — LIVE OAUTH REQUIRED',
+        oauthStatus: 'AUTHORIZATION_REQUIRED',
         provider: 'Google Workspace',
         authenticated: false,
         scopeRequired: 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send https://www.googleapis.com/auth/gmail.modify',
-        tokenRefreshReadiness: true,
+        tokenRefreshReadiness: oAuthService.hasStoredTokens('grants@phumulani.org'),
         historicalSyncReadiness: 'LOCKED_AWAITING_PROVIDER_AUTH',
         incrementalSyncReadiness: 'LOCKED_AWAITING_PROVIDER_AUTH',
         reason: 'Primary user account. Requires standard OAuth 2.0 Web Client user consent.',
@@ -2179,11 +2474,11 @@ app.get('/api/fundraising/mailboxes', (_req: Request, res: Response) => {
       {
         email: 'executive@phumulani.org',
         mailboxIdentityType: 'Executive Primary Workspace User Account (Comfort Dondo - Gated Dual-Control)',
-        oauthStatus: 'SIMULATED — LIVE OAUTH REQUIRED',
+        oauthStatus: 'AUTHORIZATION_REQUIRED',
         provider: 'Google Workspace',
         authenticated: false,
         scopeRequired: 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send',
-        tokenRefreshReadiness: true,
+        tokenRefreshReadiness: oAuthService.hasStoredTokens('executive@phumulani.org'),
         historicalSyncReadiness: 'LOCKED_AWAITING_PROVIDER_AUTH',
         incrementalSyncReadiness: 'LOCKED_AWAITING_PROVIDER_AUTH',
         reason: 'Executive high-privilege account. Requires dual-control executive sign-off and MFA security envelope.',
@@ -2191,11 +2486,11 @@ app.get('/api/fundraising/mailboxes', (_req: Request, res: Response) => {
       {
         email: 'partnerships@phumulani.org',
         mailboxIdentityType: 'Workspace Mailbox Alias (Routes to development team, not separate OAuth identity)',
-        oauthStatus: 'SIMULATED — LIVE OAUTH REQUIRED',
+        oauthStatus: 'AUTHORIZATION_REQUIRED',
         provider: 'Google Workspace',
         authenticated: false,
         scopeRequired: 'https://www.googleapis.com/auth/gmail.readonly https://www.googleapis.com/auth/gmail.send',
-        tokenRefreshReadiness: true,
+        tokenRefreshReadiness: oAuthService.hasStoredTokens('partnerships@phumulani.org'),
         historicalSyncReadiness: 'LOCKED_AWAITING_PROVIDER_AUTH',
         incrementalSyncReadiness: 'LOCKED_AWAITING_PROVIDER_AUTH',
         reason: 'Google Workspace alias. Inherits permissions from host user; cannot hold separate OAuth token.',
@@ -2267,6 +2562,19 @@ app.post('/api/fundraising/safeguarding-test', (req: Request, res: Response) => 
 // =============================================================================
 const masterAdmin = MasterAdminService.getInstance();
 
+// Protect all /api/admin/* endpoints with server-validated Staff/Admin session
+// Provider OAuth browser redirects (/email/oauth/{google,microsoft}/callback) bypass Bearer header ONLY when presenting a CSRF state param validated by oAuthService.
+app.use('/api/admin', (req: Request, res: Response, next: NextFunction) => {
+  if (
+    (req.path === '/email/oauth/google/callback' || req.path === '/email/oauth/microsoft/callback') &&
+    typeof req.query.state === 'string' &&
+    req.query.state.length > 0
+  ) {
+    return next();
+  }
+  return requireSessionMiddleware(STAFF_ADMIN_ROLES)(req, res, next);
+});
+
 // 1. Truthful Organizational Analytics
 app.get('/api/admin/analytics', (_req: Request, res: Response) => {
   res.json(masterAdmin.getTruthfulAnalytics());
@@ -2274,7 +2582,7 @@ app.get('/api/admin/analytics', (_req: Request, res: Response) => {
 
 // 2. Staff Management & Lifecycle
 app.get('/api/admin/staff', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorRole = String(getAuthenticatedSession(req)!.role);
   const auth = masterAdmin.verifySecurityAccess(actorRole, 'staff_management');
   if (!auth.allowed) {
     res.status(403).json({ error: auth.reason });
@@ -2284,7 +2592,7 @@ app.get('/api/admin/staff', (req: Request, res: Response) => {
 });
 
 app.post('/api/admin/staff', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorRole = String(getAuthenticatedSession(req)!.role);
   const result = masterAdmin.createStaffMember(req.body, actorRole);
   if (!result.success) {
     res.status(400).json({ error: result.error });
@@ -2294,7 +2602,7 @@ app.post('/api/admin/staff', (req: Request, res: Response) => {
 });
 
 app.patch('/api/admin/staff/:id/lifecycle', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorRole = String(getAuthenticatedSession(req)!.role);
   const { status, notes } = req.body;
   const result = masterAdmin.updateStaffLifecycle(req.params.id, status, actorRole, notes);
   if (!result.success) {
@@ -2310,7 +2618,7 @@ app.get('/api/admin/departments', (_req: Request, res: Response) => {
 });
 
 app.patch('/api/admin/departments/:id', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorRole = String(getAuthenticatedSession(req)!.role);
   const result = masterAdmin.updateDepartment(req.params.id, req.body, actorRole);
   if (!result.success) {
     res.status(400).json({ error: result.error });
@@ -2327,8 +2635,9 @@ app.get('/api/admin/tasks', (req: Request, res: Response) => {
 });
 
 app.post('/api/admin/tasks', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+  const session = getAuthenticatedSession(req)!;
+  const actorRole = String(session.role);
+  const actorName = session.name || session.userEmail;
   const result = masterAdmin.createTask(req.body, actorRole, actorName);
   if (!result.success) {
     res.status(400).json({ error: result.error });
@@ -2338,8 +2647,9 @@ app.post('/api/admin/tasks', (req: Request, res: Response) => {
 });
 
 app.patch('/api/admin/tasks/:id/status', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+  const session = getAuthenticatedSession(req)!;
+  const actorRole = String(session.role);
+  const actorName = session.name || session.userEmail;
   const { status, note } = req.body;
   const result = masterAdmin.updateTaskStatus(req.params.id, status, actorRole, actorName, note);
   if (!result.success) {
@@ -2350,8 +2660,15 @@ app.patch('/api/admin/tasks/:id/status', (req: Request, res: Response) => {
 });
 
 app.post('/api/admin/tasks/:id/comments', (req: Request, res: Response) => {
-  const { authorStaffId, authorName, authorRole, text } = req.body;
-  const result = masterAdmin.addTaskComment(req.params.id, authorStaffId, authorName, authorRole, text);
+  const session = getAuthenticatedSession(req)!;
+  const { text } = req.body;
+  const result = masterAdmin.addTaskComment(
+    req.params.id,
+    session.userId,
+    session.name || session.userEmail,
+    String(session.role),
+    text
+  );
   if (!result.success) {
     res.status(400).json({ error: result.error });
     return;
@@ -2366,8 +2683,9 @@ app.get('/api/admin/decisions', (req: Request, res: Response) => {
 });
 
 app.post('/api/admin/decisions/:id/review', (req: Request, res: Response) => {
-  const approverRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const approverName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+  const session = getAuthenticatedSession(req)!;
+  const approverRole = String(session.role);
+  const approverName = session.name || session.userEmail;
   const { action, notes } = req.body;
   const result = masterAdmin.reviewExecutiveDecision(req.params.id, action, approverRole, approverName, notes);
   if (!result.success) {
@@ -2384,8 +2702,9 @@ app.get('/api/admin/volunteers', (req: Request, res: Response) => {
 });
 
 app.post('/api/admin/volunteers/:id/advance', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
+  const session = getAuthenticatedSession(req)!;
+  const actorRole = String(session.role);
+  const actorName = session.name || session.userEmail;
   const { stage, screeningDetails } = req.body;
   const result = masterAdmin.advanceVolunteerStage(req.params.id, stage, actorRole, actorName, screeningDetails);
   if (!result.success) {
@@ -2402,8 +2721,9 @@ app.get('/api/admin/grants', (req: Request, res: Response) => {
 });
 
 app.post('/api/admin/grants/:id/advance', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Nadia El-Amin';
+  const session = getAuthenticatedSession(req)!;
+  const actorRole = String(session.role);
+  const actorName = session.name || session.userEmail;
   const { stage, awardedAmount } = req.body;
   const result = masterAdmin.advanceGrantStage(req.params.id, stage, actorRole, actorName, awardedAmount);
   if (!result.success) {
@@ -2420,8 +2740,9 @@ app.get('/api/admin/partnerships', (req: Request, res: Response) => {
 });
 
 app.post('/api/admin/partnerships/:id/advance', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sarah Chen';
+  const session = getAuthenticatedSession(req)!;
+  const actorRole = String(session.role);
+  const actorName = session.name || session.userEmail;
   const { stage, agreementUpdates } = req.body;
   const result = masterAdmin.advancePartnershipStage(req.params.id, stage, actorRole, actorName, agreementUpdates);
   if (!result.success) {
@@ -2545,8 +2866,9 @@ app.get('/api/admin/programs', (req: Request, res: Response) => {
 });
 
 app.post('/api/admin/programs', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+  const session = getAuthenticatedSession(req)!;
+  const actorRole = String(session.role);
+  const actorName = session.name || session.userEmail;
   const result = commService.createProgram(req.body, actorRole, actorName);
   if (!result.success) {
     res.status(400).json({ error: result.error });
@@ -2556,7 +2878,7 @@ app.post('/api/admin/programs', (req: Request, res: Response) => {
 });
 
 app.patch('/api/admin/programs/:id', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorRole = String(getAuthenticatedSession(req)!.role);
   const result = commService.updateProgram(req.params.id, req.body, actorRole);
   if (!result.success) {
     res.status(400).json({ error: result.error });
@@ -2566,9 +2888,8 @@ app.patch('/api/admin/programs/:id', (req: Request, res: Response) => {
 });
 
 app.post('/api/admin/programs/:id/request-approval', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sarah Chen';
-  const result = commService.requestProgramApproval(req.params.id, actorRole, actorName);
+  const session = getAuthenticatedSession(req)!;
+  const result = commService.requestProgramApproval(req.params.id, String(session.role), session.name || session.userEmail);
   if (!result.success) {
     res.status(400).json({ error: result.error });
     return;
@@ -2577,10 +2898,9 @@ app.post('/api/admin/programs/:id/request-approval', (req: Request, res: Respons
 });
 
 app.post('/api/admin/programs/:id/review', (req: Request, res: Response) => {
-  const approverRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const approverName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+  const session = getAuthenticatedSession(req)!;
   const { approved, notes } = req.body;
-  const result = commService.reviewProgramApproval(req.params.id, approved, approverRole, approverName, notes);
+  const result = commService.reviewProgramApproval(req.params.id, approved, String(session.role), session.name || session.userEmail, notes);
   if (!result.success) {
     res.status(403).json({ error: result.error });
     return;
@@ -2594,9 +2914,8 @@ app.get('/api/admin/programs/outreach', (_req: Request, res: Response) => {
 });
 
 app.post('/api/admin/programs/outreach', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
-  const result = commService.createOutreachInitiative(req.body, actorRole, actorName);
+  const session = getAuthenticatedSession(req)!;
+  const result = commService.createOutreachInitiative(req.body, String(session.role), session.name || session.userEmail);
   if (!result.success) {
     res.status(400).json({ error: result.error });
     return;
@@ -2605,10 +2924,9 @@ app.post('/api/admin/programs/outreach', (req: Request, res: Response) => {
 });
 
 app.patch('/api/admin/programs/outreach/:id/status', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
+  const session = getAuthenticatedSession(req)!;
   const { status, verifiedAttendees } = req.body;
-  const result = commService.updateOutreachStatus(req.params.id, status, actorRole, actorName, verifiedAttendees);
+  const result = commService.updateOutreachStatus(req.params.id, status, String(session.role), session.name || session.userEmail, verifiedAttendees);
   if (!result.success) {
     res.status(400).json({ error: result.error });
     return;
@@ -2623,9 +2941,8 @@ app.get('/api/admin/programs/services', (req: Request, res: Response) => {
 });
 
 app.post('/api/admin/programs/services', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
-  const result = commService.createServiceRequest(req.body, actorName, actorRole);
+  const session = getAuthenticatedSession(req)!;
+  const result = commService.createServiceRequest(req.body, session.name || session.userEmail, String(session.role));
   if (result.isSafeguardingCrisis) {
     // Return 200 with quarantine payload and safeguarding warning
     res.status(200).json(result);
@@ -2639,10 +2956,9 @@ app.post('/api/admin/programs/services', (req: Request, res: Response) => {
 });
 
 app.patch('/api/admin/programs/services/:id/status', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
+  const session = getAuthenticatedSession(req)!;
   const { status, outcomeSummary } = req.body;
-  const result = commService.updateServiceRequestStatus(req.params.id, status, actorName, actorRole, outcomeSummary);
+  const result = commService.updateServiceRequestStatus(req.params.id, status, session.name || session.userEmail, String(session.role), outcomeSummary);
   if (!result.success) {
     res.status(400).json({ error: result.error });
     return;
@@ -2656,9 +2972,8 @@ app.get('/api/admin/programs/referrals', (_req: Request, res: Response) => {
 });
 
 app.post('/api/admin/programs/referrals', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
-  const result = commService.createReferral(req.body, actorName, actorRole);
+  const session = getAuthenticatedSession(req)!;
+  const result = commService.createReferral(req.body, session.name || session.userEmail, String(session.role));
   if (!result.success) {
     res.status(400).json({ error: result.error });
     return;
@@ -2667,10 +2982,9 @@ app.post('/api/admin/programs/referrals', (req: Request, res: Response) => {
 });
 
 app.patch('/api/admin/programs/referrals/:id/status', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
+  const session = getAuthenticatedSession(req)!;
   const { status } = req.body;
-  const result = commService.updateReferralStatus(req.params.id, status, actorName, actorRole);
+  const result = commService.updateReferralStatus(req.params.id, status, session.name || session.userEmail, String(session.role));
   res.json(result);
 });
 
@@ -2680,8 +2994,7 @@ app.get('/api/admin/programs/deployments', (_req: Request, res: Response) => {
 });
 
 app.post('/api/admin/programs/deployments', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
+  const session = getAuthenticatedSession(req)!;
   const { volunteerId, programId, activityTitle, shiftDate, shiftHours, supervisorStaffId, supervisorStaffName } = req.body;
   const result = commService.scheduleVolunteer(
     volunteerId,
@@ -2691,8 +3004,8 @@ app.post('/api/admin/programs/deployments', (req: Request, res: Response) => {
     shiftHours,
     supervisorStaffId,
     supervisorStaffName,
-    actorRole,
-    actorName
+    String(session.role),
+    session.name || session.userEmail
   );
   if (!result.success) {
     res.status(400).json({ error: result.error });
@@ -2702,10 +3015,9 @@ app.post('/api/admin/programs/deployments', (req: Request, res: Response) => {
 });
 
 app.post('/api/admin/programs/deployments/:id/verify-hours', (req: Request, res: Response) => {
-  const supervisorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const supervisorName = (req.headers['x-phumulani-actor'] as string) || 'Sister Miriam K.';
+  const session = getAuthenticatedSession(req)!;
   const { verifiedHours, supervisorNotes } = req.body;
-  const result = commService.verifyVolunteerHours(req.params.id, verifiedHours, supervisorRole, supervisorName, supervisorNotes);
+  const result = commService.verifyVolunteerHours(req.params.id, verifiedHours, String(session.role), session.name || session.userEmail, supervisorNotes);
   if (!result.success) {
     res.status(403).json({ error: result.error });
     return;
@@ -2719,9 +3031,8 @@ app.get('/api/admin/programs/events', (_req: Request, res: Response) => {
 });
 
 app.post('/api/admin/programs/events', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sarah Chen';
-  const result = commService.createEvent(req.body, actorName, actorRole);
+  const session = getAuthenticatedSession(req)!;
+  const result = commService.createEvent(req.body, session.name || session.userEmail, String(session.role));
   if (!result.success) {
     res.status(400).json({ error: result.error });
     return;
@@ -2730,9 +3041,8 @@ app.post('/api/admin/programs/events', (req: Request, res: Response) => {
 });
 
 app.post('/api/admin/programs/events/:id/publish', (req: Request, res: Response) => {
-  const approverRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const approverName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
-  const result = commService.publishEvent(req.params.id, approverRole, approverName);
+  const session = getAuthenticatedSession(req)!;
+  const result = commService.publishEvent(req.params.id, String(session.role), session.name || session.userEmail);
   if (!result.success) {
     res.status(403).json({ error: result.error });
     return;
@@ -2746,9 +3056,8 @@ app.get('/api/admin/programs/resources', (_req: Request, res: Response) => {
 });
 
 app.post('/api/admin/programs/resources', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sarah Chen';
-  const result = commService.createResourceRequest(req.body, actorName, actorRole);
+  const session = getAuthenticatedSession(req)!;
+  const result = commService.createResourceRequest(req.body, session.name || session.userEmail, String(session.role));
   if (!result.success) {
     res.status(400).json({ error: result.error });
     return;
@@ -2757,10 +3066,9 @@ app.post('/api/admin/programs/resources', (req: Request, res: Response) => {
 });
 
 app.post('/api/admin/programs/resources/:id/review', (req: Request, res: Response) => {
-  const approverRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
-  const approverName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+  const session = getAuthenticatedSession(req)!;
   const { approved } = req.body;
-  const result = commService.reviewResourceRequest(req.params.id, approved, approverRole, approverName);
+  const result = commService.reviewResourceRequest(req.params.id, approved, String(session.role), session.name || session.userEmail);
   if (!result.success) {
     res.status(403).json({ error: result.error });
     return;
@@ -2775,7 +3083,7 @@ app.get('/api/admin/programs/impact', (_req: Request, res: Response) => {
 
 // 9. AI Program Intelligence Assistant
 app.post('/api/admin/programs/ai-assist', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'PLATFORM_SUPER_ADMIN';
+  const actorRole = String(getAuthenticatedSession(req)!.role);
   const { actionType, programId, contextNotes } = req.body;
   const result = commService.generateProgramAiAssist(actionType, programId, contextNotes || '', actorRole);
   if (!result.success) {
@@ -2843,11 +3151,10 @@ app.get('/api/admin/funding/grants/:id/go-no-go', (req: Request, res: Response) 
 
 app.post('/api/admin/funding/grants/:id/go-no-go', (req: Request, res: Response) => {
   try {
-    const actorRole = (req.headers['x-phumulani-role'] as string) || 'EXECUTIVE_DIRECTOR';
-    const actorEmail = (req.headers['x-phumulani-actor'] as string) || 'director@phumulani.org';
+    const session = getAuthenticatedSession(req)!;
     const review = fundingService.submitGoNoGoReview(
       { ...req.body, opportunityId: req.params.id },
-      { role: actorRole, email: actorEmail, name: 'Nombuso Tembe' }
+      { role: String(session.role), email: session.userEmail, name: session.name || session.userEmail }
     );
     res.status(201).json(review);
   } catch (err: any) {
@@ -2863,8 +3170,9 @@ app.get('/api/admin/funding/grants/:id/proposal', (req: Request, res: Response) 
 
 app.patch('/api/admin/funding/grants/:id/proposal/section', (req: Request, res: Response) => {
   try {
+    const session = getAuthenticatedSession(req)!;
     const { sectionKey, content } = req.body;
-    const updated = fundingService.updateProposalSection(req.params.id, sectionKey, content, { name: 'Grants Officer' });
+    const updated = fundingService.updateProposalSection(req.params.id, sectionKey, content, { name: session.name || session.userEmail });
     res.json(updated);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -2873,8 +3181,9 @@ app.patch('/api/admin/funding/grants/:id/proposal/section', (req: Request, res: 
 
 app.post('/api/admin/funding/grants/:id/proposal/ai-draft', (req: Request, res: Response) => {
   try {
+    const session = getAuthenticatedSession(req)!;
     const { sectionKey } = req.body;
-    const draftText = fundingService.generateAiDraftSection(req.params.id, sectionKey, { name: 'Grants Officer' });
+    const draftText = fundingService.generateAiDraftSection(req.params.id, sectionKey, { name: session.name || session.userEmail });
     res.json({ draftText, requiresHumanApproval: true });
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -2888,7 +3197,8 @@ app.get('/api/admin/funding/grants/:id/budget', (req: Request, res: Response) =>
 
 app.post('/api/admin/funding/grants/:id/budget', (req: Request, res: Response) => {
   try {
-    const saved = fundingService.saveBudgetSheet(req.body, { role: 'FINANCE_DIRECTOR' });
+    const session = getAuthenticatedSession(req)!;
+    const saved = fundingService.saveBudgetSheet(req.body, { role: String(session.role) });
     res.json(saved);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -2902,8 +3212,8 @@ app.get('/api/admin/funding/grants/:id/submission-checklist', (req: Request, res
 
 app.post('/api/admin/funding/grants/:id/submit', (req: Request, res: Response) => {
   try {
-    const actorRole = (req.headers['x-phumulani-role'] as string) || 'EXECUTIVE_DIRECTOR';
-    const submitted = fundingService.submitGrantProposal(req.params.id, { role: actorRole, name: 'Nombuso Tembe' });
+    const session = getAuthenticatedSession(req)!;
+    const submitted = fundingService.submitGrantProposal(req.params.id, { role: String(session.role), name: session.name || session.userEmail });
     res.json(submitted);
   } catch (err: any) {
     res.status(403).json({ error: err.message });
@@ -2917,8 +3227,9 @@ app.get('/api/admin/funding/restricted-funds', (_req: Request, res: Response) =>
 
 app.post('/api/admin/funding/restricted-funds/:id/allocate', (req: Request, res: Response) => {
   try {
+    const session = getAuthenticatedSession(req)!;
     const { programId, amount, category } = req.body;
-    const fund = fundingService.recordRestrictedAllocation(req.params.id, programId, amount, category, { role: 'FINANCE_DIRECTOR' });
+    const fund = fundingService.recordRestrictedAllocation(req.params.id, programId, amount, category, { role: String(session.role) });
     res.json(fund);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -2932,7 +3243,8 @@ app.get('/api/admin/funding/donors', (_req: Request, res: Response) => {
 
 app.post('/api/admin/funding/donors', (req: Request, res: Response) => {
   try {
-    const donor = fundingService.createDonor(req.body, { role: 'DEVELOPMENT_OFFICER' });
+    const session = getAuthenticatedSession(req)!;
+    const donor = fundingService.createDonor(req.body, { role: String(session.role) });
     res.status(201).json(donor);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -2946,7 +3258,8 @@ app.get('/api/admin/funding/pipelines', (_req: Request, res: Response) => {
 
 app.patch('/api/admin/funding/pipelines/:id/stage', (req: Request, res: Response) => {
   try {
-    const updated = fundingService.updatePipelineDealStage(req.params.id, req.body.stage, { role: 'DEVELOPMENT_OFFICER' });
+    const session = getAuthenticatedSession(req)!;
+    const updated = fundingService.updatePipelineDealStage(req.params.id, req.body.stage, { role: String(session.role) });
     res.json(updated);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -2964,10 +3277,14 @@ app.get('/api/admin/funding/reconciliations', (_req: Request, res: Response) => 
 
 app.post('/api/admin/funding/reconciliations/:id/reconcile', (req: Request, res: Response) => {
   try {
+    const session = getAuthenticatedSession(req)!;
     const { paymentMethod, depositRef } = req.body;
-    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Nombuso Tembe';
-    const actorRole = (req.headers['x-phumulani-role'] as string) || 'EXECUTIVE_DIRECTOR';
-    const reconciled = fundingService.reconcileDonation(req.params.id, { name: actorName, role: actorRole }, paymentMethod, depositRef);
+    const reconciled = fundingService.reconcileDonation(
+      req.params.id,
+      { name: session.name || session.userEmail, role: String(session.role) },
+      paymentMethod,
+      depositRef
+    );
     res.json(reconciled);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -2986,8 +3303,8 @@ app.get('/api/admin/funding/reports', (_req: Request, res: Response) => {
 
 app.post('/api/admin/funding/reports/:id/certify', (req: Request, res: Response) => {
   try {
-    const actorRole = (req.headers['x-phumulani-role'] as string) || 'EXECUTIVE_DIRECTOR';
-    const certified = fundingService.certifyFunderReport(req.params.id, { role: actorRole, name: 'Nombuso Tembe' });
+    const session = getAuthenticatedSession(req)!;
+    const certified = fundingService.certifyFunderReport(req.params.id, { role: String(session.role), name: session.name || session.userEmail });
     res.json(certified);
   } catch (err: any) {
     res.status(403).json({ error: err.message });
@@ -3017,9 +3334,8 @@ app.get('/api/admin/meal/indicators', (req: Request, res: Response) => {
 
 app.post('/api/admin/meal/indicators', (req: Request, res: Response) => {
   try {
-    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
-    const actorName = (req.headers['x-phumulani-actor'] as string) || 'MEAL Staff';
-    const indicator = mealService.createIndicator(req.body, { role: actorRole, name: actorName });
+    const session = getAuthenticatedSession(req)!;
+    const indicator = mealService.createIndicator(req.body, { role: String(session.role), name: session.name || session.userEmail });
     res.status(201).json(indicator);
   } catch (err: any) {
     res.status(403).json({ error: err.message });
@@ -3034,9 +3350,8 @@ app.get('/api/admin/meal/outputs', (req: Request, res: Response) => {
 
 app.post('/api/admin/meal/outputs', (req: Request, res: Response) => {
   try {
-    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
-    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Staff Reporter';
-    const output = mealService.recordOutput(req.body, { role: actorRole, name: actorName });
+    const session = getAuthenticatedSession(req)!;
+    const output = mealService.recordOutput(req.body, { role: String(session.role), name: session.name || session.userEmail });
     res.status(201).json(output);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -3045,10 +3360,9 @@ app.post('/api/admin/meal/outputs', (req: Request, res: Response) => {
 
 app.post('/api/admin/meal/outputs/:id/verify', (req: Request, res: Response) => {
   try {
-    const actorRole = (req.headers['x-phumulani-role'] as string) || 'PROGRAM_MANAGER';
-    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+    const session = getAuthenticatedSession(req)!;
     const { verified, correctionNotes } = req.body;
-    const output = mealService.verifyOutput(req.params.id, Boolean(verified), correctionNotes, { role: actorRole, name: actorName });
+    const output = mealService.verifyOutput(req.params.id, Boolean(verified), correctionNotes, { role: String(session.role), name: session.name || session.userEmail });
     res.json(output);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -3063,9 +3377,8 @@ app.get('/api/admin/meal/evaluations', (req: Request, res: Response) => {
 
 app.post('/api/admin/meal/evaluations', (req: Request, res: Response) => {
   try {
-    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
-    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sarah Chen';
-    const evaluation = mealService.createOutcomeEvaluation(req.body, { role: actorRole, name: actorName });
+    const session = getAuthenticatedSession(req)!;
+    const evaluation = mealService.createOutcomeEvaluation(req.body, { role: String(session.role), name: session.name || session.userEmail });
     res.status(201).json(evaluation);
   } catch (err: any) {
     res.status(403).json({ error: err.message });
@@ -3074,11 +3387,10 @@ app.post('/api/admin/meal/evaluations', (req: Request, res: Response) => {
 
 app.post('/api/admin/meal/evaluations/:id/approve', (req: Request, res: Response) => {
   try {
-    const actorRole = (req.headers['x-phumulani-role'] as string) || 'EXECUTIVE_DIRECTOR';
-    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
+    const session = getAuthenticatedSession(req)!;
     const evaluation = mealService.approveOutcomeEvaluation(req.params.id, req.body.comments || 'Approved by Executive Director', {
-      role: actorRole,
-      name: actorName,
+      role: String(session.role),
+      name: session.name || session.userEmail,
     });
     res.json(evaluation);
   } catch (err: any) {
@@ -3088,16 +3400,14 @@ app.post('/api/admin/meal/evaluations/:id/approve', (req: Request, res: Response
 
 // M26.06: Evidence Records
 app.get('/api/admin/meal/evidence', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
-  const dept = (req.headers['x-phumulani-dept'] as string) || 'DEPT-PROG';
-  res.json({ evidence: mealService.getEvidenceRecords({ role: actorRole, departmentId: dept }) });
+  const session = getAuthenticatedSession(req)!;
+  res.json({ evidence: mealService.getEvidenceRecords({ role: String(session.role), departmentId: session.departmentId || 'DEPT-PROG' }) });
 });
 
 app.post('/api/admin/meal/evidence', (req: Request, res: Response) => {
   try {
-    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
-    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Sarah Chen';
-    const record = mealService.addEvidenceRecord(req.body, { role: actorRole, name: actorName });
+    const session = getAuthenticatedSession(req)!;
+    const record = mealService.addEvidenceRecord(req.body, { role: String(session.role), name: session.name || session.userEmail });
     res.status(201).json(record);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -3106,16 +3416,15 @@ app.post('/api/admin/meal/evidence', (req: Request, res: Response) => {
 
 // M26.07: Community Feedback
 app.get('/api/admin/meal/feedback', (req: Request, res: Response) => {
-  const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
-  const dept = (req.headers['x-phumulani-dept'] as string) || 'DEPT-PROG';
-  res.json({ feedback: mealService.getCommunityFeedback({ role: actorRole, departmentId: dept }) });
+  const session = getAuthenticatedSession(req)!;
+  res.json({ feedback: mealService.getCommunityFeedback({ role: String(session.role), departmentId: session.departmentId || 'DEPT-PROG' }) });
 });
 
 app.post('/api/admin/meal/feedback', (req: Request, res: Response) => {
   try {
+    const session = getAuthenticatedSession(req)!;
     const { feedbackType, submissionChannel, content, programId } = req.body;
-    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
-    const record = mealService.submitCommunityFeedback(feedbackType, submissionChannel, content, programId, { role: actorRole });
+    const record = mealService.submitCommunityFeedback(feedbackType, submissionChannel, content, programId, { role: String(session.role) });
     res.status(201).json(record);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -3129,10 +3438,10 @@ app.get('/api/admin/meal/grant-deliverables', (_req: Request, res: Response) => 
 
 app.patch('/api/admin/meal/grant-deliverables/:id', (req: Request, res: Response) => {
   try {
+    const session = getAuthenticatedSession(req)!;
     const { verifiedCount, status, complianceNotes } = req.body;
-    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
     const updated = mealService.updateGrantDeliverableProgress(req.params.id, Number(verifiedCount), status, complianceNotes, {
-      role: actorRole,
+      role: String(session.role),
     });
     res.json(updated);
   } catch (err: any) {
@@ -3153,9 +3462,8 @@ app.get('/api/admin/meal/risks', (req: Request, res: Response) => {
 
 app.post('/api/admin/meal/risks', (req: Request, res: Response) => {
   try {
-    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
-    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Staff Reporter';
-    const risk = mealService.createProgramRisk(req.body, { role: actorRole, name: actorName });
+    const session = getAuthenticatedSession(req)!;
+    const risk = mealService.createProgramRisk(req.body, { role: String(session.role), name: session.name || session.userEmail });
     res.status(201).json(risk);
   } catch (err: any) {
     res.status(403).json({ error: err.message });
@@ -3164,12 +3472,11 @@ app.post('/api/admin/meal/risks', (req: Request, res: Response) => {
 
 app.patch('/api/admin/meal/risks/:id/status', (req: Request, res: Response) => {
   try {
+    const session = getAuthenticatedSession(req)!;
     const { status, note } = req.body;
-    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
-    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Staff Member';
     const updated = mealService.updateProgramRiskStatus(req.params.id, status, note || 'Status update', {
-      role: actorRole,
-      name: actorName,
+      role: String(session.role),
+      name: session.name || session.userEmail,
     });
     res.json(updated);
   } catch (err: any) {
@@ -3191,9 +3498,8 @@ app.get('/api/admin/meal/reports', (_req: Request, res: Response) => {
 
 app.post('/api/admin/meal/reports', (req: Request, res: Response) => {
   try {
-    const actorRole = (req.headers['x-phumulani-role'] as string) || 'STAFF';
-    const actorName = (req.headers['x-phumulani-actor'] as string) || 'MEAL Officer';
-    const report = mealService.createMealReport(req.body, { role: actorRole, name: actorName });
+    const session = getAuthenticatedSession(req)!;
+    const report = mealService.createMealReport(req.body, { role: String(session.role), name: session.name || session.userEmail });
     res.status(201).json(report);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -3202,9 +3508,8 @@ app.post('/api/admin/meal/reports', (req: Request, res: Response) => {
 
 app.post('/api/admin/meal/reports/:id/approve', (req: Request, res: Response) => {
   try {
-    const actorRole = (req.headers['x-phumulani-role'] as string) || 'EXECUTIVE_DIRECTOR';
-    const actorName = (req.headers['x-phumulani-actor'] as string) || 'Comfort Dondo';
-    const approved = mealService.executiveApproveReport(req.params.id, { role: actorRole, name: actorName });
+    const session = getAuthenticatedSession(req)!;
+    const approved = mealService.executiveApproveReport(req.params.id, { role: String(session.role), name: session.name || session.userEmail });
     res.json(approved);
   } catch (err: any) {
     res.status(403).json({ error: err.message });
@@ -3241,6 +3546,11 @@ app.post('/api/admin/meal/security/negative-tests', (_req: Request, res: Respons
 // =============================================================================
 // PHASE 36 PLATFORM RELIABILITY & SECURITY HARDENING ENDPOINTS
 // =============================================================================
+app.use('/api/v1/phase36', requireSessionMiddleware(STAFF_ADMIN_ROLES));
+app.use('/api/v1/phase37', requireSessionMiddleware(STAFF_ADMIN_ROLES));
+app.use('/api/v1/phase38', requireSessionMiddleware(STAFF_ADMIN_ROLES));
+app.use('/api/v1/phase39', requireSessionMiddleware(STAFF_ADMIN_ROLES));
+app.use('/api/v1/verification', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES));
 
 // M36.01: Traceability Matrix
 app.get('/api/v1/phase36/traceability', (_req: Request, res: Response) => {
@@ -3313,7 +3623,8 @@ app.get('/api/v1/phase36/safeguarding-policies', (_req: Request, res: Response) 
 // M36.08: AI Agent Execution with Truth-in-Monitoring & Emergency Halt
 app.post('/api/v1/phase36/ai/execute', (req: Request, res: Response) => {
   try {
-    const { agentId, taskDescription, payload = {}, requesterRole = 'staff' } = req.body;
+    const session = getAuthenticatedSession(req)!;
+    const { agentId, taskDescription, payload = {} } = req.body;
     if (!agentId || !taskDescription) {
       return res.status(400).json({ error: 'agentId and taskDescription are required.' });
     }
@@ -3321,7 +3632,7 @@ app.post('/api/v1/phase36/ai/execute', (req: Request, res: Response) => {
       agentId,
       taskDescription,
       payload,
-      requesterRole,
+      requesterRole: String(session.role),
     });
     res.json(audit);
   } catch (err: any) {
@@ -3405,11 +3716,16 @@ app.post('/api/v1/phase37/programs/concurrency-test', (req: Request, res: Respon
 
 // M37.09: Classification-Based Safeguarding Access Check
 app.post('/api/v1/phase37/safeguarding/check-access', (req: Request, res: Response) => {
-  const { recordId, requesterRole = 'public', isAiAgent = false } = req.body;
+  const session = getAuthenticatedSession(req)!;
+  const { recordId, isAiAgent = false } = req.body;
   if (!recordId) {
     return res.status(400).json({ error: 'recordId is required.' });
   }
-  const result = phase37Service.checkAccessByClassification({ recordId, requesterRole, isAiAgent });
+  const result = phase37Service.checkAccessByClassification({
+    recordId,
+    requesterRole: String(session.role),
+    isAiAgent: Boolean(isAiAgent),
+  });
   if (!result.allowed) {
     return res.status(403).json(result);
   }
@@ -4100,33 +4416,18 @@ app.post('/api/v1/verification/m4106-scenario', async (_req: Request, res: Respo
 // Operational Mode: STAGED_DEVELOPMENT · Status: AUTHORIZATION_REQUIRED
 // =============================================================================
 
-// Helper to authenticate staff actor from session or staged headers (fail-closed in PRODUCTION_ONLY)
+// Helper to authenticate staff actor strictly from verified server session (zero header spoofing)
 function getEmailAdminActor(req: Request): { id: string; name: string; role: string; isSafeguarding: boolean } {
-  const authHeader = req.headers['authorization'];
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    const token = authHeader.substring(7).trim();
-    const validation = authSecurityService.validateSession(token);
-    if (validation.valid && validation.session) {
-      const sess = validation.session;
-      const roleLower = String(sess.role).toLowerCase();
-      const isSafeguarding =
-        sess.userId === 'usr-002' ||
-        roleLower === 'safeguarding_lead' ||
-        roleLower === 'safeguarding_officer';
-      return { id: sess.userId, name: sess.name || sess.userEmail, role: sess.role, isSafeguarding };
-    }
+  const sess = getAuthenticatedSession(req) || getSessionFromReq(req);
+  if (!sess) {
     return { id: 'anonymous', name: 'Unauthenticated Visitor', role: 'visitor', isSafeguarding: false };
   }
-
-  if (EnvironmentService.isProductionOnly()) {
-    return { id: 'anonymous', name: 'Unauthenticated Visitor', role: 'visitor', isSafeguarding: false };
-  }
-
-  const role = (req.headers['x-phumulani-role'] as string) || 'staff';
-  const userId = (req.headers['x-phumulani-user-id'] as string) || (role === 'safeguarding_lead' ? 'usr-002' : 'usr-001');
-  const userName = (req.headers['x-phumulani-user-name'] as string) || (role === 'safeguarding_lead' ? 'Sister Miriam K.' : 'Comfort Dondo');
-  const isSafeguarding = userId === 'usr-002' || role === 'safeguarding_lead' || role === 'safeguarding_officer';
-  return { id: userId, name: userName, role, isSafeguarding };
+  const roleLower = String(sess.role).toLowerCase();
+  const isSafeguarding =
+    sess.userId === 'usr-002' ||
+    roleLower === 'safeguarding_lead' ||
+    roleLower === 'safeguarding_officer';
+  return { id: sess.userId, name: sess.name || sess.userEmail, role: String(sess.role), isSafeguarding };
 }
 
 // 1. Google Workspace truthful integration status
@@ -4703,8 +5004,15 @@ app.get('/api/admin/email/recovery/diagnostics', (_req: Request, res: Response) 
 });
 
 // 28. Phase 52 Google Workspace Start Authorization (M52.02)
-app.post('/api/admin/email/mailboxes/:email/auth/start', (req: Request, res: Response) => {
+app.post('/api/admin/email/mailboxes/:email/auth/start', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   try {
+    if (!oAuthService.isProviderConfigured('GOOGLE')) {
+      return res.status(503).json({
+        success: false,
+        code: 'OAUTH_CREDENTIALS_MISSING',
+        error: 'Google Workspace OAuth client credentials are not configured on the server.',
+      });
+    }
     const mailboxEmail = req.params.email;
     const result = googleWorkspaceAdapter.startAuthorization(mailboxEmail);
     res.json({ success: true, ...result });
@@ -4714,8 +5022,15 @@ app.post('/api/admin/email/mailboxes/:email/auth/start', (req: Request, res: Res
 });
 
 // 29. Phase 52 Google Workspace Complete OAuth Callback (M52.02)
-app.post('/api/admin/email/mailboxes/:email/auth/complete', (req: Request, res: Response) => {
+app.post('/api/admin/email/mailboxes/:email/auth/complete', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
   try {
+    if (!oAuthService.isProviderConfigured('GOOGLE')) {
+      return res.status(503).json({
+        success: false,
+        code: 'OAUTH_CREDENTIALS_MISSING',
+        error: 'Google Workspace OAuth client credentials are not configured on the server.',
+      });
+    }
     const { state, code, codeVerifier } = req.body;
     const result = googleWorkspaceAdapter.completeOAuthCallback({ state, code, codeVerifier });
     if (!result.success) {
@@ -5497,11 +5812,28 @@ app.patch('/api/admin/email/connections/:id', (req: Request, res: Response) => {
   }
 });
 
-app.post('/api/admin/email/connections/:id/reauthorize', (req: Request, res: Response) => {
+app.post('/api/admin/email/connections/:id/reauthorize', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   try {
     const conn = connectorRegistry.getConnection(req.params.id);
     if (!conn) {
       return res.status(404).json({ success: false, error: 'Connection not found.' });
+    }
+    if (
+      (conn.provider === 'GOOGLE' && !oAuthService.isProviderConfigured('GOOGLE')) ||
+      (conn.provider === 'MICROSOFT' && !oAuthService.isProviderConfigured('MICROSOFT'))
+    ) {
+      connectorRegistry.updateConnection(conn.id, {
+        authStatus: 'AUTHORIZATION_REQUIRED',
+        connectionHealth: 'UNTESTED',
+        credentialWarning: true,
+        lastError: `${conn.provider} OAuth client credentials are not configured on the server.`,
+      });
+      return res.status(503).json({
+        success: false,
+        code: 'OAUTH_CREDENTIALS_MISSING',
+        error: `${conn.provider} OAuth client credentials are not configured on the server.`,
+        connection: connectorRegistry.getConnection(req.params.id),
+      });
     }
     const redirectUri = `${req.protocol}://${req.get('host')}/api/admin/email/oauth/${conn.provider === 'MICROSOFT' ? 'microsoft' : 'google'}/callback`;
     let oauthInfo = null;
@@ -5512,7 +5844,7 @@ app.post('/api/admin/email/connections/:id/reauthorize', (req: Request, res: Res
     }
     connectorRegistry.updateConnection(conn.id, {
       authStatus: 'AUTHORIZATION_REQUIRED',
-      connectionHealth: 'DEGRADED',
+      connectionHealth: 'UNTESTED',
       credentialWarning: true,
     });
     res.json({
@@ -5526,7 +5858,7 @@ app.post('/api/admin/email/connections/:id/reauthorize', (req: Request, res: Res
   }
 });
 
-app.delete('/api/admin/email/connections/:id', async (req: Request, res: Response) => {
+app.delete('/api/admin/email/connections/:id', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
   try {
     const success = await mailboxConnectionService.removeMailbox(req.params.id);
     if (!success) {
@@ -5538,9 +5870,17 @@ app.delete('/api/admin/email/connections/:id', async (req: Request, res: Respons
   }
 });
 
-// 3. OAuth initiation and callback endpoints for Google & Microsoft
-app.get('/api/admin/email/oauth/google/start', (req: Request, res: Response) => {
+// 3. OAuth initiation and callback endpoints for Google & Microsoft (Fail-Closed when unconfigured)
+app.get('/api/admin/email/oauth/google/start', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   try {
+    if (!oAuthService.isProviderConfigured('GOOGLE')) {
+      return res.status(503).json({
+        success: false,
+        code: 'OAUTH_CREDENTIALS_MISSING',
+        provider: 'GOOGLE',
+        error: 'Google Workspace OAuth client credentials (GOOGLE_WORKSPACE_CLIENT_ID / GOOGLE_WORKSPACE_CLIENT_SECRET) are not configured on the server.',
+      });
+    }
     const redirectUri = (req.query.redirectUri as string) || `${req.protocol}://${req.get('host')}/api/admin/email/oauth/google/callback`;
     const mailboxEmail = req.query.email as string | undefined;
     const { authUrl, stateId, codeChallenge, codeVerifier } = oAuthService.initiateGoogleOAuth(redirectUri, mailboxEmail);
@@ -5550,7 +5890,7 @@ app.get('/api/admin/email/oauth/google/start', (req: Request, res: Response) => 
       stateId,
       redirectUri,
       provider: 'GOOGLE',
-      clientId: process.env.GOOGLE_WORKSPACE_CLIENT_ID || 'phumulani-google-client-staged.apps.googleusercontent.com',
+      clientId: process.env.GOOGLE_WORKSPACE_CLIENT_ID!.trim(),
       codeChallenge,
       codeVerifier,
       scopes: [
@@ -5567,7 +5907,7 @@ app.get('/api/admin/email/oauth/google/start', (req: Request, res: Response) => 
   }
 });
 
-app.get('/api/admin/email/oauth/google/callback', (req: Request, res: Response) => {
+app.get('/api/admin/email/oauth/google/callback', async (req: Request, res: Response) => {
   try {
     const { state, code, error } = req.query;
     if (error) {
@@ -5576,16 +5916,38 @@ app.get('/api/admin/email/oauth/google/callback', (req: Request, res: Response) 
     if (!state || !code) {
       return res.status(400).json({ success: false, error: 'Missing state or authorization code parameter.' });
     }
-    const val = oAuthService.validateCallback(state as string, code as string);
-    if (!val.valid) {
-      return res.status(400).json({ success: false, error: val.error });
+    if (!oAuthService.isProviderConfigured('GOOGLE')) {
+      return res.status(503).json({
+        success: false,
+        code: 'OAUTH_CREDENTIALS_MISSING',
+        provider: 'GOOGLE',
+        error: 'Google Workspace OAuth client credentials are not configured on the server.',
+      });
     }
-    const targetEmail = val.state?.mailboxEmail || 'donations@phumulani.org';
+    const mailboxHint = (req.query.email as string) || undefined;
+    const exchange = await oAuthService.exchangeAuthorizationCode({
+      provider: 'GOOGLE',
+      stateId: state as string,
+      code: code as string,
+      mailboxEmail: mailboxHint,
+    });
+    if (!exchange.success) {
+      return res.status(exchange.statusCode || 400).json({
+        success: false,
+        code: exchange.errorCode,
+        error: exchange.error,
+      });
+    }
+    const targetEmail = exchange.verifiedEmail || exchange.mailboxEmail || '';
     const conns = connectorRegistry.getAllConnections();
     const matched = conns.find(
-      (c) => c.emailAddress.toLowerCase() === targetEmail.toLowerCase() || c.provider === 'GOOGLE'
+      (c) => c.emailAddress.toLowerCase() === targetEmail.toLowerCase()
     );
     if (matched) {
+      const vaultTokens = oAuthService.getDecryptedTokens(targetEmail);
+      if (vaultTokens) {
+        oAuthService.storeEncryptedTokens(matched.id, vaultTokens);
+      }
       connectorRegistry.updateConnection(matched.id, {
         authStatus: 'CONNECTED',
         connectionHealth: 'HEALTHY',
@@ -5595,7 +5957,7 @@ app.get('/api/admin/email/oauth/google/callback', (req: Request, res: Response) 
     }
     res.json({
       success: true,
-      message: 'Google Workspace authorization code successfully validated and exchanged.',
+      message: 'Google Workspace authorization code verified and exchanged with provider token endpoint.',
       provider: 'GOOGLE',
       mailboxEmail: targetEmail,
       connectedId: matched?.id,
@@ -5605,8 +5967,16 @@ app.get('/api/admin/email/oauth/google/callback', (req: Request, res: Response) 
   }
 });
 
-app.get('/api/admin/email/oauth/microsoft/start', (req: Request, res: Response) => {
+app.get('/api/admin/email/oauth/microsoft/start', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   try {
+    if (!oAuthService.isProviderConfigured('MICROSOFT')) {
+      return res.status(503).json({
+        success: false,
+        code: 'OAUTH_CREDENTIALS_MISSING',
+        provider: 'MICROSOFT',
+        error: 'Microsoft 365 OAuth client credentials (MICROSOFT_GRAPH_CLIENT_ID / MICROSOFT_GRAPH_CLIENT_SECRET) are not configured on the server.',
+      });
+    }
     const redirectUri = (req.query.redirectUri as string) || `${req.protocol}://${req.get('host')}/api/admin/email/oauth/microsoft/callback`;
     const mailboxEmail = req.query.email as string | undefined;
     const { authUrl, stateId, codeChallenge, codeVerifier } = oAuthService.initiateMicrosoftOAuth(redirectUri, mailboxEmail);
@@ -5616,7 +5986,7 @@ app.get('/api/admin/email/oauth/microsoft/start', (req: Request, res: Response) 
       stateId,
       redirectUri,
       provider: 'MICROSOFT',
-      clientId: process.env.MICROSOFT_GRAPH_CLIENT_ID || 'phumulani-msft-client-staged-id',
+      clientId: process.env.MICROSOFT_GRAPH_CLIENT_ID!.trim(),
       tenantId: process.env.MICROSOFT_TENANT_ID || 'common',
       codeChallenge,
       codeVerifier,
@@ -5627,7 +5997,7 @@ app.get('/api/admin/email/oauth/microsoft/start', (req: Request, res: Response) 
   }
 });
 
-app.get('/api/admin/email/oauth/microsoft/callback', (req: Request, res: Response) => {
+app.get('/api/admin/email/oauth/microsoft/callback', async (req: Request, res: Response) => {
   try {
     const { state, code, error } = req.query;
     if (error) {
@@ -5636,16 +6006,38 @@ app.get('/api/admin/email/oauth/microsoft/callback', (req: Request, res: Respons
     if (!state || !code) {
       return res.status(400).json({ success: false, error: 'Missing state or authorization code parameter.' });
     }
-    const val = oAuthService.validateCallback(state as string, code as string);
-    if (!val.valid) {
-      return res.status(400).json({ success: false, error: val.error });
+    if (!oAuthService.isProviderConfigured('MICROSOFT')) {
+      return res.status(503).json({
+        success: false,
+        code: 'OAUTH_CREDENTIALS_MISSING',
+        provider: 'MICROSOFT',
+        error: 'Microsoft 365 OAuth client credentials are not configured on the server.',
+      });
     }
-    const targetEmail = val.state?.mailboxEmail || 'partnerships@phumulani.org';
+    const mailboxHint = (req.query.email as string) || undefined;
+    const exchange = await oAuthService.exchangeAuthorizationCode({
+      provider: 'MICROSOFT',
+      stateId: state as string,
+      code: code as string,
+      mailboxEmail: mailboxHint,
+    });
+    if (!exchange.success) {
+      return res.status(exchange.statusCode || 400).json({
+        success: false,
+        code: exchange.errorCode,
+        error: exchange.error,
+      });
+    }
+    const targetEmail = exchange.verifiedEmail || exchange.mailboxEmail || '';
     const conns = connectorRegistry.getAllConnections();
     const matched = conns.find(
-      (c) => c.emailAddress.toLowerCase() === targetEmail.toLowerCase() || c.provider === 'MICROSOFT'
+      (c) => c.emailAddress.toLowerCase() === targetEmail.toLowerCase()
     );
     if (matched) {
+      const vaultTokens = oAuthService.getDecryptedTokens(targetEmail);
+      if (vaultTokens) {
+        oAuthService.storeEncryptedTokens(matched.id, vaultTokens);
+      }
       connectorRegistry.updateConnection(matched.id, {
         authStatus: 'CONNECTED',
         connectionHealth: 'HEALTHY',
@@ -5655,7 +6047,7 @@ app.get('/api/admin/email/oauth/microsoft/callback', (req: Request, res: Respons
     }
     res.json({
       success: true,
-      message: 'Microsoft 365 authorization code successfully validated and exchanged.',
+      message: 'Microsoft 365 authorization code verified and exchanged with provider token endpoint.',
       provider: 'MICROSOFT',
       mailboxEmail: targetEmail,
       connectedId: matched?.id,
@@ -5666,22 +6058,44 @@ app.get('/api/admin/email/oauth/microsoft/callback', (req: Request, res: Respons
 });
 
 // Direct OAuth code exchange verification endpoint
-app.post('/api/admin/email/oauth/exchange', (req: Request, res: Response) => {
+app.post('/api/admin/email/oauth/exchange', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
   try {
-    const { state, code, provider, mailboxEmail } = req.body;
+    const { state, code, provider = 'GOOGLE', mailboxEmail } = req.body;
     if (!state || !code) {
       return res.status(400).json({ success: false, error: 'Missing state or authorization code parameter.' });
     }
-    const val = oAuthService.validateCallback(state as string, code as string);
-    if (!val.valid) {
-      return res.status(400).json({ success: false, error: val.error });
+    const normalizedProvider = String(provider).toUpperCase() === 'MICROSOFT' ? 'MICROSOFT' : 'GOOGLE';
+    if (!oAuthService.isProviderConfigured(normalizedProvider)) {
+      return res.status(503).json({
+        success: false,
+        code: 'OAUTH_CREDENTIALS_MISSING',
+        provider: normalizedProvider,
+        error: `${normalizedProvider === 'GOOGLE' ? 'Google Workspace' : 'Microsoft 365'} OAuth client credentials are not configured on the server.`,
+      });
     }
-    const targetEmail = mailboxEmail || val.state?.mailboxEmail || (provider === 'MICROSOFT' ? 'partnerships@phumulani.org' : 'donations@phumulani.org');
+    const exchange = await oAuthService.exchangeAuthorizationCode({
+      provider: normalizedProvider,
+      stateId: state as string,
+      code: code as string,
+      mailboxEmail,
+    });
+    if (!exchange.success) {
+      return res.status(exchange.statusCode || 400).json({
+        success: false,
+        code: exchange.errorCode,
+        error: exchange.error,
+      });
+    }
+    const targetEmail = exchange.verifiedEmail || exchange.mailboxEmail || mailboxEmail || '';
     const conns = connectorRegistry.getAllConnections();
     const matched = conns.find(
       (c) => c.emailAddress.toLowerCase() === targetEmail.toLowerCase()
     );
     if (matched) {
+      const vaultTokens = oAuthService.getDecryptedTokens(targetEmail);
+      if (vaultTokens) {
+        oAuthService.storeEncryptedTokens(matched.id, vaultTokens);
+      }
       connectorRegistry.updateConnection(matched.id, {
         authStatus: 'CONNECTED',
         connectionHealth: 'HEALTHY',
@@ -5691,8 +6105,8 @@ app.post('/api/admin/email/oauth/exchange', (req: Request, res: Response) => {
     }
     res.json({
       success: true,
-      message: 'Provider authorization code successfully validated and credentials stored.',
-      provider: provider || val.state?.provider || 'GOOGLE',
+      message: 'Provider authorization code verified and encrypted tokens stored in server vault.',
+      provider: normalizedProvider,
       mailboxEmail: targetEmail,
       connectedId: matched?.id,
     });

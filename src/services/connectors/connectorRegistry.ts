@@ -28,6 +28,8 @@ import { MicrosoftConnector } from './microsoftConnector';
 import { ImapSmtpConnector } from './imapSmtpConnector';
 import { universalSyncEngine } from './universalSyncEngine';
 import { EmailEnterpriseService } from '../emailEnterpriseService';
+import { oAuthService } from '../../email/services/OAuthService';
+import { EnvironmentService } from '../environmentService';
 
 export class ConnectorRegistry {
   private static instance: ConnectorRegistry;
@@ -52,7 +54,7 @@ export class ConnectorRegistry {
   }
 
   /**
-   * Seed canonical mailboxes from Phase 55-60 so institutional accounts are always available.
+   * Seed 10 canonical institutional mailboxes with truthful AUTHORIZATION_REQUIRED / UNTESTED initial state.
    */
   private seedCanonicalConnections(): void {
     const canonicals: Array<{
@@ -104,6 +106,30 @@ export class ConnectorRegistry {
         safeguarding: 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP',
       },
       {
+        email: 'grants@phumulani.org',
+        displayName: 'Institutional Grants & Compliance Mailbox',
+        provider: 'GOOGLE',
+        owner: 'Dr. Thandiwe Moyo (Grants Director)',
+        department: 'Grants & Institutional Funding',
+        safeguarding: 'GENERAL',
+      },
+      {
+        email: 'partnerships@phumulani.org',
+        displayName: 'Community Partnerships Mailbox',
+        provider: 'GOOGLE',
+        owner: 'Amina Hassan (Partnerships Coordinator)',
+        department: 'Community Partnerships',
+        safeguarding: 'GENERAL',
+      },
+      {
+        email: 'board@phumulani.org',
+        displayName: 'Board Governance Liaison Mailbox',
+        provider: 'GOOGLE',
+        owner: 'Governance Secretary',
+        department: 'Executive & Board Governance',
+        safeguarding: 'RESTRICTED',
+      },
+      {
         email: 'outreach@phumulani.org',
         displayName: 'Microsoft 365 Regional Outreach',
         provider: 'MICROSOFT',
@@ -124,14 +150,17 @@ export class ConnectorRegistry {
     for (const c of canonicals) {
       const id = `conn-${c.provider.toLowerCase()}-${c.email.replace(/[^a-zA-Z0-9]/g, '_')}`;
       const now = new Date().toISOString();
+      const initialAuthStatus: ConnectorConnectionStatus =
+        c.provider === 'GOOGLE' || c.provider === 'MICROSOFT' ? 'AUTHORIZATION_REQUIRED' : 'CONFIGURATION_REQUIRED';
+
       const initialEvidence: ProviderEvidenceRecord = {
-        state: 'CONNECTED',
+        state: initialAuthStatus,
         timestamp: now,
-        roundTripLatencyMs: c.provider === 'GOOGLE' ? 42 : c.provider === 'MICROSOFT' ? 56 : 68,
+        roundTripLatencyMs: 0,
         tlsVersion: 'TLSv1.3',
         cipherSuite: 'TLS_AES_256_GCM_SHA384',
         dnsResolution: 'RESOLVED_OK',
-        diagnosticsDetail: `Pre-seeded canonical ${c.provider} mailbox connected and verified over TLSv1.3.`,
+        diagnosticsDetail: `Canonical ${c.provider} mailbox initialized. Live provider credentials / OAuth 2.0 consent required.`,
       };
 
       const record: EmailConnectionRecord = {
@@ -142,24 +171,20 @@ export class ConnectorRegistry {
         accountOwner: c.owner,
         department: c.department,
         authMethod: c.provider === 'GOOGLE' || c.provider === 'MICROSOFT' ? 'OAUTH2' : 'PASSWORD',
-        authStatus: 'CONNECTED',
-        connectionHealth: 'HEALTHY',
-        lastSyncAt: new Date(Date.now() - 3600000 * 2).toISOString(),
-        lastSuccessfulSyncAt: new Date(Date.now() - 3600000 * 2).toISOString(),
+        authStatus: initialAuthStatus,
+        connectionHealth: 'UNTESTED',
+        lastSyncAt: null,
+        lastSuccessfulSyncAt: null,
         lastError: null,
-        incomingMessageCount: c.email.includes('safeguarding') ? 8 : 42,
-        outgoingMessageCount: c.email.includes('safeguarding') ? 2 : 19,
+        incomingMessageCount: 0,
+        outgoingMessageCount: 0,
         syncFailureCount: 0,
-        credentialExpiresAt: new Date(Date.now() + 86400000 * 30).toISOString(),
-        credentialWarning: false,
+        credentialExpiresAt: undefined,
+        credentialWarning: true,
         sendingPermission: 'DISARMED_STAGING',
-        syncStatus: 'SYNC_COMPLETE',
+        syncStatus: 'SYNC_IDLE',
         folders: ['INBOX', 'Sent', 'Drafts', 'Archive', 'Trash'],
-        folderInspection: [
-          { id: 'INBOX', name: 'Inbox', type: 'INBOX', totalMessageCount: 42, unreadMessageCount: 4 },
-          { id: 'SENT', name: 'Sent Items', type: 'SENT', totalMessageCount: 19, unreadMessageCount: 0 },
-          { id: 'DRAFTS', name: 'Drafts', type: 'DRAFTS', totalMessageCount: 2, unreadMessageCount: 0 },
-        ],
+        folderInspection: [],
         isInstitutionalMailbox: true,
         safeguardingClassification: c.safeguarding,
         syncCursor: c.provider === 'GOOGLE' ? '1004820' : c.provider === 'MICROSOFT' ? 'delta_91823' : 'UID:412',
@@ -172,7 +197,6 @@ export class ConnectorRegistry {
 
       this.connections.set(id, record);
 
-      // Instantiate connector
       let connector: EmailConnector;
       if (c.provider === 'GOOGLE') {
         connector = new GoogleConnector(c.email);
@@ -195,7 +219,17 @@ export class ConnectorRegistry {
         const parsed = JSON.parse(raw);
         if (parsed.connections && Array.isArray(parsed.connections)) {
           for (const conn of parsed.connections) {
-            this.connections.set(conn.id, conn);
+            const seeded = this.connections.get(conn.id);
+            const merged: EmailConnectionRecord = {
+              ...(seeded || {}),
+              ...conn,
+              currentEvidence: conn.currentEvidence || seeded?.currentEvidence,
+              evidenceHistory:
+                Array.isArray(conn.evidenceHistory) && conn.evidenceHistory.length > 0
+                  ? conn.evidenceHistory
+                  : seeded?.evidenceHistory || [],
+            };
+            this.connections.set(conn.id, merged);
             // Re-instantiate connector if not present
             if (!this.connectors.has(conn.id)) {
               let connector: EmailConnector;
@@ -657,16 +691,49 @@ export class ConnectorRegistry {
   }
 
   /**
-   * Refreshes OAuth token and clears expiration warnings.
+   * Refreshes OAuth token via encrypted vault grant and clears expiration warnings.
+   * Rejects revoked or uncredentialed connections cleanly.
    */
   public async refreshToken(connectionId: string): Promise<boolean> {
     const existing = this.connections.get(connectionId);
     if (!existing) return false;
+    if (existing.authStatus === 'REVOKED' || existing.authStatus === 'DISCONNECTED') {
+      return false;
+    }
+
+    const hasLocalVaultCreds = this.credentialVault.has(connectionId);
+    const hasOAuthTokens =
+      oAuthService.hasStoredTokens(connectionId) || oAuthService.hasStoredTokens(existing.emailAddress);
+
+    if (!hasLocalVaultCreds && !hasOAuthTokens) {
+      existing.authStatus = 'AUTHORIZATION_REQUIRED';
+      existing.connectionHealth = 'ERROR';
+      existing.credentialWarning = true;
+      existing.lastError = 'No encrypted credentials vaulted. Administrator OAuth authorization required.';
+      this.saveDurableRegistry();
+      return false;
+    }
+
+    if (hasOAuthTokens) {
+      const vaultKey = oAuthService.hasStoredTokens(connectionId) ? connectionId : existing.emailAddress;
+      const refreshed = await oAuthService.refreshAccessToken(vaultKey);
+      if (!refreshed.success) {
+        existing.authStatus = 'TOKEN_EXPIRED';
+        existing.connectionHealth = 'ERROR';
+        existing.credentialWarning = true;
+        existing.lastError = refreshed.error || 'Provider token refresh rejected.';
+        this.saveDurableRegistry();
+        return false;
+      }
+    } else if (EnvironmentService.isProductionOnly()) {
+      return false;
+    }
 
     existing.authStatus = 'CONNECTED';
     existing.connectionHealth = 'HEALTHY';
     existing.credentialWarning = false;
     existing.credentialExpiresAt = new Date(Date.now() + 86400000 * 30).toISOString();
+    existing.lastError = null;
     existing.updatedAt = new Date().toISOString();
 
     const evidence: ProviderEvidenceRecord = {
@@ -776,6 +843,29 @@ export class ConnectorRegistry {
     }
 
     const health = await connector.verifyConnection();
+    const hasCredentials =
+      this.credentialVault.has(connectionId) ||
+      oAuthService.hasStoredTokens(connectionId) ||
+      oAuthService.hasStoredTokens(existing.emailAddress);
+
+    if (
+      !hasCredentials &&
+      (existing.authStatus === 'AUTHORIZATION_REQUIRED' ||
+        existing.authStatus === 'CONFIGURATION_REQUIRED' ||
+        existing.authStatus === 'REVOKED' ||
+        existing.authStatus === 'DISCONNECTED')
+    ) {
+      existing.connectionHealth = existing.authStatus === 'REVOKED' ? 'REVOKED' : existing.authStatus === 'DISCONNECTED' ? 'DISCONNECTED' : 'UNTESTED';
+      existing.updatedAt = new Date().toISOString();
+      this.saveDurableRegistry();
+      return {
+        ...health,
+        healthy: false,
+        status: existing.connectionHealth,
+        diagnosticsDetail: `${existing.emailAddress} requires authorization before verified mailbox health can be established.`,
+      };
+    }
+
     existing.connectionHealth = health.status;
     existing.authStatus = health.healthy ? 'CONNECTED' : 'CONNECTED_WITH_ERRORS';
     existing.updatedAt = new Date().toISOString();

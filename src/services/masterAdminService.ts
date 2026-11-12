@@ -120,30 +120,40 @@ export class MasterAdminService {
     return [...this.permissionMatrix];
   }
 
+  private findMatrixItem(role: string): RolePermissionMatrixItem | undefined {
+    const norm = String(role || '').trim().toLowerCase();
+    if (!norm) return undefined;
+    const canonical =
+      norm === 'master_admin' || norm === 'platform_super_admin' || norm === 'super_admin'
+        ? 'platform_super_admin'
+        : norm;
+    return this.permissionMatrix.find((m) => String(m.role).toLowerCase() === canonical);
+  }
+
   public getPermissionsForRole(role: string): PermissionDomain[] {
-    const item = this.permissionMatrix.find((m) => m.role === role);
+    const item = this.findMatrixItem(role);
     return item ? item.allowedDomains : [];
   }
 
   public hasPermission(role: string, domain: PermissionDomain): boolean {
     if (!role) return false;
-    const item = this.permissionMatrix.find((m) => m.role === role);
+    const item = this.findMatrixItem(role);
     if (!item) return false;
     return item.allowedDomains.includes(domain);
   }
 
   public canApproveExecutiveDecisions(role: string): boolean {
-    const item = this.permissionMatrix.find((m) => m.role === role);
+    const item = this.findMatrixItem(role);
     return Boolean(item?.canApproveExecutiveDecisions);
   }
 
   public canAccessSafeguarding(role: string): boolean {
-    const item = this.permissionMatrix.find((m) => m.role === role);
+    const item = this.findMatrixItem(role);
     return Boolean(item?.canAccessSafeguarding);
   }
 
   public canManageStaff(role: string): boolean {
-    const item = this.permissionMatrix.find((m) => m.role === role);
+    const item = this.findMatrixItem(role);
     return Boolean(item?.canManageStaff);
   }
 

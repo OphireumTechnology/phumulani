@@ -23,6 +23,7 @@ import { authSecurityService } from './authSecurityService';
 import { phase36Service } from './phase36Service';
 import { phase37Service } from './phase37Service';
 import { ALL_UNIFIED_AGENTS } from './unifiedAiWorkforceSeed';
+import { authFetch } from './sessionTokenStore';
 import { db } from './db';
 
 export class Phase38Service {
@@ -330,7 +331,7 @@ export class Phase38Service {
     }
 
     try {
-      const res = await fetch('/api/v1/verification/persistence-restart', { method: 'POST' });
+      const res = await authFetch('/api/v1/verification/persistence-restart', { method: 'POST' });
       if (res.ok) {
         return await res.json();
       }

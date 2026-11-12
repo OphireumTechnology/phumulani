@@ -104,6 +104,7 @@ async function runPhase61Verification() {
   // ---------------------------------------------------------------------------
   console.log('\n--- 4. GOOGLE WORKSPACE / GMAIL REAL ADAPTER ---');
   const googleConn = new GoogleConnector('director@phumulani.org');
+  await googleConn.connect({ authCode: 'staged-dev-google-grant' });
   const gHealth = await googleConn.verifyConnection();
   const gSync = await googleConn.synchronize({
     connectionId: 'conn-p61-google',

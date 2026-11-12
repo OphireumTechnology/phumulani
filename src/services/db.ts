@@ -4,6 +4,8 @@
  * Phumulani Client Storage & Transactional Database Service
  */
 
+import { sessionTokenStore } from './sessionTokenStore';
+
 import {
   AIAgent,
   AIApprovalTask,
@@ -466,6 +468,7 @@ class DatabaseService {
   // --- Auth & Role Switching ---
   public setCurrentUser(user: User): void {
     this.saveState({ ...this.state, currentUser: user });
+    sessionTokenStore.syncStagedPersonaSession(user);
     this.appendAuditLog('USER_SWITCH', `Switched active session to ${user.name} (${user.role})`);
   }
 

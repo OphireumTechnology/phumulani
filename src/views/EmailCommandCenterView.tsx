@@ -9,6 +9,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
 import { db } from '../services/db';
+import { authFetch } from '../services/sessionTokenStore';
 import { User } from '../types';
 import {
   EmailClassificationCategory,
@@ -462,7 +463,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
     db.syncMailbox(mbxId);
     let backendSynced = false;
     try {
-      const res = await fetch(`/api/admin/email/mailboxes/${encodeURIComponent(mbxId)}/sync`, {
+      const res = await authFetch(`/api/admin/email/mailboxes/${encodeURIComponent(mbxId)}/sync`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
@@ -486,7 +487,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
     db.syncMailbox(mbxId);
     let gatewayStatus = 'UNKNOWN';
     try {
-      const res = await fetch('/api/admin/email/google-workspace/status');
+      const res = await authFetch('/api/admin/email/google-workspace/status');
       if (res.ok) {
         const data = await res.json();
         gatewayStatus = data.status || 'AUTHORIZATION_REQUIRED';
@@ -786,7 +787,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
     // Call secure backend AI endpoint
     try {
       const latestMessage = thread.messages[thread.messages.length - 1];
-      const res = await fetch('/api/ai/email-draft', {
+      const res = await authFetch('/api/ai/email-draft', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -794,7 +795,6 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
           senderName: latestMessage?.senderName || 'Valued Correspondent',
           subject: thread.threadSubject,
           toneStyle: tone,
-          role: currentUser.role,
         }),
       });
       if (res.ok) {

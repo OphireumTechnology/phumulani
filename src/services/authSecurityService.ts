@@ -7,6 +7,7 @@
 
 import crypto from 'crypto';
 import { PostgresPersistenceAdapter } from './postgresPersistenceAdapter';
+import { EnvironmentService } from './environmentService';
 import type { PermissionDomain } from '../types/masterAdmin';
 import type { CanonicalRoleFamily, UserRole } from '../types';
 
@@ -84,10 +85,19 @@ export class AuthSecurityService {
 
   private constructor() {
     this.dbAdapter = PostgresPersistenceAdapter.getInstance();
-    this.initializeBootstrapSessions();
+    const isPilot = typeof process !== 'undefined' && process.env?.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT';
+    const isProdEnv = typeof process !== 'undefined' && process.env?.NODE_ENV === 'production';
+    if (!EnvironmentService.isProductionOnly() && !isPilot && !isProdEnv) {
+      this.initializeBootstrapSessions();
+    }
   }
 
   public initializeBootstrapSessions(): { staffToken: string; execToken: string; adminToken: string } {
+    const isPilot = typeof process !== 'undefined' && process.env?.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT';
+    const isProdEnv = typeof process !== 'undefined' && process.env?.NODE_ENV === 'production';
+    if (EnvironmentService.isProductionOnly() || isPilot || isProdEnv) {
+      throw new Error('BOOTSTRAP_SESSIONS_DISABLED: Static bootstrap tokens cannot be initialized in production or pilot mode.');
+    }
     const expiresAt = new Date(Date.now() + 30 * 24 * 3600 * 1000).toISOString();
     const staffSession: UserSession = {
       sessionId: 'sess-phumulani-staff-verified',

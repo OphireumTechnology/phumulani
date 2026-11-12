@@ -21,6 +21,7 @@ import {
   ProviderCapabilities,
 } from '../../types/emailConnectors';
 import { PROVIDER_DESCRIPTORS } from './providerCapabilities';
+import { EnvironmentService } from '../environmentService';
 
 export class MicrosoftConnector implements EmailConnector {
   public readonly provider: EmailProviderType = 'MICROSOFT';
@@ -48,16 +49,30 @@ export class MicrosoftConnector implements EmailConnector {
       };
     }
 
-    // Default OAuth2 (Microsoft Graph / Azure AD)
-    this.isConnected = true;
+    if (
+      credentials &&
+      (credentials.accessToken || credentials.token || (credentials.authCode && !EnvironmentService.isProductionOnly()))
+    ) {
+      this.isConnected = true;
+      return {
+        success: true,
+        connectionId,
+        provider: 'MICROSOFT',
+        mailboxEmail: this.mailboxEmail,
+        status: 'AUTHORIZED',
+        details: 'Microsoft Graph OAuth 2.0 Azure AD consent granted.',
+        authenticatedAt: new Date().toISOString(),
+      };
+    }
+
+    this.isConnected = false;
     return {
-      success: true,
+      success: false,
       connectionId,
       provider: 'MICROSOFT',
       mailboxEmail: this.mailboxEmail,
-      status: 'AUTHORIZED',
-      details: 'Microsoft Graph OAuth 2.0 Azure AD consent granted.',
-      authenticatedAt: new Date().toISOString(),
+      status: 'AUTHORIZATION_REQUIRED',
+      details: 'Microsoft Graph OAuth 2.0 delegated consent required.',
     };
   }
 
@@ -67,13 +82,14 @@ export class MicrosoftConnector implements EmailConnector {
 
   public async verifyConnection(): Promise<ConnectionHealth> {
     const connectionId = `conn-msft-${this.mailboxEmail.replace(/[^a-zA-Z0-9]/g, '_')}`;
+    const isHealthy = !EnvironmentService.isProductionOnly() || this.isConnected;
 
     return {
       connectionId,
       provider: 'MICROSOFT',
       mailboxEmail: this.mailboxEmail,
-      healthy: true,
-      status: 'HEALTHY',
+      healthy: isHealthy,
+      status: isHealthy ? 'HEALTHY' : 'DEGRADED',
       roundTripLatencyMs: 56,
       lastCheckedAt: new Date().toISOString(),
       tlsVersion: 'TLSv1.3',

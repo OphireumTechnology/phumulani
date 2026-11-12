@@ -218,7 +218,7 @@ export class ImapSmtpConnector implements EmailConnector {
         isRead: false,
         classificationCategory: 'VOLUNTEER_INQUIRY',
         priorityLevel: 'P3',
-        isLiveImportVerified: true,
+        isLiveImportVerified: false,
       },
     ];
 
@@ -247,7 +247,7 @@ export class ImapSmtpConnector implements EmailConnector {
       receivedAt: new Date().toISOString(),
       folder: 'INBOX',
       isRead: true,
-      isLiveImportVerified: true,
+      isLiveImportVerified: false,
     };
   }
 

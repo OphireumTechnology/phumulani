@@ -19,6 +19,7 @@ import {
   ConnectorSendingPermission,
 } from '../../types/emailConnectors';
 import { PROVIDER_DESCRIPTORS } from '../../services/connectors/providerCapabilities';
+import { authFetch } from '../../services/sessionTokenStore';
 
 export type MailboxUIState =
   | 'Not connected'
@@ -179,7 +180,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
   const fetchConnections = async () => {
     try {
       setLoading(true);
-      const res = await fetch('/api/admin/email/connectors');
+      const res = await authFetch('/api/admin/email/connectors');
       const data = await res.json();
       if (data.success) {
         setConnections(data.connections || []);
@@ -202,7 +203,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
     if (!email || !email.includes('@')) return;
 
     try {
-      const res = await fetch('/api/admin/email/connectors/discover', {
+      const res = await authFetch('/api/admin/email/connectors/discover', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ emailAddress: email }),
@@ -233,7 +234,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       const endpoint = selectedProvider === 'MICROSOFT'
         ? '/api/admin/email/oauth/microsoft/start'
         : '/api/admin/email/oauth/google/start';
-      const res = await fetch(`${endpoint}?email=${encodeURIComponent(wizardEmail)}`);
+      const res = await authFetch(`${endpoint}?email=${encodeURIComponent(wizardEmail)}`);
       const data = await res.json();
       if (data.success) {
         setOauthData({
@@ -261,7 +262,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
     }
     setIsExchangingCode(true);
     try {
-      const res = await fetch('/api/admin/email/oauth/exchange', {
+      const res = await authFetch('/api/admin/email/oauth/exchange', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -289,7 +290,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
     setIsVerifying(true);
     const t0 = Date.now();
     try {
-      const res = await fetch('/api/admin/email/connectors/discover', {
+      const res = await authFetch('/api/admin/email/connectors/discover', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ emailAddress: wizardEmail }),
@@ -341,7 +342,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
     }
     setIsSaving(true);
     try {
-      const res = await fetch('/api/admin/email/connectors', {
+      const res = await authFetch('/api/admin/email/connectors', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -397,7 +398,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
   const handleSync = async (id: string) => {
     try {
-      const res = await fetch(`/api/admin/email/connectors/${id}/sync`, { method: 'POST' });
+      const res = await authFetch(`/api/admin/email/connectors/${id}/sync`, { method: 'POST' });
       const data = await res.json();
       if (data.success) {
         showToast('Synchronization completed successfully.', 'success');
@@ -414,7 +415,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
     const isPaused = conn.syncStatus === ('SYNC_PAUSED' as any) || (conn as any).metadata?.paused;
     const action = isPaused ? 'resume' : 'pause';
     try {
-      const res = await fetch(`/api/admin/email/connections/${conn.id}/${action}`, { method: 'POST' });
+      const res = await authFetch(`/api/admin/email/connections/${conn.id}/${action}`, { method: 'POST' });
       const data = await res.json();
       if (data.success) {
         showToast(data.message || `Sync ${action}d for ${conn.emailAddress}`, 'info');
@@ -429,7 +430,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
   const handleVerifyHealth = async (id: string) => {
     try {
-      const res = await fetch(`/api/admin/email/connectors/${id}/verify`, { method: 'POST' });
+      const res = await authFetch(`/api/admin/email/connectors/${id}/verify`, { method: 'POST' });
       const data = await res.json();
       if (data.success && data.health) {
         showToast(`Health Check: ${data.health.status} (${data.health.roundTripLatencyMs}ms) - ${data.health.tlsVersion}`, 'info');
@@ -452,7 +453,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
     if (!editingPermissionsConn) return;
     setIsSavingPermissions(true);
     try {
-      const res = await fetch(`/api/admin/email/connectors/${editingPermissionsConn.id}`, {
+      const res = await authFetch(`/api/admin/email/connectors/${editingPermissionsConn.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -482,7 +483,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
     setReauthCodeInput('');
     setIsReauthorizing(true);
     try {
-      const res = await fetch(`/api/admin/email/connections/${conn.id}/reauthorize`, { method: 'POST' });
+      const res = await authFetch(`/api/admin/email/connections/${conn.id}/reauthorize`, { method: 'POST' });
       const data = await res.json();
       if (data.success && data.oauth) {
         setReauthData(data.oauth);
@@ -501,7 +502,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
     }
     setIsReauthorizing(true);
     try {
-      const res = await fetch('/api/admin/email/oauth/exchange', {
+      const res = await authFetch('/api/admin/email/oauth/exchange', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -529,7 +530,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
   const handleRefreshToken = async (id: string) => {
     try {
-      const res = await fetch(`/api/admin/email/connectors/${id}/refresh-token`, { method: 'POST' });
+      const res = await authFetch(`/api/admin/email/connectors/${id}/refresh-token`, { method: 'POST' });
       const data = await res.json();
       if (data.success) {
         showToast('Token refreshed successfully. Credentials extended for 30 days.', 'success');
@@ -542,7 +543,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
   const handleRevokeToken = async (id: string) => {
     try {
-      const res = await fetch(`/api/admin/email/connectors/${id}/revoke`, { method: 'POST' });
+      const res = await authFetch(`/api/admin/email/connectors/${id}/revoke`, { method: 'POST' });
       const data = await res.json();
       if (data.success) {
         showToast('Credentials revoked and vault purged.', 'info');
@@ -555,7 +556,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
   const handleInspectFolders = async (conn: EmailConnectionRecord) => {
     try {
-      const res = await fetch(`/api/admin/email/connectors/${conn.id}/folders`);
+      const res = await authFetch(`/api/admin/email/connectors/${conn.id}/folders`);
       const data = await res.json();
       if (data.success && data.folders) {
         setInspectFolders({
@@ -570,7 +571,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
   const handleInspectEvidence = async (conn: EmailConnectionRecord) => {
     try {
-      const res = await fetch(`/api/admin/email/connectors/${conn.id}/evidence`);
+      const res = await authFetch(`/api/admin/email/connectors/${conn.id}/evidence`);
       const data = await res.json();
       if (data.success) {
         setInspectEvidence({
@@ -585,7 +586,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
   const handleRunAiTriage = async (conn: EmailConnectionRecord) => {
     try {
-      const res = await fetch(`/api/admin/email/connectors/${conn.id}/triage`, {
+      const res = await authFetch(`/api/admin/email/connectors/${conn.id}/triage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -611,7 +612,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
     const isDisconnected = conn.authStatus === 'DISCONNECTED';
     const action = isDisconnected ? 'reconnect' : 'disconnect';
     try {
-      const res = await fetch(`/api/admin/email/connectors/${conn.id}/${action}`, { method: 'POST' });
+      const res = await authFetch(`/api/admin/email/connectors/${conn.id}/${action}`, { method: 'POST' });
       const data = await res.json();
       if (data.success) {
         showToast(`Mailbox ${conn.emailAddress} is now ${isDisconnected ? 'connected' : 'disconnected'}.`, 'info');
@@ -627,7 +628,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       return;
     }
     try {
-      const res = await fetch(`/api/admin/email/connectors/${id}`, { method: 'DELETE' });
+      const res = await authFetch(`/api/admin/email/connectors/${id}`, { method: 'DELETE' });
       const data = await res.json();
       if (data.success) {
         showToast('Connection successfully removed.', 'info');
