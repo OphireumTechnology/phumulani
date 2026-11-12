@@ -186,10 +186,10 @@ async function runPhase57Verification() {
   assert(
     expiredStatus !== 'PROVIDER_CONNECTED' &&
       refreshRes.success === true &&
-      refreshRes.accessToken?.startsWith('gw_acc_refreshed_') &&
+      refreshRes.accessToken?.startsWith('staged_dev_refreshed_') &&
       revokeRes.success === true,
     'TEST-P57-07',
-    'Token expiration detected, background refresh issued, and token revocation securely purges vault'
+    'Token expiration detected, staged refresh issued, and token revocation securely purges vault'
   );
 
   // ---------------------------------------------------------------------------

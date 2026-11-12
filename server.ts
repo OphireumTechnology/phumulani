@@ -4453,8 +4453,8 @@ app.post('/api/admin/email/google-workspace/oauth/initiate', (req: Request, res:
     return res.status(400).json({ error: 'mailboxEmail is required.' });
   }
   try {
-    const oauthInit = googleWorkspaceAdapter.initiateOAuth(mailboxEmail);
-    res.json(oauthInit);
+    const { codeVerifier: _omitVerifier, ...publicOauthInit } = googleWorkspaceAdapter.initiateOAuth(mailboxEmail);
+    res.json(publicOauthInit);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
   }
@@ -5014,8 +5014,8 @@ app.post('/api/admin/email/mailboxes/:email/auth/start', requireSessionMiddlewar
       });
     }
     const mailboxEmail = req.params.email;
-    const result = googleWorkspaceAdapter.startAuthorization(mailboxEmail);
-    res.json({ success: true, ...result });
+    const { codeVerifier: _omitVerifier, ...publicAuthStart } = googleWorkspaceAdapter.startAuthorization(mailboxEmail);
+    res.json({ success: true, ...publicAuthStart });
   } catch (err: any) {
     res.status(400).json({ success: false, error: err.message });
   }
@@ -5836,11 +5836,13 @@ app.post('/api/admin/email/connections/:id/reauthorize', requireSessionMiddlewar
       });
     }
     const redirectUri = `${req.protocol}://${req.get('host')}/api/admin/email/oauth/${conn.provider === 'MICROSOFT' ? 'microsoft' : 'google'}/callback`;
-    let oauthInfo = null;
+    let oauthInfo: Record<string, any> | null = null;
     if (conn.provider === 'GOOGLE') {
-      oauthInfo = oAuthService.initiateGoogleOAuth(redirectUri, conn.emailAddress);
+      const { codeVerifier: _omitVerifier, ...publicOauth } = oAuthService.initiateGoogleOAuth(redirectUri, conn.emailAddress);
+      oauthInfo = publicOauth;
     } else if (conn.provider === 'MICROSOFT') {
-      oauthInfo = oAuthService.initiateMicrosoftOAuth(redirectUri, conn.emailAddress);
+      const { codeVerifier: _omitVerifier, ...publicOauth } = oAuthService.initiateMicrosoftOAuth(redirectUri, conn.emailAddress);
+      oauthInfo = publicOauth;
     }
     connectorRegistry.updateConnection(conn.id, {
       authStatus: 'AUTHORIZATION_REQUIRED',

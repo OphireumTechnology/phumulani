@@ -168,10 +168,10 @@ async function runPhase59Verification() {
   const refreshRes = gw.tokenRefresh('gw_refresh_token_valid_sample_p59');
   assert(
     refreshRes.success === true &&
-      refreshRes.accessToken?.startsWith('gw_acc_refreshed_') &&
+      refreshRes.accessToken?.startsWith('staged_dev_refreshed_') &&
       typeof refreshRes.expiresIn === 'number',
     'TEST-P59-06',
-    'Token expiration detected and background refresh handshake successfully renews access token'
+    'Token expiration detected and staged refresh handshake issues non-fabricated staged_dev_refreshed_ marker'
   );
 
   // ---------------------------------------------------------------------------

@@ -12,6 +12,8 @@ data/phumulani_persistent_db.json
 data/*.sqlite
 data/*.sqlite3
 data/*.db
+.email_connections_registry.json
+.sync_checkpoints_vault.json
 
 # Generated test output
 playwright-report/
