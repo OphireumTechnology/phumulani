@@ -5,6 +5,11 @@ import { defineConfig, devices } from '@playwright/test';
  * Configures real browser automation for Public Website, Community Member Portal,
  * Staff & Administration, and Volunteer & Donor journeys.
  */
+const testPort = process.env.PLAYWRIGHT_TEST_PORT || '3098';
+const testBaseUrl = process.env.PLAYWRIGHT_TEST_BASE_URL || `http://localhost:${testPort}`;
+const isolatedRuntimeDir =
+  process.env.PHUMULANI_RUNTIME_DATA_DIR || `/tmp/phumulani-playwright-runtime-${testPort}`;
+
 export default defineConfig({
   testDir: './tests/e2e',
   timeout: 30000,
@@ -20,7 +25,7 @@ export default defineConfig({
     ['json', { outputFile: 'test-results/playwright-results.json' }],
   ],
   use: {
-    baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3000',
+    baseURL: testBaseUrl,
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: process.env.PLAYWRIGHT_DISABLE_VIDEO === '1' ? 'off' : 'retain-on-failure',
@@ -61,9 +66,14 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'npm run dev',
-    url: process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
+    command: `node --import tsx server.ts --port ${testPort}`,
+    url: testBaseUrl,
+    reuseExistingServer: Boolean(process.env.PLAYWRIGHT_TEST_BASE_URL),
     timeout: 120000,
+    env: {
+      ...process.env,
+      PHUMULANI_RUNTIME_DATA_DIR: isolatedRuntimeDir,
+      PHUMULANI_OPERATIONAL_MODE: process.env.PHUMULANI_OPERATIONAL_MODE || 'STAGED_DEVELOPMENT',
+    },
   },
 });

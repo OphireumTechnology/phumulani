@@ -60,10 +60,38 @@ dotenv.config();
 
 const app = express();
 app.set('trust proxy', 1);
-const rawPort = process.env.PORT ?? '3000';
-const PORT = Number(rawPort);
+function parseStrictPort(raw: string): number {
+  const trimmed = raw.trim();
+  if (!/^\d+$/.test(trimmed)) return NaN;
+  return Number(trimmed);
+}
+
+function resolveServerPort(): number {
+  const args = process.argv.slice(2);
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === '--port') {
+      const next = args[i + 1];
+      if (!next || next.startsWith('-')) return NaN;
+      return parseStrictPort(next);
+    }
+    if (args[i].startsWith('--port=')) {
+      return parseStrictPort(args[i].slice('--port='.length));
+    }
+  }
+  const envPort = process.env.PORT?.trim();
+  const nginxPort = process.env.NGINX_PORT?.trim();
+  if (envPort && nginxPort && envPort === nginxPort) {
+    return parseStrictPort(process.env.DEFAULT_APP_PORT || '3000');
+  }
+  if (envPort) {
+    return parseStrictPort(envPort);
+  }
+  return parseStrictPort(process.env.DEFAULT_APP_PORT || '3000');
+}
+
+const PORT = resolveServerPort();
 if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65535) {
-  console.error(`[Phumulani Platform] FATAL: Invalid PORT "${rawPort}". Must be an integer between 1 and 65535.`);
+  console.error(`[Phumulani Platform] FATAL: Invalid PORT "${PORT}". Must be an integer between 1 and 65535.`);
   process.exit(1);
 }
 const BASE_PATH = process.env.BASE_PATH || '/';
