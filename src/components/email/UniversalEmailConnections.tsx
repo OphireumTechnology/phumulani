@@ -534,8 +534,10 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       const res = await authFetch(`/api/admin/email/connectors/${id}/refresh-token`, { method: 'POST' });
       const data = await res.json();
       if (data.success) {
-        showToast('Token refreshed successfully. Credentials extended for 30 days.', 'success');
+        showToast('OAuth access token refreshed and re-encrypted in vault.', 'success');
         fetchConnections();
+      } else {
+        showToast(data.error || 'Token refresh could not be completed. Reauthorization may be required.', 'error');
       }
     } catch (err) {
       showToast('Failed to refresh token: ' + String(err), 'error');

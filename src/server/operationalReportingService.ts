@@ -1663,14 +1663,18 @@ export class OperationalReportingService {
       details,
     };
     this.auditEvents.unshift(entry);
-    this.dbAdapter.insert('audit_logs', {
-      id: entry.id,
-      timestamp: entry.timestamp,
-      actor_role: 'STAFF',
-      actor_id: actor,
-      action: entry.action,
-      details: entry.details,
-    }).catch(() => {});
+    void this.dbAdapter.insertDurableWithRetry(
+      'audit_logs',
+      {
+        id: entry.id,
+        timestamp: entry.timestamp,
+        actor_role: 'STAFF',
+        actor_id: actor,
+        action: entry.action,
+        details: entry.details,
+      },
+      { context: 'operationalReporting:audit' }
+    );
   }
 }
 

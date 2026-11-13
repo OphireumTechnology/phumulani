@@ -193,6 +193,26 @@ export class UniversalSyncEngine {
 
       // 3. Delegate to connector synchronize for cursor advancement
       const syncResult = await this.executeWithRetry(() => connector.synchronize(options));
+      if (!syncResult.success) {
+        this.auditLogs.unshift({
+          id: `aud-sync-blocked-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+          connectionId,
+          mailboxEmail,
+          provider: connector.provider,
+          action: 'SYNC_CHECKPOINT_CREATED',
+          actorName: 'UniversalSyncDaemon',
+          actorRole: 'SYSTEM_SCHEDULER',
+          timestamp: new Date().toISOString(),
+          details: `Sync blocked/failed: ${syncResult.error || 'Provider synchronization unsuccessful'}`,
+          status: 'error',
+        });
+        this.saveDurableState();
+        return {
+          ...syncResult,
+          messagesImported: 0,
+          duplicatesSkipped: 0,
+        };
+      }
 
       // 4. Record Checkpoint
       const checkpoint: SyncCheckpointRecord = {

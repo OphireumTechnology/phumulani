@@ -5,6 +5,8 @@
  * Stores server-issued bearer tokens (never hardcoding privileged credentials in client code).
  */
 
+declare const __PHUMULANI_VITE_BUILD__: boolean | undefined;
+
 export interface SessionPersonaDescriptor {
   id: string;
   email?: string;
@@ -50,7 +52,14 @@ class SessionTokenStore {
     const roleLower = String(user.role || '').toLowerCase();
     this.activeRole = user.role;
 
-    if (roleLower === 'visitor' || roleLower === 'public_visitor') {
+    const isProdBundle =
+      (typeof __PHUMULANI_VITE_BUILD__ !== 'undefined' && __PHUMULANI_VITE_BUILD__ === true) ||
+      Boolean(
+        typeof import.meta !== 'undefined' &&
+          import.meta.env &&
+          import.meta.env.PROD === true
+      );
+    if (isProdBundle || roleLower === 'visitor' || roleLower === 'public_visitor') {
       this.activeToken = null;
       this.pendingSync = Promise.resolve();
       return this.pendingSync;

@@ -318,7 +318,7 @@ export class PhumulaniAiAgentService {
       updatedAt: new Date().toISOString(),
     };
     this.prospects.push(newProspect);
-    await this.dbAdapter.insert('phumulani_ai_prospects', newProspect).catch(() => {});
+    await this.dbAdapter.insertDurableWithRetry('phumulani_ai_prospects', newProspect, { context: 'aiAgent:addProspect' });
     return newProspect;
   }
 
@@ -333,7 +333,9 @@ export class PhumulaniAiAgentService {
       updatedAt: new Date().toISOString(),
     };
     this.prospects[idx] = updated;
-    await this.dbAdapter.update('phumulani_ai_prospects', id, updated).catch(() => {});
+    await this.dbAdapter.update('phumulani_ai_prospects', id, updated).catch((err) => {
+      console.error(`[PhumulaniAiAgent] Failed to persist prospect update ${id}:`, err?.message || err);
+    });
     return updated;
   }
 
@@ -458,7 +460,7 @@ ${sender}`;
     };
 
     this.campaigns.unshift(newCampaign);
-    await this.dbAdapter.insert('phumulani_ai_campaigns', newCampaign).catch(() => {});
+    await this.dbAdapter.insertDurableWithRetry('phumulani_ai_campaigns', newCampaign, { context: 'aiAgent:generateCampaign' });
     return newCampaign;
   }
 
@@ -472,7 +474,9 @@ ${sender}`;
     campaign.approvedBy = approvedBy;
     campaign.approvedAt = new Date().toISOString();
 
-    await this.dbAdapter.update('phumulani_ai_campaigns', campaignId, campaign).catch(() => {});
+    await this.dbAdapter.update('phumulani_ai_campaigns', campaignId, campaign).catch((err) => {
+      console.error(`[PhumulaniAiAgent] Failed to persist campaign approval ${campaignId}:`, err?.message || err);
+    });
     return campaign;
   }
 
@@ -744,7 +748,9 @@ ${sender}`;
         prospect.optOut = true;
         prospect.interestScore = 0;
         prospect.status = 'opted_out';
-        this.updateProspect(prospect.id, { optOut: true, interestScore: 0, status: 'opted_out' }).catch(() => {});
+        this.updateProspect(prospect.id, { optOut: true, interestScore: 0, status: 'opted_out' }).catch((err) => {
+          console.error(`[PhumulaniAiAgent] Failed to persist opt-out for ${prospect.id}:`, err?.message || err);
+        });
       }
       return {
         prospectId: params.prospectId,
@@ -831,7 +837,9 @@ ${sender}`;
       if (score >= 60) {
         prospect.status = 'qualified';
       }
-      this.updateProspect(prospect.id, { interestScore: score, status: prospect.status }).catch(() => {});
+      this.updateProspect(prospect.id, { interestScore: score, status: prospect.status }).catch((err) => {
+        console.error(`[PhumulaniAiAgent] Failed to persist prospect score ${prospect.id}:`, err?.message || err);
+      });
     }
 
     // Trigger high-interest escalation if score >= 80 or meeting signal
@@ -842,7 +850,9 @@ ${sender}`;
         emailBody: params.emailBody,
         interestScore: score,
         meetingRequested: classification.hasMeetingSignal,
-      }).catch(() => {});
+      }).catch((err) => {
+        console.error(`[PhumulaniAiAgent] Failed to escalate high-interest lead ${params.prospectId}:`, err?.message || err);
+      });
     }
 
     return {
@@ -960,7 +970,7 @@ grants@phumulani.org`;
     };
 
     this.replyDrafts.unshift(newDraft);
-    await this.dbAdapter.insert('phumulani_ai_reply_drafts', newDraft).catch(() => {});
+    await this.dbAdapter.insertDurableWithRetry('phumulani_ai_reply_drafts', newDraft, { context: 'aiAgent:replyDraft' });
 
     // When an incoming email receives a generated reply, automatically cancel pending auto follow-ups
     this.cancelPendingFollowUpsOnReply(prospect.id, 'Prospect replied to correspondence.');
@@ -1011,7 +1021,7 @@ grants@phumulani.org`;
     };
 
     this.followUps.push(item);
-    await this.dbAdapter.insert('phumulani_ai_followups', item).catch(() => {});
+    await this.dbAdapter.insertDurableWithRetry('phumulani_ai_followups', item, { context: 'aiAgent:scheduleFollowUp' });
     return item;
   }
 
@@ -1026,7 +1036,9 @@ grants@phumulani.org`;
         f.cancellationReason = reason;
         f.lastUpdated = new Date().toISOString();
         cancelledCount++;
-        this.dbAdapter.update('phumulani_ai_followups', f.id, f).catch(() => {});
+        this.dbAdapter.update('phumulani_ai_followups', f.id, f).catch((err) => {
+          console.error(`[PhumulaniAiAgent] Failed to cancel follow-up ${f.id}:`, err?.message || err);
+        });
       }
     });
     return cancelledCount;
@@ -1043,7 +1055,9 @@ grants@phumulani.org`;
         f.cancellationReason = 'Prospect opted out of all future correspondence.';
         f.lastUpdated = new Date().toISOString();
         haltedCount++;
-        this.dbAdapter.update('phumulani_ai_followups', f.id, f).catch(() => {});
+        this.dbAdapter.update('phumulani_ai_followups', f.id, f).catch((err) => {
+          console.error(`[PhumulaniAiAgent] Failed to halt follow-up ${f.id}:`, err?.message || err);
+        });
       }
     });
     return haltedCount;
@@ -1120,7 +1134,7 @@ grants@phumulani.org`;
     };
 
     this.proposalDrafts.unshift(newProposal);
-    await this.dbAdapter.insert('phumulani_ai_proposals', newProposal).catch(() => {});
+    await this.dbAdapter.insertDurableWithRetry('phumulani_ai_proposals', newProposal, { context: 'aiAgent:generateProposal' });
     return newProposal;
   }
 
@@ -1193,7 +1207,7 @@ grants@phumulani.org`;
     };
 
     this.highInterestLeads.unshift(newLead);
-    await this.dbAdapter.insert('phumulani_ai_high_interest_leads', newLead).catch(() => {});
+    await this.dbAdapter.insertDurableWithRetry('phumulani_ai_high_interest_leads', newLead, { context: 'aiAgent:highInterestLead' });
     return newLead;
   }
 

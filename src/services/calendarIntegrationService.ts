@@ -212,7 +212,7 @@ export class CalendarIntegrationService {
     };
 
     this.bookings.push(newBooking);
-    await this.dbAdapter.insert('calendar_bookings', newBooking).catch(() => {});
+    await this.dbAdapter.insertDurableWithRetry('calendar_bookings', newBooking, { context: 'calendarIntegration:booking' });
 
     return {
       success: true,

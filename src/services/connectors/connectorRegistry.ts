@@ -191,7 +191,7 @@ export class ConnectorRegistry {
         folderInspection: [],
         isInstitutionalMailbox: true,
         safeguardingClassification: c.safeguarding,
-        syncCursor: c.provider === 'GOOGLE' ? '1004820' : c.provider === 'MICROSOFT' ? 'delta_91823' : 'UID:412',
+        syncCursor: undefined,
         cursorType: c.provider === 'GOOGLE' ? 'GMAIL_HISTORY_ID' : c.provider === 'MICROSOFT' ? 'MS_GRAPH_DELTA_TOKEN' : 'IMAP_UID_SEQUENCE',
         currentEvidence: initialEvidence,
         evidenceHistory: [initialEvidence],
@@ -967,6 +967,35 @@ export class ConnectorRegistry {
       };
     }
 
+    const hasCredentials =
+      this.credentialVault.has(connectionId) ||
+      oAuthService.hasStoredTokens(connectionId) ||
+      oAuthService.hasStoredTokens(existing.emailAddress);
+
+    if (!hasCredentials) {
+      existing.authStatus = existing.authMethod === 'OAUTH2' ? 'AUTHORIZATION_REQUIRED' : 'CONFIGURATION_REQUIRED';
+      existing.syncStatus = 'SYNC_IDLE';
+      existing.credentialWarning = true;
+      existing.lastError = `Authorization required before syncing ${existing.emailAddress}.`;
+      existing.updatedAt = new Date().toISOString();
+      this.saveDurableRegistry();
+      return {
+        success: false,
+        connectionId,
+        provider: existing.provider,
+        mailboxEmail: existing.emailAddress,
+        messagesImported: 0,
+        duplicatesSkipped: 0,
+        threadsReconstructed: 0,
+        newCursor: existing.syncCursor || '',
+        cursorType: (existing.cursorType as SyncResult['cursorType']) || 'GENERIC_TIMESTAMP',
+        checkpointId: '',
+        status: 'FAILED',
+        timestamp: existing.updatedAt,
+        error: `AUTHORIZATION_REQUIRED: No vaulted credentials or OAuth 2.0 tokens stored for ${existing.emailAddress}.`,
+      };
+    }
+
     existing.authStatus = 'SYNCHRONIZING';
     existing.syncStatus = 'SYNCING';
 
@@ -984,6 +1013,7 @@ export class ConnectorRegistry {
       existing.syncCursor = result.newCursor;
       existing.cursorType = result.cursorType;
       existing.incomingMessageCount += result.messagesImported;
+      existing.lastError = null;
     } else {
       existing.authStatus = 'CONNECTED_WITH_ERRORS';
       existing.syncStatus = 'SYNC_FAILED';

@@ -1600,10 +1600,10 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl">
                           <span className="text-[10px] text-slate-400 block font-mono">LAST HANDSHAKE</span>
                           <span className="font-bold text-slate-900 truncate block">
-                            {mbx.lastSyncedAt ? new Date(mbx.lastSyncedAt).toLocaleTimeString() : 'Verified Live'}
+                            {mbx.lastSyncedAt ? new Date(mbx.lastSyncedAt).toLocaleTimeString() : 'Not synced yet'}
                           </span>
                           <span className="text-[10px] text-slate-500 font-mono truncate">
-                            {checkpoint?.historyId || 'hist-std-01'}
+                            {checkpoint?.historyId || 'Awaiting sync'}
                           </span>
                         </div>
                       </div>
@@ -2452,8 +2452,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
                       {/* Cursors and Checkpoint details */}
                       <div className="mt-2 text-[10px] text-slate-400 font-mono flex items-center justify-between">
-                        <span className="truncate">Cursor: {checkpoint?.historyId || 'hist-std-01'}</span>
-                        <span className="truncate">Token: {checkpoint?.deltaToken?.substring(0, 10)}...</span>
+                        <span className="truncate">Cursor: {checkpoint?.historyId || 'Awaiting sync'}</span>
+                        <span className="truncate">Token: {checkpoint?.deltaToken ? `${checkpoint.deltaToken.substring(0, 10)}...` : 'None'}</span>
                       </div>
                     </div>
 

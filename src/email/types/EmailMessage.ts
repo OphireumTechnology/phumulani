@@ -98,7 +98,7 @@ export interface SyncResult {
   newCursor: string;
   cursorType: 'GMAIL_HISTORY_ID' | 'MS_GRAPH_DELTA_TOKEN' | 'IMAP_UID_SEQUENCE' | 'GENERIC_TIMESTAMP';
   checkpointId: string;
-  status: 'COMPLETED' | 'PARTIAL' | 'FAILED' | 'RECONCILIATION_REQUIRED';
+  status: 'COMPLETED' | 'PARTIAL' | 'FAILED' | 'RECONCILIATION_REQUIRED' | 'AUTHORIZATION_REQUIRED';
   timestamp: string;
   error?: string;
 }

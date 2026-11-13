@@ -1089,7 +1089,7 @@ export class ProgramEnrollmentService {
       item.position = index + 1;
       item.updatedAt = new Date().toISOString();
       this.waitlists.set(item.id, item);
-      this.dbAdapter.insert('program_waitlists', item).catch(() => {});
+      void this.dbAdapter.insertDurableWithRetry('program_waitlists', item, { context: 'reorderWaitlist:waitlist' });
 
       // Sync position on corresponding enrollment application
       const enr = this.enrollments.get(item.enrollmentId);
@@ -1097,7 +1097,7 @@ export class ProgramEnrollmentService {
         enr.waitlistPosition = item.position;
         enr.updatedAt = item.updatedAt;
         this.enrollments.set(enr.id, enr);
-        this.dbAdapter.insert('enrollment_applications', enr).catch(() => {});
+        void this.dbAdapter.insertDurableWithRetry('enrollment_applications', enr, { context: 'reorderWaitlist:enrollment' });
       }
     });
   }

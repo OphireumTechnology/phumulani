@@ -86,6 +86,21 @@ export class ImapSmtpConnector implements EmailConnector {
   public async verifyConnection(): Promise<ConnectionHealth> {
     const connectionId = `conn-${this.provider.toLowerCase()}-${this.mailboxEmail.replace(/[^a-zA-Z0-9]/g, '_')}`;
 
+    if (!this.isConnected) {
+      return {
+        connectionId,
+        provider: this.provider,
+        mailboxEmail: this.mailboxEmail,
+        healthy: false,
+        status: 'DEGRADED',
+        roundTripLatencyMs: 0,
+        lastCheckedAt: new Date().toISOString(),
+        dnsResolution: 'RESOLVED_OK',
+        error: 'AUTHORIZATION_REQUIRED: IMAP/SMTP connector is not connected or authenticated.',
+        diagnosticsDetail: `IMAP (${this.imapHost}:${this.imapPort}) and SMTP (${this.smtpHost}:${this.smtpPort}) awaiting credentials and authentication.`,
+      };
+    }
+
     return {
       connectionId,
       provider: this.provider,

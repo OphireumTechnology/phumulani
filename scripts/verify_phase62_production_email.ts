@@ -167,16 +167,21 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
     record('TEST-P62-07', 'Google OAuth PKCE', false, err.message);
   }
 
-  // TEST-P62-08: Google Workspace GMAIL_HISTORY_ID Cursor
+  // TEST-P62-08: Google Workspace GMAIL_HISTORY_ID Fail-Closed Cursor Preservation
   try {
     const connector = ConnectorFactory.createConnector(EmailProviderType.GOOGLE_WORKSPACE);
     const syncRes = await connector.syncMessages('mb-donations', { cursor: 'hist-9901' });
-    const passed = syncRes.newCursor.startsWith('gmail-hist-') && Array.isArray(syncRes.messages);
+    const passed =
+      syncRes.success === false &&
+      syncRes.status === 'AUTHORIZATION_REQUIRED' &&
+      syncRes.newCursor === 'hist-9901' &&
+      syncRes.cursorType === 'GMAIL_HISTORY_ID' &&
+      Array.isArray(syncRes.messages);
     record(
       'TEST-P62-08',
-      'Google Workspace Incremental History ID Synchronization',
+      'Google Workspace Fail-Closed History ID Synchronization',
       passed,
-      `Synced ${syncRes.messages?.length || 0} messages, newCursor=${syncRes.newCursor}`
+      `Fail-closed (${syncRes.status}), preserved cursor=${syncRes.newCursor}`
     );
   } catch (err: any) {
     record('TEST-P62-08', 'Google History Sync', false, err.message);
@@ -198,16 +203,21 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
     record('TEST-P62-09', 'Microsoft OAuth PKCE', false, err.message);
   }
 
-  // TEST-P62-10: Microsoft 365 MS_GRAPH_DELTA_TOKEN Cursor
+  // TEST-P62-10: Microsoft 365 MS_GRAPH_DELTA_TOKEN Fail-Closed Cursor Preservation
   try {
     const connector = ConnectorFactory.createConnector(EmailProviderType.MICROSOFT_365);
     const syncRes = await connector.syncMessages('mb-ms-01', { cursor: 'ms-delta-001' });
-    const passed = syncRes.newCursor.startsWith('ms-delta-') && Array.isArray(syncRes.messages);
+    const passed =
+      syncRes.success === false &&
+      syncRes.status === 'AUTHORIZATION_REQUIRED' &&
+      syncRes.newCursor === 'ms-delta-001' &&
+      syncRes.cursorType === 'MS_GRAPH_DELTA_TOKEN' &&
+      Array.isArray(syncRes.messages);
     record(
       'TEST-P62-10',
-      'Microsoft 365 Delta Token Synchronization',
+      'Microsoft 365 Fail-Closed Delta Token Synchronization',
       passed,
-      `Synced ${syncRes.messages?.length || 0} messages, deltaToken=${syncRes.newCursor}`
+      `Fail-closed (${syncRes.status}), preserved deltaToken=${syncRes.newCursor}`
     );
   } catch (err: any) {
     record('TEST-P62-10', 'Microsoft Delta Sync', false, err.message);
@@ -536,7 +546,7 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
   // TEST-P62-24: 24-Hour Outbound Idempotency Deduplication
   try {
     const dispatchService = EmailDispatchService.getInstance();
-    const idempotencyKey = 'phumulani-idemp-key-test-24h';
+    const idempotencyKey = `phumulani-idemp-key-test-24h-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
     
     const recordFirst = await dispatchService.registerIdempotency(idempotencyKey, 'msg-dispatch-001');
     const recordSecond = await dispatchService.registerIdempotency(idempotencyKey, 'msg-dispatch-002');

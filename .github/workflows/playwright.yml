@@ -7,8 +7,7 @@ on:
     branches: [ main, develop ]
   workflow_dispatch:
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   # CI STAGES 1 - 4: DEPENDENCIES, TYPESCRIPT, BUILD & REGRESSION
@@ -16,6 +15,8 @@ jobs:
     name: "CI Stages 1-4: Verify, Build & Regression Suite"
     timeout-minutes: 25
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     env:
       PHUMULANI_OPERATIONAL_MODE: STAGED_DEVELOPMENT
       CI: 'true'
@@ -79,19 +80,30 @@ jobs:
           echo "=== CI STAGE 2: TYPESCRIPT TYPE-CHECKING ==="
           npx tsc --noEmit
 
-      # CI Stage 3 — Application build
+      # CI Stage 3 — Application build (client, Pages base path, and production server)
       - name: CI Stage 3 — Application Build
         run: |
-          echo "=== CI STAGE 3: APPLICATION BUNDLE BUILD ==="
+          echo "=== CI STAGE 3: APPLICATION & SERVER BUNDLE BUILD ==="
           npm run build
+          test -f dist/index.html
+          test -f dist-server/server.mjs
+          BASE_PATH=/phumulani/ npm run build:client
+          if grep -rn '/phumulani/phumulani/' dist/; then
+            echo "ERROR: Duplicate /phumulani/phumulani/ prefix detected in Pages build"
+            exit 1
+          fi
 
-      # CI Stage 4 — Phase 62 Email & Full Regression Suites
-      - name: CI Stage 4 — Phase 62 Production Email & Authoritative Regression Suites
+      # CI Stage 4 — Security Isolation, Phase 62 Email & Full Regression Suites
+      - name: CI Stage 4 — Security Isolation, Email & Authoritative Regression Suites
         run: |
-          echo "=== CI STAGE 4A: PHASE 62 PRODUCTION EMAIL INTEGRATION SUITE (35 TESTS) ==="
+          echo "=== CI STAGE 4A: SECURITY & KNOWLEDGE ISOLATION SUITE ==="
+          npx tsx scripts/verify_security_and_knowledge_isolation.ts
+          echo "=== CI STAGE 4B: PHASE 62 PRODUCTION EMAIL INTEGRATION SUITE (35 TESTS) ==="
           npx tsx scripts/verify_phase62_production_email.ts
-          echo "=== CI STAGE 4B: AUTHORITATIVE REGRESSION SUITE (706 TESTS) ==="
+          echo "=== CI STAGE 4C: AUTHORITATIVE REGRESSION SUITE ==="
           npx tsx scripts/verify_suite.ts
+          echo "=== CI STAGE 4D: BLOCKS 6-13 SECURITY & PERSISTENCE REGRESSION SUITE ==="
+          npx tsx scripts/verify_blocks6_to_13.ts
 
   # CI STAGES 5 - 9: BROWSER TEST DISCOVERY & CROSS-BROWSER MATRIX
   browser-tests:
@@ -99,6 +111,8 @@ jobs:
     needs: verify-and-build
     timeout-minutes: 35
     runs-on: ubuntu-24.04
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
       matrix:

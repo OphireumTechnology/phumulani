@@ -3,12 +3,13 @@ import react from '@vitejs/plugin-react';
 import path from 'path';
 import {defineConfig} from 'vite';
 
-export default defineConfig(() => {
+export default defineConfig(({ command }) => {
   return {
     base: process.env.BASE_PATH || '/',
     plugins: [react(), tailwindcss()],
     define: {
       global: 'globalThis',
+      __PHUMULANI_VITE_BUILD__: JSON.stringify(command === 'build'),
     },
     resolve: {
       alias: {

@@ -378,8 +378,11 @@ export class AuthSecurityService {
       return { success: false, error: 'Invalid MFA verification code format.' };
     }
 
-    const isProdOnly =
-      typeof process !== 'undefined' && process.env?.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_ONLY';
+    const isStrictMfaMode =
+      EnvironmentService.isProductionOnly() ||
+      (typeof process !== 'undefined' &&
+        (process.env?.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT' ||
+          process.env?.NODE_ENV === 'production'));
 
     if (temp.expectedCode) {
       const a = Buffer.from(trimmedCode);
@@ -387,7 +390,7 @@ export class AuthSecurityService {
       if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
         return { success: false, error: 'MFA verification code does not match challenge.' };
       }
-    } else if (isProdOnly) {
+    } else if (isStrictMfaMode) {
       this.tempMfaSessions.delete(tempToken);
       return { success: false, error: 'MFA verification failed: server-issued TOTP challenge secret missing.' };
     }
@@ -416,9 +419,12 @@ export class AuthSecurityService {
     expectedCode?: string;
   }): string {
     const tempToken = `mfa_chal_${crypto.randomBytes(24).toString('hex')}`;
-    const isProdOnly =
-      typeof process !== 'undefined' && process.env?.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_ONLY';
-    const expectedCode = user.expectedCode || (isProdOnly ? String(crypto.randomInt(100000, 999999)) : undefined);
+    const isStrictMfaMode =
+      EnvironmentService.isProductionOnly() ||
+      (typeof process !== 'undefined' &&
+        (process.env?.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT' ||
+          process.env?.NODE_ENV === 'production'));
+    const expectedCode = user.expectedCode || (isStrictMfaMode ? String(crypto.randomInt(100000, 999999)) : undefined);
     this.tempMfaSessions.set(tempToken, {
       userId: user.id,
       email: user.email,
@@ -502,6 +508,7 @@ export class AuthSecurityService {
       phone: data.phone || '',
       passwordHash: pwdHash?.hash || null,
       passwordSalt: pwdHash?.salt || null,
+      passwordIterations: pwdHash?.iterations || 100000,
       status: 'active',
       mfaEnabled: false,
       departmentId: assignedRole === 'STAFF' ? 'DEPT-OPS' : 'DEPT-COMM',

@@ -8,13 +8,17 @@
 
 import { connectorRegistry } from '../connectors/ConnectorRegistry';
 import { SyncResult, SyncOptions } from '../types';
+import { PostgresPersistenceAdapter } from '../../services/postgresPersistenceAdapter';
 
 export class EmailSyncService {
   private static instance: EmailSyncService;
   private activeSyncLocks: Set<string> = new Set();
   private cursors: Map<string, string> = new Map();
+  private dbAdapter: PostgresPersistenceAdapter;
 
-  private constructor() {}
+  private constructor() {
+    this.dbAdapter = PostgresPersistenceAdapter.getInstance();
+  }
 
   public static getInstance(): EmailSyncService {
     if (!EmailSyncService.instance) {
@@ -42,17 +46,45 @@ export class EmailSyncService {
   }
 
   /**
-   * Persist a synchronization cursor
+   * Persist a synchronization cursor both in-memory and in durable storage
    */
   public async saveCursor(mailboxId: string, folder: string, cursor: string): Promise<void> {
-    this.cursors.set(`${mailboxId}:${folder}`, cursor);
+    const key = `${mailboxId}:${folder}`;
+    this.cursors.set(key, cursor);
+    await this.dbAdapter.insertDurableWithRetry(
+      'email_sync_cursors',
+      {
+        id: key,
+        mailboxId,
+        folder,
+        cursor,
+        updatedAt: new Date().toISOString(),
+      },
+      { context: 'EmailSyncService:saveCursor' }
+    );
   }
 
   /**
-   * Retrieve a persisted synchronization cursor
+   * Retrieve a persisted synchronization cursor (falling back to durable storage on cold start)
    */
   public async getCursor(mailboxId: string, folder: string): Promise<string | null> {
-    return this.cursors.get(`${mailboxId}:${folder}`) || null;
+    const key = `${mailboxId}:${folder}`;
+    const cached = this.cursors.get(key);
+    if (cached) return cached;
+
+    try {
+      const rows = await this.dbAdapter.select<{ id: string; cursor?: string }>(
+        'email_sync_cursors',
+        (r) => r.id === key
+      );
+      const storedCursor = rows[0]?.cursor || null;
+      if (storedCursor) {
+        this.cursors.set(key, storedCursor);
+      }
+      return storedCursor;
+    } catch {
+      return null;
+    }
   }
 
   /**

@@ -9,19 +9,57 @@
 import crypto from 'crypto';
 import { connectorRegistry } from '../connectors/ConnectorRegistry';
 import { ApprovedOutboundMessage, SendResult, EmailIdempotencyRecord } from '../types';
+import { PostgresPersistenceAdapter } from '../../services/postgresPersistenceAdapter';
 
 export class EmailDispatchService {
   private static instance: EmailDispatchService;
   private idempotencyStore: Map<string, EmailIdempotencyRecord> = new Map();
   private emergencyShutdown: boolean = false;
+  private dbAdapter: PostgresPersistenceAdapter;
 
-  private constructor() {}
+  private constructor() {
+    this.dbAdapter = PostgresPersistenceAdapter.getInstance();
+  }
 
   public static getInstance(): EmailDispatchService {
     if (!EmailDispatchService.instance) {
       EmailDispatchService.instance = new EmailDispatchService();
     }
     return EmailDispatchService.instance;
+  }
+
+  private async getActiveIdempotencyRecord(key: string): Promise<EmailIdempotencyRecord | null> {
+    const now = Date.now();
+    const inMemory = this.idempotencyStore.get(key);
+    if (inMemory) {
+      if (new Date(inMemory.expiresAt).getTime() > now) {
+        return inMemory;
+      }
+      this.idempotencyStore.delete(key);
+    }
+    try {
+      const persisted = await this.dbAdapter.select<EmailIdempotencyRecord & { id: string }>(
+        'email_idempotency_keys',
+        (r) => r.id === key || r.idempotencyKey === key
+      );
+      const match = persisted[0];
+      if (match && new Date(match.expiresAt).getTime() > now) {
+        this.idempotencyStore.set(key, match);
+        return match;
+      }
+    } catch {
+      // Non-fatal read error falls through cleanly
+    }
+    return null;
+  }
+
+  private async saveIdempotencyRecord(record: EmailIdempotencyRecord): Promise<void> {
+    this.idempotencyStore.set(record.idempotencyKey, record);
+    await this.dbAdapter.insertDurableWithRetry(
+      'email_idempotency_keys',
+      { id: record.idempotencyKey, ...record },
+      { context: 'EmailDispatchService:idempotency' }
+    );
   }
 
   private drafts: Map<string, any> = new Map();
@@ -142,12 +180,12 @@ export class EmailDispatchService {
   }
 
   public async registerIdempotency(key: string, dispatchId: string): Promise<{ isNew: boolean; dispatchId: string }> {
-    if (this.idempotencyStore.has(key)) {
-      const existing = this.idempotencyStore.get(key)!;
+    const existing = await this.getActiveIdempotencyRecord(key);
+    if (existing) {
       return { isNew: false, dispatchId: existing.dispatchId };
     }
 
-    this.idempotencyStore.set(key, {
+    const record: EmailIdempotencyRecord = {
       idempotencyKey: key,
       dispatchId,
       senderAccount: 'donations@phumulani.org',
@@ -155,7 +193,8 @@ export class EmailDispatchService {
       subjectHash: 'hash',
       createdAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
-    });
+    };
+    await this.saveIdempotencyRecord(record);
 
     return { isNew: true, dispatchId };
   }
@@ -205,13 +244,13 @@ export class EmailDispatchService {
     }
 
     // Gate 4: 24-Hour Idempotency Deduplication (Section 12)
-    if (this.idempotencyStore.has(message.idempotencyKey)) {
-      const existing = this.idempotencyStore.get(message.idempotencyKey)!;
+    const existingIdem = await this.getActiveIdempotencyRecord(message.idempotencyKey);
+    if (existingIdem) {
       return {
         success: true,
-        dispatchId: existing.dispatchId,
+        dispatchId: existingIdem.dispatchId,
         deliveryState: 'PROVIDER_ACCEPTED',
-        dispatchedAt: existing.createdAt,
+        dispatchedAt: existingIdem.createdAt,
         recipientCount: message.to.length,
       };
     }
@@ -251,8 +290,8 @@ export class EmailDispatchService {
       deliveryState: operationalMode === 'CONTROLLED_LIVE_PILOT' ? 'PROVIDER_ACCEPTED' : 'STAGED',
     });
 
-    // Record idempotency
-    this.idempotencyStore.set(message.idempotencyKey, {
+    // Record idempotency durably across restarts
+    await this.saveIdempotencyRecord({
       idempotencyKey: message.idempotencyKey,
       dispatchId,
       senderAccount: message.senderAccount,

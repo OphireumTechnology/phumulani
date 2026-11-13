@@ -1620,7 +1620,7 @@ export class VolunteerOperationsService {
       createdAt: new Date().toISOString(),
     };
     this.notifications.unshift(notif);
-    this.dbAdapter.insert('notifications', notif).catch(() => {});
+    void this.dbAdapter.insertDurableWithRetry('notifications', notif, { context: 'volunteerOperations:notification' });
   }
 }
 

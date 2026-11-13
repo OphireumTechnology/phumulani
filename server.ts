@@ -59,6 +59,7 @@ import { localKnowledgeRetrievalService } from './src/services/localKnowledgeRet
 dotenv.config();
 
 const app = express();
+app.set('trust proxy', 1);
 const rawPort = process.env.PORT ?? '3000';
 const PORT = Number(rawPort);
 if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65535) {
@@ -68,7 +69,12 @@ if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65535) {
 const BASE_PATH = process.env.BASE_PATH || '/';
 const dbAdapter = PostgresPersistenceAdapter.getInstance();
 
-app.use(express.json({ limit: '2mb' }));
+app.use(express.json({
+  limit: '2mb',
+  verify: (req: any, _res, buf) => {
+    req.rawBody = buf.toString('utf8');
+  },
+}));
 app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
   if (err instanceof SyntaxError && 'body' in err) {
     return res.status(400).json({ error: 'Malformed JSON request payload.' });
@@ -111,12 +117,20 @@ const logAudit = (item: Omit<ServerAIAuditItem, 'id' | 'timestamp'>) => {
   if (serverAuditLogs.length > 200) {
     serverAuditLogs.pop();
   }
-  // Durably persist audit log to disk/PostgreSQL adapter (immutable append-only)
-  dbAdapter.insert('audit_logs', entry).catch(() => {});
+  // Durably persist audit log to disk/PostgreSQL adapter with retry & dead-letter fallback
+  void dbAdapter
+    .insertDurableWithRetry('audit_logs', entry, {
+      context: `server:logAudit:${entry.action}`,
+      failClosedInProd: false,
+    })
+    .catch((err: any) => {
+      console.error('[AuditLogger] Critical durable write fallback error:', err?.message || err);
+    });
   return entry;
 };
 
 // Initialize server-side Google Gen AI client (never exposed to browser)
+const ACTIVE_GEMINI_MODEL = (process.env.GEMINI_MODEL || '').trim() || 'gemini-2.5-flash';
 const geminiApiKey = process.env.GEMINI_API_KEY || '';
 let genAI: GoogleGenAI | null = null;
 
@@ -203,26 +217,47 @@ const handleHealthCheck = async (_req: Request, res: Response) => {
   const isProdOnly = EnvironmentService.isProductionOnly();
 
   const safeguardingStatus = getSafeguardingEncryptionStatus();
+  const auditHealth = dbAdapter.getPersistenceHealthMetrics();
+
+  const allConnections = connectorRegistry.getAllConnections();
+  const googleConnected = allConnections.some(
+    (c) => c.provider === 'GOOGLE' && c.authStatus === 'CONNECTED' && oAuthService.hasStoredTokens(c.id)
+  );
+  const anyMailboxConnected = allConnections.some(
+    (c) => c.authStatus === 'CONNECTED' && (oAuthService.hasStoredTokens(c.id) || c.authMethod !== 'OAUTH2')
+  );
+  const googleConfigured = oAuthService.isProviderConfigured('GOOGLE');
+  const liveSendingEnabled = googleWorkspaceAdapter.isLiveSendingEnabled();
+  const auditDegraded = auditHealth.failureCount > 0 || auditHealth.deadLetterCount > 0;
 
   const components = {
     APPLICATION: 'HEALTHY' as const,
     POSTGRESQL: dbInfo.engine === 'POSTGRESQL' ? dbInfo.databaseStatus : ('NOT_CONNECTED' as const),
-    GOOGLE_WORKSPACE: 'AUTHORIZATION_REQUIRED' as const,
-    MAILBOX_SYNC: 'AUTHORIZATION_REQUIRED' as const,
-    EMAIL_DISPATCH: 'AUTHORIZATION_REQUIRED' as const,
+    GOOGLE_WORKSPACE: googleConnected
+      ? ('CONNECTED' as const)
+      : googleConfigured
+      ? ('AUTHORIZATION_REQUIRED' as const)
+      : ('NOT_CONFIGURED' as const),
+    MAILBOX_SYNC: anyMailboxConnected ? ('CONNECTED' as const) : ('AUTHORIZATION_REQUIRED' as const),
+    EMAIL_DISPATCH:
+      anyMailboxConnected && liveSendingEnabled
+        ? ('CONNECTED' as const)
+        : anyMailboxConnected
+        ? ('FAIL_CLOSED_POLICY' as const)
+        : ('AUTHORIZATION_REQUIRED' as const),
     AI_MODEL: genAI ? ('CONNECTED' as const) : ('AI_SERVICE_UNAVAILABLE' as const),
-    BACKGROUND_WORKERS: 'HEALTHY' as const,
-    FUNDRAISING_CRM: 'HEALTHY' as const,
+    BACKGROUND_WORKERS: dbInfo.databaseStatus === 'NOT_CONNECTED' ? ('DEGRADED' as const) : ('HEALTHY' as const),
+    FUNDRAISING_CRM: dbInfo.databaseStatus === 'NOT_CONNECTED' ? ('DEGRADED' as const) : ('HEALTHY' as const),
     APPROVAL_ENGINE: 'HEALTHY' as const,
     FINANCIAL_PROVIDER: EnvironmentService.getPaymentProviderStatus(),
     SAFEGUARDING_ENCRYPTION: safeguardingStatus.ready ? ('HEALTHY' as const) : ('BLOCKED_MISSING_KEY' as const),
-    SECURITY_MONITORING: 'HEALTHY' as const,
+    SECURITY_MONITORING: auditDegraded ? ('DEGRADED' as const) : ('HEALTHY' as const),
   };
 
   const isBlocked = isProdOnly && (dbInfo.databaseStatus === 'NOT_CONNECTED' || !safeguardingStatus.ready);
-  const overallStatus = isBlocked ? 'BLOCKED' : 'HEALTHY';
+  const overallStatus = isBlocked ? 'BLOCKED' : auditDegraded ? 'DEGRADED' : 'HEALTHY';
 
-  res.json({
+  res.status(isBlocked ? 503 : 200).json({
     status: overallStatus,
     operationalMode: envConfig.operationalMode,
     applicationReadiness: dbInfo.applicationReadiness,
@@ -233,8 +268,9 @@ const handleHealthCheck = async (_req: Request, res: Response) => {
     basePath: BASE_PATH,
     components,
     geminiConfigured: !!genAI,
-    model: 'gemini-4-hydrogen',
+    model: ACTIVE_GEMINI_MODEL,
     auditLogCount: serverAuditLogs.length,
+    auditHealth,
     database: {
       engine: dbInfo.engine,
       connected: dbInfo.connected,
@@ -246,13 +282,18 @@ const handleHealthCheck = async (_req: Request, res: Response) => {
       readinessClassification: dbInfo.readinessClassification,
     },
     googleWorkspaceOAuth: {
-      status: 'AUTHORIZATION_REQUIRED',
-      connectionState: 'AUTHORIZATION_REQUIRED',
-      notice: 'Live provider requests require administrator OAuth 2.0 consent and encrypted token storage.',
+      status: components.GOOGLE_WORKSPACE,
+      connectionState: components.GOOGLE_WORKSPACE,
+      notice: googleConnected
+        ? 'Google Workspace OAuth 2.0 mailbox verified with encrypted vault tokens.'
+        : 'Live provider requests require administrator OAuth 2.0 consent and encrypted token storage.',
     },
     paymentProvider: {
       status: EnvironmentService.getPaymentProviderStatus(),
-      notice: 'Live merchant provider not connected. Synthetic revenue generation is strictly disabled.',
+      notice:
+        EnvironmentService.getPaymentProviderStatus() === 'CONNECTED'
+          ? 'Payment gateway configured for signed webhook reconciliation.'
+          : 'Live merchant provider not connected. Synthetic revenue generation is strictly disabled.',
     },
     safeguardingFirewall: {
       status: safeguardingStatus.ready ? 'ACTIVE' : 'FAIL_CLOSED_KEY_REQUIRED',
@@ -278,10 +319,14 @@ app.get('/healthz', (_req: Request, res: Response) => {
 
 app.get('/readyz', async (_req: Request, res: Response) => {
   const dbInfo = dbAdapter.getConnectionInfo();
-  const isHealthy = dbInfo.databaseStatus === 'HEALTHY' || dbInfo.databaseStatus === 'DEGRADED';
+  const safeguardingStatus = getSafeguardingEncryptionStatus();
+  const isProdOnly = EnvironmentService.isProductionOnly();
+  const isDbReady = dbInfo.databaseStatus === 'HEALTHY' || (!isProdOnly && dbInfo.databaseStatus === 'DEGRADED');
+  const isHealthy = isDbReady && (!isProdOnly || safeguardingStatus.ready);
   res.status(isHealthy ? 200 : 503).json({
     status: isHealthy ? 'ready' : 'not_ready',
     database: dbInfo.databaseStatus,
+    safeguardingReady: safeguardingStatus.ready,
     timestamp: new Date().toISOString(),
   });
 });
@@ -491,12 +536,12 @@ app.post('/api/payments/checkout-session', async (req: Request, res: Response) =
 app.post('/api/payments/webhook', async (req: Request, res: Response) => {
   try {
     const signature = (req.headers['stripe-signature'] as string) || (req.headers['x-payment-signature'] as string) || '';
-    const payloadRaw = JSON.stringify(req.body);
+    const payloadRaw = typeof (req as any).rawBody === 'string' ? (req as any).rawBody : JSON.stringify(req.body);
     const isVerified = paymentProviderService.verifyWebhookSignature(payloadRaw, signature);
 
     const result = await paymentProviderService.processWebhookEvent(req.body, isVerified);
     if (!result.success) {
-      return res.status(400).json(result);
+      return res.status(result.reconciliationStatus === 'SIGNATURE_FAILED' ? 401 : 400).json(result);
     }
     res.json(result);
   } catch (err: any) {
@@ -1140,6 +1185,8 @@ const requireSessionMiddleware = (allowedRoles?: Set<string>) => (req: Request, 
   next();
 };
 
+app.use('/api/reports', requireSessionMiddleware(STAFF_ADMIN_ROLES));
+
 // 1. Staff Operations Report
 app.get('/api/reports/staff-operations', async (req: Request, res: Response) => {
   try {
@@ -1361,9 +1408,10 @@ app.post('/api/ai/concierge', async (req: Request, res: Response) => {
       });
     }
 
-    // If Gemini client is active, call gemini-4-hydrogen
+    // If Gemini client is active, call configured model with untrusted input isolation
     if (genAI) {
       try {
+        const { wrapped: safeQuestion } = localInferenceAdapter.wrapUntrustedInput(question);
         const systemInstruction = `You are the official Website Concierge for Phumulani (Minnesota 501(c)(3)).
 Your tone is warm, dignified, supportive, and concise.
 Answer only using the following verified facts:
@@ -1376,8 +1424,8 @@ Rules:
 
         const response = await withTimeout(
           genAI.models.generateContent({
-            model: 'gemini-4-hydrogen',
-            contents: question,
+            model: ACTIVE_GEMINI_MODEL,
+            contents: safeQuestion,
             config: {
               systemInstruction,
             },
@@ -1391,13 +1439,13 @@ Rules:
           action: 'concierge:query',
           requesterRole: 'public_visitor',
           status: 'allowed',
-          modelUsed: 'gemini-4-hydrogen',
+          modelUsed: ACTIVE_GEMINI_MODEL,
         });
 
         return res.json({
           output: reply,
           isSafeguardingCrisis: false,
-          modelUsed: 'gemini-4-hydrogen',
+          modelUsed: ACTIVE_GEMINI_MODEL,
           blockedByPolicy: false,
         });
       } catch (err: any) {
@@ -1503,11 +1551,15 @@ app.post('/api/ai/email-draft', async (req: Request, res: Response) => {
     // Server-side Gemini generation if configured
     if (genAI) {
       try {
+        const { cleanText: cleanSender } = localInferenceAdapter.sanitizeText(String(senderName || 'Valued Correspondent'));
+        const { cleanText: cleanSubject } = localInferenceAdapter.sanitizeText(String(subject || 'Inquiry'));
+        const { wrapped: wrappedBody } = localInferenceAdapter.wrapUntrustedInput(String(messageBody || ''));
         const prompt = `Draft a polite, professional, trauma-informed email response on behalf of Phumulani (Minnesota 501(c)(3)).
-Sender: ${senderName || 'Valued Correspondent'}
-Subject: ${subject || 'Inquiry'}
+Sender: ${cleanSender}
+Subject: ${cleanSubject}
 Tone: ${toneStyle}
-Message Body: ${messageBody}
+Message Body:
+${wrappedBody}
 
 Requirements:
 - Professional, empathetic, helpful.
@@ -1517,7 +1569,7 @@ Requirements:
 
         const response = await withTimeout(
           genAI.models.generateContent({
-            model: 'gemini-4-hydrogen',
+            model: ACTIVE_GEMINI_MODEL,
             contents: prompt,
             config: {
               responseMimeType: 'application/json',
@@ -1532,16 +1584,16 @@ Requirements:
           action: 'drafts:create',
           requesterRole: role,
           status: 'allowed',
-          modelUsed: 'gemini-4-hydrogen',
+          modelUsed: ACTIVE_GEMINI_MODEL,
         });
 
         return res.json({
           draft: parsed.draft || `Dear ${senderName},\n\nThank you for contacting Phumulani. Our team has received your communication and is reviewing it.\n\nWarm regards,\nPhumulani Operations Team`,
           urgency: parsed.urgency || 'normal',
-          reasoning: parsed.reasoning || 'Draft generated with Gemini 4 Hydrogen; requires human staff review and co-signature before sending.',
+          reasoning: parsed.reasoning || `Draft generated with ${ACTIVE_GEMINI_MODEL}; requires human staff review and co-signature before sending.`,
           requiresHumanApproval: true,
           isSafeguardingCrisis: false,
-          modelUsed: 'gemini-4-hydrogen',
+          modelUsed: ACTIVE_GEMINI_MODEL,
         });
       } catch (err: any) {
         console.warn('[Phumulani AI Gateway] Gemini draft error, using verified template:', err?.message || err);
@@ -1591,11 +1643,15 @@ app.post('/api/ai/fundraising-draft', async (req: Request, res: Response) => {
 
     if (genAI) {
       try {
+        const { cleanText: cleanDonor } = localInferenceAdapter.sanitizeText(String(donorName || 'Valued Supporter'));
+        const { cleanText: cleanCampaign } = localInferenceAdapter.sanitizeText(
+          String(campaignTitle || 'General Sanctuary & Community Empowerment')
+        );
         const prompt = `Draft an official fundraising outreach communication on behalf of Comfort Dondo (Executive Director, Phumulani 501(c)(3)).
-Donor/Recipient: ${donorName}
+Donor/Recipient: ${cleanDonor}
 Communication Type: ${commType}
 Tone Style: ${toneStyle}
-Campaign/Initiative: ${campaignTitle || 'General Sanctuary & Community Empowerment'}
+Campaign/Initiative: ${cleanCampaign}
 
 Requirements:
 - Adhere strictly to 501(c)(3) ethical fundraising standards.
@@ -1604,7 +1660,7 @@ Requirements:
 
         const response = await withTimeout(
           genAI.models.generateContent({
-            model: 'gemini-4-hydrogen',
+            model: ACTIVE_GEMINI_MODEL,
             contents: prompt,
             config: {
               responseMimeType: 'application/json',
@@ -1619,16 +1675,16 @@ Requirements:
           action: 'fundraising:draft',
           requesterRole: role,
           status: 'allowed',
-          modelUsed: 'gemini-4-hydrogen',
+          modelUsed: ACTIVE_GEMINI_MODEL,
         });
 
         return res.json({
           subject: parsed.subject || `Phumulani Community Partnership: ${campaignTitle || 'Empowering Survivors'}`,
           bodyText: parsed.bodyText,
           bodyHtml: `<p>${(parsed.bodyText || '').replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</p>`,
-          rationale: parsed.rationale || 'Draft generated with Gemini 4 Hydrogen; requires dual staff review.',
+          rationale: parsed.rationale || `Draft generated with ${ACTIVE_GEMINI_MODEL}; requires dual staff review.`,
           requiresHumanApproval: true,
-          modelUsed: 'gemini-4-hydrogen',
+          modelUsed: ACTIVE_GEMINI_MODEL,
         });
       } catch (err: any) {
         console.warn('[Phumulani AI Gateway] Gemini fundraising draft error, using template:', err?.message || err);
@@ -1822,20 +1878,20 @@ app.use('/api/fundraising', requireSessionMiddleware(STAFF_ADMIN_ROLES));
 // 6. Agents Registry Endpoint (Existing Fundraising Agents Preserved)
 app.get('/api/fundraising/agents', (_req: Request, res: Response) => {
   const agents = [
-    { id: 'FUND-AI-001', code: 'AGENT 01', name: 'Director AI Orchestrator', role: 'Pipeline Coordinator', category: 'Orchestration', status: 'active', model: 'gemini-4-hydrogen', tools: ['PipelineOrchestrator', 'AgentRegistryEngine', 'GeminiAPI'], requiresHumanApproval: false },
+    { id: 'FUND-AI-001', code: 'AGENT 01', name: 'Director AI Orchestrator', role: 'Pipeline Coordinator', category: 'Orchestration', status: 'active', model: ACTIVE_GEMINI_MODEL, tools: ['PipelineOrchestrator', 'AgentRegistryEngine', 'GeminiAPI'], requiresHumanApproval: false },
     { id: 'FUND-AI-002', code: 'AGENT 02', name: 'Mailbox Opportunity Ingestion', role: 'Inbound Email Analyst', category: 'Intelligence', status: 'active', model: 'deterministic_triage_engine', tools: ['MailboxHarvester', 'TriageClassifier', 'CRMAutoLinker'], requiresHumanApproval: false },
     { id: 'FUND-AI-003', code: 'AGENT 03', name: 'Major Donor Capacity Analyst', role: 'Wealth & Propensity Profiler', category: 'Research', status: 'active', model: 'propensity_scorer_v2', tools: ['CapacityCalculator', 'PublicFilingAnalyzer', 'PropensityScorer'], requiresHumanApproval: false },
     { id: 'FUND-AI-004', code: 'AGENT 04', name: 'Donor Segmentation Engine', role: 'RFM Clustering Engine', category: 'Intelligence', status: 'active', model: 'rfm_clustering_model', tools: ['RFMClusteringModel', 'GivingTierClassifier'], requiresHumanApproval: false },
     { id: 'FUND-AI-005', code: 'AGENT 05', name: 'Public Grant & RFP Discovery', role: 'Grant Opportunity Scout', category: 'Grants', status: 'active', model: 'rfp_crawler_v3', tools: ['GrantsGovCrawler', 'MinnesotaStateRFPEngine'], requiresHumanApproval: false },
     { id: 'FUND-AI-006', code: 'AGENT 06', name: 'Grant Eligibility Verifier', role: '501(c)(3) Compliance Auditor', category: 'Grants', status: 'active', model: 'compliance_matrix_evaluator', tools: ['ComplianceMatrixAuditor', 'GuidelineScorer'], requiresHumanApproval: true },
-    { id: 'FUND-AI-007', code: 'AGENT 07', name: 'Personalized Outreach Drafter', role: 'Donor Communications Specialist', category: 'Outreach', status: 'active', model: 'gemini-4-hydrogen', tools: ['ContextualDraftEngine', 'CanSpamGuard', 'GeminiAPI'], requiresHumanApproval: true },
+    { id: 'FUND-AI-007', code: 'AGENT 07', name: 'Personalized Outreach Drafter', role: 'Donor Communications Specialist', category: 'Outreach', status: 'active', model: ACTIVE_GEMINI_MODEL, tools: ['ContextualDraftEngine', 'CanSpamGuard', 'GeminiAPI'], requiresHumanApproval: true },
     { id: 'FUND-AI-008', code: 'AGENT 08', name: 'Fail-Closed Review Gatekeeper', role: 'Policy & Delivery Gatekeeper', category: 'Security', status: 'active', model: 'fail_closed_gatekeeper', tools: ['FailClosedGatekeeper', 'DualReviewValidator'], requiresHumanApproval: false },
     { id: 'FUND-AI-009', code: 'AGENT 09', name: 'CAN-SPAM Compliance Sentinel', role: 'Opt-Out & Address Validator', category: 'Security', status: 'active', model: 'postal_suppression_sentinel', tools: ['PostalAddressValidator', 'SuppressionListSync'], requiresHumanApproval: false },
     { id: 'FUND-AI-010', code: 'AGENT 10', name: 'Multi-Year Grant Tracker', role: 'Grant Deliverables Manager', category: 'Grants', status: 'active', model: 'deliverables_tracker', tools: ['DeliverableTracker', 'ReportingMilestoneEngine'], requiresHumanApproval: true },
     { id: 'FUND-AI-011', code: 'AGENT 11', name: 'Corporate CSR Matchmaker', role: 'Sponsorship & Match Strategist', category: 'Partnerships', status: 'active', model: 'csr_alignment_matrix', tools: ['CSRAlignmentMatrix', 'MatchingGiftEngine'], requiresHumanApproval: true },
-    { id: 'FUND-AI-012', code: 'AGENT 12', name: 'Donor Stewardship Manager', role: 'Impact Reporter', category: 'Stewardship', status: 'active', model: 'gemini-4-hydrogen', tools: ['ImpactStorySynthesizer', 'TaxReceiptGenerator'], requiresHumanApproval: true },
+    { id: 'FUND-AI-012', code: 'AGENT 12', name: 'Donor Stewardship Manager', role: 'Impact Reporter', category: 'Stewardship', status: 'active', model: ACTIVE_GEMINI_MODEL, tools: ['ImpactStorySynthesizer', 'TaxReceiptGenerator'], requiresHumanApproval: true },
     { id: 'FUND-AI-013', code: 'AGENT 13', name: 'Capital Campaign Velocity Analyst', role: 'Pacing & Projection Modeler', category: 'Finance', status: 'active', model: 'velocity_projection_engine', tools: ['BurnRatePredictor', 'PledgeVelocityModel'], requiresHumanApproval: false },
-    { id: 'FUND-AI-014', code: 'AGENT 14', name: 'Lapsed Donor Win-Back Analyst', role: 'Retention & Re-engagement', category: 'Intelligence', status: 'active', model: 'gemini-4-hydrogen', tools: ['LapsePredictor', 'WinBackPersonalizer'], requiresHumanApproval: true },
+    { id: 'FUND-AI-014', code: 'AGENT 14', name: 'Lapsed Donor Win-Back Analyst', role: 'Retention & Re-engagement', category: 'Intelligence', status: 'active', model: ACTIVE_GEMINI_MODEL, tools: ['LapsePredictor', 'WinBackPersonalizer'], requiresHumanApproval: true },
     { id: 'FUND-AI-015', code: 'AGENT 15', name: 'In-Kind & Pro Bono Appraiser', role: 'Non-Cash Contribution Evaluator', category: 'Finance', status: 'active', model: 'fmv_appraisal_engine', tools: ['FMVAppraisalEngine', 'UtilityScorer'], requiresHumanApproval: true },
     { id: 'FUND-AI-016', code: 'AGENT 16', name: 'Financial Reconciliation Auditor', role: 'Bank ACH Reconciliation', category: 'Finance', status: 'active', model: 'ach_reconciliation_auditor', tools: ['BankACHReconciliation', 'AuditedLedgerVerifier'], requiresHumanApproval: true },
     { id: 'FUND-AI-017', code: 'AGENT 17', name: 'Program Funding Allocator', role: 'Impact & Metric Compiler', category: 'Finance', status: 'active', model: 'program_fund_allocator', tools: ['ProgramFundLedger', 'BeneficiaryOutcomeTracker'], requiresHumanApproval: true },
@@ -1886,6 +1942,7 @@ app.post('/api/fundraising/execute', async (req: Request, res: Response) => {
         let systemPrompt = '';
         let userContent = '';
 
+        const { wrapped: safePayload } = localInferenceAdapter.wrapUntrustedInput(JSON.stringify(inputPayload));
         if (agentId === 'FUND-AI-007') {
           systemPrompt = `You are FUND-AI-007, the Authorized Donor Communications Drafter for Phumulani (Minnesota 501(c)(3)).
 Requirements:
@@ -1893,19 +1950,19 @@ Requirements:
 2. Always include one-click unsubscribe mechanism.
 3. Adhere to ethical fundraising guidelines.
 Output JSON: {"subject": "...", "bodyText": "...", "canSpamCompliant": true}`;
-          userContent = `Draft outreach to donor: ${JSON.stringify(inputPayload)}`;
+          userContent = `Draft outreach to donor:\n${safePayload}`;
         } else if (agentId === 'FUND-AI-001') {
           systemPrompt = `You are FUND-AI-001 Director AI Orchestrator for Phumulani.
 Output JSON: {"coordinatedAgents": ["FUND-AI-002","FUND-AI-003","FUND-AI-004","FUND-AI-005","FUND-AI-006","FUND-AI-007","FUND-AI-016","FUND-AI-017","FUND-AI-018"], "status": "HEALTHY", "activePipelineCount": 4, "tasksDispatched": 17}`;
-          userContent = `Orchestrate fundraising pipeline for: ${JSON.stringify(inputPayload)}`;
+          userContent = `Orchestrate fundraising pipeline for:\n${safePayload}`;
         } else {
           systemPrompt = `You are a specialized fundraising AI agent for Phumulani 501(c)(3). Output structured JSON analysis.`;
-          userContent = `Process task with payload: ${JSON.stringify(inputPayload)}`;
+          userContent = `Process task with payload:\n${safePayload}`;
         }
 
         const aiResponse = await withTimeout(
           genAI.models.generateContent({
-            model: 'gemini-4-hydrogen',
+            model: ACTIVE_GEMINI_MODEL,
             contents: userContent,
             config: {
               systemInstruction: systemPrompt,
@@ -1916,8 +1973,8 @@ Output JSON: {"coordinatedAgents": ["FUND-AI-002","FUND-AI-003","FUND-AI-004","F
         );
 
         structuredOutput = JSON.parse(aiResponse.text || '{}');
-        outputResult = structuredOutput.bodyText || structuredOutput.summary || `Task successfully processed by Gemini 4 Hydrogen for agent ${agentId}.`;
-        modelUsed = 'gemini-4-hydrogen';
+        outputResult = structuredOutput.bodyText || structuredOutput.summary || `Task successfully processed by ${ACTIVE_GEMINI_MODEL} for agent ${agentId}.`;
+        modelUsed = ACTIVE_GEMINI_MODEL;
       } catch (gemErr) {
         console.warn(`[Phumulani Gateway] Agent ${agentId} Gemini fallback to deterministic engine:`, gemErr);
       }
@@ -2093,6 +2150,8 @@ app.post('/api/fundraising/approve', requireSessionMiddleware(EXEC_APPROVER_ROLE
 
 // 9. Server-Side Fail-Closed Dispatch Endpoint (Enforces Task 6 Requirements)
 app.post('/api/fundraising/dispatch', (req: Request, res: Response) => {
+  const session = getAuthenticatedSession(req)!;
+  const requesterRole = String(session.role);
   const { taskId, recipientEmail, contentHash: providedHash } = req.body;
 
   // 1. Emergency shutdown check
@@ -2100,7 +2159,7 @@ app.post('/api/fundraising/dispatch', (req: Request, res: Response) => {
     logAudit({
       agentId: 'FUND-AI-008',
       action: 'task:dispatch',
-      requesterRole: 'system_security',
+      requesterRole,
       status: 'blocked_policy',
       reason: 'FAIL-CLOSED: Emergency shutdown is active. All outbound transmissions terminated.',
     });
@@ -2118,7 +2177,7 @@ app.post('/api/fundraising/dispatch', (req: Request, res: Response) => {
     logAudit({
       agentId: 'FUND-AI-008',
       action: 'task:dispatch',
-      requesterRole: 'staff',
+      requesterRole,
       status: 'blocked_policy',
       reason: `FAIL-CLOSED GATE INTERCEPTED: Task ${taskId} is not in approved state.`,
     });
@@ -2133,7 +2192,7 @@ app.post('/api/fundraising/dispatch', (req: Request, res: Response) => {
     logAudit({
       agentId: 'FUND-AI-008',
       action: 'task:dispatch',
-      requesterRole: 'staff',
+      requesterRole,
       status: 'blocked_policy',
       reason: `DUPLICATE DISPATCH PREVENTED: Task ${taskId} has already been dispatched at ${task.dispatchedAt}.`,
     });
@@ -2149,7 +2208,7 @@ app.post('/api/fundraising/dispatch', (req: Request, res: Response) => {
     logAudit({
       agentId: 'FUND-AI-008',
       action: 'task:dispatch',
-      requesterRole: 'security_gatekeeper',
+      requesterRole,
       status: 'blocked_policy',
       reason: `CONTENT TAMPERING DETECTED: Provided hash (${providedHash.slice(0, 8)}...) does not match approved hash (${task.contentHash.slice(0, 8)}...).`,
     });
@@ -2168,7 +2227,7 @@ app.post('/api/fundraising/dispatch', (req: Request, res: Response) => {
   logAudit({
     agentId: 'FUND-AI-007',
     action: 'task:dispatch',
-    requesterRole: 'authorized_signoff',
+    requesterRole,
     status: 'allowed',
     reason: `Approved draft ${taskId} dispatched to ${task.dispatchedTo}.`,
   });
@@ -2183,14 +2242,16 @@ app.post('/api/fundraising/dispatch', (req: Request, res: Response) => {
 });
 
 // 10. Emergency Kill Switch Controls
-app.post('/api/fundraising/emergency-shutdown', (req: Request, res: Response) => {
-  const { activate, reason = 'Operator triggered emergency shutdown', operator = 'Master Administrator' } = req.body;
+app.post('/api/fundraising/emergency-shutdown', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
+  const session = getAuthenticatedSession(req)!;
+  const { activate, reason = 'Operator triggered emergency shutdown' } = req.body;
+  const operator = session.name || session.userEmail || 'Authenticated Administrator';
   emergencyShutdownActive = !!activate;
 
   logAudit({
     agentId: 'FUND-AI-008',
     action: emergencyShutdownActive ? 'emergency:shutdown_activated' : 'emergency:shutdown_revoked',
-    requesterRole: 'security_officer',
+    requesterRole: String(session.role),
     status: 'allowed',
     reason: `${emergencyShutdownActive ? 'SHUTDOWN ACTIVATED' : 'SHUTDOWN REVOKED'} by ${operator}: ${reason}`,
   });
@@ -5057,7 +5118,7 @@ app.get('/api/admin/email/pilot/status', (_req: Request, res: Response) => {
   });
 });
 
-app.post('/api/admin/email/pilot/activate', (req: Request, res: Response) => {
+app.post('/api/admin/email/pilot/activate', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   const actor = getEmailAdminActor(req);
   const {
     confirmationCode,
@@ -5090,7 +5151,7 @@ app.post('/api/admin/email/pilot/activate', (req: Request, res: Response) => {
   res.json(result);
 });
 
-app.post('/api/admin/email/pilot/deactivate', (req: Request, res: Response) => {
+app.post('/api/admin/email/pilot/deactivate', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   const actor = getEmailAdminActor(req);
   const { reason } = req.body;
   const result = googleWorkspaceAdapter.deactivatePilot(
@@ -5224,7 +5285,7 @@ app.post('/api/admin/email/mailboxes/:email/reauthorize', requireSessionMiddlewa
 });
 
 // 31. Phase 52 Google Workspace Disconnect Mailbox (M52.02)
-app.post('/api/admin/email/mailboxes/:email/disconnect', (req: Request, res: Response) => {
+app.post('/api/admin/email/mailboxes/:email/disconnect', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   try {
     const mailboxEmail = req.params.email;
     googleWorkspaceAdapter.disconnect(mailboxEmail);
@@ -5235,7 +5296,7 @@ app.post('/api/admin/email/mailboxes/:email/disconnect', (req: Request, res: Res
 });
 
 // 32. Phase 52 Google Workspace Revoke Access (M52.02)
-app.post('/api/admin/email/mailboxes/:email/revoke', (req: Request, res: Response) => {
+app.post('/api/admin/email/mailboxes/:email/revoke', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   try {
     const mailboxEmail = req.params.email;
     const result = googleWorkspaceAdapter.revokeAccess(mailboxEmail);
@@ -5946,22 +6007,6 @@ app.post('/api/admin/email/connections/:id/test', async (req: Request, res: Resp
   }
 });
 
-app.post('/api/admin/email/connections/:id/sync', async (req: Request, res: Response) => {
-  try {
-    const conn = connectorRegistry.getConnection(req.params.id);
-    if (!conn) {
-      return res.status(404).json({ success: false, error: 'Connection not found.' });
-    }
-    const result = await emailSyncService.syncMailbox({
-      connectionId: conn.id,
-      mailboxEmail: conn.emailAddress,
-    });
-    res.json({ success: result.success, result });
-  } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
-
 app.post('/api/admin/email/connections/:id/pause', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   try {
     const conn = connectorRegistry.getConnection(req.params.id);
@@ -6309,14 +6354,17 @@ app.post('/api/admin/email/oauth/exchange', requireSessionMiddleware(PRIVILEGED_
 });
 
 // 3b. Mailbox synchronization trigger
-app.post(['/api/admin/email/mailboxes/:id/sync', '/api/admin/email/connections/:id/sync'], async (req: Request, res: Response) => {
+app.post(['/api/admin/email/mailboxes/:id/sync', '/api/admin/email/connections/:id/sync'], requireSessionMiddleware(STAFF_ADMIN_ROLES), async (req: Request, res: Response) => {
   try {
     const conn = connectorRegistry.getConnection(req.params.id);
+    if (!conn) {
+      return res.status(404).json({ success: false, error: 'Connection not found.' });
+    }
     const syncRes = await emailSyncService.syncMailbox({
-      connectionId: req.params.id,
-      mailboxEmail: conn?.emailAddress || 'donations@phumulani.org',
+      connectionId: conn.id,
+      mailboxEmail: conn.emailAddress,
     });
-    res.json({ success: syncRes.success, sync: syncRes });
+    res.json({ success: syncRes.success, sync: syncRes, result: syncRes });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
   }

@@ -29,7 +29,7 @@ export class GmailConnector implements EmailConnector {
   }
   private connectionId: string;
   private mailboxEmail: string;
-  private currentHistoryId: string = '1004834';
+  private currentHistoryId: string | null = null;
   private isAuthorized: boolean = false;
 
   constructor(connectionId = 'conn-google-primary', mailboxEmail = 'donations@phumulani.org') {
@@ -358,18 +358,18 @@ export class GmailConnector implements EmailConnector {
   }
 
   public async syncMessages(param1?: any, param2?: any): Promise<any> {
-    const cursor =
+    const explicitCursor =
       typeof param1 === 'string' && !param1.startsWith('mb-')
         ? param1
-        : param2?.cursor || (typeof param1 === 'object' ? param1?.cursor : this.currentHistoryId);
-    const oldCursor = cursor || this.currentHistoryId;
+        : param2?.cursor || (typeof param1 === 'object' ? param1?.cursor : undefined);
+    const oldCursor = explicitCursor || this.currentHistoryId || '';
 
     const profileRes = await this.fetchGmailWithRefresh('https://gmail.googleapis.com/gmail/v1/users/me/profile');
     if (profileRes && profileRes.ok) {
       const profile: any = await profileRes.json().catch(() => ({}));
       const page = await this.listMessages({ limit: 10 });
       const newCursor = String(profile.historyId || oldCursor);
-      this.currentHistoryId = newCursor;
+      this.currentHistoryId = newCursor || null;
       return {
         success: true,
         connectionId: this.connectionId,
@@ -388,24 +388,19 @@ export class GmailConnector implements EmailConnector {
       };
     }
 
-    const num = parseInt(String(oldCursor).replace(/[^0-9]/g, '') || '9901', 10);
-    const newCursor = `gmail-hist-${num + 1}`;
-    this.currentHistoryId = newCursor;
-    const sample = await this.listMessages({ limit: 1 });
-
     return {
       success: false,
       connectionId: this.connectionId,
       provider: 'GOOGLE',
       mailboxEmail: this.mailboxEmail,
-      messages: sample.messages,
+      messages: [],
       messagesImported: 0,
       duplicatesSkipped: 0,
       threadsReconstructed: 0,
       oldCursor,
-      newCursor,
+      newCursor: oldCursor,
       cursorType: 'GMAIL_HISTORY_ID',
-      checkpointId: `chk-gmail-${Date.now()}`,
+      checkpointId: '',
       status: 'AUTHORIZATION_REQUIRED',
       error: 'Live Gmail OAuth 2.0 authorization required before live inbox sync.',
       timestamp: new Date().toISOString(),

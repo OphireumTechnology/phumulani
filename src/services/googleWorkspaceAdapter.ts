@@ -144,14 +144,14 @@ export class GoogleWorkspaceAdapter {
   };
 
   private mailboxes: GoogleMailboxProfile[] = [
-    { email: 'info@phumulani.org', displayName: 'Phumulani Front Desk & General Inquiries', department: 'Operations', role: 'Inbound Inquiries & Community Outreach', isDelegated: true, status: 'AUTHORIZATION_REQUIRED', historyId: 'hist-001000' },
-    { email: 'donations@phumulani.org', displayName: 'Phumulani Development & Stewardship', department: 'Development', role: 'Individual Donations & Corporate Sponsorships', isDelegated: true, status: 'AUTHORIZATION_REQUIRED', historyId: 'hist-002000' },
-    { email: 'grants@phumulani.org', displayName: 'Phumulani Institutional Grants & Compliance', department: 'Finance & Grants', role: 'Foundation Grants & Government Funding', isDelegated: true, status: 'AUTHORIZATION_REQUIRED', historyId: 'hist-003000' },
-    { email: 'partnerships@phumulani.org', displayName: 'Phumulani Strategic Partnerships & CSR', department: 'Strategic Alliances', role: 'Corporate CSR & Coalition Relations', isDelegated: true, status: 'AUTHORIZATION_REQUIRED', historyId: 'hist-004000' },
-    { email: 'executive@phumulani.org', displayName: 'Office of Executive Director Comfort Dondo', department: 'Executive', role: 'Executive Communications & Media Availability', isDelegated: false, status: 'AUTHORIZATION_REQUIRED', historyId: 'hist-005000' },
-    { email: 'safeguarding@phumulani.org', displayName: 'Sister Miriam K. Safeguarding Desk', department: 'Safeguarding (DEPT-SAFE)', role: 'Confidential Survivor Inquiries & Safety Planning', isDelegated: false, status: 'AUTHORIZATION_REQUIRED', historyId: 'hist-006000' },
-    { email: 'governance@phumulani.org', displayName: 'Board of Directors Secretariat', department: 'Board Governance', role: 'Official Board Resolutions & Quorum Notices', isDelegated: true, status: 'AUTHORIZATION_REQUIRED', historyId: 'hist-007000' },
-    { email: 'finance@phumulani.org', displayName: 'Finance & Comptroller David Mwangi, CPA', department: 'Finance', role: 'Audits, Tax Form 990 & Vendor Disbursements', isDelegated: true, status: 'AUTHORIZATION_REQUIRED', historyId: 'hist-008000' },
+    { email: 'info@phumulani.org', displayName: 'Phumulani Front Desk & General Inquiries', department: 'Operations', role: 'Inbound Inquiries & Community Outreach', isDelegated: true, status: 'AUTHORIZATION_REQUIRED', historyId: undefined },
+    { email: 'donations@phumulani.org', displayName: 'Phumulani Development & Stewardship', department: 'Development', role: 'Individual Donations & Corporate Sponsorships', isDelegated: true, status: 'AUTHORIZATION_REQUIRED', historyId: undefined },
+    { email: 'grants@phumulani.org', displayName: 'Phumulani Institutional Grants & Compliance', department: 'Finance & Grants', role: 'Foundation Grants & Government Funding', isDelegated: true, status: 'AUTHORIZATION_REQUIRED', historyId: undefined },
+    { email: 'partnerships@phumulani.org', displayName: 'Phumulani Strategic Partnerships & CSR', department: 'Strategic Alliances', role: 'Corporate CSR & Coalition Relations', isDelegated: true, status: 'AUTHORIZATION_REQUIRED', historyId: undefined },
+    { email: 'executive@phumulani.org', displayName: 'Office of Executive Director Comfort Dondo', department: 'Executive', role: 'Executive Communications & Media Availability', isDelegated: false, status: 'AUTHORIZATION_REQUIRED', historyId: undefined },
+    { email: 'safeguarding@phumulani.org', displayName: 'Sister Miriam K. Safeguarding Desk', department: 'Safeguarding (DEPT-SAFE)', role: 'Confidential Survivor Inquiries & Safety Planning', isDelegated: false, status: 'AUTHORIZATION_REQUIRED', historyId: undefined },
+    { email: 'governance@phumulani.org', displayName: 'Board of Directors Secretariat', department: 'Board Governance', role: 'Official Board Resolutions & Quorum Notices', isDelegated: true, status: 'AUTHORIZATION_REQUIRED', historyId: undefined },
+    { email: 'finance@phumulani.org', displayName: 'Finance & Comptroller David Mwangi, CPA', department: 'Finance', role: 'Audits, Tax Form 990 & Vendor Disbursements', isDelegated: true, status: 'AUTHORIZATION_REQUIRED', historyId: undefined },
   ];
 
   // Phase 51 Pilot Feature Flags & Security Invariants

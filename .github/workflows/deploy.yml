@@ -7,12 +7,8 @@ on:
       - main
     types:
       - completed
-  workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+permissions: {}
 
 concurrency:
   group: github-pages
@@ -21,13 +17,15 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success') }}
+    permissions:
+      contents: read
+    if: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push' && github.event.workflow_run.head_branch == 'main' && github.event.workflow_run.head_repository.full_name == github.repository }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout exact CI-verified commit
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+          ref: ${{ github.event.workflow_run.head_sha }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -41,20 +39,24 @@ jobs:
       - name: Validate TypeScript
         run: npm run lint
 
-      - name: Build website
+      - name: Build frontend website for GitHub Pages
         env:
           BASE_PATH: /phumulani/
         run: |
-          npm run build
+          npm run build:client
           cp dist/index.html dist/404.html
 
-      - name: Verify compiled output
+      - name: Verify compiled output and asset paths
         run: |
           test -f dist/index.html
           test -f dist/404.html
           test -d dist/assets
           if grep -q 'src="/src/main.tsx"' dist/index.html; then
             echo "ERROR: Development HTML detected"
+            exit 1
+          fi
+          if grep -rn '/phumulani/phumulani/' dist/; then
+            echo "ERROR: Duplicate /phumulani/phumulani/ asset prefix detected"
             exit 1
           fi
 
@@ -69,6 +71,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

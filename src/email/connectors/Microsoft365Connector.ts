@@ -29,13 +29,12 @@ export class Microsoft365Connector implements EmailConnector {
   }
   private connectionId: string;
   private mailboxEmail: string;
-  private deltaToken: string;
+  private deltaToken: string | null = null;
   private isAuthorized: boolean = false;
 
   constructor(connectionId = 'conn-msft-primary', mailboxEmail = 'partnerships@phumulani.org') {
     this.connectionId = connectionId;
     this.mailboxEmail = mailboxEmail;
-    this.deltaToken = `ms-delta-${Date.now()}`;
   }
 
   private getActiveAccessToken(): string | null {
@@ -344,36 +343,41 @@ export class Microsoft365Connector implements EmailConnector {
   }
 
   public async syncMessages(param1?: any, param2?: any): Promise<any> {
-    const cursor =
+    const explicitCursor =
       typeof param1 === 'string' && !param1.startsWith('mb-')
         ? param1
-        : param2?.cursor || (typeof param1 === 'object' ? param1?.cursor : this.deltaToken);
-    const oldCursor = cursor || this.deltaToken;
+        : param2?.cursor || (typeof param1 === 'object' ? param1?.cursor : undefined);
+    const oldCursor = explicitCursor || this.deltaToken || '';
 
-    const page = await this.listMessages({ limit: 10 });
-    const hasLiveData = page.messages.some((m) => m.isLiveImportVerified);
-    const newCursor = `ms-delta-${Date.now()}`;
-    this.deltaToken = newCursor;
-
-    if (!hasLiveData && !this.getActiveAccessToken()) {
+    const deltaRes = await this.fetchGraphWithRefresh(
+      'https://graph.microsoft.com/v1.0/me/mailFolders/Inbox/messages/delta?$top=10'
+    );
+    if (!deltaRes || !deltaRes.ok) {
       return {
         success: false,
         connectionId: this.connectionId,
         provider: 'MICROSOFT',
         mailboxEmail: this.mailboxEmail,
-        messages: page.messages,
+        messages: [],
         messagesImported: 0,
         duplicatesSkipped: 0,
         threadsReconstructed: 0,
         oldCursor,
-        newCursor,
+        newCursor: oldCursor,
         cursorType: 'MS_GRAPH_DELTA_TOKEN',
-        checkpointId: `chk-msft-${Date.now()}`,
-        status: 'AUTHORIZATION_REQUIRED',
-        error: 'Live Microsoft 365 OAuth 2.0 authorization required before live inbox sync.',
+        checkpointId: '',
+        status: deltaRes ? 'ERROR' : 'AUTHORIZATION_REQUIRED',
+        error: deltaRes
+          ? `Microsoft Graph delta sync failed with HTTP ${deltaRes.status}`
+          : 'Live Microsoft 365 OAuth 2.0 authorization required before live inbox sync.',
         timestamp: new Date().toISOString(),
       };
     }
+
+    const deltaPayload: any = await deltaRes.json().catch(() => ({}));
+    const page = await this.listMessages({ limit: 10 });
+    const newCursor = String(deltaPayload?.['@odata.deltaLink'] || deltaPayload?.['@odata.nextLink'] || oldCursor);
+    this.deltaToken = newCursor || null;
 
     return {
       success: true,
