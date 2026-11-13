@@ -116,6 +116,8 @@ export interface EmailIdempotencyRecord {
   senderAccount: string;
   recipientEmails: string[];
   subjectHash: string;
+  deliveryState?: SendResult['deliveryState'];
+  providerMessageId?: string;
   createdAt: string;
   expiresAt: string;
 }

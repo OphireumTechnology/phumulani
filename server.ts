@@ -137,7 +137,7 @@ const serverAuditLogs: ServerAIAuditItem[] = [];
 
 const logAudit = (item: Omit<ServerAIAuditItem, 'id' | 'timestamp'>) => {
   const entry: ServerAIAuditItem = {
-    id: `audit-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+    id: `audit-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`,
     timestamp: new Date().toISOString(),
     ...item,
   };
@@ -149,7 +149,7 @@ const logAudit = (item: Omit<ServerAIAuditItem, 'id' | 'timestamp'>) => {
   void dbAdapter
     .insertDurableWithRetry('audit_logs', entry, {
       context: `server:logAudit:${entry.action}`,
-      failClosedInProd: false,
+      failClosedInProd: EnvironmentService.isProductionOnly(),
     })
     .catch((err: any) => {
       console.error('[AuditLogger] Critical durable write fallback error:', err?.message || err);
@@ -760,6 +760,10 @@ app.post('/api/intake/restricted', async (req: Request, res: Response) => {
     const anonymousCode = `SAFE-${Date.now().toString().slice(-6)}-${crypto.randomBytes(2).toString('hex').toUpperCase()}`;
     const aadContext = `${anonymousCode}:${String(urgencyLevel)}`;
     const encrypted = encryptSafeguardingData(notes.trim(), aadContext);
+    const trimmedSafeTime = String(safeTimeToContact || '').trim();
+    const encryptedSafeTime = trimmedSafeTime
+      ? encryptSafeguardingData(trimmedSafeTime, `${aadContext}:safeTime`)
+      : null;
 
     const intakeRecord = {
       id: anonymousCode,
@@ -767,7 +771,11 @@ app.post('/api/intake/restricted', async (req: Request, res: Response) => {
       urgency_level: urgencyLevel,
       preferred_contact_method: preferredContactMethod,
       language_needed: languageNeeded,
-      safe_time_to_contact: String(safeTimeToContact || '').trim(),
+      safe_time_to_contact: '',
+      safe_time_ciphertext: encryptedSafeTime?.ciphertext || null,
+      safe_time_iv: encryptedSafeTime?.iv || null,
+      safe_time_auth_tag: encryptedSafeTime?.authTag || null,
+      safe_time_kdf_salt: encryptedSafeTime?.salt || null,
       ciphertext: encrypted.ciphertext,
       iv: encrypted.iv,
       auth_tag: encrypted.authTag,
@@ -790,8 +798,8 @@ app.post('/api/intake/restricted', async (req: Request, res: Response) => {
       success: true,
       anonymousCode,
       urgencyLevel,
-      status: 'SECURELY_ROUTED',
-      message: 'Your request has been encrypted and securely routed to our authorized Safeguarding Officers.',
+      status: 'RECEIVED_ENCRYPTED',
+      message: 'Your confidential request has been encrypted with AES-256-GCM and stored in the isolated safeguarding vault for review by our Safeguarding Officers.',
     });
   } catch (err: any) {
     if (err instanceof SafeguardingEncryptionUnavailableError) {
@@ -862,13 +870,27 @@ app.get('/api/intake/restricted', async (req: Request, res: Response) => {
 
     const rawRecords = await dbAdapter.select<any>('survivors_isolated');
     const decryptedList = rawRecords.map((r: any) => {
+      const aadContext = `${r.anonymous_code || r.id}:${String(r.urgency_level || 'within_24h')}`;
       let decryptedNotes = '[Decryption Unavailable]';
       if (r.ciphertext && r.iv && r.auth_tag && r.kdf_salt) {
         try {
-          const aadContext = `${r.anonymous_code || r.id}:${String(r.urgency_level || 'within_24h')}`;
           decryptedNotes = decryptSafeguardingData(r.ciphertext, r.iv, r.auth_tag, r.kdf_salt, aadContext);
         } catch {
           decryptedNotes = '[Decryption Tag Mismatch]';
+        }
+      }
+      let decryptedSafeTime = r.safe_time_to_contact || '';
+      if (r.safe_time_ciphertext && r.safe_time_iv && r.safe_time_auth_tag && r.safe_time_kdf_salt) {
+        try {
+          decryptedSafeTime = decryptSafeguardingData(
+            r.safe_time_ciphertext,
+            r.safe_time_iv,
+            r.safe_time_auth_tag,
+            r.safe_time_kdf_salt,
+            `${aadContext}:safeTime`
+          );
+        } catch {
+          decryptedSafeTime = '[Decryption Tag Mismatch]';
         }
       }
       return {
@@ -877,7 +899,7 @@ app.get('/api/intake/restricted', async (req: Request, res: Response) => {
         urgencyLevel: r.urgency_level,
         preferredContactMethod: r.preferred_contact_method,
         languageNeeded: r.language_needed,
-        safeTimeToContact: r.safe_time_to_contact,
+        safeTimeToContact: decryptedSafeTime,
         decryptedNotes,
         status: r.status,
         createdAt: r.created_at,
@@ -1759,7 +1781,7 @@ Requirements:
 });
 
 // 5. Server-side AI Audit Logs Endpoint
-app.get('/api/ai/audit-logs', (_req: Request, res: Response) => {
+app.get('/api/ai/audit-logs', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (_req: Request, res: Response) => {
   res.json({
     total: serverAuditLogs.length,
     logs: serverAuditLogs,
@@ -1861,15 +1883,19 @@ app.post('/api/ai/workforce/agents/:id/status', requireSessionMiddleware(PRIVILE
 // 6. Global Emergency Kill Switch
 app.post('/api/ai/workforce/emergency-shutdown', requireSessionMiddleware(EXEC_APPROVER_ROLES), async (req: Request, res: Response) => {
   const session = getAuthenticatedSession(req)!;
+  emergencyShutdownActive = true;
+  emailDispatchService.setEmergencyShutdown(true);
   await unifiedAiWorkforceService.emergencyHaltAllAgents(session.name || session.userEmail);
-  res.json({ success: true, message: 'All 36 AI workforce agents emergency halted.' });
+  res.json({ success: true, emergencyShutdownActive: true, message: 'All 36 AI workforce agents and outbound email dispatch emergency halted.' });
 });
 
 // 7. Global Resume All Agents
 app.post('/api/ai/workforce/resume', requireSessionMiddleware(EXEC_APPROVER_ROLES), async (req: Request, res: Response) => {
   const session = getAuthenticatedSession(req)!;
+  emergencyShutdownActive = false;
+  emailDispatchService.setEmergencyShutdown(false);
   await unifiedAiWorkforceService.resumeAllAgents(session.name || session.userEmail);
-  res.json({ success: true, message: 'All 36 AI workforce agents resumed.' });
+  res.json({ success: true, emergencyShutdownActive: false, message: 'All 36 AI workforce agents and email dispatch gate resumed.' });
 });
 
 // 8. Cross-Division Task Handoff
@@ -2289,6 +2315,7 @@ app.post('/api/fundraising/emergency-shutdown', requireSessionMiddleware(PRIVILE
   const { activate, reason = 'Operator triggered emergency shutdown' } = req.body;
   const operator = session.name || session.userEmail || 'Authenticated Administrator';
   emergencyShutdownActive = !!activate;
+  emailDispatchService.setEmergencyShutdown(emergencyShutdownActive);
 
   logAudit({
     agentId: 'FUND-AI-008',
@@ -2409,7 +2436,9 @@ app.post('/api/database/verify-concurrency', async (_req: Request, res: Response
 // 11. Multi-Agent Orchestration Runner (Task Dependencies & Persistent Jobs)
 app.post('/api/fundraising/orchestrate', async (req: Request, res: Response) => {
   try {
-    const { campaignId = 'camp-capital-001', initiatedBy = 'Comfort Dondo' } = req.body;
+    const session = getAuthenticatedSession(req)!;
+    const t0 = Date.now();
+    const { campaignId = 'camp-capital-001', initiatedBy = session.name || session.userEmail || 'Authenticated Staff' } = req.body;
 
     if (emergencyShutdownActive) {
       return res.status(503).json({ error: 'Orchestration blocked: Emergency shutdown active.' });
@@ -2431,7 +2460,8 @@ app.post('/api/fundraising/orchestrate', async (req: Request, res: Response) => 
     const executedTasks: BackendFundraisingTask[] = [];
 
     for (const ag of coordinatedAgents) {
-      const taskId = `orch-${ag.id.toLowerCase()}-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+      const stepT0 = Date.now();
+      const taskId = `orch-${ag.id.toLowerCase()}-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`;
       const task: BackendFundraisingTask = {
         id: taskId,
         agentId: ag.id,
@@ -2439,7 +2469,7 @@ app.post('/api/fundraising/orchestrate', async (req: Request, res: Response) => 
         status: ag.approval ? 'pending_approval' : 'completed',
         requiresHumanApproval: ag.approval,
         contentHash: crypto.createHash('sha256').update(ag.title + campaignId).digest('hex'),
-        executionDurationMs: Math.floor(Math.random() * 25 + 15),
+        executionDurationMs: Math.max(1, Date.now() - stepT0),
         outputResult: `Task executed under orchestration for campaign ${campaignId}.`,
         structuredOutput: { campaignId, agentId: ag.id, orchestrated: true },
         inputPayload: { campaignId, initiatedBy },
@@ -2453,9 +2483,9 @@ app.post('/api/fundraising/orchestrate', async (req: Request, res: Response) => 
     logAudit({
       agentId: 'FUND-AI-001',
       action: 'orchestrate:full_pipeline',
-      requesterRole: 'executive_director',
+      requesterRole: String(session.role),
       status: 'allowed',
-      reason: `Master pipeline executed across ${coordinatedAgents.length} agents for ${campaignId}.`,
+      reason: `Master pipeline executed across ${coordinatedAgents.length} agents for ${campaignId} in ${Math.max(1, Date.now() - t0)}ms.`,
     });
 
     return res.json({
@@ -2474,27 +2504,31 @@ app.post('/api/fundraising/orchestrate', async (req: Request, res: Response) => 
 
 // 11B. Specialized Multi-Agent Workflows for All 18 Agents
 app.post('/api/fundraising/workflow/grant', (req: Request, res: Response) => {
+  const session = getAuthenticatedSession(req)!;
   const { opportunityId = 'opp-inst-001' } = req.body;
   if (emergencyShutdownActive) return res.status(503).json({ error: 'Blocked: Emergency shutdown active.' });
   const coordinatedAgents = ['FUND-AI-005', 'FUND-AI-006', 'FUND-AI-010', 'FUND-AI-007', 'FUND-AI-009', 'FUND-AI-008'];
-  const tasks = coordinatedAgents.map((agId) => ({
-    id: `grant-${agId.toLowerCase()}-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
-    agentId: agId,
-    title: `Grant Opportunity Workflow: ${opportunityId}`,
-    status: ['FUND-AI-006', 'FUND-AI-010', 'FUND-AI-007'].includes(agId) ? 'pending_approval' : 'completed',
-    requiresHumanApproval: ['FUND-AI-006', 'FUND-AI-010', 'FUND-AI-007'].includes(agId),
-    contentHash: crypto.createHash('sha256').update(agId + opportunityId).digest('hex'),
-    executionDurationMs: 25,
-    outputResult: `Grant workflow step executed by ${agId} for ${opportunityId}`,
-    inputPayload: { opportunityId },
-    timestamp: new Date().toISOString(),
-    modelUsed: 'specialized_workflow_engine',
-  }));
+  const tasks = coordinatedAgents.map((agId) => {
+    const stepT0 = Date.now();
+    return {
+      id: `grant-${agId.toLowerCase()}-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
+      agentId: agId,
+      title: `Grant Opportunity Workflow: ${opportunityId}`,
+      status: ['FUND-AI-006', 'FUND-AI-010', 'FUND-AI-007'].includes(agId) ? 'pending_approval' : 'completed',
+      requiresHumanApproval: ['FUND-AI-006', 'FUND-AI-010', 'FUND-AI-007'].includes(agId),
+      contentHash: crypto.createHash('sha256').update(agId + opportunityId).digest('hex'),
+      executionDurationMs: Math.max(1, Date.now() - stepT0),
+      outputResult: `Grant workflow step executed by ${agId} for ${opportunityId}`,
+      inputPayload: { opportunityId },
+      timestamp: new Date().toISOString(),
+      modelUsed: 'specialized_workflow_engine',
+    };
+  });
   tasks.forEach((t) => backendFundraisingTasks.unshift(t as any));
   logAudit({
     agentId: 'FUND-AI-001',
     action: 'workflow:grant',
-    requesterRole: 'grants_officer',
+    requesterRole: String(session.role),
     status: 'allowed',
     reason: `Grant workflow executed for ${opportunityId} across ${coordinatedAgents.length} agents.`,
   });
@@ -3324,7 +3358,12 @@ app.get('/api/admin/funding/grants', (_req: Request, res: Response) => {
 
 app.post('/api/admin/funding/grants', (req: Request, res: Response) => {
   try {
-    const opp = fundingService.createGrantOpportunity(req.body, { role: 'DEVELOPMENT_DIRECTOR' });
+    const session = getAuthenticatedSession(req)!;
+    const opp = fundingService.createGrantOpportunity(req.body, {
+      role: String(session.role),
+      email: session.userEmail,
+      name: session.name || session.userEmail,
+    });
     res.status(201).json(opp);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -3333,8 +3372,14 @@ app.post('/api/admin/funding/grants', (req: Request, res: Response) => {
 
 app.patch('/api/admin/funding/grants/:id/status', (req: Request, res: Response) => {
   try {
+    const session = getAuthenticatedSession(req)!;
     const { status, notes } = req.body;
-    const updated = fundingService.updateGrantOpportunityStatus(req.params.id, status, { role: 'DEVELOPMENT_DIRECTOR' }, notes);
+    const updated = fundingService.updateGrantOpportunityStatus(
+      req.params.id,
+      status,
+      { role: String(session.role), email: session.userEmail, name: session.name || session.userEmail },
+      notes
+    );
     res.json(updated);
   } catch (err: any) {
     res.status(400).json({ error: err.message });
@@ -4763,10 +4808,10 @@ app.get('/api/admin/email/mailboxes', (_req: Request, res: Response) => {
 });
 
 // 4. Update or add organizational mailbox
-app.post('/api/admin/email/mailboxes', (req: Request, res: Response) => {
+app.post('/api/admin/email/mailboxes', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   const actor = getEmailAdminActor(req);
   if (actor.role === 'visitor') {
-    return res.status(403).json({ error: 'Forbidden: Staff role required to configure mailboxes.' });
+    return res.status(403).json({ error: 'Forbidden: Privileged admin role required to configure mailboxes.' });
   }
   const validation = EmailEnterpriseService.validateMailboxConfiguration(req.body);
   if (!validation.isValid) {
@@ -5004,20 +5049,20 @@ app.get('/api/admin/email/audit-logs', (_req: Request, res: Response) => {
 });
 
 // 16. Test Mailbox Connection Handshake
-app.post('/api/admin/email/mailboxes/:id/test', (req: Request, res: Response) => {
+app.post('/api/admin/email/mailboxes/:id/test', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   const actor = getEmailAdminActor(req);
   if (actor.role === 'visitor') {
-    return res.status(403).json({ error: 'Staff role required' });
+    return res.status(403).json({ error: 'Privileged admin role required' });
   }
   const result = db.testMailboxConnection(req.params.id);
   res.json(result);
 });
 
 // 17. Disconnect Mailbox and Revoke Tokens
-app.post('/api/admin/email/mailboxes/:id/disconnect', (req: Request, res: Response) => {
+app.post('/api/admin/email/mailboxes/:id/disconnect', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   const actor = getEmailAdminActor(req);
   if (actor.role === 'visitor') {
-    return res.status(403).json({ error: 'Staff role required' });
+    return res.status(403).json({ error: 'Privileged admin role required' });
   }
   db.disconnectMailbox(req.params.id);
   res.json({ success: true, message: 'Mailbox disconnected and provider tokens revoked.' });
@@ -5226,7 +5271,7 @@ app.post('/api/admin/email/threads/:id/transition', (req: Request, res: Response
 });
 
 // 27. Phase 51 Administrator Recovery & Diagnostics Tools (M51.18)
-app.get('/api/admin/email/recovery/diagnostics', (_req: Request, res: Response) => {
+app.get('/api/admin/email/recovery/diagnostics', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (_req: Request, res: Response) => {
   const dbInfo = dbAdapter.getConnectionInfo();
   const gwProfiles = googleWorkspaceAdapter.getMailboxes();
   const institutional = googleWorkspaceAdapter.getInstitutionalMailboxes();
@@ -5405,7 +5450,7 @@ app.get('/api/admin/email/sla/dashboard', (_req: Request, res: Response) => {
 });
 
 // 36. Phase 52 External PostgreSQL Connection Verification (M52.10)
-app.post('/api/admin/database/verify-external', async (req: Request, res: Response) => {
+app.post('/api/admin/database/verify-external', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
   try {
     const { testDatabaseUrl } = req.body;
     const result = await dbAdapter.verifyExternalConnection(testDatabaseUrl);
@@ -5594,7 +5639,7 @@ app.post('/api/admin/email/provider/verify-connection', (req: Request, res: Resp
 });
 
 // 43. Phase 55 Controlled Live Outbound Sending Test (M55.10)
-app.post('/api/admin/email/pilot/test-send', (req: Request, res: Response) => {
+app.post('/api/admin/email/pilot/test-send', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   try {
     const actor = getEmailAdminActor(req);
     const { testRecipient, subject, body, idempotencyKey } = req.body;
@@ -6152,6 +6197,31 @@ app.delete('/api/admin/email/connections/:id', requireSessionMiddleware(PRIVILEG
   }
 });
 
+function validateOAuthRedirectUri(rawUri: string | undefined, req: Request, defaultPath: string): { valid: boolean; uri?: string; error?: string } {
+  const defaultUri = `${req.protocol}://${req.get('host')}${defaultPath}`;
+  if (!rawUri || !rawUri.trim()) {
+    return { valid: true, uri: defaultUri };
+  }
+  try {
+    const parsed = new URL(rawUri.trim());
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      return { valid: false, error: 'OAuth redirectUri must use http or https protocol.' };
+    }
+    const serverOrigin = `${req.protocol}://${req.get('host')}`.toLowerCase();
+    const extraOrigins = (process.env.OAUTH_ALLOWED_REDIRECT_ORIGINS || '')
+      .split(',')
+      .map((s) => s.trim().toLowerCase())
+      .filter(Boolean);
+    const allowedOrigins = new Set([serverOrigin, ...extraOrigins]);
+    if (!allowedOrigins.has(parsed.origin.toLowerCase())) {
+      return { valid: false, error: `OAuth redirectUri origin "${parsed.origin}" is not in the server allowlist.` };
+    }
+    return { valid: true, uri: parsed.toString() };
+  } catch {
+    return { valid: false, error: 'Malformed OAuth redirectUri parameter.' };
+  }
+}
+
 // 3. OAuth initiation and callback endpoints for Google & Microsoft (Fail-Closed when unconfigured)
 app.get('/api/admin/email/oauth/google/start', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   try {
@@ -6163,7 +6233,19 @@ app.get('/api/admin/email/oauth/google/start', requireSessionMiddleware(PRIVILEG
         error: 'Google Workspace OAuth client credentials (GOOGLE_WORKSPACE_CLIENT_ID / GOOGLE_WORKSPACE_CLIENT_SECRET) are not configured on the server.',
       });
     }
-    const redirectUri = (req.query.redirectUri as string) || `${req.protocol}://${req.get('host')}/api/admin/email/oauth/google/callback`;
+    const redirectValidation = validateOAuthRedirectUri(
+      req.query.redirectUri as string | undefined,
+      req,
+      '/api/admin/email/oauth/google/callback'
+    );
+    if (!redirectValidation.valid || !redirectValidation.uri) {
+      return res.status(400).json({
+        success: false,
+        code: 'INVALID_REDIRECT_URI',
+        error: redirectValidation.error || 'Invalid OAuth redirectUri.',
+      });
+    }
+    const redirectUri = redirectValidation.uri;
     const mailboxEmail = req.query.email as string | undefined;
     const { authUrl, stateId, codeChallenge } = oAuthService.initiateGoogleOAuth(redirectUri, mailboxEmail);
     res.json({
@@ -6258,7 +6340,19 @@ app.get('/api/admin/email/oauth/microsoft/start', requireSessionMiddleware(PRIVI
         error: 'Microsoft 365 OAuth client credentials (MICROSOFT_GRAPH_CLIENT_ID / MICROSOFT_GRAPH_CLIENT_SECRET) are not configured on the server.',
       });
     }
-    const redirectUri = (req.query.redirectUri as string) || `${req.protocol}://${req.get('host')}/api/admin/email/oauth/microsoft/callback`;
+    const redirectValidation = validateOAuthRedirectUri(
+      req.query.redirectUri as string | undefined,
+      req,
+      '/api/admin/email/oauth/microsoft/callback'
+    );
+    if (!redirectValidation.valid || !redirectValidation.uri) {
+      return res.status(400).json({
+        success: false,
+        code: 'INVALID_REDIRECT_URI',
+        error: redirectValidation.error || 'Invalid OAuth redirectUri.',
+      });
+    }
+    const redirectUri = redirectValidation.uri;
     const mailboxEmail = req.query.email as string | undefined;
     const { authUrl, stateId, codeChallenge } = oAuthService.initiateMicrosoftOAuth(redirectUri, mailboxEmail);
     res.json({
@@ -6758,21 +6852,21 @@ app.get('/api/phumulani-ai/gateway/metrics', (req: Request, res: Response) => {
 
 app.post('/api/phumulani-ai/gateway/inference', async (req: Request, res: Response) => {
   try {
+    const authHeader = String(req.headers.authorization || '');
+    const configuredGatewayToken = (process.env.PHUMULANI_GATEWAY_TOKEN || '').trim();
+    const expectedBearer = configuredGatewayToken ? `Bearer ${configuredGatewayToken}` : '';
+    const isGatewayTokenValid =
+      Boolean(configuredGatewayToken) &&
+      authHeader.length === expectedBearer.length &&
+      crypto.timingSafeEqual(Buffer.from(authHeader), Buffer.from(expectedBearer));
+
+    if (!isGatewayTokenValid) {
+      const auth = authenticatePhumulaniSession(req, res);
+      if (!auth) return;
+    }
+
     const { prompt, options, requireJson, schemaDescription, fallbackValue } = req.body;
     if (!prompt) return res.status(400).json({ success: false, error: 'Prompt is required.' });
-
-    const authHeader = req.headers.authorization;
-    let isAuthenticated = false;
-    if (process.env.PHUMULANI_GATEWAY_TOKEN && authHeader === `Bearer ${process.env.PHUMULANI_GATEWAY_TOKEN}`) {
-      isAuthenticated = true;
-    } else {
-      const session = getSessionFromReq(req);
-      if (session) isAuthenticated = true;
-    }
-
-    if (!isAuthenticated) {
-      return res.status(401).json({ success: false, error: 'Unauthorized gateway access.' });
-    }
 
     if (requireJson) {
       const result = await localInferenceAdapter.generateStructuredJson(

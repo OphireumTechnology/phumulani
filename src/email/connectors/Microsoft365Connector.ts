@@ -132,7 +132,18 @@ export class Microsoft365Connector implements EmailConnector {
         }
         const profile: any = await profileRes.json().catch(() => ({}));
         const verifiedEmail = String(profile?.mail || profile?.userPrincipalName || '').trim();
-        if (verifiedEmail && verifiedEmail.toLowerCase() !== this.mailboxEmail.toLowerCase()) {
+        if (!verifiedEmail) {
+          this.isAuthorized = false;
+          return {
+            success: false,
+            connectionId: this.connectionId,
+            provider: 'MICROSOFT',
+            mailboxEmail: this.mailboxEmail,
+            status: 'AUTHENTICATION_FAILED',
+            details: 'Microsoft Graph profile verification did not return mail or userPrincipalName. Token was not vaulted.',
+          };
+        }
+        if (verifiedEmail.toLowerCase() !== this.mailboxEmail.toLowerCase()) {
           this.isAuthorized = false;
           return {
             success: false,
@@ -305,31 +316,9 @@ export class Microsoft365Connector implements EmailConnector {
       };
     }
 
-    const stagedFixtures: NormalizedEmailMessage[] = [
-      {
-        id: `msg-msft-staged-001`,
-        providerMessageId: 'staged-msft-001',
-        connectionId: this.connectionId,
-        provider: 'MICROSOFT',
-        sourceAccount: this.mailboxEmail,
-        threadId: 'th-msft-staged-201',
-        senderName: 'Staged Fixture — Corporate Partnership',
-        senderEmail: 'community.giving@example.org',
-        recipientEmails: [this.mailboxEmail],
-        subject: '[STAGED FIXTURE] Corporate Partnership Discussion: Youth Sisterhood Mentorship',
-        bodyText: 'Staged development fixture. Connect live Microsoft 365 OAuth 2.0 credentials to import live mailbox communications.',
-        receivedAt: new Date(Date.now() - 3600 * 1000 * 4).toISOString(),
-        folder,
-        isRead: false,
-        classificationCategory: 'CORPORATE_PARTNERSHIP',
-        priorityLevel: 'P1',
-        isLiveImportVerified: false,
-      },
-    ];
-
     return {
-      messages: stagedFixtures,
-      totalCount: stagedFixtures.length,
+      messages: [],
+      totalCount: 0,
       page,
       pageSize: limit,
       hasNextPage: false,
@@ -363,23 +352,7 @@ export class Microsoft365Connector implements EmailConnector {
       }
     }
 
-    return {
-      id: `msg-${providerMessageId}`,
-      providerMessageId,
-      connectionId: this.connectionId,
-      provider: 'MICROSOFT',
-      sourceAccount: this.mailboxEmail,
-      threadId: `th-${providerMessageId}`,
-      senderName: 'Staged Fixture',
-      senderEmail: 'staged@phumulani.local',
-      recipientEmails: [this.mailboxEmail],
-      subject: '[STAGED FIXTURE] Partnership Follow-up',
-      bodyText: 'Staged development fixture — authorize live Microsoft 365 OAuth 2.0 to load live provider messages.',
-      receivedAt: new Date().toISOString(),
-      folder: 'Inbox',
-      isRead: true,
-      isLiveImportVerified: false,
-    };
+    throw new Error(`AUTHORIZATION_REQUIRED: Cannot retrieve message ${providerMessageId} without verified Microsoft Graph OAuth 2.0 token.`);
   }
 
   public async syncMessages(param1?: any, param2?: any): Promise<any> {
@@ -462,34 +435,57 @@ export class Microsoft365Connector implements EmailConnector {
       };
     }
 
-    const res = await this.fetchGraphWithRefresh('https://graph.microsoft.com/v1.0/me/sendMail', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: {
-          subject: message.subject,
-          body: { contentType: 'Text', content: message.bodyText || '' },
-          toRecipients: message.to.map((address) => ({ emailAddress: { address } })),
-        },
-        saveToSentItems: true,
-      }),
-    });
+    let res: globalThis.Response | null = null;
+    try {
+      res = await this.fetchGraphWithRefresh('https://graph.microsoft.com/v1.0/me/sendMail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: {
+            subject: message.subject,
+            body: { contentType: 'Text', content: message.bodyText || '' },
+            toRecipients: message.to.map((address) => ({ emailAddress: { address } })),
+          },
+          saveToSentItems: true,
+        }),
+      });
+    } catch (err: any) {
+      return {
+        success: false,
+        dispatchId: `disp-msft-ambig-${Date.now()}`,
+        deliveryState: 'RECONCILIATION_REQUIRED',
+        dispatchedAt: new Date().toISOString(),
+        recipientCount: message.to.length,
+        error: `Microsoft Graph sendMail timeout or ambiguous outcome: ${err?.message || 'unknown error'}. Reconciliation required before retry.`,
+      };
+    }
 
-    if (!res || !res.ok) {
+    if (!res) {
+      return {
+        success: false,
+        dispatchId: `disp-msft-ambig-${Date.now()}`,
+        deliveryState: 'RECONCILIATION_REQUIRED',
+        dispatchedAt: new Date().toISOString(),
+        recipientCount: message.to.length,
+        error: 'Microsoft Graph sendMail returned no HTTP response; reconciliation required before retry.',
+      };
+    }
+
+    if (!res.ok) {
       return {
         success: false,
         dispatchId: `disp-msft-err-${Date.now()}`,
         deliveryState: 'FAILED',
         dispatchedAt: new Date().toISOString(),
         recipientCount: message.to.length,
-        error: `Microsoft Graph sendMail failed (HTTP ${res?.status || 0}).`,
+        error: `Microsoft Graph sendMail failed (HTTP ${res.status}).`,
       };
     }
 
     return {
       success: true,
       dispatchId: `disp-msft-${Date.now()}`,
-      providerMessageId: `msft-sent-${crypto.randomBytes(8).toString('hex')}`,
+      providerMessageId: res.headers?.get('request-id') || undefined,
       deliveryState: 'PROVIDER_ACCEPTED',
       dispatchedAt: new Date().toISOString(),
       recipientCount: message.to.length,

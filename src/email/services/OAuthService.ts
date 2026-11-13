@@ -63,6 +63,7 @@ export class OAuthService {
   private encryptedTokenVault: Map<string, EncryptedVaultEntry> = new Map();
   private ephemeralVaultSecret: Buffer | null = null;
   private vaultPersistencePath: string;
+  private vaultLoadError: string | null = null;
 
   private constructor() {
     const runtimeDir = process.env.PHUMULANI_RUNTIME_DATA_DIR?.trim()
@@ -154,20 +155,32 @@ export class OAuthService {
       if (fs.existsSync(this.vaultPersistencePath)) {
         const raw = fs.readFileSync(this.vaultPersistencePath, 'utf8');
         const parsed = JSON.parse(raw);
-        if (parsed?.entries && typeof parsed.entries === 'object') {
-          for (const [k, v] of Object.entries(parsed.entries)) {
-            if (v && typeof v === 'object' && 'ciphertext' in v && 'iv' in v && 'authTag' in v && 'salt' in v) {
-              this.encryptedTokenVault.set(k.toLowerCase(), v as EncryptedVaultEntry);
-            }
+        if (!parsed || typeof parsed !== 'object' || !parsed.entries || typeof parsed.entries !== 'object') {
+          this.vaultLoadError = 'OAUTH_VAULT_CORRUPT: Encrypted vault file missing valid entries object.';
+          console.error('[OAuthService]', this.vaultLoadError);
+          return;
+        }
+        for (const [k, v] of Object.entries(parsed.entries)) {
+          if (v && typeof v === 'object' && 'ciphertext' in v && 'iv' in v && 'authTag' in v && 'salt' in v) {
+            this.encryptedTokenVault.set(k.toLowerCase(), v as EncryptedVaultEntry);
           }
         }
+        this.vaultLoadError = null;
       }
-    } catch (err) {
-      console.warn('[OAuthService] Unable to load encrypted token vault:', err);
+    } catch (err: any) {
+      this.vaultLoadError = `OAUTH_VAULT_LOAD_FAILED: ${err?.message || 'Unable to parse encrypted token vault.'}`;
+      console.error('[OAuthService]', this.vaultLoadError);
     }
   }
 
+  public getVaultLoadError(): string | null {
+    return this.vaultLoadError;
+  }
+
   private saveEncryptedVault(): void {
+    if (this.vaultLoadError && fs.existsSync(this.vaultPersistencePath)) {
+      throw new Error(`OAUTH_VAULT_CORRUPT_ABORT: Refusing to overwrite unreadable vault (${this.vaultLoadError}). Recover or quarantine the existing vault file first.`);
+    }
     const tmpPath = `${this.vaultPersistencePath}.tmp.${process.pid}.${crypto.randomBytes(6).toString('hex')}`;
     try {
       const dir = path.dirname(this.vaultPersistencePath);
@@ -180,7 +193,13 @@ export class OAuthService {
         entries: Object.fromEntries(this.encryptedTokenVault.entries()),
       };
       fs.writeFileSync(tmpPath, JSON.stringify(payload, null, 2), { encoding: 'utf8', mode: 0o600 });
+      try {
+        fs.chmodSync(tmpPath, 0o600);
+      } catch {}
       fs.renameSync(tmpPath, this.vaultPersistencePath);
+      try {
+        fs.chmodSync(this.vaultPersistencePath, 0o600);
+      } catch {}
     } catch (err: any) {
       try {
         if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);
@@ -541,22 +560,28 @@ export class OAuthService {
 
       // Validate Microsoft Entra tenant boundary when MICROSOFT_TENANT_ID is pinned
       const pinnedTenant = process.env.MICROSOFT_TENANT_ID?.trim();
-      if (
-        effectiveProvider === 'MICROSOFT' &&
-        pinnedTenant &&
-        !['common', 'organizations', 'consumers'].includes(pinnedTenant.toLowerCase()) &&
-        typeof tokenData.id_token === 'string' &&
-        tokenData.id_token.split('.').length >= 2
-      ) {
+      const isSpecificTenantPinned =
+        Boolean(pinnedTenant) &&
+        !['common', 'organizations', 'consumers'].includes(pinnedTenant!.toLowerCase());
+      if (effectiveProvider === 'MICROSOFT' && isSpecificTenantPinned) {
+        if (typeof tokenData.id_token !== 'string' || tokenData.id_token.split('.').length < 2) {
+          return {
+            success: false,
+            provider: effectiveProvider,
+            statusCode: 401,
+            errorCode: 'OAUTH_TENANT_CLAIM_MISSING',
+            error: 'Microsoft token response lacked id_token tenant (tid) claim required for pinned tenant verification.',
+          };
+        }
         try {
           const claims = JSON.parse(Buffer.from(tokenData.id_token.split('.')[1], 'base64url').toString('utf8'));
-          if (claims?.tid && String(claims.tid).toLowerCase() !== pinnedTenant.toLowerCase()) {
+          if (!claims?.tid || String(claims.tid).toLowerCase() !== pinnedTenant!.toLowerCase()) {
             return {
               success: false,
               provider: effectiveProvider,
               statusCode: 403,
               errorCode: 'OAUTH_TENANT_MISMATCH',
-              error: `Microsoft Entra tenant (${claims.tid}) does not match configured tenant (${pinnedTenant}).`,
+              error: `Microsoft Entra tenant (${claims?.tid || 'missing'}) does not match configured tenant (${pinnedTenant}).`,
             };
           }
         } catch {
@@ -570,22 +595,21 @@ export class OAuthService {
         }
       }
 
-      // Validate granted OAuth scopes when returned by provider
-      if (typeof tokenData.scope === 'string' && tokenData.scope.trim().length > 0) {
-        const grantedScopes = new Set<string>(tokenData.scope.split(/\s+/).map((s: string) => s.toLowerCase()));
-        const hasMailScope =
-          effectiveProvider === 'GOOGLE'
-            ? Array.from(grantedScopes).some((s) => s.includes('gmail'))
-            : Array.from(grantedScopes).some((s) => s.includes('mail.'));
-        if (!hasMailScope) {
-          return {
-            success: false,
-            provider: effectiveProvider,
-            statusCode: 403,
-            errorCode: 'OAUTH_INSUFFICIENT_SCOPES',
-            error: `Granted OAuth scopes did not include required ${effectiveProvider === 'GOOGLE' ? 'Gmail' : 'Microsoft Mail'} permissions.`,
-          };
-        }
+      // Validate granted OAuth scopes (require explicit mail scope in token response)
+      const grantedScopeStr = typeof tokenData.scope === 'string' ? tokenData.scope.trim() : '';
+      const grantedScopes = new Set<string>(grantedScopeStr ? grantedScopeStr.split(/\s+/).map((s: string) => s.toLowerCase()) : []);
+      const hasMailScope =
+        effectiveProvider === 'GOOGLE'
+          ? Array.from(grantedScopes).some((s) => s.includes('gmail'))
+          : Array.from(grantedScopes).some((s) => s.includes('mail.'));
+      if (!hasMailScope) {
+        return {
+          success: false,
+          provider: effectiveProvider,
+          statusCode: 403,
+          errorCode: 'OAUTH_INSUFFICIENT_SCOPES',
+          error: `Granted OAuth scopes did not include required ${effectiveProvider === 'GOOGLE' ? 'Gmail' : 'Microsoft Mail'} permissions.`,
+        };
       }
 
       // Verify authorized identity against provider profile endpoint

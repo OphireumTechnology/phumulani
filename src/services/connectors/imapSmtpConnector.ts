@@ -23,13 +23,16 @@ import {
   ProviderCapabilities,
 } from '../../types/emailConnectors';
 import { PROVIDER_DESCRIPTORS } from './providerCapabilities';
-import { validateSafeMailHost } from '../../email/connectors/ImapSmtpConnector';
+import {
+  validateSafeMailHostAsync,
+  verifyMailSocketReachable,
+} from '../../email/connectors/ImapSmtpConnector';
 
 export class ImapSmtpConnector implements EmailConnector {
   public readonly provider: EmailProviderType;
   private mailboxEmail: string;
   private isConnected: boolean = false;
-  private currentUidSequence: number = 412;
+  private currentUidSequence: number = 0;
   private imapHost: string;
   private imapPort: number;
   private smtpHost: string;
@@ -58,28 +61,30 @@ export class ImapSmtpConnector implements EmailConnector {
   public async connect(credentials?: Record<string, unknown>): Promise<ConnectionResult> {
     const connectionId = `conn-${this.provider.toLowerCase()}-${this.mailboxEmail.replace(/[^a-zA-Z0-9]/g, '_')}`;
 
-    const imapCheck = validateSafeMailHost(this.imapHost);
+    const imapCheck = await validateSafeMailHostAsync(this.imapHost);
     if (!imapCheck.valid) {
       this.isConnected = false;
+      const isDnsErr = imapCheck.reason?.startsWith('DNS_ERROR');
       return {
         success: false,
         connectionId,
         provider: this.provider,
         mailboxEmail: this.mailboxEmail,
-        status: 'BLOCKED_EXTERNAL',
+        status: isDnsErr ? 'ERROR' : 'BLOCKED_EXTERNAL',
         error: imapCheck.reason,
       };
     }
 
-    const smtpCheck = validateSafeMailHost(this.smtpHost);
+    const smtpCheck = await validateSafeMailHostAsync(this.smtpHost);
     if (!smtpCheck.valid) {
       this.isConnected = false;
+      const isDnsErr = smtpCheck.reason?.startsWith('DNS_ERROR');
       return {
         success: false,
         connectionId,
         provider: this.provider,
         mailboxEmail: this.mailboxEmail,
-        status: 'BLOCKED_EXTERNAL',
+        status: isDnsErr ? 'ERROR' : 'BLOCKED_EXTERNAL',
         error: smtpCheck.reason,
       };
     }
@@ -96,6 +101,19 @@ export class ImapSmtpConnector implements EmailConnector {
       };
     }
 
+    const probe = await verifyMailSocketReachable(this.imapHost, this.imapPort, this.imapPort === 993 ? 'TLS' : 'STARTTLS');
+    if (!probe.reachable) {
+      this.isConnected = false;
+      return {
+        success: false,
+        connectionId,
+        provider: this.provider,
+        mailboxEmail: this.mailboxEmail,
+        status: 'ERROR',
+        error: probe.error || `Unable to verify IMAP endpoint ${this.imapHost}:${this.imapPort}.`,
+      };
+    }
+
     this.isConnected = true;
     return {
       success: true,
@@ -103,7 +121,7 @@ export class ImapSmtpConnector implements EmailConnector {
       provider: this.provider,
       mailboxEmail: this.mailboxEmail,
       status: 'CONNECTED',
-      details: `${this.provider} TLS IMAP/SMTP connection verified to ${this.imapHost}:${this.imapPort}.`,
+      details: `${this.provider} TLS socket verified to ${this.imapHost}:${this.imapPort}.`,
       authenticatedAt: new Date().toISOString(),
     };
   }
@@ -115,19 +133,37 @@ export class ImapSmtpConnector implements EmailConnector {
   public async verifyConnection(): Promise<ConnectionHealth> {
     const connectionId = `conn-${this.provider.toLowerCase()}-${this.mailboxEmail.replace(/[^a-zA-Z0-9]/g, '_')}`;
 
-    const imapCheck = validateSafeMailHost(this.imapHost);
+    const imapCheck = await validateSafeMailHostAsync(this.imapHost);
     if (!imapCheck.valid) {
       this.isConnected = false;
+      const isDnsErr = imapCheck.reason?.startsWith('DNS_ERROR');
       return {
         connectionId,
         provider: this.provider,
         mailboxEmail: this.mailboxEmail,
         healthy: false,
-        status: 'BLOCKED_EXTERNAL',
+        status: isDnsErr ? 'ERROR' : 'BLOCKED_EXTERNAL',
         roundTripLatencyMs: 0,
         lastCheckedAt: new Date().toISOString(),
-        dnsResolution: 'DNS_ERROR',
+        dnsResolution: isDnsErr ? 'DNS_ERROR' : 'RESOLVED_OK',
         error: imapCheck.reason,
+      };
+    }
+
+    const smtpCheck = await validateSafeMailHostAsync(this.smtpHost);
+    if (!smtpCheck.valid) {
+      this.isConnected = false;
+      const isDnsErr = smtpCheck.reason?.startsWith('DNS_ERROR');
+      return {
+        connectionId,
+        provider: this.provider,
+        mailboxEmail: this.mailboxEmail,
+        healthy: false,
+        status: isDnsErr ? 'ERROR' : 'BLOCKED_EXTERNAL',
+        roundTripLatencyMs: 0,
+        lastCheckedAt: new Date().toISOString(),
+        dnsResolution: isDnsErr ? 'DNS_ERROR' : 'RESOLVED_OK',
+        error: smtpCheck.reason,
       };
     }
 
@@ -146,144 +182,82 @@ export class ImapSmtpConnector implements EmailConnector {
       };
     }
 
+    const probe = await verifyMailSocketReachable(this.imapHost, this.imapPort, this.imapPort === 993 ? 'TLS' : 'STARTTLS');
+    if (!probe.reachable) {
+      this.isConnected = false;
+      return {
+        connectionId,
+        provider: this.provider,
+        mailboxEmail: this.mailboxEmail,
+        healthy: false,
+        status: 'ERROR',
+        roundTripLatencyMs: probe.latencyMs,
+        lastCheckedAt: new Date().toISOString(),
+        dnsResolution: 'RESOLVED_OK',
+        error: probe.error,
+      };
+    }
+
     return {
       connectionId,
       provider: this.provider,
       mailboxEmail: this.mailboxEmail,
       healthy: true,
       status: 'HEALTHY',
-      roundTripLatencyMs: 68,
+      roundTripLatencyMs: probe.latencyMs,
       lastCheckedAt: new Date().toISOString(),
-      tlsVersion: 'TLSv1.3',
-      cipherSuite: 'TLS_AES_256_GCM_SHA384',
+      tlsVersion: probe.tlsVersion || 'TLS',
+      cipherSuite: probe.cipherSuite,
       dnsResolution: 'RESOLVED_OK',
-      quotaUnitsRemaining: 100000,
-      diagnosticsDetail: `IMAP (${this.imapHost}:${this.imapPort}) and SMTP (${this.smtpHost}:${this.smtpPort}) TLS handshake verified.`,
+      diagnosticsDetail: `IMAP (${this.imapHost}:${this.imapPort}) TLS handshake verified.`,
     };
   }
 
   public async listFolders(): Promise<NormalizedEmailFolder[]> {
     return [
-      {
-        id: 'INBOX',
-        name: 'INBOX',
-        type: 'INBOX',
-        totalMessageCount: 45,
-        unreadMessageCount: 3,
-        providerFolderId: 'INBOX',
-      },
-      {
-        id: 'Sent',
-        name: 'Sent Messages',
-        type: 'SENT',
-        totalMessageCount: 110,
-        unreadMessageCount: 0,
-        providerFolderId: 'Sent',
-      },
-      {
-        id: 'Drafts',
-        name: 'Drafts',
-        type: 'DRAFTS',
-        totalMessageCount: 1,
-        unreadMessageCount: 0,
-        providerFolderId: 'Drafts',
-      },
-      {
-        id: 'Trash',
-        name: 'Trash',
-        type: 'TRASH',
-        totalMessageCount: 12,
-        unreadMessageCount: 0,
-        providerFolderId: 'Trash',
-      },
-      {
-        id: 'Junk',
-        name: 'Junk',
-        type: 'SPAM',
-        totalMessageCount: 3,
-        unreadMessageCount: 3,
-        providerFolderId: 'Junk',
-      },
+      { id: 'INBOX', name: 'INBOX', type: 'INBOX', totalMessageCount: 0, unreadMessageCount: 0, providerFolderId: 'INBOX' },
+      { id: 'Sent', name: 'Sent Messages', type: 'SENT', totalMessageCount: 0, unreadMessageCount: 0, providerFolderId: 'Sent' },
+      { id: 'Drafts', name: 'Drafts', type: 'DRAFTS', totalMessageCount: 0, unreadMessageCount: 0, providerFolderId: 'Drafts' },
+      { id: 'Trash', name: 'Trash', type: 'TRASH', totalMessageCount: 0, unreadMessageCount: 0, providerFolderId: 'Trash' },
+      { id: 'Junk', name: 'Junk', type: 'SPAM', totalMessageCount: 0, unreadMessageCount: 0, providerFolderId: 'Junk' },
     ];
   }
 
   /**
    * Sanitizes untrusted HTML by removing executable tags, event handlers, and web beacons.
    */
-  private sanitizeHtml(rawHtml: string): string {
+  public sanitizeHtml(rawHtml: string): string {
     return rawHtml
       .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
       .replace(/\bon\w+\s*=\s*(?:'[^']*'|"[^"]*"|[^\s>]+)/gi, '')
       .replace(/<img[^>]*\b(1px|tracker|pixel|beacon)[^>]*>/gi, '');
   }
 
-  public async listMessages(options: SyncOptions): Promise<NormalizedEmailMessage[]> {
-    const rawHtml = '<p>Food distribution depot delivery schedule for Mamelodi community center.<script>alert("threat")</script></p>';
-    const sanitizedHtml = this.sanitizeHtml(rawHtml);
-
-    return [
-      {
-        id: `imapmsg-${this.mailboxEmail}-001`,
-        providerMessageId: `uid-${this.currentUidSequence}`,
-        connectionId: options.connectionId,
-        provider: this.provider,
-        sourceAccount: this.mailboxEmail,
-        threadId: `th-imap-${this.currentUidSequence}`,
-        senderName: 'Mamelodi Local Coordinator',
-        senderEmail: 'relief@mamelodicommunity.org.za',
-        recipientEmails: [this.mailboxEmail],
-        subject: 'Mamelodi Relief Food Distribution Schedule',
-        bodyText: 'Food distribution depot delivery schedule for Mamelodi community center.',
-        bodyHtml: sanitizedHtml,
-        receivedAt: new Date(Date.now() - 3600000 * 8).toISOString(),
-        folder: 'INBOX',
-        isRead: false,
-        isFlagged: false,
-        classificationCategory: 'Emergency Food Support',
-        priorityLevel: 'NORMAL',
-      },
-    ];
+  public async listMessages(_options: SyncOptions): Promise<NormalizedEmailMessage[]> {
+    return [];
   }
 
   public async getMessage(messageId: string): Promise<NormalizedEmailMessage> {
-    const connectionId = `conn-${this.provider.toLowerCase()}-${this.mailboxEmail.replace(/[^a-zA-Z0-9]/g, '_')}`;
-    return {
-      id: messageId,
-      providerMessageId: messageId,
-      connectionId,
-      provider: this.provider,
-      sourceAccount: this.mailboxEmail,
-      threadId: 'th-imap-default',
-      senderName: 'RFC 5322 Inbound Mail',
-      senderEmail: 'inbound@relay.community.net',
-      recipientEmails: [this.mailboxEmail],
-      subject: `Retrieved IMAP Message ${messageId}`,
-      bodyText: 'Message retrieved via RFC 3501 IMAP4rev1 TLS stream.',
-      receivedAt: new Date().toISOString(),
-      folder: 'INBOX',
-      isRead: true,
-    };
+    throw new Error(`AUTHORIZATION_REQUIRED: Cannot retrieve IMAP message ${messageId} without an authenticated live IMAP4rev1 session.`);
   }
 
   public async synchronize(options: SyncOptions): Promise<SyncResult> {
-    const oldCursor = `UIDVALIDITY:1730000000:UID:${this.currentUidSequence}`;
-    this.currentUidSequence += 5;
-    const newCursor = `UIDVALIDITY:1730000000:UID:${this.currentUidSequence}`;
-
+    const oldCursor = `UIDVALIDITY:0:UID:${this.currentUidSequence}`;
     return {
-      success: true,
+      success: false,
       connectionId: options.connectionId,
       provider: this.provider,
       mailboxEmail: this.mailboxEmail,
-      messagesImported: 4,
-      duplicatesSkipped: 1,
-      threadsReconstructed: 3,
+      messagesImported: 0,
+      duplicatesSkipped: 0,
+      threadsReconstructed: 0,
       oldCursor,
-      newCursor,
+      newCursor: oldCursor,
       cursorType: 'IMAP_UID_SEQUENCE',
-      checkpointId: `chk-${this.provider.toLowerCase()}-${Date.now()}`,
-      status: 'COMPLETED',
+      checkpointId: '',
+      status: 'FAILED',
       timestamp: new Date().toISOString(),
+      error: 'IMAP_SYNC_UNAVAILABLE: Live IMAP4rev1 synchronization requires an authenticated mail transport session.',
     };
   }
 
@@ -335,11 +309,11 @@ export class ImapSmtpConnector implements EmailConnector {
     }
 
     return {
-      success: true,
-      dispatchId: `disp-${this.provider.toLowerCase()}-${Date.now()}`,
-      providerMessageId: `smtp-${Date.now()}@${this.smtpHost}`,
-      deliveryState: 'DELIVERY_CONFIRMED',
+      success: false,
+      dispatchId: `disp-${this.provider.toLowerCase()}-err-${Date.now()}`,
+      deliveryState: 'FAILED',
       dispatchedAt: new Date().toISOString(),
+      error: 'SMTP_TRANSPORT_UNAVAILABLE: Live SMTP relay requires verified SMTP AUTH client.',
     };
   }
 

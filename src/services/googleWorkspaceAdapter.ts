@@ -703,47 +703,33 @@ export class GoogleWorkspaceAdapter {
       };
     }
 
-    const isProdOrPilot =
-      EnvironmentService.isProductionOnly() ||
-      process.env.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT' ||
-      process.env.NODE_ENV === 'production';
     const hasConfiguredOAuth = Boolean(
       process.env.GOOGLE_WORKSPACE_CLIENT_ID?.trim() && process.env.GOOGLE_WORKSPACE_CLIENT_SECRET?.trim()
     );
 
-    if (isProdOrPilot && !hasConfiguredOAuth) {
+    // Consume state immediately so it can never be replayed
+    this.activeOAuthStates.delete(state);
+
+    if (!hasConfiguredOAuth) {
+      this.logSyncEvent(session.mailboxEmail, 'OAUTH_CREDENTIALS_MISSING', `OAuth callback failed for ${session.mailboxEmail}: client credentials not configured.`, 'error');
       return {
         success: false,
         mailboxEmail: session.mailboxEmail,
-        status: 'ERROR',
+        status: 'AUTHORIZATION_REQUIRED',
         tokenType: '',
         expiresIn: 0,
-        error: 'OAUTH_CREDENTIALS_MISSING: Live Google Workspace OAuth credentials are required in production/pilot mode.',
+        error: 'OAUTH_CREDENTIALS_MISSING: Live Google Workspace OAuth credentials are required before exchanging an authorization code.',
       };
     }
 
-    // Store non-production staged verification marker in STAGED_DEVELOPMENT (live HTTP exchange occurs in OAuthService)
-    const expiresIn = 3600;
-    const expiresAt = Date.now() + expiresIn * 1000;
-    this.secureTokenVault.set(session.mailboxEmail.toLowerCase(), {
-      accessToken: `staged_dev_grant_${crypto.randomBytes(8).toString('hex')}`,
-      refreshToken: `staged_dev_refresh_${crypto.randomBytes(8).toString('hex')}`,
-      expiresAt,
-    });
-
-    // Clean up consumed state
-    this.activeOAuthStates.delete(state);
-
-    // Update mailbox state
-    this.updateMailboxStatus(session.mailboxEmail, 'AUTHORIZED');
-    this.logSyncEvent(session.mailboxEmail, 'OAUTH_TOKEN_EXCHANGED', `OAuth code exchanged successfully for ${session.mailboxEmail}.`, 'success');
-
+    this.logSyncEvent(session.mailboxEmail, 'OAUTH_EXCHANGE_REQUIRED', `Synchronous callback rejected for ${session.mailboxEmail}: real async token exchange via OAuthService.exchangeAuthorizationCode() required.`, 'warning');
     return {
-      success: true,
+      success: false,
       mailboxEmail: session.mailboxEmail,
-      status: 'AUTHORIZED',
-      tokenType: 'Bearer',
-      expiresIn,
+      status: 'AUTHORIZATION_REQUIRED',
+      tokenType: '',
+      expiresIn: 0,
+      error: 'LIVE_PROVIDER_EXCHANGE_REQUIRED: Synthetic OAuth token grants are disabled. Complete live HTTP token exchange via OAuthService.exchangeAuthorizationCode().',
     };
   }
 
@@ -760,40 +746,9 @@ export class GoogleWorkspaceAdapter {
       return { success: false, error: 'REFRESH TOKEN INVALID: Malformed or missing refresh token.' };
     }
 
-    const isProdOrPilot =
-      EnvironmentService.isProductionOnly() ||
-      process.env.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT' ||
-      process.env.NODE_ENV === 'production';
-
-    // Locate vault entry
-    for (const [email, tokens] of this.secureTokenVault.entries()) {
-      if (tokens.refreshToken === refreshToken) {
-        if (isProdOrPilot) {
-          return {
-            success: false,
-            error: 'LIVE_OAUTH_REFRESH_REQUIRED: Synchronous mock refresh disabled in production/pilot mode. Use OAuthService.refreshAccessToken().',
-          };
-        }
-        const newAccessToken = `staged_dev_refreshed_${crypto.randomBytes(8).toString('hex')}`;
-        tokens.accessToken = newAccessToken;
-        tokens.expiresAt = Date.now() + 3600 * 1000;
-        this.logSyncEvent(email, 'TOKEN_REFRESH_SUCCESS', `Access token refreshed successfully for ${email}.`, 'success');
-        return { success: true, accessToken: newAccessToken, expiresIn: 3600 };
-      }
-    }
-
-    if (isProdOrPilot) {
-      return {
-        success: false,
-        error: 'REFRESH_TOKEN_NOT_FOUND: Unrecognized refresh token in production/pilot mode.',
-      };
-    }
-
-    // In staged unit tests ONLY, validate format
     return {
-      success: true,
-      accessToken: `staged_dev_refreshed_${crypto.randomBytes(8).toString('hex')}`,
-      expiresIn: 3600,
+      success: false,
+      error: 'LIVE_OAUTH_REFRESH_REQUIRED: Synchronous mock token refresh is disabled. Use OAuthService.refreshAccessToken().',
     };
   }
 
@@ -1220,12 +1175,13 @@ export class GoogleWorkspaceAdapter {
     const testedAt = new Date().toISOString();
     const quotaUnitsRemaining = 1000000;
 
-    let connected = true;
-    let httpStatus = 200;
-    let diagnosticsMessage = 'Google Workspace API handshake verified. OAuth 2.0 endpoints reachable with valid TLS 1.3 cipher suite.';
+    let connected = false;
+    let httpStatus = 401;
+    let diagnosticsMessage = 'Google Workspace OAuth 2.0 authorization required. No verified mailbox credentials stored in vault.';
 
     if (mailboxEmail) {
-      const mbx = this.mailboxes.find((m) => m.email.toLowerCase() === mailboxEmail.toLowerCase());
+      const key = mailboxEmail.toLowerCase();
+      const mbx = this.mailboxes.find((m) => m.email.toLowerCase() === key);
       if (!mbx) {
         connected = false;
         httpStatus = 404;
@@ -1238,7 +1194,22 @@ export class GoogleWorkspaceAdapter {
         connected = false;
         httpStatus = 429;
         diagnosticsMessage = `Provider rate limit active for "${mailboxEmail}". Exponential backoff required.`;
+      } else if (this.secureTokenVault.has(key) && (mbx.status === 'CONNECTED' || mbx.status === 'AUTHORIZED')) {
+        connected = true;
+        httpStatus = 200;
+        diagnosticsMessage = `Google Workspace mailbox "${mailboxEmail}" has verified vaulted OAuth 2.0 credentials.`;
+      } else {
+        connected = false;
+        httpStatus = 401;
+        diagnosticsMessage = `AUTHORIZATION_REQUIRED: Mailbox "${mailboxEmail}" lacks verified OAuth 2.0 credentials in the token vault (status: ${mbx.status}).`;
       }
+    } else if (
+      this.secureTokenVault.size > 0 &&
+      this.mailboxes.some((m) => m.status === 'CONNECTED' || m.status === 'AUTHORIZED')
+    ) {
+      connected = true;
+      httpStatus = 200;
+      diagnosticsMessage = 'Google Workspace API handshake verified with vaulted OAuth 2.0 credentials.';
     }
 
     return {
@@ -1250,8 +1221,8 @@ export class GoogleWorkspaceAdapter {
       quotaLimitPerSecond: 250,
       quotaLimitDaily: 1000000,
       dnsResolution: 'RESOLVED_OK',
-      tlsVersion: 'TLSv1.3',
-      cipherSuite: 'TLS_AES_256_GCM_SHA384',
+      tlsVersion: connected ? 'TLSv1.3' : 'N/A',
+      cipherSuite: connected ? 'TLS_AES_256_GCM_SHA384' : 'UNVERIFIED',
       diagnosticsMessage,
       testedAt,
     };
@@ -1607,15 +1578,7 @@ export class GoogleWorkspaceAdapter {
       .join('\r\n');
 
     const rawMime = `${headerLines}\r\n\r\n${params.body}`;
-
-    // Simple deterministic hash calculation
-    let hash = 0;
-    for (let i = 0; i < rawMime.length; i++) {
-      const char = rawMime.charCodeAt(i);
-      hash = (hash << 5) - hash + char;
-      hash |= 0;
-    }
-    const sha256Hash = `staged-hash-${Math.abs(hash).toString(16).padStart(16, '0')}`;
+    const sha256Hash = crypto.createHash('sha256').update(rawMime, 'utf8').digest('hex');
 
     return {
       rawMime,
@@ -1754,15 +1717,11 @@ export class GoogleWorkspaceAdapter {
       throw new Error('ANTI-AI SELF-APPROVAL VIOLATION: Automated AI agents are forbidden from co-signing live dispatches.');
     }
 
-    this.dispatchedIdempotencyKeys.add(params.idempotencyKey);
-    const liveMsgId = `gmail-live-${Date.now()}-${secureRandomHex(4)}`;
-    this.recordEvidence('PROVIDER_CONNECTED', params.mailboxEmail, `Live dispatch executed to ${params.recipientEmail} with id ${liveMsgId}`);
+    if (!this.secureTokenVault.has(params.mailboxEmail.toLowerCase())) {
+      throw new Error(`AUTHORIZATION_REQUIRED: No verified OAuth token vaulted for "${params.mailboxEmail}".`);
+    }
 
-    return {
-      success: true,
-      status: 'SENT',
-      liveProviderMessageId: liveMsgId,
-    };
+    throw new Error('LIVE_PROVIDER_DISPATCH_UNAVAILABLE: Synchronous GoogleWorkspaceAdapter.dispatchLiveMessage cannot claim SENT without live Gmail REST API HTTP dispatch. Use EmailDispatchService.dispatchApprovedMessage() or GoogleConnector.sendApprovedMessage().');
   }
 
   // ===========================================================================

@@ -136,7 +136,18 @@ export class GoogleConnector implements EmailConnector {
         }
         const profile: any = await profileRes.json().catch(() => ({}));
         const verifiedEmail = String(profile?.emailAddress || '').trim();
-        if (verifiedEmail && verifiedEmail.toLowerCase() !== this.mailboxEmail.toLowerCase()) {
+        if (!verifiedEmail) {
+          this.isConnected = false;
+          return {
+            success: false,
+            connectionId,
+            provider: 'GOOGLE',
+            mailboxEmail: this.mailboxEmail,
+            status: 'AUTHENTICATION_FAILED',
+            details: 'Google Workspace profile verification did not return an emailAddress. Token was not vaulted.',
+          };
+        }
+        if (verifiedEmail.toLowerCase() !== this.mailboxEmail.toLowerCase()) {
           this.isConnected = false;
           return {
             success: false,

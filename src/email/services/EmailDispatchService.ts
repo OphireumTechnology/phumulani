@@ -300,7 +300,8 @@ export class EmailDispatchService {
       return {
         success: true,
         dispatchId: existingIdem.dispatchId,
-        deliveryState: 'PROVIDER_ACCEPTED',
+        providerMessageId: existingIdem.providerMessageId,
+        deliveryState: existingIdem.deliveryState || 'STAGED',
         dispatchedAt: existingIdem.createdAt,
         recipientCount: message.to.length,
       };
@@ -366,6 +367,8 @@ export class EmailDispatchService {
       senderAccount: message.senderAccount,
       recipientEmails: message.to,
       subjectHash: crypto.createHash('sha256').update(message.subject + message.bodyText).digest('hex'),
+      deliveryState: result.deliveryState,
+      providerMessageId: result.providerMessageId,
       createdAt: new Date().toISOString(),
       expiresAt: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
     });

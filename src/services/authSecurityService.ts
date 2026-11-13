@@ -269,7 +269,7 @@ export class AuthSecurityService {
 
     // Durably log session creation
     await this.dbAdapter.insert('audit_logs', {
-      id: `audit-sess-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+      id: `audit-sess-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`,
       timestamp: now.toISOString(),
       actor_role: params.role,
       action: 'auth:session_created',
@@ -496,7 +496,7 @@ export class AuthSecurityService {
       return { success: false, error: 'An account with this email address already exists.' };
     }
 
-    const newId = `usr-mem-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+    const newId = `usr-mem-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`;
     const assignedRole = data.role || 'COMMUNITY_MEMBER';
     const pwdHash = data.password ? this.hashPassword(data.password) : null;
 
@@ -563,13 +563,27 @@ export class AuthSecurityService {
   /**
    * Updates an account role and department with audit trail.
    */
-  public async assignRole(userId: string, newRole: StaffRole, departmentId?: string): Promise<{ success: boolean; message: string }> {
+  public async assignRole(userId: string, newRole: StaffRole, departmentId?: string): Promise<{ success: boolean; message: string; sessionsRevoked: number }> {
+    const updatedAt = new Date().toISOString();
     await this.dbAdapter.update('staff_members', userId, {
       role: newRole,
       department_id: departmentId || 'DEPT-OPS',
-      roleUpdatedAt: new Date().toISOString(),
+      roleUpdatedAt: updatedAt,
     });
-    return { success: true, message: `Role updated to ${newRole} for user ${userId}.` };
+    const sessionsRevoked = await this.revokeAllUserSessions(userId);
+    await this.dbAdapter.insert('audit_logs', {
+      id: `audit-role-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`,
+      timestamp: updatedAt,
+      actor_role: newRole,
+      action: 'auth:role_assigned_sessions_revoked',
+      details: `Updated role to ${newRole} for user ${userId}; revoked ${sessionsRevoked} active session(s).`,
+      signature: crypto.createHash('sha256').update(`${userId}:${newRole}:${updatedAt}`).digest('hex'),
+    });
+    return {
+      success: true,
+      message: `Role updated to ${newRole} for user ${userId}; ${sessionsRevoked} active session(s) revoked.`,
+      sessionsRevoked,
+    };
   }
 }
 

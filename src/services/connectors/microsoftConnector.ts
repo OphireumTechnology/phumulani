@@ -133,7 +133,18 @@ export class MicrosoftConnector implements EmailConnector {
         }
         const profile: any = await profileRes.json().catch(() => ({}));
         const verifiedEmail = String(profile?.mail || profile?.userPrincipalName || '').trim();
-        if (verifiedEmail && verifiedEmail.toLowerCase() !== this.mailboxEmail.toLowerCase()) {
+        if (!verifiedEmail) {
+          this.isConnected = false;
+          return {
+            success: false,
+            connectionId,
+            provider: 'MICROSOFT',
+            mailboxEmail: this.mailboxEmail,
+            status: 'AUTHENTICATION_FAILED',
+            details: 'Microsoft Graph /me verification did not return a mailbox email or userPrincipalName. Token was not vaulted.',
+          };
+        }
+        if (verifiedEmail.toLowerCase() !== this.mailboxEmail.toLowerCase()) {
           this.isConnected = false;
           return {
             success: false,

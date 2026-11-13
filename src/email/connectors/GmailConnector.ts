@@ -132,7 +132,18 @@ export class GmailConnector implements EmailConnector {
         }
         const profile: any = await profileRes.json().catch(() => ({}));
         const verifiedEmail = String(profile?.emailAddress || '').trim();
-        if (verifiedEmail && verifiedEmail.toLowerCase() !== this.mailboxEmail.toLowerCase()) {
+        if (!verifiedEmail) {
+          this.isAuthorized = false;
+          return {
+            success: false,
+            connectionId: this.connectionId,
+            provider: 'GOOGLE',
+            mailboxEmail: this.mailboxEmail,
+            status: 'AUTHENTICATION_FAILED',
+            details: 'Google profile verification did not return an emailAddress. Token was not vaulted.',
+          };
+        }
+        if (verifiedEmail.toLowerCase() !== this.mailboxEmail.toLowerCase()) {
           this.isAuthorized = false;
           return {
             success: false,
@@ -317,32 +328,9 @@ export class GmailConnector implements EmailConnector {
       };
     }
 
-    // Staged sample fallback when no live OAuth grant is connected — explicitly marked NOT live verified
-    const stagedFixtures: NormalizedEmailMessage[] = [
-      {
-        id: `msg-gmail-staged-001`,
-        providerMessageId: 'staged-gmail-001',
-        connectionId: this.connectionId,
-        provider: 'GOOGLE',
-        sourceAccount: this.mailboxEmail,
-        threadId: 'th-gmail-staged-101',
-        senderName: 'Staged Fixture — Minnesota Women Foundation',
-        senderEmail: 'grants@mnwomen.org',
-        recipientEmails: [this.mailboxEmail],
-        subject: '[STAGED FIXTURE] Grant Funding Inquiry: Immigrant Survivor Empowerment Project',
-        bodyText: 'Staged development fixture. Connect live Google Workspace OAuth 2.0 credentials to import live mailbox communications.',
-        receivedAt: new Date(Date.now() - 3600 * 1000 * 2).toISOString(),
-        folder,
-        isRead: false,
-        classificationCategory: 'GRANT_INQUIRY',
-        priorityLevel: 'P1',
-        isLiveImportVerified: false,
-      },
-    ];
-
     return {
-      messages: stagedFixtures,
-      totalCount: stagedFixtures.length,
+      messages: [],
+      totalCount: 0,
       page,
       pageSize: limit,
       hasNextPage: false,
@@ -378,23 +366,7 @@ export class GmailConnector implements EmailConnector {
       }
     }
 
-    return {
-      id: `msg-${providerMessageId}`,
-      providerMessageId,
-      connectionId: this.connectionId,
-      provider: 'GOOGLE',
-      sourceAccount: this.mailboxEmail,
-      threadId: `th-${providerMessageId}`,
-      senderName: 'Staged Fixture',
-      senderEmail: 'staged@phumulani.local',
-      recipientEmails: [this.mailboxEmail],
-      subject: '[STAGED FIXTURE] Inquiry Follow-up',
-      bodyText: 'Staged development fixture — authorize live Google OAuth 2.0 to load live provider messages.',
-      receivedAt: new Date().toISOString(),
-      folder: 'INBOX',
-      isRead: true,
-      isLiveImportVerified: false,
-    };
+    throw new Error(`AUTHORIZATION_REQUIRED: Cannot retrieve message ${providerMessageId} without verified Gmail OAuth 2.0 token.`);
   }
 
   public async syncMessages(param1?: any, param2?: any): Promise<any> {
@@ -482,20 +454,43 @@ export class GmailConnector implements EmailConnector {
     ].join('\r\n');
     const raw = Buffer.from(rawMime, 'utf8').toString('base64url');
 
-    const res = await this.fetchGmailWithRefresh('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ raw }),
-    });
+    let res: globalThis.Response | null = null;
+    try {
+      res = await this.fetchGmailWithRefresh('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ raw }),
+      });
+    } catch (err: any) {
+      return {
+        success: false,
+        dispatchId: `disp-google-ambig-${Date.now()}`,
+        deliveryState: 'RECONCILIATION_REQUIRED',
+        dispatchedAt: new Date().toISOString(),
+        recipientCount: message.to.length,
+        error: `Gmail send network timeout or ambiguous outcome: ${err?.message || 'unknown error'}. Reconciliation required before retry.`,
+      };
+    }
 
-    if (!res || !res.ok) {
+    if (!res) {
+      return {
+        success: false,
+        dispatchId: `disp-google-ambig-${Date.now()}`,
+        deliveryState: 'RECONCILIATION_REQUIRED',
+        dispatchedAt: new Date().toISOString(),
+        recipientCount: message.to.length,
+        error: 'Gmail send returned no HTTP response; reconciliation required before retry.',
+      };
+    }
+
+    if (!res.ok) {
       return {
         success: false,
         dispatchId: `disp-google-err-${Date.now()}`,
         deliveryState: 'FAILED',
         dispatchedAt: new Date().toISOString(),
         recipientCount: message.to.length,
-        error: `Gmail send failed (HTTP ${res?.status || 0}).`,
+        error: `Gmail send failed (HTTP ${res.status}).`,
       };
     }
 
@@ -503,7 +498,7 @@ export class GmailConnector implements EmailConnector {
     return {
       success: true,
       dispatchId: `disp-google-${Date.now()}`,
-      providerMessageId: sentData.id || `gmail-sent-${crypto.randomBytes(8).toString('hex')}`,
+      providerMessageId: typeof sentData?.id === 'string' && sentData.id ? sentData.id : undefined,
       deliveryState: 'PROVIDER_ACCEPTED',
       dispatchedAt: new Date().toISOString(),
       recipientCount: message.to.length,
