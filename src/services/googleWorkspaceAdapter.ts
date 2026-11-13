@@ -8,6 +8,15 @@
 
 import crypto from 'crypto';
 import { EnvironmentService } from './environmentService';
+
+function secureRandomHex(bytes: number = 8): string {
+  if (typeof globalThis !== 'undefined' && globalThis.crypto && typeof globalThis.crypto.getRandomValues === 'function') {
+    const arr = new Uint8Array(bytes);
+    globalThis.crypto.getRandomValues(arr);
+    return Array.from(arr, (b) => b.toString(16).padStart(2, '0')).join('');
+  }
+  return crypto.randomBytes(bytes).toString('hex');
+}
 import {
   EmailDeliveryState,
   SetupWizardStatus,
@@ -575,11 +584,10 @@ export class GoogleWorkspaceAdapter {
       throw new Error(`Mailbox "${mailboxEmail}" is not an authorized institutional mailbox.`);
     }
 
-    // Deterministic base64url PKCE verifier & challenge generation
-    const randomSeed = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}-${mailboxEmail}`;
-    const codeVerifier = `pkce_verifier_${Buffer.from(randomSeed).toString('base64url')}`;
-    const codeChallenge = `pkce_challenge_${Buffer.from(`sha256_${codeVerifier}`).toString('base64url')}`;
-    const state = `state_${Date.now()}_${Math.random().toString(36).substring(2, 10)}`;
+    // Cryptographically random PKCE verifier & real RFC 7636 S256 code challenge
+    const codeVerifier = `pkce_verifier_${crypto.randomBytes(32).toString('base64url')}`;
+    const codeChallenge = crypto.createHash('sha256').update(codeVerifier).digest('base64url');
+    const state = `state_${crypto.randomBytes(24).toString('base64url')}`;
 
     const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes lifetime
     this.activeOAuthStates.set(state, {
@@ -1136,23 +1144,25 @@ export class GoogleWorkspaceAdapter {
     mailboxStatus?: GoogleMailboxProfile;
     operationalMode: string;
   } {
-    const latencyMs = Math.floor(18 + Math.random() * 24);
+    const t0 = Date.now();
     if (mailboxEmail) {
       const mbx = this.mailboxes.find((m) => m.email.toLowerCase() === mailboxEmail.toLowerCase());
       const status = mbx?.status || 'AUTHORIZATION_REQUIRED';
+      const healthy = status === 'AUTHORIZED' || status === 'CONNECTED';
       return {
-        healthy: status === 'AUTHORIZED' || status === 'CONNECTED',
+        healthy,
         status,
-        latencyMs,
+        latencyMs: healthy ? Math.max(1, Date.now() - t0) : 0,
         lastCheckedAt: new Date().toISOString(),
         mailboxStatus: mbx,
         operationalMode: this.config.operationalMode,
       };
     }
+    const healthy = this.config.status === 'AUTHORIZED' || this.config.status === 'CONNECTED';
     return {
-      healthy: this.config.status === 'AUTHORIZED' || this.config.status === 'CONNECTED',
+      healthy,
       status: this.config.status,
-      latencyMs,
+      latencyMs: healthy ? Math.max(1, Date.now() - t0) : 0,
       lastCheckedAt: new Date().toISOString(),
       operationalMode: this.config.operationalMode,
     };
@@ -1206,9 +1216,9 @@ export class GoogleWorkspaceAdapter {
    * quota tracking (250 quota units/sec, 1M/day), TLS inspection, and DNS verification.
    */
   public runDiagnosticConnectionTest(mailboxEmail?: string): DiagnosticConnectionResult {
+    const t0 = Date.now();
     const testedAt = new Date().toISOString();
-    const roundTripLatencyMs = Math.floor(22 + Math.random() * 26);
-    const quotaUnitsRemaining = Math.max(950000, 1000000 - Math.floor(Math.random() * 5000));
+    const quotaUnitsRemaining = 1000000;
 
     let connected = true;
     let httpStatus = 200;
@@ -1235,7 +1245,7 @@ export class GoogleWorkspaceAdapter {
       mailboxEmail,
       connected,
       httpStatus,
-      roundTripLatencyMs,
+      roundTripLatencyMs: Math.max(1, Date.now() - t0),
       quotaUnitsRemaining,
       quotaLimitPerSecond: 250,
       quotaLimitDaily: 1000000,
@@ -1438,7 +1448,7 @@ export class GoogleWorkspaceAdapter {
     }
     const baseMs = 1000;
     const exponentialMs = Math.min(32000, baseMs * Math.pow(2, attempt));
-    const jitter = Math.floor(Math.random() * 250);
+    const jitter = typeof crypto?.randomInt === 'function' ? crypto.randomInt(0, 250) : 125;
     const backoffMs = exponentialMs + jitter;
     return {
       backoffMs,
@@ -1515,7 +1525,7 @@ export class GoogleWorkspaceAdapter {
   } {
     const key = mailboxEmail.toLowerCase();
     const currentCursor = cursor || this.getSyncCursor(key);
-    const newCursor = `cursor-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+    const newCursor = `cursor-${Date.now()}-${secureRandomHex(4)}`;
     this.updateSyncCursor(key, newCursor);
 
     this.logSyncEvent(
@@ -1572,7 +1582,7 @@ export class GoogleWorkspaceAdapter {
     headers: Record<string, string>;
     sha256Hash: string;
   } {
-    const rfcId = params.messageId || `<msg-${Date.now()}-${Math.random().toString(36).substring(2, 9)}@phumulani.org>`;
+    const rfcId = params.messageId || `<msg-${Date.now()}-${secureRandomHex(4)}@phumulani.org>`;
     const dateStr = new Date().toUTCString();
 
     const headers: Record<string, string> = {
@@ -1669,7 +1679,7 @@ export class GoogleWorkspaceAdapter {
     // Record idempotency key to prevent duplicate dispatch
     this.dispatchedIdempotencyKeys.add(params.idempotencyKey);
 
-    const submissionId = `gmail-staged-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+    const submissionId = `gmail-staged-${Date.now()}-${secureRandomHex(4)}`;
     this.logSyncEvent(
       params.mailboxEmail,
       'STAGED_DISPATCH_RECORDED',
@@ -1745,7 +1755,7 @@ export class GoogleWorkspaceAdapter {
     }
 
     this.dispatchedIdempotencyKeys.add(params.idempotencyKey);
-    const liveMsgId = `gmail-live-${Date.now()}-${Math.random().toString(36).substring(2, 8)}`;
+    const liveMsgId = `gmail-live-${Date.now()}-${secureRandomHex(4)}`;
     this.recordEvidence('PROVIDER_CONNECTED', params.mailboxEmail, `Live dispatch executed to ${params.recipientEmail} with id ${liveMsgId}`);
 
     return {

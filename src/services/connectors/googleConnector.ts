@@ -111,19 +111,6 @@ export class GoogleConnector implements EmailConnector {
       };
     }
 
-    if (credentials?.authMethod === 'APP_PASSWORD' && credentials?.password) {
-      this.isConnected = true;
-      return {
-        success: true,
-        connectionId,
-        provider: 'GOOGLE',
-        mailboxEmail: this.mailboxEmail,
-        status: 'CONNECTED',
-        details: 'Google Workspace authenticated via secure App-Specific Password.',
-        authenticatedAt: new Date().toISOString(),
-      };
-    }
-
     const tokenInput =
       typeof credentials?.accessToken === 'string' && credentials.accessToken !== '[VAULTED_OAUTH_TOKEN]'
         ? credentials.accessToken
@@ -132,37 +119,89 @@ export class GoogleConnector implements EmailConnector {
         : null;
 
     if (tokenInput) {
-      oAuthService.storeEncryptedTokens(connectionId, {
-        accessToken: tokenInput,
-        refreshToken: typeof credentials?.refreshToken === 'string' ? credentials.refreshToken : undefined,
-        tokenType: 'Bearer',
-        expiresAt: Date.now() + 3600 * 1000,
-        verifiedEmail: this.mailboxEmail,
-        provider: 'GOOGLE',
-        updatedAt: new Date().toISOString(),
-      });
-      this.isConnected = true;
-      return {
-        success: true,
-        connectionId,
-        provider: 'GOOGLE',
-        mailboxEmail: this.mailboxEmail,
-        status: 'AUTHORIZED',
-        details: `Google Workspace OAuth 2.0 authorization verified for ${this.mailboxEmail}.`,
-        authenticatedAt: new Date().toISOString(),
-      };
+      try {
+        const profileRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/profile', {
+          headers: { Authorization: `Bearer ${tokenInput}` },
+        });
+        if (!profileRes.ok) {
+          this.isConnected = false;
+          return {
+            success: false,
+            connectionId,
+            provider: 'GOOGLE',
+            mailboxEmail: this.mailboxEmail,
+            status: 'AUTHENTICATION_FAILED',
+            details: `Google Workspace profile verification failed (HTTP ${profileRes.status}). Token was not vaulted.`,
+          };
+        }
+        const profile: any = await profileRes.json().catch(() => ({}));
+        const verifiedEmail = String(profile?.emailAddress || '').trim();
+        if (verifiedEmail && verifiedEmail.toLowerCase() !== this.mailboxEmail.toLowerCase()) {
+          this.isConnected = false;
+          return {
+            success: false,
+            connectionId,
+            provider: 'GOOGLE',
+            mailboxEmail: this.mailboxEmail,
+            status: 'AUTHENTICATION_FAILED',
+            details: `Authenticated Google account (${verifiedEmail}) does not match target mailbox (${this.mailboxEmail}).`,
+          };
+        }
+
+        oAuthService.storeEncryptedTokens(connectionId, {
+          accessToken: tokenInput,
+          refreshToken: typeof credentials?.refreshToken === 'string' ? credentials.refreshToken : undefined,
+          tokenType: 'Bearer',
+          expiresAt: Date.now() + 3600 * 1000,
+          verifiedEmail: verifiedEmail || this.mailboxEmail,
+          provider: 'GOOGLE',
+          updatedAt: new Date().toISOString(),
+        });
+        this.isConnected = true;
+        return {
+          success: true,
+          connectionId,
+          provider: 'GOOGLE',
+          mailboxEmail: verifiedEmail || this.mailboxEmail,
+          status: 'AUTHORIZED',
+          details: `Google Workspace OAuth 2.0 authorization verified against Gmail API for ${this.mailboxEmail}.`,
+          authenticatedAt: new Date().toISOString(),
+        };
+      } catch (err: any) {
+        this.isConnected = false;
+        return {
+          success: false,
+          connectionId,
+          provider: 'GOOGLE',
+          mailboxEmail: this.mailboxEmail,
+          status: 'AUTHENTICATION_FAILED',
+          details: `Google Workspace token verification failed (${err?.message || 'network error'}). Token was not vaulted.`,
+        };
+      }
     }
 
     if (this.getActiveAccessToken()) {
-      this.isConnected = true;
+      const health = await this.verifyConnection();
+      if (health.healthy) {
+        this.isConnected = true;
+        return {
+          success: true,
+          connectionId,
+          provider: 'GOOGLE',
+          mailboxEmail: this.mailboxEmail,
+          status: 'AUTHORIZED',
+          details: `Google Workspace vaulted OAuth 2.0 session verified for ${this.mailboxEmail}.`,
+          authenticatedAt: new Date().toISOString(),
+        };
+      }
+      this.isConnected = false;
       return {
-        success: true,
+        success: false,
         connectionId,
         provider: 'GOOGLE',
         mailboxEmail: this.mailboxEmail,
-        status: 'AUTHORIZED',
-        details: `Google Workspace vaulted OAuth 2.0 session active for ${this.mailboxEmail}.`,
-        authenticatedAt: new Date().toISOString(),
+        status: 'AUTHORIZATION_REQUIRED',
+        details: health.diagnosticsDetail || `Google Workspace token verification failed for ${this.mailboxEmail}.`,
       };
     }
 
@@ -355,6 +394,14 @@ export class GoogleConnector implements EmailConnector {
 
   public async synchronize(options: SyncOptions): Promise<SyncResult> {
     const oldCursor = options.cursor || this.currentHistoryId || '';
+    if (oldCursor && /^\d+$/.test(oldCursor)) {
+      const historyRes = await this.fetchGmailWithRefresh(
+        `https://gmail.googleapis.com/gmail/v1/users/me/history?startHistoryId=${encodeURIComponent(oldCursor)}`
+      );
+      if (historyRes && (historyRes.status === 404 || historyRes.status === 410)) {
+        this.currentHistoryId = null;
+      }
+    }
     const profileRes = await this.fetchGmailWithRefresh('https://gmail.googleapis.com/gmail/v1/users/me/profile');
     if (profileRes && profileRes.ok) {
       const profile: any = await profileRes.json().catch(() => ({}));
@@ -464,19 +511,40 @@ export class GoogleConnector implements EmailConnector {
     ].join('\r\n');
     const raw = Buffer.from(rawMime, 'utf8').toString('base64url');
 
-    const res = await this.fetchGmailWithRefresh('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ raw }),
-    });
+    let res: Response | null = null;
+    try {
+      res = await this.fetchGmailWithRefresh('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ raw }),
+      });
+    } catch (err: any) {
+      return {
+        success: false,
+        dispatchId: `disp-google-ambig-${Date.now()}`,
+        deliveryState: 'RECONCILIATION_REQUIRED',
+        dispatchedAt: new Date().toISOString(),
+        error: `Gmail send network timeout or ambiguous outcome: ${err?.message || 'unknown error'}. Reconciliation required before retry.`,
+      };
+    }
 
-    if (!res || !res.ok) {
+    if (!res) {
+      return {
+        success: false,
+        dispatchId: `disp-google-ambig-${Date.now()}`,
+        deliveryState: 'RECONCILIATION_REQUIRED',
+        dispatchedAt: new Date().toISOString(),
+        error: 'Gmail send returned no HTTP response; reconciliation required before retry.',
+      };
+    }
+
+    if (!res.ok) {
       return {
         success: false,
         dispatchId: `disp-google-err-${Date.now()}`,
         deliveryState: 'FAILED',
         dispatchedAt: new Date().toISOString(),
-        error: `Gmail send failed (HTTP ${res?.status || 0}).`,
+        error: `Gmail send failed (HTTP ${res.status}).`,
       };
     }
 
@@ -485,7 +553,7 @@ export class GoogleConnector implements EmailConnector {
       success: true,
       dispatchId: `disp-google-${Date.now()}`,
       providerMessageId: sentData.id,
-      deliveryState: 'DELIVERY_CONFIRMED',
+      deliveryState: 'PROVIDER_ACCEPTED',
       dispatchedAt: new Date().toISOString(),
     };
   }

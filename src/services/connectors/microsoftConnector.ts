@@ -108,19 +108,6 @@ export class MicrosoftConnector implements EmailConnector {
       };
     }
 
-    if (credentials?.authMethod === 'APP_PASSWORD' && credentials?.password) {
-      this.isConnected = true;
-      return {
-        success: true,
-        connectionId,
-        provider: 'MICROSOFT',
-        mailboxEmail: this.mailboxEmail,
-        status: 'CONNECTED',
-        details: 'Microsoft 365 Exchange authenticated via App Password.',
-        authenticatedAt: new Date().toISOString(),
-      };
-    }
-
     const tokenInput =
       typeof credentials?.accessToken === 'string' && credentials.accessToken !== '[VAULTED_OAUTH_TOKEN]'
         ? credentials.accessToken
@@ -129,37 +116,89 @@ export class MicrosoftConnector implements EmailConnector {
         : null;
 
     if (tokenInput) {
-      oAuthService.storeEncryptedTokens(connectionId, {
-        accessToken: tokenInput,
-        refreshToken: typeof credentials?.refreshToken === 'string' ? credentials.refreshToken : undefined,
-        tokenType: 'Bearer',
-        expiresAt: Date.now() + 3600 * 1000,
-        verifiedEmail: this.mailboxEmail,
-        provider: 'MICROSOFT',
-        updatedAt: new Date().toISOString(),
-      });
-      this.isConnected = true;
-      return {
-        success: true,
-        connectionId,
-        provider: 'MICROSOFT',
-        mailboxEmail: this.mailboxEmail,
-        status: 'AUTHORIZED',
-        details: 'Microsoft Graph OAuth 2.0 Azure AD consent granted.',
-        authenticatedAt: new Date().toISOString(),
-      };
+      try {
+        const profileRes = await fetch('https://graph.microsoft.com/v1.0/me?$select=mail,userPrincipalName', {
+          headers: { Authorization: `Bearer ${tokenInput}` },
+        });
+        if (!profileRes.ok) {
+          this.isConnected = false;
+          return {
+            success: false,
+            connectionId,
+            provider: 'MICROSOFT',
+            mailboxEmail: this.mailboxEmail,
+            status: 'AUTHENTICATION_FAILED',
+            details: `Microsoft Graph profile verification failed (HTTP ${profileRes.status}). Token was not vaulted.`,
+          };
+        }
+        const profile: any = await profileRes.json().catch(() => ({}));
+        const verifiedEmail = String(profile?.mail || profile?.userPrincipalName || '').trim();
+        if (verifiedEmail && verifiedEmail.toLowerCase() !== this.mailboxEmail.toLowerCase()) {
+          this.isConnected = false;
+          return {
+            success: false,
+            connectionId,
+            provider: 'MICROSOFT',
+            mailboxEmail: this.mailboxEmail,
+            status: 'AUTHENTICATION_FAILED',
+            details: `Authenticated Microsoft account (${verifiedEmail}) does not match target mailbox (${this.mailboxEmail}).`,
+          };
+        }
+
+        oAuthService.storeEncryptedTokens(connectionId, {
+          accessToken: tokenInput,
+          refreshToken: typeof credentials?.refreshToken === 'string' ? credentials.refreshToken : undefined,
+          tokenType: 'Bearer',
+          expiresAt: Date.now() + 3600 * 1000,
+          verifiedEmail: verifiedEmail || this.mailboxEmail,
+          provider: 'MICROSOFT',
+          updatedAt: new Date().toISOString(),
+        });
+        this.isConnected = true;
+        return {
+          success: true,
+          connectionId,
+          provider: 'MICROSOFT',
+          mailboxEmail: verifiedEmail || this.mailboxEmail,
+          status: 'AUTHORIZED',
+          details: 'Microsoft Graph OAuth 2.0 token verified against /me and vaulted.',
+          authenticatedAt: new Date().toISOString(),
+        };
+      } catch (err: any) {
+        this.isConnected = false;
+        return {
+          success: false,
+          connectionId,
+          provider: 'MICROSOFT',
+          mailboxEmail: this.mailboxEmail,
+          status: 'AUTHENTICATION_FAILED',
+          details: `Microsoft Graph token verification failed (${err?.message || 'network error'}). Token was not vaulted.`,
+        };
+      }
     }
 
     if (this.getActiveAccessToken()) {
-      this.isConnected = true;
+      const health = await this.verifyConnection();
+      if (health.healthy) {
+        this.isConnected = true;
+        return {
+          success: true,
+          connectionId,
+          provider: 'MICROSOFT',
+          mailboxEmail: this.mailboxEmail,
+          status: 'AUTHORIZED',
+          details: `Microsoft Graph vaulted OAuth 2.0 session verified for ${this.mailboxEmail}.`,
+          authenticatedAt: new Date().toISOString(),
+        };
+      }
+      this.isConnected = false;
       return {
-        success: true,
+        success: false,
         connectionId,
         provider: 'MICROSOFT',
         mailboxEmail: this.mailboxEmail,
-        status: 'AUTHORIZED',
-        details: `Microsoft Graph vaulted OAuth 2.0 session active for ${this.mailboxEmail}.`,
-        authenticatedAt: new Date().toISOString(),
+        status: 'AUTHORIZATION_REQUIRED',
+        details: health.diagnosticsDetail || `Microsoft Graph token verification failed for ${this.mailboxEmail}.`,
       };
     }
 
@@ -323,9 +362,17 @@ export class MicrosoftConnector implements EmailConnector {
 
   public async synchronize(options: SyncOptions): Promise<SyncResult> {
     const oldCursor = options.cursor || this.currentDeltaToken || '';
-    const deltaRes = await this.fetchGraphWithRefresh(
-      'https://graph.microsoft.com/v1.0/me/mailFolders/Inbox/messages/delta?$top=20&$select=id,conversationId,subject,from,receivedDateTime,isRead,bodyPreview'
-    );
+    const initialUrl =
+      oldCursor && oldCursor.startsWith('https://graph.microsoft.com/')
+        ? oldCursor
+        : 'https://graph.microsoft.com/v1.0/me/mailFolders/Inbox/messages/delta?$top=20&$select=id,conversationId,subject,from,receivedDateTime,isRead,bodyPreview';
+    let deltaRes = await this.fetchGraphWithRefresh(initialUrl);
+    if (deltaRes && (deltaRes.status === 410 || deltaRes.status === 404)) {
+      this.currentDeltaToken = null;
+      deltaRes = await this.fetchGraphWithRefresh(
+        'https://graph.microsoft.com/v1.0/me/mailFolders/Inbox/messages/delta?$top=20&$select=id,conversationId,subject,from,receivedDateTime,isRead,bodyPreview'
+      );
+    }
     if (deltaRes && deltaRes.ok) {
       const data: any = await deltaRes.json().catch(() => ({}));
       const items: any[] = data?.value || [];
@@ -423,34 +470,55 @@ export class MicrosoftConnector implements EmailConnector {
       };
     }
 
-    const res = await this.fetchGraphWithRefresh('https://graph.microsoft.com/v1.0/me/sendMail', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        message: {
-          subject: message.subject,
-          body: { contentType: 'Text', content: message.bodyText || '' },
-          toRecipients: message.recipientEmails.map((address) => ({ emailAddress: { address } })),
-        },
-        saveToSentItems: true,
-      }),
-    });
+    let res: Response | null = null;
+    try {
+      res = await this.fetchGraphWithRefresh('https://graph.microsoft.com/v1.0/me/sendMail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          message: {
+            subject: message.subject,
+            body: { contentType: 'Text', content: message.bodyText || '' },
+            toRecipients: message.recipientEmails.map((address) => ({ emailAddress: { address } })),
+          },
+          saveToSentItems: true,
+        }),
+      });
+    } catch (err: any) {
+      return {
+        success: false,
+        dispatchId: `disp-msft-ambig-${Date.now()}`,
+        deliveryState: 'RECONCILIATION_REQUIRED',
+        dispatchedAt: new Date().toISOString(),
+        error: `Microsoft Graph sendMail timeout or ambiguous outcome: ${err?.message || 'unknown error'}. Reconciliation required before retry.`,
+      };
+    }
 
-    if (!res || !res.ok) {
+    if (!res) {
+      return {
+        success: false,
+        dispatchId: `disp-msft-ambig-${Date.now()}`,
+        deliveryState: 'RECONCILIATION_REQUIRED',
+        dispatchedAt: new Date().toISOString(),
+        error: 'Microsoft Graph sendMail returned no HTTP response; reconciliation required before retry.',
+      };
+    }
+
+    if (!res.ok) {
       return {
         success: false,
         dispatchId: `disp-msft-err-${Date.now()}`,
         deliveryState: 'FAILED',
         dispatchedAt: new Date().toISOString(),
-        error: `Microsoft Graph sendMail failed (HTTP ${res?.status || 0}).`,
+        error: `Microsoft Graph sendMail failed (HTTP ${res.status}).`,
       };
     }
 
     return {
       success: true,
       dispatchId: `disp-msft-${Date.now()}`,
-      providerMessageId: `ms-msg-${Date.now()}`,
-      deliveryState: 'DELIVERY_CONFIRMED',
+      providerMessageId: res.headers?.get('request-id') || undefined,
+      deliveryState: 'PROVIDER_ACCEPTED',
       dispatchedAt: new Date().toISOString(),
     };
   }

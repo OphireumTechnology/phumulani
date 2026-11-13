@@ -407,7 +407,7 @@ export class PaymentProviderService {
       }
 
       const donationId = `don-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`;
-      const receiptNumber = `PHUM-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`;
+      const receiptNumber = `PHUM-${new Date().getFullYear()}-${crypto.randomInt(10000, 100000)}`;
       const amountDollars = (obj.amount || 0) / 100;
 
       await this.dbAdapter.withTransaction(async () => {

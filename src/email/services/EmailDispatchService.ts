@@ -163,18 +163,69 @@ export class EmailDispatchService {
   }
 
   public async sendApprovedEmail(draftId: string, senderId: string): Promise<any> {
+    if (this.emergencyShutdown) {
+      return {
+        success: false,
+        deliveryStatus: 'CANCELLED',
+        dispatchId: '',
+        error: 'EMERGENCY_SHUTDOWN: Outbound email dispatch is suspended by institutional administrator kill switch.',
+      };
+    }
+
     const draft = this.drafts.get(draftId);
     if (!draft) throw new Error(`Draft ${draftId} not found`);
     if (draft.status !== 'APPROVED') {
       throw new Error(`Cannot send draft in status ${draft.status}; must be APPROVED.`);
     }
 
-    draft.status = 'SENT';
-    draft.sentAt = new Date().toISOString();
+    if (
+      !senderId ||
+      senderId.startsWith('ai-') ||
+      senderId.startsWith('agent-') ||
+      senderId.startsWith('gemini')
+    ) {
+      throw new Error('POLICY_VIOLATION: AI agents cannot execute outbound email dispatch.');
+    }
+
+    const conn = connectorRegistry.getConnection(draft.mailboxId) || connectorRegistry.listConnections()[0];
+    const dispatchResult = await this.dispatchApprovedMessage({
+      id: `msg-${draft.id}`,
+      connectionId: conn?.id || draft.mailboxId,
+      senderAccount: conn?.emailAddress || 'donations@phumulani.org',
+      to: draft.to,
+      cc: draft.cc,
+      subject: draft.subject,
+      bodyText: draft.bodyText || '',
+      bodyHtml: draft.bodyHtml,
+      idempotencyKey: `draft-send-${draft.id}`,
+      approvalRecordId: `apr-${draft.id}`,
+      approvedByUserId: draft.approvedBy || senderId,
+      approvedByName: draft.approvedBy || senderId,
+      approvedAt: draft.approvedAt || new Date().toISOString(),
+      approvalVersion: 1,
+      deliveryState: 'APPROVED',
+    });
+
+    if (!dispatchResult.success) {
+      return {
+        success: false,
+        deliveryStatus: dispatchResult.deliveryState,
+        dispatchId: dispatchResult.dispatchId,
+        error: dispatchResult.error,
+      };
+    }
+
+    const isProviderAccepted =
+      dispatchResult.deliveryState === 'PROVIDER_ACCEPTED' ||
+      dispatchResult.deliveryState === 'DELIVERY_CONFIRMED';
+    draft.status = isProviderAccepted ? 'SENT' : 'STAGED';
+    draft.sentAt = dispatchResult.dispatchedAt;
+
     return {
       success: true,
-      deliveryStatus: 'SENT',
-      dispatchId: `disp-${Date.now()}`,
+      deliveryStatus: isProviderAccepted ? dispatchResult.deliveryState : 'STAGED',
+      dispatchId: dispatchResult.dispatchId,
+      providerMessageId: dispatchResult.providerMessageId,
       sentAt: draft.sentAt,
     };
   }
@@ -290,10 +341,28 @@ export class EmailDispatchService {
       deliveryState: operationalMode === 'CONTROLLED_LIVE_PILOT' ? 'PROVIDER_ACCEPTED' : 'STAGED',
     });
 
-    // Record idempotency durably across restarts
+    if (
+      !result.success ||
+      result.deliveryState === 'FAILED' ||
+      result.deliveryState === 'CANCELLED' ||
+      result.deliveryState === 'RECONCILIATION_REQUIRED'
+    ) {
+      return {
+        success: false,
+        dispatchId: result.dispatchId || dispatchId,
+        deliveryState: result.deliveryState || 'FAILED',
+        dispatchedAt: result.dispatchedAt || new Date().toISOString(),
+        recipientCount: message.to.length,
+        error: result.error || `Outbound transmission ended in state ${result.deliveryState || 'FAILED'}.`,
+      };
+    }
+
+    const finalDispatchId = result.dispatchId || dispatchId;
+
+    // Record idempotency durably ONLY for successful non-failed dispatches
     await this.saveIdempotencyRecord({
       idempotencyKey: message.idempotencyKey,
-      dispatchId,
+      dispatchId: finalDispatchId,
       senderAccount: message.senderAccount,
       recipientEmails: message.to,
       subjectHash: crypto.createHash('sha256').update(message.subject + message.bodyText).digest('hex'),
@@ -303,10 +372,10 @@ export class EmailDispatchService {
 
     return {
       success: true,
-      dispatchId,
-      providerMessageId: result.providerMessageId || `prov-${Date.now()}`,
+      dispatchId: finalDispatchId,
+      providerMessageId: result.providerMessageId,
       deliveryState: result.deliveryState,
-      dispatchedAt: new Date().toISOString(),
+      dispatchedAt: result.dispatchedAt || new Date().toISOString(),
       recipientCount: message.to.length,
     };
   }

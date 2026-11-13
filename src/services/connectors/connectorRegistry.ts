@@ -6,6 +6,7 @@
  * Grounded in Master Development Directive Phase 61
  */
 
+import crypto from 'crypto';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -261,6 +262,7 @@ export class ConnectorRegistry {
    * Persists connection state and evidence atomically to disk.
    */
   private saveDurableRegistry(): void {
+    const tmpPath = `${this.persistenceFilePath}.tmp.${process.pid}.${crypto.randomBytes(6).toString('hex')}`;
     try {
       const dir = path.dirname(this.persistenceFilePath);
       if (!fs.existsSync(dir)) {
@@ -271,11 +273,14 @@ export class ConnectorRegistry {
         connections: Array.from(this.connections.values()),
         auditEvents: this.auditEvents.slice(0, 300),
       };
-      const tmpPath = `${this.persistenceFilePath}.tmp.${Date.now()}`;
       fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), { encoding: 'utf8', mode: 0o600 });
       fs.renameSync(tmpPath, this.persistenceFilePath);
-    } catch (err) {
-      console.warn('[ConnectorRegistry] Failed to save durable registry:', err);
+    } catch (err: any) {
+      try {
+        if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);
+      } catch {}
+      console.error('[ConnectorRegistry] Failed to save durable registry:', err?.message || err);
+      throw new Error(`REGISTRY_PERSISTENCE_FAILED: ${err?.message || 'Unable to write durable registry.'}`);
     }
   }
 
@@ -420,14 +425,14 @@ export class ConnectorRegistry {
           credentials.appPassword ||
           credentials.token ||
           credentials.accessToken ||
-          credentials.authCode)
+          (credentials.code && credentials.state))
     );
 
     const now = new Date().toISOString();
     let initialStatus: ConnectorConnectionStatus = 'CONFIGURED_UNVERIFIED';
 
     if (effectiveAuthMethod === 'OAUTH2') {
-      initialStatus = hasVaultedOAuthTokens || hasProvidedCredentials ? 'AUTHORIZED' : 'AUTHORIZATION_REQUIRED';
+      initialStatus = hasVaultedOAuthTokens ? 'AUTHORIZED' : 'AUTHORIZATION_REQUIRED';
     } else if (!hasProvidedCredentials) {
       initialStatus = 'CONFIGURATION_REQUIRED';
     } else {
@@ -483,7 +488,7 @@ export class ConnectorRegistry {
     }
 
     // Store non-OAuth credential reference in-memory only when actually supplied (never persisted plaintext)
-    if (hasProvidedCredentials && credentials) {
+    if (hasProvidedCredentials && credentials && effectiveAuthMethod !== 'OAUTH2') {
       this.credentialVault.set(id, {
         ...credentials,
         storedAt: now,
@@ -514,6 +519,10 @@ export class ConnectorRegistry {
       if (connRes.success) {
         fullRecord.connectionHealth = 'HEALTHY';
         fullRecord.credentialWarning = false;
+      } else {
+        fullRecord.connectionHealth = connRes.status === 'AUTHENTICATION_FAILED' ? 'ERROR' : 'UNTESTED';
+        fullRecord.credentialWarning = true;
+        fullRecord.lastError = connRes.error || connRes.details || 'Provider verification failed.';
       }
     }
 
@@ -1074,11 +1083,18 @@ export class ConnectorRegistry {
 
     const sendResult = await connector.sendApprovedMessage(message);
 
-    // Cache idempotency result
-    this.idempotencyKeys.set(message.idempotencyKey, {
-      timestamp: Date.now(),
-      result: sendResult,
-    });
+    // Cache idempotency ONLY for non-failed, non-ambiguous dispatches so failures remain retryable
+    if (
+      sendResult.success &&
+      sendResult.deliveryState !== 'FAILED' &&
+      sendResult.deliveryState !== 'CANCELLED' &&
+      sendResult.deliveryState !== 'RECONCILIATION_REQUIRED'
+    ) {
+      this.idempotencyKeys.set(message.idempotencyKey, {
+        timestamp: Date.now(),
+        result: sendResult,
+      });
+    }
 
     // Update outgoing message count on connection
     if (connection && sendResult.success) {

@@ -6,6 +6,7 @@
  * Grounded in Master Development Instruction Phase 60 (M60.04, M60.05, M60.07, M60.08)
  */
 
+import crypto from 'crypto';
 import {
   EmailConnector,
   EmailProviderType,
@@ -22,6 +23,7 @@ import {
   ProviderCapabilities,
 } from '../../types/emailConnectors';
 import { PROVIDER_DESCRIPTORS } from './providerCapabilities';
+import { validateSafeMailHost } from '../../email/connectors/ImapSmtpConnector';
 
 export class ImapSmtpConnector implements EmailConnector {
   public readonly provider: EmailProviderType;
@@ -56,7 +58,34 @@ export class ImapSmtpConnector implements EmailConnector {
   public async connect(credentials?: Record<string, unknown>): Promise<ConnectionResult> {
     const connectionId = `conn-${this.provider.toLowerCase()}-${this.mailboxEmail.replace(/[^a-zA-Z0-9]/g, '_')}`;
 
+    const imapCheck = validateSafeMailHost(this.imapHost);
+    if (!imapCheck.valid) {
+      this.isConnected = false;
+      return {
+        success: false,
+        connectionId,
+        provider: this.provider,
+        mailboxEmail: this.mailboxEmail,
+        status: 'BLOCKED_EXTERNAL',
+        error: imapCheck.reason,
+      };
+    }
+
+    const smtpCheck = validateSafeMailHost(this.smtpHost);
+    if (!smtpCheck.valid) {
+      this.isConnected = false;
+      return {
+        success: false,
+        connectionId,
+        provider: this.provider,
+        mailboxEmail: this.mailboxEmail,
+        status: 'BLOCKED_EXTERNAL',
+        error: smtpCheck.reason,
+      };
+    }
+
     if (!credentials?.password && !credentials?.token && !credentials?.appPassword) {
+      this.isConnected = false;
       return {
         success: false,
         connectionId,
@@ -85,6 +114,22 @@ export class ImapSmtpConnector implements EmailConnector {
 
   public async verifyConnection(): Promise<ConnectionHealth> {
     const connectionId = `conn-${this.provider.toLowerCase()}-${this.mailboxEmail.replace(/[^a-zA-Z0-9]/g, '_')}`;
+
+    const imapCheck = validateSafeMailHost(this.imapHost);
+    if (!imapCheck.valid) {
+      this.isConnected = false;
+      return {
+        connectionId,
+        provider: this.provider,
+        mailboxEmail: this.mailboxEmail,
+        healthy: false,
+        status: 'BLOCKED_EXTERNAL',
+        roundTripLatencyMs: 0,
+        lastCheckedAt: new Date().toISOString(),
+        dnsResolution: 'DNS_ERROR',
+        error: imapCheck.reason,
+      };
+    }
 
     if (!this.isConnected) {
       return {
@@ -253,7 +298,7 @@ export class ImapSmtpConnector implements EmailConnector {
     return {
       success: true,
       draftId,
-      providerDraftId: `imap-draft-${Math.random().toString(36).substring(2, 9)}`,
+      providerDraftId: `imap-draft-${crypto.randomBytes(4).toString('hex')}`,
       version: 1,
       createdAt: new Date().toISOString(),
     };

@@ -115,25 +115,65 @@ export class GmailConnector implements EmailConnector {
     }
 
     if (credentials?.accessToken && typeof credentials.accessToken === 'string') {
-      oAuthService.storeEncryptedTokens(this.connectionId, {
-        accessToken: credentials.accessToken,
-        refreshToken: typeof credentials.refreshToken === 'string' ? credentials.refreshToken : undefined,
-        tokenType: 'Bearer',
-        expiresAt: Date.now() + 3600 * 1000,
-        verifiedEmail: this.mailboxEmail,
-        provider: 'GOOGLE',
-        updatedAt: new Date().toISOString(),
-      });
-      this.isAuthorized = true;
-      return {
-        success: true,
-        connectionId: this.connectionId,
-        provider: 'GOOGLE',
-        mailboxEmail: this.mailboxEmail,
-        status: 'CONNECTED',
-        details: 'Google Workspace OAuth token vaulted with AES-256-GCM.',
-        authenticatedAt: new Date().toISOString(),
-      };
+      try {
+        const profileRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/profile', {
+          headers: { Authorization: `Bearer ${credentials.accessToken}` },
+        });
+        if (!profileRes.ok) {
+          this.isAuthorized = false;
+          return {
+            success: false,
+            connectionId: this.connectionId,
+            provider: 'GOOGLE',
+            mailboxEmail: this.mailboxEmail,
+            status: 'AUTHENTICATION_FAILED',
+            details: `Google profile verification failed (HTTP ${profileRes.status}). Token was not vaulted.`,
+          };
+        }
+        const profile: any = await profileRes.json().catch(() => ({}));
+        const verifiedEmail = String(profile?.emailAddress || '').trim();
+        if (verifiedEmail && verifiedEmail.toLowerCase() !== this.mailboxEmail.toLowerCase()) {
+          this.isAuthorized = false;
+          return {
+            success: false,
+            connectionId: this.connectionId,
+            provider: 'GOOGLE',
+            mailboxEmail: this.mailboxEmail,
+            status: 'AUTHENTICATION_FAILED',
+            details: `Authenticated Google account (${verifiedEmail}) does not match mailbox (${this.mailboxEmail}).`,
+          };
+        }
+
+        oAuthService.storeEncryptedTokens(this.connectionId, {
+          accessToken: credentials.accessToken,
+          refreshToken: typeof credentials.refreshToken === 'string' ? credentials.refreshToken : undefined,
+          tokenType: 'Bearer',
+          expiresAt: Date.now() + 3600 * 1000,
+          verifiedEmail: verifiedEmail || this.mailboxEmail,
+          provider: 'GOOGLE',
+          updatedAt: new Date().toISOString(),
+        });
+        this.isAuthorized = true;
+        return {
+          success: true,
+          connectionId: this.connectionId,
+          provider: 'GOOGLE',
+          mailboxEmail: verifiedEmail || this.mailboxEmail,
+          status: 'CONNECTED',
+          details: 'Google Workspace OAuth token verified against Gmail API and vaulted with AES-256-GCM.',
+          authenticatedAt: new Date().toISOString(),
+        };
+      } catch (err: any) {
+        this.isAuthorized = false;
+        return {
+          success: false,
+          connectionId: this.connectionId,
+          provider: 'GOOGLE',
+          mailboxEmail: this.mailboxEmail,
+          status: 'AUTHENTICATION_FAILED',
+          details: `Google profile verification failed (${err?.message || 'network error'}). Token was not vaulted.`,
+        };
+      }
     }
 
     this.isAuthorized = false;
@@ -363,6 +403,15 @@ export class GmailConnector implements EmailConnector {
         ? param1
         : param2?.cursor || (typeof param1 === 'object' ? param1?.cursor : undefined);
     const oldCursor = explicitCursor || this.currentHistoryId || '';
+
+    if (oldCursor && !oldCursor.startsWith('hist-') && /^\d+$/.test(oldCursor)) {
+      const historyRes = await this.fetchGmailWithRefresh(
+        `https://gmail.googleapis.com/gmail/v1/users/me/history?startHistoryId=${encodeURIComponent(oldCursor)}`
+      );
+      if (historyRes && (historyRes.status === 404 || historyRes.status === 410)) {
+        this.currentHistoryId = null;
+      }
+    }
 
     const profileRes = await this.fetchGmailWithRefresh('https://gmail.googleapis.com/gmail/v1/users/me/profile');
     if (profileRes && profileRes.ok) {

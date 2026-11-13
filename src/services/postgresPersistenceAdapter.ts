@@ -628,8 +628,14 @@ export class PostgresPersistenceAdapter {
         const result = await callback(txWrapper);
         await client.query('COMMIT');
         return result;
-      } catch (err) {
-        await client.query('ROLLBACK').catch(() => {});
+      } catch (err: any) {
+        try {
+          await client.query('ROLLBACK');
+        } catch (rollbackErr: any) {
+          const origMsg = PostgresPersistenceAdapter.redactDatabaseUrl(err?.message || String(err));
+          const rbMsg = PostgresPersistenceAdapter.redactDatabaseUrl(rollbackErr?.message || String(rollbackErr));
+          throw new Error(`TRANSACTION_AND_ROLLBACK_FAILED: ${origMsg} | Rollback error: ${rbMsg}`);
+        }
         throw err;
       } finally {
         this.activeTxClient = prevTxClient;
@@ -829,11 +835,52 @@ export class PostgresPersistenceAdapter {
       }
     }
 
-    if (options?.failClosedInProd && process.env.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_ONLY') {
+    if (
+      options?.failClosedInProd &&
+      (process.env.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_ONLY' || process.env.NODE_ENV === 'production')
+    ) {
       throw new Error(`CRITICAL_AUDIT_PERSISTENCE_FAILURE: ${errMsg}`);
     }
 
     return { persisted: false, deadLettered, error: errMsg };
+  }
+
+  public async replayAuditDeadLetterQueue(): Promise<{ replayed: number; remaining: number }> {
+    if (typeof window !== 'undefined') {
+      return { replayed: 0, remaining: 0 };
+    }
+    const dlqPath = path.resolve(this.storageDir, '.audit_dead_letter.jsonl');
+    if (!fs.existsSync(dlqPath)) {
+      return { replayed: 0, remaining: 0 };
+    }
+    const content = fs.readFileSync(dlqPath, 'utf8').trim();
+    if (!content) {
+      return { replayed: 0, remaining: 0 };
+    }
+    const lines = content.split('\n').filter(Boolean);
+    const failedLines: string[] = [];
+    let replayed = 0;
+
+    for (const line of lines) {
+      try {
+        const entry = JSON.parse(line);
+        if (entry?.table && entry?.record) {
+          await this.insert(entry.table, entry.record);
+          replayed++;
+        }
+      } catch {
+        failedLines.push(line);
+      }
+    }
+
+    if (failedLines.length === 0) {
+      fs.unlinkSync(dlqPath);
+    } else {
+      const tmpDlq = `${dlqPath}.tmp.${process.pid}.${crypto.randomBytes(6).toString('hex')}`;
+      fs.writeFileSync(tmpDlq, failedLines.join('\n') + '\n', { encoding: 'utf8', mode: 0o600 });
+      fs.renameSync(tmpDlq, dlqPath);
+    }
+    return { replayed, remaining: failedLines.length };
   }
 
   /**
@@ -944,9 +991,16 @@ export class PostgresPersistenceAdapter {
       };
 
       const serialized = JSON.stringify(snapshot, null, 2);
-      const tempPath = `${this.storageFilePath}.${Date.now()}.${Math.random().toString(36).substring(2, 6)}.tmp`;
-      fs.writeFileSync(tempPath, serialized, { encoding: 'utf-8', mode: 0o600 });
-      fs.renameSync(tempPath, this.storageFilePath);
+      const tempPath = `${this.storageFilePath}.${process.pid}.${crypto.randomBytes(6).toString('hex')}.tmp`;
+      try {
+        fs.writeFileSync(tempPath, serialized, { encoding: 'utf-8', mode: 0o600 });
+        fs.renameSync(tempPath, this.storageFilePath);
+      } catch (writeErr) {
+        try {
+          if (fs.existsSync(tempPath)) fs.unlinkSync(tempPath);
+        } catch {}
+        throw writeErr;
+      }
     } catch (err) {
       console.error('[PostgresAdapter] Failed to flush to durable storage:', err);
       throw err;

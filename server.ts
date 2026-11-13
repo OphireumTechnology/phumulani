@@ -681,14 +681,14 @@ function encryptSafeguardingData(
   };
 }
 
-function decryptSafeguardingData(
+function decryptSafeguardingWithSecret(
   ciphertext: string,
   ivHex: string,
   authTagHex: string,
   saltHex: string,
-  aadContext: string
+  aadContext: string,
+  secret: Buffer | string
 ): string {
-  const secret = resolveSafeguardingSecretMaterial();
   const salt = Buffer.from(saltHex, 'hex');
   const derivedKey = crypto.scryptSync(secret, salt, 32);
   const decipher = crypto.createDecipheriv('aes-256-gcm', derivedKey, Buffer.from(ivHex, 'hex'));
@@ -697,6 +697,25 @@ function decryptSafeguardingData(
   let decrypted = decipher.update(ciphertext, 'hex', 'utf8');
   decrypted += decipher.final('utf8');
   return decrypted;
+}
+
+function decryptSafeguardingData(
+  ciphertext: string,
+  ivHex: string,
+  authTagHex: string,
+  saltHex: string,
+  aadContext: string
+): string {
+  const primarySecret = resolveSafeguardingSecretMaterial();
+  try {
+    return decryptSafeguardingWithSecret(ciphertext, ivHex, authTagHex, saltHex, aadContext, primarySecret);
+  } catch (primaryErr) {
+    const previousSecret = (process.env.SAFEGUARDING_MASTER_KEY_PREVIOUS || '').trim();
+    if (previousSecret && !isWeakSafeguardingKey(previousSecret)) {
+      return decryptSafeguardingWithSecret(ciphertext, ivHex, authTagHex, saltHex, aadContext, previousSecret);
+    }
+    throw primaryErr;
+  }
 }
 
 app.post('/api/intake/restricted', async (req: Request, res: Response) => {
@@ -1092,11 +1111,6 @@ const getSessionFromReq = (req: Request): UserSession | undefined => {
   const sessionId = authHeader.replace(/^Bearer\s+/i, '').trim();
   if (sessionId) {
     const val = authSecurityService.validateSession(sessionId);
-    if (val.valid && val.session) return val.session;
-  }
-  const token = req.query.token as string | undefined;
-  if (token) {
-    const val = authSecurityService.validateSession(token);
     if (val.valid && val.session) return val.session;
   }
   return undefined;

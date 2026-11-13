@@ -111,9 +111,17 @@ export class OAuthService {
   }
 
   private resolveVaultSecret(): Buffer | string {
-    const configured = (process.env.OAUTH_TOKEN_ENCRYPTION_KEY || process.env.SAFEGUARDING_MASTER_KEY || '').trim();
-    if (configured && !this.isWeakKeyMaterial(configured)) {
-      return configured;
+    const rawPrimary = process.env.OAUTH_TOKEN_ENCRYPTION_KEY?.trim();
+    const rawSafeguarding = process.env.SAFEGUARDING_MASTER_KEY?.trim();
+
+    if (rawPrimary !== undefined && rawPrimary.length > 0) {
+      if (this.isWeakKeyMaterial(rawPrimary)) {
+        throw new Error('OAUTH_TOKEN_ENCRYPTION_KEY is too weak (requires >=32 high-entropy characters).');
+      }
+      return rawPrimary;
+    }
+    if (rawSafeguarding && !this.isWeakKeyMaterial(rawSafeguarding)) {
+      return rawSafeguarding;
     }
     if (
       EnvironmentService.isProductionOnly() ||
@@ -127,6 +135,18 @@ export class OAuthService {
       this.ephemeralVaultSecret = crypto.randomBytes(32);
     }
     return this.ephemeralVaultSecret;
+  }
+
+  private resolvePreviousVaultSecret(): string | null {
+    const prev = (
+      process.env.OAUTH_TOKEN_ENCRYPTION_KEY_PREVIOUS ||
+      process.env.SAFEGUARDING_MASTER_KEY_PREVIOUS ||
+      ''
+    ).trim();
+    if (prev && !this.isWeakKeyMaterial(prev)) {
+      return prev;
+    }
+    return null;
   }
 
   private loadEncryptedVault(): void {
@@ -148,6 +168,7 @@ export class OAuthService {
   }
 
   private saveEncryptedVault(): void {
+    const tmpPath = `${this.vaultPersistencePath}.tmp.${process.pid}.${crypto.randomBytes(6).toString('hex')}`;
     try {
       const dir = path.dirname(this.vaultPersistencePath);
       if (!fs.existsSync(dir)) {
@@ -158,11 +179,14 @@ export class OAuthService {
         encryption: 'AES-256-GCM',
         entries: Object.fromEntries(this.encryptedTokenVault.entries()),
       };
-      const tmpPath = `${this.vaultPersistencePath}.tmp.${Date.now()}`;
       fs.writeFileSync(tmpPath, JSON.stringify(payload, null, 2), { encoding: 'utf8', mode: 0o600 });
       fs.renameSync(tmpPath, this.vaultPersistencePath);
-    } catch (err) {
-      console.warn('[OAuthService] Failed to persist encrypted token vault:', err);
+    } catch (err: any) {
+      try {
+        if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);
+      } catch {}
+      console.error('[OAuthService] Failed to persist encrypted token vault:', err?.message || err);
+      throw new Error(`OAUTH_VAULT_PERSISTENCE_FAILED: ${err?.message || 'Unable to write encrypted token vault.'}`);
     }
   }
 
@@ -187,8 +211,7 @@ export class OAuthService {
     };
   }
 
-  private decryptTokens(connectionKey: string, entry: EncryptedVaultEntry): StoredOAuthTokens {
-    const secret = this.resolveVaultSecret();
+  private decryptTokensWithSecret(connectionKey: string, entry: EncryptedVaultEntry, secret: Buffer | string): StoredOAuthTokens {
     const derivedKey = crypto.scryptSync(secret, Buffer.from(entry.salt, 'hex'), 32);
     const decipher = crypto.createDecipheriv('aes-256-gcm', derivedKey, Buffer.from(entry.iv, 'hex'));
     decipher.setAAD(Buffer.from(connectionKey, 'utf8'));
@@ -196,6 +219,11 @@ export class OAuthService {
     let decrypted = decipher.update(entry.ciphertext, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
     return JSON.parse(decrypted) as StoredOAuthTokens;
+  }
+
+  private decryptTokens(connectionKey: string, entry: EncryptedVaultEntry): StoredOAuthTokens {
+    const secret = this.resolveVaultSecret();
+    return this.decryptTokensWithSecret(connectionKey, entry, secret);
   }
 
   public storeEncryptedTokens(connectionKey: string, tokens: StoredOAuthTokens): void {
@@ -212,8 +240,49 @@ export class OAuthService {
     try {
       return this.decryptTokens(normalizedKey, entry);
     } catch {
+      const prevSecret = this.resolvePreviousVaultSecret();
+      if (prevSecret) {
+        try {
+          const decrypted = this.decryptTokensWithSecret(normalizedKey, entry, prevSecret);
+          const rotated = this.encryptTokens(normalizedKey, decrypted);
+          this.encryptedTokenVault.set(normalizedKey, rotated);
+          this.saveEncryptedVault();
+          return decrypted;
+        } catch {
+          return null;
+        }
+      }
       return null;
     }
+  }
+
+  public rotateVaultEncryptionKey(): { rotatedCount: number; failedCount: number } {
+    let rotatedCount = 0;
+    let failedCount = 0;
+    const prevSecret = this.resolvePreviousVaultSecret();
+    for (const [key, entry] of this.encryptedTokenVault.entries()) {
+      try {
+        const plain = this.decryptTokens(key, entry);
+        this.encryptedTokenVault.set(key, this.encryptTokens(key, plain));
+        rotatedCount++;
+      } catch {
+        if (prevSecret) {
+          try {
+            const plain = this.decryptTokensWithSecret(key, entry, prevSecret);
+            this.encryptedTokenVault.set(key, this.encryptTokens(key, plain));
+            rotatedCount++;
+          } catch {
+            failedCount++;
+          }
+        } else {
+          failedCount++;
+        }
+      }
+    }
+    if (rotatedCount > 0) {
+      this.saveEncryptedVault();
+    }
+    return { rotatedCount, failedCount };
   }
 
   public hasStoredTokens(connectionKey: string): boolean {
@@ -470,6 +539,55 @@ export class OAuthService {
         };
       }
 
+      // Validate Microsoft Entra tenant boundary when MICROSOFT_TENANT_ID is pinned
+      const pinnedTenant = process.env.MICROSOFT_TENANT_ID?.trim();
+      if (
+        effectiveProvider === 'MICROSOFT' &&
+        pinnedTenant &&
+        !['common', 'organizations', 'consumers'].includes(pinnedTenant.toLowerCase()) &&
+        typeof tokenData.id_token === 'string' &&
+        tokenData.id_token.split('.').length >= 2
+      ) {
+        try {
+          const claims = JSON.parse(Buffer.from(tokenData.id_token.split('.')[1], 'base64url').toString('utf8'));
+          if (claims?.tid && String(claims.tid).toLowerCase() !== pinnedTenant.toLowerCase()) {
+            return {
+              success: false,
+              provider: effectiveProvider,
+              statusCode: 403,
+              errorCode: 'OAUTH_TENANT_MISMATCH',
+              error: `Microsoft Entra tenant (${claims.tid}) does not match configured tenant (${pinnedTenant}).`,
+            };
+          }
+        } catch {
+          return {
+            success: false,
+            provider: effectiveProvider,
+            statusCode: 401,
+            errorCode: 'OAUTH_ID_TOKEN_INVALID',
+            error: 'Malformed id_token received from Microsoft Entra ID.',
+          };
+        }
+      }
+
+      // Validate granted OAuth scopes when returned by provider
+      if (typeof tokenData.scope === 'string' && tokenData.scope.trim().length > 0) {
+        const grantedScopes = new Set<string>(tokenData.scope.split(/\s+/).map((s: string) => s.toLowerCase()));
+        const hasMailScope =
+          effectiveProvider === 'GOOGLE'
+            ? Array.from(grantedScopes).some((s) => s.includes('gmail'))
+            : Array.from(grantedScopes).some((s) => s.includes('mail.'));
+        if (!hasMailScope) {
+          return {
+            success: false,
+            provider: effectiveProvider,
+            statusCode: 403,
+            errorCode: 'OAUTH_INSUFFICIENT_SCOPES',
+            error: `Granted OAuth scopes did not include required ${effectiveProvider === 'GOOGLE' ? 'Gmail' : 'Microsoft Mail'} permissions.`,
+          };
+        }
+      }
+
       // Verify authorized identity against provider profile endpoint
       let verifiedEmail: string | undefined;
       const profileUrl =
@@ -514,16 +632,26 @@ export class OAuthService {
       const expiresAt = Date.now() + expiresIn * 1000;
       const vaultKey = params.connectionKey || verifiedEmail || targetEmail || val.state.stateId;
 
-      this.storeEncryptedTokens(vaultKey, {
-        accessToken: tokenData.access_token,
-        refreshToken: tokenData.refresh_token,
-        tokenType: tokenData.token_type || 'Bearer',
-        scope: tokenData.scope,
-        expiresAt,
-        verifiedEmail,
-        provider: effectiveProvider,
-        updatedAt: new Date().toISOString(),
-      });
+      try {
+        this.storeEncryptedTokens(vaultKey, {
+          accessToken: tokenData.access_token,
+          refreshToken: tokenData.refresh_token,
+          tokenType: tokenData.token_type || 'Bearer',
+          scope: tokenData.scope,
+          expiresAt,
+          verifiedEmail,
+          provider: effectiveProvider,
+          updatedAt: new Date().toISOString(),
+        });
+      } catch (vaultErr: any) {
+        return {
+          success: false,
+          provider: effectiveProvider,
+          statusCode: 500,
+          errorCode: 'TOKEN_VAULT_PERSISTENCE_FAILED',
+          error: vaultErr?.message || 'Failed to encrypt and persist OAuth tokens.',
+        };
+      }
 
       return {
         success: true,

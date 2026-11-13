@@ -6,6 +6,7 @@
  * Grounded in Master Development Directive Phase 61
  */
 
+import crypto from 'crypto';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -85,6 +86,7 @@ export class UniversalSyncEngine {
    * Persists sync checkpoints atomically to disk to ensure durability across restarts.
    */
   private saveDurableState(): void {
+    const tmpPath = `${this.persistenceFilePath}.tmp.${process.pid}.${crypto.randomBytes(6).toString('hex')}`;
     try {
       const dir = path.dirname(this.persistenceFilePath);
       if (!fs.existsSync(dir)) {
@@ -96,11 +98,14 @@ export class UniversalSyncEngine {
         processedMessageIds: Array.from(this.processedMessageIds),
         auditLogs: this.auditLogs.slice(0, 300),
       };
-      const tmpPath = `${this.persistenceFilePath}.tmp.${Date.now()}`;
       fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), { encoding: 'utf8', mode: 0o600 });
       fs.renameSync(tmpPath, this.persistenceFilePath);
-    } catch (err) {
-      console.warn('[UniversalSyncEngine] Failed to persist sync state to disk:', err);
+    } catch (err: any) {
+      try {
+        if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);
+      } catch {}
+      console.error('[UniversalSyncEngine] Failed to persist sync state to disk:', err?.message || err);
+      throw new Error(`SYNC_STATE_PERSISTENCE_FAILED: ${err?.message || 'Unable to persist sync state.'}`);
     }
   }
 

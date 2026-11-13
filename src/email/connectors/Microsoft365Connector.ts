@@ -115,25 +115,65 @@ export class Microsoft365Connector implements EmailConnector {
     }
 
     if (credentials?.accessToken && typeof credentials.accessToken === 'string') {
-      oAuthService.storeEncryptedTokens(this.connectionId, {
-        accessToken: credentials.accessToken,
-        refreshToken: typeof credentials.refreshToken === 'string' ? credentials.refreshToken : undefined,
-        tokenType: 'Bearer',
-        expiresAt: Date.now() + 3600 * 1000,
-        verifiedEmail: this.mailboxEmail,
-        provider: 'MICROSOFT',
-        updatedAt: new Date().toISOString(),
-      });
-      this.isAuthorized = true;
-      return {
-        success: true,
-        connectionId: this.connectionId,
-        provider: 'MICROSOFT',
-        mailboxEmail: this.mailboxEmail,
-        status: 'CONNECTED',
-        details: 'Microsoft Graph OAuth token vaulted with AES-256-GCM.',
-        authenticatedAt: new Date().toISOString(),
-      };
+      try {
+        const profileRes = await fetch('https://graph.microsoft.com/v1.0/me?$select=mail,userPrincipalName', {
+          headers: { Authorization: `Bearer ${credentials.accessToken}` },
+        });
+        if (!profileRes.ok) {
+          this.isAuthorized = false;
+          return {
+            success: false,
+            connectionId: this.connectionId,
+            provider: 'MICROSOFT',
+            mailboxEmail: this.mailboxEmail,
+            status: 'AUTHENTICATION_FAILED',
+            details: `Microsoft Graph profile verification failed (HTTP ${profileRes.status}). Token was not vaulted.`,
+          };
+        }
+        const profile: any = await profileRes.json().catch(() => ({}));
+        const verifiedEmail = String(profile?.mail || profile?.userPrincipalName || '').trim();
+        if (verifiedEmail && verifiedEmail.toLowerCase() !== this.mailboxEmail.toLowerCase()) {
+          this.isAuthorized = false;
+          return {
+            success: false,
+            connectionId: this.connectionId,
+            provider: 'MICROSOFT',
+            mailboxEmail: this.mailboxEmail,
+            status: 'AUTHENTICATION_FAILED',
+            details: `Authenticated Microsoft account (${verifiedEmail}) does not match mailbox (${this.mailboxEmail}).`,
+          };
+        }
+
+        oAuthService.storeEncryptedTokens(this.connectionId, {
+          accessToken: credentials.accessToken,
+          refreshToken: typeof credentials.refreshToken === 'string' ? credentials.refreshToken : undefined,
+          tokenType: 'Bearer',
+          expiresAt: Date.now() + 3600 * 1000,
+          verifiedEmail: verifiedEmail || this.mailboxEmail,
+          provider: 'MICROSOFT',
+          updatedAt: new Date().toISOString(),
+        });
+        this.isAuthorized = true;
+        return {
+          success: true,
+          connectionId: this.connectionId,
+          provider: 'MICROSOFT',
+          mailboxEmail: verifiedEmail || this.mailboxEmail,
+          status: 'CONNECTED',
+          details: 'Microsoft Graph OAuth token verified against /me and vaulted with AES-256-GCM.',
+          authenticatedAt: new Date().toISOString(),
+        };
+      } catch (err: any) {
+        this.isAuthorized = false;
+        return {
+          success: false,
+          connectionId: this.connectionId,
+          provider: 'MICROSOFT',
+          mailboxEmail: this.mailboxEmail,
+          status: 'AUTHENTICATION_FAILED',
+          details: `Microsoft Graph profile verification failed (${err?.message || 'network error'}). Token was not vaulted.`,
+        };
+      }
     }
 
     this.isAuthorized = false;
@@ -349,9 +389,17 @@ export class Microsoft365Connector implements EmailConnector {
         : param2?.cursor || (typeof param1 === 'object' ? param1?.cursor : undefined);
     const oldCursor = explicitCursor || this.deltaToken || '';
 
-    const deltaRes = await this.fetchGraphWithRefresh(
-      'https://graph.microsoft.com/v1.0/me/mailFolders/Inbox/messages/delta?$top=10'
-    );
+    const initialUrl =
+      oldCursor && oldCursor.startsWith('https://graph.microsoft.com/')
+        ? oldCursor
+        : 'https://graph.microsoft.com/v1.0/me/mailFolders/Inbox/messages/delta?$top=10';
+    let deltaRes = await this.fetchGraphWithRefresh(initialUrl);
+    if (deltaRes && (deltaRes.status === 410 || deltaRes.status === 404)) {
+      this.deltaToken = null;
+      deltaRes = await this.fetchGraphWithRefresh(
+        'https://graph.microsoft.com/v1.0/me/mailFolders/Inbox/messages/delta?$top=10'
+      );
+    }
     if (!deltaRes || !deltaRes.ok) {
       return {
         success: false,

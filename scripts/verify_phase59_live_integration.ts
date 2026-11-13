@@ -124,11 +124,15 @@ async function runPhase59Verification() {
   // ---------------------------------------------------------------------------
   console.log('\n--- 4. OAUTH STATE VALIDATION & PKCE ---');
   const authSession = gw.initiateOAuth('donations@phumulani.org');
+  const expectedS256Challenge = (await import('node:crypto')).default
+    .createHash('sha256')
+    .update(authSession.codeVerifier)
+    .digest('base64url');
   assert(
     authSession.authUrl.startsWith('https://accounts.google.com/o/oauth2/v2/auth') &&
       authSession.state.startsWith('state_') &&
       authSession.codeVerifier.startsWith('pkce_verifier_') &&
-      authSession.codeChallenge.startsWith('pkce_challenge_') &&
+      authSession.codeChallenge === expectedS256Challenge &&
       authSession.scopes.length === 5,
     'TEST-P59-04',
     'OAuth initiation creates high-entropy state nonce, PKCE S256 verifier, challenge, and least-privilege scopes'
