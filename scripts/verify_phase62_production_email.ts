@@ -247,29 +247,44 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
     record('TEST-P62-11', 'SSRF Guard', false, err.message);
   }
 
-  // TEST-P62-12: Standards IMAP/SMTP Strict TLS
+  // TEST-P62-12: Strict TLS must never report an unverified mail server as healthy.
+  // A reserved .invalid hostname makes this fail-closed regression independent
+  // of external mail providers. Successful TLS handshakes require a separate
+  // controlled integration test with a trusted certificate.
   try {
-    const validConfig = {
-      imapHost: 'mail.phumulani.org',
+    const config = {
+      imapHost: 'mail.phumulani-test.invalid',
       imapPort: 993,
       imapSecurity: 'TLS' as const,
-      smtpHost: 'smtp.phumulani.org',
+      smtpHost: 'smtp.phumulani-test.invalid',
       smtpPort: 465,
       smtpSecurity: 'TLS' as const,
       username: 'donations@phumulani.org',
       password: 'testPassword123'
     };
-    const connector = ConnectorFactory.createConnector(EmailProviderType.STANDARDS_IMAP_SMTP, validConfig);
+    const connector = ConnectorFactory.createConnector(EmailProviderType.STANDARDS_IMAP_SMTP, config);
     const health = await (connector as any).testConnection();
-    const passed = health.isHealthy && health.tlsVerified;
+    const passed =
+      health.isHealthy === false &&
+      health.tlsVerified === false &&
+      health.status !== 'HEALTHY' &&
+      typeof health.error === 'string' &&
+      health.error.startsWith('DNS_ERROR');
     record(
       'TEST-P62-12',
-      'Standards IMAP/SMTP Strict TLS Verification',
+      'Standards IMAP/SMTP Strict TLS Fail-Closed Verification',
       passed,
-      `IMAP port 993 and SMTP port 465 validated with TLS 1.3 encryption`
+      passed
+        ? 'Unresolvable TLS mail hosts rejected; no healthy or TLS-verified state fabricated'
+        : `Unexpected health state: ${JSON.stringify({
+            isHealthy: health.isHealthy,
+            tlsVerified: health.tlsVerified,
+            status: health.status,
+            error: health.error
+          })}`
     );
   } catch (err: any) {
-    record('TEST-P62-12', 'IMAP/SMTP TLS', false, err.message);
+    record('TEST-P62-12', 'IMAP/SMTP Strict TLS Fail-Closed', false, err.message);
   }
 
   // TEST-P62-13: Database Migration 11 Registration
