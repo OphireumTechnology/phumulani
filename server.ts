@@ -158,7 +158,7 @@ const logAudit = (item: Omit<ServerAIAuditItem, 'id' | 'timestamp'>) => {
 };
 
 // Initialize server-side Google Gen AI client (never exposed to browser)
-const ACTIVE_GEMINI_MODEL = (process.env.GEMINI_MODEL || '').trim() || 'gemini-2.5-flash';
+const ACTIVE_GEMINI_MODEL = (process.env.GEMINI_MODEL || '').trim() || 'gemini-4-hydrogen';
 const geminiApiKey = process.env.GEMINI_API_KEY || '';
 let genAI: GoogleGenAI | null = null;
 
@@ -402,8 +402,12 @@ app.post('/api/auth/login', async (req: Request, res: Response) => {
     authSecurityService.clearFailedAttempts(emailNorm);
 
     const role: StaffRole = matched.role;
+    const roleLower = String(role || '').toLowerCase();
     const departmentId = matched.department_id || matched.departmentId || 'DEPT-EXEC';
-    const isPrivileged = ['executive_director', 'master_admin', 'finance_director', 'grants_director'].includes(String(role).toLowerCase());
+    const isPrivileged =
+      PRIVILEGED_ADMIN_ROLES.has(roleLower) ||
+      EXEC_APPROVER_ROLES.has(roleLower) ||
+      ['grants_director', 'development_director', 'programs_director', 'safeguarding_lead', 'safeguarding_officer'].includes(roleLower);
 
     if (isPrivileged) {
       const challengeToken = authSecurityService.createMfaChallenge({
@@ -473,6 +477,66 @@ app.post('/api/auth/logout', async (req: Request, res: Response) => {
   const sessionId = authHeader.replace(/^Bearer\s+/i, '').trim();
   await authSecurityService.revokeSession(sessionId);
   res.json({ success: true, message: 'Logged out successfully.' });
+});
+
+const authRateLimitBuckets = new Map<string, number[]>();
+const checkAuthRateLimit = (
+  req: Request,
+  res: Response,
+  keySuffix: string,
+  maxRequests = Number(process.env.AUTH_RATE_LIMIT_MAX || 15),
+  windowMs = 15 * 60 * 1000
+): boolean => {
+  const ip = String(req.ip || req.socket?.remoteAddress || 'unknown');
+  const key = `${ip}:${keySuffix}`;
+  const now = Date.now();
+  const recent = (authRateLimitBuckets.get(key) || []).filter((ts) => now - ts < windowMs);
+  if (recent.length >= maxRequests) {
+    res.status(429).json({
+      success: false,
+      error: 'Too many password recovery attempts. Please try again later.',
+      code: 'RATE_LIMITED',
+    });
+    return false;
+  }
+  recent.push(now);
+  authRateLimitBuckets.set(key, recent);
+  return true;
+};
+
+app.post('/api/auth/password-reset/request', async (req: Request, res: Response) => {
+  try {
+    if (!checkAuthRateLimit(req, res, 'pw-reset-req')) return;
+    const { email } = req.body || {};
+    if (!email || typeof email !== 'string') {
+      return res.status(400).json({ success: false, error: 'A valid email address is required.' });
+    }
+    const result = await authSecurityService.requestPasswordRecovery(email);
+    // CRITICAL: Never expose recoveryToken in the HTTP response body.
+    return res.json({
+      success: true,
+      message: result.message,
+    });
+  } catch (err: any) {
+    return res.status(500).json({ success: false, error: err?.message || 'Unable to process password reset request.' });
+  }
+});
+
+app.post('/api/auth/password-reset/confirm', async (req: Request, res: Response) => {
+  try {
+    if (!checkAuthRateLimit(req, res, 'pw-reset-confirm')) return;
+    const { token, newPassword } = req.body || {};
+    if (!token || !newPassword) {
+      return res.status(400).json({ success: false, error: 'token and newPassword are required.' });
+    }
+    const result = await authSecurityService.confirmPasswordReset(String(token), String(newPassword));
+    if (!result.success) {
+      return res.status(400).json(result);
+    }
+    return res.json(result);
+  } catch (err: any) {
+    return res.status(500).json({ success: false, error: err?.message || 'Unable to confirm password reset.' });
+  }
 });
 
 // Issue server-backed session ONLY in non-production / non-pilot staged development for UI persona switching
@@ -1440,10 +1504,41 @@ app.post('/api/reports/export', (req: Request, res: Response) => {
   }
 });
 
+const aiRateLimitBuckets = new Map<string, number[]>();
+const checkAiRateLimit = (
+  req: Request,
+  res: Response,
+  subjectKey?: string,
+  maxRequests = Number(process.env.AI_RATE_LIMIT_MAX || 40),
+  windowMs = 60 * 1000
+): boolean => {
+  const callerKey = subjectKey || String(req.ip || req.socket?.remoteAddress || 'unknown');
+  const now = Date.now();
+  const recent = (aiRateLimitBuckets.get(callerKey) || []).filter((ts) => now - ts < windowMs);
+  if (recent.length >= maxRequests) {
+    res.status(429).json({
+      success: false,
+      error: 'AI request rate limit exceeded. Please wait before submitting additional requests.',
+      code: 'AI_RATE_LIMITED',
+    });
+    return false;
+  }
+  recent.push(now);
+  aiRateLimitBuckets.set(callerKey, recent);
+  return true;
+};
+
 // 2. Website Concierge (Agent A10) Query Endpoint
 app.use('/api/ai', (req: Request, res: Response, next: NextFunction) => {
-  if (req.path === '/concierge') return next();
-  return requireSessionMiddleware(STAFF_ADMIN_ROLES)(req, res, next);
+  if (req.path === '/concierge') {
+    if (!checkAiRateLimit(req, res, `concierge:${req.ip || 'unknown'}`)) return;
+    return next();
+  }
+  return requireSessionMiddleware(STAFF_ADMIN_ROLES)(req, res, () => {
+    const sess = getAuthenticatedSession(req);
+    if (!checkAiRateLimit(req, res, sess?.userId || req.ip || 'unknown')) return;
+    next();
+  });
 });
 
 app.post('/api/ai/concierge', async (req: Request, res: Response) => {
@@ -1451,6 +1546,9 @@ app.post('/api/ai/concierge', async (req: Request, res: Response) => {
     const { question, conversationHistory = [] } = req.body;
     if (!question || typeof question !== 'string') {
       return res.status(400).json({ error: 'Question string is required.' });
+    }
+    if (question.length > 4000) {
+      return res.status(400).json({ error: 'Question exceeds maximum allowed length of 4000 characters.' });
     }
 
     // Safeguarding evaluation
@@ -1572,6 +1670,9 @@ app.post('/api/ai/email-draft', async (req: Request, res: Response) => {
     const session = getAuthenticatedSession(req)!;
     const role = String(session.role);
     const { messageBody, senderName, subject, toneStyle = 'professional' } = req.body;
+    if (String(messageBody || '').length > 8000 || String(subject || '').length > 500) {
+      return res.status(400).json({ error: 'Input length exceeds maximum allowed bounds.' });
+    }
 
     // Role-based authorization derived strictly from authenticated session
     const authorizedRoles = ['platform_super_admin', 'master_admin', 'super_admin', 'executive', 'executive_director', 'safeguarding_lead', 'safeguarding_officer', 'community_lead', 'program_manager', 'department_manager', 'programs_director', 'grants_director', 'development_director', 'finance_director', 'finance_officer', 'volunteer_coordinator', 'communications_officer', 'caseworker', 'staff'];
@@ -1693,6 +1794,14 @@ app.post('/api/ai/fundraising-draft', async (req: Request, res: Response) => {
     const role = String(session.role);
     const { donorName, commType, toneStyle = 'Executive & Visionary', campaignTitle } = req.body;
 
+    if (
+      String(donorName || '').length > 500 ||
+      String(campaignTitle || '').length > 1000 ||
+      String(commType || '').length > 500
+    ) {
+      return res.status(400).json({ error: 'Input length exceeds maximum allowed bounds.' });
+    }
+
     const authorizedRoles = ['platform_super_admin', 'master_admin', 'super_admin', 'executive', 'executive_director', 'finance_director', 'finance_officer', 'development_director', 'grants_director', 'department_manager', 'communications_officer', 'staff'];
     if (!authorizedRoles.includes(role.toLowerCase())) {
       logAudit({
@@ -1705,17 +1814,34 @@ app.post('/api/ai/fundraising-draft', async (req: Request, res: Response) => {
       return res.status(403).json({ error: 'Unauthorized role for fundraising drafts.' });
     }
 
+    const combinedCheck = `${donorName || ''} ${commType || ''} ${campaignTitle || ''}`;
+    if (checkSafeguardingCrisis(combinedCheck)) {
+      logAudit({
+        agentId: 'A07',
+        action: 'fundraising:draft',
+        requesterRole: role,
+        status: 'blocked_safeguarding',
+        reason: 'CRITICAL SAFEGUARDING HALT: Sensitive survivor/crisis terms blocked from fundraising draft endpoint.',
+      });
+      return res.status(403).json({
+        error: 'SAFEGUARDING HALT: Confidential crisis or survivor terms cannot be processed by fundraising draft generation.',
+        blockedByPolicy: true,
+        isSafeguardingCrisis: true,
+      });
+    }
+
     if (genAI) {
       try {
-        const { cleanText: cleanDonor } = localInferenceAdapter.sanitizeText(String(donorName || 'Valued Supporter'));
-        const { cleanText: cleanCampaign } = localInferenceAdapter.sanitizeText(
+        const { wrapped: wrappedDonor } = localInferenceAdapter.wrapUntrustedInput(String(donorName || 'Valued Supporter'));
+        const { wrapped: wrappedCommType } = localInferenceAdapter.wrapUntrustedInput(String(commType || 'General Stewardship'));
+        const { wrapped: wrappedCampaign } = localInferenceAdapter.wrapUntrustedInput(
           String(campaignTitle || 'General Sanctuary & Community Empowerment')
         );
         const prompt = `Draft an official fundraising outreach communication on behalf of Comfort Dondo (Executive Director, Phumulani 501(c)(3)).
-Donor/Recipient: ${cleanDonor}
-Communication Type: ${commType}
-Tone Style: ${toneStyle}
-Campaign/Initiative: ${cleanCampaign}
+Donor/Recipient: ${wrappedDonor}
+Communication Type: ${wrappedCommType}
+Tone Style: ${String(toneStyle).slice(0, 120)}
+Campaign/Initiative: ${wrappedCampaign}
 
 Requirements:
 - Adhere strictly to 501(c)(3) ethical fundraising standards.
@@ -1973,6 +2099,7 @@ app.post('/api/fundraising/execute', async (req: Request, res: Response) => {
   const t0 = Date.now();
   try {
     const session = getAuthenticatedSession(req)!;
+    if (!checkAiRateLimit(req, res, session.userId)) return;
     const requesterRole = String(session.role);
     const { agentId, title, inputPayload = {} } = req.body;
 
@@ -1982,6 +2109,9 @@ app.post('/api/fundraising/execute', async (req: Request, res: Response) => {
 
     // VAWA Safeguarding Quarantine Check — FAIL CLOSED IMMEDIATELY
     const payloadStr = JSON.stringify(inputPayload).toLowerCase();
+    if (payloadStr.length > 16000) {
+      return res.status(400).json({ error: 'Input payload exceeds maximum allowed size.' });
+    }
     if (payloadStr.includes('safe-mn-') || payloadStr.includes('shelter_address') || payloadStr.includes('survivor_intake') || checkSafeguardingCrisis(payloadStr)) {
       logAudit({
         agentId,
@@ -2540,7 +2670,7 @@ app.post('/api/fundraising/workflow/csr', (req: Request, res: Response) => {
   if (emergencyShutdownActive) return res.status(503).json({ error: 'Blocked: Emergency shutdown active.' });
   const coordinatedAgents = ['FUND-AI-011', 'FUND-AI-007', 'FUND-AI-009', 'FUND-AI-008'];
   const tasks = coordinatedAgents.map((agId) => ({
-    id: `csr-${agId.toLowerCase()}-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
+    id: `csr-${agId.toLowerCase()}-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
     agentId: agId,
     title: `CSR Partnership Workflow: ${companyName}`,
     status: ['FUND-AI-011', 'FUND-AI-007'].includes(agId) ? 'pending_approval' : 'completed',
@@ -2561,7 +2691,7 @@ app.post('/api/fundraising/workflow/stewardship', (req: Request, res: Response) 
   if (emergencyShutdownActive) return res.status(503).json({ error: 'Blocked: Emergency shutdown active.' });
   const coordinatedAgents = ['FUND-AI-012', 'FUND-AI-007', 'FUND-AI-008'];
   const tasks = coordinatedAgents.map((agId) => ({
-    id: `stew-${agId.toLowerCase()}-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
+    id: `stew-${agId.toLowerCase()}-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
     agentId: agId,
     title: `Donor Stewardship Workflow: ${donorName}`,
     status: ['FUND-AI-012', 'FUND-AI-007'].includes(agId) ? 'pending_approval' : 'completed',
@@ -2582,7 +2712,7 @@ app.post('/api/fundraising/workflow/reconciliation', (req: Request, res: Respons
   if (emergencyShutdownActive) return res.status(503).json({ error: 'Blocked: Emergency shutdown active.' });
   const coordinatedAgents = ['FUND-AI-016', 'FUND-AI-017', 'FUND-AI-018'];
   const tasks = coordinatedAgents.map((agId) => ({
-    id: `recon-${agId.toLowerCase()}-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
+    id: `recon-${agId.toLowerCase()}-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
     agentId: agId,
     title: `Financial Reconciliation & Safeguarding Workflow: ${campaignId}`,
     status: ['FUND-AI-016', 'FUND-AI-017'].includes(agId) ? 'pending_approval' : 'completed',
@@ -2603,7 +2733,7 @@ app.post('/api/fundraising/workflow/velocity', (req: Request, res: Response) => 
   if (emergencyShutdownActive) return res.status(503).json({ error: 'Blocked: Emergency shutdown active.' });
   const coordinatedAgents = ['FUND-AI-013', 'FUND-AI-014', 'FUND-AI-015'];
   const tasks = coordinatedAgents.map((agId) => ({
-    id: `velo-${agId.toLowerCase()}-${Date.now()}-${Math.random().toString(36).substring(2, 5)}`,
+    id: `velo-${agId.toLowerCase()}-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
     agentId: agId,
     title: `Campaign Velocity & Win-Back Workflow: ${campaignId}`,
     status: ['FUND-AI-014', 'FUND-AI-015'].includes(agId) ? 'pending_approval' : 'completed',
@@ -4990,7 +5120,14 @@ app.post('/api/admin/email/review', (req: Request, res: Response) => {
 });
 
 // 11. Controlled Outbound Dispatch (Mandatory Idempotency & Staging Delivery)
-app.post('/api/admin/email/dispatch', (req: Request, res: Response) => {
+app.post('/api/admin/email/dispatch', async (req: Request, res: Response) => {
+  if (emergencyShutdownActive || emailDispatchService.isKillSwitchActive()) {
+    return res.status(503).json({
+      success: false,
+      error: 'EMERGENCY_SHUTDOWN: Outbound email dispatch is suspended by administrator kill switch.',
+    });
+  }
+
   const actor = getEmailAdminActor(req);
   const { threadId, idempotencyKey, updatedBody } = req.body;
 
@@ -5008,11 +5145,59 @@ app.post('/api/admin/email/dispatch', (req: Request, res: Response) => {
     return res.status(400).json(dispatchResult);
   }
 
+  const authRec = dispatchResult.authorizationRecord;
+  const senderMailbox = authRec?.senderMailbox || '';
+  const hasLiveCreds =
+    Boolean(senderMailbox) &&
+    (oAuthService.hasStoredTokens(senderMailbox) || oAuthService.hasStoredMailCredentials(senderMailbox));
+  const liveSendingEnabled = googleWorkspaceAdapter.isLiveSendingEnabled();
+
+  if (hasLiveCreds && liveSendingEnabled && authRec) {
+    const matchedConn = connectorRegistry
+      .getAllConnections()
+      .find((c) => c.emailAddress.toLowerCase() === senderMailbox.toLowerCase());
+    if (matchedConn) {
+      const liveSend = await emailDispatchService.dispatchApprovedMessage({
+        id: authRec.id,
+        connectionId: matchedConn.id,
+        senderAccount: senderMailbox,
+        to: authRec.recipientEmails,
+        subject: authRec.subject,
+        bodyText: authRec.bodyText,
+        idempotencyKey: `live-${idempotencyKey}`,
+        approvalRecordId: authRec.id,
+        approvedByUserId: actor.id,
+        approvedByName: actor.name,
+        approvedAt: authRec.approvedAt,
+        approvalVersion: 1,
+        deliveryState: 'APPROVED',
+      });
+      if (!liveSend.success) {
+        return res.status(502).json({
+          success: false,
+          deliveryState: liveSend.deliveryState,
+          error: liveSend.error || 'Live provider delivery failed.',
+        });
+      }
+      return res.json({
+        ...dispatchResult,
+        deliveryState: liveSend.deliveryState,
+        providerMessageId: liveSend.providerMessageId,
+        operationalMode: EnvironmentService.getOperationalMode(),
+        googleWorkspaceStatus: 'CONNECTED',
+        truthfulNotice: `Approved message delivered via live mail connector (${liveSend.deliveryState}).`,
+      });
+    }
+  }
+
   res.json({
     ...dispatchResult,
+    deliveryState: 'STAGED',
     operationalMode: EnvironmentService.getOperationalMode(),
-    googleWorkspaceStatus: 'AUTHORIZATION_REQUIRED',
-    truthfulNotice: 'Message queued and reconciled in Staged Sent folder. Live external delivery pending Google Workspace consent.',
+    googleWorkspaceStatus: hasLiveCreds ? 'CONNECTED' : 'AUTHORIZATION_REQUIRED',
+    truthfulNotice: hasLiveCreds
+      ? 'Approved message queued in Staged Sent folder (LIVE_EMAIL_SENDING_ENABLED is false).'
+      : 'Message queued and reconciled in Staged Sent folder. Live external delivery pending provider authorization.',
   });
 });
 
@@ -5069,7 +5254,7 @@ app.post('/api/admin/email/mailboxes/:id/disconnect', requireSessionMiddleware(P
 });
 
 // 18. Delete Organizational Mailbox Configuration
-app.delete('/api/admin/email/mailboxes/:id', (req: Request, res: Response) => {
+app.delete('/api/admin/email/mailboxes/:id', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   const actor = getEmailAdminActor(req);
   if (actor.role === 'visitor' || actor.role === 'staff') {
     return res.status(403).json({ error: 'Master Admin or Executive Director role required to delete mailboxes.' });
@@ -5405,12 +5590,20 @@ app.get('/api/admin/email/mailboxes/:email/verify-identity', (req: Request, res:
 });
 
 // 34. Phase 52 Reconcile Ambiguous Dispatch (M52.06)
-app.post('/api/admin/email/dispatches/:id/reconcile', (req: Request, res: Response) => {
+app.post('/api/admin/email/dispatches/:id/reconcile', requireSessionMiddleware(EXEC_APPROVER_ROLES), (req: Request, res: Response) => {
   try {
     const dispatchId = req.params.id;
-    const { providerEvidenceId } = req.body;
+    const { providerEvidenceId } = req.body || {};
     const result = googleWorkspaceAdapter.reconcileAmbiguousDispatch(dispatchId, providerEvidenceId);
-    res.json(result);
+    const matchingConn = connectorRegistry
+      .getAllConnections()
+      .find((c) => c.emailAddress.toLowerCase() === String(req.body?.mailboxEmail || '').toLowerCase());
+    if (matchingConn) {
+      connectorRegistry.updateConnection(matchingConn.id, {
+        lastError: result.reconciled ? null : result.reconciliationEvidence,
+      });
+    }
+    res.json({ ...result, dispatchId });
   } catch (err: any) {
     res.status(400).json({ success: false, error: err.message });
   }
@@ -5951,6 +6144,13 @@ app.get('/api/admin/email/connectors/:id/audit', (req: Request, res: Response) =
 // 64. Universal Outbound Dispatch with Quad-Action & Anti-AI Self-Approval Guard
 app.post('/api/admin/email/connectors/:id/dispatch', requireSessionMiddleware(EXEC_APPROVER_ROLES), async (req: Request, res: Response) => {
   try {
+    if (emergencyShutdownActive || emailDispatchService.isKillSwitchActive()) {
+      return res.status(503).json({
+        success: false,
+        error: 'EMERGENCY_SHUTDOWN: Outbound email dispatch is suspended by administrator kill switch.',
+      });
+    }
+
     const actor = getEmailAdminActor(req);
     const { id, recipientEmails, subject, bodyText, bodyHtml, idempotencyKey, approvalVersion } = req.body || {};
 
@@ -5966,11 +6166,12 @@ app.post('/api/admin/email/connectors/:id/dispatch', requireSessionMiddleware(EX
       return res.status(404).json({ success: false, error: 'Connection not found.' });
     }
 
+    const recipients = Array.isArray(recipientEmails) ? recipientEmails : [recipientEmails];
     const dispatchResult = await connectorRegistry.dispatchApprovedMessage({
       id: id || `disp-${Date.now()}`,
       connectionId: req.params.id,
       senderAccount: connection.emailAddress,
-      recipientEmails: Array.isArray(recipientEmails) ? recipientEmails : [recipientEmails],
+      recipientEmails: recipients,
       subject,
       bodyText,
       bodyHtml,
@@ -5985,6 +6186,36 @@ app.post('/api/admin/email/connectors/:id/dispatch', requireSessionMiddleware(EX
     if (!dispatchResult.success) {
       return res.status(400).json(dispatchResult);
     }
+
+    if (connection.safeguardingClassification !== 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP') {
+      try {
+        const fundingCmd = FundingCommandService.getInstance();
+        for (const rcpt of recipients) {
+          const rcptNorm = String(rcpt || '').trim().toLowerCase();
+          if (!rcptNorm) continue;
+          const dbDonor = db.getFundraisingDonors().find((d) => d.email.toLowerCase() === rcptNorm);
+          if (dbDonor) {
+            db.addDonorEngagementActivity({
+              donorId: dbDonor.id,
+              donorName: dbDonor.name,
+              activityType: 'OUTBOUND_EMAIL',
+              title: `Outbound Email Dispatched: ${subject}`,
+              summary: `Approved connector dispatch from ${connection.emailAddress} to ${rcptNorm} by ${actor.name}.`,
+              sourceProviderMsgId: dispatchResult.providerMessageId,
+              staffActor: actor.name,
+              requiresFollowUp: false,
+              metadata: { mailbox: connection.emailAddress, direction: 'outbound' },
+            });
+          }
+          const unified = fundingCmd.getDonors().find((d) => d.email.toLowerCase() === rcptNorm);
+          if (unified) {
+            unified.engagementLogCount = (unified.engagementLogCount || 0) + 1;
+            unified.updatedAt = new Date().toISOString();
+          }
+        }
+      } catch {}
+    }
+
     res.json(dispatchResult);
   } catch (err: any) {
     const isSafeguarding = err.message.includes('SAFEGUARDING_AIR_GAP_VIOLATION');
@@ -6617,6 +6848,13 @@ app.post('/api/admin/email/approvals/:id/review', requireSessionMiddleware(EXEC_
 
 app.post('/api/admin/email/dispatch/:id/send', requireSessionMiddleware(EXEC_APPROVER_ROLES), async (req: Request, res: Response) => {
   try {
+    if (emergencyShutdownActive || emailDispatchService.isKillSwitchActive()) {
+      return res.status(503).json({
+        success: false,
+        error: 'EMERGENCY_SHUTDOWN: Outbound email dispatch is suspended by administrator kill switch.',
+      });
+    }
+
     const actor = getEmailAdminActor(req);
     const {
       connectionId,
@@ -6630,15 +6868,16 @@ app.post('/api/admin/email/dispatch/:id/send', requireSessionMiddleware(EXEC_APP
       approvedAt,
     } = req.body || {};
 
+    const recipients = Array.isArray(to) ? to : to ? [to] : [];
     const dispatchResult = await emailDispatchService.dispatchApprovedMessage({
       id: req.params.id,
       connectionId: connectionId || 'conn-google-primary',
       senderAccount: senderAccount || 'donations@phumulani.org',
-      to: to || [],
+      to: recipients,
       subject: subject || '',
       bodyText: bodyText || '',
       bodyHtml,
-      idempotencyKey: idempotencyKey || `idem-${Date.now()}`,
+      idempotencyKey: idempotencyKey || `idem-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
       approvalRecordId: approvalRecordId || `appr-${req.params.id}`,
       approvedByUserId: actor.id,
       approvedByName: actor.name,
@@ -6646,6 +6885,39 @@ app.post('/api/admin/email/dispatch/:id/send', requireSessionMiddleware(EXEC_APP
       approvalVersion: 1,
       deliveryState: 'QUEUED',
     });
+
+    const conn = connectorRegistry.getConnection(connectionId || 'conn-google-primary');
+    if (
+      dispatchResult.success &&
+      conn?.safeguardingClassification !== 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP'
+    ) {
+      try {
+        const fundingCmd = FundingCommandService.getInstance();
+        for (const rcpt of recipients) {
+          const rcptNorm = String(rcpt || '').trim().toLowerCase();
+          if (!rcptNorm) continue;
+          const dbDonor = db.getFundraisingDonors().find((d) => d.email.toLowerCase() === rcptNorm);
+          if (dbDonor) {
+            db.addDonorEngagementActivity({
+              donorId: dbDonor.id,
+              donorName: dbDonor.name,
+              activityType: 'OUTBOUND_EMAIL',
+              title: `Outbound Email Dispatched: ${subject || 'Approved Communication'}`,
+              summary: `Approved dispatch from ${senderAccount || 'donations@phumulani.org'} to ${rcptNorm} by ${actor.name}.`,
+              sourceProviderMsgId: dispatchResult.providerMessageId,
+              staffActor: actor.name,
+              requiresFollowUp: false,
+              metadata: { mailbox: senderAccount || 'donations@phumulani.org', direction: 'outbound' },
+            });
+          }
+          const unified = fundingCmd.getDonors().find((d) => d.email.toLowerCase() === rcptNorm);
+          if (unified) {
+            unified.engagementLogCount = (unified.engagementLogCount || 0) + 1;
+            unified.updatedAt = new Date().toISOString();
+          }
+        }
+      } catch {}
+    }
 
     res.json({ success: dispatchResult.success, dispatch: dispatchResult });
   } catch (err: any) {
@@ -6860,13 +7132,36 @@ app.post('/api/phumulani-ai/gateway/inference', async (req: Request, res: Respon
       authHeader.length === expectedBearer.length &&
       crypto.timingSafeEqual(Buffer.from(authHeader), Buffer.from(expectedBearer));
 
+    let callerRateKey = String(req.ip || 'gateway');
     if (!isGatewayTokenValid) {
       const auth = authenticatePhumulaniSession(req, res);
       if (!auth) return;
+      callerRateKey = auth.session.userId;
     }
+    if (!checkAiRateLimit(req, res, callerRateKey)) return;
 
-    const { prompt, options, requireJson, schemaDescription, fallbackValue } = req.body;
-    if (!prompt) return res.status(400).json({ success: false, error: 'Prompt is required.' });
+    const { prompt, options, requireJson, schemaDescription, fallbackValue } = req.body || {};
+    if (!prompt || typeof prompt !== 'string') {
+      return res.status(400).json({ success: false, error: 'Prompt string is required.' });
+    }
+    if (prompt.length > 16000) {
+      return res.status(400).json({ success: false, error: 'Prompt exceeds maximum allowed length of 16000 characters.' });
+    }
+    if (checkSafeguardingCrisis(prompt)) {
+      logAudit({
+        agentId: 'AI_GATEWAY',
+        action: 'gateway:inference',
+        requesterRole: callerRateKey,
+        status: 'blocked_safeguarding',
+        reason: 'CRITICAL SAFEGUARDING HALT: Sensitive crisis/VAWA terms blocked from gateway inference.',
+      });
+      return res.status(403).json({
+        success: false,
+        blockedByPolicy: true,
+        isSafeguardingCrisis: true,
+        error: 'SAFEGUARDING HALT: Sensitive crisis or survivor-protected terms are blocked from automated inference.',
+      });
+    }
 
     if (requireJson) {
       const result = await localInferenceAdapter.generateStructuredJson(

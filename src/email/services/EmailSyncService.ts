@@ -119,12 +119,18 @@ export class EmailSyncService {
     this.activeSyncLocks.add(lockKey);
 
     try {
+      const effectiveCursor = opts.cursor || (await this.getCursor(opts.connectionId, opts.folders?.[0] || 'INBOX')) || undefined;
       // Delegate to UniversalSyncEngine via connectorRegistry
       const result = await (connectorRegistry as any).syncConnection(opts.connectionId, {
         folders: opts.folders,
         maxMessages: opts.maxMessages || 50,
         sinceTimestamp: opts.sinceTimestamp,
+        cursor: effectiveCursor,
       });
+
+      if (result?.success && result?.newCursor) {
+        await this.saveCursor(opts.connectionId, opts.folders?.[0] || 'INBOX', result.newCursor);
+      }
 
       return {
         ...result,

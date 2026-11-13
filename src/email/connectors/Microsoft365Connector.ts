@@ -67,6 +67,13 @@ export class Microsoft365Connector implements EmailConnector {
         res = await doFetch(token);
       }
     }
+
+    for (let attempt = 1; attempt <= 2 && (res.status === 429 || res.status === 503); attempt++) {
+      const retryAfterSec = Number(res.headers?.get('retry-after') || '0');
+      const delayMs = retryAfterSec > 0 ? Math.min(retryAfterSec * 1000, 1500) : Math.min(250 * Math.pow(2, attempt - 1), 1500);
+      await new Promise((r) => setTimeout(r, delayMs));
+      res = await doFetch(token);
+    }
     return res;
   }
 
@@ -282,46 +289,80 @@ export class Microsoft365Connector implements EmailConnector {
   public async listMessages(options: MessageQueryOptions = {}): Promise<EmailMessagePage> {
     const limit = options.limit || 20;
     const page = options.page || 1;
-    const folder = options.folder || 'Inbox';
+    const targetFolders = options.folder ? [options.folder] : ['Inbox', 'SentItems'];
+    const fetched: NormalizedEmailMessage[] = [];
+    const seen = new Set<string>();
+    let hasNextPage = false;
 
-    const res = await this.fetchGraphWithRefresh(
-      `https://graph.microsoft.com/v1.0/me/messages?$top=${Math.min(limit, 25)}&$select=id,conversationId,subject,from,receivedDateTime,isRead,bodyPreview`
-    );
-    if (res && res.ok) {
+    for (const folder of targetFolders) {
+      const folderSegment = folder === 'Inbox' || folder === 'INBOX' ? 'Inbox' : folder === 'SENT' || folder === 'Sent' ? 'SentItems' : folder;
+      const res = await this.fetchGraphWithRefresh(
+        `https://graph.microsoft.com/v1.0/me/mailFolders/${encodeURIComponent(folderSegment)}/messages?$top=${Math.min(limit, 25)}&$select=id,conversationId,internetMessageId,subject,from,toRecipients,receivedDateTime,isRead,hasAttachments,bodyPreview,body`
+      );
+      if (!res || !res.ok) continue;
+
       const data: any = await res.json().catch(() => null);
+      if (data?.['@odata.nextLink']) hasNextPage = true;
       const items: any[] = data?.value || [];
-      const fetched: NormalizedEmailMessage[] = items.map((m) => ({
-        id: m.id,
-        providerMessageId: m.id,
-        connectionId: this.connectionId,
-        provider: 'MICROSOFT',
-        sourceAccount: this.mailboxEmail,
-        threadId: m.conversationId || m.id,
-        senderName: m.from?.emailAddress?.name || m.from?.emailAddress?.address || 'Unknown',
-        senderEmail: m.from?.emailAddress?.address || '',
-        recipientEmails: [this.mailboxEmail],
-        subject: m.subject || '(No Subject)',
-        bodyText: m.bodyPreview || '',
-        receivedAt: m.receivedDateTime || new Date().toISOString(),
-        folder,
-        isRead: Boolean(m.isRead),
-        isLiveImportVerified: true,
-      }));
-      return {
-        messages: fetched,
-        totalCount: fetched.length,
-        page,
-        pageSize: limit,
-        hasNextPage: Boolean(data?.['@odata.nextLink']),
-      };
+
+      for (const m of items) {
+        if (!m?.id || seen.has(m.id)) continue;
+        seen.add(m.id);
+
+        const attachments: Array<{ id: string; filename: string; mimeType: string; sizeBytes: number; isQuarantined: boolean }> = [];
+        if (m.hasAttachments) {
+          const attRes = await this.fetchGraphWithRefresh(
+            `https://graph.microsoft.com/v1.0/me/messages/${encodeURIComponent(m.id)}/attachments?$select=id,name,contentType,size`
+          );
+          if (attRes && attRes.ok) {
+            const attData: any = await attRes.json().catch(() => null);
+            for (const att of attData?.value || []) {
+              const fname = String(att.name || 'attachment');
+              const dangerous = ['.exe', '.bat', '.cmd', '.vbs', '.js', '.scr', '.pif', '.msi'].some((ext) => fname.toLowerCase().endsWith(ext));
+              attachments.push({
+                id: String(att.id || fname),
+                filename: fname,
+                mimeType: String(att.contentType || 'application/octet-stream'),
+                sizeBytes: Number(att.size || 0),
+                isQuarantined: dangerous,
+              });
+            }
+          }
+        }
+
+        const recipientEmails = Array.isArray(m.toRecipients)
+          ? m.toRecipients.map((r: any) => r?.emailAddress?.address).filter(Boolean)
+          : [this.mailboxEmail];
+
+        fetched.push({
+          id: m.id,
+          providerMessageId: m.id,
+          connectionId: this.connectionId,
+          provider: 'MICROSOFT',
+          sourceAccount: this.mailboxEmail,
+          threadId: m.conversationId || m.id,
+          rfcMessageId: m.internetMessageId || undefined,
+          senderName: m.from?.emailAddress?.name || m.from?.emailAddress?.address || 'Unknown',
+          senderEmail: m.from?.emailAddress?.address || '',
+          recipientEmails: recipientEmails.length > 0 ? recipientEmails : [this.mailboxEmail],
+          subject: m.subject || '(No Subject)',
+          bodyText: (m.body?.contentType === 'text' ? m.body?.content : m.bodyPreview) || m.bodyPreview || '',
+          bodyHtml: m.body?.contentType === 'html' ? m.body?.content : undefined,
+          attachments,
+          receivedAt: m.receivedDateTime || new Date().toISOString(),
+          folder: folderSegment === 'SentItems' ? 'SENT' : 'INBOX',
+          isRead: Boolean(m.isRead),
+          isLiveImportVerified: true,
+        });
+      }
     }
 
     return {
-      messages: [],
-      totalCount: 0,
+      messages: fetched,
+      totalCount: fetched.length,
       page,
       pageSize: limit,
-      hasNextPage: false,
+      hasNextPage,
     };
   }
 
@@ -339,13 +380,15 @@ export class Microsoft365Connector implements EmailConnector {
           provider: 'MICROSOFT',
           sourceAccount: this.mailboxEmail,
           threadId: m.conversationId || providerMessageId,
+          rfcMessageId: m.internetMessageId || undefined,
           senderName: m.from?.emailAddress?.name || '',
           senderEmail: m.from?.emailAddress?.address || '',
           recipientEmails: [this.mailboxEmail],
           subject: m.subject || '(No Subject)',
-          bodyText: m.bodyPreview || '',
+          bodyText: (m.body?.contentType === 'text' ? m.body?.content : m.bodyPreview) || m.bodyPreview || '',
+          bodyHtml: m.body?.contentType === 'html' ? m.body?.content : undefined,
           receivedAt: m.receivedDateTime || new Date().toISOString(),
-          folder: 'Inbox',
+          folder: 'INBOX',
           isRead: Boolean(m.isRead),
           isLiveImportVerified: true,
         };
@@ -365,12 +408,12 @@ export class Microsoft365Connector implements EmailConnector {
     const initialUrl =
       oldCursor && oldCursor.startsWith('https://graph.microsoft.com/')
         ? oldCursor
-        : 'https://graph.microsoft.com/v1.0/me/mailFolders/Inbox/messages/delta?$top=10';
+        : 'https://graph.microsoft.com/v1.0/me/mailFolders/Inbox/messages/delta?$top=15';
     let deltaRes = await this.fetchGraphWithRefresh(initialUrl);
     if (deltaRes && (deltaRes.status === 410 || deltaRes.status === 404)) {
       this.deltaToken = null;
       deltaRes = await this.fetchGraphWithRefresh(
-        'https://graph.microsoft.com/v1.0/me/mailFolders/Inbox/messages/delta?$top=10'
+        'https://graph.microsoft.com/v1.0/me/mailFolders/Inbox/messages/delta?$top=15'
       );
     }
     if (!deltaRes || !deltaRes.ok) {
@@ -396,7 +439,7 @@ export class Microsoft365Connector implements EmailConnector {
     }
 
     const deltaPayload: any = await deltaRes.json().catch(() => ({}));
-    const page = await this.listMessages({ limit: 10 });
+    const page = await this.listMessages({ limit: 15 });
     const newCursor = String(deltaPayload?.['@odata.deltaLink'] || deltaPayload?.['@odata.nextLink'] || oldCursor);
     this.deltaToken = newCursor || null;
 
@@ -408,7 +451,7 @@ export class Microsoft365Connector implements EmailConnector {
       messages: page.messages,
       messagesImported: page.messages.length,
       duplicatesSkipped: 0,
-      threadsReconstructed: page.messages.length,
+      threadsReconstructed: new Set(page.messages.map((m) => m.threadId)).size,
       oldCursor,
       newCursor,
       cursorType: 'MS_GRAPH_DELTA_TOKEN',
@@ -492,12 +535,31 @@ export class Microsoft365Connector implements EmailConnector {
     };
   }
 
-  public async saveDraft(_message: EmailDraft): Promise<DraftResult> {
+  public async saveDraft(message: EmailDraft): Promise<DraftResult> {
     const draftId = `draft-msft-${Date.now()}`;
+    const res = await this.fetchGraphWithRefresh('https://graph.microsoft.com/v1.0/me/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        subject: message.subject,
+        body: { contentType: 'Text', content: message.bodyText || '' },
+        toRecipients: message.to.map((address) => ({ emailAddress: { address } })),
+      }),
+    });
+    if (!res || !res.ok) {
+      return {
+        success: false,
+        draftId,
+        version: 1,
+        createdAt: new Date().toISOString(),
+        error: res ? `Microsoft Graph draft creation failed (HTTP ${res.status}).` : 'AUTHORIZATION_REQUIRED: Microsoft Graph OAuth 2.0 token required to save draft.',
+      };
+    }
+    const data: any = await res.json().catch(() => ({}));
     return {
       success: true,
       draftId,
-      providerDraftId: `ms-draft-${crypto.randomBytes(6).toString('hex')}`,
+      providerDraftId: data?.id || `ms-draft-${crypto.randomBytes(6).toString('hex')}`,
       version: 1,
       createdAt: new Date().toISOString(),
     };
@@ -511,7 +573,25 @@ export class Microsoft365Connector implements EmailConnector {
     });
   }
 
-  public async moveMessage(_messageId: string, _destinationFolder: string): Promise<void> {}
+  public async moveMessage(messageId: string, destinationFolder: string): Promise<void> {
+    const destMap: Record<string, string> = {
+      ARCHIVE: 'archive',
+      TRASH: 'deleteditems',
+      SPAM: 'junkemail',
+      INBOX: 'inbox',
+      SENT: 'sentitems',
+      DRAFTS: 'drafts',
+    };
+    const destinationId = destMap[destinationFolder.toUpperCase()] || destinationFolder;
+    await this.fetchGraphWithRefresh(
+      `https://graph.microsoft.com/v1.0/me/messages/${encodeURIComponent(messageId)}/move`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ destinationId }),
+      }
+    );
+  }
 
   public async disconnect(): Promise<void> {
     oAuthService.revokeTokens(this.connectionId);

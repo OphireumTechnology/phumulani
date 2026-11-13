@@ -62,6 +62,7 @@ export type ConnectorHealthStatus =
   | 'DISCONNECTED'
   | 'REVOKED'
   | 'ERROR'
+  | 'AUTHENTICATION_FAILED'
   | 'UNTESTED'
   | 'BLOCKED_EXTERNAL';
 

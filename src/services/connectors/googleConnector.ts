@@ -5,6 +5,7 @@
  * Grounded in Master Development Instruction Phase 60 (M60.02, M60.07, M60.08)
  */
 
+import crypto from 'crypto';
 import {
   EmailConnector,
   EmailProviderType,
@@ -74,7 +75,49 @@ export class GoogleConnector implements EmailConnector {
         res = await doFetch(token);
       }
     }
+
+    for (let attempt = 1; attempt <= 2 && (res.status === 429 || res.status === 503); attempt++) {
+      const retryAfterSec = Number(res.headers?.get('retry-after') || '0');
+      const delayMs = retryAfterSec > 0 ? Math.min(retryAfterSec * 1000, 1500) : Math.min(250 * Math.pow(2, attempt - 1), 1500);
+      await new Promise((r) => setTimeout(r, delayMs));
+      res = await doFetch(token);
+    }
     return res;
+  }
+
+  private extractGmailParts(payload: any): { bodyText: string; bodyHtml?: string; attachments: Array<{ id: string; filename: string; mimeType: string; sizeBytes: number; isQuarantined: boolean }> } {
+    let bodyText = '';
+    let bodyHtml = '';
+    const attachments: Array<{ id: string; filename: string; mimeType: string; sizeBytes: number; isQuarantined: boolean }> = [];
+
+    const walk = (part: any) => {
+      if (!part) return;
+      if (part.filename && part.body?.attachmentId) {
+        const fname = String(part.filename);
+        const dangerous = ['.exe', '.bat', '.cmd', '.vbs', '.js', '.scr', '.pif', '.msi'].some((ext) => fname.toLowerCase().endsWith(ext));
+        attachments.push({
+          id: String(part.body.attachmentId),
+          filename: fname,
+          mimeType: String(part.mimeType || 'application/octet-stream'),
+          sizeBytes: Number(part.body?.size || 0),
+          isQuarantined: dangerous,
+        });
+      } else if (part.body?.data) {
+        const decoded = Buffer.from(String(part.body.data).replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf8');
+        if (part.mimeType === 'text/plain' && !bodyText) bodyText = decoded;
+        else if (part.mimeType === 'text/html' && !bodyHtml) bodyHtml = decoded;
+      }
+      if (Array.isArray(part.parts)) {
+        for (const child of part.parts) walk(child);
+      }
+    };
+
+    walk(payload);
+    return {
+      bodyText: bodyText.trim(),
+      bodyHtml: bodyHtml ? bodyHtml.trim() : undefined,
+      attachments,
+    };
   }
 
   public async connect(credentials?: Record<string, unknown>): Promise<ConnectionResult> {
@@ -332,21 +375,34 @@ export class GoogleConnector implements EmailConnector {
   }
 
   public async listMessages(options: SyncOptions): Promise<NormalizedEmailMessage[]> {
-    const listRes = await this.fetchGmailWithRefresh(
-      `https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=${Math.min(options.maxMessages || 20, 25)}`
-    );
-    if (listRes && listRes.ok) {
+    const folders = options.folders?.length ? options.folders : ['INBOX', 'SENT'];
+    const fetched: NormalizedEmailMessage[] = [];
+    const seen = new Set<string>();
+
+    for (const label of folders) {
+      const listRes = await this.fetchGmailWithRefresh(
+        `https://gmail.googleapis.com/gmail/v1/users/me/messages?maxResults=${Math.min(options.maxMessages || 20, 25)}&labelIds=${encodeURIComponent(label)}`
+      );
+      if (!listRes || !listRes.ok) continue;
       const payload: any = await listRes.json().catch(() => null);
       const ids: Array<{ id: string; threadId: string }> = payload?.messages || [];
-      const fetched: NormalizedEmailMessage[] = [];
-      for (const item of ids.slice(0, 10)) {
+      for (const item of ids.slice(0, 15)) {
+        if (seen.has(item.id)) continue;
+        seen.add(item.id);
         const msgRes = await this.fetchGmailWithRefresh(
-          `https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(item.id)}?format=metadata`
+          `https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(item.id)}?format=full`
         );
         if (msgRes && msgRes.ok) {
           const msgJson: any = await msgRes.json().catch(() => null);
           const headers: Array<{ name: string; value: string }> = msgJson?.payload?.headers || [];
           const h = (name: string) => headers.find((x) => x.name.toLowerCase() === name.toLowerCase())?.value || '';
+          const parsedParts = this.extractGmailParts(msgJson?.payload);
+          const labelIds: string[] = Array.isArray(msgJson?.labelIds) ? msgJson.labelIds : [];
+          const rawTo = h('To')
+            .split(',')
+            .map((e) => (e.match(/<([^>]+)>/)?.[1] || e).trim())
+            .filter(Boolean);
+
           fetched.push({
             id: msgJson.id,
             providerMessageId: msgJson.id,
@@ -354,33 +410,37 @@ export class GoogleConnector implements EmailConnector {
             provider: 'GOOGLE',
             sourceAccount: this.mailboxEmail,
             threadId: msgJson.threadId || item.threadId,
-            senderName: h('From').split('<')[0].trim() || h('From'),
+            rfcMessageId: h('Message-ID') || h('Message-Id') || undefined,
+            senderName: h('From').split('<')[0].replace(/["']/g, '').trim() || h('From'),
             senderEmail: (h('From').match(/<([^>]+)>/)?.[1] || h('From')).trim(),
-            recipientEmails: [this.mailboxEmail],
+            recipientEmails: rawTo.length > 0 ? rawTo : [this.mailboxEmail],
             subject: h('Subject') || '(No Subject)',
-            bodyText: msgJson.snippet || '',
+            bodyText: parsedParts.bodyText || msgJson.snippet || '',
+            bodyHtml: parsedParts.bodyHtml,
+            attachments: parsedParts.attachments,
             receivedAt: msgJson.internalDate ? new Date(Number(msgJson.internalDate)).toISOString() : new Date().toISOString(),
-            folder: 'INBOX',
-            isRead: !(msgJson.labelIds || []).includes('UNREAD'),
+            folder: labelIds.includes('SENT') ? 'SENT' : label,
+            isRead: !labelIds.includes('UNREAD'),
           });
         }
       }
-      return fetched;
     }
 
-    return [];
+    return fetched;
   }
 
   public async getMessage(messageId: string): Promise<NormalizedEmailMessage> {
     const connectionId = this.getConnectionId();
     const res = await this.fetchGmailWithRefresh(
-      `https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(messageId)}?format=metadata`
+      `https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(messageId)}?format=full`
     );
     if (res && res.ok) {
       const msgJson: any = await res.json().catch(() => null);
       if (msgJson) {
         const headers: Array<{ name: string; value: string }> = msgJson?.payload?.headers || [];
         const h = (name: string) => headers.find((x) => x.name.toLowerCase() === name.toLowerCase())?.value || '';
+        const parsedParts = this.extractGmailParts(msgJson?.payload);
+        const labelIds: string[] = Array.isArray(msgJson?.labelIds) ? msgJson.labelIds : [];
         return {
           id: msgJson.id,
           providerMessageId: msgJson.id,
@@ -388,14 +448,17 @@ export class GoogleConnector implements EmailConnector {
           provider: 'GOOGLE',
           sourceAccount: this.mailboxEmail,
           threadId: msgJson.threadId || messageId,
-          senderName: h('From'),
-          senderEmail: h('From'),
+          rfcMessageId: h('Message-ID') || h('Message-Id') || undefined,
+          senderName: h('From').split('<')[0].replace(/["']/g, '').trim() || h('From'),
+          senderEmail: (h('From').match(/<([^>]+)>/)?.[1] || h('From')).trim(),
           recipientEmails: [this.mailboxEmail],
           subject: h('Subject') || '(No Subject)',
-          bodyText: msgJson.snippet || '',
-          receivedAt: new Date().toISOString(),
-          folder: 'INBOX',
-          isRead: !(msgJson.labelIds || []).includes('UNREAD'),
+          bodyText: parsedParts.bodyText || msgJson.snippet || '',
+          bodyHtml: parsedParts.bodyHtml,
+          attachments: parsedParts.attachments,
+          receivedAt: msgJson.internalDate ? new Date(Number(msgJson.internalDate)).toISOString() : new Date().toISOString(),
+          folder: labelIds.includes('SENT') ? 'SENT' : 'INBOX',
+          isRead: !labelIds.includes('UNREAD'),
         };
       }
     }
@@ -464,10 +527,33 @@ export class GoogleConnector implements EmailConnector {
     }
 
     const draftId = `draft-google-${Date.now()}`;
+    const rawMime = [
+      `To: ${message.recipientEmails.join(', ')}`,
+      `Subject: ${message.subject}`,
+      'Content-Type: text/plain; charset="UTF-8"',
+      '',
+      message.bodyText || '',
+    ].join('\r\n');
+    const raw = Buffer.from(rawMime, 'utf8').toString('base64url');
+    const res = await this.fetchGmailWithRefresh('https://gmail.googleapis.com/gmail/v1/users/me/drafts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: { raw } }),
+    });
+    if (!res || !res.ok) {
+      return {
+        success: false,
+        draftId,
+        version: 1,
+        createdAt: new Date().toISOString(),
+        error: res ? `Gmail draft creation failed (HTTP ${res.status}).` : 'AUTHORIZATION_REQUIRED: Gmail OAuth 2.0 token required to save draft.',
+      };
+    }
+    const data: any = await res.json().catch(() => ({}));
     return {
       success: true,
       draftId,
-      providerDraftId: `gm-draft-${Math.random().toString(36).substring(2, 9)}`,
+      providerDraftId: data?.id || `gm-draft-${crypto.randomBytes(6).toString('hex')}`,
       version: 1,
       createdAt: new Date().toISOString(),
     };

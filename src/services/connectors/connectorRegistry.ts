@@ -32,12 +32,12 @@ import { universalSyncEngine } from './universalSyncEngine';
 import { EmailEnterpriseService } from '../emailEnterpriseService';
 import { oAuthService } from '../../email/services/OAuthService';
 import { EnvironmentService } from '../environmentService';
+import { PostgresPersistenceAdapter } from '../postgresPersistenceAdapter';
 
 export class ConnectorRegistry {
   private static instance: ConnectorRegistry;
   private connections: Map<string, EmailConnectionRecord> = new Map();
   private connectors: Map<string, EmailConnector> = new Map();
-  private credentialVault: Map<string, Record<string, unknown>> = new Map();
   private auditEvents: EmailConnectionAuditEvent[] = [];
   private idempotencyKeys: Map<string, { timestamp: number; result: SendResult }> = new Map();
   private persistenceFilePath: string;
@@ -91,6 +91,14 @@ export class ConnectorRegistry {
         displayName: 'Executive Directorate Mailbox',
         provider: 'GOOGLE',
         owner: 'Dr. Zanele Khumalo (Executive Director)',
+        department: 'Executive Governance',
+        safeguarding: 'RESTRICTED',
+      },
+      {
+        email: 'executive@phumulani.org',
+        displayName: 'Executive Leadership Mailbox',
+        provider: 'GOOGLE',
+        owner: 'Comfort Dondo (Executive Director)',
         department: 'Executive Governance',
         safeguarding: 'RESTRICTED',
       },
@@ -208,10 +216,60 @@ export class ConnectorRegistry {
       } else if (c.provider === 'MICROSOFT') {
         connector = new MicrosoftConnector(c.email);
       } else {
-        connector = new ImapSmtpConnector(c.email, c.provider);
+        const storedCreds =
+          oAuthService.getDecryptedMailCredentials(id) ||
+          oAuthService.getDecryptedMailCredentials(c.email);
+        connector = new ImapSmtpConnector(c.email, c.provider, storedCreds ? {
+          imapHost: storedCreds.imapHost,
+          imapPort: storedCreds.imapPort,
+          imapSecurity: storedCreds.imapSecurity,
+          smtpHost: storedCreds.smtpHost,
+          smtpPort: storedCreds.smtpPort,
+          smtpSecurity: storedCreds.smtpSecurity,
+          tlsCa: storedCreds.tlsCa,
+        } : undefined);
       }
       this.connectors.set(id, connector);
     }
+  }
+
+  private hasAnyVaultedCredential(connectionId: string, emailAddress: string): boolean {
+    return (
+      oAuthService.hasStoredTokens(connectionId) ||
+      oAuthService.hasStoredTokens(emailAddress) ||
+      oAuthService.hasStoredMailCredentials(connectionId) ||
+      oAuthService.hasStoredMailCredentials(emailAddress)
+    );
+  }
+
+  private instantiateConnector(
+    connectionId: string,
+    emailAddress: string,
+    provider: EmailProviderType,
+    overrideCreds?: Record<string, any>
+  ): EmailConnector {
+    if (provider === 'GOOGLE') {
+      return new GoogleConnector(emailAddress);
+    }
+    if (provider === 'MICROSOFT') {
+      return new MicrosoftConnector(emailAddress);
+    }
+    const creds =
+      overrideCreds ||
+      oAuthService.getDecryptedMailCredentials(connectionId) ||
+      oAuthService.getDecryptedMailCredentials(emailAddress) ||
+      undefined;
+    return new ImapSmtpConnector(emailAddress, provider, creds ? {
+      imapHost: creds.imapHost,
+      imapPort: creds.imapPort ? Number(creds.imapPort) : undefined,
+      imapSecurity: creds.imapSecurity,
+      smtpHost: creds.smtpHost,
+      smtpPort: creds.smtpPort ? Number(creds.smtpPort) : undefined,
+      smtpSecurity: creds.smtpSecurity,
+      tlsCa: creds.tlsCa,
+      allowLoopbackForTesting: Boolean(creds.allowLoopbackForTesting),
+      skipSmtpVerifyForImapOnly: Boolean(creds.skipSmtpVerifyForImapOnly),
+    } : undefined);
   }
 
   /**
@@ -235,18 +293,10 @@ export class ConnectorRegistry {
                   : seeded?.evidenceHistory || [],
             };
             this.connections.set(conn.id, merged);
-            // Re-instantiate connector if not present
-            if (!this.connectors.has(conn.id)) {
-              let connector: EmailConnector;
-              if (conn.provider === 'GOOGLE') {
-                connector = new GoogleConnector(conn.emailAddress);
-              } else if (conn.provider === 'MICROSOFT') {
-                connector = new MicrosoftConnector(conn.emailAddress);
-              } else {
-                connector = new ImapSmtpConnector(conn.emailAddress, conn.provider);
-              }
-              this.connectors.set(conn.id, connector);
-            }
+            this.connectors.set(
+              conn.id,
+              this.instantiateConnector(conn.id, conn.emailAddress, conn.provider)
+            );
           }
         }
         if (Array.isArray(parsed.auditEvents)) {
@@ -487,27 +537,23 @@ export class ConnectorRegistry {
       }
     }
 
-    // Store non-OAuth credential reference in-memory only when actually supplied (never persisted plaintext)
+    // Store non-OAuth credentials in AES-256-GCM encrypted backend vault only (never plaintext on disk)
     if (hasProvidedCredentials && credentials && effectiveAuthMethod !== 'OAUTH2') {
-      this.credentialVault.set(id, {
+      const credPayload = {
         ...credentials,
+        username: String(credentials.username || record.emailAddress),
         storedAt: now,
-      });
+      };
+      oAuthService.storeEncryptedMailCredentials(id, credPayload);
+      oAuthService.storeEncryptedMailCredentials(record.emailAddress, credPayload);
     }
 
-    // Instantiate adapter
-    let connector: EmailConnector;
-    if (record.provider === 'GOOGLE') {
-      connector = new GoogleConnector(record.emailAddress);
-    } else if (record.provider === 'MICROSOFT') {
-      connector = new MicrosoftConnector(record.emailAddress);
-    } else {
-      connector = new ImapSmtpConnector(record.emailAddress, record.provider);
-    }
+    // Instantiate adapter (preserving custom host/port/TLS configuration)
+    const connector = this.instantiateConnector(id, record.emailAddress, record.provider, credentials);
 
     // Connect adapter only when verified credentials or vaulted OAuth tokens are present
     const connectCredentials =
-      effectiveAuthMethod === 'OAUTH2' && oAuthService.hasStoredTokens(id)
+      effectiveAuthMethod === 'OAUTH2' && (oAuthService.hasStoredTokens(id) || oAuthService.hasStoredTokens(record.emailAddress))
         ? { ...(credentials || {}), accessToken: '[VAULTED_OAUTH_TOKEN]' }
         : hasProvidedCredentials
         ? credentials
@@ -523,6 +569,10 @@ export class ConnectorRegistry {
         fullRecord.connectionHealth = connRes.status === 'AUTHENTICATION_FAILED' ? 'ERROR' : 'UNTESTED';
         fullRecord.credentialWarning = true;
         fullRecord.lastError = connRes.error || connRes.details || 'Provider verification failed.';
+        if (effectiveAuthMethod !== 'OAUTH2') {
+          oAuthService.deleteMailCredentials(id);
+          oAuthService.deleteMailCredentials(record.emailAddress);
+        }
       }
     }
 
@@ -530,7 +580,7 @@ export class ConnectorRegistry {
     this.connectors.set(id, connector);
 
     this.logAuditEvent({
-      id: `aud-${Date.now()}`,
+      id: `aud-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
       connectionId: id,
       mailboxEmail: record.emailAddress,
       provider: record.provider,
@@ -626,7 +676,10 @@ export class ConnectorRegistry {
     const connector = this.connectors.get(connectionId);
     if (!connector) return false;
 
-    const creds = this.credentialVault.get(connectionId);
+    const creds =
+      oAuthService.getDecryptedMailCredentials(connectionId) ||
+      oAuthService.getDecryptedMailCredentials(existing.emailAddress) ||
+      undefined;
     const connResult = await connector.connect(creds);
 
     existing.authStatus = connResult.status;
@@ -670,7 +723,10 @@ export class ConnectorRegistry {
     const existing = this.connections.get(connectionId);
     if (!existing) return false;
 
-    this.credentialVault.delete(connectionId);
+    oAuthService.revokeTokens(connectionId);
+    oAuthService.revokeTokens(existing.emailAddress);
+    oAuthService.deleteMailCredentials(connectionId);
+    oAuthService.deleteMailCredentials(existing.emailAddress);
     existing.authStatus = 'REVOKED';
     existing.connectionHealth = 'REVOKED';
     existing.updatedAt = new Date().toISOString();
@@ -747,11 +803,13 @@ export class ConnectorRegistry {
       return false;
     }
 
-    const hasLocalVaultCreds = this.credentialVault.has(connectionId);
+    const hasMailCreds =
+      oAuthService.hasStoredMailCredentials(connectionId) ||
+      oAuthService.hasStoredMailCredentials(existing.emailAddress);
     const hasOAuthTokens =
       oAuthService.hasStoredTokens(connectionId) || oAuthService.hasStoredTokens(existing.emailAddress);
 
-    if (!hasLocalVaultCreds && !hasOAuthTokens) {
+    if (!hasMailCreds && !hasOAuthTokens) {
       existing.authStatus = 'AUTHORIZATION_REQUIRED';
       existing.connectionHealth = 'ERROR';
       existing.credentialWarning = true;
@@ -819,7 +877,10 @@ export class ConnectorRegistry {
 
     this.connections.delete(connectionId);
     this.connectors.delete(connectionId);
-    this.credentialVault.delete(connectionId);
+    oAuthService.revokeTokens(connectionId);
+    oAuthService.revokeTokens(existing.emailAddress);
+    oAuthService.deleteMailCredentials(connectionId);
+    oAuthService.deleteMailCredentials(existing.emailAddress);
 
     this.saveDurableRegistry();
     return true;
@@ -847,11 +908,13 @@ export class ConnectorRegistry {
 
   public async checkConnectionHealth(connectionId: string): Promise<ConnectionHealth & { isHealthy: boolean; tlsVerified: boolean }> {
     const health = await this.verifyConnection(connectionId);
+    const isHealthy = Boolean(health.healthy);
+    const tlsVerified = Boolean(isHealthy && health.tlsVersion && health.tlsVersion !== 'N/A');
     return {
       ...health,
-      isHealthy: health.healthy ?? true,
-      tlsVerified: true,
-    } as any;
+      isHealthy,
+      tlsVerified,
+    } as ConnectionHealth & { isHealthy: boolean; tlsVerified: boolean };
   }
 
   public async registerWizardConnection(wizardState: any): Promise<EmailConnectionRecord> {
@@ -889,10 +952,7 @@ export class ConnectorRegistry {
     }
 
     const health = await connector.verifyConnection();
-    const hasCredentials =
-      this.credentialVault.has(connectionId) ||
-      oAuthService.hasStoredTokens(connectionId) ||
-      oAuthService.hasStoredTokens(existing.emailAddress);
+    const hasCredentials = this.hasAnyVaultedCredential(connectionId, existing.emailAddress);
 
     if (!hasCredentials) {
       existing.connectionHealth =
@@ -938,7 +998,7 @@ export class ConnectorRegistry {
     existing.evidenceHistory.unshift(evidence);
 
     this.logAuditEvent({
-      id: `aud-${Date.now()}`,
+      id: `aud-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
       connectionId,
       mailboxEmail: existing.emailAddress,
       provider: existing.provider,
@@ -954,7 +1014,10 @@ export class ConnectorRegistry {
     return health;
   }
 
-  public async syncConnection(connectionId: string): Promise<SyncResult> {
+  public async syncConnection(
+    connectionId: string,
+    syncOptions?: { folders?: string[]; maxMessages?: number; sinceTimestamp?: string; cursor?: string }
+  ): Promise<SyncResult> {
     const existing = this.connections.get(connectionId);
     const connector = this.connectors.get(connectionId);
 
@@ -976,10 +1039,7 @@ export class ConnectorRegistry {
       };
     }
 
-    const hasCredentials =
-      this.credentialVault.has(connectionId) ||
-      oAuthService.hasStoredTokens(connectionId) ||
-      oAuthService.hasStoredTokens(existing.emailAddress);
+    const hasCredentials = this.hasAnyVaultedCredential(connectionId, existing.emailAddress);
 
     if (!hasCredentials) {
       existing.authStatus = existing.authMethod === 'OAUTH2' ? 'AUTHORIZATION_REQUIRED' : 'CONFIGURATION_REQUIRED';
@@ -1011,7 +1071,10 @@ export class ConnectorRegistry {
     const result = await universalSyncEngine.executeSync(connector, {
       connectionId,
       mailboxEmail: existing.emailAddress,
-      cursor: existing.syncCursor,
+      cursor: syncOptions?.cursor || existing.syncCursor,
+      folders: syncOptions?.folders,
+      maxMessages: syncOptions?.maxMessages,
+      sinceTimestamp: syncOptions?.sinceTimestamp,
     });
 
     if (result.success) {
@@ -1019,7 +1082,23 @@ export class ConnectorRegistry {
       existing.syncStatus = 'SYNC_COMPLETE';
       existing.lastSyncAt = result.timestamp;
       existing.lastSuccessfulSyncAt = result.timestamp;
-      existing.syncCursor = result.newCursor;
+      if (result.newCursor) {
+        existing.syncCursor = result.newCursor;
+        const dbAdapter = PostgresPersistenceAdapter.getInstance();
+        await dbAdapter
+          .insertDurableWithRetry(
+            'email_sync_cursors',
+            {
+              id: `${connectionId}:INBOX`,
+              mailboxId: connectionId,
+              folder: 'INBOX',
+              cursor: result.newCursor,
+              updatedAt: result.timestamp,
+            },
+            { context: 'ConnectorRegistry:syncConnection' }
+          )
+          .catch(() => {});
+      }
       existing.cursorType = result.cursorType;
       existing.incomingMessageCount += result.messagesImported;
       existing.lastError = null;
@@ -1204,7 +1283,6 @@ export class ConnectorRegistry {
   public resetForTesting(): void {
     this.connections.clear();
     this.connectors.clear();
-    this.credentialVault.clear();
     this.auditEvents = [];
     this.idempotencyKeys.clear();
     try {

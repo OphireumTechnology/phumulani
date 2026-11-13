@@ -200,7 +200,7 @@ export class UniversalSyncEngine {
       const syncResult = await this.executeWithRetry(() => connector.synchronize(options));
       if (!syncResult.success) {
         this.auditLogs.unshift({
-          id: `aud-sync-blocked-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+          id: `aud-sync-blocked-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
           connectionId,
           mailboxEmail,
           provider: connector.provider,
@@ -241,7 +241,7 @@ export class UniversalSyncEngine {
 
       // 5. Audit Event
       this.auditLogs.unshift({
-        id: `aud-sync-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+        id: `aud-sync-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
         connectionId,
         mailboxEmail,
         provider: connector.provider,
@@ -260,12 +260,13 @@ export class UniversalSyncEngine {
         ...syncResult,
         messagesImported: newCount,
         duplicatesSkipped: dupCount,
-      };
+        ...(deduplicated.length > 0 ? { syncedMessages: deduplicated } : {}),
+      } as SyncResult & { syncedMessages?: NormalizedEmailMessage[] };
     } catch (err: unknown) {
       const errorMessage = err instanceof Error ? err.message : String(err);
 
       this.auditLogs.unshift({
-        id: `aud-sync-err-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
+        id: `aud-sync-err-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
         connectionId,
         mailboxEmail,
         provider: connector.provider,

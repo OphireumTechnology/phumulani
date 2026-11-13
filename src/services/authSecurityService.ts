@@ -6,6 +6,9 @@
  */
 
 import crypto from 'crypto';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 import { PostgresPersistenceAdapter } from './postgresPersistenceAdapter';
 import { EnvironmentService } from './environmentService';
 import type { PermissionDomain } from '../types/masterAdmin';
@@ -76,25 +79,127 @@ export interface PasswordHashRecord {
   iterations: number;
 }
 
+export interface PasswordResetRecord {
+  tokenHash: string;
+  email: string;
+  expiresAt: string;
+  used: boolean;
+  createdAt: string;
+}
+
+const isNodeRuntime =
+  typeof window === 'undefined' && typeof process !== 'undefined' && Boolean(process.versions?.node);
+
 export class AuthSecurityService {
   private static instance: AuthSecurityService;
   private dbAdapter: PostgresPersistenceAdapter;
   private activeSessions: Map<string, UserSession> = new Map();
+  private revokedSessionIds: Set<string> = new Set();
   private failedAttempts: Map<string, { count: number; lockedUntil: number }> = new Map();
+  private passwordResetTokens: Map<string, PasswordResetRecord> = new Map();
   private tempMfaSessions: Map<string, { userId: string; email: string; role: StaffRole; departmentId: string; expectedCode?: string; expiresAt: number }> = new Map();
+  private durableStorePath: string = '';
 
   private constructor() {
     this.dbAdapter = PostgresPersistenceAdapter.getInstance();
-    const isPilot = typeof process !== 'undefined' && process.env?.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT';
-    const isProdEnv = typeof process !== 'undefined' && process.env?.NODE_ENV === 'production';
+    if (isNodeRuntime) {
+      const runtimeDir = process.env?.PHUMULANI_RUNTIME_DATA_DIR?.trim()
+        ? path.resolve(process.env.PHUMULANI_RUNTIME_DATA_DIR.trim())
+        : path.resolve(os.tmpdir(), 'phumulani-runtime-data');
+      this.durableStorePath = path.resolve(runtimeDir, '.auth_sessions_store.json');
+    }
+    const isPilot = isNodeRuntime && process.env?.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT';
+    const isProdEnv = isNodeRuntime && process.env?.NODE_ENV === 'production';
     if (!EnvironmentService.isProductionOnly() && !isPilot && !isProdEnv) {
       this.initializeBootstrapSessions();
+    }
+    if (isNodeRuntime) {
+      this.loadDurableAuthState();
+    }
+  }
+
+  private persistDurableAuthState(): void {
+    if (!isNodeRuntime || !this.durableStorePath || typeof fs?.existsSync !== 'function') return;
+    const tmpPath = `${this.durableStorePath}.tmp.${process.pid}.${crypto.randomBytes(6).toString('hex')}`;
+    try {
+      const dir = path.dirname(this.durableStorePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
+      }
+      const payload = {
+        savedAt: new Date().toISOString(),
+        activeSessions: Array.from(this.activeSessions.entries()),
+        revokedSessionIds: Array.from(this.revokedSessionIds.values()).slice(-1000),
+        failedAttempts: Array.from(this.failedAttempts.entries()),
+        passwordResetTokens: Array.from(this.passwordResetTokens.entries()),
+      };
+      fs.writeFileSync(tmpPath, JSON.stringify(payload, null, 2), { encoding: 'utf8', mode: 0o600 });
+      fs.renameSync(tmpPath, this.durableStorePath);
+    } catch (err: any) {
+      try {
+        if (fs.existsSync(tmpPath)) fs.unlinkSync(tmpPath);
+      } catch {}
+      console.warn('[AuthSecurity] Failed to persist durable auth state:', err?.message || err);
+    }
+  }
+
+  private loadDurableAuthState(): void {
+    if (!isNodeRuntime || !this.durableStorePath || typeof fs?.existsSync !== 'function') return;
+    try {
+      if (!fs.existsSync(this.durableStorePath)) return;
+      const raw = fs.readFileSync(this.durableStorePath, 'utf8');
+      const parsed = JSON.parse(raw);
+
+      if (Array.isArray(parsed.revokedSessionIds)) {
+        for (const sid of parsed.revokedSessionIds) {
+          this.revokedSessionIds.add(String(sid));
+          this.activeSessions.delete(String(sid));
+        }
+      }
+      if (Array.isArray(parsed.activeSessions)) {
+        const now = Date.now();
+        for (const [sid, sess] of parsed.activeSessions) {
+          if (!sess || this.revokedSessionIds.has(sid) || sess.isRevoked) continue;
+          if (new Date(sess.expiresAt).getTime() <= now) continue;
+          this.activeSessions.set(sid, sess);
+        }
+      }
+      if (Array.isArray(parsed.failedAttempts)) {
+        const now = Date.now();
+        for (const [key, rec] of parsed.failedAttempts) {
+          if (rec && (rec.lockedUntil === 0 || rec.lockedUntil > now)) {
+            this.failedAttempts.set(String(key), rec);
+          }
+        }
+      }
+      if (Array.isArray(parsed.passwordResetTokens)) {
+        for (const [hash, rec] of parsed.passwordResetTokens) {
+          if (rec) this.passwordResetTokens.set(String(hash), rec);
+        }
+      }
+    } catch (err: any) {
+      console.warn('[AuthSecurity] Failed to load durable auth state:', err?.message || err);
+    }
+  }
+
+  public reloadDurableState(): void {
+    this.activeSessions.clear();
+    this.revokedSessionIds.clear();
+    this.failedAttempts.clear();
+    this.passwordResetTokens.clear();
+    const isPilot = isNodeRuntime && process.env?.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT';
+    const isProdEnv = isNodeRuntime && process.env?.NODE_ENV === 'production';
+    if (!EnvironmentService.isProductionOnly() && !isPilot && !isProdEnv) {
+      this.initializeBootstrapSessions();
+    }
+    if (isNodeRuntime) {
+      this.loadDurableAuthState();
     }
   }
 
   public initializeBootstrapSessions(): { staffToken: string; execToken: string; adminToken: string } {
-    const isPilot = typeof process !== 'undefined' && process.env?.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT';
-    const isProdEnv = typeof process !== 'undefined' && process.env?.NODE_ENV === 'production';
+    const isPilot = isNodeRuntime && process.env?.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT';
+    const isProdEnv = isNodeRuntime && process.env?.NODE_ENV === 'production';
     if (EnvironmentService.isProductionOnly() || isPilot || isProdEnv) {
       throw new Error('BOOTSTRAP_SESSIONS_DISABLED: Static bootstrap tokens cannot be initialized in production or pilot mode.');
     }
@@ -166,11 +271,19 @@ export class AuthSecurityService {
   }
 
   /**
-   * Verifies a password against the stored salt and hash.
+   * Verifies a password against the stored salt and hash using length-safe timingSafeEqual.
    */
   public verifyPassword(password: string, record: PasswordHashRecord): boolean {
-    const computed = crypto.pbkdf2Sync(password, record.salt, record.iterations, 64, 'sha256').toString('hex');
-    return crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(record.hash));
+    if (!password || !record?.hash || !record?.salt) return false;
+    try {
+      const computed = crypto.pbkdf2Sync(password, record.salt, record.iterations || 100000, 64, 'sha256').toString('hex');
+      const a = Buffer.from(computed, 'utf8');
+      const b = Buffer.from(String(record.hash), 'utf8');
+      if (a.length !== b.length) return false;
+      return crypto.timingSafeEqual(a, b);
+    } catch {
+      return false;
+    }
   }
 
   /**
@@ -202,6 +315,7 @@ export class AuthSecurityService {
 
     if (now >= record.lockedUntil && record.lockedUntil > 0) {
       this.failedAttempts.delete(identifier.toLowerCase());
+      this.persistDurableAuthState();
     }
 
     return { locked: false, remainingMinutes: 0 };
@@ -221,13 +335,16 @@ export class AuthSecurityService {
     }
 
     this.failedAttempts.set(key, existing);
+    this.persistDurableAuthState();
   }
 
   /**
    * Clears failed login attempts after successful authentication.
    */
   public clearFailedAttempts(identifier: string): void {
-    this.failedAttempts.delete(identifier.toLowerCase());
+    if (this.failedAttempts.delete(identifier.toLowerCase())) {
+      this.persistDurableAuthState();
+    }
   }
 
   /**
@@ -266,6 +383,7 @@ export class AuthSecurityService {
     };
 
     this.activeSessions.set(sessionId, session);
+    this.persistDurableAuthState();
 
     // Durably log session creation
     await this.dbAdapter.insert('audit_logs', {
@@ -289,6 +407,10 @@ export class AuthSecurityService {
       return { valid: false, error: 'Session ID is missing.' };
     }
 
+    if (this.revokedSessionIds.has(sessionId)) {
+      return { valid: false, error: 'Session has been revoked.' };
+    }
+
     const session = this.activeSessions.get(sessionId);
     if (!session) {
       return { valid: false, error: 'Session not found or expired.' };
@@ -302,6 +424,7 @@ export class AuthSecurityService {
     const expTime = new Date(session.expiresAt).getTime();
     if (now > expTime) {
       this.activeSessions.delete(sessionId);
+      this.persistDurableAuthState();
       return { valid: false, error: 'Session expired. Please log in again.' };
     }
 
@@ -323,14 +446,20 @@ export class AuthSecurityService {
    * Revokes a specific session (logout).
    */
   public async revokeSession(sessionId: string): Promise<boolean> {
+    if (!sessionId) return false;
     const session = this.activeSessions.get(sessionId);
-    if (!session) return false;
+    this.revokedSessionIds.add(sessionId);
+    if (!session) {
+      this.persistDurableAuthState();
+      return false;
+    }
 
     session.isRevoked = true;
     this.activeSessions.delete(sessionId);
+    this.persistDurableAuthState();
 
     await this.dbAdapter.insert('audit_logs', {
-      id: `audit-sess-rev-${Date.now()}`,
+      id: `audit-sess-rev-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
       timestamp: new Date().toISOString(),
       actor_role: session.role,
       action: 'auth:session_revoked',
@@ -349,9 +478,13 @@ export class AuthSecurityService {
     for (const [sId, sess] of this.activeSessions.entries()) {
       if (sess.userId === userId) {
         sess.isRevoked = true;
+        this.revokedSessionIds.add(sId);
         this.activeSessions.delete(sId);
         count++;
       }
+    }
+    if (count > 0) {
+      this.persistDurableAuthState();
     }
     return count;
   }
@@ -521,23 +654,117 @@ export class AuthSecurityService {
   }
 
   /**
-   * Initiates password recovery with a signed recovery token.
+   * Initiates password recovery with a cryptographically hashed durable reset token.
    */
   public async requestPasswordRecovery(email: string): Promise<{ success: boolean; recoveryToken?: string; message: string }> {
     const emailNorm = email.toLowerCase().trim();
     const token = `recov_${crypto.randomBytes(32).toString('hex')}`;
-    // Secure token logged or sent via email (mocked durable record)
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+    const nowIso = new Date().toISOString();
+    const expiresAt = new Date(Date.now() + 30 * 60 * 1000).toISOString();
+
+    const users = await this.dbAdapter.select<any>('staff_members');
+    const accountExists = users.some((u: any) => u.email?.toLowerCase().trim() === emailNorm);
+
+    if (accountExists) {
+      const resetRec: PasswordResetRecord = {
+        tokenHash,
+        email: emailNorm,
+        expiresAt,
+        used: false,
+        createdAt: nowIso,
+      };
+      this.passwordResetTokens.set(tokenHash, resetRec);
+      this.persistDurableAuthState();
+      await this.dbAdapter.insertDurableWithRetry(
+        'password_reset_tokens',
+        { id: tokenHash, ...resetRec },
+        { context: 'authSecurityService:requestPasswordRecovery' }
+      );
+    }
+
     await this.dbAdapter.insert('audit_logs', {
-      id: `audit-recov-${Date.now()}`,
+      id: `audit-recov-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
       action: 'auth:password_recovery_requested',
       email: emailNorm,
-      timestamp: new Date().toISOString(),
-      tokenHash: crypto.createHash('sha256').update(token).digest('hex'),
+      timestamp: nowIso,
+      tokenHash,
     });
     return {
       success: true,
-      recoveryToken: token,
+      recoveryToken: accountExists ? token : undefined,
       message: 'If the provided email is associated with an account, password reset instructions have been generated.',
+    };
+  }
+
+  /**
+   * Completes password reset using a single-use token, updates PBKDF2 password hash, and revokes active sessions.
+   */
+  public async confirmPasswordReset(
+    token: string,
+    newPassword: string
+  ): Promise<{ success: boolean; error?: string; message?: string }> {
+    if (!token || typeof token !== 'string') {
+      return { success: false, error: 'A valid reset token is required.' };
+    }
+    if (!newPassword || newPassword.length < 8) {
+      return { success: false, error: 'New password must be at least 8 characters long.' };
+    }
+
+    const tokenHash = crypto.createHash('sha256').update(token.trim()).digest('hex');
+    let resetRec = this.passwordResetTokens.get(tokenHash);
+    if (!resetRec) {
+      const persisted = await this.dbAdapter.select<PasswordResetRecord & { id: string }>(
+        'password_reset_tokens',
+        (r) => r.tokenHash === tokenHash || r.id === tokenHash
+      );
+      if (persisted[0]) resetRec = persisted[0];
+    }
+
+    if (!resetRec || resetRec.used) {
+      return { success: false, error: 'Reset token is invalid or has already been used.' };
+    }
+    if (Date.now() > new Date(resetRec.expiresAt).getTime()) {
+      return { success: false, error: 'Reset token has expired. Please request a new password reset.' };
+    }
+
+    const users = await this.dbAdapter.select<any>('staff_members');
+    const matched = users.find((u: any) => u.email?.toLowerCase().trim() === resetRec!.email);
+    if (!matched) {
+      return { success: false, error: 'Associated account not found.' };
+    }
+
+    const pwdHash = this.hashPassword(newPassword);
+    await this.dbAdapter.update('staff_members', matched.id, {
+      passwordHash: pwdHash.hash,
+      passwordSalt: pwdHash.salt,
+      passwordIterations: pwdHash.iterations,
+      updatedAt: new Date().toISOString(),
+    });
+
+    resetRec.used = true;
+    this.passwordResetTokens.set(tokenHash, resetRec);
+    this.persistDurableAuthState();
+    await this.dbAdapter.insertDurableWithRetry(
+      'password_reset_tokens',
+      { id: tokenHash, ...resetRec },
+      { context: 'authSecurityService:confirmPasswordReset' }
+    );
+
+    const revokedCount = await this.revokeAllUserSessions(matched.id);
+    this.clearFailedAttempts(resetRec.email);
+
+    await this.dbAdapter.insert('audit_logs', {
+      id: `audit-pwreset-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`,
+      timestamp: new Date().toISOString(),
+      actor_role: matched.role,
+      action: 'auth:password_reset_completed',
+      details: `Completed password reset for ${resetRec.email}; revoked ${revokedCount} active session(s).`,
+    });
+
+    return {
+      success: true,
+      message: 'Password updated successfully. All prior active sessions have been revoked.',
     };
   }
 
@@ -550,13 +777,7 @@ export class AuthSecurityService {
       suspensionReason: reason,
       suspendedAt: new Date().toISOString(),
     });
-    // Revoke any active sessions for user
-    for (const [sessionId, session] of this.activeSessions.entries()) {
-      if (session.userId === userId) {
-        session.isRevoked = true;
-        this.activeSessions.delete(sessionId);
-      }
-    }
+    await this.revokeAllUserSessions(userId);
     return { success: true, message: `Account ${userId} suspended successfully.` };
   }
 

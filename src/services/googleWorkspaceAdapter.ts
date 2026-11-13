@@ -704,7 +704,9 @@ export class GoogleWorkspaceAdapter {
     }
 
     const hasConfiguredOAuth = Boolean(
-      process.env.GOOGLE_WORKSPACE_CLIENT_ID?.trim() && process.env.GOOGLE_WORKSPACE_CLIENT_SECRET?.trim()
+      typeof process !== 'undefined' &&
+        process.env?.GOOGLE_WORKSPACE_CLIENT_ID?.trim() &&
+        process.env?.GOOGLE_WORKSPACE_CLIENT_SECRET?.trim()
     );
 
     // Consume state immediately so it can never be replayed

@@ -256,6 +256,13 @@ export class PostgresPersistenceAdapter {
           ssl: sslConfig,
         });
 
+        // Prevent unhandled idle pool client errors from terminating the Node.js process
+        this.pool.on('error', (poolErr: any) => {
+          const safeMsg = PostgresPersistenceAdapter.redactDatabaseUrl(poolErr?.message || String(poolErr));
+          this.connectionError = `PostgreSQL idle pool error: ${safeMsg}`;
+          console.error('[PostgresAdapter] Idle PostgreSQL client error:', safeMsg);
+        });
+
         // Test connection with ping and bootstrap baseline schema tables
         const client = await this.pool.connect();
         try {
@@ -443,7 +450,14 @@ export class PostgresPersistenceAdapter {
       totalRecords += rows.length;
     }
 
-    const stateStr = JSON.stringify(Object.fromEntries(this.memoryStore));
+    const stateStr = isPgActive
+      ? JSON.stringify({
+          engine: 'POSTGRESQL',
+          bootstrappedTables: Array.from(this.bootstrappedPgTables).sort(),
+          poolTotal: this.pool?.totalCount || 0,
+          dbUrlConfigured: true,
+        })
+      : JSON.stringify(Object.fromEntries(this.memoryStore));
     const checksum = crypto.createHash('sha256').update(stateStr).digest('hex');
 
     let host = 'localhost (isolated embedded durable)';
@@ -610,36 +624,63 @@ export class PostgresPersistenceAdapter {
   }
 
   /**
-   * ACID Transaction wrapper with automatic BEGIN, COMMIT, ROLLBACK
+   * Checks if a PostgreSQL error represents a transient retryable SQLSTATE / socket condition.
    */
-  public async withTransaction<T>(callback: (client: any) => Promise<T>): Promise<T> {
+  private isTransientPgError(err: any): boolean {
+    const code = String(err?.code || '');
+    return ['40001', '40P01', '57P01', '57P02', '57P03', '08006', '08001', 'ECONNRESET', 'ETIMEDOUT'].includes(code);
+  }
+
+  /**
+   * ACID Transaction wrapper with automatic BEGIN, COMMIT, ROLLBACK and transient SQLSTATE retries.
+   */
+  public async withTransaction<T>(callback: (client: any) => Promise<T>, maxRetries = 3): Promise<T> {
     await this.ensureInitialized();
 
+    if (this.databaseUrl && !this.pool) {
+      throw new Error(
+        `POSTGRES_UNAVAILABLE: Configured PostgreSQL pool is unavailable (${this.connectionError || 'not initialized'}). Silent runtime fallback is prohibited.`
+      );
+    }
+
     if (this.pool) {
-      const client = await this.pool.connect();
-      const prevTxClient = this.activeTxClient;
-      this.activeTxClient = client;
-      try {
-        await client.query('BEGIN');
-        const txWrapper = {
-          query: async (sql: string, params: any[] = []) => client.query(sql, params),
-          insert: async (table: string, record: any) => this.pgInsert(client, table, record),
-        };
-        const result = await callback(txWrapper);
-        await client.query('COMMIT');
-        return result;
-      } catch (err: any) {
+      let attempt = 0;
+      while (true) {
+        attempt += 1;
+        const client = await this.pool.connect();
+        const prevTxClient = this.activeTxClient;
+        this.activeTxClient = client;
+        let rolledBack = false;
         try {
-          await client.query('ROLLBACK');
-        } catch (rollbackErr: any) {
-          const origMsg = PostgresPersistenceAdapter.redactDatabaseUrl(err?.message || String(err));
-          const rbMsg = PostgresPersistenceAdapter.redactDatabaseUrl(rollbackErr?.message || String(rollbackErr));
-          throw new Error(`TRANSACTION_AND_ROLLBACK_FAILED: ${origMsg} | Rollback error: ${rbMsg}`);
+          await client.query('BEGIN');
+          const txWrapper = {
+            query: async (sql: string, params: any[] = []) => client.query(sql, params),
+            insert: async (table: string, record: any) => this.pgInsert(client, table, record),
+          };
+          const result = await callback(txWrapper);
+          await client.query('COMMIT');
+          this.connectionError = null;
+          return result;
+        } catch (err: any) {
+          try {
+            await client.query('ROLLBACK');
+            rolledBack = true;
+          } catch (rollbackErr: any) {
+            const origMsg = PostgresPersistenceAdapter.redactDatabaseUrl(err?.message || String(err));
+            const rbMsg = PostgresPersistenceAdapter.redactDatabaseUrl(rollbackErr?.message || String(rollbackErr));
+            if (attempt >= maxRetries || !this.isTransientPgError(err)) {
+              throw new Error(`TRANSACTION_AND_ROLLBACK_FAILED: ${origMsg} | Rollback error: ${rbMsg}`);
+            }
+          }
+          if (rolledBack && attempt < maxRetries && this.isTransientPgError(err)) {
+            await new Promise((r) => setTimeout(r, 40 * attempt));
+            continue;
+          }
+          throw err;
+        } finally {
+          this.activeTxClient = prevTxClient;
+          client.release();
         }
-        throw err;
-      } finally {
-        this.activeTxClient = prevTxClient;
-        client.release();
       }
     }
 
@@ -1038,9 +1079,12 @@ export class PostgresPersistenceAdapter {
 
   /**
    * Restores database state from a validated durable backup snapshot (M50.08 / M50.09).
-   * Validates structure, executes within safe rollback snapshot, and verifies consistency.
+   * Validates structure and optional checksum, executes within safe rollback snapshot, and verifies consistency.
    */
-  public async restoreDurableBackup(backupData: string): Promise<{
+  public async restoreDurableBackup(
+    backupData: string,
+    expectedChecksum?: string
+  ): Promise<{
     success: boolean;
     tablesRestored: number;
     recordsRestored: number;
@@ -1051,10 +1095,23 @@ export class PostgresPersistenceAdapter {
       throw new Error('BACKUP RESTORE FAILED: Missing or invalid backup data string.');
     }
 
+    const actualRawChecksum = crypto.createHash('sha256').update(backupData).digest('hex');
+    if (expectedChecksum && expectedChecksum !== actualRawChecksum) {
+      throw new Error(
+        `BACKUP RESTORE FAILED: Integrity checksum mismatch (expected ${expectedChecksum}, got ${actualRawChecksum}).`
+      );
+    }
+
     if (this.pool) {
       const parsed = JSON.parse(backupData);
       if (!parsed || typeof parsed !== 'object') {
         throw new Error('BACKUP RESTORE FAILED: Malformed backup JSON structure.');
+      }
+      if (parsed.checksum && typeof parsed.checksum === 'string' && parsed.tables && !expectedChecksum) {
+        const tablesChecksum = crypto.createHash('sha256').update(JSON.stringify(parsed.tables)).digest('hex');
+        if (parsed.checksum !== tablesChecksum && parsed.checksum !== actualRawChecksum) {
+          throw new Error('BACKUP RESTORE FAILED: Embedded backup checksum mismatch.');
+        }
       }
       const tablesSource = parsed.tables && typeof parsed.tables === 'object' ? parsed.tables : parsed;
       let totalRecords = 0;
@@ -1072,12 +1129,11 @@ export class PostgresPersistenceAdapter {
           }
         }
       });
-      const checksum = crypto.createHash('sha256').update(backupData).digest('hex');
       return {
         success: true,
         tablesRestored,
         recordsRestored: totalRecords,
-        checksum,
+        checksum: actualRawChecksum,
       };
     }
 
@@ -1100,7 +1156,8 @@ export class PostgresPersistenceAdapter {
         let totalRecords = 0;
         for (const [tbl, rows] of Object.entries(tablesSource)) {
           if (Array.isArray(rows)) {
-            newStore.set(tbl, rows as TableRowRecord[]);
+            const safeTbl = this.validateTableName(tbl);
+            newStore.set(safeTbl, rows as TableRowRecord[]);
             totalRecords += (rows as TableRowRecord[]).length;
           }
         }
@@ -1260,7 +1317,41 @@ export class PostgresPersistenceAdapter {
   }
 
   /**
-   * Simulates full application restart by clearing memory and reloading directly from disk
+   * Exposes verified table names in isolated store or bootstrapped PG set.
+   */
+  public getRegisteredTableNames(): string[] {
+    if (this.pool) {
+      return Array.from(this.bootstrappedPgTables);
+    }
+    return Array.from(this.memoryStore.keys());
+  }
+
+  /**
+   * Queries live PostgreSQL table row counts for diagnostics when pool is active.
+   */
+  public async getLiveRecordCount(): Promise<number> {
+    await this.ensureInitialized();
+    if (this.pool) {
+      const res = await this.pool.query(
+        `SELECT tablename FROM pg_tables WHERE schemaname = 'public'`
+      );
+      let count = 0;
+      for (const row of res.rows) {
+        const tbl = this.validateTableName(row.tablename);
+        const cntRes = await this.pool.query(`SELECT COUNT(*)::int AS cnt FROM "${tbl}"`);
+        count += Number(cntRes.rows[0]?.cnt || 0);
+      }
+      return count;
+    }
+    let total = 0;
+    for (const rows of this.memoryStore.values()) {
+      total += rows.length;
+    }
+    return total;
+  }
+
+  /**
+   * Simulates full application restart by clearing memory / pool and reloading cleanly
    */
   public async simulateApplicationRestart(): Promise<{
     success: boolean;
@@ -1268,6 +1359,22 @@ export class PostgresPersistenceAdapter {
     recordsRestored: number;
     checksum: string;
   }> {
+    if (this.pool) {
+      await this.pool.end().catch(() => {});
+      this.pool = null;
+      this.bootstrappedPgTables.clear();
+      this.isInitialized = false;
+      await this.initialize();
+      const total = await this.getLiveRecordCount();
+      const info = this.getConnectionInfo();
+      return {
+        success: info.connected,
+        tablesReloaded: this.bootstrappedPgTables.size,
+        recordsRestored: total,
+        checksum: info.checksum,
+      };
+    }
+
     this.memoryStore.clear();
     this.isInitialized = false;
     await this.initialize();

@@ -21,10 +21,13 @@ export interface NormalizedEmailAttachment {
   filename: string;
   sizeBytes: number;
   mimeType: string;
+  attachmentId?: string;
   isQuarantined?: boolean;
   quarantineReason?: string;
   contentBase64?: string;
 }
+
+export type EmailAttachmentMetadata = NormalizedEmailAttachment;
 
 export interface NormalizedEmailMessage {
   id: string;
@@ -33,6 +36,8 @@ export interface NormalizedEmailMessage {
   provider: EmailProviderType;
   sourceAccount: string;
   threadId: string;
+  rfcMessageId?: string;
+  inReplyTo?: string;
   senderName: string;
   senderEmail: string;
   recipientEmails: string[];
@@ -100,6 +105,7 @@ export interface SyncResult {
   checkpointId: string;
   status: 'COMPLETED' | 'PARTIAL' | 'FAILED' | 'RECONCILIATION_REQUIRED' | 'AUTHORIZATION_REQUIRED';
   timestamp: string;
+  messages?: NormalizedEmailMessage[];
   error?: string;
 }
 

@@ -571,46 +571,100 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
   };
 
   // Phase 48 Mailbox Administration (M48.02) Handlers
-  const handleTestConnection = (mailboxId: string) => {
+  const handleTestConnection = async (mailboxId: string) => {
     setIsTestingConnection(true);
-    const res = db.testMailboxConnection(mailboxId);
     const mbx = mailboxes.find((m) => m.id === mailboxId);
-    setTestConnectionResult({
-      mailboxId,
-      mailboxEmail: mbx?.email || mailboxId,
-      status: res.status,
-      latencyMs: res.latencyMs,
-      verifiedAt: new Date().toISOString(),
-      message: res.message,
-    });
-    setIsTestingConnection(false);
+    try {
+      const apiRes = await authFetch(`/api/admin/email/mailboxes/${encodeURIComponent(mailboxId)}/test`, {
+        method: 'POST',
+      });
+      if (!apiRes.ok) {
+        const errData = await apiRes.json().catch(() => ({}));
+        setActionNotice({
+          type: 'warning',
+          message: errData.error || `Backend connection test rejected (HTTP ${apiRes.status}) for ${mbx?.email || mailboxId}.`,
+        });
+        setIsTestingConnection(false);
+        return;
+      }
+      const apiData = await apiRes.json();
+      const res = db.testMailboxConnection(mailboxId);
+      setTestConnectionResult({
+        mailboxId,
+        mailboxEmail: mbx?.email || mailboxId,
+        status: apiData.status || res.status,
+        latencyMs: apiData.latencyMs ?? res.latencyMs,
+        verifiedAt: new Date().toISOString(),
+        message: apiData.message || res.message,
+      });
+      refreshSyncState();
+      setActionNotice({
+        type: 'success',
+        message: `Connection test completed for ${mbx?.email || mailboxId} (${apiData.latencyMs ?? res.latencyMs}ms). Status: ${apiData.status || res.status}.`,
+      });
+    } catch (err: any) {
+      setActionNotice({
+        type: 'warning',
+        message: err?.message || `Failed to test mailbox ${mbx?.email || mailboxId}.`,
+      });
+    } finally {
+      setIsTestingConnection(false);
+      setTimeout(() => setActionNotice(null), 5000);
+    }
+  };
+
+  const handleTestAllConnections = async () => {
+    let passedCount = 0;
+    let failedCount = 0;
+    for (const mbx of mailboxes) {
+      try {
+        const apiRes = await authFetch(`/api/admin/email/mailboxes/${encodeURIComponent(mbx.id)}/test`, { method: 'POST' });
+        if (apiRes.ok) {
+          db.testMailboxConnection(mbx.id);
+          passedCount++;
+        } else {
+          failedCount++;
+        }
+      } catch {
+        failedCount++;
+      }
+    }
     refreshSyncState();
     setActionNotice({
-      type: 'success',
-      message: `Connection test passed for ${mbx?.email || mailboxId} in ${res.latencyMs}ms. Status: ${res.status}.`,
+      type: failedCount > 0 ? 'warning' : 'success',
+      message: `Tested all ${mailboxes.length} organizational mailboxes via backend gateway (${passedCount} succeeded, ${failedCount} failed/unauthorized).`,
     });
     setTimeout(() => setActionNotice(null), 5000);
   };
 
-  const handleTestAllConnections = () => {
-    mailboxes.forEach((mbx) => db.testMailboxConnection(mbx.id));
-    refreshSyncState();
-    setActionNotice({
-      type: 'success',
-      message: `Tested all ${mailboxes.length} organizational mailboxes. Staged provider handshake verified with 0 fatal errors.`,
-    });
-    setTimeout(() => setActionNotice(null), 5000);
-  };
-
-  const handleDisconnectMailbox = (mailboxId: string) => {
+  const handleDisconnectMailbox = async (mailboxId: string) => {
     const mbx = mailboxes.find((m) => m.id === mailboxId);
-    db.disconnectMailbox(mailboxId);
-    refreshSyncState();
-    setActionNotice({
-      type: 'warning',
-      message: `Mailbox integration disconnected for ${mbx?.email || mailboxId}. Active tokens revoked and state transitioned to DISCONNECTED.`,
-    });
-    setTimeout(() => setActionNotice(null), 5000);
+    try {
+      const apiRes = await authFetch(`/api/admin/email/mailboxes/${encodeURIComponent(mailboxId)}/disconnect`, {
+        method: 'POST',
+      });
+      if (!apiRes.ok) {
+        const errData = await apiRes.json().catch(() => ({}));
+        setActionNotice({
+          type: 'warning',
+          message: errData.error || `Failed to disconnect ${mbx?.email || mailboxId} (HTTP ${apiRes.status}).`,
+        });
+        return;
+      }
+      db.disconnectMailbox(mailboxId);
+      refreshSyncState();
+      setActionNotice({
+        type: 'warning',
+        message: `Mailbox integration disconnected for ${mbx?.email || mailboxId}. Active tokens revoked and state transitioned to DISCONNECTED.`,
+      });
+    } catch (err: any) {
+      setActionNotice({
+        type: 'warning',
+        message: err?.message || `Failed to disconnect mailbox ${mbx?.email || mailboxId}.`,
+      });
+    } finally {
+      setTimeout(() => setActionNotice(null), 5000);
+    }
   };
 
   // Phase 50 Google Workspace Diagnostics Handler (M50.02 - M50.06)
@@ -649,88 +703,175 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
     setIsEditMailboxModalOpen(true);
   };
 
-  const handleAddMailboxSubmit = (e: React.FormEvent) => {
+  const handleAddMailboxSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!mbxFormEmail.trim() || !mbxFormDisplayName.trim()) {
       setActionNotice({ type: 'warning', message: 'Email and display name are required.' });
       return;
     }
-    db.addConnectedMailbox({
-      email: mbxFormEmail.trim(),
-      displayName: mbxFormDisplayName.trim(),
-      department: mbxFormDepartment,
-      status: mbxFormInitialState,
-      mailboxType: 'shared',
-      provider: 'Google Workspace',
-    });
-    setIsAddMailboxModalOpen(false);
-    setMbxFormEmail('');
-    setMbxFormDisplayName('');
-    setMbxFormStaff('');
-    setMbxFormSignature('');
-    setMbxFormRouting('');
-    refreshSyncState();
-    setActionNotice({
-      type: 'success',
-      message: `Organizational mailbox [${mbxFormEmail.trim()}] registered. State: ${mbxFormInitialState}.`,
-    });
-    setTimeout(() => setActionNotice(null), 5000);
+    try {
+      const apiRes = await authFetch('/api/admin/email/mailboxes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: mbxFormEmail.trim(),
+          displayName: mbxFormDisplayName.trim(),
+          department: mbxFormDepartment,
+          status: mbxFormInitialState,
+          mailboxType: 'shared',
+          provider: 'Google Workspace',
+        }),
+      });
+      if (!apiRes.ok) {
+        const errData = await apiRes.json().catch(() => ({}));
+        setActionNotice({
+          type: 'warning',
+          message: errData.error || `Backend rejected mailbox registration (HTTP ${apiRes.status}).`,
+        });
+        return;
+      }
+      db.addConnectedMailbox({
+        email: mbxFormEmail.trim(),
+        displayName: mbxFormDisplayName.trim(),
+        department: mbxFormDepartment,
+        status: mbxFormInitialState,
+        mailboxType: 'shared',
+        provider: 'Google Workspace',
+      });
+      setIsAddMailboxModalOpen(false);
+      const savedEmail = mbxFormEmail.trim();
+      setMbxFormEmail('');
+      setMbxFormDisplayName('');
+      setMbxFormStaff('');
+      setMbxFormSignature('');
+      setMbxFormRouting('');
+      refreshSyncState();
+      setActionNotice({
+        type: 'success',
+        message: `Organizational mailbox [${savedEmail}] registered. State: ${mbxFormInitialState}.`,
+      });
+    } catch (err: any) {
+      setActionNotice({
+        type: 'warning',
+        message: err?.message || 'Failed to register mailbox.',
+      });
+    } finally {
+      setTimeout(() => setActionNotice(null), 5000);
+    }
   };
 
-  const handleEditMailboxSubmit = (e: React.FormEvent) => {
+  const handleEditMailboxSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingMailbox) return;
-    db.updateConnectedMailbox(editingMailbox.id, {
-      displayName: mbxFormDisplayName.trim(),
-      department: mbxFormDepartment,
-      status: mbxFormInitialState,
-    });
-    setIsEditMailboxModalOpen(false);
-    setEditingMailbox(null);
-    refreshSyncState();
-    setActionNotice({
-      type: 'success',
-      message: `Settings updated for organizational mailbox [${editingMailbox.email}].`,
-    });
-    setTimeout(() => setActionNotice(null), 5000);
+    try {
+      const apiRes = await authFetch(`/api/admin/email/connectors/${encodeURIComponent(editingMailbox.id)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          displayName: mbxFormDisplayName.trim(),
+          department: mbxFormDepartment,
+        }),
+      });
+      if (!apiRes.ok && apiRes.status !== 404) {
+        const errData = await apiRes.json().catch(() => ({}));
+        setActionNotice({
+          type: 'warning',
+          message: errData.error || `Failed to update mailbox settings (HTTP ${apiRes.status}).`,
+        });
+        return;
+      }
+      db.updateConnectedMailbox(editingMailbox.id, {
+        displayName: mbxFormDisplayName.trim(),
+        department: mbxFormDepartment,
+        status: mbxFormInitialState,
+      });
+      const targetEmail = editingMailbox.email;
+      setIsEditMailboxModalOpen(false);
+      setEditingMailbox(null);
+      refreshSyncState();
+      setActionNotice({
+        type: 'success',
+        message: `Settings updated for organizational mailbox [${targetEmail}].`,
+      });
+    } catch (err: any) {
+      setActionNotice({
+        type: 'warning',
+        message: err?.message || 'Failed to update mailbox.',
+      });
+    } finally {
+      setTimeout(() => setActionNotice(null), 5000);
+    }
   };
 
   // Phase 48 CRM Linking Handlers (M48.05 / M48.11)
-  const handleCrmLinkSubmit = (e: React.FormEvent) => {
+  const handleCrmLinkSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!crmTargetThreadId) return;
     if (!crmEntityName.trim() || !crmEntityId.trim()) {
       setActionNotice({ type: 'warning', message: 'Entity ID and Name are required.' });
       return;
     }
-    const res = db.linkThreadToCrm(crmTargetThreadId, {
-      entityType: crmEntityType,
-      entityId: crmEntityId.trim(),
-      entityName: crmEntityName.trim(),
-    });
-    if (!res.success) {
-      setActionNotice({ type: 'warning', message: res.error || 'Failed to link CRM.' });
-      return;
+    try {
+      const apiRes = await authFetch(`/api/admin/email/threads/${encodeURIComponent(crmTargetThreadId)}/crm-link`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          entityType: crmEntityType,
+          entityId: crmEntityId.trim(),
+          entityName: crmEntityName.trim(),
+        }),
+      });
+      if (!apiRes.ok) {
+        const errData = await apiRes.json().catch(() => ({}));
+        setActionNotice({ type: 'warning', message: errData.error || `CRM link failed (HTTP ${apiRes.status}).` });
+        return;
+      }
+      const res = db.linkThreadToCrm(crmTargetThreadId, {
+        entityType: crmEntityType,
+        entityId: crmEntityId.trim(),
+        entityName: crmEntityName.trim(),
+      });
+      if (!res.success) {
+        setActionNotice({ type: 'warning', message: res.error || 'Failed to link CRM.' });
+        return;
+      }
+      const linkedName = crmEntityName.trim();
+      setIsCrmLinkModalOpen(false);
+      setCrmTargetThreadId(null);
+      setCrmEntityId('');
+      setCrmEntityName('');
+      setActionNotice({
+        type: 'success',
+        message: `Thread successfully linked to CRM [${crmEntityType.toUpperCase()}: ${linkedName}].`,
+      });
+    } catch (err: any) {
+      setActionNotice({ type: 'warning', message: err?.message || 'CRM link request failed.' });
+    } finally {
+      setTimeout(() => setActionNotice(null), 5000);
     }
-    setIsCrmLinkModalOpen(false);
-    setCrmTargetThreadId(null);
-    setCrmEntityId('');
-    setCrmEntityName('');
-    setActionNotice({
-      type: 'success',
-      message: `Thread successfully linked to CRM [${crmEntityType.toUpperCase()}: ${crmEntityName.trim()}].`,
-    });
-    setTimeout(() => setActionNotice(null), 5000);
   };
 
-  const handleUnlinkCrm = (threadId: string) => {
-    db.unlinkThreadFromCrm(threadId);
-    setIsCrmLinkModalOpen(false);
-    setActionNotice({
-      type: 'info',
-      message: `Thread unlinked from CRM.`,
-    });
-    setTimeout(() => setActionNotice(null), 4000);
+  const handleUnlinkCrm = async (threadId: string) => {
+    try {
+      const apiRes = await authFetch(`/api/admin/email/threads/${encodeURIComponent(threadId)}/crm-link`, {
+        method: 'DELETE',
+      });
+      if (!apiRes.ok) {
+        const errData = await apiRes.json().catch(() => ({}));
+        setActionNotice({ type: 'warning', message: errData.error || `CRM unlink failed (HTTP ${apiRes.status}).` });
+        return;
+      }
+      db.unlinkThreadFromCrm(threadId);
+      setIsCrmLinkModalOpen(false);
+      setActionNotice({
+        type: 'info',
+        message: `Thread unlinked from CRM.`,
+      });
+    } catch (err: any) {
+      setActionNotice({ type: 'warning', message: err?.message || 'CRM unlink request failed.' });
+    } finally {
+      setTimeout(() => setActionNotice(null), 4000);
+    }
   };
 
   const handleResolveConflict = (conflictId: string, resolution: 'KEEP_PROVIDER' | 'KEEP_DASHBOARD') => {
@@ -821,59 +962,139 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
   };
 
   // Handle Approve Draft
-  const handleApproveDraft = (threadId: string) => {
-    db.approveEmailDraft(threadId);
-    setActionNotice({
-      type: 'success',
-      message: `Draft authorized by ${currentUser.name}. Ready for authorized dispatch.`,
-    });
-    setTimeout(() => setActionNotice(null), 5000);
+  const handleApproveDraft = async (threadId: string) => {
+    try {
+      const apiRes = await authFetch(`/api/admin/email/threads/${encodeURIComponent(threadId)}/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'approve' }),
+      });
+      if (!apiRes.ok) {
+        const errData = await apiRes.json().catch(() => ({}));
+        setActionNotice({ type: 'warning', message: errData.error || `Approval rejected (HTTP ${apiRes.status}).` });
+        return;
+      }
+      db.approveEmailDraft(threadId);
+      setActionNotice({
+        type: 'success',
+        message: `Draft authorized by ${currentUser.name}. Ready for authorized dispatch.`,
+      });
+    } catch (err: any) {
+      setActionNotice({ type: 'warning', message: err?.message || 'Approval request failed.' });
+    } finally {
+      setTimeout(() => setActionNotice(null), 5000);
+    }
   };
 
   // Handle Reject Draft
-  const handleRejectDraft = (threadId: string) => {
-    db.rejectEmailDraft(threadId, 'Draft does not meet institutional standards.');
-    setActionNotice({
-      type: 'info',
-      message: `Draft rejected and routed back to review queue.`,
-    });
-    setTimeout(() => setActionNotice(null), 5000);
+  const handleRejectDraft = async (threadId: string) => {
+    try {
+      const apiRes = await authFetch(`/api/admin/email/threads/${encodeURIComponent(threadId)}/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'reject', reason: 'Draft does not meet institutional standards.' }),
+      });
+      if (!apiRes.ok) {
+        const errData = await apiRes.json().catch(() => ({}));
+        setActionNotice({ type: 'warning', message: errData.error || `Rejection failed (HTTP ${apiRes.status}).` });
+        return;
+      }
+      db.rejectEmailDraft(threadId, 'Draft does not meet institutional standards.');
+      setActionNotice({
+        type: 'info',
+        message: `Draft rejected and routed back to review queue.`,
+      });
+    } catch (err: any) {
+      setActionNotice({ type: 'warning', message: err?.message || 'Rejection request failed.' });
+    } finally {
+      setTimeout(() => setActionNotice(null), 5000);
+    }
   };
 
   // Handle Request Changes
-  const handleRequestChanges = (threadId: string) => {
-    db.requestChangesEmailDraft(threadId, 'Staff review requested revisions to tone and factual alignment.');
-    setActionNotice({
-      type: 'warning',
-      message: `Revisions requested. Draft marked as changes_requested for editing.`,
-    });
-    setTimeout(() => setActionNotice(null), 5000);
+  const handleRequestChanges = async (threadId: string) => {
+    try {
+      const apiRes = await authFetch(`/api/admin/email/threads/${encodeURIComponent(threadId)}/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'request_changes',
+          reason: 'Staff review requested revisions to tone and factual alignment.',
+        }),
+      });
+      if (!apiRes.ok) {
+        const errData = await apiRes.json().catch(() => ({}));
+        setActionNotice({ type: 'warning', message: errData.error || `Request changes failed (HTTP ${apiRes.status}).` });
+        return;
+      }
+      db.requestChangesEmailDraft(threadId, 'Staff review requested revisions to tone and factual alignment.');
+      setActionNotice({
+        type: 'warning',
+        message: `Revisions requested. Draft marked as changes_requested for editing.`,
+      });
+    } catch (err: any) {
+      setActionNotice({ type: 'warning', message: err?.message || 'Request changes call failed.' });
+    } finally {
+      setTimeout(() => setActionNotice(null), 5000);
+    }
   };
 
   // Handle Return to Draft
-  const handleReturnToDraft = (threadId: string) => {
-    db.returnToDraftEmailDraft(threadId, 'Returned to draft workspace by reviewer.');
-    setActionNotice({
-      type: 'info',
-      message: `Draft returned to initial drafting workspace.`,
-    });
-    setTimeout(() => setActionNotice(null), 5000);
+  const handleReturnToDraft = async (threadId: string) => {
+    try {
+      const apiRes = await authFetch(`/api/admin/email/threads/${encodeURIComponent(threadId)}/review`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'return_to_draft', reason: 'Returned to draft workspace by reviewer.' }),
+      });
+      if (!apiRes.ok) {
+        const errData = await apiRes.json().catch(() => ({}));
+        setActionNotice({ type: 'warning', message: errData.error || `Return to draft failed (HTTP ${apiRes.status}).` });
+        return;
+      }
+      db.returnToDraftEmailDraft(threadId, 'Returned to draft workspace by reviewer.');
+      setActionNotice({
+        type: 'info',
+        message: `Draft returned to initial drafting workspace.`,
+      });
+    } catch (err: any) {
+      setActionNotice({ type: 'warning', message: err?.message || 'Return to draft failed.' });
+    } finally {
+      setTimeout(() => setActionNotice(null), 5000);
+    }
   };
 
   // Handle Send Approved Email
-  const handleSendApprovedEmail = (threadId: string) => {
+  const handleSendApprovedEmail = async (threadId: string) => {
     try {
+      const apiRes = await authFetch('/api/admin/email/dispatch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          threadId,
+          idempotencyKey: `ui-dispatch-${threadId}-${Date.now()}`,
+        }),
+      });
+      const data = await apiRes.json().catch(() => ({}));
+      if (!apiRes.ok || !data.success) {
+        setActionNotice({
+          type: 'warning',
+          message: data.error || `Outbound dispatch rejected (HTTP ${apiRes.status}).`,
+        });
+        return;
+      }
       db.sendApprovedEmail(threadId);
       setActionNotice({
         type: 'success',
-        message: `Approved email successfully dispatched through authenticated gateway. Recipient delivery confirmed.`,
+        message: data.truthfulNotice || `Approved email dispatched (${data.deliveryState || 'STAGED'}).`,
       });
-      setTimeout(() => setActionNotice(null), 6000);
     } catch (err: any) {
       setActionNotice({
         type: 'warning',
         message: err?.message || 'Failed to dispatch email.',
       });
+    } finally {
+      setTimeout(() => setActionNotice(null), 6000);
     }
   };
 
@@ -1068,36 +1289,66 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
   };
 
   // Handle Compose Send
-  const handleSendComposedEmail = (e: React.FormEvent) => {
+  const handleSendComposedEmail = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!composeRecipient || !composeSubject || !composeBody) {
       setActionNotice({ type: 'warning', message: 'Please fill in recipient, subject, and message body.' });
       return;
     }
 
-    const { category, isSafeguardingAlert } = EmailEnterpriseService.classifyMessage(composeSubject, composeBody, composeRecipient);
-    const { priority, deadline } = EmailEnterpriseService.calculatePriority(category, composeSubject, composeBody);
-
+    const { category } = EmailEnterpriseService.classifyMessage(composeSubject, composeBody, composeRecipient);
+    const { priority } = EmailEnterpriseService.calculatePriority(category, composeSubject, composeBody);
     const mbx = mailboxes.find((m) => m.email === composeMailbox) || mailboxes[0];
-    const res = db.composeDirectOutboundEmail({
-      mailboxId: mbx.id,
-      recipientEmail: composeRecipient,
-      subject: composeSubject,
-      bodyText: composeBody,
-      category,
-      priority,
-    });
 
-    setIsComposeOpen(false);
-    setComposeRecipient('');
-    setComposeSubject('');
-    setComposeBody('');
-    setSelectedThreadId(res.threadId);
-    setActionNotice({
-      type: 'success',
-      message: `Outbound email recorded in staging communications ledger for ${composeRecipient} via ${composeMailbox}. Staged dispatch ready for Google Workspace authorized synchronization.`,
-    });
-    setTimeout(() => setActionNotice(null), 6000);
+    try {
+      const apiRes = await authFetch('/api/admin/email/compose', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          mailboxId: mbx.id,
+          recipientEmail: composeRecipient,
+          subject: composeSubject,
+          bodyText: composeBody,
+          category,
+          priority,
+          idempotencyKey: `ui-compose-${Date.now()}`,
+        }),
+      });
+      if (!apiRes.ok) {
+        const errData = await apiRes.json().catch(() => ({}));
+        setActionNotice({
+          type: 'warning',
+          message: errData.error || `Failed to queue outbound message (HTTP ${apiRes.status}).`,
+        });
+        return;
+      }
+      const res = db.composeDirectOutboundEmail({
+        mailboxId: mbx.id,
+        recipientEmail: composeRecipient,
+        subject: composeSubject,
+        bodyText: composeBody,
+        category,
+        priority,
+      });
+
+      const targetRecipient = composeRecipient;
+      setIsComposeOpen(false);
+      setComposeRecipient('');
+      setComposeSubject('');
+      setComposeBody('');
+      setSelectedThreadId(res.threadId);
+      setActionNotice({
+        type: 'success',
+        message: `Outbound email recorded in backend communications ledger for ${targetRecipient} via ${composeMailbox}.`,
+      });
+    } catch (err: any) {
+      setActionNotice({
+        type: 'warning',
+        message: err?.message || 'Network error dispatching composed email.',
+      });
+    } finally {
+      setTimeout(() => setActionNotice(null), 6000);
+    }
   };
 
   return (

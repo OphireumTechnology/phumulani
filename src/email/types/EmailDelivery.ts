@@ -59,6 +59,8 @@ export interface ApprovedOutboundMessage {
   subject: string;
   bodyText: string;
   bodyHtml?: string;
+  inReplyTo?: string;
+  references?: string[];
   attachments?: Array<{ filename: string; sizeBytes: number; mimeType: string; contentBase64?: string }>;
   idempotencyKey: string;
   approvalRecordId: string;

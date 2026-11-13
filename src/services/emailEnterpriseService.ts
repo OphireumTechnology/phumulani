@@ -5,7 +5,9 @@
  * Grounded in Master Development Playbook (feature/phumulani-email-enterprise)
  */
 
+import crypto from 'crypto';
 import { db } from './db';
+import { FundingCommandService } from './fundingCommandService';
 import {
   EmailClassificationCategory,
   EMAIL_CATEGORY_METADATA,
@@ -1876,8 +1878,8 @@ Draft a professional, compassionate response following Phumulani's organizationa
       };
     }
 
-    const providerSubmissionId = `sub-gw-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`;
-    const rfcMessageId = `<${Date.now()}.${Math.floor(100000 + Math.random() * 900000)}@${thread.mailboxEmail.split('@')[1]}>`;
+    const providerSubmissionId = `sub-gw-${Date.now()}-${crypto.randomInt(1000, 9999)}`;
+    const rfcMessageId = `<${Date.now()}.${crypto.randomInt(100000, 999999)}@${thread.mailboxEmail.split('@')[1]}>`;
 
     const authRecord: OutboundEmailAuthorization = {
       id: `auth-${Date.now()}`,
@@ -1896,6 +1898,39 @@ Draft a professional, compassionate response following Phumulani's organizationa
       dispatchedAt: new Date().toISOString(),
       reconciledInSentFolder: true,
     };
+
+    // Outbound CRM engagement logging (strictly blocked for 01_safeguarding VAWA isolation)
+    if (thread.classification !== '01_safeguarding' && thread.draft.recipientEmail) {
+      const recipientNorm = thread.draft.recipientEmail.trim().toLowerCase();
+      const matchedDbDonor = db.getFundraisingDonors().find((d) => d.email.toLowerCase() === recipientNorm);
+      if (matchedDbDonor) {
+        db.addDonorEngagementActivity({
+          donorId: matchedDbDonor.id,
+          donorName: matchedDbDonor.name,
+          activityType: 'OUTBOUND_EMAIL',
+          title: `Outbound Email Dispatched: ${thread.draft.suggestedSubject}`,
+          summary: `Human-approved communication sent from ${thread.mailboxEmail} to ${recipientNorm} by ${approverUser.name}.`,
+          sourceEmailThreadId: thread.id,
+          sourceProviderMsgId: providerSubmissionId,
+          staffActor: approverUser.name,
+          requiresFollowUp: false,
+          metadata: {
+            classification: thread.classification,
+            mailbox: thread.mailboxEmail,
+            direction: 'outbound',
+          },
+        });
+      }
+      try {
+        const fundingCmd = FundingCommandService.getInstance();
+        const unifiedMatch = fundingCmd.getDonors().find((d) => d.email.toLowerCase() === recipientNorm);
+        if (unifiedMatch) {
+          unifiedMatch.engagementLogCount = (unifiedMatch.engagementLogCount || 0) + 1;
+          unifiedMatch.updatedAt = new Date().toISOString();
+          unifiedMatch.notes = `${unifiedMatch.notes ? unifiedMatch.notes + '\n' : ''}[${new Date().toISOString()}] Outbound email dispatched (${thread.draft.suggestedSubject})`;
+        }
+      } catch {}
+    }
 
     // Construct sent message
     const sentMessage: EnterpriseEmailMessage = {
@@ -2648,6 +2683,53 @@ Draft a professional, compassionate response following Phumulani's organizationa
     const aiRecommendation = isNewOpportunity
       ? `Propose qualifying opportunity "${opportunityTitle}" ($${targetAmount.toLocaleString()}) and assigning to ${matchedDonor?.relationshipOwner}.`
       : `Link communication to existing opportunity "${matchedOpp?.title}" and schedule follow-up.`;
+
+    // 7. Bidirectional sync with FundingCommandService Unified Donor CRM (deduped by email)
+    try {
+      const fundingCmd = FundingCommandService.getInstance();
+      const existingUnified = fundingCmd.getDonors().find((d) => d.email.toLowerCase() === senderEmail);
+      if (existingUnified) {
+        existingUnified.engagementLogCount = (existingUnified.engagementLogCount || 0) + 1;
+        existingUnified.updatedAt = new Date().toISOString();
+        existingUnified.notes = `${existingUnified.notes ? existingUnified.notes + '\n' : ''}[${new Date().toISOString()}] Inbound email (${thread.threadSubject})`;
+      } else {
+        const mappedCategory =
+          contactType === 'INSTITUTIONAL_FOUNDATION'
+            ? 'FOUNDATION'
+            : contactType === 'CORPORATE'
+            ? 'CORPORATE_CSR'
+            : donorCategory === 'INDIVIDUAL_MAJOR'
+            ? 'MAJOR_DONOR'
+            : 'INDIVIDUAL';
+        fundingCmd.createDonor(
+          {
+            name: donorName,
+            organizationName: contactType === 'INDIVIDUAL' ? undefined : donorName,
+            category: mappedCategory as any,
+            email: senderEmail,
+            city: 'Minneapolis',
+            state: 'Minnesota',
+            country: 'United States',
+            relationshipOwner: matchedDonor?.relationshipOwner || 'Comfort Dondo',
+            stage: 'CULTIVATION',
+            lifetimeGiving: 0,
+            largestGift: 0,
+            giftCount: 0,
+            givingTier: 'COMMUNITY',
+            programInterests: ['Community Programs', 'Survivor Workforce Pathways'],
+            consentStatus: 'OPTED_IN',
+            vawaSafeguardingCertified: true,
+            notes: `Auto-synced from non-safeguarding Email Command Center thread "${thread.threadSubject}" (${thread.id}).`,
+            tags: ['email-crm-sync', thread.classification],
+          },
+          {
+            email: 'crm-sync@phumulani.org',
+            name: matchedDonor?.relationshipOwner || 'Comfort Dondo',
+            role: 'DEVELOPMENT_DIRECTOR',
+          }
+        );
+      }
+    } catch {}
 
     db.appendAuditLog(
       'EMAIL_TO_CRM_INGESTED',

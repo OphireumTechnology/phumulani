@@ -44,6 +44,7 @@ export type ConnectorHealthStatus =
   | 'DISCONNECTED'
   | 'REVOKED'
   | 'ERROR'
+  | 'AUTHENTICATION_FAILED'
   | 'UNTESTED'
   | 'BLOCKED_EXTERNAL';
 
@@ -150,6 +151,7 @@ export interface NormalizedEmailMessage {
   provider: EmailProviderType;
   sourceAccount: string;
   threadId: string;
+  rfcMessageId?: string;
   senderName: string;
   senderEmail: string;
   recipientEmails: string[];

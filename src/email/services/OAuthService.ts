@@ -309,8 +309,82 @@ export class OAuthService {
   }
 
   public revokeTokens(connectionKey: string): void {
-    this.encryptedTokenVault.delete(connectionKey.toLowerCase());
+    const key = connectionKey.toLowerCase();
+    this.encryptedTokenVault.delete(key);
+    this.encryptedTokenVault.delete(`mailcred:${key}`);
     this.saveEncryptedVault();
+  }
+
+  /**
+   * Stores non-OAuth (IMAP/SMTP password / app-password) credentials in the same
+   * AES-256-GCM encrypted vault, prefixed with "mailcred:" so secrets are never
+   * kept unencrypted on disk or returned in browser API responses.
+   */
+  public storeEncryptedMailCredentials(
+    connectionKey: string,
+    credentials: {
+      username?: string;
+      password?: string;
+      appPassword?: string;
+      token?: string;
+      imapHost?: string;
+      imapPort?: number;
+      imapSecurity?: string;
+      smtpHost?: string;
+      smtpPort?: number;
+      smtpSecurity?: string;
+      tlsCa?: string;
+      [key: string]: unknown;
+    }
+  ): void {
+    const normalizedKey = `mailcred:${connectionKey.toLowerCase()}`;
+    const serialized = JSON.stringify(credentials);
+    const payload: StoredOAuthTokens = {
+      accessToken: serialized,
+      tokenType: 'IMAP_SMTP_SECRET',
+      expiresAt: Date.now() + 86400000 * 365,
+      verifiedEmail: credentials.username,
+      provider: 'GOOGLE',
+      updatedAt: new Date().toISOString(),
+    };
+    const entry = this.encryptTokens(normalizedKey, payload);
+    this.encryptedTokenVault.set(normalizedKey, entry);
+    this.saveEncryptedVault();
+  }
+
+  public getDecryptedMailCredentials(connectionKey: string): Record<string, any> | null {
+    const normalizedKey = `mailcred:${connectionKey.toLowerCase()}`;
+    const entry = this.encryptedTokenVault.get(normalizedKey);
+    if (!entry) return null;
+    try {
+      const decrypted = this.decryptTokens(normalizedKey, entry);
+      return JSON.parse(decrypted.accessToken) as Record<string, any>;
+    } catch {
+      const prevSecret = this.resolvePreviousVaultSecret();
+      if (prevSecret) {
+        try {
+          const decrypted = this.decryptTokensWithSecret(normalizedKey, entry, prevSecret);
+          const rotated = this.encryptTokens(normalizedKey, decrypted);
+          this.encryptedTokenVault.set(normalizedKey, rotated);
+          this.saveEncryptedVault();
+          return JSON.parse(decrypted.accessToken) as Record<string, any>;
+        } catch {
+          return null;
+        }
+      }
+      return null;
+    }
+  }
+
+  public hasStoredMailCredentials(connectionKey: string): boolean {
+    return this.encryptedTokenVault.has(`mailcred:${connectionKey.toLowerCase()}`);
+  }
+
+  public deleteMailCredentials(connectionKey: string): void {
+    const normalizedKey = `mailcred:${connectionKey.toLowerCase()}`;
+    if (this.encryptedTokenVault.delete(normalizedKey)) {
+      this.saveEncryptedVault();
+    }
   }
 
   /**

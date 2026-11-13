@@ -7,6 +7,7 @@
  * Proposal Generation, and Meeting Conversion Coordination.
  */
 
+import crypto from 'crypto';
 import {
   ProspectProfile,
   ProgramMatchResult,
@@ -1602,7 +1603,7 @@ grants@phumulani.org`;
     const fundingService = FundingCommandService.getInstance();
     const donor = fundingService.getDonor(params.donorId);
 
-    const auditId = `audit-crm-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+    const auditId = `audit-crm-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`;
     db.logAudit({
       actorId: params.actorSession.userEmail || params.actorSession.email || 'staff@phumulani.org',
       actorName: params.actorSession.name || 'Staff Member',

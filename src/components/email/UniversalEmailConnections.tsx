@@ -303,21 +303,27 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
         throw new Error(data?.error || 'Provider discovery request failed');
       }
 
-      const isAuthorized = selectedAuthMethod === 'OAUTH2' ? oauthVerified : true;
+      const hasNonOAuthCreds = Boolean(password.trim() || appPassword.trim());
+      const isAuthorized = selectedAuthMethod === 'OAUTH2' ? oauthVerified : hasNonOAuthCreds;
       const discoveredProvider = data.discovery?.provider || selectedProvider;
 
       setVerificationHealth({
         connectionId: 'conn-verify-preview',
         provider: discoveredProvider,
         mailboxEmail: wizardEmail,
-        healthy: isAuthorized,
-        status: isAuthorized ? 'HEALTHY' : 'UNTESTED',
+        healthy: selectedAuthMethod === 'OAUTH2' ? oauthVerified : false,
+        status: isAuthorized ? (selectedAuthMethod === 'OAUTH2' ? 'HEALTHY' : 'UNTESTED') : 'UNTESTED',
         roundTripLatencyMs,
         lastCheckedAt: new Date().toISOString(),
         dnsResolution: data.discovery?.supported ? 'RESOLVED_OK' : 'DNS_ERROR',
-        diagnosticsDetail: isAuthorized
-          ? `Provider discovered (${discoveredProvider}) and credential check completed (${roundTripLatencyMs}ms).`
-          : `Provider discovered (${discoveredProvider}), but OAuth 2.0 authorization has not yet been completed.`,
+        diagnosticsDetail:
+          selectedAuthMethod === 'OAUTH2'
+            ? isAuthorized
+              ? `Provider discovered (${discoveredProvider}) and OAuth 2.0 authorization verified (${roundTripLatencyMs}ms).`
+              : `Provider discovered (${discoveredProvider}), but OAuth 2.0 authorization has not yet been completed.`
+            : hasNonOAuthCreds
+            ? `Provider discovered (${discoveredProvider}). Save & authenticate to verify real IMAP/SMTP credentials against the mail server.`
+            : `Provider discovered (${discoveredProvider}), but IMAP/SMTP password or app password is required before authentication.`,
       });
     } catch (err: unknown) {
       setVerificationHealth({
