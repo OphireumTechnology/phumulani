@@ -88,11 +88,15 @@ test.describe('PHUMULANI-PUBLIC-100 — Public Website & Safeguarding Suite', ()
 
     const resJson = await response.json();
     expect(resJson.success).toBe(true);
+    expect(resJson.inquirySaved).toBe(true);
     expect(resJson.trackingId).toMatch(/^INQ-[A-Z0-9-]+$/);
     expect(resJson.routedTo).toContain('programs@phumulani.org');
+    expect(['EMAIL_QUEUED', 'EMAIL_SENT', 'EMAIL_DELIVERY_FAILED']).toContain(resJson.emailDeliveryStatus);
+    expect(resJson.emailSent).toBe(false);
 
-    // Verify UI confirmation
-    await expect(page.locator(`text=Inquiry Delivered: ${resJson.trackingId}`)).toBeVisible();
+    // Verify UI confirmation distinguishes inquiry saved vs email queued
+    await expect(page.locator(`text=Inquiry Saved: ${resJson.trackingId}`)).toBeVisible();
+    await expect(page.locator('#contact-section').locator('text=Email Queued')).toBeVisible();
   });
 
   test('05: Confidential safeguarding intake securely encrypts and stores request', async ({ page }) => {

@@ -60,7 +60,7 @@ export class ServerVerificationService {
 
       return {
         persistenceLevel: 'DURABLE_LOCAL_STORAGE',
-        storageFilePath: info.storageFilePath || 'data/phumulani_persistent_db.json',
+        storageFilePath: info.storageFilePath || '/tmp/phumulani-runtime-data/phumulani_persistent_db.json',
         recordIdentifier: 'rec-p38-durable-restart-test',
         testPayloadChecksum: info.checksum,
         initialProcessWritten: true,

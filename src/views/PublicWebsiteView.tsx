@@ -198,6 +198,8 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
   const [contactError, setContactError] = useState<string | null>(null);
   const [contactRoutedTo, setContactRoutedTo] = useState<string | null>(null);
   const [contactSubmittedCode, setContactSubmittedCode] = useState<string | null>(null);
+  const [contactDeliveryStatus, setContactDeliveryStatus] = useState<'EMAIL_QUEUED' | 'EMAIL_SENT' | 'EMAIL_DELIVERY_FAILED' | null>(null);
+  const [contactDeliveryNotice, setContactDeliveryNotice] = useState<string | null>(null);
 
   useEffect(() => {
     if (!selectedCampaignId && campaigns.length > 0) {
@@ -243,6 +245,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       }
       setContactSubmittedCode(data.trackingId);
       setContactRoutedTo(data.routedTo);
+      setContactDeliveryStatus(
+        data.emailDeliveryStatus ||
+          (data.emailSent ? 'EMAIL_SENT' : data.emailDeliveryFailed ? 'EMAIL_DELIVERY_FAILED' : 'EMAIL_QUEUED')
+      );
+      setContactDeliveryNotice(data.message || null);
       setContactMessage('');
       setContactSubject('');
     } catch (err: any) {
@@ -1973,16 +1980,41 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               </p>
 
               {contactSubmittedCode ? (
-                <div className="p-6 bg-teal-50 border border-teal-200 rounded-xl text-center space-y-3">
-                  <CheckCircle2 className="w-8 h-8 text-[#006D6F] mx-auto" />
-                  <div className="font-heading text-lg font-bold text-teal-950">Inquiry Delivered: {contactSubmittedCode}</div>
+                <div
+                  className={`p-6 rounded-xl text-center space-y-3 border ${
+                    contactDeliveryStatus === 'EMAIL_DELIVERY_FAILED'
+                      ? 'bg-amber-50 border-amber-300'
+                      : 'bg-teal-50 border-teal-200'
+                  }`}
+                >
+                  {contactDeliveryStatus === 'EMAIL_DELIVERY_FAILED' ? (
+                    <AlertTriangle className="w-8 h-8 text-amber-700 mx-auto" />
+                  ) : (
+                    <CheckCircle2 className="w-8 h-8 text-[#006D6F] mx-auto" />
+                  )}
+                  <div className="font-heading text-lg font-bold text-teal-950">
+                    Inquiry Saved: {contactSubmittedCode}
+                  </div>
+                  <div className="inline-block px-3 py-1 rounded-md text-[11px] font-heading font-bold uppercase tracking-wider border bg-white text-slate-800 border-slate-300">
+                    {contactDeliveryStatus === 'EMAIL_SENT'
+                      ? 'Email Sent'
+                      : contactDeliveryStatus === 'EMAIL_DELIVERY_FAILED'
+                      ? 'Email Delivery Failed'
+                      : 'Email Queued'}
+                  </div>
                   <p className="text-xs text-slate-600 max-w-md mx-auto font-sans leading-relaxed">
-                    Thank you for reaching out. Your inquiry has been routed to <strong>{contactRoutedTo || 'our team'}</strong>. A coordinator will reply within 1 business day.
+                    {contactDeliveryNotice || (
+                      <>
+                        Your inquiry was saved and queued for <strong>{contactRoutedTo || 'our team'}</strong>.
+                      </>
+                    )}
                   </p>
                   <button
                     onClick={() => {
                       setContactSubmittedCode(null);
                       setContactRoutedTo(null);
+                      setContactDeliveryStatus(null);
+                      setContactDeliveryNotice(null);
                     }}
                     className="text-xs font-bold font-heading text-[#006D6F] hover:underline cursor-pointer"
                   >

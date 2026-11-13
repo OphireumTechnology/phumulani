@@ -7,6 +7,7 @@
  */
 
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import {
   SyncOptions,
@@ -39,7 +40,10 @@ export class UniversalSyncEngine {
   private persistenceFilePath: string;
 
   private constructor() {
-    this.persistenceFilePath = path.resolve(process.cwd(), '.sync_checkpoints_vault.json');
+    const runtimeDir = process.env.PHUMULANI_RUNTIME_DATA_DIR?.trim()
+      ? path.resolve(process.env.PHUMULANI_RUNTIME_DATA_DIR.trim())
+      : path.resolve(os.tmpdir(), 'phumulani-runtime-data');
+    this.persistenceFilePath = path.resolve(runtimeDir, '.sync_checkpoints_vault.json');
     this.loadDurableState();
   }
 
@@ -82,6 +86,10 @@ export class UniversalSyncEngine {
    */
   private saveDurableState(): void {
     try {
+      const dir = path.dirname(this.persistenceFilePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
+      }
       const data = {
         savedAt: new Date().toISOString(),
         checkpoints: Object.fromEntries(this.checkpoints.entries()),
@@ -89,7 +97,7 @@ export class UniversalSyncEngine {
         auditLogs: this.auditLogs.slice(0, 300),
       };
       const tmpPath = `${this.persistenceFilePath}.tmp.${Date.now()}`;
-      fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf8');
+      fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), { encoding: 'utf8', mode: 0o600 });
       fs.renameSync(tmpPath, this.persistenceFilePath);
     } catch (err) {
       console.warn('[UniversalSyncEngine] Failed to persist sync state to disk:', err);

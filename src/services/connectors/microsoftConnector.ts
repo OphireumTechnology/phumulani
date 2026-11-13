@@ -82,7 +82,7 @@ export class MicrosoftConnector implements EmailConnector {
 
   public async verifyConnection(): Promise<ConnectionHealth> {
     const connectionId = `conn-msft-${this.mailboxEmail.replace(/[^a-zA-Z0-9]/g, '_')}`;
-    const isHealthy = !EnvironmentService.isProductionOnly() || this.isConnected;
+    const isHealthy = this.isConnected;
 
     return {
       connectionId,

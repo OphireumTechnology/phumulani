@@ -1,6 +1,7 @@
 node_modules/
 build/
 dist/
+dist-server/
 coverage/
 .DS_Store
 *.log
@@ -14,6 +15,7 @@ data/*.sqlite3
 data/*.db
 .email_connections_registry.json
 .sync_checkpoints_vault.json
+.oauth_tokens_vault.enc.json
 
 # Generated test output
 playwright-report/

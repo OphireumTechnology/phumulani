@@ -7,6 +7,9 @@
  */
 
 import crypto from 'crypto';
+import fs from 'fs';
+import os from 'os';
+import path from 'path';
 import { EnvironmentService } from '../../services/environmentService';
 
 export interface OAuthSessionState {
@@ -59,8 +62,14 @@ export class OAuthService {
   private activeStates: Map<string, OAuthSessionState> = new Map();
   private encryptedTokenVault: Map<string, EncryptedVaultEntry> = new Map();
   private ephemeralVaultSecret: Buffer | null = null;
+  private vaultPersistencePath: string;
 
   private constructor() {
+    const runtimeDir = process.env.PHUMULANI_RUNTIME_DATA_DIR?.trim()
+      ? path.resolve(process.env.PHUMULANI_RUNTIME_DATA_DIR.trim())
+      : path.resolve(os.tmpdir(), 'phumulani-runtime-data');
+    this.vaultPersistencePath = path.resolve(runtimeDir, '.oauth_tokens_vault.enc.json');
+    this.loadEncryptedVault();
     setInterval(() => this.cleanupExpiredStates(), 60000).unref?.();
   }
 
@@ -92,22 +101,69 @@ export class OAuthService {
     );
   }
 
+  private isWeakKeyMaterial(value: string): boolean {
+    if (!value || value.length < 32) return true;
+    const lower = value.toLowerCase();
+    const knownWeakPrefixes = ['changeme', 'default', 'test-key', 'placeholder', 'example', 'phumulani-dev', 'secret-key'];
+    if (knownWeakPrefixes.some((p) => lower.startsWith(p))) return true;
+    if (new Set(value).size < 6) return true;
+    return false;
+  }
+
   private resolveVaultSecret(): Buffer | string {
     const configured = (process.env.OAUTH_TOKEN_ENCRYPTION_KEY || process.env.SAFEGUARDING_MASTER_KEY || '').trim();
-    if (configured.length >= 32) {
+    if (configured && !this.isWeakKeyMaterial(configured)) {
       return configured;
     }
     if (
       EnvironmentService.isProductionOnly() ||
       process.env.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT' ||
-      process.env.NODE_ENV === 'production'
+      process.env.NODE_ENV === 'production' ||
+      process.env.SAFEGUARDING_REQUIRE_CONFIGURED_KEY === 'true'
     ) {
-      throw new Error('OAUTH_TOKEN_ENCRYPTION_KEY (minimum 32 characters) is required for encrypted OAuth token storage in production.');
+      throw new Error('OAUTH_TOKEN_ENCRYPTION_KEY (minimum 32 high-entropy characters) is required for encrypted OAuth token storage in production.');
     }
     if (!this.ephemeralVaultSecret) {
       this.ephemeralVaultSecret = crypto.randomBytes(32);
     }
     return this.ephemeralVaultSecret;
+  }
+
+  private loadEncryptedVault(): void {
+    try {
+      if (fs.existsSync(this.vaultPersistencePath)) {
+        const raw = fs.readFileSync(this.vaultPersistencePath, 'utf8');
+        const parsed = JSON.parse(raw);
+        if (parsed?.entries && typeof parsed.entries === 'object') {
+          for (const [k, v] of Object.entries(parsed.entries)) {
+            if (v && typeof v === 'object' && 'ciphertext' in v && 'iv' in v && 'authTag' in v && 'salt' in v) {
+              this.encryptedTokenVault.set(k.toLowerCase(), v as EncryptedVaultEntry);
+            }
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('[OAuthService] Unable to load encrypted token vault:', err);
+    }
+  }
+
+  private saveEncryptedVault(): void {
+    try {
+      const dir = path.dirname(this.vaultPersistencePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
+      }
+      const payload = {
+        savedAt: new Date().toISOString(),
+        encryption: 'AES-256-GCM',
+        entries: Object.fromEntries(this.encryptedTokenVault.entries()),
+      };
+      const tmpPath = `${this.vaultPersistencePath}.tmp.${Date.now()}`;
+      fs.writeFileSync(tmpPath, JSON.stringify(payload, null, 2), { encoding: 'utf8', mode: 0o600 });
+      fs.renameSync(tmpPath, this.vaultPersistencePath);
+    } catch (err) {
+      console.warn('[OAuthService] Failed to persist encrypted token vault:', err);
+    }
   }
 
   private encryptTokens(connectionKey: string, payload: StoredOAuthTokens): EncryptedVaultEntry {
@@ -146,6 +202,7 @@ export class OAuthService {
     const normalizedKey = connectionKey.toLowerCase();
     const entry = this.encryptTokens(normalizedKey, tokens);
     this.encryptedTokenVault.set(normalizedKey, entry);
+    this.saveEncryptedVault();
   }
 
   public getDecryptedTokens(connectionKey: string): StoredOAuthTokens | null {
@@ -165,6 +222,7 @@ export class OAuthService {
 
   public revokeTokens(connectionKey: string): void {
     this.encryptedTokenVault.delete(connectionKey.toLowerCase());
+    this.saveEncryptedVault();
   }
 
   /**
@@ -361,6 +419,16 @@ export class OAuthService {
       };
     }
 
+    if (val.state.provider !== provider) {
+      return {
+        success: false,
+        provider,
+        statusCode: 400,
+        errorCode: 'OAUTH_PROVIDER_MISMATCH',
+        error: `OAuth state belongs to provider ${val.state.provider}, not ${provider}.`,
+      };
+    }
+
     const effectiveProvider = val.state.provider;
     const targetEmail = params.mailboxEmail || val.state.mailboxEmail;
 
@@ -403,21 +471,43 @@ export class OAuthService {
       }
 
       // Verify authorized identity against provider profile endpoint
-      let verifiedEmail = targetEmail;
-      try {
-        const profileUrl =
-          effectiveProvider === 'GOOGLE'
-            ? 'https://www.googleapis.com/oauth2/v2/userinfo'
-            : 'https://graph.microsoft.com/v1.0/me?$select=mail,userPrincipalName';
-        const profileRes = await fetch(profileUrl, {
-          headers: { Authorization: `Bearer ${tokenData.access_token}` },
-        });
-        if (profileRes.ok) {
-          const profile: any = await profileRes.json();
-          verifiedEmail = profile.email || profile.mail || profile.userPrincipalName || verifiedEmail;
-        }
-      } catch {
-        // Non-fatal if userinfo endpoint transiently unavailable, retain targetEmail
+      let verifiedEmail: string | undefined;
+      const profileUrl =
+        effectiveProvider === 'GOOGLE'
+          ? 'https://www.googleapis.com/oauth2/v2/userinfo'
+          : 'https://graph.microsoft.com/v1.0/me?$select=mail,userPrincipalName';
+      const profileRes = await fetch(profileUrl, {
+        headers: { Authorization: `Bearer ${tokenData.access_token}` },
+      });
+      if (!profileRes.ok) {
+        return {
+          success: false,
+          provider: effectiveProvider,
+          statusCode: 401,
+          errorCode: 'OAUTH_IDENTITY_VERIFICATION_FAILED',
+          error: `Provider identity verification endpoint returned HTTP ${profileRes.status}. Cannot mark mailbox connected without verified identity.`,
+        };
+      }
+      const profile: any = await profileRes.json();
+      verifiedEmail = profile.email || profile.mail || profile.userPrincipalName;
+      if (!verifiedEmail) {
+        return {
+          success: false,
+          provider: effectiveProvider,
+          statusCode: 401,
+          errorCode: 'OAUTH_IDENTITY_MISSING',
+          error: 'Provider profile did not return a verified mailbox email address.',
+        };
+      }
+
+      if (targetEmail && targetEmail.toLowerCase() !== verifiedEmail.toLowerCase()) {
+        return {
+          success: false,
+          provider: effectiveProvider,
+          statusCode: 403,
+          errorCode: 'OAUTH_MAILBOX_MISMATCH',
+          error: `Authorized provider account (${verifiedEmail}) does not match target mailbox (${targetEmail}).`,
+        };
       }
 
       const expiresIn = Number(tokenData.expires_in) || 3600;

@@ -118,8 +118,10 @@ export class PostgresPersistenceAdapter {
       return;
     }
     this.databaseUrl = typeof process !== 'undefined' ? process.env?.DATABASE_URL?.trim() : undefined;
-    const cwd = typeof process !== 'undefined' && typeof process.cwd === 'function' ? process.cwd() : '';
-    this.storageDir = cwd ? path.resolve(cwd, 'data') : '/data';
+    const configuredDir = typeof process !== 'undefined' ? process.env?.PHUMULANI_RUNTIME_DATA_DIR?.trim() : undefined;
+    const tmpBase =
+      typeof process !== 'undefined' ? process.env?.TMPDIR || process.env?.TEMP || '/tmp' : '/tmp';
+    this.storageDir = configuredDir ? path.resolve(configuredDir) : path.resolve(tmpBase, 'phumulani-runtime-data');
     this.storageFilePath = path.resolve(this.storageDir, 'phumulani_persistent_db.json');
   }
 
@@ -195,7 +197,7 @@ export class PostgresPersistenceAdapter {
     // Isolated Embedded Durable Storage Mode (staged development and local test baseline)
     try {
       if (!fs.existsSync(this.storageDir)) {
-        fs.mkdirSync(this.storageDir, { recursive: true });
+        fs.mkdirSync(this.storageDir, { recursive: true, mode: 0o700 });
       }
 
       if (fs.existsSync(this.storageFilePath)) {
@@ -658,7 +660,7 @@ export class PostgresPersistenceAdapter {
     }
     try {
       if (!fs.existsSync(this.storageDir)) {
-        fs.mkdirSync(this.storageDir, { recursive: true });
+        fs.mkdirSync(this.storageDir, { recursive: true, mode: 0o700 });
       }
 
       // Merge disk records to prevent multi-process write stomping
@@ -699,7 +701,7 @@ export class PostgresPersistenceAdapter {
 
       const serialized = JSON.stringify(snapshot, null, 2);
       const tempPath = `${this.storageFilePath}.${Date.now()}.${Math.random().toString(36).substring(2, 6)}.tmp`;
-      fs.writeFileSync(tempPath, serialized, 'utf-8');
+      fs.writeFileSync(tempPath, serialized, { encoding: 'utf-8', mode: 0o600 });
       fs.renameSync(tempPath, this.storageFilePath);
     } catch (err) {
       console.error('[PostgresAdapter] Failed to flush to durable storage:', err);

@@ -154,7 +154,7 @@ export class Phase38Service {
         route: 'Server & Persistence Layer',
         primaryUiComponent: 'DatabaseMigrationManager',
         canonicalService: 'postgresPersistenceAdapter',
-        dataSource: 'data/phumulani_persistent_db.json',
+        dataSource: 'PHUMULANI_RUNTIME_DATA_DIR/phumulani_persistent_db.json',
         authorizationRequirement: 'INTERNAL_SYSTEM',
         testIdentifier: 'TEST-P38-11',
         testType: 'INTEGRATION_AUTOMATED',
@@ -342,7 +342,7 @@ export class Phase38Service {
     const info = this.persistenceAdapter.getConnectionInfo();
     return {
       persistenceLevel: 'DURABLE_LOCAL_STORAGE',
-      storageFilePath: info.storageFilePath || 'data/phumulani_persistent_db.json',
+      storageFilePath: info.storageFilePath || '/tmp/phumulani-runtime-data/phumulani_persistent_db.json',
       recordIdentifier: 'rec-p38-durable-restart-test',
       testPayloadChecksum: info.checksum || 'fb3d4bf7bad2b0a957eb3b65aef2ca031d2c9164609b561b96e9f7aa8ba1e8a3',
       initialProcessWritten: true,

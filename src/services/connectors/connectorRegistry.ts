@@ -7,6 +7,7 @@
  */
 
 import fs from 'fs';
+import os from 'os';
 import path from 'path';
 import {
   EmailConnector,
@@ -41,7 +42,10 @@ export class ConnectorRegistry {
   private persistenceFilePath: string;
 
   private constructor() {
-    this.persistenceFilePath = path.resolve(process.cwd(), '.email_connections_registry.json');
+    const runtimeDir = process.env.PHUMULANI_RUNTIME_DATA_DIR?.trim()
+      ? path.resolve(process.env.PHUMULANI_RUNTIME_DATA_DIR.trim())
+      : path.resolve(os.tmpdir(), 'phumulani-runtime-data');
+    this.persistenceFilePath = path.resolve(runtimeDir, '.email_connections_registry.json');
     this.seedCanonicalConnections();
     this.loadDurableRegistry();
   }
@@ -258,13 +262,17 @@ export class ConnectorRegistry {
    */
   private saveDurableRegistry(): void {
     try {
+      const dir = path.dirname(this.persistenceFilePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
+      }
       const data = {
         savedAt: new Date().toISOString(),
         connections: Array.from(this.connections.values()),
         auditEvents: this.auditEvents.slice(0, 300),
       };
       const tmpPath = `${this.persistenceFilePath}.tmp.${Date.now()}`;
-      fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), 'utf8');
+      fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2), { encoding: 'utf8', mode: 0o600 });
       fs.renameSync(tmpPath, this.persistenceFilePath);
     } catch (err) {
       console.warn('[ConnectorRegistry] Failed to save durable registry:', err);
@@ -402,21 +410,34 @@ export class ConnectorRegistry {
       record.emailAddress.toLowerCase().includes('safeguarding') ||
       record.safeguardingClassification === 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP';
 
+    const effectiveAuthMethod =
+      record.authMethod || PROVIDER_DESCRIPTORS[record.provider]?.recommendedAuthMethod || 'PASSWORD';
+    const hasVaultedOAuthTokens =
+      oAuthService.hasStoredTokens(record.emailAddress) || oAuthService.hasStoredTokens(id);
+    const hasProvidedCredentials = Boolean(
+      credentials &&
+        (credentials.password ||
+          credentials.appPassword ||
+          credentials.token ||
+          credentials.accessToken ||
+          credentials.authCode)
+    );
+
     const now = new Date().toISOString();
     let initialStatus: ConnectorConnectionStatus = 'CONFIGURED_UNVERIFIED';
 
-    if (!credentials) {
+    if (effectiveAuthMethod === 'OAUTH2') {
+      initialStatus = hasVaultedOAuthTokens || hasProvidedCredentials ? 'AUTHORIZED' : 'AUTHORIZATION_REQUIRED';
+    } else if (!hasProvidedCredentials) {
       initialStatus = 'CONFIGURATION_REQUIRED';
-    } else if (record.authMethod === 'OAUTH2') {
-      initialStatus = 'AUTHORIZED';
     } else {
-      initialStatus = 'CONNECTED';
+      initialStatus = 'CONFIGURED_UNVERIFIED';
     }
 
     const initialEvidence: ProviderEvidenceRecord = {
       state: initialStatus,
       timestamp: now,
-      roundTripLatencyMs: 45,
+      roundTripLatencyMs: 0,
       tlsVersion: 'TLSv1.3',
       cipherSuite: 'TLS_AES_256_GCM_SHA384',
       dnsResolution: 'RESOLVED_OK',
@@ -430,17 +451,17 @@ export class ConnectorRegistry {
       displayName: record.displayName || `${record.provider} Mailbox (${record.emailAddress})`,
       accountOwner: record.accountOwner || 'Designated Administrator',
       department: record.department || 'General Administration',
-      authMethod: record.authMethod || PROVIDER_DESCRIPTORS[record.provider]?.recommendedAuthMethod || 'PASSWORD',
+      authMethod: effectiveAuthMethod,
       authStatus: initialStatus,
-      connectionHealth: initialStatus === 'CONNECTED' || initialStatus === 'AUTHORIZED' ? 'HEALTHY' : 'UNTESTED',
+      connectionHealth: 'UNTESTED',
       lastSyncAt: null,
       lastSuccessfulSyncAt: null,
       lastError: null,
       incomingMessageCount: 0,
       outgoingMessageCount: 0,
       syncFailureCount: 0,
-      credentialExpiresAt: new Date(Date.now() + 86400000 * 30).toISOString(),
-      credentialWarning: false,
+      credentialExpiresAt: hasVaultedOAuthTokens || hasProvidedCredentials ? new Date(Date.now() + 86400000 * 30).toISOString() : undefined,
+      credentialWarning: !(hasVaultedOAuthTokens || hasProvidedCredentials),
       sendingPermission: 'DISARMED_STAGING',
       syncStatus: 'SYNC_IDLE',
       folders: ['INBOX', 'Sent', 'Drafts', 'Trash'],
@@ -453,8 +474,16 @@ export class ConnectorRegistry {
       updatedAt: now,
     };
 
-    // Store in credential vault (masked)
-    if (credentials) {
+    // Link vaulted OAuth tokens to connection ID if authorized via OAuthService
+    if (oAuthService.hasStoredTokens(record.emailAddress) && !oAuthService.hasStoredTokens(id)) {
+      const vaultedTokens = oAuthService.getDecryptedTokens(record.emailAddress);
+      if (vaultedTokens) {
+        oAuthService.storeEncryptedTokens(id, vaultedTokens);
+      }
+    }
+
+    // Store non-OAuth credential reference in-memory only when actually supplied (never persisted plaintext)
+    if (hasProvidedCredentials && credentials) {
       this.credentialVault.set(id, {
         ...credentials,
         storedAt: now,
@@ -471,12 +500,20 @@ export class ConnectorRegistry {
       connector = new ImapSmtpConnector(record.emailAddress, record.provider);
     }
 
-    // Connect adapter if credentials provided
-    if (credentials) {
-      const connRes = await connector.connect(credentials);
+    // Connect adapter only when verified credentials or vaulted OAuth tokens are present
+    const connectCredentials =
+      effectiveAuthMethod === 'OAUTH2' && oAuthService.hasStoredTokens(id)
+        ? { ...(credentials || {}), accessToken: '[VAULTED_OAUTH_TOKEN]' }
+        : hasProvidedCredentials
+        ? credentials
+        : undefined;
+
+    if (connectCredentials) {
+      const connRes = await connector.connect(connectCredentials);
       fullRecord.authStatus = (connRes.status === 'OAUTH_AUTHORIZED' ? 'AUTHORIZED' : connRes.status) as ConnectorConnectionStatus;
       if (connRes.success) {
         fullRecord.connectionHealth = 'HEALTHY';
+        fullRecord.credentialWarning = false;
       }
     }
 
@@ -848,21 +885,29 @@ export class ConnectorRegistry {
       oAuthService.hasStoredTokens(connectionId) ||
       oAuthService.hasStoredTokens(existing.emailAddress);
 
-    if (
-      !hasCredentials &&
-      (existing.authStatus === 'AUTHORIZATION_REQUIRED' ||
-        existing.authStatus === 'CONFIGURATION_REQUIRED' ||
-        existing.authStatus === 'REVOKED' ||
-        existing.authStatus === 'DISCONNECTED')
-    ) {
-      existing.connectionHealth = existing.authStatus === 'REVOKED' ? 'REVOKED' : existing.authStatus === 'DISCONNECTED' ? 'DISCONNECTED' : 'UNTESTED';
+    if (!hasCredentials) {
+      existing.connectionHealth =
+        existing.authStatus === 'REVOKED'
+          ? 'REVOKED'
+          : existing.authStatus === 'DISCONNECTED'
+          ? 'DISCONNECTED'
+          : 'UNTESTED';
+      if (
+        existing.authStatus !== 'REVOKED' &&
+        existing.authStatus !== 'DISCONNECTED' &&
+        existing.authStatus !== 'TOKEN_EXPIRED'
+      ) {
+        existing.authStatus =
+          existing.authMethod === 'OAUTH2' ? 'AUTHORIZATION_REQUIRED' : 'CONFIGURATION_REQUIRED';
+      }
+      existing.credentialWarning = true;
       existing.updatedAt = new Date().toISOString();
       this.saveDurableRegistry();
       return {
         ...health,
         healthy: false,
         status: existing.connectionHealth,
-        diagnosticsDetail: `${existing.emailAddress} requires authorization before verified mailbox health can be established.`,
+        diagnosticsDetail: `${existing.emailAddress} requires verified credentials / OAuth authorization before health can be confirmed.`,
       };
     }
 

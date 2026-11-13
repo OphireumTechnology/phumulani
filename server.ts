@@ -6,7 +6,7 @@
 
 import express from 'express';
 import type { Request, Response, NextFunction } from 'express';
-import { createServer as createViteServer } from 'vite';
+import fs from 'fs';
 import path from 'path';
 import dotenv from 'dotenv';
 import crypto from 'crypto';
@@ -59,7 +59,12 @@ import { localKnowledgeRetrievalService } from './src/services/localKnowledgeRet
 dotenv.config();
 
 const app = express();
-const PORT = 3000;
+const rawPort = process.env.PORT ?? '3000';
+const PORT = Number(rawPort);
+if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65535) {
+  console.error(`[Phumulani Platform] FATAL: Invalid PORT "${rawPort}". Must be an integer between 1 and 65535.`);
+  process.exit(1);
+}
 const BASE_PATH = process.env.BASE_PATH || '/';
 const dbAdapter = PostgresPersistenceAdapter.getInstance();
 
@@ -573,9 +578,18 @@ function isStrictSafeguardingKeyRequired(): boolean {
   );
 }
 
+function isWeakSafeguardingKey(value: string): boolean {
+  if (!value || value.length < 32) return true;
+  const lower = value.toLowerCase();
+  const weakPrefixes = ['changeme', 'default', 'test-key', 'placeholder', 'example', 'phumulani-dev', 'secret-key'];
+  if (weakPrefixes.some((prefix) => lower.startsWith(prefix))) return true;
+  if (new Set(value).size < 6) return true;
+  return false;
+}
+
 function getSafeguardingEncryptionStatus(): { ready: boolean; keySource: 'CONFIGURED_ENV' | 'STAGED_EPHEMERAL' | 'UNCONFIGURED_BLOCKED' } {
   const configured = (process.env.SAFEGUARDING_MASTER_KEY || '').trim();
-  if (configured.length >= 32) {
+  if (!isWeakSafeguardingKey(configured)) {
     return { ready: true, keySource: 'CONFIGURED_ENV' };
   }
   if (isStrictSafeguardingKeyRequired()) {
@@ -586,12 +600,12 @@ function getSafeguardingEncryptionStatus(): { ready: boolean; keySource: 'CONFIG
 
 function resolveSafeguardingSecretMaterial(): Buffer | string {
   const configured = (process.env.SAFEGUARDING_MASTER_KEY || '').trim();
-  if (configured.length >= 32) {
+  if (!isWeakSafeguardingKey(configured)) {
     return configured;
   }
   if (isStrictSafeguardingKeyRequired()) {
     throw new SafeguardingEncryptionUnavailableError(
-      'SAFEGUARDING_MASTER_KEY (minimum 32 characters) is required for confidential intake encryption in production and pilot environments.'
+      'SAFEGUARDING_MASTER_KEY (minimum 32 high-entropy characters) is required for confidential intake encryption in production and pilot environments.'
     );
   }
   if (!ephemeralStagedSafeguardingSecret) {
@@ -845,6 +859,7 @@ app.post('/api/contact/submit', async (req: Request, res: Response) => {
     const routedMailbox = departmentMailboxMap[department] || 'info@phumulani.org';
 
     const trackingId = `INQ-${new Date().getFullYear()}-${Date.now().toString().slice(-6)}`;
+    const nowIso = new Date().toISOString();
     const inquiryRecord = {
       id: trackingId,
       name: name.trim(),
@@ -853,27 +868,117 @@ app.post('/api/contact/submit', async (req: Request, res: Response) => {
       routed_to_mailbox: routedMailbox,
       subject: subject.trim(),
       message: message.trim(),
-      status: 'RECEIVED',
-      created_at: new Date().toISOString(),
+      status: 'INQUIRY_SAVED',
+      created_at: nowIso,
     };
 
     await dbAdapter.insert('contact_inquiries', inquiryRecord);
 
-    logAudit({
-      agentId: 'A02',
-      action: 'contact:submit',
-      requesterRole: 'public_visitor',
-      status: 'allowed',
+    const liveSendingEnabled = googleWorkspaceAdapter.isLiveSendingEnabled();
+    const hasConnectedProviderToken =
+      oAuthService.isProviderConfigured('GOOGLE') && oAuthService.hasStoredTokens(routedMailbox);
+
+    let emailDeliveryStatus: 'EMAIL_QUEUED' | 'EMAIL_SENT' | 'EMAIL_DELIVERY_FAILED' = 'EMAIL_QUEUED';
+    let emailQueued = true;
+    let emailSent = false;
+    let emailDeliveryFailed = false;
+    let emailDeliveryReason =
+      'Inquiry queued in outbound delivery queue. Live email transport is not active in this environment.';
+
+    if (liveSendingEnabled) {
+      if (!hasConnectedProviderToken) {
+        emailDeliveryStatus = 'EMAIL_DELIVERY_FAILED';
+        emailQueued = false;
+        emailDeliveryFailed = true;
+        emailDeliveryReason = `Live outbound email sending is enabled, but mailbox ${routedMailbox} has no verified OAuth tokens.`;
+      } else {
+        const token = oAuthService.getDecryptedTokens(routedMailbox);
+        if (!token?.accessToken) {
+          emailDeliveryStatus = 'EMAIL_DELIVERY_FAILED';
+          emailQueued = false;
+          emailDeliveryFailed = true;
+          emailDeliveryReason = `Unable to decrypt OAuth transport credentials for ${routedMailbox}.`;
+        } else {
+          try {
+            const rawMime = [
+              `From: ${routedMailbox}`,
+              `To: ${routedMailbox}`,
+              `Reply-To: ${inquiryRecord.email}`,
+              `Subject: [Website Inquiry ${trackingId}] ${inquiryRecord.subject}`,
+              'Content-Type: text/plain; charset=utf-8',
+              '',
+              `From: ${inquiryRecord.name} <${inquiryRecord.email}>`,
+              `Department: ${department}`,
+              '',
+              inquiryRecord.message,
+            ].join('\r\n');
+            const encodedRaw = Buffer.from(rawMime, 'utf8').toString('base64url');
+            const gmailRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/messages/send', {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${token.accessToken}`,
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ raw: encodedRaw }),
+            });
+            if (!gmailRes.ok) {
+              const errBody = await gmailRes.text().catch(() => '');
+              emailDeliveryStatus = 'EMAIL_DELIVERY_FAILED';
+              emailQueued = false;
+              emailDeliveryFailed = true;
+              emailDeliveryReason = `Gmail API returned HTTP ${gmailRes.status}${errBody ? `: ${errBody.slice(0, 120)}` : ''}`;
+            } else {
+              emailDeliveryStatus = 'EMAIL_SENT';
+              emailQueued = false;
+              emailSent = true;
+              emailDeliveryReason = `Dispatched via authenticated Gmail transport to ${routedMailbox}.`;
+            }
+          } catch (sendErr: any) {
+            emailDeliveryStatus = 'EMAIL_DELIVERY_FAILED';
+            emailQueued = false;
+            emailDeliveryFailed = true;
+            emailDeliveryReason = sendErr?.message || 'Outbound transport error during email delivery.';
+          }
+        }
+      }
+    }
+
+    await dbAdapter.insert('email_delivery_queue', {
+      id: `queue-${trackingId}`,
+      inquiry_id: trackingId,
+      routed_to_mailbox: routedMailbox,
+      delivery_status: emailDeliveryStatus,
+      reason: emailDeliveryReason,
+      created_at: nowIso,
     });
 
-    console.log(`[Contact Delivery] Inquiry ${trackingId} routed to ${routedMailbox} from ${email}`);
+    logAudit({
+      agentId: 'A02',
+      action: `contact:submit:${emailDeliveryStatus.toLowerCase()}`,
+      requesterRole: 'public_visitor',
+      status: emailDeliveryFailed ? 'fallback_used' : 'allowed',
+      reason: emailDeliveryReason,
+    });
+
+    console.log(`[Contact Delivery] Inquiry ${trackingId} saved (routedTo=${routedMailbox}, delivery=${emailDeliveryStatus})`);
 
     res.json({
       success: true,
       trackingId,
       routedTo: routedMailbox,
       createdAt: inquiryRecord.created_at,
-      message: 'Your inquiry has been received and routed to our team.',
+      status: emailSent ? 'EMAIL_SENT' : 'INQUIRY_SAVED',
+      emailDeliveryStatus,
+      inquirySaved: true,
+      emailQueued,
+      emailSent,
+      emailDeliveryFailed,
+      emailDeliveryReason,
+      message: emailSent
+        ? `Your inquiry was saved (Ref: ${trackingId}) and emailed to ${routedMailbox}.`
+        : emailDeliveryFailed
+          ? `Your inquiry was saved (Ref: ${trackingId}), but email delivery failed: ${emailDeliveryReason}`
+          : `Your inquiry was saved (Ref: ${trackingId}) and queued for ${routedMailbox}. Automated outbound email delivery is not active in this environment.`,
     });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
@@ -4430,6 +4535,18 @@ function getEmailAdminActor(req: Request): { id: string; name: string; role: str
   return { id: sess.userId, name: sess.name || sess.userEmail, role: String(sess.role), isSafeguarding };
 }
 
+// Require authenticated staff session across all /api/admin/email routes
+// (exempting only external browser OAuth callback GET redirects which validate state CSRF server-side)
+app.use('/api/admin/email', (req: Request, res: Response, next: NextFunction) => {
+  if (
+    req.method === 'GET' &&
+    (req.path === '/oauth/google/callback' || req.path === '/oauth/microsoft/callback')
+  ) {
+    return next();
+  }
+  return requireSessionMiddleware(STAFF_ADMIN_ROLES)(req, res, next);
+});
+
 // 1. Google Workspace truthful integration status
 app.get('/api/admin/email/google-workspace/status', (_req: Request, res: Response) => {
   res.json(googleWorkspaceAdapter.getStatus());
@@ -4442,35 +4559,57 @@ app.post('/api/admin/email/google-workspace/verify-scopes', (req: Request, res: 
   res.json(validation);
 });
 
-// 2a. Google Workspace OAuth Initiation (M49.04)
-app.post('/api/admin/email/google-workspace/oauth/initiate', (req: Request, res: Response) => {
-  const actor = getEmailAdminActor(req);
-  if (actor.role === 'visitor') {
-    return res.status(403).json({ error: 'Staff role required to initiate OAuth onboarding.' });
-  }
-  const { mailboxEmail } = req.body;
+// 2a. Google Workspace OAuth Initiation (M49.04 — Fail-Closed, Server-Side PKCE)
+app.post('/api/admin/email/google-workspace/oauth/initiate', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
+  const { mailboxEmail } = req.body || {};
   if (!mailboxEmail) {
     return res.status(400).json({ error: 'mailboxEmail is required.' });
   }
+  if (!oAuthService.isProviderConfigured('GOOGLE')) {
+    return res.status(503).json({
+      success: false,
+      code: 'OAUTH_CREDENTIALS_MISSING',
+      provider: 'GOOGLE',
+      error: 'Google Workspace OAuth client credentials are not configured on the server.',
+    });
+  }
   try {
-    const { codeVerifier: _omitVerifier, ...publicOauthInit } = googleWorkspaceAdapter.initiateOAuth(mailboxEmail);
-    res.json(publicOauthInit);
+    const redirectUri = `${req.protocol}://${req.get('host')}/api/admin/email/oauth/google/callback`;
+    const { codeVerifier: _omitVerifier, ...publicOauthInit } = oAuthService.initiateGoogleOAuth(redirectUri, mailboxEmail);
+    res.json({ success: true, ...publicOauthInit });
   } catch (err: any) {
     res.status(400).json({ error: err.message });
   }
 });
 
-// 2b. Google Workspace OAuth Callback & Token Exchange (M49.04)
-app.post('/api/admin/email/google-workspace/oauth/callback', (req: Request, res: Response) => {
-  const { code, state, codeVerifier } = req.body;
-  if (!code || !state || !codeVerifier) {
-    return res.status(400).json({ error: 'code, state, and codeVerifier are required.' });
+// 2b. Google Workspace OAuth Callback & Token Exchange (M49.04 — Real Provider Exchange Only)
+app.post('/api/admin/email/google-workspace/oauth/callback', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
+  const { code, state, mailboxEmail } = req.body || {};
+  if (!code || !state) {
+    return res.status(400).json({ success: false, error: 'code and state are required. PKCE verifier stays server-side.' });
   }
-  const result = googleWorkspaceAdapter.handleOAuthCallback(code, state, codeVerifier);
-  if (!result.success) {
-    return res.status(400).json(result);
+  if (!oAuthService.isProviderConfigured('GOOGLE')) {
+    return res.status(503).json({
+      success: false,
+      code: 'OAUTH_CREDENTIALS_MISSING',
+      provider: 'GOOGLE',
+      error: 'Google Workspace OAuth client credentials are not configured on the server.',
+    });
   }
-  res.json(result);
+  const exchange = await oAuthService.exchangeAuthorizationCode({
+    provider: 'GOOGLE',
+    stateId: String(state),
+    code: String(code),
+    mailboxEmail: mailboxEmail ? String(mailboxEmail) : undefined,
+  });
+  if (!exchange.success) {
+    return res.status(exchange.statusCode || 400).json({
+      success: false,
+      code: exchange.errorCode,
+      error: exchange.error,
+    });
+  }
+  res.json(exchange);
 });
 
 // 2c. Google Workspace Connection Health Diagnostics (M49.03/M49.04)
@@ -4616,6 +4755,16 @@ app.get('/api/admin/email/threads/:id', (req: Request, res: Response) => {
 // 7. Add Internal Staff Note (strictly isolated from outbound payload)
 app.post('/api/admin/email/threads/:id/notes', (req: Request, res: Response) => {
   const actor = getEmailAdminActor(req);
+  const thread = db.getState().enterpriseEmailThreads.find((t) => t.id === req.params.id);
+  if (!thread) {
+    return res.status(404).json({ error: 'Thread not found' });
+  }
+  if (thread.classification === '01_safeguarding' && !actor.isSafeguarding) {
+    return res.status(403).json({
+      error: 'ACCESS DENIED: Confidential safeguarding records are restricted under VAWA policy.',
+      safeguardingQuarantined: true,
+    });
+  }
   const { noteText } = req.body;
   if (!noteText || !noteText.trim()) {
     return res.status(400).json({ error: 'Note text is required.' });
@@ -5003,7 +5152,7 @@ app.get('/api/admin/email/recovery/diagnostics', (_req: Request, res: Response) 
   });
 });
 
-// 28. Phase 52 Google Workspace Start Authorization (M52.02)
+// 28. Phase 52 Google Workspace Start Authorization (M52.02 — Server-Side PKCE)
 app.post('/api/admin/email/mailboxes/:email/auth/start', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   try {
     if (!oAuthService.isProviderConfigured('GOOGLE')) {
@@ -5014,14 +5163,15 @@ app.post('/api/admin/email/mailboxes/:email/auth/start', requireSessionMiddlewar
       });
     }
     const mailboxEmail = req.params.email;
-    const { codeVerifier: _omitVerifier, ...publicAuthStart } = googleWorkspaceAdapter.startAuthorization(mailboxEmail);
-    res.json({ success: true, ...publicAuthStart });
+    const redirectUri = `${req.protocol}://${req.get('host')}/api/admin/email/oauth/google/callback`;
+    const { codeVerifier: _omitVerifier, ...publicAuthStart } = oAuthService.initiateGoogleOAuth(redirectUri, mailboxEmail);
+    res.json({ success: true, mailboxEmail, ...publicAuthStart });
   } catch (err: any) {
     res.status(400).json({ success: false, error: err.message });
   }
 });
 
-// 29. Phase 52 Google Workspace Complete OAuth Callback (M52.02)
+// 29. Phase 52 Google Workspace Complete OAuth Callback (M52.02 — Real Provider Exchange)
 app.post('/api/admin/email/mailboxes/:email/auth/complete', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
   try {
     if (!oAuthService.isProviderConfigured('GOOGLE')) {
@@ -5031,10 +5181,22 @@ app.post('/api/admin/email/mailboxes/:email/auth/complete', requireSessionMiddle
         error: 'Google Workspace OAuth client credentials are not configured on the server.',
       });
     }
-    const { state, code, codeVerifier } = req.body;
-    const result = googleWorkspaceAdapter.completeOAuthCallback({ state, code, codeVerifier });
+    const { state, code } = req.body || {};
+    if (!state || !code) {
+      return res.status(400).json({ success: false, error: 'state and code are required.' });
+    }
+    const result = await oAuthService.exchangeAuthorizationCode({
+      provider: 'GOOGLE',
+      stateId: String(state),
+      code: String(code),
+      mailboxEmail: req.params.email,
+    });
     if (!result.success) {
-      return res.status(400).json(result);
+      return res.status(result.statusCode || 400).json({
+        success: false,
+        code: result.errorCode,
+        error: result.error,
+      });
     }
     res.json(result);
   } catch (err: any) {
@@ -5043,11 +5205,19 @@ app.post('/api/admin/email/mailboxes/:email/auth/complete', requireSessionMiddle
 });
 
 // 30. Phase 52 Google Workspace Reauthorize Mailbox (M52.02)
-app.post('/api/admin/email/mailboxes/:email/reauthorize', (req: Request, res: Response) => {
+app.post('/api/admin/email/mailboxes/:email/reauthorize', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   try {
+    if (!oAuthService.isProviderConfigured('GOOGLE')) {
+      return res.status(503).json({
+        success: false,
+        code: 'OAUTH_CREDENTIALS_MISSING',
+        error: 'Google Workspace OAuth client credentials are not configured on the server.',
+      });
+    }
     const mailboxEmail = req.params.email;
-    const result = googleWorkspaceAdapter.reauthorize(mailboxEmail);
-    res.json(result);
+    const redirectUri = `${req.protocol}://${req.get('host')}/api/admin/email/oauth/google/callback`;
+    const { codeVerifier: _omitVerifier, ...publicAuth } = oAuthService.initiateGoogleOAuth(redirectUri, mailboxEmail);
+    res.json({ success: true, mailboxEmail, ...publicAuth });
   } catch (err: any) {
     res.status(400).json({ success: false, error: err.message });
   }
@@ -5448,12 +5618,19 @@ app.get('/api/admin/email/connectors', (_req: Request, res: Response) => {
   }
 });
 
-// 52. Register New Email Connection
-app.post('/api/admin/email/connectors', async (req: Request, res: Response) => {
+// 52. Register New Email Connection (privileged admins; OAuth2 tokens must come from verified OAuth exchange)
+app.post('/api/admin/email/connectors', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
   try {
     const { emailAddress, provider, displayName, accountOwner, department, authMethod, credentials, safeguardingClassification } = req.body || {};
     if (!emailAddress || !provider) {
       return res.status(400).json({ success: false, error: 'emailAddress and provider are required.' });
+    }
+
+    const effectiveAuthMethod = authMethod || (provider === 'GOOGLE' || provider === 'MICROSOFT' ? 'OAUTH2' : 'PASSWORD');
+    let safeCredentials = credentials;
+    if (effectiveAuthMethod === 'OAUTH2' && credentials && typeof credentials === 'object') {
+      const { authCode: _dropAuthCode, accessToken: _dropAccessToken, token: _dropToken, ...restCreds } = credentials as Record<string, unknown>;
+      safeCredentials = Object.keys(restCreds).length > 0 ? restCreds : undefined;
     }
 
     const created = await connectorRegistry.registerConnection(
@@ -5463,10 +5640,10 @@ app.post('/api/admin/email/connectors', async (req: Request, res: Response) => {
         displayName,
         accountOwner,
         department,
-        authMethod,
+        authMethod: effectiveAuthMethod,
         safeguardingClassification,
       },
-      credentials
+      safeCredentials
     );
 
     res.json({ success: true, connection: created });
@@ -5489,9 +5666,10 @@ app.get('/api/admin/email/connectors/:id', (req: Request, res: Response) => {
 });
 
 // 54. Update Connection Configuration
-app.patch('/api/admin/email/connectors/:id', (req: Request, res: Response) => {
+app.patch('/api/admin/email/connectors/:id', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   try {
-    const updated = connectorRegistry.updateConnection(req.params.id, req.body);
+    const { authStatus: _dropAuthStatus, connectionHealth: _dropHealth, ...safeUpdates } = req.body || {};
+    const updated = connectorRegistry.updateConnection(req.params.id, safeUpdates);
     if (!updated) {
       return res.status(404).json({ success: false, error: 'Connection not found.' });
     }
@@ -5502,7 +5680,7 @@ app.patch('/api/admin/email/connectors/:id', (req: Request, res: Response) => {
 });
 
 // 55. Delete Connection
-app.delete('/api/admin/email/connectors/:id', (req: Request, res: Response) => {
+app.delete('/api/admin/email/connectors/:id', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   try {
     const success = connectorRegistry.deleteConnection(req.params.id);
     if (!success) {
@@ -5535,7 +5713,7 @@ app.post('/api/admin/email/connectors/:id/sync', async (req: Request, res: Respo
 });
 
 // 58. Disconnect Connection
-app.post('/api/admin/email/connectors/:id/disconnect', async (req: Request, res: Response) => {
+app.post('/api/admin/email/connectors/:id/disconnect', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
   try {
     const disconnected = await connectorRegistry.disconnectConnection(req.params.id);
     res.json({ success: disconnected });
@@ -5545,7 +5723,7 @@ app.post('/api/admin/email/connectors/:id/disconnect', async (req: Request, res:
 });
 
 // 59. Reconnect Connection
-app.post('/api/admin/email/connectors/:id/reconnect', async (req: Request, res: Response) => {
+app.post('/api/admin/email/connectors/:id/reconnect', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
   try {
     const reconnected = await connectorRegistry.reconnectConnection(req.params.id);
     res.json({ success: reconnected });
@@ -5568,13 +5746,25 @@ app.get('/api/admin/email/connectors/:id/folders', async (req: Request, res: Res
   }
 });
 
-// 61. List Messages for Connection
+// 61. List Messages for Connection (VAWA Safeguarding Air-Gap Enforced)
 app.get('/api/admin/email/connectors/:id/messages', async (req: Request, res: Response) => {
   try {
+    const actor = getEmailAdminActor(req);
     const connection = connectorRegistry.getConnection(req.params.id);
     const connector = connectorRegistry.getConnectorInstance(req.params.id);
     if (!connection || !connector) {
       return res.status(404).json({ success: false, error: 'Connection or connector not found.' });
+    }
+    if (
+      (connection.safeguardingClassification === 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP' ||
+        connection.emailAddress.toLowerCase().includes('safeguarding')) &&
+      !actor.isSafeguarding
+    ) {
+      return res.status(403).json({
+        success: false,
+        error: 'ACCESS DENIED: Confidential safeguarding mailbox messages are strictly restricted under VAWA policy.',
+        safeguardingQuarantined: true,
+      });
     }
     const messages = await connector.listMessages({
       connectionId: connection.id,
@@ -5611,7 +5801,7 @@ app.get('/api/admin/email/connectors/:id/audit', (req: Request, res: Response) =
 });
 
 // 64. Universal Outbound Dispatch with Quad-Action & Anti-AI Self-Approval Guard
-app.post('/api/admin/email/connectors/:id/dispatch', async (req: Request, res: Response) => {
+app.post('/api/admin/email/connectors/:id/dispatch', requireSessionMiddleware(EXEC_APPROVER_ROLES), async (req: Request, res: Response) => {
   try {
     const actor = getEmailAdminActor(req);
     const { id, recipientEmails, subject, bodyText, bodyHtml, idempotencyKey, approvalVersion } = req.body || {};
@@ -5656,7 +5846,7 @@ app.post('/api/admin/email/connectors/:id/dispatch', async (req: Request, res: R
 });
 
 // 65. Phase 61 Token Refresh
-app.post('/api/admin/email/connectors/:id/refresh-token', async (req: Request, res: Response) => {
+app.post('/api/admin/email/connectors/:id/refresh-token', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
   try {
     const success = await connectorRegistry.refreshToken(req.params.id);
     res.json({ success });
@@ -5666,7 +5856,7 @@ app.post('/api/admin/email/connectors/:id/refresh-token', async (req: Request, r
 });
 
 // 66. Phase 61 Token Revocation & Vault Purge
-app.post('/api/admin/email/connectors/:id/revoke', async (req: Request, res: Response) => {
+app.post('/api/admin/email/connectors/:id/revoke', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
   try {
     const success = await connectorRegistry.revokeConnection(req.params.id);
     res.json({ success });
@@ -5720,15 +5910,17 @@ app.get('/api/admin/email/connections', (_req: Request, res: Response) => {
   }
 });
 
-app.post('/api/admin/email/connections', async (req: Request, res: Response) => {
+app.post('/api/admin/email/connections', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
   try {
-    const regResult = await mailboxConnectionService.registerMailbox(req.body);
-    if (!regResult.success) {
-      return res.status(400).json({ success: false, error: regResult.error });
+    const body = { ...(req.body || {}) };
+    if (body.credentials && typeof body.credentials === 'object') {
+      const { authCode: _dropAuthCode, accessToken: _dropAccessToken, token: _dropToken, ...restCreds } = body.credentials;
+      body.credentials = restCreds;
     }
-    res.status(201).json({ success: true, mailbox: regResult.mailbox });
+    const mailbox = await mailboxConnectionService.registerMailbox(body);
+    res.status(201).json({ success: true, mailbox });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, error: err.message });
   }
 });
 
@@ -5770,7 +5962,7 @@ app.post('/api/admin/email/connections/:id/sync', async (req: Request, res: Resp
   }
 });
 
-app.post('/api/admin/email/connections/:id/pause', (req: Request, res: Response) => {
+app.post('/api/admin/email/connections/:id/pause', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   try {
     const conn = connectorRegistry.getConnection(req.params.id);
     if (!conn) {
@@ -5785,7 +5977,7 @@ app.post('/api/admin/email/connections/:id/pause', (req: Request, res: Response)
   }
 });
 
-app.post('/api/admin/email/connections/:id/resume', (req: Request, res: Response) => {
+app.post('/api/admin/email/connections/:id/resume', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   try {
     const conn = connectorRegistry.getConnection(req.params.id);
     if (!conn) {
@@ -5800,9 +5992,10 @@ app.post('/api/admin/email/connections/:id/resume', (req: Request, res: Response
   }
 });
 
-app.patch('/api/admin/email/connections/:id', (req: Request, res: Response) => {
+app.patch('/api/admin/email/connections/:id', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
   try {
-    const updated = connectorRegistry.updateConnection(req.params.id, req.body);
+    const { authStatus: _dropAuthStatus, connectionHealth: _dropHealth, ...safeUpdates } = req.body || {};
+    const updated = connectorRegistry.updateConnection(req.params.id, safeUpdates);
     if (!updated) {
       return res.status(404).json({ success: false, error: 'Connection not found.' });
     }
@@ -6141,15 +6334,26 @@ app.get('/api/admin/email/mailboxes/:id/folders', async (req: Request, res: Resp
 
 app.get('/api/admin/email/mailboxes/:id/messages', async (req: Request, res: Response) => {
   try {
+    const actor = getEmailAdminActor(req);
     const conn = connectorRegistry.getConnection(req.params.id);
     if (!conn) {
       return res.status(404).json({ success: false, error: 'Mailbox connection not found.' });
+    }
+    if (
+      (conn.safeguardingClassification === 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP' ||
+        conn.emailAddress.toLowerCase().includes('safeguarding')) &&
+      !actor.isSafeguarding
+    ) {
+      return res.status(403).json({
+        success: false,
+        error: 'ACCESS DENIED: Confidential safeguarding mailbox messages are restricted under VAWA policy.',
+        safeguardingQuarantined: true,
+      });
     }
     const folder = (req.query.folder as string) || 'INBOX';
     const limit = parseInt(req.query.limit as string, 10) || 20;
     const page = parseInt(req.query.page as string, 10) || 1;
 
-    // Use EmailEnterpriseService messages or connector messages
     const emailService = EmailEnterpriseService.getInstance();
     const result = emailService.getConversations({
       folder: folder as any,
@@ -6157,8 +6361,11 @@ app.get('/api/admin/email/mailboxes/:id/messages', async (req: Request, res: Res
       page,
       search: req.query.search as string,
     });
+    const safeConversations = actor.isSafeguarding
+      ? result.conversations
+      : result.conversations.filter((c: any) => c.classification !== '01_safeguarding');
 
-    res.json({ success: true, messages: result.conversations, total: result.total, page, limit });
+    res.json({ success: true, messages: safeConversations, total: safeConversations.length, page, limit });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -6166,10 +6373,18 @@ app.get('/api/admin/email/mailboxes/:id/messages', async (req: Request, res: Res
 
 app.get('/api/admin/email/messages/:id', (req: Request, res: Response) => {
   try {
+    const actor = getEmailAdminActor(req);
     const emailService = EmailEnterpriseService.getInstance();
     const conv = emailService.getConversationById(req.params.id);
     if (!conv) {
       return res.status(404).json({ success: false, error: 'Message not found.' });
+    }
+    if (conv.classification === '01_safeguarding' && !actor.isSafeguarding) {
+      return res.status(403).json({
+        success: false,
+        error: 'ACCESS DENIED: Confidential safeguarding communication restricted under VAWA policy.',
+        safeguardingQuarantined: true,
+      });
     }
     res.json({ success: true, message: conv });
   } catch (err: any) {
@@ -6195,18 +6410,19 @@ app.post('/api/admin/email/drafts/:id/submit', (req: Request, res: Response) => 
   }
 });
 
-app.post('/api/admin/email/approvals/:id/review', (req: Request, res: Response) => {
+app.post('/api/admin/email/approvals/:id/review', requireSessionMiddleware(EXEC_APPROVER_ROLES), (req: Request, res: Response) => {
   try {
-    const { decision, reviewerId, reviewerName, reviewerRole, reviewNotes } = req.body || {};
-    if (!decision || !reviewerId) {
-      return res.status(400).json({ success: false, error: 'decision and reviewerId are required.' });
+    const actor = getEmailAdminActor(req);
+    const { decision, reviewNotes } = req.body || {};
+    if (!decision) {
+      return res.status(400).json({ success: false, error: 'decision is required.' });
     }
     const updated = emailApprovalService.recordDecision({
       approvalId: req.params.id,
       decision,
-      reviewerId,
-      reviewerName: reviewerName || 'Authorized Staff',
-      reviewerRole: reviewerRole || 'executive_director',
+      reviewerId: actor.id,
+      reviewerName: actor.name,
+      reviewerRole: actor.role,
       reviewNotes,
     });
     res.json({ success: true, approval: updated });
@@ -6215,8 +6431,9 @@ app.post('/api/admin/email/approvals/:id/review', (req: Request, res: Response) 
   }
 });
 
-app.post('/api/admin/email/dispatch/:id/send', async (req: Request, res: Response) => {
+app.post('/api/admin/email/dispatch/:id/send', requireSessionMiddleware(EXEC_APPROVER_ROLES), async (req: Request, res: Response) => {
   try {
+    const actor = getEmailAdminActor(req);
     const {
       connectionId,
       senderAccount,
@@ -6226,8 +6443,6 @@ app.post('/api/admin/email/dispatch/:id/send', async (req: Request, res: Respons
       bodyHtml,
       idempotencyKey,
       approvalRecordId,
-      approvedByUserId,
-      approvedByName,
       approvedAt,
     } = req.body || {};
 
@@ -6241,8 +6456,8 @@ app.post('/api/admin/email/dispatch/:id/send', async (req: Request, res: Respons
       bodyHtml,
       idempotencyKey: idempotencyKey || `idem-${Date.now()}`,
       approvalRecordId: approvalRecordId || `appr-${req.params.id}`,
-      approvedByUserId: approvedByUserId || 'usr-exec-01',
-      approvedByName: approvedByName || 'Comfort Dondo',
+      approvedByUserId: actor.id,
+      approvedByName: actor.name,
       approvedAt: approvedAt || new Date().toISOString(),
       approvalVersion: 1,
       deliveryState: 'QUEUED',
@@ -6907,8 +7122,13 @@ async function startServer() {
   const publicDir = path.resolve(process.cwd(), 'public');
   app.use(express.static(publicDir));
 
-  if (process.env.NODE_ENV !== 'production') {
+  const isProductionRuntime =
+    process.env.NODE_ENV === 'production' ||
+    Boolean(process.argv[1] && process.argv[1].endsWith('server.mjs'));
+
+  if (!isProductionRuntime) {
     const isHmrDisabled = process.env.DISABLE_HMR !== 'false' && process.env.DISABLE_HMR !== '0';
+    const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
       server: {
         middlewareMode: true,
@@ -6922,15 +7142,25 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     const distPath = path.resolve(process.cwd(), 'dist');
+    const indexHtmlPath = path.resolve(distPath, 'index.html');
+    if (!fs.existsSync(indexHtmlPath)) {
+      throw new Error(
+        `[Phumulani Platform] FATAL: Frontend build artifact not found at ${indexHtmlPath}. Run "npm run build" before starting the production server.`
+      );
+    }
     app.use(express.static(distPath));
     app.get('*', (_req: Request, res: Response) => {
-      res.sendFile(path.resolve(distPath, 'index.html'));
+      res.sendFile(indexHtmlPath);
     });
   }
 
-  app.listen(PORT, '0.0.0.0', () => {
+  const httpServer = app.listen(PORT, '0.0.0.0', () => {
     console.log(`[Phumulani Platform] Server running at http://0.0.0.0:${PORT}`);
-    console.log(`[Phumulani Platform] Base path: ${BASE_PATH}`);
+    console.log(`[Phumulani Platform] Mode: ${isProductionRuntime ? 'production-static' : 'development-vite'} | Base path: ${BASE_PATH}`);
+  });
+  httpServer.on('error', (err) => {
+    console.error('[Phumulani Platform] HTTP server listen error:', err);
+    process.exit(1);
   });
 }
 
