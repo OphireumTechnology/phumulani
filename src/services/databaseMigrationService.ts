@@ -523,11 +523,119 @@ export class DatabaseMigrationService {
           `);
         },
       },
+      {
+        version: '20261113_012',
+        name: 'unified_jsonb_columns_and_unique_constraints',
+        description: 'Non-destructively ensures JSONB storage columns, complete email/operational tables, and PostgreSQL uniqueness constraints without altering existing rows.',
+        up: async (adapter) => {
+          const allRequiredTables = [
+            'users',
+            'connected_mailboxes',
+            'fundraising_donors',
+            'funding_opportunities',
+            'restricted_intakes',
+            'background_jobs',
+            'audit_logs',
+            'schema_migrations',
+            'staff_members',
+            'community_programs',
+            'restricted_funds',
+            'meal_indicators',
+            'operational_workflows',
+            'operational_approvals',
+            'payment_sessions',
+            'donations_verified',
+            'processed_webhook_events',
+            'contact_inquiries',
+            'email_delivery_queue',
+            'email_sync_cursors',
+            'email_idempotency_keys',
+            'program_waitlists',
+            'enrollment_applications',
+            'notifications',
+            'calendar_bookings',
+            'members',
+            'programs',
+            'volunteer_profiles',
+            'volunteer_shifts',
+            'volunteer_shift_assignments',
+            'volunteer_hours_v2',
+            'email_provider_connections',
+            'email_mailboxes',
+            'email_mailbox_permissions',
+            'email_oauth_credentials',
+            'email_sync_checkpoints',
+            'email_folders',
+            'email_messages',
+            'email_threads',
+            'email_attachments',
+            'email_provider_credentials',
+            'email_participants',
+            'email_sync_logs',
+            'email_concurrency_locks',
+            'email_drafts',
+            'email_outbound_approvals',
+            'email_outbound_dispatch',
+            'email_crm_links',
+            'email_safeguarding_metadata',
+            'email_audit_ledger',
+            'email_connection_health',
+            'email_quarantined_files',
+            'email_operational_killswitches',
+          ];
+
+          const connInfo = adapter.getConnectionInfo();
+          if (connInfo.engine !== 'POSTGRESQL') {
+            // In embedded durable mode, ensure every table exists without overwriting any existing records
+            for (const tbl of allRequiredTables) {
+              const existing = await adapter.select(tbl);
+              if (existing.length === 0) {
+                await adapter.saveTable(tbl, []);
+              }
+            }
+            return;
+          }
+
+          for (const tbl of allRequiredTables) {
+            await adapter.query(`
+              CREATE TABLE IF NOT EXISTS "${tbl}" (
+                id TEXT PRIMARY KEY,
+                data JSONB NOT NULL DEFAULT '{}'::jsonb,
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+              );
+              ALTER TABLE "${tbl}" ADD COLUMN IF NOT EXISTS data JSONB NOT NULL DEFAULT '{}'::jsonb;
+              ALTER TABLE "${tbl}" ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW();
+            `);
+          }
+
+          await adapter.query(`
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_users_jsonb_email_uq
+              ON "users" ((LOWER(data->>'email'))) WHERE data->>'email' IS NOT NULL;
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_staff_members_jsonb_email_uq
+              ON "staff_members" ((LOWER(data->>'email'))) WHERE data->>'email' IS NOT NULL;
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_payment_sessions_idem_uq
+              ON "payment_sessions" ((data->>'idempotency_key')) WHERE data->>'idempotency_key' IS NOT NULL;
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_donations_verified_pi_uq
+              ON "donations_verified" ((data->>'payment_intent_id')) WHERE data->>'payment_intent_id' IS NOT NULL;
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_donations_verified_receipt_uq
+              ON "donations_verified" ((data->>'receipt_number')) WHERE data->>'receipt_number' IS NOT NULL;
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_email_idem_key_uq
+              ON "email_idempotency_keys" ((data->>'idempotencyKey')) WHERE data->>'idempotencyKey' IS NOT NULL;
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_background_jobs_active_idem_uq
+              ON "background_jobs" ((data->>'idempotencyKey'))
+              WHERE data->>'idempotencyKey' IS NOT NULL AND data->>'status' IN ('PENDING', 'IN_PROGRESS', 'RETRYING');
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_restricted_intakes_code_uq
+              ON "restricted_intakes" ((data->>'anonymous_code')) WHERE data->>'anonymous_code' IS NOT NULL;
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_email_mailboxes_addr_uq
+              ON "email_mailboxes" ((LOWER(data->>'email_address'))) WHERE data->>'email_address' IS NOT NULL;
+          `);
+        },
+      },
     ];
   }
 
   /**
-   * Run pending migrations sequentially inside a transaction
+   * Run pending migrations sequentially inside an ACID transaction (with PostgreSQL advisory lock)
    */
   public async runMigrations(actorName = 'System Migration Runner'): Promise<{
     appliedCount: number;
@@ -537,7 +645,7 @@ export class DatabaseMigrationService {
   }> {
     await this.adapter.initialize();
 
-    // Ensure schema_migrations table exists
+    const connInfo = this.adapter.getConnectionInfo();
     const existingMigrations = await this.adapter.select<SchemaMigrationRecord>(
       'schema_migrations'
     );
@@ -556,25 +664,35 @@ export class DatabaseMigrationService {
         .digest('hex');
 
       try {
+        let appliedRecord!: SchemaMigrationRecord;
         await this.adapter.withTransaction(async () => {
+          if (connInfo.engine === 'POSTGRESQL') {
+            // Serialize concurrent migration runners across instances without blocking unrelated queries
+            await this.adapter.query('SELECT pg_advisory_xact_lock(7020261113)');
+            const freshRows = await this.adapter.select<SchemaMigrationRecord>('schema_migrations');
+            if (freshRows.some((m) => m.version === migration.version && m.status === 'SUCCESS')) {
+              return;
+            }
+          }
           await migration.up(this.adapter);
+          const executionTimeMs = Math.round(performance.now() - t0);
+          appliedRecord = {
+            id: `mig-${migration.version}`,
+            version: migration.version,
+            name: migration.name,
+            appliedAt: new Date().toISOString(),
+            checksum,
+            executionTimeMs: Math.max(1, executionTimeMs),
+            status: 'SUCCESS',
+            appliedBy: actorName,
+          };
+          await this.adapter.insert('schema_migrations', appliedRecord);
         });
 
-        const executionTimeMs = Math.round(performance.now() - t0);
-        const record: SchemaMigrationRecord = {
-          id: `mig-${migration.version}`,
-          version: migration.version,
-          name: migration.name,
-          appliedAt: new Date().toISOString(),
-          checksum,
-          executionTimeMs: Math.max(1, executionTimeMs),
-          status: 'SUCCESS',
-          appliedBy: actorName,
-        };
-
-        await this.adapter.insert('schema_migrations', record);
-        records.push(record);
-        console.log(`[MigrationService] Applied migration ${migration.version}: ${migration.name} (${executionTimeMs}ms)`);
+        if (appliedRecord) {
+          records.push(appliedRecord);
+          console.log(`[MigrationService] Applied migration ${migration.version}: ${migration.name} (${appliedRecord.executionTimeMs}ms)`);
+        }
       } catch (err: any) {
         console.error(`[MigrationService] Migration ${migration.version} failed:`, err);
         const failedRecord: SchemaMigrationRecord = {
@@ -587,7 +705,9 @@ export class DatabaseMigrationService {
           status: 'FAILED',
           appliedBy: actorName,
         };
-        await this.adapter.insert('schema_migrations', failedRecord);
+        await this.adapter.insertDurableWithRetry('schema_migrations', failedRecord, {
+          context: `migrationFailed:${migration.version}`,
+        }).catch(() => {});
         throw new Error(`Migration ${migration.version} (${migration.name}) failed: ${err?.message || err}`);
       }
     }
@@ -729,6 +849,9 @@ export class DatabaseMigrationService {
       const pgTables = await this.adapter.query<{ table_name: string }>(
         `SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'`
       );
+      const pgDataCols = await this.adapter.query<{ table_name: string }>(
+        `SELECT table_name FROM information_schema.columns WHERE table_schema = 'public' AND column_name = 'data'`
+      );
       const pgIndexes = await this.adapter.query<{ tablename: string }>(
         `SELECT DISTINCT tablename FROM pg_indexes WHERE schemaname = 'public'`
       );
@@ -737,8 +860,9 @@ export class DatabaseMigrationService {
       );
 
       const liveSet = new Set(pgTables.map((r) => r.table_name));
-      const existingTables = requiredTables.filter((t) => liveSet.has(t));
-      const missingTables = requiredTables.filter((t) => !liveSet.has(t));
+      const dataColSet = new Set(pgDataCols.map((r) => r.table_name));
+      const existingTables = requiredTables.filter((t) => liveSet.has(t) && dataColSet.has(t));
+      const missingTables = requiredTables.filter((t) => !existingTables.includes(t));
       return {
         valid: missingTables.length === 0,
         verifiedTables: requiredTables,
@@ -766,7 +890,7 @@ export class DatabaseMigrationService {
     if (appliedVersions.has('20261026_004')) ddlTablesFromMigrations.add('restricted_intakes');
     if (appliedVersions.has('20261026_005')) ddlTablesFromMigrations.add('background_jobs');
     if (appliedVersions.has('20261026_006')) ddlTablesFromMigrations.add('audit_logs');
-    if (appliedVersions.has('20261103_011')) {
+    if (appliedVersions.has('20261103_011') || appliedVersions.has('20261113_012')) {
       [
         'email_provider_connections',
         'email_mailboxes',

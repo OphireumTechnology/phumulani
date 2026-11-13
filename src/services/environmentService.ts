@@ -7,6 +7,22 @@
 
 export type PhumulaniOperationalMode = 'PRODUCTION_ONLY' | 'STAGED_DEVELOPMENT';
 
+export interface DatabaseEnvironmentPolicy {
+  nodeEnv: string;
+  rawOperationalMode: string;
+  effectiveMode: PhumulaniOperationalMode;
+  requireLiveDatabase: boolean;
+  allowEmbeddedFallback: boolean;
+  requireStrictTls: boolean;
+  policyCode:
+    | 'PRODUCTION_ONLY'
+    | 'PRODUCTION_AUTHORIZED'
+    | 'NODE_ENV_PRODUCTION_DEFAULT'
+    | 'STAGED_DEVELOPMENT_AUTHORIZED'
+    | 'LOCAL_DEVELOPMENT';
+  reason: string;
+}
+
 export interface PhumulaniEnvironmentConfig {
   nodeEnv: string;
   phumulaniEnvironment: string;
@@ -29,22 +45,95 @@ export interface PhumulaniEnvironmentConfig {
 
 export class EnvironmentService {
   private static operationalMode: PhumulaniOperationalMode = 'STAGED_DEVELOPMENT';
+  private static liveDatabaseConnectedProbe: (() => boolean) | null = null;
+
+  public static registerLiveDatabaseProbe(probe: () => boolean): void {
+    this.liveDatabaseConnectedProbe = probe;
+  }
+
+  /**
+   * Authoritative, documented database policy shared across EnvironmentService,
+   * PostgresPersistenceAdapter, DatabaseMigrationService, and server readiness probes.
+   *
+   * Rules:
+   * 1. PHUMULANI_OPERATIONAL_MODE=PRODUCTION_ONLY or PRODUCTION_AUTHORIZED -> live PostgreSQL mandatory; JSON fallback prohibited.
+   * 2. NODE_ENV=production without explicit PHUMULANI_OPERATIONAL_MODE=STAGED_DEVELOPMENT -> live PostgreSQL mandatory; JSON fallback prohibited.
+   * 3. PHUMULANI_OPERATIONAL_MODE=STAGED_DEVELOPMENT (or non-production development/testing) -> isolated embedded JSON permitted ONLY when DATABASE_URL is omitted.
+   */
+  public static getDatabasePolicy(): DatabaseEnvironmentPolicy {
+    const nodeEnv =
+      typeof process !== 'undefined' && process.env?.NODE_ENV ? process.env.NODE_ENV.trim() : 'development';
+    const rawOperationalMode =
+      typeof process !== 'undefined' && process.env?.PHUMULANI_OPERATIONAL_MODE
+        ? process.env.PHUMULANI_OPERATIONAL_MODE.trim()
+        : '';
+
+    if (rawOperationalMode === 'PRODUCTION_ONLY') {
+      return {
+        nodeEnv,
+        rawOperationalMode,
+        effectiveMode: 'PRODUCTION_ONLY',
+        requireLiveDatabase: true,
+        allowEmbeddedFallback: false,
+        requireStrictTls: true,
+        policyCode: 'PRODUCTION_ONLY',
+        reason: 'PHUMULANI_OPERATIONAL_MODE=PRODUCTION_ONLY enforces mandatory live PostgreSQL and forbids embedded JSON fallback.',
+      };
+    }
+
+    if (rawOperationalMode === 'PRODUCTION_AUTHORIZED') {
+      return {
+        nodeEnv,
+        rawOperationalMode,
+        effectiveMode: 'PRODUCTION_ONLY',
+        requireLiveDatabase: true,
+        allowEmbeddedFallback: false,
+        requireStrictTls: true,
+        policyCode: 'PRODUCTION_AUTHORIZED',
+        reason: 'PHUMULANI_OPERATIONAL_MODE=PRODUCTION_AUTHORIZED enforces mandatory live PostgreSQL and forbids embedded JSON fallback.',
+      };
+    }
+
+    if (rawOperationalMode === 'STAGED_DEVELOPMENT') {
+      return {
+        nodeEnv,
+        rawOperationalMode,
+        effectiveMode: 'STAGED_DEVELOPMENT',
+        requireLiveDatabase: false,
+        allowEmbeddedFallback: true,
+        requireStrictTls: nodeEnv === 'production',
+        policyCode: 'STAGED_DEVELOPMENT_AUTHORIZED',
+        reason: 'PHUMULANI_OPERATIONAL_MODE=STAGED_DEVELOPMENT explicitly authorizes isolated embedded durable storage when DATABASE_URL is omitted.',
+      };
+    }
+
+    if (nodeEnv === 'production') {
+      return {
+        nodeEnv,
+        rawOperationalMode,
+        effectiveMode: 'PRODUCTION_ONLY',
+        requireLiveDatabase: true,
+        allowEmbeddedFallback: false,
+        requireStrictTls: true,
+        policyCode: 'NODE_ENV_PRODUCTION_DEFAULT',
+        reason: 'NODE_ENV=production requires a live PostgreSQL database unless PHUMULANI_OPERATIONAL_MODE=STAGED_DEVELOPMENT is explicitly authorized.',
+      };
+    }
+
+    return {
+      nodeEnv,
+      rawOperationalMode,
+      effectiveMode: this.operationalMode,
+      requireLiveDatabase: this.operationalMode === 'PRODUCTION_ONLY',
+      allowEmbeddedFallback: this.operationalMode !== 'PRODUCTION_ONLY',
+      requireStrictTls: false,
+      policyCode: 'LOCAL_DEVELOPMENT',
+      reason: 'Local development mode allows isolated embedded durable storage when DATABASE_URL is omitted.',
+    };
+  }
 
   public static getOperationalMode(): PhumulaniOperationalMode {
-    if (typeof process !== 'undefined' && process.env?.PHUMULANI_OPERATIONAL_MODE) {
-      const val = process.env.PHUMULANI_OPERATIONAL_MODE.trim();
-      if (val === 'PRODUCTION_ONLY' || val === 'STAGED_DEVELOPMENT') {
-        return val;
-      }
-    }
-    if (
-      typeof process !== 'undefined' &&
-      process.env?.NODE_ENV === 'production' &&
-      Boolean(process.env?.DATABASE_URL?.trim())
-    ) {
-      return 'PRODUCTION_ONLY';
-    }
-    return this.operationalMode;
+    return this.getDatabasePolicy().effectiveMode;
   }
 
   public static setOperationalMode(mode: PhumulaniOperationalMode): void {
@@ -55,12 +144,13 @@ export class EnvironmentService {
   }
 
   public static getConfig(): PhumulaniEnvironmentConfig {
-    const isProdOnly = this.isProductionOnly();
+    const policy = this.getDatabasePolicy();
+    const isProdOnly = policy.effectiveMode === 'PRODUCTION_ONLY';
 
     return {
-      nodeEnv: isProdOnly ? 'production' : 'development',
+      nodeEnv: isProdOnly ? 'production' : policy.nodeEnv || 'development',
       phumulaniEnvironment: isProdOnly ? 'production' : 'staged-development',
-      operationalMode: this.getOperationalMode(),
+      operationalMode: policy.effectiveMode,
       enableDemoMode: !isProdOnly,
       enableSyntheticData: !isProdOnly,
       enableFixtureSeeding: !isProdOnly,
@@ -68,11 +158,11 @@ export class EnvironmentService {
       enableMockPayments: false, // Never enable mock payments
       enableMockCrm: !isProdOnly,
       enableSimulatedAiResults: !isProdOnly,
-      requireLiveDatabase: isProdOnly,
+      requireLiveDatabase: policy.requireLiveDatabase,
       requireRealProviderVerification: true,
       requireHumanEmailApproval: true, // Always mandatory
       requireFinancialEvidence: true, // Always mandatory
-      allowJsonProductionFallback: !isProdOnly,
+      allowJsonProductionFallback: policy.allowEmbeddedFallback,
       allowSimulatedDispatch: false, // Dispatches must never be silently simulated without notification
       allowUnverifiedRevenue: false, // Never allow unverified revenue
     };
@@ -87,7 +177,7 @@ export class EnvironmentService {
   }
 
   public static isLiveDatabaseRequired(): boolean {
-    return this.isProductionOnly();
+    return this.getDatabasePolicy().requireLiveDatabase;
   }
 
   public static isRealProviderVerificationRequired(): boolean {
@@ -116,8 +206,9 @@ export class EnvironmentService {
     LIVE_EMAIL_SYNCHRONIZATION: 'NOT_ACTIVATED' | 'ACTIVATED';
   } {
     const hasDatabaseUrl = typeof process !== 'undefined' && Boolean(process.env?.DATABASE_URL?.trim());
+    const pgConnected = hasDatabaseUrl && (this.liveDatabaseConnectedProbe ? this.liveDatabaseConnectedProbe() : false);
     return {
-      POSTGRESQL: hasDatabaseUrl ? 'CONNECTED' : 'NOT_CONNECTED',
+      POSTGRESQL: pgConnected ? 'CONNECTED' : 'NOT_CONNECTED',
       GOOGLE_WORKSPACE: 'AUTHORIZATION_REQUIRED',
       PAYMENT_GATEWAY: this.getPaymentProviderStatus() === 'CONNECTED' ? 'CONNECTED' : 'NOT_CONNECTED',
       LIVE_EMAIL_SYNCHRONIZATION: 'NOT_ACTIVATED',

@@ -11,6 +11,7 @@ import path from 'path';
 import crypto from 'crypto';
 import pg from 'pg';
 import { PostgresDetailedState } from '../types/emailEnterprise';
+import { EnvironmentService } from './environmentService';
 
 const { Pool } = pg;
 
@@ -34,6 +35,9 @@ export interface DatabaseConnectionInfo {
   transactionSupport: boolean;
   concurrencyLockActive: boolean;
   readinessClassification: string;
+  policyCode?: string;
+  policyReason?: string;
+  lastHealthPingAt?: string;
   poolDiagnostics?: {
     totalCount: number;
     idleCount: number;
@@ -102,6 +106,10 @@ export class PostgresPersistenceAdapter {
   private pool: any = null;
   private sslActive = false;
   private activeTxClient: any = null;
+  private txStorage: any = null;
+  private initPromise: Promise<DatabaseConnectionInfo> | null = null;
+  private lastHealthPingAt: string | undefined = undefined;
+  private lastKnownPgRecordCount = 0;
   private bootstrappedPgTables: Set<string> = new Set();
   private storageDir: string;
   private storageFilePath: string;
@@ -128,6 +136,7 @@ export class PostgresPersistenceAdapter {
     'enrollment_applications',
     'notifications',
     'calendar_bookings',
+    'schema_migrations',
   ];
 
   private constructor() {
@@ -137,12 +146,22 @@ export class PostgresPersistenceAdapter {
       this.storageFilePath = '/data/phumulani_persistent_db.json';
       return;
     }
-    this.databaseUrl = typeof process !== 'undefined' ? process.env?.DATABASE_URL?.trim() : undefined;
+    this.databaseUrl = undefined;
     const configuredDir = typeof process !== 'undefined' ? process.env?.PHUMULANI_RUNTIME_DATA_DIR?.trim() : undefined;
     const tmpBase =
       typeof process !== 'undefined' ? process.env?.TMPDIR || process.env?.TEMP || '/tmp' : '/tmp';
     this.storageDir = configuredDir ? path.resolve(configuredDir) : path.resolve(tmpBase, 'phumulani-runtime-data');
     this.storageFilePath = path.resolve(this.storageDir, 'phumulani_persistent_db.json');
+    EnvironmentService.registerLiveDatabaseProbe(() => Boolean(this.pool && !this.connectionError));
+  }
+
+  private resolveDatabaseUrl(): string | undefined {
+    if (typeof window !== 'undefined') return undefined;
+    if (this.databaseUrl && this.databaseUrl.trim()) {
+      return this.databaseUrl.trim();
+    }
+    const envUrl = typeof process !== 'undefined' ? process.env?.DATABASE_URL?.trim() : undefined;
+    return envUrl || undefined;
   }
 
   public static getInstance(): PostgresPersistenceAdapter {
@@ -154,14 +173,20 @@ export class PostgresPersistenceAdapter {
 
   public static redactDatabaseUrl(input: string): string {
     if (!input) return '';
+    let sanitized = input;
     try {
-      const u = new URL(input);
+      const u = new URL(sanitized);
       if (u.password) u.password = '****';
       if (u.username) u.username = '****';
-      return u.toString();
+      sanitized = u.toString();
     } catch {
-      return input.replace(/\/\/([^:@\s]+):([^@\s]+)@/g, '//****:****@');
+      sanitized = sanitized.replace(/\/\/([^:@\s]+):([^@\s]+)@/g, '//****:****@');
     }
+    // Redact embedded connection URLs or key=value DSN secrets inside error strings
+    sanitized = sanitized
+      .replace(/((?:postgres|postgresql|mysql):\/\/)([^:@\s]+):([^@\s]+)@/gi, '$1****:****@')
+      .replace(/\b(password|pwd|pass|secret|token)\s*=\s*('[^']*'|"[^"]*"|[^\s;]+)/gi, '$1=****');
+    return sanitized;
   }
 
   public static buildPostgresSslConfig(connectionString: string): { rejectUnauthorized: true; ca?: string } | undefined {
@@ -169,13 +194,19 @@ export class PostgresPersistenceAdapter {
     const sslParam = (u.searchParams.get('ssl') || '').toLowerCase();
     const sslMode = (u.searchParams.get('sslmode') || '').toLowerCase();
     const isLocalHost = ['localhost', '127.0.0.1', '::1'].includes(u.hostname);
-    const explicitlyDisabled = sslParam === 'false' || sslMode === 'disable';
+    const policy = EnvironmentService.getDatabasePolicy();
+    const explicitlyDisabled =
+      sslParam === 'false' || sslMode === 'disable' || sslMode === 'allow' || sslMode === 'prefer';
 
     if (explicitlyDisabled) {
-      if (!isLocalHost && process.env.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_ONLY') {
-        throw new Error('TLS_REQUIRED: Remote PostgreSQL connections in PRODUCTION_ONLY mode cannot disable TLS.');
+      if (!isLocalHost && (policy.requireLiveDatabase || policy.requireStrictTls)) {
+        throw new Error(
+          `TLS_REQUIRED: Remote PostgreSQL connections in ${policy.policyCode} mode cannot disable or downgrade TLS (sslmode=${sslMode || sslParam}).`
+        );
       }
-      return undefined;
+      if (sslParam === 'false' || sslMode === 'disable') {
+        return undefined;
+      }
     }
 
     const useTls =
@@ -183,7 +214,7 @@ export class PostgresPersistenceAdapter {
       sslMode === 'require' ||
       sslMode === 'verify-ca' ||
       sslMode === 'verify-full' ||
-      process.env.NODE_ENV === 'production' ||
+      policy.requireStrictTls ||
       !isLocalHost;
 
     if (!useTls) {
@@ -214,7 +245,7 @@ export class PostgresPersistenceAdapter {
     const valid = this.validateTableName(table);
     if (!this.bootstrappedPgTables.has(valid)) {
       await executor.query(
-        `CREATE TABLE IF NOT EXISTS "${valid}" (id TEXT PRIMARY KEY, data JSONB NOT NULL, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`
+        `CREATE TABLE IF NOT EXISTS "${valid}" (id TEXT PRIMARY KEY, data JSONB NOT NULL DEFAULT '{}'::jsonb, updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW())`
       );
       this.bootstrappedPgTables.add(valid);
     }
@@ -222,7 +253,10 @@ export class PostgresPersistenceAdapter {
   }
 
   private getPgExecutor(): any {
-    return this.activeTxClient || this.pool;
+    const asyncClient = this.txStorage && typeof this.txStorage.getStore === 'function'
+      ? this.txStorage.getStore()
+      : undefined;
+    return asyncClient || this.activeTxClient || this.pool;
   }
 
   /**
@@ -237,34 +271,63 @@ export class PostgresPersistenceAdapter {
       return this.getConnectionInfo();
     }
 
-    const isProdOnly = process.env.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_ONLY';
-
     if (this.isInitialized) {
       return this.getConnectionInfo();
     }
 
-    if (this.databaseUrl) {
-      console.log('[PostgresAdapter] Production DATABASE_URL detected. Initializing PostgreSQL client pool...');
+    if (this.initPromise) {
+      return this.initPromise;
+    }
+
+    this.initPromise = this.performInitialize();
+    try {
+      return await this.initPromise;
+    } finally {
+      this.initPromise = null;
+    }
+  }
+
+  private async performInitialize(): Promise<DatabaseConnectionInfo> {
+    const policy = EnvironmentService.getDatabasePolicy();
+    const dbUrl = this.resolveDatabaseUrl();
+
+    if (!this.txStorage && typeof process !== 'undefined' && process.versions?.node) {
       try {
-        const sslConfig = PostgresPersistenceAdapter.buildPostgresSslConfig(this.databaseUrl);
+        const asyncHooksModule = await import('node:async_hooks');
+        if (asyncHooksModule?.AsyncLocalStorage) {
+          this.txStorage = new asyncHooksModule.AsyncLocalStorage();
+        }
+      } catch {
+        // Fallback to activeTxClient if async_hooks unavailable
+      }
+    }
+
+    if (dbUrl) {
+      console.log('[PostgresAdapter] Production DATABASE_URL detected. Initializing PostgreSQL client pool...');
+      let candidatePool: any = null;
+      try {
+        const sslConfig = PostgresPersistenceAdapter.buildPostgresSslConfig(dbUrl);
         this.sslActive = Boolean(sslConfig);
-        this.pool = new Pool({
-          connectionString: this.databaseUrl,
+        candidatePool = new Pool({
+          connectionString: dbUrl,
           max: 10,
           idleTimeoutMillis: 30000,
           connectionTimeoutMillis: 5000,
+          query_timeout: 15000,
+          statement_timeout: 15000,
+          keepAlive: true,
           ssl: sslConfig,
         });
 
         // Prevent unhandled idle pool client errors from terminating the Node.js process
-        this.pool.on('error', (poolErr: any) => {
+        candidatePool.on('error', (poolErr: any) => {
           const safeMsg = PostgresPersistenceAdapter.redactDatabaseUrl(poolErr?.message || String(poolErr));
           this.connectionError = `PostgreSQL idle pool error: ${safeMsg}`;
           console.error('[PostgresAdapter] Idle PostgreSQL client error:', safeMsg);
         });
 
         // Test connection with ping and bootstrap baseline schema tables
-        const client = await this.pool.connect();
+        const client = await candidatePool.connect();
         try {
           const res = await client.query('SELECT 1 AS health_check, current_database() as db_name, version() as pg_version');
           for (const tableName of [
@@ -273,15 +336,20 @@ export class PostgresPersistenceAdapter {
           ]) {
             await this.ensurePgTable(client, tableName);
           }
+          this.lastHealthPingAt = new Date().toISOString();
           console.log(`[PostgresAdapter] PostgreSQL connection verified (TLS=${this.sslActive}): DB=${res.rows[0]?.db_name}`);
         } finally {
           client.release();
         }
+        this.pool = candidatePool;
         this.setupMigrations();
         this.isInitialized = true;
         this.connectionError = null;
         return this.getConnectionInfo();
       } catch (err: any) {
+        if (candidatePool) {
+          await candidatePool.end().catch(() => {});
+        }
         const safeMessage = PostgresPersistenceAdapter.redactDatabaseUrl(
           err?.message || 'Failed to connect to configured PostgreSQL instance'
         );
@@ -296,16 +364,16 @@ export class PostgresPersistenceAdapter {
       }
     }
 
-    // In PRODUCTION_ONLY mode, PostgreSQL is mandatory (no silent fallback to embedded JSON)
-    if (isProdOnly) {
-      this.connectionError = 'PHUMULANI_OPERATIONAL_MODE is PRODUCTION_ONLY but DATABASE_URL is not configured';
+    // Enforce documented production policy (PRODUCTION_ONLY, PRODUCTION_AUTHORIZED, or NODE_ENV=production without STAGED_DEVELOPMENT)
+    if (policy.requireLiveDatabase) {
+      this.connectionError = `${policy.policyCode} (${policy.effectiveMode}) requires live PostgreSQL but DATABASE_URL is not configured`;
       this.isInitialized = false;
       throw new Error(
-        '[PostgresAdapter] FATAL: Production mode requires a live PostgreSQL instance (DATABASE_URL missing). Silent JSON fallback is strictly disabled in PRODUCTION_ONLY mode.'
+        `[PostgresAdapter] FATAL: Production mode (${policy.policyCode} / PRODUCTION_ONLY) requires a live PostgreSQL instance (DATABASE_URL missing). Silent JSON fallback is strictly disabled.`
       );
     }
 
-    // Isolated Embedded Durable Storage Mode (staged development and local test baseline)
+    // Isolated Embedded Durable Storage Mode (explicitly authorized staged development and local test baseline)
     try {
       if (!fs.existsSync(this.storageDir)) {
         fs.mkdirSync(this.storageDir, { recursive: true, mode: 0o700 });
@@ -335,6 +403,8 @@ export class PostgresPersistenceAdapter {
 
     this.setupMigrations();
     this.isInitialized = true;
+    this.connectionError = null;
+    this.lastHealthPingAt = new Date().toISOString();
     return this.getConnectionInfo();
   }
 
@@ -418,36 +488,79 @@ export class PostgresPersistenceAdapter {
   }
 
   /**
-   * Returns current database connection and persistence diagnostics
+   * Executes a live reachability ping against the active PostgreSQL pool (when configured)
+   * and returns up-to-date connection & readiness diagnostics.
+   */
+  public async checkHealth(): Promise<DatabaseConnectionInfo> {
+    if (typeof window !== 'undefined') {
+      return this.getConnectionInfo();
+    }
+
+    const dbUrl = this.resolveDatabaseUrl();
+    if (this.pool) {
+      try {
+        await Promise.race([
+          this.pool.query('SELECT 1 AS ping'),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('PostgreSQL health ping timed out after 3000ms')), 3000)),
+        ]);
+        this.connectionError = null;
+        this.lastHealthPingAt = new Date().toISOString();
+      } catch (err: any) {
+        this.connectionError = PostgresPersistenceAdapter.redactDatabaseUrl(err?.message || 'PostgreSQL health check failed');
+      }
+    } else if (dbUrl && !this.connectionError) {
+      try {
+        await this.initialize();
+      } catch (err: any) {
+        this.connectionError = PostgresPersistenceAdapter.redactDatabaseUrl(err?.message || 'PostgreSQL initialization failed');
+      }
+    }
+    return this.getConnectionInfo();
+  }
+
+  /**
+   * Returns current database connection and persistence diagnostics using the authoritative EnvironmentService policy.
    */
   public getConnectionInfo(): DatabaseConnectionInfo {
-    const isProdOnly = process.env.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_ONLY';
-    const isPgConfigured = !!this.databaseUrl;
-    const isPgActive = isPgConfigured && !!this.pool && !this.connectionError;
+    const policy = EnvironmentService.getDatabasePolicy();
+    const isProdRequired = policy.requireLiveDatabase;
+    const dbUrl = this.resolveDatabaseUrl();
+    const isPgConfigured = Boolean(dbUrl);
+    const isPgActive = isPgConfigured && Boolean(this.pool) && !this.connectionError;
 
     let databaseStatus: 'HEALTHY' | 'NOT_CONNECTED' | 'DEGRADED' = 'HEALTHY';
     let applicationReadiness: 'READY' | 'BLOCKED' = 'READY';
     let readinessClassification = 'INTEGRATION_COMPLETE_STAGED_READY';
 
-    if (isProdOnly) {
+    if (isProdRequired) {
       if (!isPgActive) {
         databaseStatus = 'NOT_CONNECTED';
         applicationReadiness = 'BLOCKED';
-        readinessClassification = 'BLOCKED_MISSING_PRODUCTION_DATABASE';
+        readinessClassification = isPgConfigured
+          ? 'BLOCKED_DATABASE_CONNECTION_FAILED'
+          : 'BLOCKED_MISSING_PRODUCTION_DATABASE';
       } else {
         databaseStatus = 'HEALTHY';
         applicationReadiness = 'READY';
         readinessClassification = 'PRODUCTION_VERIFIED';
       }
+    } else if (isPgConfigured && !isPgActive) {
+      databaseStatus = 'NOT_CONNECTED';
+      applicationReadiness = 'BLOCKED';
+      readinessClassification = 'BLOCKED_DATABASE_CONNECTION_FAILED';
     } else {
-      databaseStatus = isPgConfigured && !isPgActive ? 'DEGRADED' : 'HEALTHY';
+      databaseStatus = 'HEALTHY';
       applicationReadiness = 'READY';
       readinessClassification = isPgActive ? 'PRODUCTION_VERIFIED' : 'INTEGRATION_COMPLETE_STAGED_READY';
     }
 
     let totalRecords = 0;
-    for (const rows of this.memoryStore.values()) {
-      totalRecords += rows.length;
+    if (isPgActive) {
+      totalRecords = this.lastKnownPgRecordCount;
+    } else {
+      for (const rows of this.memoryStore.values()) {
+        totalRecords += rows.length;
+      }
     }
 
     const stateStr = isPgActive
@@ -462,9 +575,9 @@ export class PostgresPersistenceAdapter {
 
     let host = 'localhost (isolated embedded durable)';
     let dbName = 'phumulani_isolated_dev';
-    if (isPgConfigured) {
+    if (isPgConfigured && dbUrl) {
       try {
-        const u = new URL(this.databaseUrl!);
+        const u = new URL(dbUrl);
         host = u.host;
         dbName = u.pathname.replace(/^\//, '') || 'phumulani_prod';
       } catch {
@@ -473,16 +586,12 @@ export class PostgresPersistenceAdapter {
     }
 
     let detailedState: PostgresDetailedState = 'EMBEDDED_STAGING';
-    if (!this.isInitialized) {
+    if (!this.isInitialized && !this.connectionError) {
       detailedState = isPgConfigured ? 'EXTERNAL_CONFIGURED_UNVERIFIED' : 'EXTERNAL_NOT_CONFIGURED';
     } else if (this.connectionError) {
       detailedState = 'EXTERNAL_CONNECTION_FAILED';
     } else if (isPgActive) {
-      detailedState =
-        process.env.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_ONLY' ||
-        process.env.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_AUTHORIZED'
-          ? 'CONNECTED_PRODUCTION'
-          : 'EXTERNAL_CONNECTED_STAGING';
+      detailedState = isProdRequired ? 'CONNECTED_PRODUCTION' : 'EXTERNAL_CONNECTED_STAGING';
     } else if (isPgConfigured && !isPgActive) {
       detailedState = 'EXTERNAL_CONNECTION_FAILED';
     } else {
@@ -491,7 +600,7 @@ export class PostgresPersistenceAdapter {
 
     return {
       engine: isPgActive ? 'POSTGRESQL' : 'ISOLATED_EMBEDDED_DURABLE',
-      connected: isProdOnly ? isPgActive : (isPgConfigured ? isPgActive : true),
+      connected: isProdRequired ? isPgActive : (isPgConfigured ? isPgActive : true),
       databaseStatus,
       detailedState,
       applicationReadiness,
@@ -511,6 +620,9 @@ export class PostgresPersistenceAdapter {
       transactionSupport: true,
       concurrencyLockActive: true,
       readinessClassification,
+      policyCode: policy.policyCode,
+      policyReason: policy.reason,
+      lastHealthPingAt: this.lastHealthPingAt,
       poolDiagnostics: this.pool
         ? {
             totalCount: this.pool.totalCount,
@@ -534,7 +646,7 @@ export class PostgresPersistenceAdapter {
     tablesVerified?: number;
     error?: string;
   }> {
-    const targetUrl = testUrl || this.databaseUrl;
+    const targetUrl = testUrl || this.resolveDatabaseUrl();
     if (!targetUrl) {
       return {
         success: false,
@@ -559,13 +671,15 @@ export class PostgresPersistenceAdapter {
     }
 
     const t0 = Date.now();
+    let testPool: any = null;
     try {
       const u = new URL(targetUrl);
       const sslConfig = PostgresPersistenceAdapter.buildPostgresSslConfig(targetUrl);
-      const testPool = new Pool({
+      testPool = new Pool({
         connectionString: targetUrl,
         max: 2,
         connectionTimeoutMillis: 4000,
+        query_timeout: 5000,
         ssl: sslConfig,
       });
 
@@ -574,7 +688,6 @@ export class PostgresPersistenceAdapter {
         await client.query('SELECT 1 as ping');
       } finally {
         client.release();
-        await testPool.end();
       }
 
       const latencyMs = Date.now() - t0;
@@ -595,17 +708,28 @@ export class PostgresPersistenceAdapter {
         latencyMs: Date.now() - t0,
         error: `External PostgreSQL verification failed: ${PostgresPersistenceAdapter.redactDatabaseUrl(err?.message || 'Connection error')}`,
       };
+    } finally {
+      if (testPool) {
+        await testPool.end().catch(() => {});
+      }
     }
   }
 
   /**
-   * Parameterized SQL query execution
+   * Parameterized SQL query execution (respects active AsyncLocalStorage transaction client)
    */
   public async query<T = any>(sql: string, params: any[] = []): Promise<T[]> {
     await this.ensureInitialized();
-    if (this.pool) {
-      const res = await this.pool.query(sql, params);
-      return res.rows as T[];
+    const executor = this.getPgExecutor();
+    if (executor) {
+      try {
+        const res = await executor.query(sql, params);
+        return (res.rows || []) as T[];
+      } catch (err: any) {
+        const safeErr = new Error(PostgresPersistenceAdapter.redactDatabaseUrl(err?.message || String(err)));
+        (safeErr as any).code = err?.code;
+        throw safeErr;
+      }
     }
 
     // In isolated durable mode, simulate simple parameterized selects
@@ -632,56 +756,97 @@ export class PostgresPersistenceAdapter {
   }
 
   /**
-   * ACID Transaction wrapper with automatic BEGIN, COMMIT, ROLLBACK and transient SQLSTATE retries.
+   * ACID Transaction wrapper with AsyncLocalStorage concurrency isolation,
+   * automatic BEGIN, COMMIT, ROLLBACK, and transient SQLSTATE retries.
    */
   public async withTransaction<T>(callback: (client: any) => Promise<T>, maxRetries = 3): Promise<T> {
     await this.ensureInitialized();
 
-    if (this.databaseUrl && !this.pool) {
+    const dbUrl = this.resolveDatabaseUrl();
+    if (dbUrl && !this.pool) {
       throw new Error(
         `POSTGRES_UNAVAILABLE: Configured PostgreSQL pool is unavailable (${this.connectionError || 'not initialized'}). Silent runtime fallback is prohibited.`
       );
     }
 
     if (this.pool) {
+      const existingTxClient =
+        this.txStorage && typeof this.txStorage.getStore === 'function' ? this.txStorage.getStore() : null;
+      if (existingTxClient) {
+        const nestedWrapper = {
+          query: async (sql: string, params: any[] = []) => existingTxClient.query(sql, params),
+          insert: async (table: string, record: any) => this.pgInsert(existingTxClient, table, record),
+        };
+        return callback(nestedWrapper);
+      }
+
       let attempt = 0;
       while (true) {
         attempt += 1;
         const client = await this.pool.connect();
-        const prevTxClient = this.activeTxClient;
-        this.activeTxClient = client;
         let rolledBack = false;
-        try {
-          await client.query('BEGIN');
-          const txWrapper = {
-            query: async (sql: string, params: any[] = []) => client.query(sql, params),
-            insert: async (table: string, record: any) => this.pgInsert(client, table, record),
-          };
-          const result = await callback(txWrapper);
-          await client.query('COMMIT');
-          this.connectionError = null;
-          return result;
-        } catch (err: any) {
-          try {
-            await client.query('ROLLBACK');
-            rolledBack = true;
-          } catch (rollbackErr: any) {
-            const origMsg = PostgresPersistenceAdapter.redactDatabaseUrl(err?.message || String(err));
-            const rbMsg = PostgresPersistenceAdapter.redactDatabaseUrl(rollbackErr?.message || String(rollbackErr));
-            if (attempt >= maxRetries || !this.isTransientPgError(err)) {
-              throw new Error(`TRANSACTION_AND_ROLLBACK_FAILED: ${origMsg} | Rollback error: ${rbMsg}`);
-            }
+        const runTx = async () => {
+          const prevTxClient = this.activeTxClient;
+          if (!this.txStorage) {
+            this.activeTxClient = client;
           }
-          if (rolledBack && attempt < maxRetries && this.isTransientPgError(err)) {
+          try {
+            await client.query('BEGIN');
+            const txWrapper = {
+              query: async (sql: string, params: any[] = []) => client.query(sql, params),
+              insert: async (table: string, record: any) => this.pgInsert(client, table, record),
+            };
+            const result = await callback(txWrapper);
+            await client.query('COMMIT');
+            this.connectionError = null;
+            return result;
+          } catch (err: any) {
+            try {
+              await client.query('ROLLBACK');
+              rolledBack = true;
+            } catch (rollbackErr: any) {
+              const origMsg = PostgresPersistenceAdapter.redactDatabaseUrl(err?.message || String(err));
+              const rbMsg = PostgresPersistenceAdapter.redactDatabaseUrl(rollbackErr?.message || String(rollbackErr));
+              if (attempt >= maxRetries || !this.isTransientPgError(err)) {
+                throw new Error(`TRANSACTION_AND_ROLLBACK_FAILED: ${origMsg} | Rollback error: ${rbMsg}`);
+              }
+            }
+            if (rolledBack && attempt < maxRetries && this.isTransientPgError(err)) {
+              throw Object.assign(new Error('__RETRY_TX__'), { originalError: err });
+            }
+            const safeErr = new Error(PostgresPersistenceAdapter.redactDatabaseUrl(err?.message || String(err)));
+            (safeErr as any).code = err?.code;
+            throw safeErr;
+          } finally {
+            if (!this.txStorage) {
+              this.activeTxClient = prevTxClient;
+            }
+            client.release();
+          }
+        };
+
+        try {
+          if (this.txStorage && typeof this.txStorage.run === 'function') {
+            return await this.txStorage.run(client, runTx);
+          }
+          return await runTx();
+        } catch (err: any) {
+          if (err?.message === '__RETRY_TX__') {
             await new Promise((r) => setTimeout(r, 40 * attempt));
             continue;
           }
           throw err;
-        } finally {
-          this.activeTxClient = prevTxClient;
-          client.release();
         }
       }
+    }
+
+    // In isolated mode, support nested transactions safely without re-entering writeMutex
+    if (this.inTransaction) {
+      const nestedClient = {
+        query: async (sql: string, params: any[] = []) => this.query(sql, params),
+        insert: async (table: string, record: any) => this.rawInsert(table, record),
+      };
+      return callback(nestedClient);
     }
 
     // In isolated mode, execute with concurrency mutex and snapshot rollback
@@ -774,6 +939,108 @@ export class PostgresPersistenceAdapter {
   }
 
   /**
+   * Atomically insert a record only if no existing record conflicts on `id` or any specified `uniqueFields`.
+   * Returns `{ inserted: true, record }` or `{ inserted: false, existing }` under concurrency lock / PG constraint.
+   */
+  public async insertIfAbsent<T extends TableRowRecord>(
+    table: string,
+    record: T,
+    uniqueFields: string[] = []
+  ): Promise<{ inserted: boolean; record: T }> {
+    const validTable = this.validateTableName(table);
+    await this.ensureInitialized();
+
+    for (const field of uniqueFields) {
+      if (!/^[a-zA-Z0-9_]+$/.test(field)) {
+        throw new Error(`INVALID_FIELD_IDENTIFIER: "${field}" is not a safe JSON field identifier.`);
+      }
+    }
+
+    if (this.pool) {
+      return this.withTransaction(async (tx) => {
+        await this.ensurePgTable(tx, validTable);
+        // Check id and unique fields atomically inside transaction
+        const idCheck = await tx.query(`SELECT data FROM "${validTable}" WHERE id = $1 FOR UPDATE`, [record.id]);
+        if (idCheck.rows && idCheck.rows.length > 0) {
+          return { inserted: false, record: idCheck.rows[0].data as T };
+        }
+        for (const field of uniqueFields) {
+          const val = (record as any)[field];
+          if (val !== undefined && val !== null) {
+            const dupCheck = await tx.query(
+              `SELECT data FROM "${validTable}" WHERE data->>'${field}' = $1 LIMIT 1`,
+              [String(val)]
+            );
+            if (dupCheck.rows && dupCheck.rows.length > 0) {
+              return { inserted: false, record: dupCheck.rows[0].data as T };
+            }
+          }
+        }
+        await tx.query(
+          `INSERT INTO "${validTable}" (id, data, updated_at) VALUES ($1, $2::jsonb, NOW()) ON CONFLICT (id) DO NOTHING`,
+          [record.id, JSON.stringify(record)]
+        );
+        return { inserted: true, record };
+      });
+    }
+
+    const executeCheckAndInsert = async (): Promise<{ inserted: boolean; record: T }> => {
+      const rows = (this.memoryStore.get(validTable) || []) as T[];
+      const byId = rows.find((r) => r.id === record.id);
+      if (byId) {
+        return { inserted: false, record: byId };
+      }
+      for (const field of uniqueFields) {
+        const val = (record as any)[field];
+        if (val !== undefined && val !== null) {
+          const dup = rows.find((r) => (r as any)[field] === val);
+          if (dup) {
+            return { inserted: false, record: dup };
+          }
+        }
+      }
+      this.rawInsert(validTable, record);
+      if (!this.inTransaction) {
+        await this.flushToDurableStorage();
+      }
+      return { inserted: true, record };
+    };
+
+    if (this.inTransaction) {
+      return executeCheckAndInsert();
+    }
+    return this.enqueueWrite(executeCheckAndInsert);
+  }
+
+  /**
+   * Delete a table row by ID atomically
+   */
+  public async deleteById(table: string, id: string): Promise<boolean> {
+    const validTable = this.validateTableName(table);
+    await this.ensureInitialized();
+    if (this.pool) {
+      const executor = this.getPgExecutor();
+      await this.ensurePgTable(executor, validTable);
+      const res = await executor.query(`DELETE FROM "${validTable}" WHERE id = $1`, [id]);
+      return (res.rowCount || 0) > 0;
+    }
+    const execDelete = async () => {
+      const rows = (this.memoryStore.get(validTable) || []) as TableRowRecord[];
+      const next = rows.filter((r) => r.id !== id);
+      if (next.length === rows.length) return false;
+      this.memoryStore.set(validTable, next);
+      if (!this.inTransaction) {
+        await this.flushToDurableStorage({ skipDiskMerge: true });
+      }
+      return true;
+    };
+    if (this.inTransaction) {
+      return execDelete();
+    }
+    return this.enqueueWrite(execDelete);
+  }
+
+  /**
    * Update a table row by ID and persist atomically
    */
   public async update<T extends TableRowRecord>(table: string, id: string, updates: Partial<T>): Promise<T | null> {
@@ -791,15 +1058,21 @@ export class PostgresPersistenceAdapter {
       ]);
       return merged;
     }
-    return this.enqueueWrite(async () => {
+    const execUpdate = async () => {
       const records = (this.memoryStore.get(table) || []) as T[];
       const idx = records.findIndex((r) => r.id === id);
       if (idx === -1) return null;
       records[idx] = { ...records[idx], ...updates };
       this.memoryStore.set(table, records);
-      await this.flushToDurableStorage();
+      if (!this.inTransaction) {
+        await this.flushToDurableStorage();
+      }
       return records[idx];
-    });
+    };
+    if (this.inTransaction) {
+      return execUpdate();
+    }
+    return this.enqueueWrite(execUpdate);
   }
 
   /**
@@ -940,9 +1213,13 @@ export class PostgresPersistenceAdapter {
       });
       return;
     }
+    if (this.inTransaction) {
+      this.memoryStore.set(table, records);
+      return;
+    }
     return this.enqueueWrite(async () => {
       this.memoryStore.set(table, records);
-      await this.flushToDurableStorage();
+      await this.flushToDurableStorage({ skipDiskMerge: true });
     });
   }
 
@@ -986,7 +1263,7 @@ export class PostgresPersistenceAdapter {
   /**
    * Executes atomic file flush using write-to-temp and rename pattern to prevent corruption
    */
-  public async flushToDurableStorage(): Promise<void> {
+  public async flushToDurableStorage(options?: { skipDiskMerge?: boolean }): Promise<void> {
     if (typeof window !== 'undefined') {
       return;
     }
@@ -995,8 +1272,8 @@ export class PostgresPersistenceAdapter {
         fs.mkdirSync(this.storageDir, { recursive: true, mode: 0o700 });
       }
 
-      // Merge disk records to prevent multi-process write stomping
-      if (fs.existsSync(this.storageFilePath)) {
+      // Merge disk records to prevent multi-process write stomping (unless explicitly replacing state)
+      if (!options?.skipDiskMerge && fs.existsSync(this.storageFilePath)) {
         try {
           const diskRaw = fs.readFileSync(this.storageFilePath, 'utf-8');
           const diskParsed = JSON.parse(diskRaw);
@@ -1019,11 +1296,12 @@ export class PostgresPersistenceAdapter {
         }
       }
 
+      const dbUrl = this.resolveDatabaseUrl();
       const snapshot = {
         metadata: {
           platform: 'Phumulani AI Community Platform',
           schema: 'PostgreSQL 15+ Compatible DDL',
-          engine: this.databaseUrl ? 'POSTGRESQL' : 'ISOLATED_EMBEDDED_DURABLE',
+          engine: dbUrl ? 'POSTGRESQL' : 'ISOLATED_EMBEDDED_DURABLE',
           persistedAt: new Date().toISOString(),
           tablesCount: this.memoryStore.size,
           classification: 'INTEGRATION_COMPLETE_STAGED_READY',
@@ -1170,7 +1448,7 @@ export class PostgresPersistenceAdapter {
         }
 
         this.memoryStore = newStore;
-        await this.flushToDurableStorage();
+        await this.flushToDurableStorage({ skipDiskMerge: true });
 
         const info = this.getConnectionInfo();
         return {
@@ -1341,6 +1619,7 @@ export class PostgresPersistenceAdapter {
         const cntRes = await this.pool.query(`SELECT COUNT(*)::int AS cnt FROM "${tbl}"`);
         count += Number(cntRes.rows[0]?.cnt || 0);
       }
+      this.lastKnownPgRecordCount = count;
       return count;
     }
     let total = 0;
@@ -1348,6 +1627,25 @@ export class PostgresPersistenceAdapter {
       total += rows.length;
     }
     return total;
+  }
+
+  /**
+   * Cleanly closes PostgreSQL connection pool or flushes pending embedded durable state.
+   */
+  public async close(): Promise<void> {
+    if (this.pool) {
+      await this.pool.end().catch(() => {});
+      this.pool = null;
+      this.bootstrappedPgTables.clear();
+      this.isInitialized = false;
+      return;
+    }
+    if (this.isInitialized && typeof window === 'undefined') {
+      await this.enqueueWrite(async () => {
+        await this.flushToDurableStorage();
+      }).catch(() => {});
+    }
+    this.isInitialized = false;
   }
 
   /**

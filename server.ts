@@ -240,9 +240,10 @@ const checkSafeguardingCrisis = (text: string): boolean => {
 
 // 1. Production Health & Readiness Endpoints (/health, /api/health, /api/v1/health)
 const handleHealthCheck = async (_req: Request, res: Response) => {
-  const dbInfo = dbAdapter.getConnectionInfo();
+  const dbInfo = await dbAdapter.checkHealth();
+  const dbPolicy = EnvironmentService.getDatabasePolicy();
   const envConfig = EnvironmentService.getConfig();
-  const isProdOnly = EnvironmentService.isProductionOnly();
+  const isProdRequired = dbPolicy.requireLiveDatabase;
 
   const safeguardingStatus = getSafeguardingEncryptionStatus();
   const auditHealth = dbAdapter.getPersistenceHealthMetrics();
@@ -282,13 +283,16 @@ const handleHealthCheck = async (_req: Request, res: Response) => {
     SECURITY_MONITORING: auditDegraded ? ('DEGRADED' as const) : ('HEALTHY' as const),
   };
 
-  const isBlocked = isProdOnly && (dbInfo.databaseStatus === 'NOT_CONNECTED' || !safeguardingStatus.ready);
+  const isDbBlocked =
+    dbInfo.applicationReadiness === 'BLOCKED' ||
+    (isProdRequired && (dbInfo.engine !== 'POSTGRESQL' || dbInfo.databaseStatus !== 'HEALTHY'));
+  const isBlocked = isDbBlocked || (isProdRequired && !safeguardingStatus.ready);
   const overallStatus = isBlocked ? 'BLOCKED' : auditDegraded ? 'DEGRADED' : 'HEALTHY';
 
   res.status(isBlocked ? 503 : 200).json({
     status: overallStatus,
     operationalMode: envConfig.operationalMode,
-    applicationReadiness: dbInfo.applicationReadiness,
+    applicationReadiness: isBlocked ? 'BLOCKED' : dbInfo.applicationReadiness,
     service: 'Phumulani AI Community Platform',
     version: '1.0.0-phase29',
     environment: envConfig.phumulaniEnvironment,
@@ -305,9 +309,13 @@ const handleHealthCheck = async (_req: Request, res: Response) => {
       databaseStatus: dbInfo.databaseStatus,
       host: dbInfo.host,
       databaseName: dbInfo.databaseName,
+      sslEnabled: dbInfo.sslEnabled,
       tablesVerifiedCount: dbInfo.tablesVerifiedCount,
       totalRecordsCount: dbInfo.totalRecordsCount,
       readinessClassification: dbInfo.readinessClassification,
+      policyCode: dbPolicy.policyCode,
+      lastHealthPingAt: dbInfo.lastHealthPingAt,
+      connectionError: dbInfo.connectionError || undefined,
     },
     googleWorkspaceOAuth: {
       status: components.GOOGLE_WORKSPACE,
@@ -346,14 +354,20 @@ app.get('/healthz', (_req: Request, res: Response) => {
 });
 
 app.get('/readyz', async (_req: Request, res: Response) => {
-  const dbInfo = dbAdapter.getConnectionInfo();
+  const dbInfo = await dbAdapter.checkHealth();
   const safeguardingStatus = getSafeguardingEncryptionStatus();
-  const isProdOnly = EnvironmentService.isProductionOnly();
-  const isDbReady = dbInfo.databaseStatus === 'HEALTHY' || (!isProdOnly && dbInfo.databaseStatus === 'DEGRADED');
-  const isHealthy = isDbReady && (!isProdOnly || safeguardingStatus.ready);
+  const dbPolicy = EnvironmentService.getDatabasePolicy();
+  const isProdRequired = dbPolicy.requireLiveDatabase;
+  const isDbReady = isProdRequired
+    ? dbInfo.engine === 'POSTGRESQL' && dbInfo.databaseStatus === 'HEALTHY' && dbInfo.applicationReadiness === 'READY'
+    : dbInfo.applicationReadiness === 'READY' && dbInfo.databaseStatus === 'HEALTHY';
+  const isHealthy = isDbReady && (!isProdRequired || safeguardingStatus.ready);
   res.status(isHealthy ? 200 : 503).json({
     status: isHealthy ? 'ready' : 'not_ready',
     database: dbInfo.databaseStatus,
+    engine: dbInfo.engine,
+    applicationReadiness: isHealthy ? 'READY' : 'BLOCKED',
+    policyCode: dbPolicy.policyCode,
     safeguardingReady: safeguardingStatus.ready,
     timestamp: new Date().toISOString(),
   });
@@ -7561,23 +7575,36 @@ app.get('/api/phumulani-ai/knowledge/audit-report', (req: Request, res: Response
 
 
 async function startServer() {
-  // Initialize persistent database adapter (PostgreSQL or isolated durable store)
+  const dbPolicy = EnvironmentService.getDatabasePolicy();
+  console.log(`[Phumulani Platform] Database policy active: ${dbPolicy.policyCode} (${dbPolicy.reason})`);
+
+  // Initialize persistent database adapter (PostgreSQL mandatory in production; isolated durable store only when authorized)
   await dbAdapter.initialize();
   console.log('[Phumulani Platform] Database persistence layer initialized successfully.');
+
+  try {
+    const migrationService = DatabaseMigrationService.getInstance();
+    const migrationRes = await migrationService.runMigrations('Server Bootstrapper');
+    const integrity = await migrationService.validateSchemaIntegrity();
+    if (!integrity.valid) {
+      throw new Error(`Schema integrity verification failed. Missing tables: ${integrity.missingTables.join(', ')}`);
+    }
+    console.log(
+      `[Phumulani Platform] Migrations verified: ${migrationRes.appliedCount} applied, current version: ${migrationRes.currentVersion}, schema tables: ${integrity.existingTables.length}`
+    );
+  } catch (migErr) {
+    if (dbPolicy.requireLiveDatabase) {
+      console.error('[Phumulani Platform] FATAL: Database migrations or schema integrity failed in production mode:', migErr);
+      throw migErr;
+    }
+    console.warn('[Phumulani Platform] Migration notice (non-fatal in staged development):', migErr);
+  }
 
   try {
     await volunteerOperationsService.initialize();
     console.log('[Phumulani Platform] Volunteer operations service initialized successfully.');
   } catch (volErr) {
     console.warn('[Phumulani Platform] Volunteer operations initialization notice:', volErr);
-  }
-
-  try {
-    const migrationService = DatabaseMigrationService.getInstance();
-    const migrationRes = await migrationService.runMigrations('Server Bootstrapper');
-    console.log(`[Phumulani Platform] Migrations verified: ${migrationRes.appliedCount} applied, current version: ${migrationRes.currentVersion}`);
-  } catch (migErr) {
-    console.warn('[Phumulani Platform] Migration notice (non-fatal):', migErr);
   }
 
   try {
@@ -7641,9 +7668,27 @@ async function startServer() {
     console.error('[Phumulani Platform] HTTP server listen error:', err);
     process.exit(1);
   });
+
+  let shuttingDown = false;
+  const gracefulShutdown = async (signal: string) => {
+    if (shuttingDown) return;
+    shuttingDown = true;
+    console.log(`[Phumulani Platform] Received ${signal}. Closing HTTP server and draining database connections...`);
+    await new Promise<void>((resolve) => {
+      httpServer.close(() => resolve());
+      setTimeout(resolve, 4000).unref();
+    });
+    await dbAdapter.close().catch((err) => {
+      console.error('[Phumulani Platform] Error closing database adapter during shutdown:', err);
+    });
+    process.exit(0);
+  };
+  process.once('SIGTERM', () => void gracefulShutdown('SIGTERM'));
+  process.once('SIGINT', () => void gracefulShutdown('SIGINT'));
 }
 
-startServer().catch((err) => {
+startServer().catch(async (err) => {
   console.error('[Phumulani Platform] Failed to start server:', err);
+  await dbAdapter.close().catch(() => {});
   process.exit(1);
 });
