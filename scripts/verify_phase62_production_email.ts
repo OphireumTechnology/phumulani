@@ -397,7 +397,7 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
   try {
     const mbService = MailboxConnectionService.getInstance();
     const mailboxes = mbService.getMailboxes();
-    const pilot = mailboxes.find(m => m.emailAddress === 'donations@phumulani.org');
+    const pilot = mailboxes.find(m => m.emailAddress === 'pilot-test-donations@phumulani.org');
     const passed = pilot ? !('clientSecret' in pilot) && !('refreshToken' in pilot) : false;
     record(
       'TEST-P62-18',
@@ -412,7 +412,7 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
   // TEST-P62-19: Real-Time Sync Concurrency Lock
   try {
     const syncService = EmailSyncService.getInstance();
-    const pilot = MailboxConnectionService.getInstance().getMailboxes().find(m => m.emailAddress === 'donations@phumulani.org');
+    const pilot = MailboxConnectionService.getInstance().getMailboxes().find(m => m.emailAddress === 'pilot-test-donations@phumulani.org');
     if (!pilot) throw new Error('Pilot mailbox not found');
     
     // Acquire lock
@@ -434,7 +434,7 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
   // TEST-P62-20: Synchronization Cursor Recovery & Durability
   try {
     const syncService = EmailSyncService.getInstance();
-    const pilot = MailboxConnectionService.getInstance().getMailboxes().find(m => m.emailAddress === 'donations@phumulani.org');
+    const pilot = MailboxConnectionService.getInstance().getMailboxes().find(m => m.emailAddress === 'pilot-test-donations@phumulani.org');
     if (!pilot) throw new Error('Pilot mailbox not found');
 
     await syncService.saveCursor(pilot.id, 'INBOX', 'checkpoint-cursor-9000');
@@ -453,7 +453,7 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
   // TEST-P62-21: Outbound Quad-Action Workflow Transitions
   try {
     const dispatchService = EmailDispatchService.getInstance();
-    const pilot = MailboxConnectionService.getInstance().getMailboxes().find(m => m.emailAddress === 'donations@phumulani.org');
+    const pilot = MailboxConnectionService.getInstance().getMailboxes().find(m => m.emailAddress === 'pilot-test-donations@phumulani.org');
     if (!pilot) throw new Error('Pilot mailbox not found');
 
     const draft = await dispatchService.createDraft({
@@ -484,7 +484,7 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
   // TEST-P62-22: Anti-AI Self-Approval Guard
   try {
     const dispatchService = EmailDispatchService.getInstance();
-    const pilot = MailboxConnectionService.getInstance().getMailboxes().find(m => m.emailAddress === 'donations@phumulani.org');
+    const pilot = MailboxConnectionService.getInstance().getMailboxes().find(m => m.emailAddress === 'pilot-test-donations@phumulani.org');
     if (!pilot) throw new Error('Pilot mailbox not found');
 
     const aiDraft = await dispatchService.createDraft({
@@ -523,8 +523,14 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
   try {
     const dispatchService = EmailDispatchService.getInstance();
     const mbService = MailboxConnectionService.getInstance();
-    const safeMb = mbService.getMailboxes().find(m => m.emailAddress === 'safeguarding@phumulani.org');
-    if (!safeMb) throw new Error('Safeguarding mailbox not found');
+    const safeMb = await mbService.registerMailbox({
+      emailAddress: 'phase62-safeguarding-test@phumulani.invalid',
+      displayName: 'Phase 62 Safeguarding Test',
+      providerType: EmailProviderType.GOOGLE_WORKSPACE,
+      purpose: 'SAFEGUARDING',
+      isSafeguarded: true,
+      organizationId: 'org-phumulani-main'
+    });
 
     const safeDraft = await dispatchService.createDraft({
       mailboxId: safeMb.id,
@@ -787,7 +793,7 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
     const dispatchService = EmailDispatchService.getInstance();
 
     // 1. Get or register mailbox
-    const pilot = mbService.getMailboxes().find(m => m.emailAddress === 'donations@phumulani.org')!;
+    const pilot = mbService.getMailboxes().find(m => m.emailAddress === 'pilot-test-donations@phumulani.org')!;
     
     // 2. Perform inbound sync
     const syncRes = await syncService.syncMailbox(pilot.id);
