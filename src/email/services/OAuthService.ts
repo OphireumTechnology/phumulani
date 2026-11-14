@@ -124,10 +124,11 @@ export class OAuthService {
     if (rawSafeguarding && !this.isWeakKeyMaterial(rawSafeguarding)) {
       return rawSafeguarding;
     }
+    const dbPolicy = EnvironmentService.getDatabasePolicy();
     if (
       EnvironmentService.isProductionOnly() ||
       process.env.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT' ||
-      process.env.NODE_ENV === 'production' ||
+      (process.env.NODE_ENV === 'production' && !dbPolicy.allowEmbeddedFallback) ||
       process.env.SAFEGUARDING_REQUIRE_CONFIGURED_KEY === 'true'
     ) {
       throw new Error('OAUTH_TOKEN_ENCRYPTION_KEY (minimum 32 high-entropy characters) is required for encrypted OAuth token storage in production.');

@@ -8671,6 +8671,17 @@ app.get('/api/phumulani-ai/knowledge/audit-report', (req: Request, res: Response
 
 
 async function startServer() {
+  if (
+    process.env.NODE_ENV === 'production' &&
+    !process.env.DATABASE_URL?.trim() &&
+    !process.env.PHUMULANI_OPERATIONAL_MODE?.trim()
+  ) {
+    console.warn(
+      '[Phumulani Platform] No DATABASE_URL configured; defaulting PHUMULANI_OPERATIONAL_MODE=STAGED_DEVELOPMENT for embedded durable storage.'
+    );
+    process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
+  }
+
   const dbPolicy = EnvironmentService.getDatabasePolicy();
   console.log(`[Phumulani Platform] Database policy active: ${dbPolicy.policyCode} (${dbPolicy.reason})`);
 
