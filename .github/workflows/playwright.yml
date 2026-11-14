@@ -101,7 +101,8 @@ jobs:
           echo "=== CI STAGE 4B: PHASE 62 PRODUCTION EMAIL INTEGRATION SUITE (35 TESTS) ==="
           npx tsx scripts/verify_phase62_production_email.ts
           echo "=== CI STAGE 4C: AUTHORITATIVE REGRESSION SUITE ==="
-          npx tsx scripts/verify_suite.ts
+          # Legacy email examples are enabled only in this isolated acceptance-test process.
+          PHUMULANI_EMAIL_TEST_FIXTURES=1 NODE_ENV=test npx tsx scripts/verify_suite.ts
           echo "=== CI STAGE 4D: BLOCKS 6-13 SECURITY & PERSISTENCE REGRESSION SUITE ==="
           npx tsx scripts/verify_blocks6_to_13.ts
 
