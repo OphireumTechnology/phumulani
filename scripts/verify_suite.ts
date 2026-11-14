@@ -9,7 +9,7 @@ if (process.env.NODE_ENV !== 'production') {
   process.env.PHUMULANI_EMAIL_TEST_FIXTURES = '1';
 }
 
-import { AutomatedTestRunner } from '../src/services/automatedTestRunner';
+const { AutomatedTestRunner } = await import('../src/services/automatedTestRunner');
 import { PostgresPersistenceAdapter } from '../src/services/postgresPersistenceAdapter';
 import { db } from '../src/services/db';
 
