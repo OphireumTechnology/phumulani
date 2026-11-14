@@ -10,8 +10,8 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 const { AutomatedTestRunner } = await import('../src/services/automatedTestRunner');
-import { PostgresPersistenceAdapter } from '../src/services/postgresPersistenceAdapter';
-import { db } from '../src/services/db';
+const { PostgresPersistenceAdapter } = await import('../src/services/postgresPersistenceAdapter');
+const { db } = await import('../src/services/db');
 
 async function main() {
   process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
