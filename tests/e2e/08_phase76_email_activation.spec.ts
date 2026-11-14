@@ -38,8 +38,12 @@ test.describe('Phase 76 — Email Command Center Clean State & Discovery', () =>
         if (text.includes('Permissions policy violation: unload is not allowed in this document.')) return;
         // Firefox reports Vite's development HMR socket refusal as a console error.
         // This is unrelated to the email provider connection being tested.
-        if (text.includes('/@vite/client') && text.includes('WebSocket')) return;
-        if (text.includes('/@vite/client') && text.includes('can’t establish a connection to the server at ws://')) return;
+        // Vite's local development HMR client can emit these even though the email
+        // interactions succeeded. Restrict exclusions to Vite's *local* HMR socket;
+        // all email-provider socket failures and unrelated console errors still fail.
+        if (/^WebSocket connection to 'ws:\/\/localhost:24678\/\?token=[^']+' failed:/.test(text)) return;
+        if (/^\[vite\] failed to connect to websocket \(Error: WebSocket closed without opened\.\)/.test(text)) return;
+        if (text.includes('/@vite/client') && /localhost:24678/.test(text) && /WebSocket|connection to the server/.test(text)) return;
         if (expectingOAuth503 && text.includes('503 (Service Unavailable)')) return;
         consoleErrors.push(text);
       }
