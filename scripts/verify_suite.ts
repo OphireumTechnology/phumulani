@@ -3,9 +3,15 @@
  * Verifies all 244 automated acceptance tests, PostgreSQL adapter transactions,
  * concurrent write locks, durable restart simulation, and all 5 workflow pipelines.
  */
-import { AutomatedTestRunner } from '../src/services/automatedTestRunner';
-import { PostgresPersistenceAdapter } from '../src/services/postgresPersistenceAdapter';
-import { db } from '../src/services/db';
+// The acceptance suite exercises legacy mailboxes as isolated fixtures, never production data.
+// Set this before imported modules initialize their singleton database state.
+if (process.env.NODE_ENV !== 'production') {
+  process.env.PHUMULANI_EMAIL_TEST_FIXTURES = '1';
+}
+
+const { AutomatedTestRunner } = await import('../src/services/automatedTestRunner');
+const { PostgresPersistenceAdapter } = await import('../src/services/postgresPersistenceAdapter');
+const { db } = await import('../src/services/db');
 
 async function main() {
   process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
