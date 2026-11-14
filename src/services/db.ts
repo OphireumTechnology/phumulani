@@ -317,10 +317,10 @@ function getInitialState(): AppDatabaseState {
     safeExitNeutralUrl: 'https://weather.com',
     systemSettings: INITIAL_SYSTEM_SETTINGS,
     // Phase 8 Enterprise Email Seed Data
-    connectedMailboxes: INITIAL_CONNECTED_MAILBOXES,
+    connectedMailboxes: [],
     autoResponderRules: INITIAL_AUTORESPONDER_RULES,
-    autoResponderLogs: INITIAL_AUTORESPONDER_LOGS,
-    enterpriseEmailThreads: INITIAL_ENTERPRISE_THREADS,
+    autoResponderLogs: [],
+    enterpriseEmailThreads: [],
     donorProfiles: INITIAL_DONOR_PROFILES,
     majorDonorPipeline: INITIAL_MAJOR_DONOR_PIPELINE,
     grantPipeline: INITIAL_GRANT_PIPELINE,
@@ -343,10 +343,10 @@ function getInitialState(): AppDatabaseState {
     fundraisingAIAgents: INITIAL_FUNDRAISING_AI_AGENTS,
     donorEngagementActivities: INITIAL_DONOR_ENGAGEMENT_ACTIVITIES,
     // Phase 12A: Email Synchronization & Unified Mailbox Management
-    historicalImportJobs: INITIAL_HISTORICAL_IMPORT_JOBS,
-    syncCheckpoints: INITIAL_MAILBOX_SYNC_CHECKPOINTS,
-    syncConflicts: INITIAL_SYNC_CONFLICT_RECORDS,
-    syncAuditLogs: INITIAL_SYNC_AUDIT_LOGS,
+    historicalImportJobs: [],
+    syncCheckpoints: [],
+    syncConflicts: [],
+    syncAuditLogs: [],
     // Phase 13: Client Development Transparency, GitHub Integration & Local Synchronization
     developmentMilestones: INITIAL_DEVELOPMENT_MILESTONES,
     developmentFeatures: INITIAL_DEVELOPMENT_FEATURES,
