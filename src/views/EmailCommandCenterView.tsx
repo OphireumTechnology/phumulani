@@ -2221,16 +2221,11 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             <button
                               type="button"
                               onClick={() => {
-                                db.updateConnectedMailbox(mbx.id, {
-                                  status: 'CONNECTED',
-                                  authStatus: 'authorized',
-                                });
-                                refreshSyncState();
+                                setActiveTab('universal_connectors');
                                 setActionNotice({
-                                  type: 'success',
-                                  message: `Mailbox [${mbx.email}] reconnected.`,
+                                  type: 'info',
+                                  message: `Authorize ${mbx.email} through the live provider connection wizard. A mailbox cannot be marked connected manually.`,
                                 });
-                                setTimeout(() => setActionNotice(null), 4000);
                               }}
                               className="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold text-[11px] cursor-pointer"
                             >
