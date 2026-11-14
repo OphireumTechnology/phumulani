@@ -309,6 +309,11 @@ export interface EmailConnectionRecord {
   updatedAt: string;
 }
 
+export interface MxRecordEntry {
+  exchange: string;
+  priority: number;
+}
+
 export interface ProviderDiscoveryResult {
   emailAddress: string;
   domain: string;
@@ -316,6 +321,11 @@ export interface ProviderDiscoveryResult {
   confidenceScore: number;
   detectionReason: string;
   suggestedAuthMethod: AuthMethodType;
+  mxRecords?: MxRecordEntry[];
+  dnsStatus?: 'RESOLVED_OK' | 'NO_MX' | 'NXDOMAIN' | 'TIMEOUT' | 'DNS_ERROR';
+  discoverySource?: 'DNS_MX' | 'KNOWN_DOMAIN_FALLBACK' | 'CUSTOM_FALLBACK';
+  mxIsRoutingOnly?: boolean;
+  manualSelectionRecommended?: boolean;
   suggestedSettings?: {
     imapHost?: string;
     imapPort?: number;

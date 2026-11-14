@@ -37,6 +37,9 @@ async function runSuite() {
   console.log('Testing 30 Mandated Functional, Architectural & Security Items');
   console.log('================================================================\n');
 
+  process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
+  db.hydrateEmailTestFixturesForSuite();
+
   const state = db.getState();
   const threads = state.enterpriseEmailThreads;
   const mailboxes = state.connectedMailboxes;

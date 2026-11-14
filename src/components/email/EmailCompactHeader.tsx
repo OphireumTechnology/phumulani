@@ -66,9 +66,9 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
 
   return (
     <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
-      <div className="px-3 sm:px-4 py-2 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2 sm:gap-4">
         {/* Left: Brand & Return to Master Admin & Mailbox Selector */}
-        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 flex-wrap sm:flex-nowrap">
           {onBackToMasterAdmin && (
             <button
               onClick={onBackToMasterAdmin}
@@ -81,7 +81,7 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
             </button>
           )}
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-2 min-w-0">
             <div className="w-7 h-7 rounded-lg bg-[#104F57] text-white flex items-center justify-center shadow-xs shrink-0">
               <Mail className="w-3.5 h-3.5" />
             </div>
@@ -98,7 +98,7 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
           <div className="hidden lg:block h-4 w-px bg-slate-200" />
 
           {/* Mailbox Selector */}
-          <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-lg text-xs min-w-0 max-w-[180px] sm:max-w-[240px]">
+          <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-2 py-1 rounded-lg text-xs min-w-0 max-w-[140px] sm:max-w-[240px]">
             <Inbox className="w-3.5 h-3.5 text-teal-800 shrink-0" />
             <select
               id="header-mailbox-select"
@@ -234,6 +234,7 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
             onClick={onOpenCompose}
             className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer shrink-0"
             title="Compose New Outbound Email"
+            aria-label="Compose New Outbound Email"
           >
             <Plus className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">New Email</span>

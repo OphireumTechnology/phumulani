@@ -645,6 +645,47 @@ Draft a professional, compassionate response following Phumulani's organizationa
     const upcomingGrantDeadlines = grants.filter(g => g.stage !== 'closed' && g.stage !== 'declined').length;
     const autoResponsesSentTotal = rules.reduce((sum, r) => sum + r.totalTriggeredCount, 0);
 
+    const respondedThreads = threads.filter(
+      (t) => t.status === 'responded' || t.status === 'resolved' || t.messages.some((m) => m.direction === 'outbound')
+    );
+    const threadsWithDrafts = threads.filter((t) => Boolean(t.draft));
+    const approvedOrSentDrafts = threadsWithDrafts.filter(
+      (t) => t.draft?.status === 'approved' || t.draft?.status === 'sent'
+    );
+    const overriddenCount = threads.filter((t) => Boolean(t.classificationOverridden)).length;
+    const confirmedMeetings = (db.getState().calendarProposals || []).filter(
+      (c) => c.status === 'approved_sent'
+    ).length;
+
+    let avgResponseTimeHours = 0;
+    if (respondedThreads.length > 0) {
+      const responseHours: number[] = [];
+      for (const th of respondedThreads) {
+        const firstInbound = th.messages.find((m) => m.direction === 'inbound');
+        const firstOutbound = th.messages.find((m) => m.direction === 'outbound');
+        if (firstInbound && firstOutbound) {
+          const diffMs = Math.max(
+            0,
+            new Date(firstOutbound.receivedAt).getTime() - new Date(firstInbound.receivedAt).getTime()
+          );
+          responseHours.push(diffMs / (1000 * 60 * 60));
+        }
+      }
+      if (responseHours.length > 0) {
+        avgResponseTimeHours =
+          Math.round((responseHours.reduce((a, b) => a + b, 0) / responseHours.length) * 10) / 10;
+      }
+    }
+
+    const aiDraftAcceptanceRatePercent =
+      threadsWithDrafts.length > 0
+        ? Math.round((approvedOrSentDrafts.length / threadsWithDrafts.length) * 1000) / 10
+        : 0;
+    const classificationAccuracyPercent =
+      threads.length > 0
+        ? Math.round(((threads.length - overriddenCount) / threads.length) * 1000) / 10
+        : 0;
+
     return {
       totalIncoming,
       unreadCount,
@@ -656,12 +697,12 @@ Draft a professional, compassionate response following Phumulani's organizationa
       activeDonorConversations,
       activeFundraisingOpportunities,
       upcomingGrantDeadlines,
-      scheduledMeetings: 4,
+      scheduledMeetings: confirmedMeetings,
       processingErrorsCount: 0,
-      avgResponseTimeHours: 1.8,
-      avgResolutionTimeHours: 4.2,
-      aiDraftAcceptanceRatePercent: 96.4,
-      classificationAccuracyPercent: 98.2,
+      avgResponseTimeHours,
+      avgResolutionTimeHours: avgResponseTimeHours,
+      aiDraftAcceptanceRatePercent,
+      classificationAccuracyPercent,
       autoResponsesSentTotal,
     };
   }
@@ -978,7 +1019,7 @@ Draft a professional, compassionate response following Phumulani's organizationa
    */
   public static authenticateMailbox(
     mailboxId: string,
-    options?: { token?: string; providerAccountId?: string; scopes?: string[] }
+    options?: { token?: string; expiresAt?: number; providerAccountId?: string; scopes?: string[] }
   ): { success: boolean; connectionState: MailboxConnectionState; error?: string } {
     const mailbox = db.getState().connectedMailboxes.find((m) => m.id === mailboxId);
     if (!mailbox) {
@@ -989,7 +1030,9 @@ Draft a professional, compassionate response following Phumulani's organizationa
       };
     }
 
-    if (options?.token === 'EXPIRED_TOKEN' || options?.token === 'INVALID_CREDENTIALS') {
+    const tokenValue = (options?.token || '').trim();
+    const isExpiredByTimestamp = typeof options?.expiresAt === 'number' && options.expiresAt <= Date.now();
+    if (!tokenValue || tokenValue === 'EXPIRED_TOKEN' || tokenValue === 'INVALID_CREDENTIALS' || isExpiredByTimestamp) {
       const updated = db.getState().connectedMailboxes.map((m) =>
         m.id === mailboxId
           ? {
@@ -997,6 +1040,7 @@ Draft a professional, compassionate response following Phumulani's organizationa
               status: 'AUTHENTICATION_FAILED' as MailboxConnectionState,
               connectionState: 'AUTHENTICATION_FAILED' as MailboxConnectionState,
               authStatus: 'expired' as const,
+              reauthRequired: true,
               currentError: 'OAuth token has expired or credentials were rejected by provider.',
             }
           : m
@@ -1024,6 +1068,7 @@ Draft a professional, compassionate response following Phumulani's organizationa
             status: 'CONNECTED' as MailboxConnectionState,
             connectionState: 'CONNECTED' as MailboxConnectionState,
             authStatus: 'authorized' as const,
+            reauthRequired: false,
             currentError: undefined,
             lastSyncedAt: new Date().toISOString(),
           }

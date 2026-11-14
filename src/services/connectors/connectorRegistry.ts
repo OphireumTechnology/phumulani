@@ -7,6 +7,7 @@
  */
 
 import crypto from 'crypto';
+import dns from 'node:dns';
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
@@ -15,6 +16,7 @@ import {
   EmailConnectionRecord,
   EmailProviderType,
   ProviderDiscoveryResult,
+  MxRecordEntry,
   ConnectionHealth,
   SyncResult,
   ApprovedMessage,
@@ -431,6 +433,8 @@ export class ConnectorRegistry {
         confidenceScore: 0.96,
         detectionReason: 'Primary institutional domain provisioned via Google Workspace enterprise tenant.',
         suggestedAuthMethod: 'OAUTH2',
+        discoverySource: 'KNOWN_DOMAIN_FALLBACK',
+        mxIsRoutingOnly: true,
       };
     }
 
@@ -442,6 +446,9 @@ export class ConnectorRegistry {
       confidenceScore: 0.85,
       detectionReason: `Custom domain (${domain}). Using standards-based TLS IMAP/SMTP autodiscovery.`,
       suggestedAuthMethod: 'PASSWORD',
+      discoverySource: 'CUSTOM_FALLBACK',
+      mxIsRoutingOnly: true,
+      manualSelectionRecommended: true,
       suggestedSettings: {
         imapHost: `imap.${domain}`,
         imapPort: 993,
@@ -451,6 +458,209 @@ export class ConnectorRegistry {
         useStartTls: true,
       },
     };
+  }
+
+  /**
+   * Real DNS MX record discovery (with deterministic fallback when DNS cannot resolve or is offline).
+   * MX records indicate mail routing only; they never prove mailbox ownership or OAuth consent.
+   */
+  public async discoverProviderWithMx(emailAddress: string): Promise<ProviderDiscoveryResult> {
+    const normalized = emailAddress.trim().toLowerCase();
+    const base = this.discoverProvider(normalized);
+    const domain = base.domain;
+
+    if (!domain || !/^[^\s@]+\.[^\s@]{2,}$/.test(domain)) {
+      return {
+        ...base,
+        dnsStatus: 'DNS_ERROR',
+        discoverySource: 'CUSTOM_FALLBACK',
+        mxRecords: [],
+        mxIsRoutingOnly: true,
+        manualSelectionRecommended: true,
+        detectionReason: 'Invalid or incomplete email domain; manual provider selection recommended.',
+      };
+    }
+
+    try {
+      const mxRaw = await Promise.race([
+        dns.promises.resolveMx(domain),
+        new Promise<never>((_, reject) =>
+          setTimeout(() => reject(Object.assign(new Error('DNS MX lookup timed out'), { code: 'ETIMEOUT' })), 3500)
+        ),
+      ]);
+
+      const mxRecords: MxRecordEntry[] = (mxRaw || [])
+        .map((r) => ({ exchange: String(r.exchange || '').replace(/\.$/, '').toLowerCase(), priority: Number(r.priority || 0) }))
+        .filter((r) => r.exchange.length > 0)
+        .sort((a, b) => a.priority - b.priority);
+
+      if (mxRecords.length === 0) {
+        return {
+          ...base,
+          dnsStatus: 'NO_MX',
+          discoverySource: base.discoverySource || 'CUSTOM_FALLBACK',
+          mxRecords: [],
+          mxIsRoutingOnly: true,
+          manualSelectionRecommended: true,
+          detectionReason: `No DNS MX records published for ${domain}. Select provider manually or configure custom IMAP/SMTP.`,
+        };
+      }
+
+      const topHost = mxRecords[0].exchange;
+      const allHosts = mxRecords.map((m) => m.exchange).join(' ');
+
+      if (
+        allHosts.includes('google.com') ||
+        allHosts.includes('googlemail.com') ||
+        allHosts.includes('smtp.google.com') ||
+        allHosts.includes('aspmx.l.google.com')
+      ) {
+        return {
+          emailAddress: normalized,
+          domain,
+          detectedProvider: 'GOOGLE',
+          confidenceScore: 0.99,
+          detectionReason: `DNS MX lookup resolved to Google Workspace / Gmail (${topHost}). MX indicates routing only; OAuth verification is still required.`,
+          suggestedAuthMethod: 'OAUTH2',
+          mxRecords,
+          dnsStatus: 'RESOLVED_OK',
+          discoverySource: 'DNS_MX',
+          mxIsRoutingOnly: true,
+          manualSelectionRecommended: false,
+        };
+      }
+
+      if (
+        allHosts.includes('protection.outlook.com') ||
+        allHosts.includes('outlook.com') ||
+        allHosts.includes('hotmail.com')
+      ) {
+        return {
+          emailAddress: normalized,
+          domain,
+          detectedProvider: 'MICROSOFT',
+          confidenceScore: 0.99,
+          detectionReason: `DNS MX lookup resolved to Microsoft 365 / Exchange Online (${topHost}). MX indicates routing only; OAuth verification is still required.`,
+          suggestedAuthMethod: 'OAUTH2',
+          mxRecords,
+          dnsStatus: 'RESOLVED_OK',
+          discoverySource: 'DNS_MX',
+          mxIsRoutingOnly: true,
+          manualSelectionRecommended: false,
+        };
+      }
+
+      if (allHosts.includes('zoho.com') || allHosts.includes('zohomail.com') || allHosts.includes('zoho.eu')) {
+        return {
+          emailAddress: normalized,
+          domain,
+          detectedProvider: 'ZOHO',
+          confidenceScore: 0.97,
+          detectionReason: `DNS MX lookup resolved to Zoho Mail (${topHost}).`,
+          suggestedAuthMethod: 'OAUTH2',
+          mxRecords,
+          dnsStatus: 'RESOLVED_OK',
+          discoverySource: 'DNS_MX',
+          mxIsRoutingOnly: true,
+          manualSelectionRecommended: false,
+          suggestedSettings: {
+            imapHost: 'imappro.zoho.com',
+            imapPort: 993,
+            smtpHost: 'smtppro.zoho.com',
+            smtpPort: 465,
+            useSsl: true,
+          },
+        };
+      }
+
+      if (allHosts.includes('yahoodns.net') || allHosts.includes('yahoo.com')) {
+        return {
+          emailAddress: normalized,
+          domain,
+          detectedProvider: 'YAHOO',
+          confidenceScore: 0.97,
+          detectionReason: `DNS MX lookup resolved to Yahoo Mail (${topHost}). Requires App-Specific Password.`,
+          suggestedAuthMethod: 'APP_PASSWORD',
+          mxRecords,
+          dnsStatus: 'RESOLVED_OK',
+          discoverySource: 'DNS_MX',
+          mxIsRoutingOnly: true,
+          manualSelectionRecommended: false,
+          suggestedSettings: {
+            imapHost: 'imap.mail.yahoo.com',
+            imapPort: 993,
+            smtpHost: 'smtp.mail.yahoo.com',
+            smtpPort: 465,
+            useSsl: true,
+          },
+        };
+      }
+
+      if (allHosts.includes('icloud.com') || allHosts.includes('me.com')) {
+        return {
+          emailAddress: normalized,
+          domain,
+          detectedProvider: 'ICLOUD',
+          confidenceScore: 0.97,
+          detectionReason: `DNS MX lookup resolved to Apple iCloud (${topHost}). Requires App-Specific Password.`,
+          suggestedAuthMethod: 'APP_PASSWORD',
+          mxRecords,
+          dnsStatus: 'RESOLVED_OK',
+          discoverySource: 'DNS_MX',
+          mxIsRoutingOnly: true,
+          manualSelectionRecommended: false,
+          suggestedSettings: {
+            imapHost: 'imap.mail.me.com',
+            imapPort: 993,
+            smtpHost: 'smtp.mail.me.com',
+            smtpPort: 587,
+            useStartTls: true,
+          },
+        };
+      }
+
+      return {
+        emailAddress: normalized,
+        domain,
+        detectedProvider: 'IMAP_SMTP',
+        confidenceScore: 0.8,
+        detectionReason: `DNS MX lookup resolved (${topHost}). Custom mail exchanger detected — verify provider or enter IMAP/SMTP server settings manually.`,
+        suggestedAuthMethod: 'PASSWORD',
+        mxRecords,
+        dnsStatus: 'RESOLVED_OK',
+        discoverySource: 'DNS_MX',
+        mxIsRoutingOnly: true,
+        manualSelectionRecommended: true,
+        suggestedSettings: {
+          imapHost: `imap.${domain}`,
+          imapPort: 993,
+          smtpHost: `smtp.${domain}`,
+          smtpPort: 587,
+          useSsl: true,
+          useStartTls: true,
+        },
+      };
+    } catch (err: any) {
+      const code = String(err?.code || '');
+      const dnsStatus: ProviderDiscoveryResult['dnsStatus'] =
+        code === 'ENOTFOUND' || code === 'ENODATA'
+          ? code === 'ENOTFOUND'
+            ? 'NXDOMAIN'
+            : 'NO_MX'
+          : code === 'ETIMEOUT' || code === 'EAI_AGAIN'
+          ? 'TIMEOUT'
+          : 'DNS_ERROR';
+
+      return {
+        ...base,
+        dnsStatus,
+        discoverySource: base.discoverySource || 'CUSTOM_FALLBACK',
+        mxRecords: [],
+        mxIsRoutingOnly: true,
+        manualSelectionRecommended: true,
+        detectionReason: `${base.detectionReason} (Live DNS MX query returned ${dnsStatus}; manual provider verification recommended.)`,
+      };
+    }
   }
 
   /**

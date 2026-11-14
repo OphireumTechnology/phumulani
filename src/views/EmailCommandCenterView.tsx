@@ -207,10 +207,12 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
   // Compose Modal State
   const [isComposeOpen, setIsComposeOpen] = useState(false);
   const [composeMailbox, setComposeMailbox] = useState<string>(mailboxes[0]?.email || 'info@phumulani.org');
+  const [composeCategory, setComposeCategory] = useState<string>('23_general_inquiries');
   const [composeRecipient, setComposeRecipient] = useState<string>('');
   const [composeSubject, setComposeSubject] = useState<string>('');
   const [composeBody, setComposeBody] = useState<string>('');
   const [composeTone, setComposeTone] = useState<ResponseToneStyle>('professional');
+  const [isSavingComposeDraft, setIsSavingComposeDraft] = useState(false);
 
   // Action Notice Banner
   const [actionNotice, setActionNotice] = useState<{ type: 'success' | 'warning' | 'info'; message: string } | null>(null);
@@ -774,14 +776,33 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
     setTimeout(() => setActionNotice(null), 5000);
   };
 
-  const handleIncrementalSync = (mbxId: string) => {
-    const res = db.runIncrementalSync(mbxId);
-    refreshSyncState();
-    setActionNotice({
-      type: 'success',
-      message: `Incremental sync complete for ${mbxId}. Delta token: ${res.deltaToken}. Synced ${res.newCount} new messages.`,
-    });
-    setTimeout(() => setActionNotice(null), 5000);
+  const handleIncrementalSync = async (mbxId: string) => {
+    try {
+      const apiRes = await authFetch(`/api/admin/email/connectors/${encodeURIComponent(mbxId)}/sync`, {
+        method: 'POST',
+      });
+      const data = await apiRes.json().catch(() => ({}));
+      if (apiRes.ok && data.success) {
+        await refreshEnterprisePersistence();
+        refreshSyncState();
+        setActionNotice({
+          type: 'success',
+          message: `Sync complete for ${mbxId}. Cursor: ${data.syncCursor || 'Updated'}.`,
+        });
+      } else {
+        setActionNotice({
+          type: 'warning',
+          message: data.error || `Synchronization unavailable for ${mbxId} (HTTP ${apiRes.status}). Verify provider authorization in Email Connections.`,
+        });
+      }
+    } catch (err: any) {
+      setActionNotice({
+        type: 'warning',
+        message: err?.message || `Failed to synchronize mailbox ${mbxId}.`,
+      });
+    } finally {
+      setTimeout(() => setActionNotice(null), 5000);
+    }
   };
 
   const handleToggleTwoWay = (mbxId: string) => {
@@ -795,13 +816,12 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
   };
 
   const handleReauthorizeMailbox = (mbxId: string) => {
-    db.reauthorizeMailbox(mbxId);
-    refreshSyncState();
+    setActiveTab('universal_connectors');
     setActionNotice({
-      type: 'success',
-      message: `Mailbox ${mbxId} successfully reauthorized with provider. OAuth token refreshed.`,
+      type: 'info',
+      message: `Opened Email Connections Manager to complete provider OAuth reauthorization for ${mbxId}. Accounts remain unverified until provider consent succeeds.`,
     });
-    setTimeout(() => setActionNotice(null), 5000);
+    setTimeout(() => setActionNotice(null), 6000);
   };
 
   // Phase 48 Mailbox Administration (M48.02) Handlers
@@ -809,32 +829,30 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
     setIsTestingConnection(true);
     const mbx = mailboxes.find((m) => m.id === mailboxId);
     try {
-      const apiRes = await authFetch(`/api/admin/email/mailboxes/${encodeURIComponent(mailboxId)}/test`, {
+      const apiRes = await authFetch(`/api/admin/email/connections/${encodeURIComponent(mailboxId)}/test`, {
         method: 'POST',
       });
-      if (!apiRes.ok) {
-        const errData = await apiRes.json().catch(() => ({}));
+      const apiData = await apiRes.json().catch(() => ({}));
+      if (!apiRes.ok || apiData.success === false) {
         setActionNotice({
           type: 'warning',
-          message: errData.error || `Backend connection test rejected (HTTP ${apiRes.status}) for ${mbx?.email || mailboxId}.`,
+          message: apiData.error || `Backend connection test rejected (HTTP ${apiRes.status}) for ${mbx?.email || mailboxId}.`,
         });
-        setIsTestingConnection(false);
         return;
       }
-      const apiData = await apiRes.json();
-      const res = db.testMailboxConnection(mailboxId);
+      const health = apiData.health || apiData;
       setTestConnectionResult({
         mailboxId,
         mailboxEmail: mbx?.email || mailboxId,
-        status: apiData.status || res.status,
-        latencyMs: apiData.latencyMs ?? res.latencyMs,
+        status: health.status || 'UNTESTED',
+        latencyMs: health.roundTripLatencyMs ?? health.latencyMs ?? 0,
         verifiedAt: new Date().toISOString(),
-        message: apiData.message || res.message,
+        message: health.diagnosticsDetail || health.error || health.message || 'Health check completed.',
       });
       refreshSyncState();
       setActionNotice({
-        type: 'success',
-        message: `Connection test completed for ${mbx?.email || mailboxId} (${apiData.latencyMs ?? res.latencyMs}ms). Status: ${apiData.status || res.status}.`,
+        type: health.healthy ? 'success' : 'warning',
+        message: `Connection check for ${mbx?.email || mailboxId}: ${health.status || 'UNTESTED'} (${health.roundTripLatencyMs ?? 0}ms).`,
       });
     } catch (err: any) {
       setActionNotice({
@@ -852,9 +870,9 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
     let failedCount = 0;
     for (const mbx of mailboxes) {
       try {
-        const apiRes = await authFetch(`/api/admin/email/mailboxes/${encodeURIComponent(mbx.id)}/test`, { method: 'POST' });
-        if (apiRes.ok) {
-          db.testMailboxConnection(mbx.id);
+        const apiRes = await authFetch(`/api/admin/email/connections/${encodeURIComponent(mbx.id)}/test`, { method: 'POST' });
+        const apiData = await apiRes.json().catch(() => ({}));
+        if (apiRes.ok && apiData?.health?.healthy) {
           passedCount++;
         } else {
           failedCount++;
@@ -866,7 +884,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
     refreshSyncState();
     setActionNotice({
       type: failedCount > 0 ? 'warning' : 'success',
-      message: `Tested all ${mailboxes.length} organizational mailboxes via backend gateway (${passedCount} succeeded, ${failedCount} failed/unauthorized).`,
+      message: `Tested ${mailboxes.length} organizational mailboxes via backend gateway (${passedCount} healthy, ${failedCount} unconfigured/unauthorized).`,
     });
     setTimeout(() => setActionNotice(null), 5000);
   };
@@ -1522,6 +1540,48 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
     setIsComposeOpen(true);
   };
 
+  // Handle Save Persistent Draft from Composer
+  const handleSaveComposeDraft = async () => {
+    if (!composeRecipient || !composeSubject || !composeBody) {
+      setActionNotice({ type: 'warning', message: 'Please fill in recipient, subject, and message body to save a persistent draft.' });
+      return;
+    }
+    const mbx = mailboxes.find((m) => m.email === composeMailbox) || mailboxes[0];
+    const resolvedMailboxId = mbx?.id || composeMailbox;
+    const isSafeguarded =
+      composeCategory === '01_safeguarding' || composeMailbox.toLowerCase().includes('safeguarding');
+    setIsSavingComposeDraft(true);
+    try {
+      const res = await phumulaniApiClient.createPersistentDraft({
+        mailboxId: resolvedMailboxId,
+        to: [composeRecipient.trim()],
+        subject: composeSubject.trim(),
+        bodyText: composeBody,
+        isAiGenerated: false,
+        isSafeguarded,
+      });
+      if (res.success && res.draft) {
+        await refreshEnterprisePersistence();
+        setIsComposeOpen(false);
+        setComposeRecipient('');
+        setComposeSubject('');
+        setComposeBody('');
+        setActionNotice({
+          type: 'success',
+          message: `Persistent draft [${res.draft.id}] saved for maker-checker review and approval.`,
+        });
+      }
+    } catch (err: any) {
+      setActionNotice({
+        type: 'warning',
+        message: err?.message || 'Failed to save persistent draft.',
+      });
+    } finally {
+      setIsSavingComposeDraft(false);
+      setTimeout(() => setActionNotice(null), 6000);
+    }
+  };
+
   // Handle Compose Send
   const handleSendComposedEmail = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -1530,16 +1590,19 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
       return;
     }
 
-    const { category } = EmailEnterpriseService.classifyMessage(composeSubject, composeBody, composeRecipient);
+    const detected = EmailEnterpriseService.classifyMessage(composeSubject, composeBody, composeRecipient);
+    const category = (composeCategory || detected.category) as EmailClassificationCategory;
     const { priority } = EmailEnterpriseService.calculatePriority(category, composeSubject, composeBody);
     const mbx = mailboxes.find((m) => m.email === composeMailbox) || mailboxes[0];
+    const resolvedMailboxId = mbx?.id || composeMailbox;
 
     try {
       const apiRes = await authFetch('/api/admin/email/compose', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          mailboxId: mbx.id,
+          mailboxId: resolvedMailboxId,
+          mailboxEmail: composeMailbox,
           recipientEmail: composeRecipient,
           subject: composeSubject,
           bodyText: composeBody,
@@ -1557,7 +1620,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         return;
       }
       const res = db.composeDirectOutboundEmail({
-        mailboxId: mbx.id,
+        mailboxId: resolvedMailboxId,
+        mailboxEmail: composeMailbox,
         recipientEmail: composeRecipient,
         subject: composeSubject,
         bodyText: composeBody,
@@ -1573,7 +1637,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
       setSelectedThreadId(res.threadId);
       setActionNotice({
         type: 'success',
-        message: `Outbound email recorded in backend communications ledger for ${targetRecipient} via ${composeMailbox}.`,
+        message: `Outbound email staged in backend communications ledger for ${targetRecipient} via ${composeMailbox}.`,
       });
     } catch (err: any) {
       setActionNotice({
@@ -1586,7 +1650,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F6F8] flex flex-col font-sans text-slate-800">
+    <div className="min-h-screen bg-[#F4F6F8] flex flex-col font-sans text-slate-800 max-w-full overflow-x-hidden">
       {/* 1. COMPACT HEADER (Area A) */}
       <EmailCompactHeader
         currentUser={currentUser}
@@ -6158,9 +6222,9 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
       {/* 5. NEW EMAIL COMPOSER MODAL */}
       {isComposeOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-fadeIn">
-            <div className="bg-[#006D6F] text-white px-5 py-3 flex items-center justify-between font-heading">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-fade-in">
+            <div className="bg-[#006D6F] text-white px-5 py-3 flex items-center justify-between font-heading shrink-0">
               <div className="flex items-center gap-2">
                 <Send className="w-4 h-4" />
                 <h3 className="font-bold text-sm">Compose Authorized Email</h3>
@@ -6173,16 +6237,32 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               </button>
             </div>
 
-            <form onSubmit={handleSendComposedEmail} className="p-5 space-y-3 text-xs">
-              <div className="grid grid-cols-2 gap-3">
+            <form onSubmit={handleSendComposedEmail} className="p-5 space-y-3 text-xs flex-1 min-h-0 overflow-y-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-[11px] font-bold text-slate-600 mb-1 font-heading">
-                    From (Authorized Mailbox):
+                    From (Organizational Mailbox):
                   </label>
-                  <div className="w-full bg-slate-100 border border-slate-200 rounded-lg p-2 font-mono text-xs text-slate-800 flex items-center justify-between">
-                    <span className="font-bold">info@phumulani.org</span>
-                    <span className="text-[10px] bg-teal-100 text-[#006D6F] px-1.5 py-0.5 rounded font-bold">Official Sole Mailbox</span>
-                  </div>
+                  <select
+                    value={composeMailbox}
+                    onChange={(e) => setComposeMailbox(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-mono text-xs font-bold text-slate-800"
+                  >
+                    {(mailboxes.length > 0
+                      ? mailboxes.map((m) => m.email)
+                      : [
+                          'info@phumulani.org',
+                          'donations@phumulani.org',
+                          'grants@phumulani.org',
+                          'executive@phumulani.org',
+                          'partnerships@phumulani.org',
+                        ]
+                    ).map((addr) => (
+                      <option key={addr} value={addr}>
+                        {addr}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
                 <div>
@@ -6190,15 +6270,15 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     Operational Category:
                   </label>
                   <select
-                    value={composeMailbox}
-                    onChange={(e) => setComposeMailbox(e.target.value)}
+                    value={composeCategory}
+                    onChange={(e) => setComposeCategory(e.target.value)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-medium text-slate-700"
                   >
-                    <option value="info@phumulani.org">General Inquiries &amp; Community</option>
-                    <option value="info@phumulani.org">Development &amp; Donor Engagement</option>
-                    <option value="info@phumulani.org">Institutional Grants &amp; Compliance</option>
-                    <option value="info@phumulani.org">Corporate &amp; Academic Partnerships</option>
-                    <option value="info@phumulani.org">Executive &amp; Governance Stewardship</option>
+                    <option value="23_general_inquiries">General Inquiries &amp; Community</option>
+                    <option value="02_donor_major">Development &amp; Donor Engagement</option>
+                    <option value="03_grant_funder">Institutional Grants &amp; Compliance</option>
+                    <option value="04_corporate_sponsorship">Corporate &amp; Academic Partnerships</option>
+                    <option value="10_executive_board">Executive &amp; Governance Stewardship</option>
                   </select>
                 </div>
               </div>
@@ -6239,11 +6319,11 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 />
               </div>
 
-              <div className="flex items-center justify-between border-t border-slate-100 pt-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-slate-100 pt-3">
                 <div className="text-[11px] text-slate-500">
                   Sender Identity: <span className="font-bold text-slate-800">{currentUser.name}</span> ({currentUser.role})
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <button
                     type="button"
                     onClick={() => setIsComposeOpen(false)}
@@ -6252,11 +6332,19 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     Cancel
                   </button>
                   <button
+                    type="button"
+                    onClick={handleSaveComposeDraft}
+                    disabled={isSavingComposeDraft}
+                    className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 rounded-xl font-bold cursor-pointer disabled:opacity-50"
+                  >
+                    {isSavingComposeDraft ? 'Saving Draft...' : 'Save Persistent Draft'}
+                  </button>
+                  <button
                     type="submit"
                     className="px-4 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                   >
                     <Send className="w-3.5 h-3.5" />
-                    <span>Authorize & Dispatch Email</span>
+                    <span>Stage Outbound Dispatch</span>
                   </button>
                 </div>
               </div>

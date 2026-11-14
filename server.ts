@@ -53,6 +53,7 @@ import {
   emailAiIntelligenceService,
   emailGrantFinancialService,
   emailGovernanceService,
+  demoDataCleanupService,
   normalizeMailboxConnectionState,
 } from './src/email';
 import { phumulaniAiAgentService, APPROVED_COMMUNITY_PROGRAMS } from './src/services/phumulaniAiAgentService';
@@ -5359,12 +5360,17 @@ app.post('/api/admin/email/compose', (req: Request, res: Response) => {
   if (actor.role === 'visitor') {
     return res.status(403).json({ error: 'Staff role required to send outbound email.' });
   }
-  const { mailboxId, recipientEmail, subject, bodyText, category, priority, idempotencyKey } = req.body;
+  const { mailboxId, mailboxEmail, recipientEmail, subject, bodyText, category, priority, idempotencyKey } = req.body;
   if (!recipientEmail || !subject || !bodyText) {
     return res.status(400).json({ error: 'recipientEmail, subject, and bodyText are required.' });
   }
+  const resolvedMailboxId = mailboxId || db.getState().connectedMailboxes[0]?.id;
+  if (!resolvedMailboxId && !mailboxEmail) {
+    return res.status(400).json({ error: 'A configured mailboxId or mailboxEmail is required to stage outbound correspondence.' });
+  }
   const result = db.composeDirectOutboundEmail({
-    mailboxId: mailboxId || db.getState().connectedMailboxes[0]?.id,
+    mailboxId: resolvedMailboxId,
+    mailboxEmail,
     recipientEmail,
     subject,
     bodyText,
@@ -6049,32 +6055,48 @@ app.get('/api/admin/email/connectors/providers', (_req: Request, res: Response) 
   }
 });
 
-// 50. Automatic Provider Discovery
-app.post('/api/admin/email/connectors/discover', (req: Request, res: Response) => {
+// 50. Automatic Provider Discovery (with real backend DNS MX lookup)
+app.post('/api/admin/email/connectors/discover', async (req: Request, res: Response) => {
   try {
     const { emailAddress } = req.body || {};
-    if (!emailAddress) {
-      return res.status(400).json({ success: false, error: 'emailAddress is required for provider discovery.' });
+    const trimmed = String(emailAddress || '').trim();
+    if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(trimmed)) {
+      return res.status(400).json({
+        success: false,
+        error: 'A valid emailAddress is required for provider and DNS MX discovery.',
+      });
     }
-    const discovery = connectorRegistry.discoverProvider(emailAddress);
+    const discovery = await connectorRegistry.discoverProviderWithMx(trimmed);
     res.json({ success: true, discovery });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
-// 51. List All Configured Email Connections (with Phase 64 8-State Canonical Lifecycle)
+// 51. List All Configured Email Connections (with Phase 64 8-State Canonical Lifecycle & Config Readiness)
 app.get('/api/admin/email/connectors', (_req: Request, res: Response) => {
   try {
-    const connections = connectorRegistry.listConnections().map((c) => ({
-      ...c,
-      lifecycleState: normalizeMailboxConnectionState({
-        authStatus: c.authStatus,
-        connectionHealth: c.connectionHealth,
-        syncStatus: c.syncStatus,
-        lastError: c.lastError,
-      }),
-    }));
+    const connections = connectorRegistry.listConnections().map((c) => {
+      const oauthConfigured =
+        c.provider === 'GOOGLE'
+          ? oAuthService.isProviderConfigured('GOOGLE')
+          : c.provider === 'MICROSOFT'
+          ? oAuthService.isProviderConfigured('MICROSOFT')
+          : true;
+      const configurationStatus =
+        c.authMethod === 'OAUTH2' && !oauthConfigured ? 'BLOCKED_BY_CONFIGURATION' : 'READY';
+      return {
+        ...c,
+        configurationStatus,
+        oauthClientConfigured: oauthConfigured,
+        lifecycleState: normalizeMailboxConnectionState({
+          authStatus: c.authStatus,
+          connectionHealth: c.connectionHealth,
+          syncStatus: c.syncStatus,
+          lastError: c.lastError,
+        }),
+      };
+    });
     res.json({ success: true, count: connections.length, connections });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
@@ -7639,6 +7661,38 @@ app.get('/api/admin/email/audit/ledger', async (req: Request, res: Response) => 
     res.json({ success: true, chainVerified, total: entries.length, entries });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// Phase 76.2 — Safe Demonstration Email Data Cleanup (Backup -> Dry-Run Diff -> Explicit Admin Approval -> Execute -> Audit)
+app.post('/api/admin/email/demo-cleanup/dry-run', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const report = await demoDataCleanupService.createDryRun({
+      actorId: actor.id,
+      actorName: actor.name,
+      actorRole: actor.role,
+    });
+    res.json({ success: true, report });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/demo-cleanup/execute', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const { approvalToken, adminApproved } = req.body || {};
+    const result = await demoDataCleanupService.executeCleanup({
+      actorId: actor.id,
+      actorName: actor.name,
+      actorRole: actor.role,
+      adminApproved: adminApproved === true,
+      approvalToken: String(approvalToken || ''),
+    });
+    res.json(result);
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
   }
 });
 

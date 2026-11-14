@@ -13,6 +13,8 @@ import { EMAIL_TEMPLATES, EMAIL_CATEGORY_METADATA } from '../src/types/emailEnte
 import { EmailEnterpriseService } from '../src/services/emailEnterpriseService';
 
 console.log('=== STARTING PHASE 48 EMAIL ADMINISTRATION VERIFICATION ===');
+process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
+db.hydrateEmailTestFixturesForSuite();
 
 let passCount = 0;
 let failCount = 0;

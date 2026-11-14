@@ -17,6 +17,7 @@ import { ConnectedMailbox, HistoricalImportJob, EMAIL_TEMPLATES } from '../types
 import { googleWorkspaceAdapter } from './googleWorkspaceAdapter';
 import { OutreachMessageDraft } from '../types/fundraising';
 import { INITIAL_CONNECTED_MAILBOXES } from './emailEnterpriseSeed';
+import { emailThreadService } from '../email/services/EmailThreadService';
 import { EnvironmentService } from './environmentService';
 import { MasterAdminService } from './masterAdminService';
 import { CommunityProgramsService } from './communityProgramsService';
@@ -127,8 +128,12 @@ export class AutomatedTestRunner {
   public static async runAllTests(): Promise<TestSuiteSummary> {
     process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
     EnvironmentService.setOperationalMode('STAGED_DEVELOPMENT');
+    const prevEmailSnapshot = db.snapshotEmailState();
+    db.hydrateEmailTestFixturesForSuite();
+    await emailThreadService.seedTestFixturesForSuite();
     const startTime = performance.now();
     const results: TestResultItem[] = [];
+    try {
 
     const runTest = async (
       id: string,
@@ -19543,5 +19548,8 @@ export class AutomatedTestRunner {
       timestamp: new Date().toISOString(),
       results,
     };
+    } finally {
+      db.restoreEmailState(prevEmailSnapshot);
+    }
   }
 }

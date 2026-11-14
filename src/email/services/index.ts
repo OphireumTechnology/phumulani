@@ -17,4 +17,5 @@ export * from './EmailRecoveryService';
 export * from './EmailAiIntelligenceService';
 export * from './EmailGrantFinancialService';
 export * from './EmailGovernanceService';
+export * from './DemoDataCleanupService';
 

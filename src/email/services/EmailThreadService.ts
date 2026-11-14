@@ -6,6 +6,9 @@
 
 import { EmailThread, EmailStaffNote } from '../types';
 import { PostgresPersistenceAdapter } from '../../services/postgresPersistenceAdapter';
+import { EnvironmentService } from '../../services/environmentService';
+
+export const DEMO_THREAD_SERVICE_SEED_IDS = ['th-gmail-101'] as const;
 
 export type CrmLinkEntityType =
   | 'donor_profile'
@@ -39,7 +42,6 @@ export class EmailThreadService {
 
   private constructor() {
     this.dbAdapter = PostgresPersistenceAdapter.getInstance();
-    this.seedInitialThreads();
   }
 
   public static getInstance(): EmailThreadService {
@@ -70,7 +72,13 @@ export class EmailThreadService {
     this.initialized = true;
   }
 
-  private seedInitialThreads(): void {
+  /**
+   * @internal TEST FIXTURE ONLY — Never call in production initialization.
+   */
+  public seedTestFixturesForSuite(): void {
+    if (EnvironmentService.isProductionOnly()) {
+      throw new Error('PRODUCTION_GUARD: Cannot seed demo thread fixtures in PRODUCTION_ONLY mode.');
+    }
     const thread1: EmailThread = {
       id: 'th-gmail-101',
       connectionId: 'conn-google-primary',
@@ -103,6 +111,21 @@ export class EmailThreadService {
     };
 
     this.threads.set(thread1.id, thread1);
+  }
+
+  public async removeThreadsByIds(ids: string[]): Promise<number> {
+    let removed = 0;
+    for (const id of ids) {
+      const existedInMem = this.threads.delete(id);
+      const links = this.crmLinks.get(id) || [];
+      for (const l of links) {
+        await this.dbAdapter.deleteById('email_crm_links', l.id).catch(() => {});
+      }
+      this.crmLinks.delete(id);
+      const dbDeleted = await this.dbAdapter.deleteById('email_threads', id).catch(() => false);
+      if (existedInMem || dbDeleted) removed++;
+    }
+    return removed;
   }
 
   public getThread(threadId: string): EmailThread | undefined {

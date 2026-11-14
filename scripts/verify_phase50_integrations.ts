@@ -29,6 +29,9 @@ async function runPhase50Verification() {
   console.log('  Google Workspace OAuth 2.0, PostgreSQL 19 Tables, Safeguarding & Pilot Guards');
   console.log('================================================================================\n');
 
+  process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
+  db.hydrateEmailTestFixturesForSuite();
+
   const gw = GoogleWorkspaceAdapter.getInstance();
   const pg = PostgresPersistenceAdapter.getInstance();
 

@@ -83,7 +83,16 @@ import {
   INITIAL_MAILBOX_SYNC_CHECKPOINTS,
   INITIAL_SYNC_CONFLICT_RECORDS,
   INITIAL_SYNC_AUDIT_LOGS,
+  DEMO_MAILBOX_IDS,
+  DEMO_THREAD_IDS,
+  DEMO_AUTORESPONDER_LOG_IDS,
+  DEMO_HISTORICAL_IMPORT_JOB_IDS,
+  DEMO_SYNC_CONFLICT_IDS,
+  DEMO_SYNC_AUDIT_LOG_IDS,
+  createCleanAutoResponderRules,
+  assertEmailFixturesAllowedInCurrentEnv,
 } from './emailEnterpriseSeed';
+import { EnvironmentService } from './environmentService';
 import {
   DonorContact,
   FundingOpportunity,
@@ -316,17 +325,17 @@ function getInitialState(): AppDatabaseState {
     auditLogs: INITIAL_AUDIT_LOGS,
     safeExitNeutralUrl: 'https://weather.com',
     systemSettings: INITIAL_SYSTEM_SETTINGS,
-    // Phase 8 Enterprise Email Seed Data
-    connectedMailboxes: INITIAL_CONNECTED_MAILBOXES,
-    autoResponderRules: INITIAL_AUTORESPONDER_RULES,
-    autoResponderLogs: INITIAL_AUTORESPONDER_LOGS,
-    enterpriseEmailThreads: INITIAL_ENTERPRISE_THREADS,
+    // Phase 8 Enterprise Email — clean initial state (no auto-seeded demo mailboxes or messages)
+    connectedMailboxes: [],
+    autoResponderRules: createCleanAutoResponderRules(),
+    autoResponderLogs: [],
+    enterpriseEmailThreads: [],
     donorProfiles: INITIAL_DONOR_PROFILES,
     majorDonorPipeline: INITIAL_MAJOR_DONOR_PIPELINE,
     grantPipeline: INITIAL_GRANT_PIPELINE,
     corporatePartnerships: INITIAL_CORPORATE_PARTNERSHIPS,
     followUpTasks: INITIAL_FOLLOW_UP_TASKS,
-    calendarProposals: INITIAL_CALENDAR_PROPOSALS,
+    calendarProposals: [],
     // Phase 8 Directive: Enterprise Fundraising
     fundraisingDonors: INITIAL_DONOR_CONTACTS,
     fundraisingOpportunities: INITIAL_FUNDING_OPPORTUNITIES,
@@ -342,11 +351,11 @@ function getInitialState(): AppDatabaseState {
     financialReconciliation: INITIAL_FINANCIAL_RECONCILIATION,
     fundraisingAIAgents: INITIAL_FUNDRAISING_AI_AGENTS,
     donorEngagementActivities: INITIAL_DONOR_ENGAGEMENT_ACTIVITIES,
-    // Phase 12A: Email Synchronization & Unified Mailbox Management
-    historicalImportJobs: INITIAL_HISTORICAL_IMPORT_JOBS,
-    syncCheckpoints: INITIAL_MAILBOX_SYNC_CHECKPOINTS,
-    syncConflicts: INITIAL_SYNC_CONFLICT_RECORDS,
-    syncAuditLogs: INITIAL_SYNC_AUDIT_LOGS,
+    // Phase 12A: Email Synchronization & Unified Mailbox Management — clean initial state
+    historicalImportJobs: [],
+    syncCheckpoints: [],
+    syncConflicts: [],
+    syncAuditLogs: [],
     // Phase 13: Client Development Transparency, GitHub Integration & Local Synchronization
     developmentMilestones: INITIAL_DEVELOPMENT_MILESTONES,
     developmentFeatures: INITIAL_DEVELOPMENT_FEATURES,
@@ -381,10 +390,10 @@ class DatabaseService {
         return {
           ...initial,
           ...parsed,
-          connectedMailboxes: parsed.connectedMailboxes?.length ? parsed.connectedMailboxes : initial.connectedMailboxes,
+          connectedMailboxes: Array.isArray(parsed.connectedMailboxes) ? parsed.connectedMailboxes : initial.connectedMailboxes,
           autoResponderRules: parsed.autoResponderRules?.length ? parsed.autoResponderRules : initial.autoResponderRules,
-          autoResponderLogs: parsed.autoResponderLogs || initial.autoResponderLogs,
-          enterpriseEmailThreads: parsed.enterpriseEmailThreads?.length ? parsed.enterpriseEmailThreads : initial.enterpriseEmailThreads,
+          autoResponderLogs: Array.isArray(parsed.autoResponderLogs) ? parsed.autoResponderLogs : initial.autoResponderLogs,
+          enterpriseEmailThreads: Array.isArray(parsed.enterpriseEmailThreads) ? parsed.enterpriseEmailThreads : initial.enterpriseEmailThreads,
           donorProfiles: parsed.donorProfiles?.length ? parsed.donorProfiles : initial.donorProfiles,
           majorDonorPipeline: parsed.majorDonorPipeline?.length ? parsed.majorDonorPipeline : initial.majorDonorPipeline,
           grantPipeline: parsed.grantPipeline?.length ? parsed.grantPipeline : initial.grantPipeline,
@@ -407,10 +416,10 @@ class DatabaseService {
           fundraisingAIAgents: parsed.fundraisingAIAgents?.length >= 18 ? parsed.fundraisingAIAgents : initial.fundraisingAIAgents,
           donorEngagementActivities: parsed.donorEngagementActivities?.length ? parsed.donorEngagementActivities : initial.donorEngagementActivities,
           // Phase 12A sync collections
-          historicalImportJobs: parsed.historicalImportJobs?.length ? parsed.historicalImportJobs : initial.historicalImportJobs,
-          syncCheckpoints: parsed.syncCheckpoints?.length ? parsed.syncCheckpoints : initial.syncCheckpoints,
-          syncConflicts: parsed.syncConflicts?.length ? parsed.syncConflicts : initial.syncConflicts,
-          syncAuditLogs: parsed.syncAuditLogs?.length ? parsed.syncAuditLogs : initial.syncAuditLogs,
+          historicalImportJobs: Array.isArray(parsed.historicalImportJobs) ? parsed.historicalImportJobs : initial.historicalImportJobs,
+          syncCheckpoints: Array.isArray(parsed.syncCheckpoints) ? parsed.syncCheckpoints : initial.syncCheckpoints,
+          syncConflicts: Array.isArray(parsed.syncConflicts) ? parsed.syncConflicts : initial.syncConflicts,
+          syncAuditLogs: Array.isArray(parsed.syncAuditLogs) ? parsed.syncAuditLogs : initial.syncAuditLogs,
           // Phase 13 Development Transparency collections
           developmentMilestones: parsed.developmentMilestones?.length ? parsed.developmentMilestones : initial.developmentMilestones,
           developmentFeatures: parsed.developmentFeatures?.length ? parsed.developmentFeatures : initial.developmentFeatures,
@@ -462,7 +471,101 @@ class DatabaseService {
   public resetDatabase(): void {
     const fresh = getInitialState();
     this.saveState(fresh);
-    this.appendAuditLog('DATABASE_RESET', 'Entire test database reset to baseline seed data.');
+    this.appendAuditLog('DATABASE_RESET', 'Entire test database reset to baseline clean state.');
+  }
+
+  /**
+   * @internal TEST FIXTURE ONLY — Hydrates isolated email test fixtures for automated suites.
+   * Prohibited in PRODUCTION_ONLY mode.
+   */
+  public hydrateEmailTestFixturesForSuite(): void {
+    assertEmailFixturesAllowedInCurrentEnv();
+    this.saveState({
+      ...this.state,
+      connectedMailboxes: JSON.parse(JSON.stringify(INITIAL_CONNECTED_MAILBOXES)),
+      autoResponderRules: JSON.parse(JSON.stringify(INITIAL_AUTORESPONDER_RULES)),
+      autoResponderLogs: JSON.parse(JSON.stringify(INITIAL_AUTORESPONDER_LOGS)),
+      enterpriseEmailThreads: JSON.parse(JSON.stringify(INITIAL_ENTERPRISE_THREADS)),
+      historicalImportJobs: JSON.parse(JSON.stringify(INITIAL_HISTORICAL_IMPORT_JOBS)),
+      syncCheckpoints: JSON.parse(JSON.stringify(INITIAL_MAILBOX_SYNC_CHECKPOINTS)),
+      syncConflicts: JSON.parse(JSON.stringify(INITIAL_SYNC_CONFLICT_RECORDS)),
+      syncAuditLogs: JSON.parse(JSON.stringify(INITIAL_SYNC_AUDIT_LOGS)),
+      calendarProposals: JSON.parse(JSON.stringify(INITIAL_CALENDAR_PROPOSALS)),
+    });
+  }
+
+  public snapshotEmailState() {
+    return JSON.parse(
+      JSON.stringify({
+        connectedMailboxes: this.state.connectedMailboxes,
+        autoResponderRules: this.state.autoResponderRules,
+        autoResponderLogs: this.state.autoResponderLogs,
+        enterpriseEmailThreads: this.state.enterpriseEmailThreads,
+        historicalImportJobs: this.state.historicalImportJobs,
+        syncCheckpoints: this.state.syncCheckpoints,
+        syncConflicts: this.state.syncConflicts,
+        syncAuditLogs: this.state.syncAuditLogs,
+        calendarProposals: this.state.calendarProposals,
+      })
+    );
+  }
+
+  public restoreEmailState(snapshot: ReturnType<DatabaseService['snapshotEmailState']>): void {
+    this.saveState({
+      ...this.state,
+      ...snapshot,
+    });
+  }
+
+  /**
+   * Removes ONLY confirmed demonstration email records by deterministic provenance IDs while preserving real records.
+   */
+  public purgeConfirmedDemoEmailData(): {
+    removedMailboxes: number;
+    removedThreads: number;
+    removedAutoResponderLogs: number;
+    removedImportJobs: number;
+    removedCheckpoints: number;
+    removedConflicts: number;
+    removedSyncAuditLogs: number;
+  } {
+    const demoMbxSet = new Set(DEMO_MAILBOX_IDS);
+    const demoThreadSet = new Set([...DEMO_THREAD_IDS, 'th-gmail-101']);
+    const demoArLogSet = new Set(DEMO_AUTORESPONDER_LOG_IDS);
+    const demoJobSet = new Set(DEMO_HISTORICAL_IMPORT_JOB_IDS);
+    const demoConflictSet = new Set(DEMO_SYNC_CONFLICT_IDS);
+    const demoSyncAuditSet = new Set(DEMO_SYNC_AUDIT_LOG_IDS);
+
+    const nextMailboxes = this.state.connectedMailboxes.filter((m) => !demoMbxSet.has(m.id));
+    const nextThreads = this.state.enterpriseEmailThreads.filter((t) => !demoThreadSet.has(t.id));
+    const nextArLogs = this.state.autoResponderLogs.filter((l) => !demoArLogSet.has(l.id));
+    const nextJobs = this.state.historicalImportJobs.filter((j) => !demoJobSet.has(j.id));
+    const nextCheckpoints = this.state.syncCheckpoints.filter((c) => !demoMbxSet.has(c.mailboxId));
+    const nextConflicts = this.state.syncConflicts.filter((c) => !demoConflictSet.has(c.id));
+    const nextSyncAuditLogs = this.state.syncAuditLogs.filter((l) => !demoSyncAuditSet.has(l.id));
+
+    const stats = {
+      removedMailboxes: this.state.connectedMailboxes.length - nextMailboxes.length,
+      removedThreads: this.state.enterpriseEmailThreads.length - nextThreads.length,
+      removedAutoResponderLogs: this.state.autoResponderLogs.length - nextArLogs.length,
+      removedImportJobs: this.state.historicalImportJobs.length - nextJobs.length,
+      removedCheckpoints: this.state.syncCheckpoints.length - nextCheckpoints.length,
+      removedConflicts: this.state.syncConflicts.length - nextConflicts.length,
+      removedSyncAuditLogs: this.state.syncAuditLogs.length - nextSyncAuditLogs.length,
+    };
+
+    this.saveState({
+      ...this.state,
+      connectedMailboxes: nextMailboxes,
+      autoResponderRules: createCleanAutoResponderRules(),
+      autoResponderLogs: nextArLogs,
+      enterpriseEmailThreads: nextThreads,
+      historicalImportJobs: nextJobs,
+      syncCheckpoints: nextCheckpoints,
+      syncConflicts: nextConflicts,
+      syncAuditLogs: nextSyncAuditLogs,
+    });
+    return stats;
   }
 
   // --- Auth & Role Switching ---
@@ -1091,6 +1194,16 @@ class DatabaseService {
     newSentCount: number;
     error?: string;
   } {
+    if (EnvironmentService.isProductionOnly()) {
+      return {
+        success: false,
+        deltaToken: '',
+        newCount: 0,
+        newIncomingCount: 0,
+        newSentCount: 0,
+        error: 'PRODUCTION_GUARD: Local simulated incremental sync is prohibited in PRODUCTION_ONLY mode. Use backend /api/admin/email/connectors/:id/sync.',
+      };
+    }
     const actor = this.state.currentUser;
     const mbx = this.state.connectedMailboxes.find((m) => m.id === mailboxId);
     const cp = this.state.syncCheckpoints.find((c) => c.mailboxId === mailboxId);
@@ -1203,6 +1316,11 @@ class DatabaseService {
   }
 
   public reauthorizeMailbox(mailboxId: string): ConnectedMailbox & { authUrl: string } {
+    if (EnvironmentService.isProductionOnly()) {
+      throw new Error(
+        'PRODUCTION_GUARD: Local simulated OAuth reauthorization is prohibited in PRODUCTION_ONLY mode. Use /api/admin/email/connections/:id/reauthorize.'
+      );
+    }
     const actor = this.state.currentUser;
     const mbx = this.state.connectedMailboxes.find((m) => m.id === mailboxId);
     if (!mbx) throw new Error(`Mailbox ${mailboxId} not found`);
@@ -1471,6 +1589,14 @@ class DatabaseService {
   }
 
   public testMailboxConnection(mailboxId: string): { success: boolean; latencyMs: number; status: string; message: string } {
+    if (EnvironmentService.isProductionOnly()) {
+      return {
+        success: false,
+        latencyMs: 0,
+        status: 'BLOCKED_SIMULATION',
+        message: 'Simulated connection handshake is disabled in PRODUCTION_ONLY mode. Use backend connector verification.',
+      };
+    }
     const actor = this.state.currentUser;
     const mbx = this.state.connectedMailboxes.find((m) => m.id === mailboxId);
     if (!mbx) {
@@ -1549,6 +1675,7 @@ class DatabaseService {
 
   public composeDirectOutboundEmail(params: {
     mailboxId: string;
+    mailboxEmail?: string;
     recipientEmail: string;
     recipientName?: string;
     subject: string;
@@ -1558,7 +1685,13 @@ class DatabaseService {
     idempotencyKey?: string;
   }): { success: boolean; threadId: string; messageId: string } {
     const actor = this.state.currentUser;
-    const mbx = this.state.connectedMailboxes.find((m) => m.id === params.mailboxId) || this.state.connectedMailboxes[0];
+    const matchedMbx =
+      this.state.connectedMailboxes.find((m) => m.id === params.mailboxId || (params.mailboxEmail && m.email === params.mailboxEmail)) ||
+      this.state.connectedMailboxes[0];
+    const mbx = matchedMbx || {
+      id: params.mailboxId || 'conn-unverified',
+      email: params.mailboxEmail || 'info@phumulani.org',
+    };
     const threadId = `th-out-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`;
     const messageId = `msg-out-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`;
     const now = new Date().toISOString();

@@ -1,9 +1,12 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- * Phumulani Enterprise Email Management & Fundraising Intelligence Seed Data
+ * @internal TEST FIXTURE ONLY — DO NOT AUTO-SEED INTO PRODUCTION RUNTIME STATE
+ * Phumulani Enterprise Email Management & Fundraising Intelligence Test Fixtures
  * Grounded in Master Development Playbook (feature/phumulani-email-enterprise)
  */
+
+import { EnvironmentService } from './environmentService';
 
 import {
   ConnectedMailbox,
@@ -1485,3 +1488,26 @@ export const INITIAL_SYNC_AUDIT_LOGS: SyncAuditLogItem[] = [
     status: 'success',
   },
 ];
+
+// Deterministic provenance identifiers for Phase 76.2 Safe Demo Data Cleanup & Test Isolation
+export const DEMO_MAILBOX_IDS = INITIAL_CONNECTED_MAILBOXES.map((m) => m.id);
+export const DEMO_THREAD_IDS = INITIAL_ENTERPRISE_THREADS.map((t) => t.id);
+export const DEMO_AUTORESPONDER_LOG_IDS = INITIAL_AUTORESPONDER_LOGS.map((l) => l.id);
+export const DEMO_HISTORICAL_IMPORT_JOB_IDS = INITIAL_HISTORICAL_IMPORT_JOBS.map((j) => j.id);
+export const DEMO_SYNC_CONFLICT_IDS = INITIAL_SYNC_CONFLICT_RECORDS.map((c) => c.id);
+export const DEMO_SYNC_AUDIT_LOG_IDS = INITIAL_SYNC_AUDIT_LOGS.map((l) => l.id);
+
+export function createCleanAutoResponderRules(): AutoResponderRule[] {
+  return INITIAL_AUTORESPONDER_RULES.map((rule) => ({
+    ...rule,
+    totalTriggeredCount: 0,
+    lastTriggeredAt: undefined,
+  }));
+}
+
+export function assertEmailFixturesAllowedInCurrentEnv(): void {
+  if (EnvironmentService.isProductionOnly()) {
+    throw new Error('PRODUCTION_GUARD: Email test fixtures cannot be hydrated in PRODUCTION_ONLY mode.');
+  }
+}
+

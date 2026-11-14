@@ -31,6 +31,9 @@ async function runPhase51Verification() {
   console.log('  Controlled Enterprise Integration, Email Operations & Acceptance Verification');
   console.log('================================================================================\n');
 
+  process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
+  db.hydrateEmailTestFixturesForSuite();
+
   const gw = GoogleWorkspaceAdapter.getInstance();
   const pg = PostgresPersistenceAdapter.getInstance();
   gw.resetPilotForTesting();

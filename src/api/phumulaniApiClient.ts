@@ -532,6 +532,53 @@ class PhumulaniApiClient {
       body: JSON.stringify({ maxJobs }),
     });
   }
+
+  public async createPersistentDraft(payload: {
+    mailboxId: string;
+    to: string[];
+    cc?: string[];
+    subject: string;
+    bodyText: string;
+    isAiGenerated?: boolean;
+    isSafeguarded?: boolean;
+  }): Promise<{ success: boolean; draft?: any; error?: string }> {
+    return this.request('/api/admin/email/drafts', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async discoverEmailProvider(emailAddress: string): Promise<{ success: boolean; discovery?: any; error?: string }> {
+    return this.request('/api/admin/email/connectors/discover', {
+      method: 'POST',
+      body: JSON.stringify({ emailAddress }),
+    });
+  }
+
+  public async dryRunDemoEmailCleanup(): Promise<{ success: boolean; report: any }> {
+    return this.request('/api/admin/email/demo-cleanup/dry-run', {
+      method: 'POST',
+      body: JSON.stringify({}),
+    });
+  }
+
+  public async executeDemoEmailCleanup(payload: {
+    approvalToken: string;
+    adminApproved: boolean;
+  }): Promise<{
+    success: boolean;
+    deletedCount: number;
+    uncertainPreservedCount: number;
+    genuinePreservedCount: number;
+    backupFilePath: string;
+    auditLedgerId: string;
+    auditLedgerHash: string;
+  }> {
+    return this.request('/api/admin/email/demo-cleanup/execute', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
 }
 
 export const phumulaniApiClient = new PhumulaniApiClient();

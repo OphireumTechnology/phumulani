@@ -25,6 +25,9 @@ console.log('PHUMULANI PHASE 49 — ENTERPRISE EMAIL & SECURITY TEST SUITE');
 console.log('Mode: STAGED_DEVELOPMENT · Verification Gate M49.18 / M49.19');
 console.log('================================================================\n');
 
+process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
+db.hydrateEmailTestFixturesForSuite();
+
 let passCount = 0;
 let failCount = 0;
 

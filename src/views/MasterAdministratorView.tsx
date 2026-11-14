@@ -361,28 +361,28 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
 
 
   return (
-    <div className="min-h-screen bg-[#F4F6F8] flex flex-col font-sans text-slate-800">
+    <div className="min-h-screen bg-[#F4F6F8] flex flex-col font-sans text-slate-800 max-w-full overflow-x-hidden">
       {/* MASTER TOP HEADER */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
-        <div className="px-4 py-2.5 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
+        <div className="px-3 sm:px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 sm:gap-4">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-wrap">
             <button
               onClick={toggleSidebar}
-              className="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer shrink-0"
               title={isSidebarCollapsed ? "Expand Navigation Sidebar" : "Collapse Navigation Sidebar"}
               aria-label="Toggle Navigation Sidebar"
               aria-expanded={!isSidebarCollapsed}
             >
               <Layers className="w-5 h-5 text-teal-800" />
             </button>
-            <div className="flex items-center gap-2">
-              <span className="font-serif font-bold text-slate-900 text-base tracking-tight">
+            <div className="flex items-center gap-2 min-w-0 flex-wrap">
+              <span className="font-serif font-bold text-slate-900 text-sm sm:text-base tracking-tight truncate">
                 Phumulani Master Administrator
               </span>
               {activeModule === 'email_command_center' && (
                 <>
-                  <span className="text-slate-400 font-normal">/</span>
-                  <span className="font-semibold text-teal-900 text-xs bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-md">
+                  <span className="text-slate-400 font-normal hidden sm:inline">/</span>
+                  <span className="font-semibold text-teal-900 text-xs bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-md hidden sm:inline">
                     Email Command Center
                   </span>
                   <button
@@ -394,14 +394,14 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                 </>
               )}
               {activeModule !== 'email_command_center' && (
-                <span className="text-[10px] font-mono font-bold bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full uppercase tracking-wider">
+                <span className="text-[10px] font-mono font-bold bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full uppercase tracking-wider hidden sm:inline-block">
                   PLATFORM_SUPER_ADMIN
                 </span>
               )}
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             {/* Live Probe Status Pill */}
             <button
               onClick={handleRunProbe}
@@ -594,10 +594,10 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
 
         {/* MAIN MODULE CONTENT AREA */}
         <main
-          className={`flex-1 overflow-y-auto ${
+          className={`flex-1 min-w-0 overflow-y-auto overflow-x-hidden ${
             activeModule === 'email_command_center' || activeModule === 'fundraising_command_center'
               ? 'p-0 max-w-none'
-              : 'p-6 sm:p-8 max-w-7xl'
+              : 'p-4 sm:p-8 max-w-7xl'
           }`}
         >
           <Suspense

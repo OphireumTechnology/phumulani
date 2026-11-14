@@ -20,6 +20,10 @@ import {
 } from '../../types/emailConnectors';
 import { PROVIDER_DESCRIPTORS } from '../../services/connectors/providerCapabilities';
 import { authFetch } from '../../services/sessionTokenStore';
+import { phumulaniApiClient } from '../../api/phumulaniApiClient';
+import { db } from '../../services/db';
+
+const EMAIL_FORMAT_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 export type MailboxUIState =
   | 'Not connected'
@@ -131,6 +135,19 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
   const [oauthVerified, setOauthVerified] = useState<boolean>(false);
   const [isInitiatingOAuth, setIsInitiatingOAuth] = useState<boolean>(false);
   const [isExchangingCode, setIsExchangingCode] = useState<boolean>(false);
+  const [oauthConfigError, setOauthConfigError] = useState<{
+    message: string;
+    code?: string;
+    missingEnvVars?: string[];
+  } | null>(null);
+
+  // Admin Safe Demo Data Cleanup State (Block 76.2)
+  const [showCleanupPanel, setShowCleanupPanel] = useState<boolean>(false);
+  const [cleanupDryRun, setCleanupDryRun] = useState<any | null>(null);
+  const [cleanupLoading, setCleanupLoading] = useState<boolean>(false);
+  const [cleanupApprovalChecked, setCleanupApprovalChecked] = useState<boolean>(false);
+  const [cleanupExecuting, setCleanupExecuting] = useState<boolean>(false);
+  const [cleanupResult, setCleanupResult] = useState<any | null>(null);
 
   // Edit Permissions Modal
   const [editingPermissionsConn, setEditingPermissionsConn] = useState<EmailConnectionRecord | null>(null);
@@ -201,13 +218,17 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
   const handleDiscover = async (email: string) => {
     setWizardEmail(email);
-    if (!email || !email.includes('@')) return;
+    setOauthConfigError(null);
+    if (!email || !EMAIL_FORMAT_REGEX.test(email.trim())) {
+      setDiscoveryResult(null);
+      return;
+    }
 
     try {
       const res = await authFetch('/api/admin/email/connectors/discover', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ emailAddress: email }),
+        body: JSON.stringify({ emailAddress: email.trim() }),
       });
       const data = await res.json();
       if (data.success && data.discovery) {
@@ -229,13 +250,57 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
     }
   };
 
+  const handleRunCleanupDryRun = async () => {
+    setCleanupLoading(true);
+    setCleanupResult(null);
+    setCleanupApprovalChecked(false);
+    try {
+      const res = await phumulaniApiClient.dryRunDemoEmailCleanup();
+      if (res.success && res.report) {
+        setCleanupDryRun(res.report);
+        showToast('Safe demo cleanup dry-run inspection & timestamped backup created.', 'info');
+      } else {
+        showToast('Dry-run cleanup returned no report.', 'error');
+      }
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Dry-run cleanup failed', 'error');
+    } finally {
+      setCleanupLoading(false);
+    }
+  };
+
+  const handleExecuteSafeCleanup = async () => {
+    if (!cleanupDryRun?.approvalToken || !cleanupApprovalChecked) return;
+    setCleanupExecuting(true);
+    try {
+      const res = await phumulaniApiClient.executeDemoEmailCleanup({
+        approvalToken: cleanupDryRun.approvalToken,
+        adminApproved: true,
+      });
+      db.purgeConfirmedDemoEmailData();
+      setCleanupResult(res);
+      setCleanupDryRun(null);
+      setCleanupApprovalChecked(false);
+      await fetchConnections();
+      showToast(
+        `Demo cleanup complete: ${res.deletedCount} confirmed demo records removed, ${res.genuinePreservedCount} genuine & ${res.uncertainPreservedCount} uncertain records preserved.`,
+        'success'
+      );
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Cleanup execution failed', 'error');
+    } finally {
+      setCleanupExecuting(false);
+    }
+  };
+
   const handleInitiateOAuthInWizard = async () => {
     setIsInitiatingOAuth(true);
+    setOauthConfigError(null);
     try {
       const endpoint = selectedProvider === 'MICROSOFT'
         ? '/api/admin/email/oauth/microsoft/start'
         : '/api/admin/email/oauth/google/start';
-      const res = await authFetch(`${endpoint}?email=${encodeURIComponent(wizardEmail)}`);
+      const res = await authFetch(`${endpoint}?email=${encodeURIComponent(wizardEmail.trim())}`);
       const data = await res.json();
       if (data.success) {
         setOauthData({
@@ -245,8 +310,19 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
           clientId: data.clientId,
           scopes: data.scopes || [],
         });
-        showToast('OAuth 2.0 PKCE challenge generated. Click "Open Provider Login" to authenticate.', 'info');
+        showToast('OAuth 2.0 PKCE challenge generated. Click "Open Provider Consent Screen" to authenticate.', 'info');
       } else {
+        const missingVars =
+          selectedProvider === 'MICROSOFT'
+            ? ['MICROSOFT_GRAPH_CLIENT_ID', 'MICROSOFT_GRAPH_CLIENT_SECRET', 'MICROSOFT_TENANT_ID']
+            : ['GOOGLE_WORKSPACE_CLIENT_ID', 'GOOGLE_WORKSPACE_CLIENT_SECRET'];
+        if (res.status === 503 || data.code === 'OAUTH_CREDENTIALS_MISSING') {
+          setOauthConfigError({
+            message: data.error || `${selectedProvider} OAuth credentials are not configured on the server.`,
+            code: 'BLOCKED_BY_CONFIGURATION',
+            missingEnvVars: missingVars,
+          });
+        }
         showToast(data.error || 'Failed to initiate OAuth', 'error');
       }
     } catch (err) {
@@ -315,7 +391,17 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
         status: isAuthorized ? (selectedAuthMethod === 'OAUTH2' ? 'HEALTHY' : 'UNTESTED') : 'UNTESTED',
         roundTripLatencyMs,
         lastCheckedAt: new Date().toISOString(),
-        dnsResolution: data.discovery?.supported ? 'RESOLVED_OK' : 'DNS_ERROR',
+        dnsResolution:
+          data.discovery?.dnsStatus === 'RESOLVED_OK'
+            ? 'RESOLVED_OK'
+            : data.discovery?.dnsStatus === 'NO_MX' ||
+              data.discovery?.dnsStatus === 'NXDOMAIN' ||
+              data.discovery?.dnsStatus === 'TIMEOUT' ||
+              data.discovery?.dnsStatus === 'DNS_ERROR'
+            ? 'DNS_ERROR'
+            : data.discovery?.supported
+            ? 'RESOLVED_OK'
+            : 'DNS_ERROR',
         diagnosticsDetail:
           selectedAuthMethod === 'OAUTH2'
             ? isAuthorized
@@ -401,6 +487,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
     setOauthData(null);
     setOauthAuthCodeInput('');
     setOauthVerified(false);
+    setOauthConfigError(null);
   };
 
   const handleSync = async (id: string) => {
@@ -687,6 +774,12 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
           </div>
           <div className="flex items-center gap-2.5 flex-wrap">
             <button
+              onClick={() => setShowCleanupPanel(!showCleanupPanel)}
+              className="px-4 py-2.5 bg-slate-800/80 hover:bg-slate-700 text-amber-200 font-medium text-xs rounded-xl border border-amber-500/40 transition-colors flex items-center gap-1.5"
+            >
+              {showCleanupPanel ? 'Hide Demo Cleanup' : 'Safe Demo Cleanup'}
+            </button>
+            <button
               onClick={() => setShowConfigGuide(!showConfigGuide)}
               className="px-4 py-2.5 bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-medium text-xs rounded-xl border border-slate-600 transition-colors flex items-center gap-1.5"
             >
@@ -809,6 +902,76 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
           <div className="bg-teal-950/60 p-3.5 rounded-xl border border-teal-800/60 text-teal-200 text-xs">
             <strong>VAWA Section 1367 Safeguarding Air-Gap Policy:</strong> Accounts classified as <code className="bg-teal-900 px-1 py-0.5 rounded text-white">CONFIDENTIAL_SAFEGUARDING_AIR_GAP</code> (e.g. safeguarding@phumulani.org) strictly prohibit AI automated dispatch, suppress donor CRM syncing, and air-gap sensitive survivor PII.
           </div>
+        </div>
+      )}
+
+      {/* Admin Safe Demonstration Data Cleanup Panel (Block 76.2) */}
+      {showCleanupPanel && (
+        <div className="bg-white border border-amber-300 rounded-2xl p-5 shadow-sm space-y-4 text-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div>
+              <h3 className="text-sm font-bold text-slate-900">Safe Demonstration Email Data Cleanup</h3>
+              <p className="text-slate-600 mt-0.5">
+                Inspects email stores only after creating a timestamped backup. Donor records, grant pipelines, payments, audit logs, and any uncertain records are strictly preserved.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleRunCleanupDryRun}
+              disabled={cleanupLoading}
+              className="px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl font-semibold disabled:opacity-50"
+            >
+              {cleanupLoading ? 'Inspecting...' : 'Run Dry-Run & Create Backup'}
+            </button>
+          </div>
+
+          {cleanupDryRun && (
+            <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-4 space-y-3">
+              <div className="font-bold text-slate-900">Dry-Run Inspection Report (Approval Required)</div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div className="bg-white p-2.5 rounded-lg border border-amber-200">
+                  <div className="text-slate-500">Confirmed Demo Records</div>
+                  <div className="text-lg font-bold text-rose-700">{cleanupDryRun.confirmedDemoCount}</div>
+                </div>
+                <div className="bg-white p-2.5 rounded-lg border border-emerald-200">
+                  <div className="text-slate-500">Genuine Records Preserved</div>
+                  <div className="text-lg font-bold text-emerald-700">{cleanupDryRun.genuinePreservedCount}</div>
+                </div>
+                <div className="bg-white p-2.5 rounded-lg border border-slate-200">
+                  <div className="text-slate-500">Uncertain Preserved</div>
+                  <div className="text-lg font-bold text-slate-800">{cleanupDryRun.uncertainPreservedCount}</div>
+                </div>
+              </div>
+              <div className="font-mono text-[11px] text-slate-700 break-all">
+                <strong>Backup Created:</strong> {cleanupDryRun.backupFilePath} (SHA-256: {String(cleanupDryRun.backupChecksum || '').slice(0, 16)}…)
+              </div>
+              <label className="flex items-center gap-2 text-slate-800 font-semibold cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={cleanupApprovalChecked}
+                  onChange={(e) => setCleanupApprovalChecked(e.target.checked)}
+                  className="rounded border-slate-300"
+                />
+                <span>I confirm deletion of ONLY confirmed demonstration email records listed in this dry-run.</span>
+              </label>
+              <button
+                type="button"
+                onClick={handleExecuteSafeCleanup}
+                disabled={!cleanupApprovalChecked || cleanupExecuting}
+                className="px-4 py-2 bg-rose-700 hover:bg-rose-800 text-white rounded-xl font-bold disabled:opacity-50"
+              >
+                {cleanupExecuting ? 'Executing Cleanup...' : 'Approve & Execute Confirmed Cleanup'}
+              </button>
+            </div>
+          )}
+
+          {cleanupResult && (
+            <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-emerald-900 space-y-1">
+              <div className="font-bold">Cleanup Audit Entry Recorded</div>
+              <div>Deleted confirmed demo records: {cleanupResult.deletedCount} | Genuine preserved: {cleanupResult.genuinePreservedCount} | Uncertain preserved: {cleanupResult.uncertainPreservedCount}</div>
+              <div className="font-mono text-[11px]">Audit Ledger ID: {cleanupResult.auditLedgerId}</div>
+            </div>
+          )}
         </div>
       )}
 
@@ -976,9 +1139,10 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                             Err: {conn.lastError}
                           </span>
                         )}
-                        {!(conn as any).credentialsConfigured && uiState === 'Not connected' && (
-                          <span className="text-amber-700 font-medium">
-                            Live provider OAuth / IMAP credentials not configured
+                        {((conn as any).configurationStatus === 'BLOCKED_BY_CONFIGURATION' ||
+                          (!(conn as any).credentialsConfigured && uiState === 'Not connected')) && (
+                          <span className="px-2 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-300 font-semibold">
+                            BLOCKED_BY_CONFIGURATION — Live OAuth / provider credentials not configured
                           </span>
                         )}
                       </div>
@@ -1179,10 +1343,10 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       {/* 6-STEP CONNECT EMAIL ACCOUNT WIZARD MODAL (REAL OAUTH INTEGRATION)       */}
       {/* ========================================================================= */}
       {isWizardOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 overflow-hidden animate-fade-in my-8">
+        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 overflow-hidden animate-fade-in">
             {/* Modal Header */}
-            <div className="bg-slate-900 px-6 py-4 text-white flex items-center justify-between">
+            <div className="bg-slate-900 px-6 py-4 text-white flex items-center justify-between shrink-0">
               <div>
                 <h3 className="font-bold text-lg">Connect Email Account</h3>
                 <p className="text-xs text-slate-400">Step {wizardStep} of 6 — Universal Connector Provisioning</p>
@@ -1196,7 +1360,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
             </div>
 
             {/* Stepper Indicator */}
-            <div className="bg-slate-100 px-6 py-2.5 flex items-center justify-between border-b border-slate-200 text-xs">
+            <div className="bg-slate-100 px-6 py-2.5 flex items-center justify-between border-b border-slate-200 text-xs shrink-0">
               {['Email & Discovery', 'Provider', 'Auth Credentials', 'TLS Verification', 'Permissions', 'Review'].map(
                 (title, idx) => {
                   const stepNum = idx + 1;
@@ -1232,7 +1396,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
             </div>
 
             {/* Wizard Body */}
-            <div className="p-6 space-y-5 max-h-[70vh] overflow-y-auto">
+            <div className="p-6 space-y-5 flex-1 min-h-0 overflow-y-auto">
               {/* STEP 1: Email Address & Autodiscovery */}
               {wizardStep === 1 && (
                 <div className="space-y-4">
@@ -1246,13 +1410,18 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       type="email"
                       value={wizardEmail}
                       onChange={(e) => handleDiscover(e.target.value)}
-                      placeholder="e.g. outreach@phumulani.org, partner@outlook.com"
+                      placeholder="e.g. info@phumulani.org, partner@outlook.com"
                       className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-teal-500"
                     />
+                    {wizardEmail.trim().length > 0 && !EMAIL_FORMAT_REGEX.test(wizardEmail.trim()) && (
+                      <p className="text-[11px] text-rose-600 mt-1">
+                        Enter a valid email address with domain (e.g. info@phumulani.org).
+                      </p>
+                    )}
                   </div>
 
                   {discoveryResult && (
-                    <div className="p-4 rounded-xl bg-teal-50/80 border border-teal-200 text-xs text-teal-900 space-y-1">
+                    <div className="p-4 rounded-xl bg-teal-50/80 border border-teal-200 text-xs text-teal-900 space-y-1.5">
                       <div className="font-bold flex items-center gap-1.5 text-teal-800">
                         <svg className="w-4 h-4 text-teal-600" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -1260,7 +1429,29 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                         Detected Provider: {PROVIDER_DESCRIPTORS[discoveryResult.detectedProvider]?.name || discoveryResult.detectedProvider} ({Math.round(discoveryResult.confidenceScore * 100)}% match)
                       </div>
                       <div>{discoveryResult.detectionReason}</div>
-                      <div><strong>Suggested Auth:</strong> {discoveryResult.suggestedAuthMethod}</div>
+                      <div>
+                        <strong>Suggested Auth:</strong> {discoveryResult.suggestedAuthMethod}
+                        {discoveryResult.dnsStatus && (
+                          <span className="ml-2 font-mono text-[11px] px-1.5 py-0.5 rounded bg-white border border-teal-200">
+                            DNS: {discoveryResult.dnsStatus}
+                          </span>
+                        )}
+                      </div>
+                      {discoveryResult.mxRecords && discoveryResult.mxRecords.length > 0 && (
+                        <div className="pt-1">
+                          <strong>MX Records:</strong>
+                          <ul className="mt-1 space-y-0.5 font-mono text-[11px]">
+                            {discoveryResult.mxRecords.slice(0, 4).map((mx) => (
+                              <li key={`${mx.priority}-${mx.exchange}`}>
+                                [{mx.priority}] {mx.exchange}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+                      <div className="text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded-lg p-2 mt-1">
+                        MX records identify mail routing only. Account ownership and authorization require OAuth 2.0 or credential verification before this mailbox can connect.
+                      </div>
                     </div>
                   )}
                 </div>
@@ -1342,6 +1533,20 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                         </button>
                       </div>
 
+                      {oauthConfigError && (
+                        <div className="p-3 rounded-lg bg-amber-50 border border-amber-300 text-amber-950 text-xs space-y-1">
+                          <div className="font-bold">
+                            {oauthConfigError.code || 'BLOCKED_BY_CONFIGURATION'}: Provider OAuth Credentials Missing
+                          </div>
+                          <div>{oauthConfigError.message}</div>
+                          {oauthConfigError.missingEnvVars && (
+                            <div className="font-mono text-[11px]">
+                              Required server env vars: {oauthConfigError.missingEnvVars.join(', ')}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
                       {oauthData && (
                         <div className="space-y-3 pt-3 border-t border-slate-200 text-xs">
                           <div className="bg-white p-3 rounded-lg border border-slate-200 space-y-1.5">
@@ -1383,7 +1588,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                                 type="text"
                                 value={oauthAuthCodeInput}
                                 onChange={(e) => setOauthAuthCodeInput(e.target.value)}
-                                placeholder="Paste code or staged test code: e.g. 4/0AX4XfWh..."
+                                placeholder="Paste authorization code returned from provider callback"
                                 className="flex-1 px-3 py-1.5 text-xs rounded-lg border border-slate-300 font-mono"
                               />
                               <button
@@ -1592,7 +1797,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
             </div>
 
             {/* Modal Footer Controls */}
-            <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between">
+            <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 flex items-center justify-between shrink-0">
               <button
                 onClick={() => setWizardStep(Math.max(1, wizardStep - 1))}
                 disabled={wizardStep === 1}
@@ -1603,7 +1808,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               {wizardStep < 6 ? (
                 <button
                   onClick={() => setWizardStep(wizardStep + 1)}
-                  disabled={!wizardEmail || !wizardEmail.includes('@')}
+                  disabled={!EMAIL_FORMAT_REGEX.test(wizardEmail.trim())}
                   className="px-5 py-2 text-xs font-semibold bg-teal-600 hover:bg-teal-700 text-white rounded-xl shadow disabled:opacity-50 transition-colors"
                 >
                   Continue
