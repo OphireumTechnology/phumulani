@@ -304,7 +304,7 @@ async function main() {
   // 11. Persistent Drafts + Maker-Checker + STAGED vs DELIVERY_CONFIRMED
   await runCheck('P76-11-DRAFT-MAKER-CHECKER-DISPATCH', async () => {
     const draft = await emailDispatchService.createDraft({
-      mailboxId: 'conn-grants-phumulani',
+      mailboxId: 'conn-google-grants_phumulani_org',
       to: ['program.officer@foundation.example.org'],
       subject: 'Phase 76 Persistent Grant Follow-Up',
       bodyText: 'Thank you for reviewing our housing readiness report.',

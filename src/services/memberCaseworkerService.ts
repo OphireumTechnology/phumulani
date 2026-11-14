@@ -316,7 +316,7 @@ export class MemberCaseworkerService {
   ): Promise<{ success: boolean; profile?: MemberProfile; error?: string }> {
     // Server-side authorization: requester can ONLY read their own profile unless master_admin or executive
     const isSelf = requesterSession.userId === targetMemberId;
-    const isStaffLead = ['master_admin', 'executive_director', 'safeguarding_lead'].includes(requesterSession.role.toLowerCase());
+    const isStaffLead = ['master_admin', 'executive_director', 'safeguarding_lead', 'safeguarding_officer'].includes(requesterSession.role.toLowerCase());
 
     if (!isSelf && !isStaffLead) {
       return {
@@ -533,7 +533,7 @@ export class MemberCaseworkerService {
 
     // Ownership check: must match memberSession.userId unless authorized staff
     const isOwner = req.memberId === memberSession.userId;
-    const isStaff = ['master_admin', 'executive_director', 'staff', 'programs_director', 'volunteer_coordinator', 'safeguarding_lead', 'caseworker'].includes(
+    const isStaff = ['master_admin', 'executive_director', 'staff', 'programs_director', 'volunteer_coordinator', 'safeguarding_lead', 'safeguarding_officer', 'caseworker'].includes(
       memberSession.role.toLowerCase()
     );
 
@@ -568,6 +568,7 @@ export class MemberCaseworkerService {
       'programs_director',
       'staff',
       'safeguarding_lead',
+      'safeguarding_officer',
       'volunteer_coordinator',
       'caseworker',
     ];
@@ -595,8 +596,8 @@ export class MemberCaseworkerService {
       filtered = filtered.filter((r) => !r.assignedStaffId);
     }
 
-    // Hide VAWA quarantined crisis records unless safeguarding_lead or executive_director
-    const isSafeguardingLead = ['safeguarding_lead', 'executive_director'].includes(staffSession.role.toLowerCase());
+    // Hide VAWA quarantined crisis records unless safeguarding_lead, safeguarding_officer, or executive_director
+    const isSafeguardingLead = ['safeguarding_lead', 'safeguarding_officer', 'executive_director'].includes(staffSession.role.toLowerCase());
     if (!isSafeguardingLead) {
       filtered = filtered.filter((r) => r.assignedDepartmentId !== 'DEPT-SAFE');
     }
@@ -612,7 +613,7 @@ export class MemberCaseworkerService {
     assignment: CaseworkerAssignmentInput,
     staffSession: UserSession
   ): Promise<{ success: boolean; request?: IntegratedServiceRequest; error?: string }> {
-    const authorizedRoles = ['master_admin', 'executive_director', 'programs_director', 'staff', 'safeguarding_lead'];
+    const authorizedRoles = ['master_admin', 'executive_director', 'programs_director', 'staff', 'safeguarding_lead', 'safeguarding_officer'];
     if (!authorizedRoles.includes(staffSession.role.toLowerCase())) {
       return {
         success: false,
@@ -705,6 +706,7 @@ export class MemberCaseworkerService {
       'programs_director',
       'staff',
       'safeguarding_lead',
+      'safeguarding_officer',
       'caseworker',
     ];
     if (!authorizedRoles.includes(caseworkerSession.role.toLowerCase())) {

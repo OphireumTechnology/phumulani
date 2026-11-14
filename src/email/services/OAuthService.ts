@@ -777,15 +777,25 @@ export class OAuthService {
     success: boolean;
     accessToken?: string;
     expiresAt?: number;
+    revoked?: boolean;
+    errorCode?: 'NO_REFRESH_TOKEN' | 'OAUTH_CREDENTIALS_MISSING' | 'OAUTH_GRANT_REVOKED' | 'TOKEN_REFRESH_FAILED' | 'OAUTH_NETWORK_ERROR';
     error?: string;
   }> {
     const stored = this.getDecryptedTokens(connectionKey);
     if (!stored || !stored.refreshToken) {
-      return { success: false, error: 'NO_REFRESH_TOKEN: Connection has no encrypted refresh token stored.' };
+      return {
+        success: false,
+        errorCode: 'NO_REFRESH_TOKEN',
+        error: 'NO_REFRESH_TOKEN: Connection has no encrypted refresh token stored.',
+      };
     }
 
     if (!this.isProviderConfigured(stored.provider)) {
-      return { success: false, error: 'OAUTH_CREDENTIALS_MISSING: Provider client credentials missing.' };
+      return {
+        success: false,
+        errorCode: 'OAUTH_CREDENTIALS_MISSING',
+        error: 'OAUTH_CREDENTIALS_MISSING: Provider client credentials missing.',
+      };
     }
 
     const tokenUrl =
@@ -814,8 +824,28 @@ export class OAuthService {
       });
       const data: any = await res.json().catch(() => ({}));
       if (!res.ok || !data.access_token) {
+        const rawErr = String(data.error || '').toLowerCase();
+        const rawDesc = String(data.error_description || '').toLowerCase();
+        const isRevoked =
+          rawErr === 'invalid_grant' ||
+          rawDesc.includes('revoked') ||
+          rawDesc.includes('expired or revoked') ||
+          rawDesc.includes('interaction_required');
+        if (isRevoked) {
+          this.revokeTokens(connectionKey);
+          if (stored.verifiedEmail) {
+            this.revokeTokens(stored.verifiedEmail);
+          }
+          return {
+            success: false,
+            revoked: true,
+            errorCode: 'OAUTH_GRANT_REVOKED',
+            error: `OAUTH_GRANT_REVOKED: Provider refresh grant rejected or revoked (${data.error_description || data.error || `HTTP ${res.status}`}). Reauthorization required.`,
+          };
+        }
         return {
           success: false,
+          errorCode: 'TOKEN_REFRESH_FAILED',
           error: data.error_description || data.error || `Refresh grant rejected (HTTP ${res.status}).`,
         };
       }
@@ -831,7 +861,11 @@ export class OAuthService {
 
       return { success: true, accessToken: data.access_token, expiresAt };
     } catch (err: any) {
-      return { success: false, error: err?.message || 'Token refresh network failure.' };
+      return {
+        success: false,
+        errorCode: 'OAUTH_NETWORK_ERROR',
+        error: err?.message || 'Token refresh network failure.',
+      };
     }
   }
 

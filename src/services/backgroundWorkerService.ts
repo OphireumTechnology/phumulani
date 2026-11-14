@@ -64,6 +64,8 @@ export class BackgroundWorkerService {
   private handlers: Map<BackgroundJobType, JobHandler> = new Map();
   private leaseDurationMs = 30000;
   private lastCycleAt: string | null = null;
+  private activeCyclePromise: Promise<any> | null = null;
+  private inProcessClaimMutex: Promise<void> = Promise.resolve();
 
   private constructor() {
     this.adapter = PostgresPersistenceAdapter.getInstance();
@@ -80,6 +82,20 @@ export class BackgroundWorkerService {
 
   public getWorkerId(): string {
     return this.workerId;
+  }
+
+  public async waitForIdle(): Promise<void> {
+    if (this.activeCyclePromise) {
+      await this.activeCyclePromise.catch(() => {});
+    }
+    await this.inProcessClaimMutex.catch(() => {});
+  }
+
+  private withClaimMutex<T>(fn: () => Promise<T>): Promise<T> {
+    const run = () => fn();
+    const next = this.inProcessClaimMutex.then(run, run);
+    this.inProcessClaimMutex = next.then(() => {}, () => {});
+    return next;
   }
 
   private registerDefaultHandlers(): void {
@@ -228,58 +244,121 @@ export class BackgroundWorkerService {
         .update(type + JSON.stringify(payload))
         .digest('hex');
 
-    const existing = await this.adapter.select<DurableJobDefinition>(
-      'background_jobs',
-      (j) => j.idempotencyKey === idempotencyKey && ['PENDING', 'IN_PROGRESS', 'RETRYING'].includes(j.status)
-    );
+    if (this.adapter.isPostgresPoolActive()) {
+      const existing = await this.adapter.select<DurableJobDefinition>(
+        'background_jobs',
+        (j) => j.idempotencyKey === idempotencyKey && ['PENDING', 'IN_PROGRESS', 'RETRYING'].includes(j.status)
+      );
+      if (existing.length > 0) return existing[0];
 
-    if (existing.length > 0) {
-      return existing[0];
+      const job: DurableJobDefinition = {
+        id: `job-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        type,
+        idempotencyKey,
+        status: 'PENDING',
+        payload,
+        retryCount: 0,
+        maxRetries: options?.maxRetries ?? 3,
+        backoffDelayMs: 1000,
+        executionTimeoutMs: options?.executionTimeoutMs ?? 15000,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      await this.adapter.insert('background_jobs', job);
+      return job;
     }
 
-    const job: DurableJobDefinition = {
-      id: `job-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
-      type,
-      idempotencyKey,
-      status: 'PENDING',
-      payload,
-      retryCount: 0,
-      maxRetries: options?.maxRetries ?? 3,
-      backoffDelayMs: 1000,
-      executionTimeoutMs: options?.executionTimeoutMs ?? 15000,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    return this.adapter.runWithCrossProcessLock('background_jobs', async () => {
+      const existing = await this.adapter.select<DurableJobDefinition>(
+        'background_jobs',
+        (j) => j.idempotencyKey === idempotencyKey && ['PENDING', 'IN_PROGRESS', 'RETRYING'].includes(j.status)
+      );
+      if (existing.length > 0) {
+        return existing[0];
+      }
 
-    await this.adapter.insert('background_jobs', job);
-    return job;
+      const job: DurableJobDefinition = {
+        id: `job-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
+        type,
+        idempotencyKey,
+        status: 'PENDING',
+        payload,
+        retryCount: 0,
+        maxRetries: options?.maxRetries ?? 3,
+        backoffDelayMs: 1000,
+        executionTimeoutMs: options?.executionTimeoutMs ?? 15000,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      await this.adapter.upsertEmbeddedLocked('background_jobs', job);
+      return job;
+    });
   }
 
   public async acquireNextJob(): Promise<DurableJobDefinition | null> {
     await this.adapter.initialize();
-    const now = new Date();
-    const nowIso = now.toISOString();
+    return this.withClaimMutex(async () => {
+      const now = new Date();
+      const nowIso = now.toISOString();
+      const leaseExpiresAt = new Date(now.getTime() + this.leaseDurationMs).toISOString();
 
-    const jobs = await this.adapter.select<DurableJobDefinition>('background_jobs', (j) => {
-      if (j.status === 'PENDING') return true;
-      if (j.status === 'RETRYING') {
-        return !j.nextAttemptAfter || new Date(j.nextAttemptAfter) <= now;
+      if (this.adapter.isPostgresPoolActive()) {
+        return this.adapter.withTransaction(async (tx) => {
+          const picked = await tx.query(
+            `SELECT id, data FROM "background_jobs"
+             WHERE (data->>'status' = 'PENDING'
+                    OR (data->>'status' = 'RETRYING'
+                        AND (data->>'nextAttemptAfter' IS NULL OR (data->>'nextAttemptAfter')::timestamptz <= $1::timestamptz)))
+             ORDER BY (data->>'createdAt') ASC, id ASC
+             FOR UPDATE SKIP LOCKED
+             LIMIT 1`,
+            [nowIso]
+          );
+          if (!picked.rows || picked.rows.length === 0) return null;
+          const target: DurableJobDefinition = {
+            ...picked.rows[0].data,
+            status: 'IN_PROGRESS',
+            leaseOwner: this.workerId,
+            leaseExpiresAt,
+            updatedAt: nowIso,
+          };
+          await tx.insert('background_jobs', target);
+          return target;
+        });
       }
-      return false;
+
+      return this.adapter.runWithCrossProcessLock('background_jobs', async () => {
+        const jobs = await this.adapter.select<DurableJobDefinition>('background_jobs', (j) => {
+          if (j.status === 'PENDING') return true;
+          if (j.status === 'RETRYING') {
+            return !j.nextAttemptAfter || new Date(j.nextAttemptAfter) <= now;
+          }
+          return false;
+        });
+
+        if (jobs.length === 0) return null;
+
+        // Enforce strict FIFO ordering by createdAt ascending
+        jobs.sort((a, b) => {
+          const tA = new Date(a.createdAt || 0).getTime();
+          const tB = new Date(b.createdAt || 0).getTime();
+          if (tA !== tB) return tA - tB;
+          return String(a.id).localeCompare(String(b.id));
+        });
+
+        const target: DurableJobDefinition = {
+          ...jobs[0],
+          status: 'IN_PROGRESS',
+          leaseOwner: this.workerId,
+          leaseExpiresAt,
+          updatedAt: nowIso,
+        };
+
+        await this.adapter.upsertEmbeddedLocked('background_jobs', target);
+        return target;
+      });
     });
-
-    if (jobs.length === 0) return null;
-
-    const target = jobs[0];
-    const leaseExpiresAt = new Date(now.getTime() + this.leaseDurationMs).toISOString();
-
-    target.status = 'IN_PROGRESS';
-    target.leaseOwner = this.workerId;
-    target.leaseExpiresAt = leaseExpiresAt;
-    target.updatedAt = nowIso;
-
-    await this.adapter.insert('background_jobs', target);
-    return target;
   }
 
   public async processJob(jobId: string): Promise<DurableJobDefinition> {
@@ -288,12 +367,24 @@ export class BackgroundWorkerService {
     const job = jobs[0];
     if (!job) throw new Error(`Job ${jobId} not found.`);
 
+    const persistJobState = async (updated: DurableJobDefinition) => {
+      if (this.adapter.isPostgresPoolActive()) {
+        await this.adapter.insert('background_jobs', updated);
+      } else {
+        await this.adapter.runWithCrossProcessLock('background_jobs', async () => {
+          await this.adapter.upsertEmbeddedLocked('background_jobs', updated);
+        });
+      }
+    };
+
     const handler = this.handlers.get(job.type);
     if (!handler) {
       job.status = 'DEAD_LETTER';
       job.errorMessage = `No handler registered for job type ${job.type}`;
+      job.leaseOwner = undefined;
+      job.leaseExpiresAt = undefined;
       job.updatedAt = new Date().toISOString();
-      await this.adapter.insert('background_jobs', job);
+      await persistJobState(job);
       return job;
     }
 
@@ -313,7 +404,7 @@ export class BackgroundWorkerService {
       job.leaseOwner = undefined;
       job.leaseExpiresAt = undefined;
       job.updatedAt = new Date().toISOString();
-      await this.adapter.insert('background_jobs', job);
+      await persistJobState(job);
       return job;
     } catch (err: any) {
       job.retryCount += 1;
@@ -334,7 +425,7 @@ export class BackgroundWorkerService {
         job.updatedAt = new Date().toISOString();
       }
 
-      await this.adapter.insert('background_jobs', job);
+      await persistJobState(job);
       return job;
     }
   }
@@ -345,50 +436,74 @@ export class BackgroundWorkerService {
     scheduledDispatches: { processed: number; sent: number; failed: number };
     calendarReminders: { processed: number; dispatched: number };
   }> {
-    this.lastCycleAt = new Date().toISOString();
-    const staleRecovered = await this.recoverStaleLeases();
-    let jobsProcessed = 0;
-    for (let i = 0; i < maxJobs; i++) {
-      const job = await this.acquireNextJob();
-      if (!job) break;
-      await this.processJob(job.id);
-      jobsProcessed++;
+    if (this.activeCyclePromise) {
+      return this.activeCyclePromise;
     }
-    const scheduledDispatches = await emailDispatchService.processDueScheduledDispatches().catch(() => ({
-      processed: 0,
-      sent: 0,
-      failed: 0,
-    }));
-    const calendarReminders = await calendarIntegrationService.processDueReminders().catch(() => ({
-      processed: 0,
-      dispatched: 0,
-    }));
-    return {
-      staleRecovered,
-      jobsProcessed,
-      scheduledDispatches,
-      calendarReminders,
+
+    const executeCycle = async () => {
+      this.lastCycleAt = new Date().toISOString();
+      const staleRecovered = await this.recoverStaleLeases();
+      let jobsProcessed = 0;
+      for (let i = 0; i < maxJobs; i++) {
+        const job = await this.acquireNextJob();
+        if (!job) break;
+        await this.processJob(job.id);
+        jobsProcessed++;
+      }
+      const scheduledDispatches = await emailDispatchService.processDueScheduledDispatches().catch(() => ({
+        processed: 0,
+        sent: 0,
+        failed: 0,
+      }));
+      const calendarReminders = await calendarIntegrationService.processDueReminders().catch(() => ({
+        processed: 0,
+        dispatched: 0,
+      }));
+      return {
+        staleRecovered,
+        jobsProcessed,
+        scheduledDispatches,
+        calendarReminders,
+      };
     };
+
+    this.activeCyclePromise = executeCycle();
+    try {
+      return await this.activeCyclePromise;
+    } finally {
+      this.activeCyclePromise = null;
+    }
   }
 
   public async recoverStaleLeases(): Promise<number> {
     await this.adapter.initialize();
-    const now = new Date();
-    const staleJobs = await this.adapter.select<DurableJobDefinition>(
-      'background_jobs',
-      (j) => j.status === 'IN_PROGRESS' && !!j.leaseExpiresAt && new Date(j.leaseExpiresAt) < now
-    );
+    const recoverOp = async () => {
+      const now = new Date();
+      const staleJobs = await this.adapter.select<DurableJobDefinition>(
+        'background_jobs',
+        (j) => j.status === 'IN_PROGRESS' && !!j.leaseExpiresAt && new Date(j.leaseExpiresAt) < now
+      );
 
-    for (const job of staleJobs) {
-      job.status = 'RETRYING';
-      job.leaseOwner = undefined;
-      job.leaseExpiresAt = undefined;
-      job.errorMessage = `Worker lease expired. Resumed by worker ${this.workerId}`;
-      job.updatedAt = new Date().toISOString();
-      await this.adapter.insert('background_jobs', job);
+      for (const job of staleJobs) {
+        job.status = 'RETRYING';
+        job.leaseOwner = undefined;
+        job.leaseExpiresAt = undefined;
+        job.errorMessage = `Worker lease expired. Resumed by worker ${this.workerId}`;
+        job.updatedAt = new Date().toISOString();
+        if (this.adapter.isPostgresPoolActive()) {
+          await this.adapter.insert('background_jobs', job);
+        } else {
+          await this.adapter.upsertEmbeddedLocked('background_jobs', job);
+        }
+      }
+
+      return staleJobs.length;
+    };
+
+    if (this.adapter.isPostgresPoolActive()) {
+      return recoverOp();
     }
-
-    return staleJobs.length;
+    return this.adapter.runWithCrossProcessLock('background_jobs', recoverOp);
   }
 
   public async cancelJob(jobId: string): Promise<boolean> {

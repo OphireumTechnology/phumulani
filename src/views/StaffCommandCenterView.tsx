@@ -199,7 +199,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
     setTimeout(() => setActionFeedback(null), 3000);
   };
 
-  const isSafeguardingOfficer = currentUser.role === 'safeguarding_officer' || currentUser.role === 'executive_director';
+  const isSafeguardingOfficer = currentUser.role === 'safeguarding_officer' || currentUser.role === 'safeguarding_lead' || currentUser.role === 'executive_director';
 
   const pendingInboxCount = messages.filter((m) => m.status === 'unread' || m.status === 'draft_ready').length;
   const pendingVolunteersCount = applications.filter((a) => a.status === 'submitted' || a.status === 'screening_review').length;

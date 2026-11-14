@@ -1032,8 +1032,9 @@ export class ConnectorRegistry {
       const vaultKey = oAuthService.hasStoredTokens(connectionId) ? connectionId : existing.emailAddress;
       const refreshed = await oAuthService.refreshAccessToken(vaultKey);
       if (!refreshed.success) {
-        existing.authStatus = 'TOKEN_EXPIRED';
-        existing.connectionHealth = 'ERROR';
+        const isRevoked = refreshed.revoked || refreshed.errorCode === 'OAUTH_GRANT_REVOKED';
+        existing.authStatus = isRevoked ? 'REVOKED' : 'TOKEN_EXPIRED';
+        existing.connectionHealth = isRevoked ? 'REVOKED' : 'ERROR';
         existing.credentialWarning = true;
         existing.lastError = refreshed.error || 'Provider token refresh rejected.';
         this.saveDurableRegistry();
@@ -1165,14 +1166,19 @@ export class ConnectorRegistry {
     const hasCredentials = this.hasAnyVaultedCredential(connectionId, existing.emailAddress);
 
     if (!hasCredentials) {
-      existing.connectionHealth =
-        existing.authStatus === 'REVOKED'
-          ? 'REVOKED'
-          : existing.authStatus === 'DISCONNECTED'
-          ? 'DISCONNECTED'
-          : 'UNTESTED';
-      if (
-        existing.authStatus !== 'REVOKED' &&
+      const errText = String(health.error || health.diagnosticsDetail || '');
+      const wasRevoked =
+        existing.authStatus === 'REVOKED' ||
+        errText.includes('REVOKED') ||
+        errText.includes('401');
+      existing.connectionHealth = wasRevoked
+        ? 'REVOKED'
+        : existing.authStatus === 'DISCONNECTED'
+        ? 'DISCONNECTED'
+        : 'UNTESTED';
+      if (wasRevoked) {
+        existing.authStatus = 'REVOKED';
+      } else if (
         existing.authStatus !== 'DISCONNECTED' &&
         existing.authStatus !== 'TOKEN_EXPIRED'
       ) {
@@ -1180,18 +1186,29 @@ export class ConnectorRegistry {
           existing.authMethod === 'OAUTH2' ? 'AUTHORIZATION_REQUIRED' : 'CONFIGURATION_REQUIRED';
       }
       existing.credentialWarning = true;
+      existing.lastError = health.error || health.diagnosticsDetail || existing.lastError || null;
       existing.updatedAt = new Date().toISOString();
       this.saveDurableRegistry();
       return {
         ...health,
         healthy: false,
         status: existing.connectionHealth,
-        diagnosticsDetail: `${existing.emailAddress} requires verified credentials / OAuth authorization before health can be confirmed.`,
+        diagnosticsDetail: wasRevoked
+          ? `${existing.emailAddress} OAuth permissions were revoked or invalidated. Reauthorization required.`
+          : `${existing.emailAddress} requires verified credentials / OAuth authorization before health can be confirmed.`,
       };
     }
 
     existing.connectionHealth = health.status;
-    existing.authStatus = health.healthy ? 'CONNECTED' : 'CONNECTED_WITH_ERRORS';
+    if (health.healthy) {
+      existing.authStatus = 'CONNECTED';
+      existing.credentialWarning = false;
+      existing.lastError = null;
+    } else {
+      const errStr = String(health.error || '');
+      existing.authStatus = errStr.includes('401') || errStr.includes('403') ? 'TOKEN_EXPIRED' : 'CONNECTED_WITH_ERRORS';
+      existing.lastError = health.error || health.diagnosticsDetail || existing.lastError || null;
+    }
     existing.updatedAt = new Date().toISOString();
 
     const evidence: ProviderEvidenceRecord = {
@@ -1313,10 +1330,18 @@ export class ConnectorRegistry {
       existing.incomingMessageCount += result.messagesImported;
       existing.lastError = null;
     } else {
-      existing.authStatus = 'CONNECTED_WITH_ERRORS';
+      const errMsg = String(result.error || 'Sync failed');
+      const stillHasCreds = this.hasAnyVaultedCredential(connectionId, existing.emailAddress);
+      if (!stillHasCreds && existing.authMethod === 'OAUTH2') {
+        existing.authStatus = errMsg.includes('REVOKED') ? 'REVOKED' : 'AUTHORIZATION_REQUIRED';
+      } else if (errMsg.includes('401') || errMsg.includes('AUTHORIZATION_REQUIRED')) {
+        existing.authStatus = 'AUTHORIZATION_REQUIRED';
+      } else {
+        existing.authStatus = 'CONNECTED_WITH_ERRORS';
+      }
       existing.syncStatus = 'SYNC_FAILED';
       existing.syncFailureCount = (existing.syncFailureCount || 0) + 1;
-      existing.lastError = result.error || 'Sync failed';
+      existing.lastError = errMsg;
     }
 
     existing.updatedAt = new Date().toISOString();

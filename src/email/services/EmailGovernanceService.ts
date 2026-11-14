@@ -139,7 +139,7 @@ export class EmailGovernanceService {
       },
       {
         mailboxEmail: 'safeguarding@phumulani.org',
-        allowedRoles: ['safeguarding_lead', 'executive_director'],
+        allowedRoles: ['safeguarding_lead', 'safeguarding_officer', 'executive_director'],
         allowedUserEmails: [],
         allowAiAnalysis: false,
         allowCrmLinking: false,
@@ -188,10 +188,10 @@ export class EmailGovernanceService {
     const roleLower = String(params.userRole || '').toLowerCase();
     const emailLower = String(params.userEmail || '').toLowerCase();
 
-    if (policy.vawaAirGapped && !['safeguarding_lead', 'executive_director'].includes(roleLower)) {
+    if (policy.vawaAirGapped && !['safeguarding_lead', 'safeguarding_officer', 'executive_director'].includes(roleLower)) {
       return {
         allowed: false,
-        reason: 'VAWA_SECTION_1367_FORBIDDEN: Only Safeguarding Lead or Executive Director can access safeguarded mailbox.',
+        reason: 'VAWA_SECTION_1367_FORBIDDEN: Only Safeguarding Officer/Lead or Executive Director can access safeguarded mailbox.',
         policy,
       };
     }

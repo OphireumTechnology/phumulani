@@ -511,7 +511,7 @@ export class OperationalReportingService {
     }).length;
 
     // Service request filtering (excluding restricted survivor cases from non-safeguarding staff)
-    const isSafeguarding = ['safeguarding_lead', 'executive_director', 'master_admin'].includes(session.role.toLowerCase());
+    const isSafeguarding = ['safeguarding_lead', 'safeguarding_officer', 'executive_director'].includes(session.role.toLowerCase());
     const filteredRequests = serviceRequests.filter((r: any) => {
       if (r.safeguardingQuarantine && !isSafeguarding) return false;
       if (filter.programId && r.programId !== filter.programId) return false;
@@ -590,7 +590,7 @@ export class OperationalReportingService {
     this.verifyReportAccess(session, 'CASEWORKER_PERFORMANCE');
 
     const serviceRequests = await this.dbAdapter.select<any>('service_requests');
-    const isSafeguarding = ['safeguarding_lead', 'executive_director', 'master_admin'].includes(session.role.toLowerCase());
+    const isSafeguarding = ['safeguarding_lead', 'safeguarding_officer', 'executive_director'].includes(session.role.toLowerCase());
 
     const safeRequests = serviceRequests.filter((r: any) => !r.safeguardingQuarantine || isSafeguarding);
 

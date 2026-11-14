@@ -28,6 +28,7 @@ export type UserRole =
   | 'executive_director'
   | 'board_member'
   | 'safeguarding_officer'
+  | 'safeguarding_lead'
   | 'super_admin'
   | 'PLATFORM_SUPER_ADMIN' // Phase 8 Master Administrator
   | 'governance_officer'

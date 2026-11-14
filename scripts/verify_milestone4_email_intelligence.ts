@@ -415,62 +415,104 @@ async function runMilestone4Suite() {
   // -------------------------------------------------------------------------
   console.log('\n--- 7. Existing Mailbox Thread Context & CRM Integration ---');
 
-  // 7.1 Retrieve thread context from existing Email Enterprise Service (th-donor-01)
-  const threadContext = phumulaniAiAgentService.getThreadContext('th-donor-01');
-  recordTest(
-    'M4-THREAD-01',
-    'Thread Context Retrieval',
-    'Retrieve full chronological conversation thread without duplicate mailbox store',
-    !!threadContext.thread && threadContext.messageCount >= 1 && !!threadContext.matchedProgram,
-    `Thread Subject: "${threadContext.thread?.threadSubject}", Message count: ${threadContext.messageCount}, Program: "${threadContext.matchedProgram.title}"`
-  );
-
-  // 7.2 Program matching accurately correlates thread text to approved program
-  recordTest(
-    'M4-THREAD-02',
-    'Program Matching',
-    'Accurately matches thread content to approved community program (Transitional Housing)',
-    threadContext.matchedProgram.id === 'PROG-002',
-    `Matched Program: ${threadContext.matchedProgram.id} (${threadContext.matchedProgram.title})`
-  );
-
-  // 7.3 End-to-end thread processing (th-donor-01)
-  const staffSession: UserSession = {
-    sessionId: 'sess-phumulani-staff-verified',
-    userId: 'usr-staff-01',
-    userEmail: 'staff@phumulani.org',
-    role: 'staff',
-    createdAt: new Date().toISOString(),
-    expiresAt: new Date(Date.now() + 86400000).toISOString(),
+  // Seed a test-scoped donor thread fixture (cleaned up right after Group 7 so production startup stays empty)
+  const testDonorThreadFixture: any = {
+    id: 'th-donor-01',
+    mailboxEmail: 'grants@phumulani.org',
+    threadSubject: 'Healing Homes Transitional Housing & Emergency Shelter Grant Proposal',
+    classification: '07_foundation_grants',
+    priority: 'P1',
+    assignedDepartment: 'Grants & Institutional Funding',
+    assignedAgent: 'FUND-AI-005',
+    assignedHuman: 'Comfort Dondo',
+    status: 'AWAITING_HUMAN_REVIEW',
+    slaStatus: 'ON_TRACK',
+    lastMessageAt: new Date().toISOString(),
+    unreadCount: 1,
+    hasAttachments: false,
+    isSafeguardingConfidential: false,
+    messages: [
+      {
+        id: 'msg-donor-01',
+        threadId: 'th-donor-01',
+        senderName: 'Elena Vance, Program Officer',
+        senderEmail: 'grants@mcknight.org',
+        recipientEmail: 'grants@phumulani.org',
+        subject: 'Healing Homes Transitional Housing & Emergency Shelter Grant Proposal',
+        bodyText: 'We are interested in funding your transitional housing and emergency shelter program with a grant proposal of $75,000. Can we schedule a meeting next week to discuss housing and rental assistance outcomes?',
+        receivedAt: new Date().toISOString(),
+        direction: 'inbound',
+        isRead: false,
+      },
+    ],
   };
+  const prevThreadsSnapshot = [...(db.getState().enterpriseEmailThreads || [])];
+  if (!prevThreadsSnapshot.some((t: any) => t.id === 'th-donor-01')) {
+    db.getState().enterpriseEmailThreads.push(testDonorThreadFixture);
+  }
 
-  const processResult = await phumulaniAiAgentService.processThreadWithAi('th-donor-01', staffSession);
-  recordTest(
-    'M4-E2E-01',
-    'Email Intelligence Processing',
-    'End-to-end thread processing: assigns P1 priority, scores interest, and prepares grounded draft',
-    processResult.success &&
-      processResult.classification.priority === 'P1' &&
-      processResult.interestScore.score >= 80 &&
-      !!processResult.draft &&
-      processResult.isEscalated === true,
-    `Thread priority: ${processResult.classification.priority}, Score: ${processResult.interestScore.score}, Escalated: ${processResult.isEscalated}`
-  );
+  let threadContext: ReturnType<typeof phumulaniAiAgentService.getThreadContext>;
+  let processResult: Awaited<ReturnType<typeof phumulaniAiAgentService.processThreadWithAi>>;
+  try {
+    // 7.1 Retrieve thread context from Email Enterprise Service (th-donor-01)
+    threadContext = phumulaniAiAgentService.getThreadContext('th-donor-01');
+    recordTest(
+      'M4-THREAD-01',
+      'Thread Context Retrieval',
+      'Retrieve full chronological conversation thread without duplicate mailbox store',
+      !!threadContext.thread && threadContext.messageCount >= 1 && !!threadContext.matchedProgram,
+      `Thread Subject: "${threadContext.thread?.threadSubject}", Message count: ${threadContext.messageCount}, Program: "${threadContext.matchedProgram.title}"`
+    );
 
-  // 7.4 Authenticated CRM update reflects staff identity in audit log
-  const crmAction = phumulaniAiAgentService.recordAuthenticatedCrmAction({
-    donorId: 'DON-REC-001',
-    actionType: 'STEWARDSHIP_DISCUSSION_LOGGED',
-    details: 'Staff logged introductory discussion with funder regarding Transitional Housing.',
-    actorSession: staffSession,
-  });
-  recordTest(
-    'M4-CRM-01',
-    'Authenticated CRM Update',
-    'Durable CRM stewardship record created with session actor attribution',
-    crmAction.success && crmAction.auditId.startsWith('audit-crm-'),
-    `CRM Action result: success=${crmAction.success}, auditId=${crmAction.auditId}`
-  );
+    // 7.2 Program matching accurately correlates thread text to approved program
+    recordTest(
+      'M4-THREAD-02',
+      'Program Matching',
+      'Accurately matches thread content to approved community program (Transitional Housing)',
+      threadContext.matchedProgram.id === 'PROG-002',
+      `Matched Program: ${threadContext.matchedProgram.id} (${threadContext.matchedProgram.title})`
+    );
+
+    // 7.3 End-to-end thread processing (th-donor-01)
+    const staffSession: UserSession = {
+      sessionId: 'sess-phumulani-staff-verified',
+      userId: 'usr-staff-01',
+      userEmail: 'staff@phumulani.org',
+      role: 'staff',
+      createdAt: new Date().toISOString(),
+      expiresAt: new Date(Date.now() + 86400000).toISOString(),
+    };
+
+    processResult = await phumulaniAiAgentService.processThreadWithAi('th-donor-01', staffSession);
+    recordTest(
+      'M4-E2E-01',
+      'Email Intelligence Processing',
+      'End-to-end thread processing: assigns P1 priority, scores interest, and prepares grounded draft',
+      processResult.success &&
+        processResult.classification.priority === 'P1' &&
+        processResult.interestScore.score >= 80 &&
+        !!processResult.draft &&
+        processResult.isEscalated === true,
+      `Thread priority: ${processResult.classification.priority}, Score: ${processResult.interestScore.score}, Escalated: ${processResult.isEscalated}`
+    );
+
+    // 7.4 Authenticated CRM update reflects staff identity in audit log
+    const crmAction = phumulaniAiAgentService.recordAuthenticatedCrmAction({
+      donorId: 'DON-REC-001',
+      actionType: 'STEWARDSHIP_DISCUSSION_LOGGED',
+      details: 'Staff logged introductory discussion with funder regarding Transitional Housing.',
+      actorSession: staffSession,
+    });
+    recordTest(
+      'M4-CRM-01',
+      'Authenticated CRM Update',
+      'Durable CRM stewardship record created with session actor attribution',
+      crmAction.success && crmAction.auditId.startsWith('audit-crm-'),
+      `CRM Action result: success=${crmAction.success}, auditId=${crmAction.auditId}`
+    );
+  } finally {
+    db.getState().enterpriseEmailThreads = prevThreadsSnapshot;
+  }
 
   // -------------------------------------------------------------------------
   // TEST GROUP 8: Offline Model Fallback & Anti-Hallucination Integrity

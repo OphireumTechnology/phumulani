@@ -537,7 +537,7 @@ export class Phase36Service {
     if (privilegedRoles.includes(actorRole)) {
       if (domain === 'RESTRICTED_SURVIVOR') {
         // Even Master Admin cannot access without Safeguarding Lead role
-        if (actorRole !== 'safeguarding_lead' && !actorRole.includes('sister_miriam')) {
+        if (actorRole !== 'safeguarding_lead' && actorRole !== 'safeguarding_officer' && !actorRole.includes('sister_miriam')) {
           return {
             allowed: false,
             reason: 'VAWA Section 1367 Boundary: Master Admin access to restricted survivor records is prohibited.',
@@ -568,7 +568,7 @@ export class Phase36Service {
         excludeFromGeneralSearch: true,
         excludeFromAiPrompts: true,
         excludeFromExportDumps: true,
-        authorizedViewingRoles: ['safeguarding_lead', 'crisis_advocate'],
+        authorizedViewingRoles: ['safeguarding_lead', 'safeguarding_officer', 'crisis_advocate'],
       },
       {
         modelName: 'community_resources',
@@ -579,7 +579,7 @@ export class Phase36Service {
         excludeFromGeneralSearch: true,
         excludeFromAiPrompts: true,
         excludeFromExportDumps: true,
-        authorizedViewingRoles: ['safeguarding_lead'],
+        authorizedViewingRoles: ['safeguarding_lead', 'safeguarding_officer'],
       },
       {
         modelName: 'members',

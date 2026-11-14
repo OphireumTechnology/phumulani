@@ -559,6 +559,7 @@ export class Phase34Service {
       'finance_director',
       'grants_director',
       'safeguarding_lead',
+      'safeguarding_officer',
     ];
 
     if (!privilegedRoles.includes(userRole)) {
@@ -1046,7 +1047,7 @@ export class Phase34Service {
         effectiveDate: '2026-09-01',
         reviewFrequencyMonths: 6,
         isStale: false,
-        allowedRoles: ['staff', 'community_lead', 'volunteer_coordinator', 'safeguarding_lead', 'executive_director', 'PLATFORM_SUPER_ADMIN'],
+        allowedRoles: ['staff', 'community_lead', 'volunteer_coordinator', 'safeguarding_lead', 'safeguarding_officer', 'executive_director', 'PLATFORM_SUPER_ADMIN'],
         contentSummary: 'Mandatory operational guidelines for intake advocates receiving disclosures of intimate partner violence or trauma.',
         keyCitations: [
           'Minnesota Day One Crisis Hotline: 1-866-223-1111',

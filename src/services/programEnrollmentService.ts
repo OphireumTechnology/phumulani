@@ -25,6 +25,7 @@ export const isStaffUser = (session?: UserSession): boolean => {
     'programs_director',
     'staff',
     'safeguarding_lead',
+    'safeguarding_officer',
     'volunteer_coordinator',
     'caseworker',
     'super_admin',

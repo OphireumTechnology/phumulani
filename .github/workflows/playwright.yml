@@ -104,6 +104,8 @@ jobs:
           npx tsx scripts/verify_suite.ts
           echo "=== CI STAGE 4D: BLOCKS 6-13 SECURITY & PERSISTENCE REGRESSION SUITE ==="
           npx tsx scripts/verify_blocks6_to_13.ts
+          echo "=== CI STAGE 4E: PHASE 79 PRODUCTION REPAIR VERIFICATION SUITE ==="
+          npx tsx scripts/verify_phase79_production_repairs.ts
 
   # CI STAGES 5 - 9: BROWSER TEST DISCOVERY & CROSS-BROWSER MATRIX
   browser-tests:

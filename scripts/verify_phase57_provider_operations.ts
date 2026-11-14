@@ -124,18 +124,22 @@ async function runPhase57Verification() {
   // ---------------------------------------------------------------------------
   console.log('\n--- 4. OAUTH STATE VALIDATION & PKCE ---');
   const authSession = gw.initiateOAuth('donations@phumulani.org');
+  const expectedS256Challenge = (await import('node:crypto')).default
+    .createHash('sha256')
+    .update(authSession.codeVerifier)
+    .digest('base64url');
   assert(
     authSession.authUrl.startsWith('https://accounts.google.com/o/oauth2/v2/auth') &&
       authSession.state.startsWith('state_') &&
       authSession.codeVerifier.startsWith('pkce_verifier_') &&
-      authSession.codeChallenge.startsWith('pkce_challenge_') &&
+      authSession.codeChallenge === expectedS256Challenge &&
       authSession.scopes.length === 5,
     'TEST-P57-04',
-    'OAuth initiation creates high-entropy state nonce, PKCE S256 verifier, challenge, and least-privilege scopes'
+    'OAuth initiation creates high-entropy state nonce, real RFC 7636 PKCE S256 verifier/challenge, and least-privilege scopes'
   );
 
   // ---------------------------------------------------------------------------
-  // 5. Callback replay rejection (M57.06)
+  // 5. Callback replay rejection & fail-closed synthetic grant block (M57.06)
   // ---------------------------------------------------------------------------
   console.log('\n--- 5. CALLBACK REPLAY REJECTION ---');
   const replaySession = gw.startAuthorization('donations@phumulani.org');
@@ -150,14 +154,16 @@ async function runPhase57Verification() {
     codeVerifier: replaySession.codeVerifier,
   });
   assert(
-    firstCallback.success === true &&
+    firstCallback.success === false &&
+      (firstCallback.error?.includes('OAUTH_CREDENTIALS_MISSING') ||
+        firstCallback.error?.includes('LIVE_PROVIDER_EXCHANGE_REQUIRED')) &&
       replayedCallback.success === false &&
       (replayedCallback.error?.includes('TAMPERING') ||
         replayedCallback.error?.includes('unrecognized') ||
         replayedCallback.error?.includes('expired') ||
         replayedCallback.error?.includes('REPLAY')),
     'TEST-P57-05',
-    'OAuth callback replay rejected as consumed state tokens are purged immediately upon first use'
+    'Synchronous mock OAuth callback fails closed without live creds and consumed state replays are rejected immediately'
   );
 
   // ---------------------------------------------------------------------------
@@ -176,7 +182,7 @@ async function runPhase57Verification() {
   );
 
   // ---------------------------------------------------------------------------
-  // 7. Token expiration detection & revocation (M57.06)
+  // 7. Token expiration detection, mock refresh rejection & revocation (M57.06)
   // ---------------------------------------------------------------------------
   console.log('\n--- 7. TOKEN EXPIRATION DETECTION & REVOCATION ---');
   gw.handleExpiredToken('donations@phumulani.org');
@@ -185,11 +191,11 @@ async function runPhase57Verification() {
   const revokeRes = gw.revokeAccess('donations@phumulani.org');
   assert(
     expiredStatus !== 'PROVIDER_CONNECTED' &&
-      refreshRes.success === true &&
-      refreshRes.accessToken?.startsWith('staged_dev_refreshed_') &&
+      refreshRes.success === false &&
+      Boolean(refreshRes.error?.includes('LIVE_OAUTH_REFRESH_REQUIRED')) &&
       revokeRes.success === true,
     'TEST-P57-07',
-    'Token expiration detected, staged refresh issued, and token revocation securely purges vault'
+    'Token expiration detected, synthetic synchronous refresh rejected fail-closed, and revocation purges vault'
   );
 
   // ---------------------------------------------------------------------------
@@ -585,6 +591,18 @@ async function runPhase57Verification() {
   // 25. Confidential safeguarding isolation (VAWA 8 U.S.C. § 1367) (M57.17)
   // ---------------------------------------------------------------------------
   console.log('\n--- 25. CONFIDENTIAL SAFEGUARDING ISOLATION ---');
+  const prevThreadsP57 = [...db.getState().enterpriseEmailThreads];
+  if (!prevThreadsP57.some((t) => t.classification === '01_safeguarding')) {
+    db.getState().enterpriseEmailThreads.push({
+      id: 'th-safeguard-fixture-p57',
+      mailboxEmail: 'safeguarding@phumulani.org',
+      threadSubject: 'CONFIDENTIAL: Emergency Safety Intake (Fixture)',
+      classification: '01_safeguarding',
+      priority: 'P0',
+      isSafeguardingConfidential: true,
+      messages: [],
+    } as any);
+  }
   const stateThreads = db.getState().enterpriseEmailThreads;
   const safeguardingThreads = stateThreads.filter((t) => t.classification === '01_safeguarding');
   const zeroAutoResponses = safeguardingThreads.every((t) => {
@@ -592,6 +610,7 @@ async function runPhase57Verification() {
     return !log || log.status === 'blocked_by_safety';
   });
   const zeroCrmLinkages = safeguardingThreads.every((t) => !t.crmLink);
+  db.getState().enterpriseEmailThreads = prevThreadsP57;
   assert(
     safeguardingThreads.length > 0 && zeroAutoResponses && zeroCrmLinkages,
     'TEST-P57-25',

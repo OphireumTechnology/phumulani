@@ -94,7 +94,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
   const isSuperAdmin = role === 'PLATFORM_SUPER_ADMIN' || role === 'super_admin' || role === 'master_admin';
   const isExec = role === 'executive_director' || role === 'board_member';
   const isSupervisor = isSuperAdmin || isExec || role === 'communications_officer';
-  const isSafeguarding = role === 'safeguarding_officer';
+  const isSafeguarding = role === 'safeguarding_officer' || role === 'safeguarding_lead';
 
   return (
     <aside

@@ -2553,14 +2553,15 @@ export class GoogleWorkspaceAdapter {
       'staff_lead',
       'it_admin',
       'safeguarding_lead',
+      'safeguarding_officer',
     ];
     if (!allowedRoles.includes(normalizedRole)) {
       throw new Error('PERMISSION_DENIED: Elevated administrator role required for operational recovery.');
     }
 
     // 3. Cross-mailbox safeguarding isolation (Anti-IDOR / VAWA Safeguarding Air-Gap)
-    if (key === 'safeguarding@phumulani.org' && normalizedRole !== 'safeguarding_lead') {
-      throw new Error('CROSS_MAILBOX_ACCESS_DENIED: Safeguarding recovery restricted to authorized safeguarding lead.');
+    if (key === 'safeguarding@phumulani.org' && !['safeguarding_lead', 'safeguarding_officer'].includes(normalizedRole)) {
+      throw new Error('CROSS_MAILBOX_ACCESS_DENIED: Safeguarding recovery restricted to authorized safeguarding lead/officer.');
     }
 
     // Handle ROLLBACK_RECOVERY action directly
@@ -2732,6 +2733,7 @@ export class GoogleWorkspaceAdapter {
       'staff_lead',
       'it_admin',
       'safeguarding_lead',
+      'safeguarding_officer',
     ];
     if (!allowedRoles.includes(normalizedRole)) {
       throw new Error('PERMISSION_DENIED: Elevated administrator role required for operational recovery.');
@@ -2744,8 +2746,8 @@ export class GoogleWorkspaceAdapter {
     }
 
     // 4. Cross-mailbox safeguarding isolation (Anti-IDOR)
-    if (snapshot.mailboxEmail.toLowerCase() === 'safeguarding@phumulani.org' && normalizedRole !== 'safeguarding_lead') {
-      throw new Error('CROSS_MAILBOX_ACCESS_DENIED: Safeguarding recovery restricted to authorized safeguarding lead.');
+    if (snapshot.mailboxEmail.toLowerCase() === 'safeguarding@phumulani.org' && !['safeguarding_lead', 'safeguarding_officer'].includes(normalizedRole)) {
+      throw new Error('CROSS_MAILBOX_ACCESS_DENIED: Safeguarding recovery restricted to authorized safeguarding lead/officer.');
     }
 
     const key = snapshot.mailboxEmail.toLowerCase();

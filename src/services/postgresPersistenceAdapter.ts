@@ -189,6 +189,63 @@ export class PostgresPersistenceAdapter {
     return sanitized;
   }
 
+  public static validateDatabaseUrl(rawUrl: string): {
+    valid: boolean;
+    error?: string;
+    isLocalHost: boolean;
+    sslRequired: boolean;
+  } {
+    const trimmed = (rawUrl || '').trim();
+    if (!trimmed) {
+      return { valid: false, error: 'INVALID_DATABASE_URL: DATABASE_URL is empty.', isLocalHost: false, sslRequired: true };
+    }
+    if (/\s/.test(trimmed)) {
+      return {
+        valid: false,
+        error: 'INVALID_DATABASE_URL: DATABASE_URL contains unescaped whitespace characters.',
+        isLocalHost: false,
+        sslRequired: true,
+      };
+    }
+    try {
+      const parsed = new URL(trimmed);
+      if (parsed.protocol !== 'postgres:' && parsed.protocol !== 'postgresql:') {
+        return {
+          valid: false,
+          error: `INVALID_DATABASE_URL: Unsupported protocol "${parsed.protocol}". Expected postgresql:// or postgres://.`,
+          isLocalHost: false,
+          sslRequired: true,
+        };
+      }
+      if (!parsed.hostname) {
+        return {
+          valid: false,
+          error: 'INVALID_DATABASE_URL: Missing PostgreSQL hostname.',
+          isLocalHost: false,
+          sslRequired: true,
+        };
+      }
+      const dbName = parsed.pathname.replace(/^\//, '').trim();
+      if (!dbName) {
+        return {
+          valid: false,
+          error: 'INVALID_DATABASE_URL: Missing target database name in path.',
+          isLocalHost: false,
+          sslRequired: true,
+        };
+      }
+      const isLocalHost = ['localhost', '127.0.0.1', '::1'].includes(parsed.hostname.toLowerCase());
+      return { valid: true, isLocalHost, sslRequired: !isLocalHost };
+    } catch {
+      return {
+        valid: false,
+        error: `INVALID_DATABASE_URL: Malformed PostgreSQL connection URI (${PostgresPersistenceAdapter.redactDatabaseUrl(trimmed)}).`,
+        isLocalHost: false,
+        sslRequired: true,
+      };
+    }
+  }
+
   public static buildPostgresSslConfig(connectionString: string): { rejectUnauthorized: true; ca?: string } | undefined {
     const u = new URL(connectionString);
     const sslParam = (u.searchParams.get('ssl') || '').toLowerCase();
@@ -303,6 +360,13 @@ export class PostgresPersistenceAdapter {
     }
 
     if (dbUrl) {
+      const urlCheck = PostgresPersistenceAdapter.validateDatabaseUrl(dbUrl);
+      if (!urlCheck.valid) {
+        this.connectionError = urlCheck.error || 'Invalid DATABASE_URL';
+        this.isInitialized = false;
+        this.pool = null;
+        throw new Error(`[PostgresAdapter] FATAL: ${this.connectionError}`);
+      }
       console.log('[PostgresAdapter] Production DATABASE_URL detected. Initializing PostgreSQL client pool...');
       let candidatePool: any = null;
       try {
@@ -1701,6 +1765,90 @@ export class PostgresPersistenceAdapter {
     checksum: string;
   }> {
     return this.simulateApplicationRestart();
+  }
+
+  /**
+   * Executes an operation under both the in-process write mutex and a cross-process file lock
+   * in embedded mode, reloading the target table from disk before running so concurrent
+   * OS worker processes observe atomic state transitions without double-claims.
+   */
+  public async runWithCrossProcessLock<T>(
+    table: string,
+    op: () => Promise<T>,
+    timeoutMs = 5000
+  ): Promise<T> {
+    this.validateTableName(table);
+    await this.ensureInitialized();
+    if (this.pool || typeof window !== 'undefined') {
+      return op();
+    }
+
+    return this.enqueueWrite(async () => {
+      if (!fs.existsSync(this.storageDir)) {
+        fs.mkdirSync(this.storageDir, { recursive: true, mode: 0o700 });
+      }
+      const lockPath = `${this.storageFilePath}.${table}.lock`;
+      const deadline = Date.now() + timeoutMs;
+      let acquired = false;
+      while (!acquired) {
+        try {
+          const fd = fs.openSync(lockPath, 'wx', 0o600);
+          try {
+            fs.writeSync(fd, JSON.stringify({ pid: process.pid, at: Date.now() }));
+          } finally {
+            fs.closeSync(fd);
+          }
+          acquired = true;
+        } catch (err: any) {
+          if (err?.code !== 'EEXIST') throw err;
+          // Evict abandoned lock files left behind by crashed processes (> 10s old)
+          try {
+            const stat = fs.statSync(lockPath);
+            if (Date.now() - stat.mtimeMs > 10000) {
+              fs.unlinkSync(lockPath);
+              continue;
+            }
+          } catch {}
+          if (Date.now() > deadline) {
+            throw new Error(`CROSS_PROCESS_LOCK_TIMEOUT: Could not acquire lock for ${table} within ${timeoutMs}ms.`);
+          }
+          await new Promise((r) => setTimeout(r, 8 + Math.floor(Math.random() * 12)));
+        }
+      }
+
+      try {
+        if (fs.existsSync(this.storageFilePath)) {
+          try {
+            const diskRaw = fs.readFileSync(this.storageFilePath, 'utf-8');
+            const parsed = JSON.parse(diskRaw);
+            if (parsed?.tables && Array.isArray(parsed.tables[table])) {
+              this.memoryStore.set(table, parsed.tables[table]);
+            }
+          } catch {
+            // Keep existing memoryStore if disk file unreadable
+          }
+        }
+        return await op();
+      } finally {
+        try {
+          if (fs.existsSync(lockPath)) fs.unlinkSync(lockPath);
+        } catch {}
+      }
+    });
+  }
+
+  /**
+   * Direct embedded mutation helper used inside runWithCrossProcessLock without re-entering writeMutex.
+   */
+  public async upsertEmbeddedLocked<T extends TableRowRecord>(table: string, record: T): Promise<T> {
+    this.validateTableName(table);
+    this.rawInsert(table, record);
+    await this.flushToDurableStorage({ skipDiskMerge: false });
+    return record;
+  }
+
+  public isPostgresPoolActive(): boolean {
+    return Boolean(this.pool);
   }
 
   /**

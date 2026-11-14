@@ -371,13 +371,13 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
         if (g.isHumanGate) {
           // G09 requires Safeguarding Lead or Executive Director specifically (VAWA boundary)
           if (code === 'G09') {
-            const hasSafeguarding = currentUser.role === 'safeguarding_officer' || currentUser.role === 'executive_director';
+            const hasSafeguarding = currentUser.role === 'safeguarding_officer' || currentUser.role === 'safeguarding_lead' || currentUser.role === 'executive_director';
             if (!hasSafeguarding) {
               setGateReviewNotice('Gate G09 (Safeguarding & Survivor Safety) review requires Safeguarding Lead (Sister Miriam K.) or Executive Director (Comfort Dondo) credentials due to strict VAWA segregation.');
               return g;
             }
           } else {
-            const isAuthorized = currentUser.role === 'executive_director' || currentUser.role === 'safeguarding_officer' || currentUser.role === 'PLATFORM_SUPER_ADMIN';
+            const isAuthorized = currentUser.role === 'executive_director' || currentUser.role === 'safeguarding_officer' || currentUser.role === 'safeguarding_lead' || currentUser.role === 'PLATFORM_SUPER_ADMIN';
             if (!isAuthorized) {
               setGateReviewNotice('Human Gate review requires Executive Director, Safeguarding Lead, or Master Administrator credentials.');
               return g;

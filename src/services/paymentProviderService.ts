@@ -20,7 +20,9 @@ import { EnvironmentService } from './environmentService';
 export interface PaymentGatewayConfig {
   provider: 'STRIPE' | 'AUTHORIZE_NET' | 'PLAID_ACH' | 'NOT_CONFIGURED';
   status: 'CONNECTED' | 'NOT_CONNECTED' | 'BLOCKED_BY_CREDENTIALS';
+  environmentMode: 'TEST' | 'LIVE' | 'NOT_CONFIGURED' | 'INVALID';
   liveCheckoutEnabled: boolean;
+  liveApprovalRequired?: boolean;
   webhookSecretConfigured: boolean;
   supportedCurrencies: string[];
   minimumAmountCents: number;
@@ -107,20 +109,66 @@ export class PaymentProviderService {
 
   /**
    * Evaluates payment gateway configuration truthfully from environment variables.
+   * Distinguishes sk_test_ vs sk_live_ and blocks live payments until LIVE_PAYMENTS_ENABLED=true.
    */
   public getGatewayConfig(): PaymentGatewayConfig {
-    const secretKey = process.env.PAYMENT_SECRET_KEY || process.env.STRIPE_SECRET_KEY || '';
-    const webhookSecret = process.env.PAYMENT_WEBHOOK_SECRET || process.env.STRIPE_WEBHOOK_SECRET || '';
-    const isConfigured = secretKey.trim().length > 0;
+    const secretKey = (process.env.PAYMENT_SECRET_KEY || process.env.STRIPE_SECRET_KEY || '').trim();
+    const webhookSecret = (process.env.PAYMENT_WEBHOOK_SECRET || process.env.STRIPE_WEBHOOK_SECRET || '').trim();
+
+    if (!secretKey) {
+      return {
+        provider: 'NOT_CONFIGURED',
+        status: 'NOT_CONNECTED',
+        environmentMode: 'NOT_CONFIGURED',
+        liveCheckoutEnabled: false,
+        webhookSecretConfigured: webhookSecret.length > 0,
+        supportedCurrencies: ['usd'],
+        minimumAmountCents: 100, // $1.00 min
+        maximumAmountCents: 25000000, // $250,000 max single transaction
+      };
+    }
+
+    const isTestKey = secretKey.startsWith('sk_test_') || secretKey.startsWith('rk_test_');
+    const isLiveKey = secretKey.startsWith('sk_live_') || secretKey.startsWith('rk_live_');
+    const liveApproved = process.env.LIVE_PAYMENTS_ENABLED === 'true';
+
+    if (isTestKey) {
+      return {
+        provider: 'STRIPE',
+        status: 'CONNECTED',
+        environmentMode: 'TEST',
+        liveCheckoutEnabled: true,
+        liveApprovalRequired: false,
+        webhookSecretConfigured: webhookSecret.length > 0,
+        supportedCurrencies: ['usd'],
+        minimumAmountCents: 100,
+        maximumAmountCents: 25000000,
+      };
+    }
+
+    if (isLiveKey) {
+      return {
+        provider: 'STRIPE',
+        status: liveApproved ? 'CONNECTED' : 'BLOCKED_BY_CREDENTIALS',
+        environmentMode: 'LIVE',
+        liveCheckoutEnabled: liveApproved,
+        liveApprovalRequired: !liveApproved,
+        webhookSecretConfigured: webhookSecret.length > 0,
+        supportedCurrencies: ['usd'],
+        minimumAmountCents: 100,
+        maximumAmountCents: 25000000,
+      };
+    }
 
     return {
-      provider: isConfigured ? 'STRIPE' : 'NOT_CONFIGURED',
-      status: isConfigured ? 'CONNECTED' : 'NOT_CONNECTED',
-      liveCheckoutEnabled: isConfigured,
-      webhookSecretConfigured: webhookSecret.trim().length > 0,
+      provider: 'STRIPE',
+      status: 'BLOCKED_BY_CREDENTIALS',
+      environmentMode: 'INVALID',
+      liveCheckoutEnabled: false,
+      webhookSecretConfigured: webhookSecret.length > 0,
       supportedCurrencies: ['usd'],
-      minimumAmountCents: 100, // $1.00 min
-      maximumAmountCents: 25000000, // $250,000 max single transaction
+      minimumAmountCents: 100,
+      maximumAmountCents: 25000000,
     };
   }
 
@@ -170,13 +218,19 @@ export class PaymentProviderService {
 
     if (!config.liveCheckoutEnabled) {
       const sessionId = `cs_blocked_${Date.now()}_${crypto.randomBytes(6).toString('hex')}`;
+      const errorMsg =
+        config.environmentMode === 'LIVE' && config.liveApprovalRequired
+          ? 'BLOCKED_LIVE_APPROVAL_REQUIRED: Live Stripe key configured without explicit LIVE_PAYMENTS_ENABLED=true authorization.'
+          : config.environmentMode === 'INVALID'
+          ? 'INVALID_STRIPE_KEY: Secret key must start with sk_test_ or sk_live_.'
+          : 'PAYMENT_GATEWAY=NOT_CONNECTED. Live merchant processor credentials (PAYMENT_SECRET_KEY) are not configured in environment.';
       const blockedResult: CheckoutSessionResult = {
         sessionId,
         status: 'BLOCKED_GATEWAY_NOT_CONNECTED',
         amountCents,
         currency: 'usd',
         idempotencyKey: request.idempotencyKey,
-        error: 'PAYMENT_GATEWAY=NOT_CONNECTED. Live merchant processor credentials (PAYMENT_SECRET_KEY) are not configured in environment.',
+        error: errorMsg,
       };
       this.idempotencyCache.set(request.idempotencyKey, blockedResult);
       return blockedResult;
@@ -377,7 +431,6 @@ export class PaymentProviderService {
       };
     }
 
-    this.processedEvents.add(eventId);
     const nowIso = new Date().toISOString();
 
     if (event.type === 'payment_intent.succeeded') {
@@ -394,6 +447,7 @@ export class PaymentProviderService {
           { id: eventId, event_type: event.type, payment_intent_id: obj.id, status: 'DUPLICATE_INTENT_IGNORED', processed_at: nowIso },
           { context: 'paymentProviderService:dupIntentEvent' }
         );
+        this.processedEvents.add(eventId);
         return {
           success: true,
           eventId,
@@ -450,6 +504,7 @@ export class PaymentProviderService {
         );
       });
 
+      this.processedEvents.add(eventId);
       return {
         success: true,
         eventId,
@@ -465,32 +520,35 @@ export class PaymentProviderService {
     if (event.type === 'payment_intent.payment_failed') {
       const obj = event.data.object;
       const failureReason = obj.failure_message || 'Decline';
-      if (obj.metadata?.idempotencyKey) {
-        const sessions = await this.dbAdapter.select<any>('payment_sessions', (r) => r.idempotency_key === obj.metadata?.idempotencyKey);
-        if (sessions[0]?.id) {
-          await this.dbAdapter.update('payment_sessions', sessions[0].id, {
-            status: 'PAYMENT_FAILED',
-            failure_message: failureReason,
-            updated_at: nowIso,
-          });
+      await this.dbAdapter.withTransaction(async () => {
+        if (obj.metadata?.idempotencyKey) {
+          const sessions = await this.dbAdapter.select<any>('payment_sessions', (r) => r.idempotency_key === obj.metadata?.idempotencyKey);
+          if (sessions[0]?.id) {
+            await this.dbAdapter.update('payment_sessions', sessions[0].id, {
+              status: 'PAYMENT_FAILED',
+              failure_message: failureReason,
+              updated_at: nowIso,
+            });
+          }
         }
-      }
-      await this.dbAdapter.insertDurableWithRetry(
-        'processed_webhook_events',
-        { id: eventId, event_type: event.type, payment_intent_id: obj.id, status: 'EXCEPTION_FLAGGED', failure_message: failureReason, processed_at: nowIso },
-        { context: 'paymentProviderService:failedEvent' }
-      );
-      await this.dbAdapter.insertDurableWithRetry(
-        'audit_logs',
-        {
-          id: `audit-pay-fail-${Date.now()}-${crypto.randomBytes(2).toString('hex')}`,
-          timestamp: nowIso,
-          actor_role: 'payment_webhook_system',
-          action: 'payment:intent_failed',
-          details: `Payment failure logged for intent ${obj.id}: ${failureReason}.`,
-        },
-        { context: 'paymentProviderService:auditFailed' }
-      );
+        await this.dbAdapter.insertDurableWithRetry(
+          'processed_webhook_events',
+          { id: eventId, event_type: event.type, payment_intent_id: obj.id, status: 'EXCEPTION_FLAGGED', failure_message: failureReason, processed_at: nowIso },
+          { context: 'paymentProviderService:failedEvent', failClosedInProd: true }
+        );
+        await this.dbAdapter.insertDurableWithRetry(
+          'audit_logs',
+          {
+            id: `audit-pay-fail-${Date.now()}-${crypto.randomBytes(2).toString('hex')}`,
+            timestamp: nowIso,
+            actor_role: 'payment_webhook_system',
+            action: 'payment:intent_failed',
+            details: `Payment failure logged for intent ${obj.id}: ${failureReason}.`,
+          },
+          { context: 'paymentProviderService:auditFailed', failClosedInProd: true }
+        );
+      });
+      this.processedEvents.add(eventId);
       return {
         success: true,
         eventId,
@@ -502,34 +560,40 @@ export class PaymentProviderService {
     }
 
     if (event.type === 'charge.refunded') {
-      const obj = event.data.object;
-      const matchingDonations = await this.dbAdapter.select<any>(
-        'donations_verified',
-        (r) => r.payment_intent_id === obj.id || r.payment_intent_id === (obj as any).payment_intent
-      );
-      for (const don of matchingDonations) {
-        await this.dbAdapter.update('donations_verified', don.id, {
-          payment_status: 'refunded',
-          refunded_at: nowIso,
-          receipt_revoked: true,
-        });
-      }
-      await this.dbAdapter.insertDurableWithRetry(
-        'processed_webhook_events',
-        { id: eventId, event_type: event.type, charge_id: obj.id, status: 'RECONCILED_REFUND', processed_at: nowIso },
-        { context: 'paymentProviderService:refundEvent' }
-      );
-      await this.dbAdapter.insertDurableWithRetry(
-        'audit_logs',
-        {
-          id: `audit-pay-ref-${Date.now()}-${crypto.randomBytes(2).toString('hex')}`,
-          timestamp: nowIso,
-          actor_role: 'payment_webhook_system',
-          action: 'payment:charge_refunded',
-          details: `Refund registered for charge ${obj.id}. Updated ${matchingDonations.length} verified donation record(s).`,
-        },
-        { context: 'paymentProviderService:auditRefund' }
-      );
+      const obj = event.data.object as any;
+      const amountRefundedCents = typeof obj.amount_refunded === 'number' ? obj.amount_refunded : obj.amount || 0;
+      const isPartial = typeof obj.amount === 'number' && obj.amount > 0 && amountRefundedCents > 0 && amountRefundedCents < obj.amount;
+      await this.dbAdapter.withTransaction(async () => {
+        const matchingDonations = await this.dbAdapter.select<any>(
+          'donations_verified',
+          (r) => r.payment_intent_id === obj.id || r.payment_intent_id === obj.payment_intent
+        );
+        for (const don of matchingDonations) {
+          await this.dbAdapter.update('donations_verified', don.id, {
+            payment_status: isPartial ? 'partially_refunded' : 'refunded',
+            amount_refunded: amountRefundedCents / 100,
+            refunded_at: nowIso,
+            receipt_revoked: !isPartial,
+          });
+        }
+        await this.dbAdapter.insertDurableWithRetry(
+          'processed_webhook_events',
+          { id: eventId, event_type: event.type, charge_id: obj.id, status: isPartial ? 'RECONCILED_PARTIAL_REFUND' : 'RECONCILED_REFUND', processed_at: nowIso },
+          { context: 'paymentProviderService:refundEvent', failClosedInProd: true }
+        );
+        await this.dbAdapter.insertDurableWithRetry(
+          'audit_logs',
+          {
+            id: `audit-pay-ref-${Date.now()}-${crypto.randomBytes(2).toString('hex')}`,
+            timestamp: nowIso,
+            actor_role: 'payment_webhook_system',
+            action: 'payment:charge_refunded',
+            details: `${isPartial ? 'Partial refund' : 'Full refund'} registered for charge ${obj.id}. Updated ${matchingDonations.length} verified donation record(s).`,
+          },
+          { context: 'paymentProviderService:auditRefund', failClosedInProd: true }
+        );
+      });
+      this.processedEvents.add(eventId);
       return {
         success: true,
         eventId,
@@ -541,23 +605,37 @@ export class PaymentProviderService {
     }
 
     if (event.type === 'charge.dispute.created') {
-      const obj = event.data.object;
-      await this.dbAdapter.insertDurableWithRetry(
-        'processed_webhook_events',
-        { id: eventId, event_type: event.type, charge_id: obj.id, status: 'EXCEPTION_FLAGGED', processed_at: nowIso },
-        { context: 'paymentProviderService:disputeEvent' }
-      );
-      await this.dbAdapter.insertDurableWithRetry(
-        'audit_logs',
-        {
-          id: `audit-pay-disp-${Date.now()}-${crypto.randomBytes(2).toString('hex')}`,
-          timestamp: nowIso,
-          actor_role: 'payment_webhook_system',
-          action: 'payment:dispute_created',
-          details: `Dispute opened for charge ${obj.id}. Flagged for Finance Committee reconciliation.`,
-        },
-        { context: 'paymentProviderService:auditDispute' }
-      );
+      const obj = event.data.object as any;
+      await this.dbAdapter.withTransaction(async () => {
+        const matchingDonations = await this.dbAdapter.select<any>(
+          'donations_verified',
+          (r) => r.payment_intent_id === obj.id || r.payment_intent_id === obj.payment_intent || r.payment_intent_id === obj.charge
+        );
+        for (const don of matchingDonations) {
+          await this.dbAdapter.update('donations_verified', don.id, {
+            payment_status: 'disputed',
+            disputed_at: nowIso,
+            receipt_revoked: true,
+          });
+        }
+        await this.dbAdapter.insertDurableWithRetry(
+          'processed_webhook_events',
+          { id: eventId, event_type: event.type, charge_id: obj.id, status: 'EXCEPTION_FLAGGED', processed_at: nowIso },
+          { context: 'paymentProviderService:disputeEvent', failClosedInProd: true }
+        );
+        await this.dbAdapter.insertDurableWithRetry(
+          'audit_logs',
+          {
+            id: `audit-pay-disp-${Date.now()}-${crypto.randomBytes(2).toString('hex')}`,
+            timestamp: nowIso,
+            actor_role: 'payment_webhook_system',
+            action: 'payment:dispute_created',
+            details: `Dispute opened for charge ${obj.id}. Flagged ${matchingDonations.length} donation(s) for Finance Committee reconciliation.`,
+          },
+          { context: 'paymentProviderService:auditDispute', failClosedInProd: true }
+        );
+      });
+      this.processedEvents.add(eventId);
       return {
         success: true,
         eventId,
@@ -573,6 +651,7 @@ export class PaymentProviderService {
       { id: eventId, event_type: event.type, processed_at: nowIso },
       { context: 'paymentProviderService:otherEvent' }
     );
+    this.processedEvents.add(eventId);
     return {
       success: true,
       eventId,

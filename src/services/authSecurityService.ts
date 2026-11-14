@@ -573,7 +573,7 @@ export class AuthSecurityService {
    * Server-side authorization check for role and domain.
    */
   public authorizeDomain(role: StaffRole, domain: PermissionDomain): boolean {
-    if (role === 'master_admin' || role === 'MASTER_ADMIN') return true;
+    if ((role === 'master_admin' || role === 'MASTER_ADMIN') && domain !== 'restricted_safeguarding') return true;
 
     // Normalize canonical roles
     const normRole = role.toLowerCase();
@@ -586,7 +586,7 @@ export class AuthSecurityService {
       case 'grant_management':
         return ['grants_director', 'executive_director', 'executive', 'department_manager'].includes(normRole);
       case 'restricted_safeguarding':
-        return ['safeguarding_lead', 'executive_director'].includes(normRole);
+        return ['safeguarding_lead', 'safeguarding_officer', 'executive_director'].includes(normRole);
       case 'staff_management':
       case 'department_management':
         return ['executive_director', 'executive'].includes(normRole);
@@ -595,7 +595,7 @@ export class AuthSecurityService {
       case 'fundraising_crm':
         return ['development_director', 'grants_director', 'executive_director', 'executive', 'department_manager'].includes(normRole);
       case 'email_management':
-        return ['development_director', 'programs_director', 'executive_director', 'executive', 'safeguarding_lead'].includes(normRole);
+        return ['development_director', 'programs_director', 'executive_director', 'executive', 'safeguarding_lead', 'safeguarding_officer'].includes(normRole);
       case 'master_administration':
         return ['master_admin', 'platform_super_admin'].includes(normRole);
       case 'organizational_tasks':

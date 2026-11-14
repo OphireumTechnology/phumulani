@@ -328,8 +328,9 @@ export class EmailDispatchService {
     }
 
     // Safeguarding Air-Gap Guard
-    if (draft.isSafeguarded && reviewerRole !== 'safeguarding_lead' && reviewerRole !== 'executive_director') {
-      throw new Error('SAFEGUARDING_AIR_GAP_VIOLATION: Confidential survivor communication requires safeguarding lead authorization.');
+    const reviewerNorm = String(reviewerRole || '').toLowerCase();
+    if (draft.isSafeguarded && !['safeguarding_lead', 'safeguarding_officer', 'executive_director'].includes(reviewerNorm)) {
+      throw new Error('SAFEGUARDING_AIR_GAP_VIOLATION: Confidential survivor communication requires safeguarding officer/lead or executive director authorization.');
     }
 
     const contentHash = emailApprovalService.computeContentHash(
@@ -541,16 +542,24 @@ export class EmailDispatchService {
       }
     }
 
-    draft.lifecycleStage = 'SENDING';
-    const normalizedMbx = (draft.mailboxId || '').toLowerCase();
+    const rawMailboxTarget = (draft.mailboxId || '').trim();
+    const normalizedMbx = rawMailboxTarget.toLowerCase();
     const conn =
-      connectorRegistry.getConnection(draft.mailboxId) ||
-      connectorRegistry.listConnections().find((c) => c.emailAddress.toLowerCase() === normalizedMbx) ||
-      connectorRegistry.listConnections()[0];
+      connectorRegistry.getConnection(rawMailboxTarget) ||
+      connectorRegistry.listConnections().find((c) => c.emailAddress.toLowerCase() === normalizedMbx);
+    if (!conn) {
+      draft.lifecycleStage = 'DELIVERY_FAILED';
+      await this.dbAdapter.insertDurableWithRetry('email_drafts', draft, { context: 'EmailDispatchService:missingMailbox' });
+      throw new Error(
+        `MAILBOX_CONNECTION_NOT_FOUND: Cannot dispatch draft "${draft.id}" because target mailbox "${rawMailboxTarget}" is not registered. Cross-mailbox fallback is disabled.`
+      );
+    }
+
+    draft.lifecycleStage = 'SENDING';
     const dispatchResult = await this.dispatchApprovedMessage({
       id: `msg-${draft.id}`,
-      connectionId: conn?.id || draft.mailboxId,
-      senderAccount: conn?.emailAddress || (normalizedMbx.includes('@') ? draft.mailboxId : 'donations@phumulani.org'),
+      connectionId: conn.id,
+      senderAccount: conn.emailAddress,
       to: draft.to,
       cc: draft.cc,
       subject: draft.subject,
@@ -662,23 +671,61 @@ export class EmailDispatchService {
       }
     }
 
+    if (!message.to || message.to.length === 0) {
+      throw new Error('INVALID_RECIPIENT: Outbound message must contain at least one recipient address.');
+    }
+
+    const targetConn = connectorRegistry.getConnection(message.connectionId);
+    if (!targetConn) {
+      throw new Error(
+        `MAILBOX_CONNECTION_NOT_FOUND: Outbound dispatch rejected; connection "${message.connectionId}" does not exist.`
+      );
+    }
+    if (
+      message.senderAccount &&
+      targetConn.emailAddress.toLowerCase() !== message.senderAccount.trim().toLowerCase()
+    ) {
+      throw new Error(
+        `CROSS_MAILBOX_DISPATCH_REJECTED: Requested senderAccount "${message.senderAccount}" does not match target connection mailbox "${targetConn.emailAddress}".`
+      );
+    }
+
     const existingIdem = await this.getActiveIdempotencyRecord(message.idempotencyKey);
     if (existingIdem) {
+      const state = existingIdem.deliveryState || 'STAGED';
+      if (state === 'SENDING' || state === 'RECONCILIATION_REQUIRED') {
+        return {
+          success: false,
+          dispatchId: existingIdem.dispatchId,
+          providerMessageId: existingIdem.providerMessageId,
+          deliveryState: 'RECONCILIATION_REQUIRED',
+          dispatchedAt: existingIdem.createdAt,
+          recipientCount: message.to.length,
+          error: `RECONCILIATION_REQUIRED: Idempotency key "${message.idempotencyKey}" already has an in-flight or ambiguous dispatch (${existingIdem.dispatchId}). Verify provider Sent folder before retrying.`,
+        };
+      }
       return {
         success: true,
         dispatchId: existingIdem.dispatchId,
         providerMessageId: existingIdem.providerMessageId,
-        deliveryState: existingIdem.deliveryState || 'STAGED',
+        deliveryState: state,
         dispatchedAt: existingIdem.createdAt,
         recipientCount: message.to.length,
       };
     }
 
-    if (!message.to || message.to.length === 0) {
-      throw new Error('INVALID_RECIPIENT: Outbound message must contain at least one recipient address.');
-    }
-
     const operationalMode = process.env.PHUMULANI_OPERATIONAL_MODE || 'STAGED_DEVELOPMENT';
+    const isLiveSendActive =
+      operationalMode === 'CONTROLLED_LIVE_PILOT' ||
+      process.env.LIVE_EMAIL_SENDING_ENABLED === 'true';
+    if (
+      isLiveSendActive &&
+      !['CONNECTED', 'AUTHORIZED'].includes(String(targetConn.authStatus || '').toUpperCase())
+    ) {
+      throw new Error(
+        `AUTHORIZATION_REQUIRED: Target mailbox "${targetConn.emailAddress}" is not authorized (${targetConn.authStatus}). Live outbound dispatch refused.`
+      );
+    }
     if (operationalMode === 'CONTROLLED_LIVE_PILOT') {
       const allowedPilotDomains = ['phumulani.org', 'example.org', 'test.phumulani.org'];
       for (const recipient of message.to) {
@@ -690,51 +737,148 @@ export class EmailDispatchService {
     }
 
     const dispatchId = `disp-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`;
-    const result = await connectorRegistry.transmitApprovedMessage(message.connectionId, {
-      id: message.id,
-      connectionId: message.connectionId,
-      senderAccount: message.senderAccount,
-      recipientEmails: message.to,
-      subject: message.subject,
-      bodyText: message.bodyText,
-      bodyHtml: message.bodyHtml,
+    const subjectHash = crypto.createHash('sha256').update(message.subject + message.bodyText).digest('hex');
+    const claimTimestamp = new Date().toISOString();
+    const claimRecord: EmailIdempotencyRecord = {
       idempotencyKey: message.idempotencyKey,
-      approvedByUserId: message.approvedByUserId,
-      approvedByName: message.approvedByName,
-      approvedAt: message.approvedAt,
-      approvalVersion: message.approvalVersion,
-      deliveryState: operationalMode === 'CONTROLLED_LIVE_PILOT' ? 'PROVIDER_ACCEPTED' : 'STAGED',
-    });
+      dispatchId,
+      senderAccount: targetConn.emailAddress,
+      recipientEmails: message.to,
+      subjectHash,
+      deliveryState: 'SENDING',
+      createdAt: claimTimestamp,
+      expiresAt: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
+    };
+    const claimResult = await this.dbAdapter.insertIfAbsent(
+      'email_idempotency_keys',
+      { id: message.idempotencyKey, ...claimRecord },
+      ['idempotencyKey']
+    );
+    if (!claimResult.inserted) {
+      const existing = claimResult.record as EmailIdempotencyRecord;
+      this.idempotencyStore.set(message.idempotencyKey, existing);
+      const state = existing.deliveryState || 'SENDING';
+      if (state === 'SENDING' || state === 'RECONCILIATION_REQUIRED') {
+        return {
+          success: false,
+          dispatchId: existing.dispatchId,
+          deliveryState: 'RECONCILIATION_REQUIRED',
+          dispatchedAt: existing.createdAt,
+          recipientCount: message.to.length,
+          error: `RECONCILIATION_REQUIRED: Concurrent or prior in-flight dispatch detected for "${message.idempotencyKey}".`,
+        };
+      }
+      return {
+        success: true,
+        dispatchId: existing.dispatchId,
+        providerMessageId: existing.providerMessageId,
+        deliveryState: state,
+        dispatchedAt: existing.createdAt,
+        recipientCount: message.to.length,
+      };
+    }
+    this.idempotencyStore.set(message.idempotencyKey, claimRecord);
+
+    const dispatchTimeoutMs = Math.max(1000, Number(process.env.EMAIL_DISPATCH_TIMEOUT_MS || 15000));
+    let result: SendResult;
+    try {
+      const rawResult = await Promise.race([
+        connectorRegistry.transmitApprovedMessage(message.connectionId, {
+          id: message.id,
+          connectionId: message.connectionId,
+          senderAccount: targetConn.emailAddress,
+          recipientEmails: message.to,
+          subject: message.subject,
+          bodyText: message.bodyText,
+          bodyHtml: message.bodyHtml,
+          idempotencyKey: message.idempotencyKey,
+          approvedByUserId: message.approvedByUserId,
+          approvedByName: message.approvedByName,
+          approvedAt: message.approvedAt,
+          approvalVersion: message.approvalVersion,
+          deliveryState: operationalMode === 'CONTROLLED_LIVE_PILOT' ? 'PROVIDER_ACCEPTED' : 'STAGED',
+        }),
+        new Promise<SendResult>((resolve) =>
+          setTimeout(
+            () =>
+              resolve({
+                success: false,
+                dispatchId,
+                deliveryState: 'RECONCILIATION_REQUIRED',
+                dispatchedAt: new Date().toISOString(),
+                recipientCount: message.to.length,
+                error: `DISPATCH_TIMEOUT: Outbound transmission exceeded ${dispatchTimeoutMs}ms; marked RECONCILIATION_REQUIRED to prevent duplicate send.`,
+              }),
+            dispatchTimeoutMs
+          ).unref?.()
+        ),
+      ]);
+      result = {
+        recipientCount: message.to.length,
+        ...rawResult,
+      };
+    } catch (txErr: any) {
+      result = {
+        success: false,
+        dispatchId,
+        deliveryState: 'FAILED',
+        dispatchedAt: new Date().toISOString(),
+        recipientCount: message.to.length,
+        error: txErr?.message || 'Connector dispatch error',
+      };
+    }
 
     const finalDispatchId = result.dispatchId || dispatchId;
     const timestamp = result.dispatchedAt || new Date().toISOString();
 
-    await this.dbAdapter
-      .insertDurableWithRetry(
-        'email_outbound_dispatch',
-        {
-          id: finalDispatchId,
-          connectionId: message.connectionId,
-          senderAccount: message.senderAccount,
-          recipientEmails: message.to,
-          subject: message.subject,
-          deliveryState: result.deliveryState || 'FAILED',
-          lifecycleStage: mapToOutboundLifecycleStage(result.deliveryState || 'FAILED'),
-          providerMessageId: result.providerMessageId,
-          approvedByUserId: message.approvedByUserId,
-          error: result.error,
-          dispatchedAt: timestamp,
-        },
-        { context: 'EmailDispatchService:dispatchRecord' }
-      )
-      .catch(() => {});
+    await this.dbAdapter.insertDurableWithRetry(
+      'email_outbound_dispatch',
+      {
+        id: finalDispatchId,
+        connectionId: message.connectionId,
+        senderAccount: targetConn.emailAddress,
+        recipientEmails: message.to,
+        subject: message.subject,
+        deliveryState: result.deliveryState || 'FAILED',
+        lifecycleStage: mapToOutboundLifecycleStage(result.deliveryState || 'FAILED'),
+        providerMessageId: result.providerMessageId,
+        approvedByUserId: message.approvedByUserId,
+        error: result.error,
+        dispatchedAt: timestamp,
+      },
+      { context: 'EmailDispatchService:dispatchRecord', failClosedInProd: true }
+    );
+
+    if (result.deliveryState === 'RECONCILIATION_REQUIRED') {
+      await this.saveIdempotencyRecord({
+        idempotencyKey: message.idempotencyKey,
+        dispatchId: finalDispatchId,
+        senderAccount: targetConn.emailAddress,
+        recipientEmails: message.to,
+        subjectHash,
+        deliveryState: 'RECONCILIATION_REQUIRED',
+        providerMessageId: result.providerMessageId,
+        createdAt: timestamp,
+        expiresAt: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
+      });
+      return {
+        success: false,
+        dispatchId: finalDispatchId,
+        deliveryState: 'RECONCILIATION_REQUIRED',
+        dispatchedAt: timestamp,
+        recipientCount: message.to.length,
+        error: result.error || 'Dispatch outcome requires reconciliation before retry.',
+      };
+    }
 
     if (
       !result.success ||
       result.deliveryState === 'FAILED' ||
-      result.deliveryState === 'CANCELLED' ||
-      result.deliveryState === 'RECONCILIATION_REQUIRED'
+      result.deliveryState === 'CANCELLED'
     ) {
+      // Clear pre-transmission claim on hard pre-acceptance failure so authorized retry remains possible
+      this.idempotencyStore.delete(message.idempotencyKey);
+      await this.dbAdapter.deleteById('email_idempotency_keys', message.idempotencyKey).catch(() => false);
       return {
         success: false,
         dispatchId: finalDispatchId,
@@ -748,9 +892,9 @@ export class EmailDispatchService {
     await this.saveIdempotencyRecord({
       idempotencyKey: message.idempotencyKey,
       dispatchId: finalDispatchId,
-      senderAccount: message.senderAccount,
+      senderAccount: targetConn.emailAddress,
       recipientEmails: message.to,
-      subjectHash: crypto.createHash('sha256').update(message.subject + message.bodyText).digest('hex'),
+      subjectHash,
       deliveryState: result.deliveryState,
       providerMessageId: result.providerMessageId,
       createdAt: timestamp,

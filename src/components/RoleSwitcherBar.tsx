@@ -74,6 +74,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
     executive_director: 'Executive Director (CEO)',
     board_member: 'Board Chair',
     safeguarding_officer: 'Safeguarding Officer',
+    safeguarding_lead: 'Safeguarding Lead',
     super_admin: 'Super Administrator',
     PLATFORM_SUPER_ADMIN: 'Master Administrator',
     governance_officer: 'Governance Officer',

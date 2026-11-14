@@ -798,6 +798,7 @@ Draft a professional, compassionate response following Phumulani's organizationa
 
     const isAuthorizedSafeguarding =
       role === 'safeguarding_officer' ||
+      role === 'safeguarding_lead' ||
       role === 'PLATFORM_SUPER_ADMIN' ||
       role === 'executive_director';
 
@@ -1599,7 +1600,7 @@ Draft a professional, compassionate response following Phumulani's organizationa
 
     // Safeguarding quarantine release requires authorized safeguarding officer
     if (from === 'QUARANTINED') {
-      const authorizedRoles = ['safeguarding_officer', 'Sister Miriam K.', 'PLATFORM_SUPER_ADMIN', 'executive_director'];
+      const authorizedRoles = ['safeguarding_officer', 'safeguarding_lead', 'Sister Miriam K.', 'PLATFORM_SUPER_ADMIN', 'executive_director'];
       if (!authorizedRoles.includes(userRole)) {
         return {
           valid: false,

@@ -383,17 +383,35 @@ app.get('/readyz', async (_req: Request, res: Response) => {
   const dbInfo = await dbAdapter.checkHealth();
   const safeguardingStatus = getSafeguardingEncryptionStatus();
   const dbPolicy = EnvironmentService.getDatabasePolicy();
+  const schemaIntegrity = await DatabaseMigrationService.getInstance()
+    .validateSchemaIntegrity()
+    .catch(() => ({
+      valid: false,
+      verifiedTables: [] as string[],
+      existingTables: [] as string[],
+      missingTables: ['SCHEMA_CHECK_FAILED'],
+      indexIntegrity: false,
+      foreignKeysVerified: false,
+    }));
+  const vaultError = oAuthService.getVaultLoadError();
   const isProdRequired = dbPolicy.requireLiveDatabase;
   const isDbReady = isProdRequired
     ? dbInfo.engine === 'POSTGRESQL' && dbInfo.databaseStatus === 'HEALTHY' && dbInfo.applicationReadiness === 'READY'
     : dbInfo.applicationReadiness === 'READY' && dbInfo.databaseStatus === 'HEALTHY';
-  const isHealthy = isDbReady && (!isProdRequired || safeguardingStatus.ready);
+  const isHealthy =
+    isDbReady &&
+    schemaIntegrity.valid &&
+    !vaultError &&
+    (!isProdRequired || safeguardingStatus.ready);
   res.status(isHealthy ? 200 : 503).json({
     status: isHealthy ? 'ready' : 'not_ready',
     database: dbInfo.databaseStatus,
     engine: dbInfo.engine,
     applicationReadiness: isHealthy ? 'READY' : 'BLOCKED',
     policyCode: dbPolicy.policyCode,
+    schemaValid: schemaIntegrity.valid,
+    missingTablesCount: schemaIntegrity.missingTables.length,
+    vaultReady: !vaultError,
     safeguardingReady: safeguardingStatus.ready,
     timestamp: new Date().toISOString(),
   });
@@ -4913,9 +4931,23 @@ app.post('/api/admin/email/google-workspace/oauth/initiate', requireSessionMiddl
     });
   }
   try {
-    const redirectUri = `${req.protocol}://${req.get('host')}/api/admin/email/oauth/google/callback`;
-    const { codeVerifier: _omitVerifier, ...publicOauthInit } = oAuthService.initiateGoogleOAuth(redirectUri, mailboxEmail);
-    res.json({ success: true, ...publicOauthInit });
+    const redirectValidation = validateOAuthRedirectUri(
+      (req.body?.redirectUri as string | undefined) || process.env.OAUTH_REDIRECT_URI,
+      req,
+      '/api/admin/email/oauth/google/callback'
+    );
+    if (!redirectValidation.valid || !redirectValidation.uri) {
+      return res.status(400).json({
+        success: false,
+        code: 'INVALID_REDIRECT_URI',
+        error: redirectValidation.error || 'Invalid OAuth redirectUri.',
+      });
+    }
+    const { codeVerifier: _omitVerifier, ...publicOauthInit } = oAuthService.initiateGoogleOAuth(
+      redirectValidation.uri,
+      mailboxEmail
+    );
+    res.json({ success: true, redirectUri: redirectValidation.uri, ...publicOauthInit });
   } catch (err: any) {
     res.status(400).json({ error: err.message });
   }
@@ -6564,7 +6596,20 @@ app.post('/api/admin/email/connections/:id/reauthorize', requireSessionMiddlewar
         connection: connectorRegistry.getConnection(req.params.id),
       });
     }
-    const redirectUri = `${req.protocol}://${req.get('host')}/api/admin/email/oauth/${conn.provider === 'MICROSOFT' ? 'microsoft' : 'google'}/callback`;
+    const defaultCallbackPath = `/api/admin/email/oauth/${conn.provider === 'MICROSOFT' ? 'microsoft' : 'google'}/callback`;
+    const redirectValidation = validateOAuthRedirectUri(
+      (req.body?.redirectUri as string | undefined) || process.env.OAUTH_REDIRECT_URI,
+      req,
+      defaultCallbackPath
+    );
+    if (!redirectValidation.valid || !redirectValidation.uri) {
+      return res.status(400).json({
+        success: false,
+        code: 'INVALID_REDIRECT_URI',
+        error: redirectValidation.error || 'Invalid OAuth redirectUri.',
+      });
+    }
+    const redirectUri = redirectValidation.uri;
     let oauthInfo: Record<string, any> | null = null;
     if (conn.provider === 'GOOGLE') {
       const { codeVerifier: _omitVerifier, ...publicOauth } = oAuthService.initiateGoogleOAuth(redirectUri, conn.emailAddress);
@@ -8549,15 +8594,9 @@ async function startServer() {
   const workerService = BackgroundWorkerService.getInstance();
   const workerIntervalMs = Math.max(15000, Number(process.env.WORKER_CYCLE_INTERVAL_MS || 30000));
   const workerTimer = setInterval(() => {
-    void workerService
-      .runWorkerCycle(10)
-      .then(() => Promise.all([
-        emailDispatchService.processDueScheduledDispatches(),
-        calendarIntegrationService.processDueReminders(),
-      ]))
-      .catch((err) => {
-        console.warn('[BackgroundWorker] Scheduled cycle notice:', err?.message || err);
-      });
+    void workerService.runWorkerCycle(10).catch((err) => {
+      console.warn('[BackgroundWorker] Scheduled cycle notice:', err?.message || err);
+    });
   }, workerIntervalMs);
   workerTimer.unref();
 
@@ -8566,7 +8605,11 @@ async function startServer() {
     if (shuttingDown) return;
     shuttingDown = true;
     clearInterval(workerTimer);
-    console.log(`[Phumulani Platform] Received ${signal}. Closing HTTP server and draining database connections...`);
+    console.log(`[Phumulani Platform] Received ${signal}. Draining HTTP server, background worker, and database connections...`);
+    await Promise.race([
+      workerService.waitForIdle(),
+      new Promise<void>((resolve) => setTimeout(resolve, 4000)),
+    ]).catch(() => {});
     await new Promise<void>((resolve) => {
       httpServer.close(() => resolve());
       setTimeout(resolve, 4000).unref();

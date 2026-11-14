@@ -154,14 +154,16 @@ async function runPhase59Verification() {
     codeVerifier: replaySession.codeVerifier,
   });
   assert(
-    firstCallback.success === true &&
+    firstCallback.success === false &&
+      (firstCallback.error?.includes('OAUTH_CREDENTIALS_MISSING') ||
+        firstCallback.error?.includes('LIVE_PROVIDER_EXCHANGE_REQUIRED')) &&
       replayedCallback.success === false &&
       (replayedCallback.error?.includes('TAMPERING') ||
         replayedCallback.error?.includes('unrecognized') ||
         replayedCallback.error?.includes('expired') ||
         replayedCallback.error?.includes('REPLAY')),
     'TEST-P59-05',
-    'OAuth callback replay rejected as consumed state tokens are purged immediately upon first use'
+    'Synchronous mock OAuth callback fails closed without live creds and consumed state replays are rejected immediately'
   );
 
   // ---------------------------------------------------------------------------
@@ -171,11 +173,10 @@ async function runPhase59Verification() {
   gw.handleExpiredToken('donations@phumulani.org');
   const refreshRes = gw.tokenRefresh('gw_refresh_token_valid_sample_p59');
   assert(
-    refreshRes.success === true &&
-      refreshRes.accessToken?.startsWith('staged_dev_refreshed_') &&
-      typeof refreshRes.expiresIn === 'number',
+    refreshRes.success === false &&
+      Boolean(refreshRes.error?.includes('LIVE_OAUTH_REFRESH_REQUIRED')),
     'TEST-P59-06',
-    'Token expiration detected and staged refresh handshake issues non-fabricated staged_dev_refreshed_ marker'
+    'Token expiration detected and synthetic synchronous token refresh rejected fail-closed'
   );
 
   // ---------------------------------------------------------------------------
@@ -663,6 +664,18 @@ async function runPhase59Verification() {
   // 28. Safeguarding isolation & air gap (VAWA 8 U.S.C. § 1367) (M59.19)
   // ---------------------------------------------------------------------------
   console.log('\n--- 28. SAFEGUARDING ISOLATION & AIR GAP ---');
+  const prevThreadsP59 = [...db.getState().enterpriseEmailThreads];
+  if (!prevThreadsP59.some((t) => t.classification === '01_safeguarding')) {
+    db.getState().enterpriseEmailThreads.push({
+      id: 'th-safeguard-fixture-p59',
+      mailboxEmail: 'safeguarding@phumulani.org',
+      threadSubject: 'CONFIDENTIAL: Emergency Safety Intake P59 (Fixture)',
+      classification: '01_safeguarding',
+      priority: 'P0',
+      isSafeguardingConfidential: true,
+      messages: [],
+    } as any);
+  }
   const stateThreads = db.getState().enterpriseEmailThreads;
   const safeguardingThreads = stateThreads.filter((t) => t.classification === '01_safeguarding');
   const zeroAutoResponses = safeguardingThreads.every((t) => {
@@ -670,6 +683,7 @@ async function runPhase59Verification() {
     return !log || log.status === 'blocked_by_safety';
   });
   const zeroCrmLinkages = safeguardingThreads.every((t) => !t.crmLink);
+  db.getState().enterpriseEmailThreads = prevThreadsP59;
   const crisisSurvivorThread: any = {
     id: 'th-crisis-vawa-p59',
     mailboxEmail: 'safeguarding@phumulani.org',

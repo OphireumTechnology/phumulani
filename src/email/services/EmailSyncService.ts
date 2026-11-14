@@ -444,7 +444,7 @@ export class EmailSyncService {
     const allMessages = await this.dbAdapter.select<PersistentEmailMessageRecord>('email_messages');
     const allThreads = await this.dbAdapter.select<EmailThread>('email_threads');
     const role = (filter.userRole || '').toLowerCase();
-    const canSeeSafeguarding = ['safeguarding_lead', 'executive_director'].includes(role);
+    const canSeeSafeguarding = ['safeguarding_lead', 'safeguarding_officer', 'executive_director'].includes(role);
 
     const visibleMessages = allMessages.filter((m) => {
       if (m.isSafeguarded || m.mailboxEmail?.toLowerCase().includes('safeguarding')) {
@@ -612,9 +612,17 @@ export class EmailSyncService {
     if (!existing) throw new Error(`Message ${messageId} not found.`);
     const msg: PersistentEmailMessageRecord = { ...existing };
 
+    const conn = connectorRegistry.getConnection(msg.connectionId);
+    const isConnected = conn?.authStatus === 'CONNECTED' || conn?.authStatus === 'AUTHORIZED';
     const connector = connectorRegistry.getConnectorInstance(msg.connectionId) as any;
     if (connector && typeof connector.markRead === 'function') {
-      await connector.markRead(msg.providerMessageId, read).catch(() => {});
+      try {
+        await connector.markRead(msg.providerMessageId, read);
+      } catch (err: any) {
+        if (isConnected) {
+          throw new Error(`PROVIDER_MARK_READ_FAILED: ${err?.message || 'Unable to sync read state with provider.'}`);
+        }
+      }
     }
 
     msg.isRead = read;
@@ -650,9 +658,17 @@ export class EmailSyncService {
       });
     }
 
+    const conn = connectorRegistry.getConnection(msg.connectionId);
+    const isConnected = conn?.authStatus === 'CONNECTED' || conn?.authStatus === 'AUTHORIZED';
     const connector = connectorRegistry.getConnectorInstance(msg.connectionId) as any;
     if (connector && typeof connector.moveMessage === 'function') {
-      await connector.moveMessage(msg.providerMessageId, destinationFolder).catch(() => {});
+      try {
+        await connector.moveMessage(msg.providerMessageId, destinationFolder);
+      } catch (err: any) {
+        if (isConnected) {
+          throw new Error(`PROVIDER_MOVE_FAILED: ${err?.message || 'Unable to move message on provider.'}`);
+        }
+      }
     }
 
     msg.folder = destinationFolder;
