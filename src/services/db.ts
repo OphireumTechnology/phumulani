@@ -1511,11 +1511,17 @@ class DatabaseService {
     const actor = this.state.currentUser;
     const mbx = this.state.connectedMailboxes.find((m) => m.id === mailboxId);
     if (!mbx) return;
-    const updated = this.state.connectedMailboxes.map((m) =>
-      m.id === mailboxId ? { ...m, lastSyncedAt: new Date().toISOString(), status: 'connected' as const } : m
-    );
-    this.saveState({ ...this.state, connectedMailboxes: updated });
-    this.appendAuditLog('MAILBOX_SYNC_TRIGGERED', `Mailbox [${mbx.email}] synchronized by ${actor.name}`);
+    // This legacy client-side helper is not evidence of a provider sync.
+    // In production, only the authenticated backend sync service may update
+    // mailbox connectivity and last successful synchronization timestamps.
+    if (EnvironmentService.isProductionOnly()) {
+      throw new Error(
+        'PRODUCTION_GUARD: Use the authenticated email sync API. Local sync cannot mark a mailbox connected.'
+      );
+    }
+    // In development, record only that a local sync was requested.
+    // Do not fabricate a provider connection or successful sync timestamp.
+    this.appendAuditLog('MAILBOX_SYNC_REQUESTED', `Local sync requested for [${mbx.email}] by ${actor.name}; provider sync not verified.`);
   }
 
   public addConnectedMailbox(data: Partial<ConnectedMailbox>): ConnectedMailbox {
