@@ -151,6 +151,12 @@ import {
 import { DevelopmentOpsService } from './developmentOpsService';
 
 const STORAGE_KEY = 'phumulani_database_v1';
+// The historical email examples are fixtures for the automated regression runner only.
+// Production must never initialize fabricated email conversations or connections.
+const ENABLE_EMAIL_TEST_FIXTURES =
+  typeof process !== 'undefined' &&
+  process.env?.PHUMULANI_EMAIL_TEST_FIXTURES === '1' &&
+  process.env?.NODE_ENV !== 'production';
 
 export interface AppDatabaseState {
   currentUser: User;
@@ -317,10 +323,10 @@ function getInitialState(): AppDatabaseState {
     safeExitNeutralUrl: 'https://weather.com',
     systemSettings: INITIAL_SYSTEM_SETTINGS,
     // Phase 8 Enterprise Email Seed Data
-    connectedMailboxes: [],
+    connectedMailboxes: ENABLE_EMAIL_TEST_FIXTURES ? INITIAL_CONNECTED_MAILBOXES : [],
     autoResponderRules: INITIAL_AUTORESPONDER_RULES,
-    autoResponderLogs: [],
-    enterpriseEmailThreads: [],
+    autoResponderLogs: ENABLE_EMAIL_TEST_FIXTURES ? INITIAL_AUTORESPONDER_LOGS : [],
+    enterpriseEmailThreads: ENABLE_EMAIL_TEST_FIXTURES ? INITIAL_ENTERPRISE_THREADS : [],
     donorProfiles: INITIAL_DONOR_PROFILES,
     majorDonorPipeline: INITIAL_MAJOR_DONOR_PIPELINE,
     grantPipeline: INITIAL_GRANT_PIPELINE,
@@ -343,10 +349,10 @@ function getInitialState(): AppDatabaseState {
     fundraisingAIAgents: INITIAL_FUNDRAISING_AI_AGENTS,
     donorEngagementActivities: INITIAL_DONOR_ENGAGEMENT_ACTIVITIES,
     // Phase 12A: Email Synchronization & Unified Mailbox Management
-    historicalImportJobs: [],
-    syncCheckpoints: [],
-    syncConflicts: [],
-    syncAuditLogs: [],
+    historicalImportJobs: ENABLE_EMAIL_TEST_FIXTURES ? INITIAL_HISTORICAL_IMPORT_JOBS : [],
+    syncCheckpoints: ENABLE_EMAIL_TEST_FIXTURES ? INITIAL_MAILBOX_SYNC_CHECKPOINTS : [],
+    syncConflicts: ENABLE_EMAIL_TEST_FIXTURES ? INITIAL_SYNC_CONFLICT_RECORDS : [],
+    syncAuditLogs: ENABLE_EMAIL_TEST_FIXTURES ? INITIAL_SYNC_AUDIT_LOGS : [],
     // Phase 13: Client Development Transparency, GitHub Integration & Local Synchronization
     developmentMilestones: INITIAL_DEVELOPMENT_MILESTONES,
     developmentFeatures: INITIAL_DEVELOPMENT_FEATURES,
