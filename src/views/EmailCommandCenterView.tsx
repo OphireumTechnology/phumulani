@@ -41,6 +41,7 @@ import {
 } from '../types/emailEnterprise';
 import { EmailEnterpriseService } from '../services/emailEnterpriseService';
 import { googleWorkspaceAdapter } from '../services/googleWorkspaceAdapter';
+import { phumulaniApiClient } from '../api/phumulaniApiClient';
 import { UniversalEmailConnections } from '../components/email/UniversalEmailConnections';
 import { PhumulaniAiFundraisingCenter } from '../components/email/PhumulaniAiFundraisingCenter';
 import { EmailCompactHeader } from '../components/email/EmailCompactHeader';
@@ -148,7 +149,9 @@ export type EmailCommandCenterTab =
   | 'partnerships'
   | 'setup_wizard'
   | 'universal_connectors'
-  | 'phumulani_ai';
+  | 'phumulani_ai'
+  | 'financial_docs'
+  | 'governance';
 
 interface EmailCommandCenterViewProps {
   currentUser: User;
@@ -317,12 +320,243 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
     }, 250);
   };
 
-  // Phase 48 CRM Linking Modal State (M48.05 / M48.11)
+  // Phase 48 CRM Linking Modal State (M48.05 / M48.11) + Phase 69 8-Type CRM Entities
   const [isCrmLinkModalOpen, setIsCrmLinkModalOpen] = useState(false);
   const [crmTargetThreadId, setCrmTargetThreadId] = useState<string | null>(null);
-  const [crmEntityType, setCrmEntityType] = useState<'donor' | 'grant' | 'partnership' | 'volunteer' | 'campaign' | 'partner' | 'client'>('donor');
+  const [crmEntityType, setCrmEntityType] = useState<
+    'donor' | 'grant' | 'partnership' | 'volunteer' | 'campaign' | 'partner' | 'client' | 'program'
+  >('donor');
   const [crmEntityId, setCrmEntityId] = useState('');
   const [crmEntityName, setCrmEntityName] = useState('');
+
+  // Phase 66-74 Persistent Backend State (Drafts, Grant Financials, Governance, Audit Ledger, Worker Telemetry)
+  const [persistentDrafts, setPersistentDrafts] = useState<any[]>([]);
+  const [financialDocs, setFinancialDocs] = useState<any[]>([]);
+  const [legalHolds, setLegalHolds] = useState<any[]>([]);
+  const [governancePermissions, setGovernancePermissions] = useState<any[]>([]);
+  const [auditLedgerState, setAuditLedgerState] = useState<{ chainVerified: boolean; total: number; entries: any[] }>({
+    chainVerified: true,
+    total: 0,
+    entries: [],
+  });
+  const [opsMonitoring, setOpsMonitoring] = useState<any>(null);
+  const [aiTelemetryState, setAiTelemetryState] = useState<any>(null);
+  const [unifiedInboxStats, setUnifiedInboxStats] = useState<{ total?: number; folderCounts?: Record<string, number> } | null>(null);
+
+  // Grant Financial Doc Ingestion Form State
+  const [finDocSubject, setFinDocSubject] = useState('');
+  const [finDocBody, setFinDocBody] = useState('');
+  const [finDocMailbox, setFinDocMailbox] = useState('grants@phumulani.org');
+  const [finDocSender, setFinDocSender] = useState('grants-officer@foundation-example.org');
+  const [finDocBlockNotice, setFinDocBlockNotice] = useState<string | null>(null);
+
+  // Legal Hold Form State
+  const [holdTitle, setHoldTitle] = useState('');
+  const [holdReason, setHoldReason] = useState('');
+  const [holdTargetType, setHoldTargetType] = useState<'THREAD' | 'MAILBOX' | 'SENDER'>('MAILBOX');
+  const [holdTargetValue, setHoldTargetValue] = useState('');
+
+  const refreshEnterprisePersistence = async () => {
+    try {
+      const [inboxRes, draftsRes, finRes, holdsRes, permsRes, ledgerRes, opsRes, aiRes] = await Promise.all([
+        phumulaniApiClient.getUnifiedInbox({ page: 1, pageSize: 25 }).catch(() => null),
+        phumulaniApiClient.getPersistentDrafts().catch(() => null),
+        phumulaniApiClient.getFinancialDocs().catch(() => null),
+        phumulaniApiClient.getLegalHolds().catch(() => null),
+        phumulaniApiClient.getGovernancePermissions().catch(() => null),
+        phumulaniApiClient.getAuditLedger(40).catch(() => null),
+        phumulaniApiClient.getOperationsMonitoring().catch(() => null),
+        phumulaniApiClient.getEmailAiTelemetry().catch(() => null),
+      ]);
+      if (inboxRes) setUnifiedInboxStats({ total: inboxRes.total, folderCounts: inboxRes.folderCounts });
+      if (draftsRes?.drafts) setPersistentDrafts(draftsRes.drafts);
+      if (finRes?.documents) setFinancialDocs(finRes.documents);
+      if (holdsRes?.holds) setLegalHolds(holdsRes.holds);
+      if (permsRes?.permissions) setGovernancePermissions(permsRes.permissions);
+      if (ledgerRes) setAuditLedgerState(ledgerRes);
+      if (opsRes?.monitoring) setOpsMonitoring(opsRes.monitoring);
+      if (aiRes) setAiTelemetryState(aiRes);
+    } catch {
+      // Gracefully ignore uninitialized or 401 before login
+    }
+  };
+
+  useEffect(() => {
+    refreshEnterprisePersistence();
+  }, []);
+
+  const handleApprovePersistentDraft = async (
+    draftId: string,
+    decision: 'APPROVE' | 'REQUEST_CHANGES' | 'RETURN_TO_DRAFT' | 'REJECT'
+  ) => {
+    try {
+      const res = await phumulaniApiClient.approvePersistentDraft(draftId, { decision });
+      setActionNotice({
+        type: res.success ? 'success' : 'warning',
+        message: res.success
+          ? `Draft [${draftId}] updated via maker-checker decision: ${decision}.`
+          : res.error || 'Approval rejected by policy',
+      });
+      await refreshEnterprisePersistence();
+    } catch (err: any) {
+      setActionNotice({
+        type: 'warning',
+        message: err?.message || 'Maker-checker enforcement blocked this action.',
+      });
+    }
+    setTimeout(() => setActionNotice(null), 5000);
+  };
+
+  const handleSchedulePersistentDraft = async (draftId: string) => {
+    const scheduledSendAt = new Date(Date.now() + 60 * 60 * 1000).toISOString();
+    try {
+      const res = await phumulaniApiClient.schedulePersistentDraft(draftId, scheduledSendAt);
+      setActionNotice({
+        type: res.success ? 'success' : 'warning',
+        message: res.success
+          ? `Draft [${draftId}] scheduled for ${new Date(scheduledSendAt).toLocaleString()}.`
+          : res.error || 'Failed to schedule draft',
+      });
+      await refreshEnterprisePersistence();
+    } catch (err: any) {
+      setActionNotice({ type: 'warning', message: err?.message || 'Failed to schedule draft.' });
+    }
+    setTimeout(() => setActionNotice(null), 5000);
+  };
+
+  const handleSendPersistentDraft = async (draftId: string) => {
+    try {
+      const res = await phumulaniApiClient.sendPersistentDraft(draftId, `ui-send-${draftId}-${Date.now()}`);
+      setActionNotice({
+        type: res.success ? 'success' : 'warning',
+        message: res.success
+          ? `Outbound dispatch recorded for draft [${draftId}].`
+          : res.error || 'Dispatch could not complete against mail provider.',
+      });
+      await refreshEnterprisePersistence();
+    } catch (err: any) {
+      setActionNotice({ type: 'warning', message: err?.message || 'Outbound dispatch failed.' });
+    }
+    setTimeout(() => setActionNotice(null), 5000);
+  };
+
+  const handleIngestFinancialDoc = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!finDocSubject.trim() || !finDocBody.trim()) return;
+    try {
+      const res = await phumulaniApiClient.ingestFinancialDoc({
+        subject: finDocSubject.trim(),
+        bodyText: finDocBody.trim(),
+        mailboxEmail: finDocMailbox,
+        senderEmail: finDocSender.trim(),
+      });
+      setFinDocSubject('');
+      setFinDocBody('');
+      setFinDocBlockNotice(null);
+      setActionNotice({
+        type: 'success',
+        message: `Financial correspondence classified as [${res.document?.classification}] and queued for Finance review.`,
+      });
+      await refreshEnterprisePersistence();
+    } catch (err: any) {
+      setActionNotice({ type: 'warning', message: err?.message || 'Failed to ingest financial document.' });
+    }
+    setTimeout(() => setActionNotice(null), 5000);
+  };
+
+  const handleApproveFinancialDoc = async (docId: string, decision: 'APPROVED' | 'REJECTED') => {
+    try {
+      await phumulaniApiClient.approveFinancialDoc(docId, decision, `Reviewed by ${currentUser.name}`);
+      setActionNotice({
+        type: 'success',
+        message: `Financial document [${docId}] marked ${decision}.`,
+      });
+      await refreshEnterprisePersistence();
+    } catch (err: any) {
+      setActionNotice({ type: 'warning', message: err?.message || 'Financial approval blocked (maker-checker).' });
+    }
+    setTimeout(() => setActionNotice(null), 5000);
+  };
+
+  const handleCreateInvoiceFromDoc = async (docId: string) => {
+    try {
+      const res = await phumulaniApiClient.createFinancialDocInvoice(docId);
+      setFinDocBlockNotice(null);
+      setActionNotice({
+        type: 'success',
+        message: `Invoice [${res.invoiceId}] generated from financial document [${docId}].`,
+      });
+      await refreshEnterprisePersistence();
+    } catch (err: any) {
+      const msg = err?.message || 'ACCOUNTING_RULE_BLOCKED: Grant advances require liquidation/replenishment, never invoicing.';
+      setFinDocBlockNotice(msg);
+      setActionNotice({ type: 'warning', message: msg });
+    }
+    setTimeout(() => setActionNotice(null), 6000);
+  };
+
+  const handleCreateLegalHold = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!holdTitle.trim() || !holdTargetValue.trim()) return;
+    try {
+      await phumulaniApiClient.createLegalHold({
+        title: holdTitle.trim(),
+        reason: holdReason.trim() || 'Litigation / Compliance Preservation Hold',
+        targetType: holdTargetType,
+        targetValue: holdTargetValue.trim(),
+      });
+      setHoldTitle('');
+      setHoldReason('');
+      setHoldTargetValue('');
+      setActionNotice({ type: 'success', message: 'Legal Hold activated. Matching records cannot be deleted.' });
+      await refreshEnterprisePersistence();
+    } catch (err: any) {
+      setActionNotice({ type: 'warning', message: err?.message || 'Failed to create legal hold.' });
+    }
+    setTimeout(() => setActionNotice(null), 5000);
+  };
+
+  const handleReleaseLegalHold = async (holdId: string) => {
+    try {
+      await phumulaniApiClient.releaseLegalHold(holdId);
+      setActionNotice({ type: 'info', message: `Legal Hold [${holdId}] released.` });
+      await refreshEnterprisePersistence();
+    } catch (err: any) {
+      setActionNotice({ type: 'warning', message: err?.message || 'Failed to release legal hold.' });
+    }
+    setTimeout(() => setActionNotice(null), 5000);
+  };
+
+  const handleExportComplianceBundle = async () => {
+    try {
+      const bundle = await phumulaniApiClient.exportComplianceBundle();
+      const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(bundle, null, 2));
+      const a = document.createElement('a');
+      a.setAttribute('href', dataStr);
+      a.setAttribute('download', `phumulani_redacted_compliance_bundle_${new Date().toISOString().split('T')[0]}.json`);
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setActionNotice({ type: 'success', message: 'VAWA-redacted compliance bundle exported.' });
+    } catch (err: any) {
+      setActionNotice({ type: 'warning', message: err?.message || 'Compliance export failed.' });
+    }
+    setTimeout(() => setActionNotice(null), 5000);
+  };
+
+  const handleRunWorkerCycle = async () => {
+    try {
+      const res = await phumulaniApiClient.runWorkerCycle(10);
+      setActionNotice({
+        type: 'success',
+        message: `Worker cycle complete: ${res.cycle?.processed || 0} jobs processed (${res.cycle?.succeeded || 0} succeeded, ${res.cycle?.retried || 0} retried).`,
+      });
+      await refreshEnterprisePersistence();
+    } catch (err: any) {
+      setActionNotice({ type: 'warning', message: err?.message || 'Worker cycle execution failed.' });
+    }
+    setTimeout(() => setActionNotice(null), 5000);
+  };
 
   // Selected Thread
   const selectedThread = threads.find((t) => t.id === selectedThreadId) || threads[0];
@@ -3877,6 +4111,102 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   })}
               </div>
             )}
+
+            {/* Phase 68 Persistent 10-Stage Outbound Drafts & Maker-Checker Queue */}
+            <div className="border-t border-slate-200 pt-5 space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h4 className="text-sm font-bold text-slate-900">
+                    Persistent 10-Stage Outbound Queue & Maker-Checker Ledger ({persistentDrafts.length})
+                  </h4>
+                  <p className="text-xs text-slate-500">
+                    Database-backed drafts enforcing strict author/approver separation (no self-approval), SHA-256 content-hash binding, 72h approval expiry, and scheduled dispatch.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={refreshEnterprisePersistence}
+                  className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer"
+                >
+                  Refresh Queue
+                </button>
+              </div>
+
+              {persistentDrafts.length === 0 ? (
+                <div className="p-6 text-center text-xs text-slate-500 border border-dashed border-slate-200 rounded-xl">
+                  No persistent Phase 68 outbound drafts recorded yet. Create a persistent draft via <code>POST /api/admin/email/drafts</code> or the Compose workflow.
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
+                  {persistentDrafts.map((pd) => (
+                    <div key={pd.id} className="border border-slate-200 rounded-xl p-4 bg-slate-50/70 space-y-2 text-xs">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-900">
+                          {pd.lifecycleStage || pd.status}
+                        </span>
+                        <span className="font-mono text-[10px] text-slate-500">
+                          Hash: {String(pd.contentHash || '').slice(0, 12)}…
+                        </span>
+                      </div>
+                      <div className="font-bold text-slate-900">{pd.subject}</div>
+                      <div className="text-[11px] text-slate-600 font-mono">
+                        To: {Array.isArray(pd.to) ? pd.to.join(', ') : pd.to} · Author: {pd.createdBy || pd.authorId || 'unknown'}
+                      </div>
+                      <div className="bg-white border border-slate-200 rounded-lg p-2.5 text-slate-800 whitespace-pre-wrap max-h-28 overflow-y-auto">
+                        {pd.bodyText}
+                      </div>
+                      <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-200">
+                        {['DRAFT', 'AI_SUGGESTED', 'PENDING_APPROVAL', 'HUMAN_REVIEW_REQUIRED'].includes(
+                          String(pd.lifecycleStage || pd.status)
+                        ) && (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => handleApprovePersistentDraft(pd.id, 'APPROVE')}
+                              className="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold cursor-pointer"
+                            >
+                              Approve (Maker-Checker)
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleApprovePersistentDraft(pd.id, 'REQUEST_CHANGES')}
+                              className="px-2.5 py-1 bg-amber-50 border border-amber-300 text-amber-800 rounded-lg font-semibold cursor-pointer"
+                            >
+                              Request Changes
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleApprovePersistentDraft(pd.id, 'REJECT')}
+                              className="px-2.5 py-1 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg font-semibold cursor-pointer"
+                            >
+                              Reject
+                            </button>
+                          </>
+                        )}
+                        {['APPROVED', 'SCHEDULED'].includes(String(pd.lifecycleStage || pd.status)) && (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => handleSchedulePersistentDraft(pd.id)}
+                              className="px-2.5 py-1 bg-indigo-50 border border-indigo-200 text-indigo-800 rounded-lg font-semibold cursor-pointer"
+                            >
+                              Schedule (+1h)
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleSendPersistentDraft(pd.id)}
+                              className="px-2.5 py-1 bg-[#104F57] hover:bg-teal-900 text-white rounded-lg font-bold cursor-pointer"
+                            >
+                              Dispatch Now
+                            </button>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         )}
 
@@ -5230,6 +5560,356 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         )}
 
         {/* ========================================================================= */}
+        {/* TAB: GRANT FINANCIAL DOCUMENTS & ADVANCE LIQUIDATION GUARD (Phase 71)     */}
+        {/* ========================================================================= */}
+        {activeTab === 'financial_docs' && (
+          <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5 space-y-5">
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-mono text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 px-2.5 py-0.5 rounded-full uppercase">
+                    Phase 71 Grant Financial Integrity
+                  </span>
+                  <span className="text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300 px-2.5 py-0.5 rounded-full">
+                    Advance Liquidation / Replenishment ≠ Invoice
+                  </span>
+                </div>
+                <h2 className="text-xl font-bold font-serif text-slate-900">
+                  Grant Financial Documents, Advance Liquidation &amp; Approval Desk
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5 max-w-3xl">
+                  Classifies incoming grant advances, liquidation reports, replenishment requests, reimbursement claims, and vendor invoices. Enforces Finance/Executive maker-checker approval and blocks invoice generation for grant advances.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={refreshEnterprisePersistence}
+                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold cursor-pointer"
+              >
+                Refresh Financial Docs
+              </button>
+            </div>
+
+            {finDocBlockNotice && (
+              <div className="p-4 rounded-xl bg-rose-50 border border-rose-300 text-rose-900 text-xs font-semibold flex items-start gap-2">
+                <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                <span>{finDocBlockNotice}</span>
+              </div>
+            )}
+
+            {/* Ingest & Classify Form */}
+            <form onSubmit={handleIngestFinancialDoc} className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3 text-xs">
+              <h3 className="font-bold text-slate-900">Ingest &amp; Classify Grant Financial Correspondence</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Subject:</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Q3 Grant Advance Request & Budget Annex"
+                    value={finDocSubject}
+                    onChange={(e) => setFinDocSubject(e.target.value)}
+                    className="w-full px-3 py-1.5 border border-slate-200 rounded-lg bg-slate-50"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Mailbox:</label>
+                  <select
+                    value={finDocMailbox}
+                    onChange={(e) => setFinDocMailbox(e.target.value)}
+                    className="w-full px-3 py-1.5 border border-slate-200 rounded-lg bg-slate-50"
+                  >
+                    <option value="grants@phumulani.org">grants@phumulani.org</option>
+                    <option value="donations@phumulani.org">donations@phumulani.org</option>
+                    <option value="executive@phumulani.org">executive@phumulani.org</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-700 mb-1">Sender Email:</label>
+                  <input
+                    type="email"
+                    value={finDocSender}
+                    onChange={(e) => setFinDocSender(e.target.value)}
+                    className="w-full px-3 py-1.5 border border-slate-200 rounded-lg bg-slate-50"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block font-semibold text-slate-700 mb-1">Correspondence / Annex Summary:</label>
+                <textarea
+                  rows={3}
+                  required
+                  placeholder="Include advance/liquidation/replenishment/invoice wording and amount (e.g. $25,000 USD)..."
+                  value={finDocBody}
+                  onChange={(e) => setFinDocBody(e.target.value)}
+                  className="w-full px-3 py-2 border border-slate-200 rounded-lg bg-slate-50"
+                />
+              </div>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl font-bold cursor-pointer"
+              >
+                Ingest &amp; Classify Document
+              </button>
+            </form>
+
+            {/* Financial Documents Inventory */}
+            <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs">
+                  <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase text-[10px]">
+                    <tr>
+                      <th className="p-3">Document</th>
+                      <th className="p-3">Classification</th>
+                      <th className="p-3">Amount</th>
+                      <th className="p-3">Accounting Rule</th>
+                      <th className="p-3">Approval</th>
+                      <th className="p-3 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {financialDocs.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className="p-8 text-center text-slate-500">
+                          No grant financial documents ingested yet. Submit one above to test classification &amp; accounting guardrails.
+                        </td>
+                      </tr>
+                    ) : (
+                      financialDocs.map((doc) => (
+                        <tr key={doc.id} className="hover:bg-slate-50/70">
+                          <td className="p-3">
+                            <div className="font-bold text-slate-900">{doc.subject || doc.id}</div>
+                            <div className="text-[11px] text-slate-500">{doc.senderEmail} · {doc.mailboxEmail}</div>
+                          </td>
+                          <td className="p-3">
+                            <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-900">
+                              {doc.classification}
+                            </span>
+                          </td>
+                          <td className="p-3 font-semibold text-slate-900">
+                            {doc.amount ? `$${Number(doc.amount).toLocaleString()} ${doc.currency || 'USD'}` : 'Not extracted'}
+                          </td>
+                          <td className="p-3 text-[11px]">
+                            {doc.requiresLiquidationOrReplenishment || doc.isGrantAdvance ? (
+                              <span className="font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">
+                                Advance / Liquidation Only
+                              </span>
+                            ) : (
+                              <span className="text-slate-600">Standard Invoice Eligible</span>
+                            )}
+                          </td>
+                          <td className="p-3">
+                            <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-800">
+                              {doc.approvalStatus}
+                            </span>
+                          </td>
+                          <td className="p-3 text-right space-x-1.5 whitespace-nowrap">
+                            {doc.approvalStatus === 'PENDING_FINANCE_REVIEW' && (
+                              <>
+                                <button
+                                  type="button"
+                                  onClick={() => handleApproveFinancialDoc(doc.id, 'APPROVED')}
+                                  className="px-2 py-1 bg-emerald-600 text-white rounded text-[11px] font-bold cursor-pointer"
+                                >
+                                  Approve
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleApproveFinancialDoc(doc.id, 'REJECTED')}
+                                  className="px-2 py-1 bg-rose-50 text-rose-700 border border-rose-200 rounded text-[11px] font-semibold cursor-pointer"
+                                >
+                                  Reject
+                                </button>
+                              </>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => handleCreateInvoiceFromDoc(doc.id)}
+                              className="px-2 py-1 bg-slate-800 hover:bg-slate-900 text-white rounded text-[11px] font-semibold cursor-pointer"
+                              title="Creates invoice for vendor bills; strictly blocks grant advances & liquidations"
+                            >
+                              Create Invoice
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* TAB: GOVERNANCE, LEGAL HOLDS, ACLs & WORKER TELEMETRY (Phases 73–74)      */}
+        {/* ========================================================================= */}
+        {activeTab === 'governance' && (
+          <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5 space-y-5">
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-mono text-[10px] font-bold bg-indigo-100 text-indigo-900 border border-indigo-300 px-2.5 py-0.5 rounded-full uppercase">
+                    Phases 73–74 Governance &amp; Operations
+                  </span>
+                  <span
+                    className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${
+                      auditLedgerState.chainVerified
+                        ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                        : 'bg-rose-100 text-rose-800 border-rose-300'
+                    }`}
+                  >
+                    Audit Hash Chain: {auditLedgerState.chainVerified ? 'VERIFIED' : 'INTEGRITY ALERT'}
+                  </span>
+                </div>
+                <h2 className="text-xl font-bold font-serif text-slate-900">
+                  Mailbox ACLs, Legal Holds, Compliance Export &amp; Worker Monitoring
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Enforce per-mailbox role permissions, activate legal holds blocking deletion, export VAWA-redacted compliance bundles, and trigger durable background worker cycles.
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleRunWorkerCycle}
+                  className="px-3 py-1.5 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl text-xs font-bold cursor-pointer"
+                >
+                  Run Worker Cycle
+                </button>
+                <button
+                  type="button"
+                  onClick={handleExportComplianceBundle}
+                  className="px-3 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold cursor-pointer"
+                >
+                  Export Redacted Compliance Bundle
+                </button>
+              </div>
+            </div>
+
+            {/* Operational Metrics */}
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs">
+              <div className="bg-white border border-slate-200 rounded-xl p-4">
+                <div className="text-slate-500">Persistent Inbox Threads</div>
+                <div className="text-xl font-bold text-slate-900 mt-1">{unifiedInboxStats?.total ?? 0}</div>
+              </div>
+              <div className="bg-white border border-slate-200 rounded-xl p-4">
+                <div className="text-slate-500">Queued Worker Jobs</div>
+                <div className="text-xl font-bold text-slate-900 mt-1">{opsMonitoring?.workerMetrics?.queued ?? 0}</div>
+              </div>
+              <div className="bg-white border border-slate-200 rounded-xl p-4">
+                <div className="text-slate-500">Dead-Letter Queue (DLQ)</div>
+                <div className="text-xl font-bold text-rose-700 mt-1">{opsMonitoring?.workerMetrics?.deadLetter ?? 0}</div>
+              </div>
+              <div className="bg-white border border-slate-200 rounded-xl p-4">
+                <div className="text-slate-500">AI Invocations Recorded</div>
+                <div className="text-xl font-bold text-teal-800 mt-1">{aiTelemetryState?.telemetry?.totalCalls ?? 0}</div>
+              </div>
+              <div className="bg-white border border-slate-200 rounded-xl p-4">
+                <div className="text-slate-500">Ledger Entries Verified</div>
+                <div className="text-xl font-bold text-emerald-700 mt-1">{auditLedgerState.total}</div>
+              </div>
+            </div>
+
+            {/* Legal Holds Manager */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 text-xs">
+              <form onSubmit={handleCreateLegalHold} className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3">
+                <h3 className="font-bold text-slate-900">Place Legal Preservation Hold</h3>
+                <div className="grid grid-cols-2 gap-2">
+                  <select
+                    value={holdTargetType}
+                    onChange={(e) => setHoldTargetType(e.target.value as any)}
+                    className="px-2.5 py-1.5 border border-slate-200 rounded-lg bg-slate-50 font-semibold"
+                  >
+                    <option value="MAILBOX">MAILBOX</option>
+                    <option value="THREAD">THREAD</option>
+                    <option value="SENDER">SENDER</option>
+                  </select>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. grants@phumulani.org or thd-123"
+                    value={holdTargetValue}
+                    onChange={(e) => setHoldTargetValue(e.target.value)}
+                    className="px-2.5 py-1.5 border border-slate-200 rounded-lg bg-slate-50"
+                  />
+                </div>
+                <input
+                  type="text"
+                  required
+                  placeholder="Hold Title (e.g. FY2026 Audit Preservation)"
+                  value={holdTitle}
+                  onChange={(e) => setHoldTitle(e.target.value)}
+                  className="w-full px-2.5 py-1.5 border border-slate-200 rounded-lg bg-slate-50"
+                />
+                <input
+                  type="text"
+                  placeholder="Legal / Audit Reason..."
+                  value={holdReason}
+                  onChange={(e) => setHoldReason(e.target.value)}
+                  className="w-full px-2.5 py-1.5 border border-slate-200 rounded-lg bg-slate-50"
+                />
+                <button
+                  type="submit"
+                  className="px-4 py-1.5 bg-rose-700 hover:bg-rose-800 text-white rounded-xl font-bold cursor-pointer"
+                >
+                  Activate Legal Hold
+                </button>
+              </form>
+
+              <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-2.5">
+                <h3 className="font-bold text-slate-900">Active &amp; Historical Legal Holds ({legalHolds.length})</h3>
+                {legalHolds.length === 0 ? (
+                  <p className="text-slate-500">No legal holds currently placed.</p>
+                ) : (
+                  <div className="space-y-2 max-h-56 overflow-y-auto">
+                    {legalHolds.map((h) => (
+                      <div key={h.id} className="p-3 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between gap-2">
+                        <div>
+                          <div className="font-bold text-slate-900">{h.title}</div>
+                          <div className="text-[11px] font-mono text-slate-600">
+                            {h.targetType}: {h.targetValue} · {h.active ? 'ACTIVE' : 'RELEASED'}
+                          </div>
+                        </div>
+                        {h.active && (
+                          <button
+                            type="button"
+                            onClick={() => handleReleaseLegalHold(h.id)}
+                            className="px-2.5 py-1 bg-white border border-slate-300 rounded-lg text-[11px] font-semibold hover:bg-slate-100 cursor-pointer"
+                          >
+                            Release
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Mailbox ACL Permissions */}
+            <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3 text-xs">
+              <h3 className="font-bold text-slate-900">Mailbox Access Control Matrix ({governancePermissions.length} Rules)</h3>
+              {governancePermissions.length === 0 ? (
+                <p className="text-slate-500">Default RBAC &amp; VAWA Section 1367 air-gap rules enforced.</p>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                  {governancePermissions.map((perm, idx) => (
+                    <div key={perm.id || idx} className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-1">
+                      <div className="font-mono font-bold text-teal-900">{perm.mailboxEmail}</div>
+                      <div className="text-[11px] text-slate-600">Role: <strong>{perm.role}</strong></div>
+                      <div className="text-[10px] font-mono text-slate-500">
+                        Read: {String(perm.canRead)} · Approve: {String(perm.canApprove)} · Send: {String(perm.canSend)}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ========================================================================= */}
         {/* TAB 12: SETTINGS & APPROVED TEMPLATES (Milestone 23.09) */}
         {/* ========================================================================= */}
         {activeTab === 'settings' && (
@@ -6455,7 +7135,10 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 >
                   <option value="donor">Major Donor Profile</option>
                   <option value="grant">Grant Opportunity / Funder</option>
+                  <option value="partnership">Strategic Partnership / Alliance</option>
                   <option value="partner">Corporate CSR Partner</option>
+                  <option value="campaign">Fundraising Campaign</option>
+                  <option value="program">Community Program Initiative</option>
                   <option value="volunteer">Volunteer Applicant / Active</option>
                   <option value="client">Community Client (Non-Safe)</option>
                 </select>

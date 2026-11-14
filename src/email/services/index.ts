@@ -14,3 +14,7 @@ export * from './EmailApprovalService';
 export * from './EmailAuditService';
 export * from './EmailHealthService';
 export * from './EmailRecoveryService';
+export * from './EmailAiIntelligenceService';
+export * from './EmailGrantFinancialService';
+export * from './EmailGovernanceService';
+

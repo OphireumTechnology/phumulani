@@ -1241,6 +1241,37 @@ export class ConnectorRegistry {
     };
   }
 
+  public getCanonicalLifecycleState(connectionId: string) {
+    const conn = this.connections.get(connectionId);
+    if (!conn) return 'DISCONNECTED';
+    const hasTokens = this.hasAnyVaultedCredential(connectionId, conn.emailAddress);
+    const authStr = String(conn.authStatus || '');
+    if (conn.syncStatus === 'SYNCING') return 'SYNCING';
+    if (authStr === 'OAUTH_PENDING' || authStr === 'CONNECTING') return 'AUTHORIZING';
+    if (authStr === 'CONFIGURED_UNVERIFIED') return 'VERIFYING';
+    if (authStr === 'TOKEN_EXPIRED' || authStr === 'REVOKED' || authStr === 'AUTHORIZATION_REQUIRED') {
+      return 'REAUTH_REQUIRED';
+    }
+    if (authStr === 'AUTHENTICATION_FAILED' || authStr === 'CONNECTION_ERROR' || authStr === 'ERROR') {
+      return 'FAILED';
+    }
+    if (conn.connectionHealth === 'DEGRADED' || authStr === 'CONNECTED_WITH_ERRORS') {
+      return 'DEGRADED';
+    }
+    if ((authStr === 'CONNECTED' || authStr === 'AUTHORIZED') && hasTokens) {
+      return 'CONNECTED';
+    }
+    return 'DISCONNECTED';
+  }
+
+  public async fetchConnectorAttachment(connectionId: string, providerMessageId: string, attachmentId: string) {
+    const connector = this.connectors.get(connectionId) as any;
+    if (!connector || typeof connector.getAttachment !== 'function') {
+      return null;
+    }
+    return connector.getAttachment(providerMessageId, attachmentId);
+  }
+
   public getAuditEvents(connectionId?: string): EmailConnectionAuditEvent[] {
     if (!connectionId) return this.auditEvents;
     return this.auditEvents.filter((a) => a.connectionId === connectionId);

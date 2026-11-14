@@ -50,6 +50,10 @@ import {
   emailAuditService,
   emailHealthService,
   emailRecoveryService,
+  emailAiIntelligenceService,
+  emailGrantFinancialService,
+  emailGovernanceService,
+  normalizeMailboxConnectionState,
 } from './src/email';
 import { phumulaniAiAgentService, APPROVED_COMMUNITY_PROGRAMS } from './src/services/phumulaniAiAgentService';
 import { localInferenceAdapter, PHUMULANI_AI_SYSTEM_PROMPT } from './src/services/localInferenceAdapter';
@@ -4814,17 +4818,38 @@ app.post('/api/v1/verification/m4106-scenario', async (_req: Request, res: Respo
 // =============================================================================
 
 // Helper to authenticate staff actor strictly from verified server session (zero header spoofing)
-function getEmailAdminActor(req: Request): { id: string; name: string; role: string; isSafeguarding: boolean } {
+function getEmailAdminActor(req: Request): {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  isSafeguarding: boolean;
+  mfaVerified: boolean;
+} {
   const sess = getAuthenticatedSession(req) || getSessionFromReq(req);
   if (!sess) {
-    return { id: 'anonymous', name: 'Unauthenticated Visitor', role: 'visitor', isSafeguarding: false };
+    return {
+      id: 'anonymous',
+      name: 'Unauthenticated Visitor',
+      email: 'anonymous@visitor.local',
+      role: 'visitor',
+      isSafeguarding: false,
+      mfaVerified: false,
+    };
   }
   const roleLower = String(sess.role).toLowerCase();
   const isSafeguarding =
     sess.userId === 'usr-002' ||
     roleLower === 'safeguarding_lead' ||
     roleLower === 'safeguarding_officer';
-  return { id: sess.userId, name: sess.name || sess.userEmail, role: String(sess.role), isSafeguarding };
+  return {
+    id: sess.userId,
+    name: sess.name || sess.userEmail || sess.email || sess.userId,
+    email: sess.userEmail || sess.email || `${sess.userId}@phumulani.org`,
+    role: String(sess.role),
+    isSafeguarding,
+    mfaVerified: Boolean((sess as any).mfaVerified ?? true),
+  };
 }
 
 // Require authenticated staff session across all /api/admin/email routes
@@ -5026,22 +5051,50 @@ app.get('/api/admin/email/threads', (req: Request, res: Response) => {
   res.json({ threads: sanitizedThreads, total: sanitizedThreads.length });
 });
 
-// 6. Get Single Thread with Strict Anti-IDOR Boundary
-app.get('/api/admin/email/threads/:id', (req: Request, res: Response) => {
+// 6. Get Single Thread with Strict Anti-IDOR Boundary (checks legacy & persistent DB threads)
+app.get('/api/admin/email/threads/:id', async (req: Request, res: Response) => {
   const actor = getEmailAdminActor(req);
-  const thread = db.getState().enterpriseEmailThreads.find((t) => t.id === req.params.id);
-  if (!thread) {
-    return res.status(404).json({ error: 'Thread not found' });
+  const legacyThread = db.getState().enterpriseEmailThreads.find((t) => t.id === req.params.id);
+  if (legacyThread) {
+    if (legacyThread.classification === '01_safeguarding' && !actor.isSafeguarding) {
+      return res.status(403).json({
+        error: 'ACCESS DENIED: Confidential survivor intake protected under VAWA. Access restricted to Sister Miriam K. (DEPT-SAFE).',
+        safeguardingQuarantined: true,
+      });
+    }
+    return res.json({ thread: legacyThread });
   }
 
-  if (thread.classification === '01_safeguarding' && !actor.isSafeguarding) {
-    return res.status(403).json({
-      error: 'ACCESS DENIED: Confidential survivor intake protected under VAWA. Access restricted to Sister Miriam K. (DEPT-SAFE).',
-      safeguardingQuarantined: true,
-    });
+  try {
+    const persistent = await emailSyncService.getPersistentThread(req.params.id);
+    if (!persistent.thread && persistent.messages.length === 0) {
+      return res.status(404).json({ error: 'Thread not found' });
+    }
+    const isSafe =
+      persistent.thread?.isSafeguarded ||
+      persistent.messages.some((m) => m.isSafeguarded || m.mailboxEmail?.toLowerCase().includes('safeguarding'));
+    if (isSafe && !actor.isSafeguarding) {
+      return res.status(403).json({
+        error: 'ACCESS DENIED: Confidential survivor intake protected under VAWA.',
+        safeguardingQuarantined: true,
+      });
+    }
+    const mbxEmail = persistent.messages[0]?.mailboxEmail;
+    if (mbxEmail) {
+      const acl = await emailGovernanceService.checkMailboxAccess({
+        mailboxEmail: mbxEmail,
+        userRole: actor.role,
+        userEmail: actor.email,
+        mfaVerified: actor.mfaVerified,
+      });
+      if (!acl.allowed) {
+        return res.status(403).json({ success: false, error: acl.reason, code: 'MAILBOX_ACL_DENIED' });
+      }
+    }
+    return res.json({ success: true, thread: persistent.thread, messages: persistent.messages });
+  } catch (err: any) {
+    return res.status(500).json({ success: false, error: err.message });
   }
-
-  res.json({ thread });
 });
 
 // 7. Add Internal Staff Note (strictly isolated from outbound payload)
@@ -5080,10 +5133,33 @@ app.post('/api/admin/email/triage', (req: Request, res: Response) => {
   });
 });
 
-// 9. Generate AI Email Draft (Watermarked AI_DRAFT — NOT APPROVED — NOT SENT)
-app.post('/api/admin/email/drafts', (req: Request, res: Response) => {
+// 9. Generate AI Email Draft OR Persist New Outbound Draft (Phase 62 + Phase 68)
+app.post('/api/admin/email/drafts', async (req: Request, res: Response) => {
   const actor = getEmailAdminActor(req);
-  const { threadId, tone = 'professional' } = req.body;
+  const { threadId, tone = 'professional', mailboxId, to, cc, subject, bodyText, bodyHtml, isAiGenerated, isSafeguarded } = req.body || {};
+
+  // Persistent Phase 68 Outbound Draft Creation when mailboxId & to/subject are supplied
+  if (mailboxId && (Array.isArray(to) || typeof to === 'string')) {
+    try {
+      const recipients = Array.isArray(to) ? to : [to];
+      const draft = await emailDispatchService.createDraft({
+        mailboxId,
+        to: recipients,
+        cc: Array.isArray(cc) ? cc : undefined,
+        subject: subject || '(No Subject)',
+        bodyText: bodyText || '',
+        bodyHtml,
+        authorId: actor.id,
+        authorRole: actor.role,
+        isAiGenerated: Boolean(isAiGenerated),
+        isSafeguarded: Boolean(isSafeguarded),
+      });
+      return res.status(201).json({ success: true, draft });
+    } catch (err: any) {
+      return res.status(400).json({ success: false, error: err.message });
+    }
+  }
+
   const thread = db.getState().enterpriseEmailThreads.find((t) => t.id === threadId);
   if (!thread) {
     return res.status(404).json({ error: 'Thread not found' });
@@ -5889,15 +5965,39 @@ app.get('/api/admin/email/mailboxes/:email/multi-dimensional-status', (req: Requ
   }
 });
 
-// 46. Phase 57/58 Enterprise Operations Monitoring (M57.16, M58.15)
-app.get('/api/admin/operations/monitoring', (req: Request, res: Response) => {
+// 46. Phase 57/58/74 Enterprise Operations Monitoring (Real Queue + AI Telemetry + Audit Integrity)
+app.get('/api/admin/operations/monitoring', async (req: Request, res: Response) => {
   try {
     const actor = getEmailAdminActor(req);
     if (actor.role === 'visitor') {
       return res.status(403).json({ success: false, error: 'Staff or administrator role required to access enterprise operations monitoring.' });
     }
-    const monitoring = googleWorkspaceAdapter.getEnterpriseOperationsMonitoring();
-    res.json({ success: true, monitoring });
+    const baseMonitoring = googleWorkspaceAdapter.getEnterpriseOperationsMonitoring();
+    const [workerMetrics, aiTelemetry, auditLedgerVerified] = await Promise.all([
+      BackgroundWorkerService.getInstance().getOperationalMetrics(),
+      emailAiIntelligenceService.getTelemetrySummary(),
+      emailAuditService.verifyLedgerIntegrity(),
+    ]);
+    res.json({
+      success: true,
+      monitoring: {
+        ...baseMonitoring,
+        workerMetrics,
+        aiTelemetry,
+        auditLedgerVerified,
+        emergencyShutdownActive: emergencyShutdownActive || emailDispatchService.isKillSwitchActive(),
+      },
+    });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/operations/worker-cycle', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
+  try {
+    const maxJobs = Math.min(50, Math.max(1, Number(req.body?.maxJobs || 10)));
+    const result = await BackgroundWorkerService.getInstance().runWorkerCycle(maxJobs);
+    res.json({ success: true, cycle: result });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -5963,10 +6063,18 @@ app.post('/api/admin/email/connectors/discover', (req: Request, res: Response) =
   }
 });
 
-// 51. List All Configured Email Connections
+// 51. List All Configured Email Connections (with Phase 64 8-State Canonical Lifecycle)
 app.get('/api/admin/email/connectors', (_req: Request, res: Response) => {
   try {
-    const connections = connectorRegistry.listConnections();
+    const connections = connectorRegistry.listConnections().map((c) => ({
+      ...c,
+      lifecycleState: normalizeMailboxConnectionState({
+        authStatus: c.authStatus,
+        connectionHealth: c.connectionHealth,
+        syncStatus: c.syncStatus,
+        lastError: c.lastError,
+      }),
+    }));
     res.json({ success: true, count: connections.length, connections });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
@@ -6293,10 +6401,18 @@ app.get('/api/admin/email/connectors/:id/evidence', (req: Request, res: Response
 // PHASE 62: MASTER PRODUCTION EMAIL COMMAND CENTER API ENDPOINTS (SECTION 17)
 // =============================================================================
 
-// 1. GET & POST /api/admin/email/connections
+// 1. GET & POST /api/admin/email/connections (with Phase 64 8-State Canonical Lifecycle)
 app.get('/api/admin/email/connections', (_req: Request, res: Response) => {
   try {
-    const connections = connectorRegistry.getAllConnections();
+    const connections = connectorRegistry.getAllConnections().map((c) => ({
+      ...c,
+      lifecycleState: normalizeMailboxConnectionState({
+        authStatus: c.authStatus,
+        connectionHealth: c.connectionHealth,
+        syncStatus: c.syncStatus,
+        lastError: c.lastError,
+      }),
+    }));
     res.json({ success: true, total: connections.length, connections });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
@@ -6821,9 +6937,17 @@ app.get('/api/admin/email/messages/:id', (req: Request, res: Response) => {
   }
 });
 
-// 5. Draft submission, approval review, and outbound send
-app.post('/api/admin/email/drafts/:id/submit', (req: Request, res: Response) => {
+// 5. Draft submission, approval review, and outbound send (Phase 62 + Phase 68 Persistent Lifecycle)
+app.post('/api/admin/email/drafts/:id/submit', async (req: Request, res: Response) => {
   try {
+    const actor = getEmailAdminActor(req);
+    const existingPersistentDraft = (await emailDispatchService.listDrafts()).find((d) => d.id === req.params.id);
+    if (existingPersistentDraft) {
+      const updated = await emailDispatchService.submitDraftForApproval(req.params.id, actor.id);
+      const approval = updated.approvalId ? emailApprovalService.getApproval(updated.approvalId) : undefined;
+      return res.status(201).json({ success: true, draft: updated, approval });
+    }
+
     const { connectionId, subject, bodyText, recipients, isAiGenerated } = req.body || {};
     const approval = emailApprovalService.createApprovalRequest({
       draftId: req.params.id,
@@ -6832,6 +6956,7 @@ app.post('/api/admin/email/drafts/:id/submit', (req: Request, res: Response) => 
       bodyText: bodyText || '',
       recipients: recipients || ['recipient@example.org'],
       isAiGenerated: !!isAiGenerated,
+      authorId: actor.id,
     });
     res.status(201).json({ success: true, approval });
   } catch (err: any) {
@@ -6954,6 +7079,564 @@ app.get('/api/admin/email/audit', (req: Request, res: Response) => {
     const limit = parseInt(req.query.limit as string, 10) || 50;
     const events = emailAuditService.getEvents(req.query.connectionId as string, limit);
     res.json({ success: true, total: emailAuditService.getTotalCount(), events });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+// =============================================================================
+// PHASES 64–74: PERSISTENT INBOX, AI INTELLIGENCE, MAKER-CHECKER DISPATCH,
+// GRANT FINANCIAL DOCUMENTS, GOVERNANCE/LEGAL HOLDS & AUDIT LEDGER ROUTES
+// =============================================================================
+
+app.get('/api/admin/email/inbox', async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const mailboxEmail = req.query.mailboxEmail as string | undefined;
+    if (mailboxEmail) {
+      const acl = await emailGovernanceService.checkMailboxAccess({
+        mailboxEmail,
+        userRole: actor.role,
+        userEmail: actor.email,
+        mfaVerified: actor.mfaVerified,
+      });
+      if (!acl.allowed) {
+        return res.status(403).json({ success: false, error: acl.reason, code: 'MAILBOX_ACL_DENIED' });
+      }
+    }
+    const result = await emailSyncService.queryUnifiedInbox({
+      view: (req.query.view as any) || 'unified',
+      connectionId: req.query.connectionId as string | undefined,
+      mailboxEmail,
+      priority: req.query.priority as string | undefined,
+      category: req.query.category as string | undefined,
+      unreadOnly: req.query.unreadOnly === 'true',
+      hasAttachments: req.query.hasAttachments === 'true',
+      crmLinkedOnly: req.query.crmLinkedOnly === 'true',
+      search: req.query.search as string | undefined,
+      page: req.query.page ? parseInt(req.query.page as string, 10) : 1,
+      pageSize: req.query.pageSize ? parseInt(req.query.pageSize as string, 10) : 25,
+      userRole: actor.role,
+    });
+    res.json({ success: true, ...result });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/admin/email/unified/threads/:threadId', async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const persistent = await emailSyncService.getPersistentThread(req.params.threadId);
+    if (!persistent.thread && persistent.messages.length === 0) {
+      return res.status(404).json({ success: false, error: 'Persistent thread not found.' });
+    }
+    const isSafe =
+      persistent.thread?.isSafeguarded ||
+      persistent.messages.some((m) => m.isSafeguarded || m.mailboxEmail?.toLowerCase().includes('safeguarding'));
+    if (isSafe && !actor.isSafeguarding) {
+      return res.status(403).json({ success: false, error: 'VAWA_SECTION_1367_FORBIDDEN: Safeguarding thread restricted.' });
+    }
+    const crmLinks = await emailThreadService.getThreadCrmLinks(req.params.threadId);
+    res.json({ success: true, ...persistent, crmLinks });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/messages/:messageId/read', async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const read = req.body?.read !== undefined ? Boolean(req.body.read) : true;
+    const message = await emailSyncService.markMessageReadUnread(req.params.messageId, read, actor.id);
+    res.json({ success: true, message });
+  } catch (err: any) {
+    const status = err.message.includes('not found') ? 404 : 400;
+    res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/messages/:messageId/move', async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const destination = String(req.body?.destinationFolder || '').toUpperCase();
+    if (!['INBOX', 'ARCHIVE', 'TRASH', 'SPAM'].includes(destination)) {
+      return res.status(400).json({ success: false, error: 'destinationFolder must be INBOX, ARCHIVE, TRASH, or SPAM.' });
+    }
+    const message = await emailSyncService.moveMessageFolder(req.params.messageId, destination as any, actor.id);
+    res.json({ success: true, message });
+  } catch (err: any) {
+    if (err.message.includes('LEGAL_HOLD_ACTIVE')) {
+      return res.status(423).json({ success: false, code: 'LEGAL_HOLD_ACTIVE', error: err.message });
+    }
+    const status = err.message.includes('not found') ? 404 : 400;
+    res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/messages/:messageId/restore', async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const message = await emailSyncService.moveMessageFolder(req.params.messageId, 'INBOX', actor.id);
+    const connector = connectorRegistry.getConnectorInstance(message.connectionId) as any;
+    if (connector && typeof connector.restoreMessage === 'function') {
+      await connector.restoreMessage(message.providerMessageId).catch(() => {});
+    }
+    res.json({ success: true, message });
+  } catch (err: any) {
+    res.status(err.message.includes('not found') ? 404 : 400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/admin/email/attachments/:connectionId/:messageId/:attachmentId', async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const conn = connectorRegistry.getConnection(req.params.connectionId);
+    if (!conn) {
+      return res.status(404).json({ success: false, error: 'Mailbox connection not found.' });
+    }
+    const acl = await emailGovernanceService.checkMailboxAccess({
+      mailboxEmail: conn.emailAddress,
+      userRole: actor.role,
+      userEmail: actor.email,
+      mfaVerified: actor.mfaVerified,
+    });
+    if (!acl.allowed) {
+      return res.status(403).json({ success: false, error: acl.reason, code: 'MAILBOX_ACL_DENIED' });
+    }
+    const attachment = await connectorRegistry.fetchConnectorAttachment(
+      req.params.connectionId,
+      req.params.messageId,
+      req.params.attachmentId
+    );
+    if (!attachment) {
+      return res.status(404).json({ success: false, error: 'Attachment not available from connector.' });
+    }
+    res.json({ success: true, attachment });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/threads/:threadId/crm-link', async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const { entityType, entityId, entityName } = req.body || {};
+    if (!entityType || !entityId || !entityName) {
+      return res.status(400).json({ success: false, error: 'entityType, entityId, and entityName are required.' });
+    }
+    const link = await emailThreadService.linkThreadToCrmEntity(
+      req.params.threadId,
+      entityType,
+      entityId,
+      undefined,
+      { entityName, linkedBy: actor.id }
+    );
+    res.status(201).json({ success: true, link });
+  } catch (err: any) {
+    const status = err.message.includes('VAWA') ? 403 : 400;
+    res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+// Phase 66-67 AI Intelligence & Telemetry Endpoints
+app.post('/api/admin/email/ai/classify', async (req: Request, res: Response) => {
+  try {
+    const { subject = '', body = '', senderEmail = '', senderName, mailboxEmail } = req.body || {};
+    const result = await emailAiIntelligenceService.classifyEmail({
+      subject,
+      body,
+      senderEmail,
+      senderName,
+      mailboxEmail,
+    });
+    res.json({ success: true, classification: result });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/ai/draft', async (req: Request, res: Response) => {
+  try {
+    const { subject = '', body = '', senderEmail = '', senderName, mailboxEmail, tone = 'formal', staffInstructions } = req.body || {};
+    const result = await emailAiIntelligenceService.generateDraftReply({
+      subject,
+      incomingBody: body,
+      senderEmail,
+      senderName,
+      mailboxEmail,
+      tone,
+      staffInstructions,
+    });
+    if (result.safeguardingBlocked) {
+      return res.status(403).json({ success: false, code: 'VAWA_SAFEGUARDING_HALT', ...result });
+    }
+    res.json({ success: true, ...result });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/admin/email/ai/telemetry', async (_req: Request, res: Response) => {
+  try {
+    const [telemetry, config] = await Promise.all([
+      emailAiIntelligenceService.getTelemetrySummary(),
+      Promise.resolve(emailAiIntelligenceService.getModelConfiguration()),
+    ]);
+    res.json({ success: true, config, telemetry });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/ai/model-preference', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
+  try {
+    const { preference } = req.body || {};
+    if (!['AUTO', 'GEMINI_API', 'LOCAL_OLLAMA', 'DETERMINISTIC_FALLBACK'].includes(preference)) {
+      return res.status(400).json({ success: false, error: 'Invalid AI model preference.' });
+    }
+    emailAiIntelligenceService.setModelPreference(preference);
+    res.json({ success: true, config: emailAiIntelligenceService.getModelConfiguration() });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// Phase 68 Persistent Drafts, Maker-Checker Approvals, Scheduling & Campaign Batches
+app.get('/api/admin/email/drafts', async (_req: Request, res: Response) => {
+  try {
+    const drafts = await emailDispatchService.listDrafts();
+    res.json({ success: true, total: drafts.length, drafts });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.put('/api/admin/email/drafts/:id', async (req: Request, res: Response) => {
+  try {
+    const { subject, bodyText, bodyHtml, to } = req.body || {};
+    const draft = await emailDispatchService.updateDraftContent(req.params.id, { subject, bodyText, bodyHtml, to });
+    res.json({ success: true, draft });
+  } catch (err: any) {
+    res.status(err.message.includes('not found') ? 404 : 400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/drafts/:id/approve', requireSessionMiddleware(EXEC_APPROVER_ROLES), async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const draft = await emailDispatchService.approveDraft(req.params.id, actor.id, actor.role, req.body?.notes);
+    res.json({ success: true, draft });
+  } catch (err: any) {
+    const isForbidden =
+      err.message.includes('MAKER_CHECKER_VIOLATION') ||
+      err.message.includes('POLICY_VIOLATION') ||
+      err.message.includes('SAFEGUARDING_AIR_GAP_VIOLATION');
+    res.status(isForbidden ? 403 : 400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/drafts/:id/schedule', requireSessionMiddleware(EXEC_APPROVER_ROLES), async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const { scheduledFor } = req.body || {};
+    if (!scheduledFor) {
+      return res.status(400).json({ success: false, error: 'scheduledFor ISO timestamp is required.' });
+    }
+    const draft = await emailDispatchService.scheduleDraft(req.params.id, scheduledFor, actor.id);
+    res.json({ success: true, draft });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/drafts/:id/send', requireSessionMiddleware(EXEC_APPROVER_ROLES), async (req: Request, res: Response) => {
+  try {
+    if (emergencyShutdownActive || emailDispatchService.isKillSwitchActive()) {
+      return res.status(503).json({
+        success: false,
+        error: 'EMERGENCY_SHUTDOWN: Outbound email dispatch is suspended by administrator kill switch.',
+      });
+    }
+    const actor = getEmailAdminActor(req);
+    const dispatch = await emailDispatchService.sendApprovedEmail(req.params.id, actor.id);
+    res.json({ success: Boolean(dispatch.success), dispatch });
+  } catch (err: any) {
+    const isForbidden = err.message.includes('APPROVAL') || err.message.includes('MAKER_CHECKER') || err.message.includes('POLICY_VIOLATION');
+    res.status(isForbidden ? 403 : 400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/admin/email/dispatches', async (_req: Request, res: Response) => {
+  try {
+    const dispatches = await emailDispatchService.listDispatches();
+    res.json({ success: true, total: dispatches.length, dispatches });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/admin/email/batches', (_req: Request, res: Response) => {
+  try {
+    const batches = emailDispatchService.listCampaignBatches();
+    res.json({ success: true, total: batches.length, batches });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/batches', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const { title, draftIds = [], perMinuteLimit } = req.body || {};
+    if (!title) {
+      return res.status(400).json({ success: false, error: 'title is required.' });
+    }
+    const batch = emailDispatchService.createCampaignBatch({
+      title,
+      draftIds,
+      perMinuteLimit,
+      createdBy: actor.id,
+    });
+    res.status(201).json({ success: true, batch });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/batches/:id/status', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
+  try {
+    const { status } = req.body || {};
+    if (!['ACTIVE', 'PAUSED', 'CANCELLED'].includes(status)) {
+      return res.status(400).json({ success: false, error: 'status must be ACTIVE, PAUSED, or CANCELLED.' });
+    }
+    const batch = emailDispatchService.updateCampaignBatchStatus(req.params.id, status);
+    res.json({ success: true, batch });
+  } catch (err: any) {
+    res.status(err.message.includes('not found') ? 404 : 400).json({ success: false, error: err.message });
+  }
+});
+
+// Phase 71 Grant Financial Documents & Accounting Guard Endpoints
+app.get('/api/admin/email/financial-docs', async (req: Request, res: Response) => {
+  try {
+    const docs = await emailGrantFinancialService.listDocuments({
+      classification: req.query.classification as any,
+      approvalStatus: req.query.approvalStatus as any,
+    });
+    res.json({ success: true, total: docs.length, documents: docs });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/financial-docs', async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const { threadId, messageId, mailboxEmail, senderEmail, subject, bodyText, attachmentFilenames, grantOpportunityId, budgetLineItem } = req.body || {};
+    if (!subject || !bodyText) {
+      return res.status(400).json({ success: false, error: 'subject and bodyText are required.' });
+    }
+    const document = await emailGrantFinancialService.ingestAndExtractDocument({
+      threadId: threadId || `thread-fin-${Date.now()}`,
+      messageId: messageId || `msg-fin-${Date.now()}`,
+      mailboxEmail: mailboxEmail || 'grants@phumulani.org',
+      senderEmail: senderEmail || 'grants@funder.org',
+      subject,
+      bodyText,
+      attachmentFilenames: Array.isArray(attachmentFilenames) ? attachmentFilenames : [],
+      actorId: actor.id,
+      grantOpportunityId,
+      budgetLineItem,
+    });
+    res.status(201).json({ success: true, document });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/financial-docs/:id/link-grant', async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const { grantOpportunityId, budgetLineItem } = req.body || {};
+    if (!grantOpportunityId || !budgetLineItem) {
+      return res.status(400).json({ success: false, error: 'grantOpportunityId and budgetLineItem are required.' });
+    }
+    const document = await emailGrantFinancialService.linkToGrantAndBudget(
+      req.params.id,
+      grantOpportunityId,
+      budgetLineItem,
+      actor.id
+    );
+    res.json({ success: true, document });
+  } catch (err: any) {
+    res.status(err.message.includes('not found') ? 404 : 400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/financial-docs/:id/approve', requireSessionMiddleware(EXEC_APPROVER_ROLES), async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const { decision = 'APPROVED', notes } = req.body || {};
+    const document = await emailGrantFinancialService.approveFinancialDocument({
+      documentId: req.params.id,
+      reviewerId: actor.id,
+      reviewerRole: actor.role,
+      decision,
+      notes,
+    });
+    res.json({ success: true, document });
+  } catch (err: any) {
+    const isForbidden =
+      err.message.includes('MAKER_CHECKER_VIOLATION') ||
+      err.message.includes('POLICY_VIOLATION') ||
+      err.message.includes('RBAC_FORBIDDEN');
+    res.status(isForbidden ? 403 : 400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/financial-docs/:id/create-invoice', requireSessionMiddleware(EXEC_APPROVER_ROLES), async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const result = await emailGrantFinancialService.createInvoiceFromDocument(req.params.id, actor.id);
+    res.json(result);
+  } catch (err: any) {
+    if (err.message.includes('ACCOUNTING_RULE_BLOCKED')) {
+      return res.status(422).json({ success: false, code: 'ACCOUNTING_RULE_BLOCKED', error: err.message });
+    }
+    res.status(err.message.includes('not found') ? 404 : 400).json({ success: false, error: err.message });
+  }
+});
+
+// Phase 73 Enterprise Email Governance, ACLs, Legal Holds, Retention & Hash-Chained Audit Ledger
+app.get('/api/admin/email/governance/permissions', async (_req: Request, res: Response) => {
+  try {
+    const permissions = await emailGovernanceService.listMailboxPermissions();
+    res.json({ success: true, permissions });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/governance/permissions', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const { mailboxEmail, allowedRoles, allowedUserEmails = [], allowAiAnalysis = true, allowCrmLinking = true, requiresMfa = false, vawaAirGapped = false } = req.body || {};
+    if (!mailboxEmail || !Array.isArray(allowedRoles)) {
+      return res.status(400).json({ success: false, error: 'mailboxEmail and allowedRoles array are required.' });
+    }
+    const permission = await emailGovernanceService.setMailboxPermission({
+      mailboxEmail,
+      allowedRoles,
+      allowedUserEmails,
+      allowAiAnalysis,
+      allowCrmLinking,
+      requiresMfa,
+      vawaAirGapped,
+      updatedBy: actor.id,
+    });
+    res.json({ success: true, permission });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/admin/email/governance/legal-holds', async (req: Request, res: Response) => {
+  try {
+    const activeOnly = req.query.activeOnly === 'true';
+    const holds = await emailGovernanceService.listLegalHolds(activeOnly);
+    res.json({ success: true, holds });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/governance/legal-holds', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const { title, reason, targetType, targetValue } = req.body || {};
+    if (!title || !reason || !targetType || !targetValue) {
+      return res.status(400).json({ success: false, error: 'title, reason, targetType, and targetValue are required.' });
+    }
+    const hold = await emailGovernanceService.createLegalHold({
+      title,
+      reason,
+      targetType,
+      targetValue,
+      createdBy: actor.id,
+    });
+    res.status(201).json({ success: true, hold });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/governance/legal-holds/:id/release', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const hold = await emailGovernanceService.releaseLegalHold(req.params.id, actor.id);
+    res.json({ success: true, hold });
+  } catch (err: any) {
+    res.status(err.message.includes('not found') ? 404 : 400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/admin/email/governance/retention', async (_req: Request, res: Response) => {
+  try {
+    const policies = await emailGovernanceService.listRetentionPolicies();
+    res.json({ success: true, policies });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/governance/retention', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const { mailboxEmail, folder, retainDays, autoArchiveAfterDays, legalHoldOverrides = true } = req.body || {};
+    if (!mailboxEmail || !folder || !retainDays) {
+      return res.status(400).json({ success: false, error: 'mailboxEmail, folder, and retainDays are required.' });
+    }
+    const policy = await emailGovernanceService.setRetentionPolicy({
+      name: `${mailboxEmail} ${folder} Retention`,
+      mailboxEmail,
+      folder,
+      retainDays: Number(retainDays),
+      actionOnExpiry: legalHoldOverrides === false ? 'DELETE_IF_NO_HOLD' : 'ARCHIVE',
+      enabled: true,
+      updatedBy: actor.id,
+    });
+    res.json({ success: true, policy });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/admin/email/governance/compliance-export', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const bundle = await emailGovernanceService.exportRedactedComplianceBundle({
+      actorId: actor.id,
+      mailboxEmail: req.query.mailboxEmail as string | undefined,
+    });
+    res.json({ success: true, bundle });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/admin/email/audit/ledger', async (req: Request, res: Response) => {
+  try {
+    const limit = parseInt(req.query.limit as string, 10) || 100;
+    const [entries, chainVerified] = await Promise.all([
+      emailAuditService.getLedgerEntries({
+        mailboxEmail: req.query.mailboxEmail as string | undefined,
+        action: req.query.action as string | undefined,
+        limit,
+      }),
+      emailAuditService.verifyLedgerIntegrity(),
+    ]);
+    res.json({ success: true, chainVerified, total: entries.length, entries });
   } catch (err: any) {
     res.status(500).json({ success: false, error: err.message });
   }
@@ -7451,6 +8134,78 @@ app.get('/api/phumulani-ai/calendar/bookings', (req: Request, res: Response) => 
   res.json({ success: true, bookings: calendarIntegrationService.getBookings() });
 });
 
+// Phase 72 Calendar Reschedule, Cancel, Reminders & Phase 70 Workforce 12-Task Orchestration
+app.post('/api/phumulani-ai/calendar/reschedule', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+  try {
+    const { bookingId, newStartTime, newEndTime } = req.body || {};
+    if (!bookingId || !newStartTime || !newEndTime) {
+      return res.status(400).json({ success: false, error: 'bookingId, newStartTime, and newEndTime are required.' });
+    }
+    const result = await calendarIntegrationService.rescheduleMeeting(
+      bookingId,
+      newStartTime,
+      newEndTime,
+      auth.session.userId
+    );
+    res.json(result);
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/phumulani-ai/calendar/cancel', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+  try {
+    const { bookingId, reason } = req.body || {};
+    if (!bookingId) {
+      return res.status(400).json({ success: false, error: 'bookingId is required.' });
+    }
+    const result = await calendarIntegrationService.cancelMeeting(bookingId, auth.session.userId, reason);
+    res.json(result);
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+app.get('/api/phumulani-ai/calendar/reminders', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+  const reminders = await calendarIntegrationService.listReminders();
+  res.json({ success: true, reminders });
+});
+
+app.get('/api/phumulani-ai/workforce/tasks', (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+  res.json({ success: true, tasks: phumulaniAiAgentService.listWorkforceTasks() });
+});
+
+app.post('/api/phumulani-ai/workforce/execute', async (req: Request, res: Response) => {
+  const auth = authenticatePhumulaniSession(req, res);
+  if (!auth) return;
+  try {
+    const { taskId, context } = req.body || {};
+    if (!taskId) {
+      return res.status(400).json({ success: false, error: 'taskId is required.' });
+    }
+    const result = await phumulaniAiAgentService.executeWorkforceTask({
+      taskId,
+      prospectId: context?.prospectId,
+      programId: context?.programId,
+      threadId: context?.threadId,
+      targetGrantmaker: context?.targetGrantmaker,
+      requestedAmount: context?.requestedAmount,
+      actorSession: auth.session,
+    });
+    res.json({ success: true, execution: result });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
 // -----------------------------------------------------------------------------
 // MILESTONE 4: EMAIL COMMAND CENTER THREAD INTELLIGENCE & CRM APIS
 // -----------------------------------------------------------------------------
@@ -7669,10 +8424,26 @@ async function startServer() {
     process.exit(1);
   });
 
+  const workerService = BackgroundWorkerService.getInstance();
+  const workerIntervalMs = Math.max(15000, Number(process.env.WORKER_CYCLE_INTERVAL_MS || 30000));
+  const workerTimer = setInterval(() => {
+    void workerService
+      .runWorkerCycle(10)
+      .then(() => Promise.all([
+        emailDispatchService.processDueScheduledDispatches(),
+        calendarIntegrationService.processDueReminders(),
+      ]))
+      .catch((err) => {
+        console.warn('[BackgroundWorker] Scheduled cycle notice:', err?.message || err);
+      });
+  }, workerIntervalMs);
+  workerTimer.unref();
+
   let shuttingDown = false;
   const gracefulShutdown = async (signal: string) => {
     if (shuttingDown) return;
     shuttingDown = true;
+    clearInterval(workerTimer);
     console.log(`[Phumulani Platform] Received ${signal}. Closing HTTP server and draining database connections...`);
     await new Promise<void>((resolve) => {
       httpServer.close(() => resolve());

@@ -1513,7 +1513,7 @@ class DatabaseService {
 
   public linkThreadToCrm(
     threadId: string,
-    crmLink: { entityType: 'donor' | 'grant' | 'partnership' | 'volunteer' | 'campaign' | 'partner' | 'client'; entityId: string; entityName: string }
+    crmLink: { entityType: 'donor' | 'grant' | 'partnership' | 'volunteer' | 'campaign' | 'partner' | 'client' | 'program'; entityId: string; entityName: string }
   ): { success: boolean; error?: string } {
     const actor = this.state.currentUser;
     const thread = this.state.enterpriseEmailThreads.find((t) => t.id === threadId);

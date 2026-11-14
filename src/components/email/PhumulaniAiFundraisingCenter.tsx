@@ -125,6 +125,17 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
   const [policy, setPolicy] = useState<AutonomousPolicyConfig | null>(null);
   const [metrics, setMetrics] = useState<GatewayInferenceMetrics | null>(null);
 
+  // Phase 66-72 Multi-Model Telemetry, 12-Task Workforce & Calendar Lifecycle
+  const [aiTelemetry, setAiTelemetry] = useState<{ config?: any; telemetry?: any } | null>(null);
+  const [workforceTasks, setWorkforceTasks] = useState<any[]>([]);
+  const [workforceResult, setWorkforceResult] = useState<any | null>(null);
+  const [executingTaskId, setExecutingTaskId] = useState<string | null>(null);
+  const [calendarReminders, setCalendarReminders] = useState<any[]>([]);
+  const [calendarProviderStatus, setCalendarProviderStatus] = useState<{
+    googleConnected?: boolean;
+    microsoftConnected?: boolean;
+  } | null>(null);
+
   // Load All Data via Role-Controlled Client API
   const refreshData = async () => {
     setIsLoadingHealth(true);
@@ -143,6 +154,10 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
         knowledgeDocsRes,
         auditReportRes,
         financialRes,
+        aiTelemetryRes,
+        workforceRes,
+        remindersRes,
+        calStatusRes,
       ] = await Promise.all([
         phumulaniApiClient.getProspects().catch(() => ({ prospects: [] })),
         phumulaniApiClient.getCampaigns().catch(() => ({ campaigns: [] })),
@@ -157,6 +172,10 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
         phumulaniApiClient.getKnowledgeDocuments().catch(() => ({ documents: [] })),
         phumulaniApiClient.getSourceApprovalAuditReport().catch(() => ({ auditReport: null })),
         phumulaniApiClient.getFinancialBreakdown().catch(() => ({ financialBreakdown: null })),
+        phumulaniApiClient.getEmailAiTelemetry().catch(() => null),
+        phumulaniApiClient.getWorkforceTasks().catch(() => ({ tasks: [] })),
+        phumulaniApiClient.getCalendarReminders().catch(() => ({ reminders: [] })),
+        phumulaniApiClient.getCalendarStatus().catch(() => null),
       ]);
 
       setProspects(prospectsRes.prospects || []);
@@ -170,6 +189,10 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
       setKnowledgeDocs(knowledgeDocsRes.documents || []);
       setAuditReport(auditReportRes.auditReport || null);
       setFinancialBreakdown(financialRes.financialBreakdown || null);
+      setAiTelemetry(aiTelemetryRes);
+      setWorkforceTasks(workforceRes.tasks || []);
+      setCalendarReminders(remindersRes.reminders || []);
+      setCalendarProviderStatus(calStatusRes as any);
 
       if (policyRes.policy) setPolicy(policyRes.policy);
       if (gatewayRes.gateway) {
@@ -184,6 +207,64 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
     } finally {
       setIsLoadingHealth(false);
     }
+  };
+
+  const handleExecuteWorkforceTask = async (taskId: string) => {
+    setExecutingTaskId(taskId);
+    try {
+      const res = await phumulaniApiClient.executeWorkforceTask({
+        taskId,
+        context: {
+          prospectId: selectedProspectId,
+          programId: proposalProgramId,
+          subject: emailSubjectInput,
+          body: emailBodyInput,
+        },
+      });
+      setWorkforceResult(res.execution);
+      refreshData();
+    } catch (err: any) {
+      setWorkforceResult({ taskId, error: err?.message || 'Task execution failed' });
+    } finally {
+      setExecutingTaskId(null);
+    }
+  };
+
+  const handleRescheduleBooking = async (booking: CalendarMeetingBooking) => {
+    const newStart = new Date(new Date(booking.startTime).getTime() + 24 * 60 * 60 * 1000).toISOString();
+    const newEnd = new Date(new Date(booking.endTime).getTime() + 24 * 60 * 60 * 1000).toISOString();
+    try {
+      const res = await phumulaniApiClient.rescheduleMeeting({
+        bookingId: booking.id,
+        newStartTime: newStart,
+        newEndTime: newEnd,
+      });
+      setBookingNotice(
+        res.success
+          ? `Meeting rescheduled to ${new Date(newStart).toLocaleString()}.`
+          : `Reschedule blocked: ${res.error || 'Calendar provider update failed'}`
+      );
+      refreshData();
+    } catch (err: any) {
+      setBookingNotice(`Reschedule error: ${err?.message || 'Unknown error'}`);
+    }
+    setTimeout(() => setBookingNotice(null), 6000);
+  };
+
+  const handleCancelBooking = async (bookingId: string) => {
+    try {
+      const res = await phumulaniApiClient.cancelMeeting({
+        bookingId,
+        reason: 'Cancelled by staff via Fundraising Command Center',
+      });
+      setBookingNotice(
+        res.success ? 'Meeting cancelled and reminders cleared.' : `Cancel notice: ${res.error || 'Failed to cancel'}`
+      );
+      refreshData();
+    } catch (err: any) {
+      setBookingNotice(`Cancel error: ${err?.message || 'Unknown error'}`);
+    }
+    setTimeout(() => setBookingNotice(null), 6000);
   };
 
   const handleAutonomyChange = async (lvl: AutonomyLevel) => {
@@ -337,35 +418,41 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
             </select>
           </div>
 
-          {/* Local Runtime Indicator */}
+          {/* Truthful Multi-Model AI Runtime Indicator */}
           <div className="flex items-center gap-2 bg-black/20 px-3 py-1 rounded-lg border border-white/10">
             <div className="flex items-center gap-1.5">
               <Cpu className="w-3.5 h-3.5 text-teal-300" />
-              <span className="text-teal-200 font-medium">Model:</span>
+              <span className="text-teal-200 font-medium">AI Engine:</span>
               <span className="font-semibold text-white">
-                {healthStatus?.backend === 'ollama' ? 'phumulani-ai' : 'Local Fallback'}
+                {aiTelemetry?.config?.geminiConfigured
+                  ? `Gemini (${aiTelemetry?.config?.geminiModel || 'gemini-4-hydrogen'})`
+                  : healthStatus?.backend === 'ollama'
+                  ? `Ollama (${healthStatus?.modelId || 'local'})`
+                  : 'Deterministic Fallback'}
               </span>
             </div>
             <span className="text-teal-400/50">|</span>
             <div className="flex items-center gap-1.5">
               <div
                 className={`w-2 h-2 rounded-full ${
-                  healthStatus?.status === 'healthy'
+                  aiTelemetry?.config?.geminiConfigured || healthStatus?.status === 'healthy'
                     ? 'bg-emerald-400 animate-pulse'
-                    : healthStatus?.status === 'degraded'
-                    ? 'bg-amber-400'
-                    : 'bg-teal-300'
+                    : 'bg-amber-400'
                 }`}
               />
               <span className="text-teal-100">
-                {healthStatus?.status === 'healthy' ? 'Ollama Online' : 'Failover Ready'}
+                {aiTelemetry?.config?.geminiConfigured
+                  ? 'Gemini Live Ready'
+                  : healthStatus?.status === 'healthy'
+                  ? 'Local Ollama Connected'
+                  : 'Rule-Based Fallback Active'}
               </span>
             </div>
-            {metrics && (
+            {aiTelemetry?.telemetry && (
               <>
                 <span className="text-teal-400/50">|</span>
-                <span className="text-teal-200" title="Average inference latency">
-                  {metrics.averageLatencyMs || healthStatus?.latencyMs || 0}ms
+                <span className="text-teal-200" title="Persisted AI invocations">
+                  {aiTelemetry.telemetry.totalCalls || 0} calls · {aiTelemetry.telemetry.avgLatencyMs || 0}ms
                 </span>
               </>
             )}
@@ -493,6 +580,81 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                   VAWA Section 1367 Safeguarding Firewall Active
                 </span>
               </div>
+            </div>
+
+            {/* Coordinated 12-Task AI Fundraising Workforce (Phase 70) */}
+            <div className="p-5 rounded-xl border border-teal-200 bg-teal-50/30 space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div>
+                  <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
+                    <Target className="w-4 h-4 text-[#104F57]" />
+                    Coordinated 12-Task AI Fundraising Workforce (Phase 70)
+                  </h3>
+                  <p className="text-xs text-slate-600 mt-0.5">
+                    Structured human-gated task agents grounded in verified institutional budgets and strict VAWA isolation.
+                  </p>
+                </div>
+                <span className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-900 border border-teal-300">
+                  {workforceTasks.length} Tasks Registered
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {workforceTasks.map((task) => (
+                  <div
+                    key={task.taskId}
+                    className="p-3.5 rounded-xl bg-white border border-slate-200 flex flex-col justify-between space-y-2 text-xs shadow-2xs"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between gap-2 mb-1">
+                        <span className="font-mono text-[10px] font-bold bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded">
+                          {task.taskId}
+                        </span>
+                        <span className="text-[10px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">
+                          {task.humanGate || 'Human Review'}
+                        </span>
+                      </div>
+                      <h4 className="font-bold text-slate-900">{task.title}</h4>
+                      <p className="text-[11px] text-slate-500 mt-0.5">{task.description}</p>
+                    </div>
+                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                      <span className="text-[10px] font-mono text-slate-400">{task.scope}</span>
+                      <button
+                        type="button"
+                        disabled={executingTaskId === task.taskId}
+                        onClick={() => handleExecuteWorkforceTask(task.taskId)}
+                        className="px-2.5 py-1 bg-[#104F57] hover:bg-teal-800 text-white rounded-lg text-[11px] font-semibold cursor-pointer disabled:opacity-50"
+                      >
+                        {executingTaskId === task.taskId ? 'Running...' : 'Run Task'}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {workforceResult && (
+                <div className="p-3.5 rounded-xl bg-white border border-teal-300 text-xs space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="font-bold text-teal-950">
+                      Execution Result: {workforceResult.taskId} — {workforceResult.title || ''}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setWorkforceResult(null)}
+                      className="text-slate-400 hover:text-slate-700 font-bold"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  {workforceResult.error ? (
+                    <p className="text-rose-700 font-medium">{workforceResult.error}</p>
+                  ) : (
+                    <pre className="p-2.5 bg-slate-900 text-teal-200 rounded-lg font-mono text-[11px] overflow-x-auto max-h-48">
+                      {JSON.stringify(workforceResult.artifact || workforceResult, null, 2)}
+                    </pre>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* System Prompt Inspector */}
@@ -1302,7 +1464,70 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                 ) : (
                   <p className="text-gray-500 text-xs">Select an available slot on the left to confirm an appointment.</p>
                 )}
+
+                <div className="pt-3 border-t border-gray-200 text-[11px] space-y-1">
+                  <div className="font-semibold text-gray-700">Live Calendar Provider Status:</div>
+                  <div className="flex items-center justify-between">
+                    <span>Google Calendar:</span>
+                    <span className={calendarProviderStatus?.googleConnected ? 'text-emerald-700 font-bold' : 'text-amber-700 font-semibold'}>
+                      {calendarProviderStatus?.googleConnected ? 'CONNECTED' : 'AUTHORIZATION_REQUIRED'}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span>Microsoft Graph:</span>
+                    <span className={calendarProviderStatus?.microsoftConnected ? 'text-emerald-700 font-bold' : 'text-amber-700 font-semibold'}>
+                      {calendarProviderStatus?.microsoftConnected ? 'CONNECTED' : 'AUTHORIZATION_REQUIRED'}
+                    </span>
+                  </div>
+                </div>
               </div>
+            </div>
+
+            {/* Scheduled Bookings & Reschedule / Cancel Controls */}
+            <div className="border border-gray-200 rounded-xl p-4 bg-white space-y-3">
+              <div className="flex items-center justify-between">
+                <h4 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
+                  Scheduled Meetings & Reminders ({scheduledBookings.length} Bookings · {calendarReminders.length} Reminders)
+                </h4>
+              </div>
+              {scheduledBookings.length === 0 ? (
+                <p className="text-xs text-gray-500">No donor meetings currently scheduled.</p>
+              ) : (
+                <div className="space-y-2">
+                  {scheduledBookings.map((booking) => (
+                    <div
+                      key={booking.id}
+                      className="p-3 rounded-lg border border-gray-200 bg-gray-50 flex flex-wrap items-center justify-between gap-2 text-xs"
+                    >
+                      <div>
+                        <div className="font-bold text-gray-900">{booking.title}</div>
+                        <div className="text-[11px] text-gray-600">
+                          {new Date(booking.startTime).toLocaleString()} · {booking.prospectName} ({booking.prospectEmail}) · Status:{' '}
+                          <span className="font-mono font-bold">{booking.status}</span>
+                        </div>
+                      </div>
+                      {booking.status !== 'cancelled' && (
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleRescheduleBooking(booking)}
+                            className="px-2.5 py-1 rounded bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 font-semibold text-[11px] cursor-pointer"
+                          >
+                            Reschedule (+24h)
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleCancelBooking(booking.id)}
+                            className="px-2.5 py-1 rounded bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 font-semibold text-[11px] cursor-pointer"
+                          >
+                            Cancel
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         )}

@@ -356,6 +356,183 @@ class PhumulaniApiClient {
       body: JSON.stringify(payload),
     });
   }
+
+  // --- Phase 72 Calendar Lifecycle & Reminders ---
+  public async rescheduleMeeting(payload: {
+    bookingId: string;
+    newStartTime: string;
+    newEndTime: string;
+  }): Promise<{ success: boolean; booking?: CalendarMeetingBooking; error?: string }> {
+    return this.request('/api/phumulani-ai/calendar/reschedule', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async cancelMeeting(payload: {
+    bookingId: string;
+    reason?: string;
+  }): Promise<{ success: boolean; booking?: CalendarMeetingBooking; error?: string }> {
+    return this.request('/api/phumulani-ai/calendar/cancel', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async getCalendarReminders(): Promise<{ reminders: any[] }> {
+    return this.request('/api/phumulani-ai/calendar/reminders');
+  }
+
+  // --- Phase 70 Coordinated 12-Task AI Fundraising Workforce ---
+  public async getWorkforceTasks(): Promise<{ tasks: Array<any> }> {
+    return this.request('/api/phumulani-ai/workforce/tasks');
+  }
+
+  public async executeWorkforceTask(payload: {
+    taskId: string;
+    context?: Record<string, any>;
+  }): Promise<{ success: boolean; execution: any }> {
+    return this.request('/api/phumulani-ai/workforce/execute', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  // --- Phase 66-74 AI Email Telemetry, Inbox, Drafts, Grant Financials & Governance ---
+  public async getEmailAiTelemetry(): Promise<{ config: any; telemetry: any }> {
+    return this.request('/api/admin/email/ai/telemetry');
+  }
+
+  public async getUnifiedInbox(params?: {
+    view?: string;
+    mailboxEmail?: string;
+    search?: string;
+    page?: number;
+    pageSize?: number;
+  }): Promise<any> {
+    const qs = new URLSearchParams();
+    if (params?.view) qs.set('view', params.view);
+    if (params?.mailboxEmail) qs.set('mailboxEmail', params.mailboxEmail);
+    if (params?.search) qs.set('search', params.search);
+    if (params?.page) qs.set('page', String(params.page));
+    if (params?.pageSize) qs.set('pageSize', String(params.pageSize));
+    return this.request(`/api/admin/email/inbox?${qs.toString()}`);
+  }
+
+  public async getPersistentDrafts(): Promise<{ total: number; drafts: any[] }> {
+    return this.request('/api/admin/email/drafts');
+  }
+
+  public async approvePersistentDraft(
+    id: string,
+    payload: {
+      decision: 'APPROVE' | 'EDIT_AND_APPROVE' | 'REQUEST_CHANGES' | 'RETURN_TO_DRAFT' | 'REJECT';
+      notes?: string;
+      editedSubject?: string;
+      editedBody?: string;
+    }
+  ): Promise<{ success: boolean; draft?: any; approval?: any; error?: string; code?: string }> {
+    return this.request(`/api/admin/email/drafts/${encodeURIComponent(id)}/approve`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async schedulePersistentDraft(
+    id: string,
+    scheduledSendAt: string
+  ): Promise<{ success: boolean; draft?: any; error?: string }> {
+    return this.request(`/api/admin/email/drafts/${encodeURIComponent(id)}/schedule`, {
+      method: 'POST',
+      body: JSON.stringify({ scheduledSendAt }),
+    });
+  }
+
+  public async sendPersistentDraft(
+    id: string,
+    idempotencyKey?: string
+  ): Promise<{ success: boolean; dispatch?: any; draft?: any; error?: string }> {
+    return this.request(`/api/admin/email/drafts/${encodeURIComponent(id)}/send`, {
+      method: 'POST',
+      body: JSON.stringify({ idempotencyKey }),
+    });
+  }
+
+  public async getFinancialDocs(): Promise<{ total: number; documents: any[] }> {
+    return this.request('/api/admin/email/financial-docs');
+  }
+
+  public async ingestFinancialDoc(payload: {
+    subject: string;
+    bodyText: string;
+    mailboxEmail?: string;
+    senderEmail?: string;
+    attachmentFilenames?: string[];
+  }): Promise<{ document: any }> {
+    return this.request('/api/admin/email/financial-docs', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async approveFinancialDoc(id: string, decision: 'APPROVED' | 'REJECTED', notes?: string): Promise<{ document: any }> {
+    return this.request(`/api/admin/email/financial-docs/${encodeURIComponent(id)}/approve`, {
+      method: 'POST',
+      body: JSON.stringify({ decision, notes }),
+    });
+  }
+
+  public async createFinancialDocInvoice(id: string): Promise<{ success: boolean; invoiceId?: string; error?: string; code?: string }> {
+    return this.request(`/api/admin/email/financial-docs/${encodeURIComponent(id)}/create-invoice`, {
+      method: 'POST',
+    });
+  }
+
+  public async getGovernancePermissions(): Promise<{ permissions: any[] }> {
+    return this.request('/api/admin/email/governance/permissions');
+  }
+
+  public async getLegalHolds(activeOnly = false): Promise<{ holds: any[] }> {
+    return this.request(`/api/admin/email/governance/legal-holds?activeOnly=${activeOnly}`);
+  }
+
+  public async createLegalHold(payload: {
+    title: string;
+    reason: string;
+    targetType: 'THREAD' | 'MAILBOX' | 'SENDER';
+    targetValue: string;
+  }): Promise<{ hold: any }> {
+    return this.request('/api/admin/email/governance/legal-holds', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  public async releaseLegalHold(holdId: string): Promise<{ hold: any }> {
+    return this.request(`/api/admin/email/governance/legal-holds/${encodeURIComponent(holdId)}/release`, {
+      method: 'POST',
+    });
+  }
+
+  public async exportComplianceBundle(): Promise<any> {
+    return this.request('/api/admin/email/governance/compliance-export');
+  }
+
+  public async getAuditLedger(limit = 50): Promise<{ chainVerified: boolean; total: number; entries: any[] }> {
+    return this.request(`/api/admin/email/audit/ledger?limit=${limit}`);
+  }
+
+  public async getOperationsMonitoring(): Promise<{ monitoring: any }> {
+    return this.request('/api/admin/operations/monitoring');
+  }
+
+  public async runWorkerCycle(maxJobs = 10): Promise<{ cycle: any }> {
+    return this.request('/api/admin/operations/worker-cycle', {
+      method: 'POST',
+      body: JSON.stringify({ maxJobs }),
+    });
+  }
 }
 
 export const phumulaniApiClient = new PhumulaniApiClient();
+

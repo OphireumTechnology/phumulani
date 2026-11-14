@@ -631,6 +631,72 @@ export class DatabaseMigrationService {
           `);
         },
       },
+      {
+        version: '20261114_013',
+        name: 'email_enterprise_phases64_to_74_completion',
+        description:
+          'Add Phase 64-74 enterprise tables (financial documents, legal holds, retention policies, AI usage telemetry, calendar reminders) and deduplication/inbox indexes',
+        up: async (adapter: PostgresPersistenceAdapter) => {
+          const newTables = [
+            'email_financial_documents',
+            'email_legal_holds',
+            'email_retention_policies',
+            'email_ai_usage_metrics',
+            'email_calendar_reminders',
+            'email_campaign_batches',
+          ];
+
+          const connInfo = adapter.getConnectionInfo();
+          if (connInfo.engine !== 'POSTGRESQL') {
+            for (const tbl of newTables) {
+              const existing = await adapter.select(tbl);
+              if (existing.length === 0) {
+                await adapter.saveTable(tbl, []);
+              }
+            }
+            return;
+          }
+
+          for (const tbl of newTables) {
+            await adapter.query(`
+              CREATE TABLE IF NOT EXISTS "${tbl}" (
+                id TEXT PRIMARY KEY,
+                data JSONB NOT NULL DEFAULT '{}'::jsonb,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+              );
+            `);
+          }
+
+          await adapter.query(`
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_email_messages_provider_msg_uq
+              ON "email_messages" ((data->>'connectionId'), (data->>'providerMessageId'))
+              WHERE data->>'connectionId' IS NOT NULL AND data->>'providerMessageId' IS NOT NULL;
+            CREATE INDEX IF NOT EXISTS idx_email_messages_thread_idx
+              ON "email_messages" ((data->>'threadId'));
+            CREATE INDEX IF NOT EXISTS idx_email_messages_folder_idx
+              ON "email_messages" ((data->>'folder'));
+            CREATE INDEX IF NOT EXISTS idx_email_financial_docs_grant_idx
+              ON "email_financial_documents" ((data->>'grantId'));
+            CREATE INDEX IF NOT EXISTS idx_email_financial_docs_type_idx
+              ON "email_financial_documents" ((data->>'documentType'));
+            CREATE INDEX IF NOT EXISTS idx_email_legal_holds_active_idx
+              ON "email_legal_holds" ((data->>'active'));
+          `);
+        },
+        down: async (adapter: PostgresPersistenceAdapter) => {
+          for (const tbl of [
+            'email_campaign_batches',
+            'email_calendar_reminders',
+            'email_ai_usage_metrics',
+            'email_retention_policies',
+            'email_legal_holds',
+            'email_financial_documents',
+          ]) {
+            await adapter.query(`DROP TABLE IF EXISTS "${tbl}"`);
+          }
+        },
+      },
     ];
   }
 
@@ -840,6 +906,12 @@ export class DatabaseMigrationService {
         'email_connection_health',
         'email_quarantined_files',
         'email_operational_killswitches',
+        'email_financial_documents',
+        'email_legal_holds',
+        'email_retention_policies',
+        'email_ai_usage_metrics',
+        'email_calendar_reminders',
+        'email_campaign_batches',
       ])
     );
 
@@ -916,6 +988,16 @@ export class DatabaseMigrationService {
         'email_connection_health',
         'email_quarantined_files',
         'email_operational_killswitches',
+      ].forEach((t) => ddlTablesFromMigrations.add(t));
+    }
+    if (appliedVersions.has('20261114_013')) {
+      [
+        'email_financial_documents',
+        'email_legal_holds',
+        'email_retention_policies',
+        'email_ai_usage_metrics',
+        'email_calendar_reminders',
+        'email_campaign_batches',
       ].forEach((t) => ddlTablesFromMigrations.add(t));
     }
 

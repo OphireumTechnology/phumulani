@@ -646,7 +646,7 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
   try {
     const threadService = EmailThreadService.getInstance();
     const link = await threadService.linkThreadToCrmEntity('thread-101', 'crm_donor', 'contrib-001', 'Linked to capital campaign pledge');
-    const passed = link.entityType === 'crm_donor' && link.entityId === 'contrib-001';
+    const passed = (link.entityType as string) === 'crm_donor' && link.entityId === 'contrib-001';
     record(
       'TEST-P62-28',
       'Email Thread CRM Association & Donor Linking',

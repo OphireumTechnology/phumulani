@@ -593,6 +593,29 @@ export class Microsoft365Connector implements EmailConnector {
     );
   }
 
+  public async restoreMessage(messageId: string): Promise<void> {
+    await this.moveMessage(messageId, 'INBOX');
+  }
+
+  public async getAttachment(
+    messageId: string,
+    attachmentId: string
+  ): Promise<{ attachmentId: string; filename?: string; mimeType?: string; contentBytesBase64: string; size: number } | null> {
+    const res = await this.fetchGraphWithRefresh(
+      `https://graph.microsoft.com/v1.0/me/messages/${encodeURIComponent(messageId)}/attachments/${encodeURIComponent(attachmentId)}`
+    );
+    if (!res || !res.ok) return null;
+    const data: any = await res.json().catch(() => null);
+    if (!data?.contentBytes) return null;
+    return {
+      attachmentId,
+      filename: data.name ? String(data.name) : undefined,
+      mimeType: data.contentType ? String(data.contentType) : undefined,
+      contentBytesBase64: String(data.contentBytes),
+      size: Number(data.size || 0),
+    };
+  }
+
   public async disconnect(): Promise<void> {
     oAuthService.revokeTokens(this.connectionId);
     oAuthService.revokeTokens(this.mailboxEmail);

@@ -455,6 +455,32 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 <History className="w-4 h-4 shrink-0 text-slate-500" />
                 {!isCollapsed && <span className="truncate">Audit Logs</span>}
               </button>
+
+              <button
+                onClick={() => onTabSelect('financial_docs')}
+                title="Grant Financial Documents & Advance Liquidation Guard"
+                className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                  activeTab === 'financial_docs'
+                    ? 'bg-[#104F57] text-white shadow-2xs'
+                    : 'text-slate-700 hover:bg-slate-100'
+                }`}
+              >
+                <DollarSign className="w-4 h-4 shrink-0 text-emerald-700" />
+                {!isCollapsed && <span className="truncate">Grant Financials</span>}
+              </button>
+
+              <button
+                onClick={() => onTabSelect('governance')}
+                title="Mailbox ACLs, Legal Holds, Retention & Worker Telemetry"
+                className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                  activeTab === 'governance'
+                    ? 'bg-[#104F57] text-white shadow-2xs'
+                    : 'text-slate-700 hover:bg-slate-100'
+                }`}
+              >
+                <ShieldAlert className="w-4 h-4 shrink-0 text-rose-700" />
+                {!isCollapsed && <span className="truncate">Governance & Holds</span>}
+              </button>
             </div>
           )}
         </div>

@@ -933,13 +933,19 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                           </span>
                         )}
 
-                        {/* Exact 9-State Status Badge */}
+                        {/* Exact 9-State Status Badge + Canonical 8-State Lifecycle Pill */}
                         <span
                           className={`px-2.5 py-0.5 text-xs rounded-full border flex items-center gap-1.5 ${stateBadgeClass}`}
                         >
                           <span className={`w-2 h-2 rounded-full ${stateDotColor}`}></span>
                           {uiState}
                         </span>
+
+                        {(conn as any).lifecycleState && (
+                          <span className="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-slate-100 text-slate-700 border border-slate-300">
+                            {(conn as any).lifecycleState}
+                          </span>
+                        )}
 
                         {isAirGapped && (
                           <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-rose-100 text-rose-800 border border-rose-300 flex items-center gap-1">
@@ -962,9 +968,17 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                         <span><strong>Permission:</strong> {conn.sendingPermission || 'AUTHORIZED_PILOT'}</span>
                         <span><strong>Inbound/Outbound:</strong> {conn.incomingMessageCount} / {conn.outgoingMessageCount || 0}</span>
                         <span><strong>Cursor:</strong> {conn.syncCursor || 'Initial'} ({conn.cursorType || 'N/A'})</span>
+                        {conn.lastSyncAt && (
+                          <span><strong>Last Sync:</strong> {new Date(conn.lastSyncAt).toLocaleString()}</span>
+                        )}
                         {conn.lastError && (
                           <span className="text-rose-600 font-semibold truncate max-w-xs" title={conn.lastError}>
                             Err: {conn.lastError}
+                          </span>
+                        )}
+                        {!(conn as any).credentialsConfigured && uiState === 'Not connected' && (
+                          <span className="text-amber-700 font-medium">
+                            Live provider OAuth / IMAP credentials not configured
                           </span>
                         )}
                       </div>

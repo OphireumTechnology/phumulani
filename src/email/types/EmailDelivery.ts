@@ -32,6 +32,50 @@ export const EmailDeliveryStatus = {
 } as const;
 export type EmailDeliveryStatus = typeof EmailDeliveryStatus[keyof typeof EmailDeliveryStatus];
 
+export const OutboundLifecycleStage = {
+  DRAFT: 'DRAFT',
+  AI_REVIEWED: 'AI_REVIEWED',
+  PENDING_HUMAN_APPROVAL: 'PENDING_HUMAN_APPROVAL',
+  APPROVED: 'APPROVED',
+  SCHEDULED: 'SCHEDULED',
+  QUEUED: 'QUEUED',
+  SENDING: 'SENDING',
+  SENT: 'SENT',
+  DELIVERY_FAILED: 'DELIVERY_FAILED',
+  CANCELLED: 'CANCELLED',
+} as const;
+export type OutboundLifecycleStage = typeof OutboundLifecycleStage[keyof typeof OutboundLifecycleStage];
+
+export function mapToOutboundLifecycleStage(status: string): OutboundLifecycleStage {
+  const s = String(status || '').toUpperCase();
+  if (s === 'AI_REVIEWED') return 'AI_REVIEWED';
+  if (s === 'SUBMITTED' || s === 'PENDING_APPROVAL' || s === 'PENDING_HUMAN_APPROVAL') return 'PENDING_HUMAN_APPROVAL';
+  if (s === 'APPROVED') return 'APPROVED';
+  if (s === 'SCHEDULED') return 'SCHEDULED';
+  if (s === 'QUEUED' || s === 'STAGED') return 'QUEUED';
+  if (s === 'SENDING' || s === 'SUBMITTED_TO_PROVIDER') return 'SENDING';
+  if (s === 'SENT' || s === 'PROVIDER_ACCEPTED' || s === 'DELIVERY_CONFIRMED') return 'SENT';
+  if (s === 'FAILED' || s === 'BOUNCED' || s === 'DELIVERY_FAILED' || s === 'RECONCILIATION_REQUIRED') return 'DELIVERY_FAILED';
+  if (s === 'CANCELLED' || s === 'REJECTED') return 'CANCELLED';
+  return 'DRAFT';
+}
+
+export type FinancialDocumentClassification =
+  | 'GRANT_AWARD_NOTICE'
+  | 'GRANT_AGREEMENT'
+  | 'ADVANCE_REQUEST'
+  | 'LIQUIDATION_REPORT'
+  | 'REPLENISHMENT_REQUEST'
+  | 'EXPENSE_INVOICE'
+  | 'REIMBURSEMENT_CLAIM'
+  | 'PAYMENT_RECEIPT'
+  | 'BUDGET_REVISION'
+  | 'FINANCIAL_AUDIT_REQUEST'
+  | 'DISBURSEMENT_CONFIRMATION'
+  | 'INVOICE_ADJUSTMENT'
+  | 'UNALLOWABLE_EXPENSE_FLAG'
+  | 'NON_FINANCIAL_GENERAL';
+
 export interface EmailApprovalRecord {
   id: string;
   draftId: string;
@@ -40,13 +84,16 @@ export interface EmailApprovalRecord {
   contentHash: string;
   version: number;
   decision: QuadActionType;
+  authorId?: string;
   reviewerId: string;
   reviewerName: string;
   reviewerRole: string;
   reviewNotes?: string;
   reviewedAt: string;
+  expiresAt?: string;
   isAiGenerated: boolean;
   isValid: boolean;
+  invalidatedReason?: string;
 }
 
 export interface ApprovedOutboundMessage {

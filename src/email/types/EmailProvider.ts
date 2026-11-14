@@ -66,6 +66,54 @@ export type ConnectorHealthStatus =
   | 'UNTESTED'
   | 'BLOCKED_EXTERNAL';
 
+export type MailboxConnectionLifecycleState =
+  | 'DISCONNECTED'
+  | 'AUTHORIZING'
+  | 'VERIFYING'
+  | 'CONNECTED'
+  | 'SYNCING'
+  | 'DEGRADED'
+  | 'REAUTH_REQUIRED'
+  | 'FAILED';
+
+export function normalizeMailboxConnectionState(params: {
+  authStatus?: string;
+  connectionHealth?: string;
+  syncStatus?: string;
+  lastError?: string | null;
+  hasTokens?: boolean;
+}): MailboxConnectionLifecycleState {
+  const auth = String(params.authStatus || '').toUpperCase();
+  const health = String(params.connectionHealth || '').toUpperCase();
+  const sync = String(params.syncStatus || '').toUpperCase();
+
+  if (auth === 'OAUTH_PENDING' || auth === 'CONNECTING' || auth === 'AUTHORIZING') {
+    return 'AUTHORIZING';
+  }
+  if (auth === 'CONFIGURED_UNVERIFIED' || auth === 'VERIFYING') {
+    return 'VERIFYING';
+  }
+  if (sync === 'SYNCING' || auth === 'SYNCHRONIZING') {
+    return 'SYNCING';
+  }
+  if (auth === 'TOKEN_EXPIRED' || auth === 'REVOKED' || auth === 'AUTHORIZATION_REQUIRED') {
+    return 'REAUTH_REQUIRED';
+  }
+  if (auth === 'DISCONNECTED' || auth === 'NOT_CONFIGURED' || auth === 'CONFIGURATION_REQUIRED') {
+    return 'DISCONNECTED';
+  }
+  if (auth === 'AUTHENTICATION_FAILED' || auth === 'CONNECTION_ERROR' || auth === 'ERROR' || auth === 'FAILED') {
+    return 'FAILED';
+  }
+  if (health === 'DEGRADED' || auth === 'CONNECTED_WITH_ERRORS' || Boolean(params.lastError)) {
+    return 'DEGRADED';
+  }
+  if ((auth === 'CONNECTED' || auth === 'AUTHORIZED' || auth === 'OAUTH_AUTHORIZED') && params.hasTokens !== false) {
+    return 'CONNECTED';
+  }
+  return 'DISCONNECTED';
+}
+
 export type ConnectorSyncStatus =
   | 'SYNC_IDLE'
   | 'SYNCING'

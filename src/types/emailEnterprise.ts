@@ -520,7 +520,7 @@ export interface EnterpriseEmailThread {
   messages: EnterpriseEmailMessage[];
   draft?: EmailDraft;
   crmLink?: {
-    entityType: 'donor' | 'grant' | 'partnership' | 'volunteer' | 'campaign' | 'partner' | 'client';
+    entityType: 'donor' | 'grant' | 'partnership' | 'volunteer' | 'campaign' | 'partner' | 'client' | 'program';
     entityId: string;
     entityName: string;
   };

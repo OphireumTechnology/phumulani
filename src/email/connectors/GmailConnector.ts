@@ -644,6 +644,34 @@ export class GmailConnector implements EmailConnector {
     );
   }
 
+  public async restoreMessage(messageId: string): Promise<void> {
+    await this.fetchGmailWithRefresh(
+      `https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(messageId)}/modify`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ addLabelIds: ['INBOX'], removeLabelIds: ['TRASH', 'SPAM'] }),
+      }
+    );
+  }
+
+  public async getAttachment(
+    messageId: string,
+    attachmentId: string
+  ): Promise<{ attachmentId: string; dataBase64Url: string; size: number } | null> {
+    const res = await this.fetchGmailWithRefresh(
+      `https://gmail.googleapis.com/gmail/v1/users/me/messages/${encodeURIComponent(messageId)}/attachments/${encodeURIComponent(attachmentId)}`
+    );
+    if (!res || !res.ok) return null;
+    const data: any = await res.json().catch(() => null);
+    if (!data?.data) return null;
+    return {
+      attachmentId,
+      dataBase64Url: String(data.data),
+      size: Number(data.size || 0),
+    };
+  }
+
   public async disconnect(): Promise<void> {
     oAuthService.revokeTokens(this.connectionId);
     oAuthService.revokeTokens(this.mailboxEmail);

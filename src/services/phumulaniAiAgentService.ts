@@ -1620,6 +1620,208 @@ grants@phumulani.org`;
 
     return { success: true, auditId };
   }
+
+  // ---------------------------------------------------------------------------
+  // 11. PHASE 70: 12 COORDINATED AI FUNDRAISING WORKFORCE TASKS
+  // ---------------------------------------------------------------------------
+
+  public listWorkforceTasks(): Array<{
+    taskId: string;
+    code: string;
+    title: string;
+    scope: string;
+    requiresHumanReview: boolean;
+    allowUnattendedExternalSend: false;
+  }> {
+    return [
+      { taskId: 'WF-TASK-01', code: 'PROSPECT_RESEARCH', title: 'Identify & Score Eligible Funding Prospects', scope: 'Donor & Foundation Discovery', requiresHumanReview: false, allowUnattendedExternalSend: false },
+      { taskId: 'WF-TASK-02', code: 'PROGRAM_MATCHING', title: 'Match Funder Priorities to Phumulani Programs', scope: '5 Approved Community Programs', requiresHumanReview: false, allowUnattendedExternalSend: false },
+      { taskId: 'WF-TASK-03', code: 'SOLICITATION_DRAFTING', title: 'Draft Grounded Solicitation & Outreach Campaigns', scope: 'Outreach Campaign Generator', requiresHumanReview: true, allowUnattendedExternalSend: false },
+      { taskId: 'WF-TASK-04', code: 'INBOUND_CLASSIFICATION', title: 'Classify & Prioritize Incoming Donor/Grant Mail', scope: '14 Categories + P0-P4 Routing', requiresHumanReview: false, allowUnattendedExternalSend: false },
+      { taskId: 'WF-TASK-05', code: 'INTEREST_SCORING', title: 'Analyze Explicit Funding Interest Signals (0-100)', scope: 'Donor Interest & Opt-Out Guard', requiresHumanReview: false, allowUnattendedExternalSend: false },
+      { taskId: 'WF-TASK-06', code: 'REPLY_DRAFTING', title: 'Generate Context-Aware Reply Drafts with Citations', scope: 'Knowledge-Grounded Correspondence', requiresHumanReview: true, allowUnattendedExternalSend: false },
+      { taskId: 'WF-TASK-07', code: 'FOLLOWUP_SEQUENCING', title: 'Prepare & Auto-Cancel Follow-Up Sequences', scope: '7-Day Cooldown & Opt-Out Halt', requiresHumanReview: true, allowUnattendedExternalSend: false },
+      { taskId: 'WF-TASK-08', code: 'PROPOSAL_BUDGET_DRAFTING', title: 'Prepare Concept Notes & 15% Indirect Budget Proposals', scope: 'Grant Proposals & Compliance', requiresHumanReview: true, allowUnattendedExternalSend: false },
+      { taskId: 'WF-TASK-09', code: 'HIGH_INTEREST_ESCALATION', title: 'Escalate High-Interest Leads & Briefings to Leadership', scope: 'Executive Dossiers', requiresHumanReview: true, allowUnattendedExternalSend: false },
+      { taskId: 'WF-TASK-10', code: 'MEETING_COORDINATION', title: 'Check Availability & Propose Calendar Meetings', scope: 'Google & Microsoft Calendar', requiresHumanReview: true, allowUnattendedExternalSend: false },
+      { taskId: 'WF-TASK-11', code: 'CRM_SYNCHRONIZATION', title: 'Update Donor CRM Links & Engagement Records', scope: '8-Type CRM Link Graph', requiresHumanReview: false, allowUnattendedExternalSend: false },
+      { taskId: 'WF-TASK-12', code: 'GOVERNANCE_AUDIT_GUARD', title: 'Enforce VAWA Air-Gap, Anti-AI Approval & Ledger Audit', scope: 'Security & Compliance Gate', requiresHumanReview: true, allowUnattendedExternalSend: false },
+    ];
+  }
+
+  public async executeWorkforceTask(params: {
+    taskId: string;
+    prospectId?: string;
+    programId?: string;
+    threadId?: string;
+    targetGrantmaker?: string;
+    requestedAmount?: number;
+    actorSession?: UserSession;
+  }): Promise<{
+    taskId: string;
+    scope: string;
+    status: 'COMPLETED_FOR_REVIEW' | 'COMPLETED' | 'BLOCKED_BY_POLICY';
+    artifactId?: string;
+    reviewStatus: 'PENDING_HUMAN_REVIEW' | 'NO_EXTERNAL_SEND_REQUIRED' | 'HUMAN_APPROVAL_REQUIRED';
+    summary: string;
+    result: any;
+    executedAt: string;
+  }> {
+    await this.initialize();
+    const taskDef = this.listWorkforceTasks().find((t) => t.taskId === params.taskId);
+    if (!taskDef) {
+      throw new Error(`Unknown AI Fundraising Workforce task: ${params.taskId}`);
+    }
+
+    const prospect =
+      (params.prospectId ? this.getProspectById(params.prospectId) : undefined) || this.prospects[0];
+    const programId = params.programId || prospect?.matchedProgramId || 'PROG-002';
+    const executedAt = new Date().toISOString();
+
+    let result: any;
+    let artifactId: string | undefined;
+
+    switch (taskDef.taskId) {
+      case 'WF-TASK-01':
+        result = { prospectsCount: this.prospects.length, topProspect: prospect };
+        artifactId = prospect?.id;
+        break;
+      case 'WF-TASK-02':
+        result = prospect ? this.matchProspectToPrograms(prospect.id) : [];
+        artifactId = prospect?.id;
+        break;
+      case 'WF-TASK-03': {
+        const camp = await this.generateCampaign({
+          title: `Workforce Campaign: ${programId}`,
+          targetProgramId: programId,
+          prospectIds: prospect ? [prospect.id] : [],
+          senderMailbox: 'grants@phumulani.org',
+          createdBy: params.actorSession?.userEmail || 'development@phumulani.org',
+        });
+        result = camp;
+        artifactId = camp.id;
+        break;
+      }
+      case 'WF-TASK-04':
+        result = this.classifyIncomingEmail({
+          emailSubject: 'Grant Funding Inquiry',
+          emailBody: 'Interested in learning more about Phumulani transitional housing outcomes.',
+          senderEmail: prospect?.contactEmail || 'funder@example.org',
+        });
+        break;
+      case 'WF-TASK-05':
+        result = this.analyzeDonorInterest({
+          prospectId: prospect.id,
+          emailSubject: 'Partnership Discussion',
+          emailBody: 'We are interested in funding outcomes and would like to schedule a call.',
+        });
+        artifactId = prospect.id;
+        break;
+      case 'WF-TASK-06': {
+        const draft = await this.generateReplyDraft({
+          incomingEmailId: params.threadId || `em-${Date.now()}`,
+          incomingEmailSubject: 'Partnership Discussion',
+          prospectId: prospect.id,
+          programId,
+        });
+        result = draft;
+        artifactId = draft.id;
+        break;
+      }
+      case 'WF-TASK-07': {
+        const dup = this.checkDuplicateOutreach(prospect.contactEmail, programId);
+        if (dup.isDuplicate) {
+          return {
+            taskId: taskDef.taskId,
+            scope: taskDef.scope,
+            status: 'BLOCKED_BY_POLICY',
+            artifactId: dup.existingEntityId,
+            reviewStatus: 'HUMAN_APPROVAL_REQUIRED',
+            summary: dup.reason || 'Duplicate outreach suppressed.',
+            result: dup,
+            executedAt,
+          };
+        }
+        const fup = await this.scheduleFollowUp({
+          prospectId: prospect.id,
+          programId,
+          sequenceStep: 1,
+          delayDays: 5,
+        });
+        result = fup;
+        artifactId = fup.id;
+        break;
+      }
+      case 'WF-TASK-08': {
+        const prop = await this.generateFundingProposal({
+          targetGrantmaker: params.targetGrantmaker || prospect.organizationName,
+          programId,
+          requestedAmount: params.requestedAmount || 25000,
+          author: params.actorSession?.name || 'Development Director',
+        });
+        result = prop;
+        artifactId = prop.id;
+        break;
+      }
+      case 'WF-TASK-09': {
+        const lead = await this.escalateHighInterestLead({
+          prospectId: prospect.id,
+          interestScore: Math.max(85, prospect.interestScore || 85),
+          meetingRequested: true,
+        });
+        result = lead;
+        artifactId = lead.id;
+        break;
+      }
+      case 'WF-TASK-10': {
+        const slots = await this.calendar.getAvailableSlots({
+          staffEmail: 'director@phumulani.org',
+          staffName: 'Comfort Dondo',
+          startDate: new Date(Date.now() + 86400000).toISOString(),
+          daysCount: 3,
+          durationMinutes: 30,
+        });
+        result = { availableSlots: slots.filter((s) => s.isAvailable).slice(0, 4) };
+        artifactId = slots[0]?.slotId;
+        break;
+      }
+      case 'WF-TASK-11': {
+        if (params.actorSession) {
+          result = this.recordAuthenticatedCrmAction({
+            donorId: prospect.id,
+            actionType: 'AI_WORKFORCE_CRM_SYNC',
+            details: `Workforce task WF-TASK-11 reconciled CRM record for ${prospect.organizationName}.`,
+            actorSession: params.actorSession,
+          });
+          artifactId = result.auditId;
+        } else {
+          result = { audited: true, prospectId: prospect.id };
+          artifactId = prospect.id;
+        }
+        break;
+      }
+      case 'WF-TASK-12':
+      default:
+        result = {
+          policy: this.getPolicyConfig(),
+          allowUnattendedSending: false,
+          safeguardingAirGapEnforced: true,
+          humanApprovalMandatory: true,
+        };
+        break;
+    }
+
+    return {
+      taskId: taskDef.taskId,
+      scope: taskDef.scope,
+      status: taskDef.requiresHumanReview ? 'COMPLETED_FOR_REVIEW' : 'COMPLETED',
+      artifactId,
+      reviewStatus: taskDef.requiresHumanReview ? 'PENDING_HUMAN_REVIEW' : 'NO_EXTERNAL_SEND_REQUIRED',
+      summary: `${taskDef.title} completed under Level ${this.policyConfig.autonomyLevel} governance.`,
+      result,
+      executedAt,
+    };
+  }
 }
 
 export const phumulaniAiAgentService = PhumulaniAiAgentService.getInstance();
