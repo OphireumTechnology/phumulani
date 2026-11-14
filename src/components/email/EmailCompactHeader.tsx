@@ -174,7 +174,7 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
             const liveAuthorizedCount = mailboxes.filter(
               (m) =>
                 (m.status === 'CONNECTED' || m.status === 'connected' || m.status === 'SYNCING' || m.status === 'syncing') &&
-                m.authStatus === 'authorized'
+                ['authorized', 'AUTHORIZED', 'CONNECTED', 'OAUTH_AUTHORIZED'].includes(String(m.authStatus || ''))
             ).length;
             const activeStagedCount = mailboxes.filter(
               (m) => m.status === 'CONNECTED' || m.status === 'connected' || m.status === 'SYNCING' || m.status === 'syncing'
@@ -265,7 +265,7 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
                 <button
                   onClick={() => {
                     setIsOverflowOpen(false);
-                    onSyncMailbox(selectedMailboxId === 'all' ? 'mbx-info' : selectedMailboxId);
+                    onSyncMailbox(selectedMailboxId === 'all' ? (mailboxes[0]?.id || '') : selectedMailboxId);
                   }}
                   disabled={isSyncing}
                   className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-slate-100 text-slate-700 flex items-center gap-2 cursor-pointer font-medium"

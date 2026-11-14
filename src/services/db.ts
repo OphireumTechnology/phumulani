@@ -1508,36 +1508,61 @@ class DatabaseService {
 
   // --- Enterprise Email & Communications Operations ---
   public syncMailbox(mailboxId: string): void {
+    if (EnvironmentService.isProductionOnly()) {
+      throw new Error(
+        'PRODUCTION_GUARD: Use the authenticated email sync API. Local sync cannot mark a mailbox connected.'
+      );
+    }
     const actor = this.state.currentUser;
     const mbx = this.state.connectedMailboxes.find((m) => m.id === mailboxId);
     if (!mbx) return;
-    const updated = this.state.connectedMailboxes.map((m) =>
-      m.id === mailboxId ? { ...m, lastSyncedAt: new Date().toISOString(), status: 'connected' as const } : m
+    this.appendAuditLog(
+      'MAILBOX_SYNC_REQUESTED',
+      `Local sync helper invoked for [${mbx.email}] by ${actor.name}. Backend connector authorization is required to change connection state.`
     );
-    this.saveState({ ...this.state, connectedMailboxes: updated });
-    this.appendAuditLog('MAILBOX_SYNC_TRIGGERED', `Mailbox [${mbx.email}] synchronized by ${actor.name}`);
+  }
+
+  private sanitizeManualMailboxState(
+    requested?: ConnectedMailbox['status'] | string
+  ): ConnectedMailbox['status'] {
+    const blockedLiveStates = new Set([
+      'CONNECTED',
+      'connected',
+      'SYNCING',
+      'syncing',
+      'HEALTHY',
+      'healthy',
+      'PROVIDER_VERIFIED',
+    ]);
+    if (!requested || blockedLiveStates.has(String(requested))) {
+      return 'AUTHORIZATION_REQUIRED';
+    }
+    return requested as ConnectedMailbox['status'];
   }
 
   public addConnectedMailbox(data: Partial<ConnectedMailbox>): ConnectedMailbox {
     const actor = this.state.currentUser;
+    const safeStatus = this.sanitizeManualMailboxState(data.status || data.connectionState);
+    const {
+      status: _dropStatus,
+      connectionState: _dropConnState,
+      authStatus: _dropAuthStatus,
+      ...restData
+    } = data;
     const newMailbox: ConnectedMailbox = {
-      id: data.id || `mbx-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
-      email: data.email?.toLowerCase().trim() || 'inbox@phumulani.org',
-      displayName: data.displayName || 'Department Mailbox',
-      department: data.department || 'Operations',
-      provider: data.provider || 'Google Workspace',
-      status: data.status || 'AUTHORIZATION_REQUIRED',
-      connectionState: data.connectionState || 'AUTHORIZATION_REQUIRED',
-      mailboxType: data.mailboxType || 'shared',
-      lastSyncedAt: new Date().toISOString(),
+      id: restData.id || `mbx-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`,
+      email: restData.email?.toLowerCase().trim() || 'inbox@phumulani.org',
+      displayName: restData.displayName || 'Department Mailbox',
+      department: restData.department || 'Operations',
+      provider: restData.provider || 'Google Workspace',
+      mailboxType: restData.mailboxType || 'shared',
       unreadCount: 0,
       totalThreads: 0,
-      authStatus: 'SIMULATED — LIVE OAUTH REQUIRED',
-      permissionScopes: data.permissionScopes || [
+      permissionScopes: restData.permissionScopes || [
         'https://www.googleapis.com/auth/gmail.readonly',
         'https://www.googleapis.com/auth/gmail.send',
       ],
-      twoWaySyncEnabled: data.twoWaySyncEnabled ?? true,
+      twoWaySyncEnabled: restData.twoWaySyncEnabled ?? true,
       historicalImportStatus: 'not_started',
       historicalImportProgress: 0,
       totalImportedMessages: 0,
@@ -1546,7 +1571,11 @@ class DatabaseService {
       duplicatesPrevented: 0,
       authFailures: 0,
       rateLimitEvents: 0,
-      ...data,
+      ...restData,
+      status: safeStatus,
+      connectionState: safeStatus as any,
+      authStatus: 'unauthorized',
+      lastSyncedAt: restData.lastSyncedAt || '',
     };
     this.saveState({
       ...this.state,
@@ -1570,9 +1599,27 @@ class DatabaseService {
   ): void {
     const actor = this.state.currentUser;
     const mailboxId = typeof idOrMailbox === 'string' ? idOrMailbox : idOrMailbox.id;
-    const mailboxUpdates = typeof idOrMailbox === 'string' ? (updates || {}) : idOrMailbox;
+    const rawUpdates = { ...(typeof idOrMailbox === 'string' ? (updates || {}) : idOrMailbox) };
+    const blockedLiveStates = new Set([
+      'CONNECTED',
+      'connected',
+      'SYNCING',
+      'syncing',
+      'HEALTHY',
+      'healthy',
+      'PROVIDER_VERIFIED',
+    ]);
+    if (rawUpdates.status && blockedLiveStates.has(String(rawUpdates.status))) {
+      delete rawUpdates.status;
+    }
+    if (rawUpdates.connectionState && blockedLiveStates.has(String(rawUpdates.connectionState))) {
+      delete rawUpdates.connectionState;
+    }
+    if (rawUpdates.authStatus === 'authorized') {
+      delete rawUpdates.authStatus;
+    }
     const updated = this.state.connectedMailboxes.map((m) =>
-      m.id === mailboxId ? { ...m, ...mailboxUpdates } : m
+      m.id === mailboxId ? { ...m, ...rawUpdates } : m
     );
     this.saveState({ ...this.state, connectedMailboxes: updated });
     const mbx = this.state.connectedMailboxes.find((m) => m.id === mailboxId);

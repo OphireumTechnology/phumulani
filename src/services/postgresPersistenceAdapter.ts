@@ -1149,9 +1149,12 @@ export class PostgresPersistenceAdapter {
       }
     }
 
+    const policy = EnvironmentService.getDatabasePolicy();
     if (
-      options?.failClosedInProd &&
-      (process.env.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_ONLY' || process.env.NODE_ENV === 'production')
+      this.pool !== null ||
+      policy.requireLiveDatabase ||
+      (options?.failClosedInProd &&
+        (process.env.PHUMULANI_OPERATIONAL_MODE === 'PRODUCTION_ONLY' || process.env.NODE_ENV === 'production'))
     ) {
       throw new Error(`CRITICAL_AUDIT_PERSISTENCE_FAILURE: ${errMsg}`);
     }

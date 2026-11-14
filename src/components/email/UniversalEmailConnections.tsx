@@ -216,6 +216,26 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
     fetchConnections();
   }, []);
 
+  useEffect(() => {
+    const handleOAuthPopupMessage = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+      const payload = event.data;
+      if (!payload || payload.type !== 'PHUMULANI_OAUTH_CALLBACK') return;
+      if (payload.success) {
+        setOauthVerified(true);
+        setOauthConfigError(null);
+        setReauthorizingConn(null);
+        setReauthData(null);
+        showToast(payload.message || 'OAuth provider authorization verified and tokens vaulted.', 'success');
+        void fetchConnections();
+      } else {
+        showToast(payload.error || 'Provider authorization was not completed.', 'error');
+      }
+    };
+    window.addEventListener('message', handleOAuthPopupMessage);
+    return () => window.removeEventListener('message', handleOAuthPopupMessage);
+  }, []);
+
   const handleDiscover = async (email: string) => {
     setWizardEmail(email);
     setOauthConfigError(null);
@@ -870,7 +890,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                 Register an OAuth 2.0 Web Application in <strong>Google Cloud Console</strong> for organization <code className="bg-slate-900 px-1 py-0.5 rounded text-teal-300">phumulani.org</code>.
               </p>
               <div className="space-y-1 font-mono text-[11px] bg-slate-950 p-2.5 rounded-lg border border-slate-800">
-                <div><strong>Authorized Redirect URI:</strong> http://0.0.0.0:3000/api/admin/email/oauth/google/callback</div>
+                <div><strong>Authorized Redirect URI:</strong> {typeof window !== 'undefined' ? window.location.origin : ''}/api/admin/email/oauth/google/callback</div>
                 <div><strong>Scopes:</strong> openid, email, profile, gmail.readonly, gmail.send, gmail.modify</div>
                 <div><strong>Env Var:</strong> GOOGLE_WORKSPACE_CLIENT_ID</div>
               </div>
@@ -889,7 +909,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                 Register an App in <strong>Microsoft Entra ID (Azure AD)</strong> under the organization directory.
               </p>
               <div className="space-y-1 font-mono text-[11px] bg-slate-950 p-2.5 rounded-lg border border-slate-800">
-                <div><strong>Authorized Redirect URI:</strong> http://0.0.0.0:3000/api/admin/email/oauth/microsoft/callback</div>
+                <div><strong>Authorized Redirect URI:</strong> {typeof window !== 'undefined' ? window.location.origin : ''}/api/admin/email/oauth/microsoft/callback</div>
                 <div><strong>Graph Scopes:</strong> openid, profile, offline_access, Mail.Read, Mail.ReadWrite, Mail.Send</div>
                 <div><strong>Env Vars:</strong> MICROSOFT_GRAPH_CLIENT_ID, MICROSOFT_TENANT_ID</div>
               </div>

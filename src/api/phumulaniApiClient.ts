@@ -539,6 +539,7 @@ class PhumulaniApiClient {
     cc?: string[];
     subject: string;
     bodyText: string;
+    attachments?: Array<{ fileName: string; mimeType: string; sizeBytes: number }>;
     isAiGenerated?: boolean;
     isSafeguarded?: boolean;
   }): Promise<{ success: boolean; draft?: any; error?: string }> {

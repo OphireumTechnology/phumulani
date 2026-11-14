@@ -542,11 +542,15 @@ export class EmailDispatchService {
     }
 
     draft.lifecycleStage = 'SENDING';
-    const conn = connectorRegistry.getConnection(draft.mailboxId) || connectorRegistry.listConnections()[0];
+    const normalizedMbx = (draft.mailboxId || '').toLowerCase();
+    const conn =
+      connectorRegistry.getConnection(draft.mailboxId) ||
+      connectorRegistry.listConnections().find((c) => c.emailAddress.toLowerCase() === normalizedMbx) ||
+      connectorRegistry.listConnections()[0];
     const dispatchResult = await this.dispatchApprovedMessage({
       id: `msg-${draft.id}`,
       connectionId: conn?.id || draft.mailboxId,
-      senderAccount: conn?.emailAddress || 'donations@phumulani.org',
+      senderAccount: conn?.emailAddress || (normalizedMbx.includes('@') ? draft.mailboxId : 'donations@phumulani.org'),
       to: draft.to,
       cc: draft.cc,
       subject: draft.subject,

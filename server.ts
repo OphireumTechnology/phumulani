@@ -123,6 +123,27 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   const reqId = (req.headers['x-request-id'] as string) || `req-${Date.now()}-${crypto.randomBytes(4).toString('hex')}`;
   res.setHeader('X-Request-Id', reqId);
+
+  const corsEnv = (process.env.CORS_ALLOWED_ORIGINS || '').trim();
+  const originHeader = req.headers.origin;
+  if (corsEnv && originHeader) {
+    const allowedCors = new Set(
+      corsEnv
+        .split(',')
+        .map((o) => o.trim().toLowerCase())
+        .filter(Boolean)
+    );
+    if (allowedCors.has(originHeader.toLowerCase())) {
+      res.setHeader('Access-Control-Allow-Origin', originHeader);
+      res.setHeader('Vary', 'Origin');
+      res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Request-Id, X-Phumulani-Session');
+      res.setHeader('Access-Control-Allow-Credentials', 'true');
+      if (req.method === 'OPTIONS') {
+        return res.status(204).end();
+      }
+    }
+  }
   next();
 });
 
@@ -6591,11 +6612,21 @@ function validateOAuthRedirectUri(rawUri: string | undefined, req: Request, defa
       return { valid: false, error: 'OAuth redirectUri must use http or https protocol.' };
     }
     const serverOrigin = `${req.protocol}://${req.get('host')}`.toLowerCase();
+    const configuredAppUrls = [process.env.APP_URL, process.env.PUBLIC_APP_URL]
+      .filter((u): u is string => Boolean(u && u.trim()))
+      .map((u) => {
+        try {
+          return new URL(u.trim()).origin.toLowerCase();
+        } catch {
+          return '';
+        }
+      })
+      .filter(Boolean);
     const extraOrigins = (process.env.OAUTH_ALLOWED_REDIRECT_ORIGINS || '')
       .split(',')
       .map((s) => s.trim().toLowerCase())
       .filter(Boolean);
-    const allowedOrigins = new Set([serverOrigin, ...extraOrigins]);
+    const allowedOrigins = new Set([serverOrigin, ...configuredAppUrls, ...extraOrigins]);
     if (!allowedOrigins.has(parsed.origin.toLowerCase())) {
       return { valid: false, error: `OAuth redirectUri origin "${parsed.origin}" is not in the server allowlist.` };
     }
@@ -6603,6 +6634,41 @@ function validateOAuthRedirectUri(rawUri: string | undefined, req: Request, defa
   } catch {
     return { valid: false, error: 'Malformed OAuth redirectUri parameter.' };
   }
+}
+
+function sendOAuthCallbackResponse(
+  req: Request,
+  res: Response,
+  statusCode: number,
+  payload: Record<string, unknown>
+) {
+  const acceptsHtml = (req.headers.accept || '').includes('text/html') && !(req.headers.accept || '').startsWith('application/json');
+  if (!acceptsHtml) {
+    return res.status(statusCode).json(payload);
+  }
+  const safeJson = JSON.stringify({ type: 'PHUMULANI_OAUTH_CALLBACK', ...payload }).replace(/</g, '\\u003c');
+  const title = payload.success ? 'Mailbox Authorization Complete' : 'Mailbox Authorization Notice';
+  const heading = payload.success ? 'Provider Authorization Verified' : 'Provider Authorization Failed';
+  const messageText = String(payload.message || payload.error || (payload.success ? 'You may close this window.' : 'Authorization could not be completed.'));
+  const escapedText = messageText.replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch] || ch));
+  return res.status(statusCode).type('html').send(`<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>${title}</title></head>
+<body style="font-family:system-ui,sans-serif;padding:24px;background:#f8fafc;color:#0f172a;">
+  <div style="max-width:460px;margin:40px auto;background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px;">
+    <h2 style="margin:0 0 8px 0;font-size:18px;">${heading}</h2>
+    <p style="margin:0 0 16px 0;font-size:14px;color:#475569;">${escapedText}</p>
+    <button onclick="window.close()" style="background:#0f766e;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer;">Close Window</button>
+  </div>
+  <script>
+    try {
+      var data = ${safeJson};
+      if (window.opener && !window.opener.closed) {
+        window.opener.postMessage(data, window.location.origin);
+        if (data.success) { setTimeout(function(){ window.close(); }, 600); }
+      }
+    } catch (e) {}
+  </script>
+</body></html>`);
 }
 
 // 3. OAuth initiation and callback endpoints for Google & Microsoft (Fail-Closed when unconfigured)
@@ -6657,13 +6723,13 @@ app.get('/api/admin/email/oauth/google/callback', async (req: Request, res: Resp
   try {
     const { state, code, error } = req.query;
     if (error) {
-      return res.status(400).json({ success: false, error: `Google OAuth error: ${error}` });
+      return sendOAuthCallbackResponse(req, res, 400, { success: false, provider: 'GOOGLE', error: `Google OAuth error: ${error}` });
     }
     if (!state || !code) {
-      return res.status(400).json({ success: false, error: 'Missing state or authorization code parameter.' });
+      return sendOAuthCallbackResponse(req, res, 400, { success: false, provider: 'GOOGLE', error: 'Missing state or authorization code parameter.' });
     }
     if (!oAuthService.isProviderConfigured('GOOGLE')) {
-      return res.status(503).json({
+      return sendOAuthCallbackResponse(req, res, 503, {
         success: false,
         code: 'OAUTH_CREDENTIALS_MISSING',
         provider: 'GOOGLE',
@@ -6678,8 +6744,9 @@ app.get('/api/admin/email/oauth/google/callback', async (req: Request, res: Resp
       mailboxEmail: mailboxHint,
     });
     if (!exchange.success) {
-      return res.status(exchange.statusCode || 400).json({
+      return sendOAuthCallbackResponse(req, res, exchange.statusCode || 400, {
         success: false,
+        provider: 'GOOGLE',
         code: exchange.errorCode,
         error: exchange.error,
       });
@@ -6701,7 +6768,7 @@ app.get('/api/admin/email/oauth/google/callback', async (req: Request, res: Resp
         lastError: null,
       });
     }
-    res.json({
+    return sendOAuthCallbackResponse(req, res, 200, {
       success: true,
       message: 'Google Workspace authorization code verified and exchanged with provider token endpoint.',
       provider: 'GOOGLE',
@@ -6709,7 +6776,7 @@ app.get('/api/admin/email/oauth/google/callback', async (req: Request, res: Resp
       connectedId: matched?.id,
     });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    return sendOAuthCallbackResponse(req, res, 500, { success: false, provider: 'GOOGLE', error: err.message });
   }
 });
 
@@ -6758,13 +6825,13 @@ app.get('/api/admin/email/oauth/microsoft/callback', async (req: Request, res: R
   try {
     const { state, code, error } = req.query;
     if (error) {
-      return res.status(400).json({ success: false, error: `Microsoft OAuth error: ${error}` });
+      return sendOAuthCallbackResponse(req, res, 400, { success: false, provider: 'MICROSOFT', error: `Microsoft OAuth error: ${error}` });
     }
     if (!state || !code) {
-      return res.status(400).json({ success: false, error: 'Missing state or authorization code parameter.' });
+      return sendOAuthCallbackResponse(req, res, 400, { success: false, provider: 'MICROSOFT', error: 'Missing state or authorization code parameter.' });
     }
     if (!oAuthService.isProviderConfigured('MICROSOFT')) {
-      return res.status(503).json({
+      return sendOAuthCallbackResponse(req, res, 503, {
         success: false,
         code: 'OAUTH_CREDENTIALS_MISSING',
         provider: 'MICROSOFT',
@@ -6779,8 +6846,9 @@ app.get('/api/admin/email/oauth/microsoft/callback', async (req: Request, res: R
       mailboxEmail: mailboxHint,
     });
     if (!exchange.success) {
-      return res.status(exchange.statusCode || 400).json({
+      return sendOAuthCallbackResponse(req, res, exchange.statusCode || 400, {
         success: false,
+        provider: 'MICROSOFT',
         code: exchange.errorCode,
         error: exchange.error,
       });
@@ -6802,7 +6870,7 @@ app.get('/api/admin/email/oauth/microsoft/callback', async (req: Request, res: R
         lastError: null,
       });
     }
-    res.json({
+    return sendOAuthCallbackResponse(req, res, 200, {
       success: true,
       message: 'Microsoft 365 authorization code verified and exchanged with provider token endpoint.',
       provider: 'MICROSOFT',
@@ -6810,7 +6878,7 @@ app.get('/api/admin/email/oauth/microsoft/callback', async (req: Request, res: R
       connectedId: matched?.id,
     });
   } catch (err: any) {
-    res.status(500).json({ success: false, error: err.message });
+    return sendOAuthCallbackResponse(req, res, 500, { success: false, provider: 'MICROSOFT', error: err.message });
   }
 });
 

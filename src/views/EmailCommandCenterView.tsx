@@ -192,7 +192,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
   // Modals
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
-  const [importTargetMailbox, setImportTargetMailbox] = useState<string>('mbx-grants');
+  const [importTargetMailbox, setImportTargetMailbox] = useState<string>('');
   const [importScopeFolders, setImportScopeFolders] = useState<string[]>(['INBOX', 'SENT', 'ARCHIVE']);
   const [isConflictsModalOpen, setIsConflictsModalOpen] = useState(false);
   const [isAuditLogsModalOpen, setIsAuditLogsModalOpen] = useState(false);
@@ -695,49 +695,69 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
   // Handle Sync Mailbox
   const handleSyncMailbox = async (mbxId: string) => {
+    if (!mbxId) {
+      setActionNotice({
+        type: 'warning',
+        message: 'No connected mailbox is configured yet. Connect an authorized mailbox under Universal Connectors first.',
+      });
+      setTimeout(() => setActionNotice(null), 5000);
+      return;
+    }
     const target = mailboxes.find((m) => m.id === mbxId);
-    db.syncMailbox(mbxId);
     let backendSynced = false;
+    let syncErrorMessage = '';
     try {
       const res = await authFetch(`/api/admin/email/mailboxes/${encodeURIComponent(mbxId)}/sync`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
       });
-      if (res.ok) backendSynced = true;
-    } catch {
-      // Staged offline fallback
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.success) {
+        backendSynced = true;
+      } else {
+        syncErrorMessage = data?.sync?.error || data?.error || `HTTP ${res.status}`;
+      }
+    } catch (err: any) {
+      syncErrorMessage = err?.message || 'Backend sync endpoint unreachable';
     }
+    await refreshEnterprisePersistence();
     refreshSyncState();
-    const isLiveOAuth = target?.authStatus === 'authorized';
     setActionNotice({
-      type: isLiveOAuth ? 'success' : 'warning',
-      message: isLiveOAuth
-        ? `Mailbox ${target?.email || mbxId} synchronized${backendSynced ? ' via backend gateway' : ''}.`
-        : `Staged local sync recorded for ${target?.email || mbxId}. Live provider OAuth authorization is still required before external inbox retrieval.`,
+      type: backendSynced ? 'success' : 'warning',
+      message: backendSynced
+        ? `Mailbox ${target?.email || mbxId} synchronized via backend gateway.`
+        : `Synchronization blocked for ${target?.email || mbxId}: ${syncErrorMessage || 'Live provider OAuth authorization is required before inbox retrieval.'}`,
     });
     setTimeout(() => setActionNotice(null), 5000);
   };
 
   const handleVerifyMailbox = async (mbxId: string) => {
     const target = mailboxes.find((m) => m.id === mbxId);
-    db.syncMailbox(mbxId);
-    let gatewayStatus = 'UNKNOWN';
+    let gatewayStatus = 'AUTHORIZATION_REQUIRED';
+    let connectorHealthy = false;
     try {
-      const res = await authFetch('/api/admin/email/google-workspace/status');
-      if (res.ok) {
-        const data = await res.json();
+      const [connRes, gwRes] = await Promise.all([
+        authFetch(`/api/admin/email/connections/${encodeURIComponent(mbxId)}/test`, { method: 'POST' }).catch(() => null),
+        authFetch('/api/admin/email/google-workspace/status').catch(() => null),
+      ]);
+      if (connRes && connRes.ok) {
+        const connData = await connRes.json().catch(() => ({}));
+        connectorHealthy = Boolean(connData?.health?.healthy);
+        if (connData?.health?.status) gatewayStatus = connData.health.status;
+      } else if (gwRes && gwRes.ok) {
+        const data = await gwRes.json().catch(() => ({}));
         gatewayStatus = data.status || 'AUTHORIZATION_REQUIRED';
       }
     } catch {
       gatewayStatus = 'UNREACHABLE';
     }
     refreshSyncState();
-    const isLiveOAuth = target?.authStatus === 'authorized' && gatewayStatus === 'CONNECTED';
+    const isLiveOAuth = connectorHealthy || (target?.authStatus === 'authorized' && gatewayStatus === 'CONNECTED');
     setActionNotice({
       type: isLiveOAuth ? 'success' : 'warning',
       message: isLiveOAuth
         ? `Mailbox connection verified for ${target?.email || mbxId}. Live provider OAuth active.`
-        : `Verification check for ${target?.email || mbxId}: Gateway status is ${gatewayStatus}. Live provider OAuth authorization required.`,
+        : `Verification check for ${target?.email || mbxId}: Status is ${gatewayStatus}. Live provider OAuth authorization required.`,
     });
     setTimeout(() => setActionNotice(null), 5000);
   };
@@ -951,7 +971,10 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
     setMbxFormEmail(mbx.email);
     setMbxFormDisplayName(mbx.displayName);
     setMbxFormDepartment(mbx.department);
-    setMbxFormInitialState(mbx.status);
+    const nonLiveState = (['AUTHORIZATION_REQUIRED', 'DEGRADED', 'DISCONNECTED', 'ERROR', 'NOT_CONFIGURED'].includes(String(mbx.status))
+      ? mbx.status
+      : 'AUTHORIZATION_REQUIRED') as MailboxConnectionState;
+    setMbxFormInitialState(nonLiveState);
     setIsEditMailboxModalOpen(true);
   };
 
@@ -961,6 +984,11 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
       setActionNotice({ type: 'warning', message: 'Email and display name are required.' });
       return;
     }
+    const safeInitialState: MailboxConnectionState = (
+      ['AUTHORIZATION_REQUIRED', 'DEGRADED', 'DISCONNECTED', 'NOT_CONFIGURED'].includes(String(mbxFormInitialState))
+        ? mbxFormInitialState
+        : 'AUTHORIZATION_REQUIRED'
+    ) as MailboxConnectionState;
     try {
       const apiRes = await authFetch('/api/admin/email/mailboxes', {
         method: 'POST',
@@ -969,7 +997,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
           email: mbxFormEmail.trim(),
           displayName: mbxFormDisplayName.trim(),
           department: mbxFormDepartment,
-          status: mbxFormInitialState,
+          status: safeInitialState,
           mailboxType: 'shared',
           provider: 'Google Workspace',
         }),
@@ -986,7 +1014,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         email: mbxFormEmail.trim(),
         displayName: mbxFormDisplayName.trim(),
         department: mbxFormDepartment,
-        status: mbxFormInitialState,
+        status: safeInitialState,
         mailboxType: 'shared',
         provider: 'Google Workspace',
       });
@@ -1000,7 +1028,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
       refreshSyncState();
       setActionNotice({
         type: 'success',
-        message: `Organizational mailbox [${savedEmail}] registered. State: ${mbxFormInitialState}.`,
+        message: `Organizational mailbox [${savedEmail}] registered. State: ${safeInitialState}.`,
       });
     } catch (err: any) {
       setActionNotice({
@@ -1015,6 +1043,11 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
   const handleEditMailboxSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingMailbox) return;
+    const safeEditState: MailboxConnectionState | undefined = ['AUTHORIZATION_REQUIRED', 'DEGRADED', 'DISCONNECTED', 'ERROR', 'NOT_CONFIGURED'].includes(
+      String(mbxFormInitialState)
+    )
+      ? mbxFormInitialState
+      : undefined;
     try {
       const apiRes = await authFetch(`/api/admin/email/connectors/${encodeURIComponent(editingMailbox.id)}`, {
         method: 'PATCH',
@@ -1035,7 +1068,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
       db.updateConnectedMailbox(editingMailbox.id, {
         displayName: mbxFormDisplayName.trim(),
         department: mbxFormDepartment,
-        status: mbxFormInitialState,
+        ...(safeEditState ? { status: safeEditState } : {}),
       });
       const targetEmail = editingMailbox.email;
       setIsEditMailboxModalOpen(false);
@@ -2648,19 +2681,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
                 <div className="flex flex-wrap items-center gap-2">
                   <button
-                    onClick={() => {
-                      mailboxes.forEach((m) => db.syncMailbox(m.id));
-                      refreshSyncState();
-                      const liveCount = mailboxes.filter((m) => m.authStatus === 'authorized').length;
-                      setActionNotice({
-                        type: liveCount === mailboxes.length ? 'success' : 'warning',
-                        message:
-                          liveCount === mailboxes.length
-                            ? `All ${mailboxes.length} mailboxes verified against provider gateways.`
-                            : `Verified ${mailboxes.length} staged mailboxes. ${mailboxes.length - liveCount} mailbox(es) require live OAuth 2.0 authorization.`,
-                      });
-                      setTimeout(() => setActionNotice(null), 5000);
-                    }}
+                    onClick={handleTestAllConnections}
                     className="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 cursor-pointer shadow-2xs"
                   >
                     <RefreshCw className="w-3.5 h-3.5 text-slate-600" />
@@ -2669,7 +2690,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
                   <button
                     onClick={() => {
-                      setImportTargetMailbox(mailboxes[0]?.id || 'mbx-info');
+                      setImportTargetMailbox(mailboxes[0]?.id || '');
                       setIsImportModalOpen(true);
                     }}
                     className="px-3 py-1.5 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 text-indigo-900 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-2xs"
@@ -6995,8 +7016,6 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-mono font-bold"
                   >
                     <option value="AUTHORIZATION_REQUIRED">AUTHORIZATION_REQUIRED</option>
-                    <option value="CONNECTED">CONNECTED</option>
-                    <option value="SYNCING">SYNCING</option>
                     <option value="DEGRADED">DEGRADED</option>
                     <option value="DISCONNECTED">DISCONNECTED</option>
                     <option value="NOT_CONFIGURED">NOT_CONFIGURED</option>
@@ -7095,9 +7114,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     onChange={(e) => setMbxFormInitialState(e.target.value as MailboxConnectionState)}
                     className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-mono font-bold"
                   >
-                    <option value="CONNECTED">CONNECTED</option>
                     <option value="AUTHORIZATION_REQUIRED">AUTHORIZATION_REQUIRED</option>
-                    <option value="SYNCING">SYNCING</option>
                     <option value="DEGRADED">DEGRADED</option>
                     <option value="DISCONNECTED">DISCONNECTED</option>
                     <option value="ERROR">ERROR</option>
