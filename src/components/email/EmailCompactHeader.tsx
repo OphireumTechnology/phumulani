@@ -203,11 +203,11 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
             }
             return (
               <div
-                className="hidden xl:flex items-center gap-1 px-2 py-0.5 rounded-full bg-rose-50 text-rose-800 border border-rose-200 text-[11px] font-medium"
-                title="No Mailboxes Currently Connected"
+                className="hidden xl:flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 text-[11px] font-medium"
+                title="Active Email Synchronization Disabled Until a Mailbox Is Connected"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-rose-600" />
-                <span>Sync Disconnected</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                <span>Sync Disabled</span>
               </div>
             );
           })()}
@@ -267,12 +267,18 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
                     setIsOverflowOpen(false);
                     onSyncMailbox(selectedMailboxId === 'all' ? (mailboxes[0]?.id || '') : selectedMailboxId);
                   }}
-                  disabled={isSyncing}
-                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-slate-100 text-slate-700 flex items-center gap-2 cursor-pointer font-medium"
+                  disabled={isSyncing || mailboxes.length === 0}
+                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed text-slate-700 flex items-center gap-2 cursor-pointer font-medium"
                   role="menuitem"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 text-teal-700 ${isSyncing ? 'animate-spin' : ''}`} />
-                  <span>{isSyncing ? 'Syncing Mailbox...' : 'Sync Current Mailbox'}</span>
+                  <span>
+                    {mailboxes.length === 0
+                      ? 'Sync Disabled (No Accounts)'
+                      : isSyncing
+                      ? 'Syncing Mailbox...'
+                      : 'Sync Current Mailbox'}
+                  </span>
                 </button>
 
                 {onOpenSettings && (

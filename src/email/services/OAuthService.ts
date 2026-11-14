@@ -315,6 +315,71 @@ export class OAuthService {
     this.saveEncryptedVault();
   }
 
+  public listStoredVaultKeys(): string[] {
+    return Array.from(this.encryptedTokenVault.keys());
+  }
+
+  /**
+   * Phase 79.1 Block 2: Best-effort OAuth grant revocation against provider endpoints (never deletes provider accounts)
+   * followed by complete purge of all vaulted OAuth tokens, IMAP/SMTP credentials, and pending OAuth states.
+   */
+  public async purgeAllEmailTokensAndCredentials(options?: {
+    attemptProviderRevocation?: boolean;
+  }): Promise<{
+    purgedVaultEntries: number;
+    clearedActiveStates: number;
+    revocationAttempted: number;
+    revokedAtProvider: number;
+  }> {
+    const keys = Array.from(this.encryptedTokenVault.keys());
+    const purgedVaultEntries = keys.length;
+    const clearedActiveStates = this.activeStates.size;
+    let revocationAttempted = 0;
+    let revokedAtProvider = 0;
+
+    if (options?.attemptProviderRevocation !== false && !this.vaultLoadError) {
+      for (const k of keys) {
+        if (k.startsWith('mailcred:')) continue;
+        const entry = this.encryptedTokenVault.get(k);
+        if (!entry || entry.provider !== 'GOOGLE') continue;
+        const decrypted = this.getDecryptedTokens(k);
+        const tokenToRevoke = decrypted?.refreshToken || decrypted?.accessToken;
+        if (!tokenToRevoke || tokenToRevoke.startsWith('mock-') || tokenToRevoke.startsWith('test-')) {
+          continue;
+        }
+        revocationAttempted++;
+        try {
+          const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+          const timer = controller ? setTimeout(() => controller.abort(), 3000) : null;
+          const res = await fetch(
+            `https://oauth2.googleapis.com/revoke?token=${encodeURIComponent(tokenToRevoke)}`,
+            {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              signal: controller?.signal,
+            }
+          );
+          if (timer) clearTimeout(timer);
+          if (res.ok) revokedAtProvider++;
+        } catch {
+          // Offline / sandboxed environments gracefully proceed to local vault purge
+        }
+      }
+    }
+
+    this.activeStates.clear();
+    this.encryptedTokenVault.clear();
+    this.vaultLoadError = null;
+    this.saveEncryptedVault();
+
+    return {
+      purgedVaultEntries,
+      clearedActiveStates,
+      revocationAttempted,
+      revokedAtProvider,
+    };
+  }
+
   /**
    * Stores non-OAuth (IMAP/SMTP password / app-password) credentials in the same
    * AES-256-GCM encrypted vault, prefixed with "mailcred:" so secrets are never

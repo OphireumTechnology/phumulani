@@ -1500,6 +1500,7 @@ export const DEMO_SYNC_AUDIT_LOG_IDS = INITIAL_SYNC_AUDIT_LOGS.map((l) => l.id);
 export function createCleanAutoResponderRules(): AutoResponderRule[] {
   return INITIAL_AUTORESPONDER_RULES.map((rule) => ({
     ...rule,
+    enabled: false,
     totalTriggeredCount: 0,
     lastTriggeredAt: undefined,
   }));

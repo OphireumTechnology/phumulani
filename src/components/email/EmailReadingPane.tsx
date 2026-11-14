@@ -80,6 +80,8 @@ interface EmailReadingPaneProps {
   onSendApprovedEmail: (threadId: string) => void;
   onIngestFundraising?: (thread: EnterpriseEmailThread, message: EnterpriseEmailMessage) => void;
   onOpenFundraisingCRM?: (tab: string, id: string) => void;
+  hasConnectedMailboxes?: boolean;
+  onOpenConnectWizard?: () => void;
 }
 
 export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
@@ -107,6 +109,8 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
   onSendApprovedEmail,
   onIngestFundraising,
   onOpenFundraisingCRM,
+  hasConnectedMailboxes = true,
+  onOpenConnectWizard,
 }) => {
   // Accordion states: all collapsed by default for clean staff experience
   const [isCrmOpen, setIsCrmOpen] = useState(false);
@@ -124,6 +128,29 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
   const [newInternalNote, setNewInternalNote] = useState('');
 
   if (!thread) {
+    if (!hasConnectedMailboxes) {
+      return (
+        <div className="flex-1 bg-white border border-slate-200 rounded-2xl flex flex-col items-center justify-center p-10 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-teal-50 border border-teal-200/80 flex items-center justify-center mb-4 text-[#104F57]">
+            <Mail className="w-8 h-8 stroke-[1.5]" />
+          </div>
+          <h3 className="text-lg font-bold text-slate-900">No Email Accounts Connected</h3>
+          <p className="text-xs sm:text-sm text-slate-600 max-w-md mt-2 leading-relaxed">
+            Your Email Command Center is ready. Connect and authorize your organizational email accounts to begin receiving and managing messages.
+          </p>
+          {onOpenConnectWizard && (
+            <button
+              type="button"
+              onClick={onOpenConnectWizard}
+              className="mt-5 px-4 py-2 bg-[#104F57] hover:bg-teal-900 text-white text-xs font-bold rounded-xl shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Connect Email Account</span>
+            </button>
+          )}
+        </div>
+      );
+    }
     return (
       <div className="flex-1 bg-white border border-slate-200 rounded-2xl flex flex-col items-center justify-center p-12 text-center">
         <div className="w-16 h-16 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center mb-4 text-slate-400">

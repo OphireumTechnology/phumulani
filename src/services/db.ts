@@ -160,8 +160,11 @@ import {
 import { DevelopmentOpsService } from './developmentOpsService';
 
 const STORAGE_KEY = 'phumulani_database_v1';
+export const EMAIL_RESET_MARKER_VERSION = 'phase79_1_clean_email_v1';
+const EMAIL_RESET_MARKER_STORAGE_KEY = 'phumulani_email_reset_version';
 
 export interface AppDatabaseState {
+  emailResetMarkerVersion?: string;
   currentUser: User;
   users: User[];
   programs: Program[];
@@ -326,6 +329,7 @@ function getInitialState(): AppDatabaseState {
     safeExitNeutralUrl: 'https://weather.com',
     systemSettings: INITIAL_SYSTEM_SETTINGS,
     // Phase 8 Enterprise Email — clean initial state (no auto-seeded demo mailboxes or messages)
+    emailResetMarkerVersion: EMAIL_RESET_MARKER_VERSION,
     connectedMailboxes: [],
     autoResponderRules: createCleanAutoResponderRules(),
     autoResponderLogs: [],
@@ -334,7 +338,7 @@ function getInitialState(): AppDatabaseState {
     majorDonorPipeline: INITIAL_MAJOR_DONOR_PIPELINE,
     grantPipeline: INITIAL_GRANT_PIPELINE,
     corporatePartnerships: INITIAL_CORPORATE_PARTNERSHIPS,
-    followUpTasks: INITIAL_FOLLOW_UP_TASKS,
+    followUpTasks: [],
     calendarProposals: [],
     // Phase 8 Directive: Enterprise Fundraising
     fundraisingDonors: INITIAL_DONOR_CONTACTS,
@@ -380,14 +384,81 @@ class DatabaseService {
     this.state = this.loadState();
   }
 
+  private clearBrowserEmailCaches(): void {
+    try {
+      localStorage.setItem(EMAIL_RESET_MARKER_STORAGE_KEY, EMAIL_RESET_MARKER_VERSION);
+      const localKeysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (!key) continue;
+        if (
+          key !== STORAGE_KEY &&
+          key !== EMAIL_RESET_MARKER_STORAGE_KEY &&
+          (key.startsWith('phumulani_email_') || key.includes('email_cache') || key.includes('mailbox_cache'))
+        ) {
+          localKeysToRemove.push(key);
+        }
+      }
+      for (const k of localKeysToRemove) {
+        localStorage.removeItem(k);
+      }
+    } catch {
+      // Ignore storage access restrictions
+    }
+
+    try {
+      if (typeof sessionStorage !== 'undefined') {
+        const sessionKeysToRemove: string[] = [];
+        for (let i = 0; i < sessionStorage.length; i++) {
+          const key = sessionStorage.key(i);
+          if (key && (key.startsWith('phumulani_email_') || key.includes('email') || key.includes('mailbox'))) {
+            sessionKeysToRemove.push(key);
+          }
+        }
+        for (const k of sessionKeysToRemove) {
+          sessionStorage.removeItem(k);
+        }
+      }
+    } catch {
+      // Ignore sessionStorage restrictions
+    }
+
+    try {
+      if (typeof indexedDB !== 'undefined' && typeof indexedDB.deleteDatabase === 'function') {
+        indexedDB.deleteDatabase('phumulani_email_cache');
+        indexedDB.deleteDatabase('phumulani_email_store');
+      }
+    } catch {
+      // Ignore IndexedDB unavailability in Node/restricted browsers
+    }
+  }
+
+  private applyVersionedCleanEmailReset(state: AppDatabaseState): AppDatabaseState {
+    this.clearBrowserEmailCaches();
+    return {
+      ...state,
+      emailResetMarkerVersion: EMAIL_RESET_MARKER_VERSION,
+      connectedMailboxes: [],
+      autoResponderRules: createCleanAutoResponderRules(),
+      autoResponderLogs: [],
+      enterpriseEmailThreads: [],
+      followUpTasks: [],
+      calendarProposals: [],
+      historicalImportJobs: [],
+      syncCheckpoints: [],
+      syncConflicts: [],
+      syncAuditLogs: [],
+    };
+  }
+
   private loadState(): AppDatabaseState {
     const initial = getInitialState();
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
+      const markerInStorage = localStorage.getItem(EMAIL_RESET_MARKER_STORAGE_KEY);
       if (stored) {
         const parsed = JSON.parse(stored);
-        // Ensure all required fields exist and fallback to seed if missing in storage
-        return {
+        const merged: AppDatabaseState = {
           ...initial,
           ...parsed,
           connectedMailboxes: Array.isArray(parsed.connectedMailboxes) ? parsed.connectedMailboxes : initial.connectedMailboxes,
@@ -398,8 +469,8 @@ class DatabaseService {
           majorDonorPipeline: parsed.majorDonorPipeline?.length ? parsed.majorDonorPipeline : initial.majorDonorPipeline,
           grantPipeline: parsed.grantPipeline?.length ? parsed.grantPipeline : initial.grantPipeline,
           corporatePartnerships: parsed.corporatePartnerships?.length ? parsed.corporatePartnerships : initial.corporatePartnerships,
-          followUpTasks: parsed.followUpTasks?.length ? parsed.followUpTasks : initial.followUpTasks,
-          calendarProposals: parsed.calendarProposals?.length ? parsed.calendarProposals : initial.calendarProposals,
+          followUpTasks: Array.isArray(parsed.followUpTasks) ? parsed.followUpTasks : initial.followUpTasks,
+          calendarProposals: Array.isArray(parsed.calendarProposals) ? parsed.calendarProposals : initial.calendarProposals,
           // Fundraising collections
           fundraisingDonors: parsed.fundraisingDonors?.length ? parsed.fundraisingDonors : initial.fundraisingDonors,
           fundraisingOpportunities: parsed.fundraisingOpportunities?.length ? parsed.fundraisingOpportunities : initial.fundraisingOpportunities,
@@ -434,10 +505,21 @@ class DatabaseService {
           projectDocuments: parsed.projectDocuments?.length ? parsed.projectDocuments : initial.projectDocuments,
           weeklyReports: parsed.weeklyReports?.length ? parsed.weeklyReports : initial.weeklyReports,
         };
+
+        if (
+          parsed.emailResetMarkerVersion !== EMAIL_RESET_MARKER_VERSION ||
+          markerInStorage !== EMAIL_RESET_MARKER_VERSION
+        ) {
+          const migrated = this.applyVersionedCleanEmailReset(merged);
+          this.saveState(migrated);
+          return migrated;
+        }
+        return merged;
       }
     } catch {
       // Fallback if parsing fails
     }
+    this.clearBrowserEmailCaches();
     this.saveState(initial);
     return initial;
   }
@@ -568,9 +650,27 @@ class DatabaseService {
     return stats;
   }
 
+  public executeClientCompleteEmailReset(): void {
+    const cleaned = this.applyVersionedCleanEmailReset(this.state);
+    this.saveState(cleaned);
+  }
+
   // --- Auth & Role Switching ---
   public setCurrentUser(user: User): void {
-    this.saveState({ ...this.state, currentUser: user });
+    let baseState = this.state;
+    let markerInStorage: string | null = null;
+    try {
+      markerInStorage = localStorage.getItem(EMAIL_RESET_MARKER_STORAGE_KEY);
+    } catch {
+      markerInStorage = EMAIL_RESET_MARKER_VERSION;
+    }
+    if (
+      baseState.emailResetMarkerVersion !== EMAIL_RESET_MARKER_VERSION ||
+      markerInStorage !== EMAIL_RESET_MARKER_VERSION
+    ) {
+      baseState = this.applyVersionedCleanEmailReset(baseState);
+    }
+    this.saveState({ ...baseState, currentUser: user });
     sessionTokenStore.syncStagedPersonaSession(user);
     this.appendAuditLog('USER_SWITCH', `Switched active session to ${user.name} (${user.role})`);
   }
@@ -1061,6 +1161,9 @@ class DatabaseService {
     mailboxId: string,
     options?: { folders?: string[]; dateRange?: string }
   ): HistoricalImportJob {
+    if (this.state.connectedMailboxes.length === 0) {
+      throw new Error('EMAIL_OPERATIONS_DISABLED: Historical email imports are disabled until a mailbox is connected.');
+    }
     const actor = this.state.currentUser;
     const mbx = this.state.connectedMailboxes.find((m) => m.id === mailboxId);
     if (!mbx) throw new Error(`Mailbox not found: ${mailboxId}`);
@@ -1202,6 +1305,16 @@ class DatabaseService {
         newIncomingCount: 0,
         newSentCount: 0,
         error: 'PRODUCTION_GUARD: Local simulated incremental sync is prohibited in PRODUCTION_ONLY mode. Use backend /api/admin/email/connectors/:id/sync.',
+      };
+    }
+    if (this.state.connectedMailboxes.length === 0) {
+      return {
+        success: false,
+        deltaToken: '',
+        newCount: 0,
+        newIncomingCount: 0,
+        newSentCount: 0,
+        error: 'EMAIL_OPERATIONS_DISABLED: Email synchronization is disabled until a mailbox is connected.',
       };
     }
     const actor = this.state.currentUser;
@@ -1730,15 +1843,27 @@ class DatabaseService {
     category?: EmailClassificationCategory;
     priority?: EmailPriorityLevel;
     idempotencyKey?: string;
-  }): { success: boolean; threadId: string; messageId: string } {
+  }): { success: boolean; threadId: string; messageId: string; error?: string } {
+    if (this.state.connectedMailboxes.length === 0) {
+      return {
+        success: false,
+        threadId: '',
+        messageId: '',
+        error: 'EMAIL_OPERATIONS_DISABLED: Outbound email dispatch is disabled until a mailbox is connected.',
+      };
+    }
     const actor = this.state.currentUser;
-    const matchedMbx =
+    const mbx =
       this.state.connectedMailboxes.find((m) => m.id === params.mailboxId || (params.mailboxEmail && m.email === params.mailboxEmail)) ||
       this.state.connectedMailboxes[0];
-    const mbx = matchedMbx || {
-      id: params.mailboxId || 'conn-unverified',
-      email: params.mailboxEmail || 'info@phumulani.org',
-    };
+    if (!mbx) {
+      return {
+        success: false,
+        threadId: '',
+        messageId: '',
+        error: 'EMAIL_OPERATIONS_DISABLED: No matching connected mailbox found.',
+      };
+    }
     const threadId = `th-out-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`;
     const messageId = `msg-out-${Date.now()}-${Math.floor(100 + Math.random() * 900)}`;
     const now = new Date().toISOString();

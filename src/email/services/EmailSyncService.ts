@@ -303,8 +303,27 @@ export class EmailSyncService {
    */
   public async syncMailbox(param: string | SyncOptions, options?: any): Promise<SyncResult & { syncedCount: number }> {
     const opts: SyncOptions = typeof param === 'string'
-      ? { connectionId: param, mailboxEmail: options?.email || 'donations@phumulani.org', ...(options || {}) }
+      ? { connectionId: param, mailboxEmail: options?.email || '', ...(options || {}) }
       : param;
+
+    if (connectorRegistry.listConnections().length === 0) {
+      return {
+        success: false,
+        connectionId: opts.connectionId,
+        provider: 'GOOGLE',
+        mailboxEmail: opts.mailboxEmail,
+        messagesImported: 0,
+        duplicatesSkipped: 0,
+        threadsReconstructed: 0,
+        newCursor: '',
+        cursorType: 'GENERIC_TIMESTAMP',
+        checkpointId: '',
+        status: 'FAILED',
+        timestamp: new Date().toISOString(),
+        error: 'EMAIL_SYNC_DISABLED: Active email synchronization is disabled until an administrator connects a mailbox.',
+        syncedCount: 0,
+      };
+    }
 
     const lockKey = opts.connectionId;
 
@@ -362,6 +381,9 @@ export class EmailSyncService {
 
   public async syncAllActiveMailboxes(): Promise<SyncResult[]> {
     const connections = connectorRegistry.getAllConnections();
+    if (connections.length === 0) {
+      return [];
+    }
     const active = connections.filter(
       (c) => c.authStatus === 'CONNECTED' || c.authStatus === 'AUTHORIZED'
     );
@@ -686,6 +708,18 @@ export class EmailSyncService {
 
   public isLocked(connectionId: string): boolean {
     return this.activeSyncLocks.has(connectionId);
+  }
+
+  public async clearCursorsForReset(): Promise<number> {
+    this.activeSyncLocks.clear();
+    this.cursors.clear();
+    const rows = await this.dbAdapter.select<{ id: string }>('email_sync_cursors').catch(() => []);
+    let removed = 0;
+    for (const r of rows) {
+      const ok = await this.dbAdapter.deleteById('email_sync_cursors', r.id).catch(() => false);
+      if (ok) removed++;
+    }
+    return removed;
   }
 }
 

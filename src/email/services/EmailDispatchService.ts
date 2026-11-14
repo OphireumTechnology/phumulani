@@ -412,8 +412,11 @@ export class EmailDispatchService {
     return draft;
   }
 
-  public async processDueScheduledDispatches(): Promise<{ processed: number; sent: number; failed: number }> {
+  public async processDueScheduledDispatches(): Promise<{ processed: number; sent: number; failed: number; disabled?: boolean; reason?: string }> {
     await this.initialize();
+    if (connectorRegistry.listConnections().length === 0) {
+      return { processed: 0, sent: 0, failed: 0, disabled: true, reason: 'NO_MAILBOXES_CONNECTED' };
+    }
     if (this.emergencyShutdown) {
       return { processed: 0, sent: 0, failed: 0 };
     }
@@ -502,6 +505,15 @@ export class EmailDispatchService {
 
   public async sendApprovedEmail(draftId: string, senderId: string): Promise<any> {
     await this.initialize();
+    if (connectorRegistry.listConnections().length === 0) {
+      return {
+        success: false,
+        deliveryStatus: 'CANCELLED',
+        lifecycleStage: 'CANCELLED',
+        dispatchId: '',
+        error: 'EMAIL_OPERATIONS_DISABLED: Outbound email sending is disabled because 0 organizational mailboxes are connected.',
+      };
+    }
     if (this.emergencyShutdown) {
       return {
         success: false,
@@ -633,6 +645,17 @@ export class EmailDispatchService {
    */
   public async dispatchApprovedMessage(message: ApprovedOutboundMessage): Promise<SendResult> {
     await this.initialize();
+
+    if (connectorRegistry.listConnections().length === 0) {
+      return {
+        success: false,
+        dispatchId: '',
+        deliveryState: 'CANCELLED',
+        dispatchedAt: new Date().toISOString(),
+        recipientCount: message.to.length,
+        error: 'EMAIL_OPERATIONS_DISABLED: Outbound dispatch is disabled because 0 organizational mailboxes are connected.',
+      };
+    }
 
     if (this.emergencyShutdown) {
       return {
@@ -920,6 +943,54 @@ export class EmailDispatchService {
 
   public async listDispatches(): Promise<any[]> {
     return this.dbAdapter.select<any>('email_outbound_dispatch');
+  }
+
+  public async clearAllForReset(preservedDraftIds: Set<string> = new Set()): Promise<{
+    draftsRemoved: number;
+    dispatchesRemoved: number;
+    idempotencyKeysRemoved: number;
+    batchesRemoved: number;
+  }> {
+    await this.initialize();
+    let draftsRemoved = 0;
+    let dispatchesRemoved = 0;
+    let idempotencyKeysRemoved = 0;
+    let batchesRemoved = 0;
+
+    const draftRows = await this.dbAdapter.select<PersistentDraftRecord>('email_drafts').catch(() => []);
+    for (const d of draftRows) {
+      if (!preservedDraftIds.has(d.id)) {
+        const ok = await this.dbAdapter.deleteById('email_drafts', d.id).catch(() => false);
+        if (ok) draftsRemoved++;
+      }
+    }
+    for (const key of Array.from(this.drafts.keys())) {
+      if (!preservedDraftIds.has(key)) {
+        this.drafts.delete(key);
+      }
+    }
+
+    const dispatchRows = await this.dbAdapter.select<any>('email_outbound_dispatch').catch(() => []);
+    for (const disp of dispatchRows) {
+      const ok = await this.dbAdapter.deleteById('email_outbound_dispatch', disp.id).catch(() => false);
+      if (ok) dispatchesRemoved++;
+    }
+
+    const idemRows = await this.dbAdapter.select<any>('email_idempotency_keys').catch(() => []);
+    for (const idem of idemRows) {
+      const ok = await this.dbAdapter.deleteById('email_idempotency_keys', idem.id).catch(() => false);
+      if (ok) idempotencyKeysRemoved++;
+    }
+    this.idempotencyStore.clear();
+
+    const batchRows = await this.dbAdapter.select<CampaignBatchRecord>('email_campaign_batches').catch(() => []);
+    for (const b of batchRows) {
+      const ok = await this.dbAdapter.deleteById('email_campaign_batches', b.id).catch(() => false);
+      if (ok) batchesRemoved++;
+    }
+    this.batches.clear();
+
+    return { draftsRemoved, dispatchesRemoved, idempotencyKeysRemoved, batchesRemoved };
   }
 }
 

@@ -128,6 +128,39 @@ export class EmailThreadService {
     return removed;
   }
 
+  public async clearAllForReset(preservedThreadIds: Set<string> = new Set()): Promise<{
+    threadsRemoved: number;
+    crmLinksRemoved: number;
+  }> {
+    await this.initialize();
+    const persistedThreads = await this.dbAdapter.select<EmailThread>('email_threads').catch(() => []);
+    const allThreadIds = new Set<string>([
+      ...Array.from(this.threads.keys()),
+      ...persistedThreads.map((t) => t.id),
+    ]);
+
+    const toDelete = Array.from(allThreadIds).filter((id) => !preservedThreadIds.has(id));
+    let crmLinksRemoved = 0;
+
+    const allLinks = await this.dbAdapter.select<PersistentCrmLink>('email_crm_links').catch(() => []);
+    for (const l of allLinks) {
+      if (!preservedThreadIds.has(l.threadId)) {
+        const deleted = await this.dbAdapter.deleteById('email_crm_links', l.id).catch(() => false);
+        if (deleted) crmLinksRemoved++;
+      }
+    }
+    for (const tid of toDelete) {
+      const links = this.crmLinks.get(tid) || [];
+      for (const l of links) {
+        await this.dbAdapter.deleteById('email_crm_links', l.id).catch(() => {});
+      }
+      this.crmLinks.delete(tid);
+    }
+
+    const threadsRemoved = await this.removeThreadsByIds(toDelete);
+    return { threadsRemoved, crmLinksRemoved };
+  }
+
   public getThread(threadId: string): EmailThread | undefined {
     return this.threads.get(threadId);
   }

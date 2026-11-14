@@ -305,6 +305,29 @@ export class EmailApprovalService {
       (a, b) => new Date(b.reviewedAt || 0).getTime() - new Date(a.reviewedAt || 0).getTime()
     );
   }
+
+  public async clearAllForReset(preservedDraftIds: Set<string> = new Set()): Promise<number> {
+    await this.initialize();
+    const persisted = await this.dbAdapter.select<EmailApprovalRecord>('email_outbound_approvals').catch(() => []);
+    const allIds = new Set<string>();
+    for (const r of persisted) {
+      if (!preservedDraftIds.has(r.draftId)) {
+        allIds.add(r.id);
+      }
+    }
+    for (const [k, r] of this.approvals.entries()) {
+      if (!preservedDraftIds.has(r.draftId)) {
+        allIds.add(r.id);
+        this.approvals.delete(k);
+      }
+    }
+    let deleted = 0;
+    for (const id of allIds) {
+      const ok = await this.dbAdapter.deleteById('email_outbound_approvals', id).catch(() => false);
+      if (ok) deleted++;
+    }
+    return deleted;
+  }
 }
 
 export const emailApprovalService = EmailApprovalService.getInstance();

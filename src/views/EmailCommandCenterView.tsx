@@ -206,13 +206,15 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
   // Compose Modal State
   const [isComposeOpen, setIsComposeOpen] = useState(false);
-  const [composeMailbox, setComposeMailbox] = useState<string>(mailboxes[0]?.email || 'info@phumulani.org');
+  const [composeMailbox, setComposeMailbox] = useState<string>(mailboxes[0]?.email || '');
   const [composeCategory, setComposeCategory] = useState<string>('23_general_inquiries');
   const [composeRecipient, setComposeRecipient] = useState<string>('');
   const [composeSubject, setComposeSubject] = useState<string>('');
   const [composeBody, setComposeBody] = useState<string>('');
   const [composeTone, setComposeTone] = useState<ResponseToneStyle>('professional');
   const [isSavingComposeDraft, setIsSavingComposeDraft] = useState(false);
+  const [openWizardSignal, setOpenWizardSignal] = useState<number>(0);
+  const [serverConnectionsCount, setServerConnectionsCount] = useState<number>(0);
 
   // Action Notice Banner
   const [actionNotice, setActionNotice] = useState<{ type: 'success' | 'warning' | 'info'; message: string } | null>(null);
@@ -360,7 +362,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
   const refreshEnterprisePersistence = async () => {
     try {
-      const [inboxRes, draftsRes, finRes, holdsRes, permsRes, ledgerRes, opsRes, aiRes] = await Promise.all([
+      const [inboxRes, draftsRes, finRes, holdsRes, permsRes, ledgerRes, opsRes, aiRes, connRes] = await Promise.all([
         phumulaniApiClient.getUnifiedInbox({ page: 1, pageSize: 25 }).catch(() => null),
         phumulaniApiClient.getPersistentDrafts().catch(() => null),
         phumulaniApiClient.getFinancialDocs().catch(() => null),
@@ -369,6 +371,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         phumulaniApiClient.getAuditLedger(40).catch(() => null),
         phumulaniApiClient.getOperationsMonitoring().catch(() => null),
         phumulaniApiClient.getEmailAiTelemetry().catch(() => null),
+        authFetch('/api/admin/email/connectors').then((r) => r.json()).catch(() => null),
       ]);
       if (inboxRes) setUnifiedInboxStats({ total: inboxRes.total, folderCounts: inboxRes.folderCounts });
       if (draftsRes?.drafts) setPersistentDrafts(draftsRes.drafts);
@@ -378,6 +381,9 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
       if (ledgerRes) setAuditLedgerState(ledgerRes);
       if (opsRes?.monitoring) setOpsMonitoring(opsRes.monitoring);
       if (aiRes) setAiTelemetryState(aiRes);
+      if (connRes?.success && Array.isArray(connRes.connections)) {
+        setServerConnectionsCount(connRes.connections.length);
+      }
     } catch {
       // Gracefully ignore uninitialized or 401 before login
     }
@@ -692,6 +698,31 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
   const analytics = useMemo(() => {
     return EmailEnterpriseService.calculateAnalytics(threads, autoRules, donors, pipeline, grants, followUps);
   }, [threads, autoRules, donors, pipeline, grants, followUps]);
+
+  const effectiveConnectedMailboxesCount = Math.max(mailboxes.length, serverConnectionsCount);
+  const inboxCount = useMemo(
+    () => threads.filter((t) => t.folder !== 'ARCHIVE' && t.folder !== 'SENT' && !t.isArchived).length,
+    [threads]
+  );
+  const draftsCount = useMemo(
+    () => threads.filter((t) => Boolean(t.draft)).length + persistentDrafts.filter((d) => d.status === 'DRAFT' || d.status === 'PENDING_APPROVAL').length,
+    [threads, persistentDrafts]
+  );
+  const sentCount = useMemo(
+    () => threads.filter((t) => t.folder === 'SENT' || t.messages.some((m) => m.direction === 'outbound')).length,
+    [threads]
+  );
+  const pendingFollowUpsCount = useMemo(
+    () => followUps.filter((f) => f.status !== 'completed').length,
+    [followUps]
+  );
+  const autoSyncEnabled = effectiveConnectedMailboxesCount > 0;
+  const autoSendingEnabled = false;
+
+  const openConnectEmailWizard = () => {
+    setActiveTab('universal_connectors');
+    setOpenWizardSignal((n) => n + 1);
+  };
 
   // Handle Sync Mailbox
   const handleSyncMailbox = async (mbxId: string) => {
@@ -1575,6 +1606,13 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
   // Handle Save Persistent Draft from Composer
   const handleSaveComposeDraft = async () => {
+    if (effectiveConnectedMailboxesCount === 0) {
+      setActionNotice({
+        type: 'warning',
+        message: 'Email operations are disabled until at least one organizational email account is connected.',
+      });
+      return;
+    }
     if (!composeRecipient || !composeSubject || !composeBody) {
       setActionNotice({ type: 'warning', message: 'Please fill in recipient, subject, and message body to save a persistent draft.' });
       return;
@@ -1618,6 +1656,13 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
   // Handle Compose Send
   const handleSendComposedEmail = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (effectiveConnectedMailboxesCount === 0) {
+      setActionNotice({
+        type: 'warning',
+        message: 'Email operations are disabled until at least one organizational email account is connected.',
+      });
+      return;
+    }
     if (!composeRecipient || !composeSubject || !composeBody) {
       setActionNotice({ type: 'warning', message: 'Please fill in recipient, subject, and message body.' });
       return;
@@ -1738,17 +1783,27 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         </div>
       )}
 
-      {/* 2. COMPACT SUMMARY STRIP (Replaces 12-card grid) */}
+      {/* 2. COMPACT SUMMARY STRIP (Block 5 Required Operational Counters) */}
       <EmailSummaryStrip
+        connectedMailboxesCount={effectiveConnectedMailboxesCount}
+        inboxCount={inboxCount}
         unreadCount={analytics.unreadCount}
         priorityCount={analytics.criticalP0Count + analytics.urgentP1Count}
+        draftsCount={draftsCount}
+        sentCount={sentCount}
         awaitingApprovalCount={analytics.draftsAwaitingApprovalCount}
-        followUpsCount={analytics.overdueFollowUpsCount}
+        followUpsCount={pendingFollowUpsCount}
+        autoSyncEnabled={autoSyncEnabled}
+        autoSendingEnabled={autoSendingEnabled}
         activeFilter={quickFilter}
         onFilterClick={(filter) => {
           if (filter === 'priority') {
             setActiveTab('priority');
             setQuickFilter('p0');
+          } else if (filter === 'drafts') {
+            setActiveTab('drafts');
+          } else if (filter === 'sent') {
+            setActiveTab('sent');
           } else if (filter === 'awaiting_approval') {
             setActiveTab('approvals');
             setQuickFilter('awaiting_approval');
@@ -1790,7 +1845,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
           />
         </div>
 
-        {/* WORKSPACE CONTENT: INBOX PANELS (AREAS C & D) */}
+        {/* WORKSPACE CONTENT: INBOX PANELS (AREAS C & D) OR CLEAN EMPTY STATE */}
         {(activeTab === 'all_mailboxes' ||
           activeTab === 'conversations' ||
           activeTab === 'historical' ||
@@ -1806,6 +1861,28 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
           activeTab === 'executive' ||
           activeTab === 'sent' ||
           activeTab === 'archived') && (
+          effectiveConnectedMailboxesCount === 0 && filteredThreads.length === 0 ? (
+            <div
+              data-testid="email-clean-empty-state"
+              className="flex-1 bg-white border border-slate-200 rounded-2xl flex flex-col items-center justify-center p-8 sm:p-12 text-center shadow-2xs"
+            >
+              <div className="w-16 h-16 rounded-2xl bg-teal-50 border border-teal-200/80 flex items-center justify-center mb-5 text-[#104F57]">
+                <Mail className="w-8 h-8 stroke-[1.5]" />
+              </div>
+              <h2 className="text-xl font-bold text-slate-900">No Email Accounts Connected</h2>
+              <p className="text-sm text-slate-600 max-w-md mt-2 leading-relaxed">
+                Your Email Command Center is ready. Connect and authorize your organizational email accounts to begin receiving and managing messages.
+              </p>
+              <button
+                type="button"
+                onClick={openConnectEmailWizard}
+                className="mt-6 px-5 py-2.5 bg-[#104F57] hover:bg-teal-900 text-white text-xs sm:text-sm font-bold rounded-xl shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Connect Email Account</span>
+              </button>
+            </div>
+          ) : (
           <div className="flex-1 flex flex-col md:flex-row gap-3 md:gap-4 overflow-hidden min-w-0">
             {/* AREA C: MESSAGE LIST */}
             <div
@@ -1832,7 +1909,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 selectedMailboxId={selectedMailboxId}
                 onMailboxChange={setSelectedMailboxId}
                 onOpenFolders={() => setMobileScreen('folders')}
-                onOpenManageAccounts={() => setActiveTab('universal_connectors')}
+                onOpenManageAccounts={openConnectEmailWizard}
               />
             </div>
 
@@ -1845,6 +1922,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               <EmailReadingPane
                 thread={selectedThread || null}
                 currentUser={currentUser}
+                hasConnectedMailboxes={effectiveConnectedMailboxesCount > 0}
+                onOpenConnectWizard={openConnectEmailWizard}
                 onBackToList={() => setMobileScreen('list')}
                 onReply={handleReplyToThread}
                 onForward={handleForwardThread}
@@ -1916,6 +1995,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               />
             </div>
           </div>
+          )
         )}
 
         {/* ========================================================================= */}
@@ -2282,113 +2362,79 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               </div>
             </div>
 
-            {/* Departmental Message Routing Matrix */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-2">
-                <div>
-                  <h4 className="text-sm font-bold text-slate-900">
-                    Institutional Message Routing & SLA Architecture
-                  </h4>
-                  <p className="text-xs text-slate-500">
-                    Deterministic category routing rules across the 5 organizational mailboxes.
-                  </p>
+            {/* Departmental Message Routing Matrix — Only displayed when organizational mailboxes are connected */}
+            {mailboxes.length === 0 ? (
+              <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center space-y-3">
+                <div className="font-bold text-slate-900 text-base">No Email Accounts Connected</div>
+                <p className="text-xs text-slate-600 max-w-md mx-auto">
+                  Your Email Command Center is ready. Connect and authorize your organizational email accounts to begin receiving and managing messages.
+                </p>
+                <button
+                  type="button"
+                  onClick={openConnectEmailWizard}
+                  className="px-4 py-2 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold shadow-xs cursor-pointer"
+                >
+                  Connect Email Account
+                </button>
+              </div>
+            ) : (
+              <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
+                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+                  <div>
+                    <h4 className="text-sm font-bold text-slate-900">
+                      Connected Mailbox Routing & SLA Summary
+                    </h4>
+                    <p className="text-xs text-slate-500">
+                      Active category routing rules across connected organizational mailboxes.
+                    </p>
+                  </div>
+                  <span className="text-[11px] font-mono font-bold bg-teal-50 text-teal-900 border border-teal-200 px-2 py-0.5 rounded-full">
+                    {mailboxes.length} Connected Mailboxes
+                  </span>
                 </div>
-                <span className="text-[11px] font-mono font-bold bg-teal-50 text-teal-900 border border-teal-200 px-2 py-0.5 rounded-full">
-                  5 Mailbox Routing Rules
-                </span>
-              </div>
 
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 text-slate-500 uppercase font-mono text-[10px]">
-                    <tr>
-                      <th className="p-2.5">Mailbox</th>
-                      <th className="p-2.5">Department</th>
-                      <th className="p-2.5">Lead Staff</th>
-                      <th className="p-2.5">Target Categories</th>
-                      <th className="p-2.5">Default Priority</th>
-                      <th className="p-2.5">Provider Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 text-xs">
-                    {[
-                      {
-                        email: 'info@phumulani.org',
-                        dept: 'DEPT-OPS / Community',
-                        lead: 'Front Desk & Sister Miriam K.',
-                        cats: 'Safeguarding (01), Community Programs (15, 16), General (23)',
-                        priority: 'P0 / P3',
-                        priorityClass: 'bg-rose-100 text-rose-800',
-                      },
-                      {
-                        email: 'donations@phumulani.org',
-                        dept: 'DEPT-DEV / Stewardship',
-                        lead: 'David Mwangi, CPA',
-                        cats: 'Major Donors (04), Individual Gifts (05), Campaigns (10)',
-                        priority: 'P2 / P3',
-                        priorityClass: 'bg-amber-100 text-amber-800',
-                      },
-                      {
-                        email: 'executive@phumulani.org',
-                        dept: 'DEPT-EXEC / Leadership',
-                        lead: 'Comfort Dondo',
-                        cats: 'Executive (02), Board (03), Legal (20), Media (18)',
-                        priority: 'P1',
-                        priorityClass: 'bg-orange-100 text-orange-800',
-                      },
-                      {
-                        email: 'grants@phumulani.org',
-                        dept: 'DEPT-PROG / Institutional',
-                        lead: 'Dr. Elena Rostova',
-                        cats: 'Foundation Grants (07), Government Funding (08)',
-                        priority: 'P1',
-                        priorityClass: 'bg-orange-100 text-orange-800',
-                      },
-                      {
-                        email: 'partnerships@phumulani.org',
-                        dept: 'DEPT-DEV / Corporate CSR',
-                        lead: 'Lead Staff',
-                        cats: 'Corporate Sponsorships (06), CSR (12), Alliances (11)',
-                        priority: 'P2',
-                        priorityClass: 'bg-amber-100 text-amber-800',
-                      },
-                    ].map((row) => {
-                      const matched = mailboxes.find((m) => m.email === row.email);
-                      const liveAuth = matched?.authStatus === 'authorized';
-                      const rawState = matched?.connectionState || matched?.status || 'NOT_CONFIGURED';
-                      const label =
-                        rawState === 'DISCONNECTED' || rawState === 'disconnected'
-                          ? 'DISCONNECTED'
-                          : liveAuth
-                          ? 'CONNECTED (LIVE OAUTH)'
-                          : `${String(rawState).toUpperCase()} (STAGED)`;
-                      const badgeCls =
-                        rawState === 'DISCONNECTED' || rawState === 'disconnected'
-                          ? 'text-slate-600'
-                          : liveAuth
-                          ? 'text-emerald-700'
-                          : 'text-amber-800';
-                      return (
-                        <tr key={row.email} className="hover:bg-slate-50/50">
-                          <td className="p-2.5 font-mono font-bold text-slate-900">{row.email}</td>
-                          <td className="p-2.5 font-semibold text-slate-700">{row.dept}</td>
-                          <td className="p-2.5 text-slate-600">{row.lead}</td>
-                          <td className="p-2.5 text-slate-600">{row.cats}</td>
-                          <td className="p-2.5">
-                            <span className={`px-2 py-0.5 rounded-full font-bold font-mono text-[10px] ${row.priorityClass}`}>
-                              {row.priority}
-                            </span>
-                          </td>
-                          <td className="p-2.5">
-                            <span className={`${badgeCls} font-semibold font-mono text-[11px]`}>{label}</span>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-slate-50 text-slate-500 uppercase font-mono text-[10px]">
+                      <tr>
+                        <th className="p-2.5">Mailbox</th>
+                        <th className="p-2.5">Department</th>
+                        <th className="p-2.5">Provider</th>
+                        <th className="p-2.5">Provider Status</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-slate-100 text-xs">
+                      {mailboxes.map((matched) => {
+                        const liveAuth = matched?.authStatus === 'authorized';
+                        const rawState = matched?.connectionState || matched?.status || 'AUTHORIZATION_REQUIRED';
+                        const label =
+                          rawState === 'DISCONNECTED' || rawState === 'disconnected'
+                            ? 'DISCONNECTED'
+                            : liveAuth
+                            ? 'CONNECTED (LIVE OAUTH)'
+                            : String(rawState).toUpperCase();
+                        const badgeCls =
+                          rawState === 'DISCONNECTED' || rawState === 'disconnected'
+                            ? 'text-slate-600'
+                            : liveAuth
+                            ? 'text-emerald-700'
+                            : 'text-amber-800';
+                        return (
+                          <tr key={matched.id} className="hover:bg-slate-50/50">
+                            <td className="p-2.5 font-mono font-bold text-slate-900">{matched.email}</td>
+                            <td className="p-2.5 font-semibold text-slate-700">{matched.department}</td>
+                            <td className="p-2.5 text-slate-600">{matched.provider}</td>
+                            <td className="p-2.5">
+                              <span className={`${badgeCls} font-semibold font-mono text-[11px]`}>{label}</span>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 
@@ -3867,6 +3913,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
           <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5">
             <UniversalEmailConnections
               selectedMailboxId={selectedMailboxId}
+              openWizardSignal={openWizardSignal}
+              onConnectionsUpdated={(list) => setServerConnectionsCount(list.length)}
               onSelectActiveMailbox={(mailboxEmail, mailboxId) => {
                 setSelectedMailboxId(mailboxId);
                 setActiveTab('all_mailboxes');
@@ -6254,6 +6302,26 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             </div>
 
             <form onSubmit={handleSendComposedEmail} className="p-5 space-y-3 text-xs flex-1 min-h-0 overflow-y-auto">
+              {effectiveConnectedMailboxesCount === 0 && (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-amber-950 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <div>
+                    <div className="font-bold">No Email Accounts Connected</div>
+                    <p className="text-[11px] text-amber-900 mt-0.5">
+                      Email composition, draft saving, and outbound dispatch are disabled until you connect an organizational email account.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsComposeOpen(false);
+                      openConnectEmailWizard();
+                    }}
+                    className="px-3 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-lg font-bold shrink-0 cursor-pointer"
+                  >
+                    Connect Email Account
+                  </button>
+                </div>
+              )}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-[11px] font-bold text-slate-600 mb-1 font-heading">
@@ -6262,22 +6330,18 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   <select
                     value={composeMailbox}
                     onChange={(e) => setComposeMailbox(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-mono text-xs font-bold text-slate-800"
+                    disabled={effectiveConnectedMailboxesCount === 0}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-mono text-xs font-bold text-slate-800 disabled:opacity-60"
                   >
-                    {(mailboxes.length > 0
-                      ? mailboxes.map((m) => m.email)
-                      : [
-                          'info@phumulani.org',
-                          'donations@phumulani.org',
-                          'grants@phumulani.org',
-                          'executive@phumulani.org',
-                          'partnerships@phumulani.org',
-                        ]
-                    ).map((addr) => (
-                      <option key={addr} value={addr}>
-                        {addr}
-                      </option>
-                    ))}
+                    {mailboxes.length === 0 ? (
+                      <option value="">No email accounts connected</option>
+                    ) : (
+                      mailboxes.map((m) => (
+                        <option key={m.email} value={m.email}>
+                          {m.email}
+                        </option>
+                      ))
+                    )}
                   </select>
                 </div>
 
@@ -6350,14 +6414,15 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   <button
                     type="button"
                     onClick={handleSaveComposeDraft}
-                    disabled={isSavingComposeDraft}
-                    className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 rounded-xl font-bold cursor-pointer disabled:opacity-50"
+                    disabled={isSavingComposeDraft || effectiveConnectedMailboxesCount === 0}
+                    className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 rounded-xl font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSavingComposeDraft ? 'Saving Draft...' : 'Save Persistent Draft'}
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                    disabled={effectiveConnectedMailboxesCount === 0}
+                    className="px-4 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>Stage Outbound Dispatch</span>

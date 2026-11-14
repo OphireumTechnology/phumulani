@@ -56,9 +56,12 @@ export async function runPhases63To75Verification(): Promise<{
 
   // Ensure latest migrations including Phase 64–74 schema are applied cleanly
   await DatabaseMigrationService.runPendingMigrations();
-
-  // CAT-01: 5 Canonical Mailboxes + Fail-Closed Without Credentials + Domain Autodiscovery
+  const startedWithEmptyConnections = connectorRegistry.listConnections().length === 0;
   try {
+
+  // CAT-01: Clean Empty Boot + Test Canonical Mailboxes + Fail-Closed Without Credentials + Domain Autodiscovery
+  try {
+    connectorRegistry.seedCanonicalConnectionsForTesting();
     const connections = connectorRegistry.listConnections();
     const canonicalEmails = [
       'info@phumulani.org',
@@ -91,7 +94,7 @@ export async function runPhases63To75Verification(): Promise<{
       'TEST-P64-01',
       '1. Mailboxes, Autodiscovery, SSRF & Fail-Closed Connectors',
       passed,
-      `5 canonical mailboxes present=${allFivePresent}, fail-closed sync=${failClosedSync.success}, SSRF blocked=${ssrfBlocked}`
+      `Clean boot=${startedWithEmptyConnections}, 5 canonical test mailboxes seeded=${allFivePresent}, fail-closed sync=${failClosedSync.success}, SSRF blocked=${ssrfBlocked}`
     );
   } catch (err: any) {
     record('TEST-P64-01', '1. Mailboxes & Fail-Closed Connectors', false, err.message);
@@ -1168,6 +1171,16 @@ export async function runPhases63To75Verification(): Promise<{
     );
   } catch (err: any) {
     record('TEST-P75-20', '20. Frontend Command Center & Truthful UI', false, err.message);
+  }
+
+  } finally {
+    if (startedWithEmptyConnections) {
+      connectorRegistry.clearAllConnectionsAndPersistReset({
+        version: 'phase79_1_clean_email_v1',
+        actorId: 'verify-phases63-75',
+        reason: 'Restore clean 0-mailbox state after test',
+      });
+    }
   }
 
   const passedCount = results.filter((r) => r.passed).length;

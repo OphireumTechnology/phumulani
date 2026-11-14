@@ -13,22 +13,40 @@ import {
   Sparkles,
   ChevronDown,
   ChevronUp,
+  Mail,
+  FileEdit,
+  Send,
+  RefreshCw,
 } from 'lucide-react';
 
 interface EmailSummaryStripProps {
+  connectedMailboxesCount?: number;
+  inboxCount?: number;
   unreadCount: number;
   priorityCount: number;
+  draftsCount?: number;
+  sentCount?: number;
   awaitingApprovalCount: number;
   followUpsCount: number;
-  onFilterClick: (filter: 'all' | 'unread' | 'priority' | 'awaiting_approval' | 'follow_ups') => void;
+  autoSyncEnabled?: boolean;
+  autoSendingEnabled?: boolean;
+  onFilterClick: (
+    filter: 'all' | 'unread' | 'priority' | 'drafts' | 'sent' | 'awaiting_approval' | 'follow_ups'
+  ) => void;
   activeFilter?: string;
 }
 
 export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
+  connectedMailboxesCount = 0,
+  inboxCount = 0,
   unreadCount,
   priorityCount,
+  draftsCount = 0,
+  sentCount = 0,
   awaitingApprovalCount,
   followUpsCount,
+  autoSyncEnabled = false,
+  autoSendingEnabled = false,
   onFilterClick,
   activeFilter,
 }) => {
@@ -52,17 +70,49 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
   };
 
   return (
-    <div className="bg-slate-50 border-b border-slate-200/90 text-xs px-3 sm:px-4 py-1.5 transition-all">
-      <div className="flex items-center justify-between gap-2">
+    <div
+      className="bg-slate-50 border-b border-slate-200/90 text-xs px-3 sm:px-4 py-2 transition-all"
+      data-testid="email-summary-strip"
+    >
+      <div className="flex items-start sm:items-center justify-between gap-2">
         {/* Metric Badges Strip */}
         {!isCollapsed ? (
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-4 overflow-x-auto py-0.5">
-            <span className="text-[10px] uppercase font-bold tracking-wider text-slate-400 hidden sm:inline shrink-0">
-              Overview:
-            </span>
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2.5 py-0.5 flex-1">
+            {/* Connected Mailboxes */}
+            <div
+              data-testid="metric-connected-mailboxes"
+              className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white border border-slate-200/90 text-slate-700 font-medium"
+            >
+              <Mail className="w-3.5 h-3.5 text-teal-700" />
+              <span>Connected mailboxes</span>
+              <span className="font-mono tabular-nums font-bold text-slate-900 text-[11px]">
+                {connectedMailboxesCount}
+              </span>
+            </div>
+
+            {/* Inbox */}
+            <button
+              type="button"
+              data-testid="metric-inbox"
+              onClick={() => onFilterClick('all')}
+              className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-xs cursor-pointer ${
+                activeFilter === 'all'
+                  ? 'bg-teal-100 text-teal-900 font-bold border border-teal-200'
+                  : 'text-slate-700 hover:bg-slate-200/60 font-medium'
+              }`}
+              title="View Inbox"
+            >
+              <Inbox className="w-3.5 h-3.5 text-teal-700" />
+              <span>Inbox</span>
+              <span className="font-mono tabular-nums font-bold text-slate-900 bg-white px-1.5 py-0.2 rounded border border-slate-200/80 text-[11px]">
+                {inboxCount}
+              </span>
+            </button>
 
             {/* Unread */}
             <button
+              type="button"
+              data-testid="metric-unread"
               onClick={() => onFilterClick('unread')}
               className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-xs cursor-pointer ${
                 activeFilter === 'unread'
@@ -71,7 +121,6 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
               }`}
               title="Filter by unread messages"
             >
-              <Inbox className="w-3.5 h-3.5 text-blue-600" />
               <span>Unread</span>
               <span className="font-mono tabular-nums font-bold text-slate-900 bg-white px-1.5 py-0.2 rounded border border-slate-200/80 text-[11px]">
                 {unreadCount}
@@ -80,6 +129,8 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
 
             {/* Priority P0/P1 */}
             <button
+              type="button"
+              data-testid="metric-priority"
               onClick={() => onFilterClick('priority')}
               className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-xs cursor-pointer ${
                 activeFilter === 'priority'
@@ -95,8 +146,40 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
               </span>
             </button>
 
+            {/* Drafts */}
+            <button
+              type="button"
+              data-testid="metric-drafts"
+              onClick={() => onFilterClick('drafts')}
+              className="flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-xs cursor-pointer text-slate-700 hover:bg-slate-200/60 font-medium"
+              title="View drafts"
+            >
+              <FileEdit className="w-3.5 h-3.5 text-slate-600" />
+              <span>Drafts</span>
+              <span className="font-mono tabular-nums font-bold text-slate-900 bg-white px-1.5 py-0.2 rounded border border-slate-200/80 text-[11px]">
+                {draftsCount}
+              </span>
+            </button>
+
+            {/* Sent */}
+            <button
+              type="button"
+              data-testid="metric-sent"
+              onClick={() => onFilterClick('sent')}
+              className="flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-xs cursor-pointer text-slate-700 hover:bg-slate-200/60 font-medium"
+              title="View sent messages"
+            >
+              <Send className="w-3.5 h-3.5 text-slate-600" />
+              <span>Sent</span>
+              <span className="font-mono tabular-nums font-bold text-slate-900 bg-white px-1.5 py-0.2 rounded border border-slate-200/80 text-[11px]">
+                {sentCount}
+              </span>
+            </button>
+
             {/* Awaiting Approval */}
             <button
+              type="button"
+              data-testid="metric-awaiting-approval"
               onClick={() => onFilterClick('awaiting_approval')}
               className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-xs cursor-pointer ${
                 activeFilter === 'awaiting_approval'
@@ -106,7 +189,7 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
               title="Filter by pending human reviews"
             >
               <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-              <span>Awaiting Approval</span>
+              <span>Awaiting approval</span>
               <span className="font-mono tabular-nums font-bold text-amber-800 bg-white px-1.5 py-0.2 rounded border border-amber-200/80 text-[11px]">
                 {awaitingApprovalCount}
               </span>
@@ -114,6 +197,8 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
 
             {/* Follow-ups */}
             <button
+              type="button"
+              data-testid="metric-follow-ups"
               onClick={() => onFilterClick('follow_ups')}
               className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-xs cursor-pointer ${
                 activeFilter === 'follow_ups'
@@ -128,21 +213,49 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
                 {followUpsCount}
               </span>
             </button>
+
+            {/* Operational Lock Statuses */}
+            <div className="flex flex-wrap items-center gap-1.5 sm:ml-auto">
+              <span
+                data-testid="status-active-sync"
+                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] font-medium ${
+                  autoSyncEnabled
+                    ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                    : 'bg-white text-slate-600 border-slate-200'
+                }`}
+              >
+                <RefreshCw className="w-3 h-3" />
+                <span>Active email synchronization:</span>
+                <strong className="font-semibold">{autoSyncEnabled ? 'Enabled' : 'Disabled'}</strong>
+              </span>
+              <span
+                data-testid="status-auto-sending"
+                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] font-medium ${
+                  autoSendingEnabled
+                    ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                    : 'bg-white text-slate-600 border-slate-200'
+                }`}
+              >
+                <span>Automatic email sending:</span>
+                <strong className="font-semibold">{autoSendingEnabled ? 'Enabled' : 'Disabled'}</strong>
+              </span>
+            </div>
           </div>
         ) : (
           <div className="flex items-center gap-2 text-slate-500 text-xs">
             <span className="font-medium">Metrics Summary</span>
             <span className="text-slate-300">·</span>
-            <span className="font-mono text-[11px]">
-              {unreadCount} unread · {priorityCount} priority · {awaitingApprovalCount} approvals
+            <span className="font-mono text-[11px] tabular-nums">
+              {connectedMailboxesCount} mailboxes · {inboxCount} inbox · {unreadCount} unread · {priorityCount} priority · {awaitingApprovalCount} approvals
             </span>
           </div>
         )}
 
         {/* Expand / Collapse Control */}
         <button
+          type="button"
           onClick={toggleCollapsed}
-          className="text-slate-400 hover:text-slate-700 text-[11px] flex items-center gap-1 px-1.5 py-0.5 hover:bg-slate-200/50 rounded cursor-pointer shrink-0 ml-auto"
+          className="text-slate-400 hover:text-slate-700 text-[11px] flex items-center gap-1 px-1.5 py-0.5 hover:bg-slate-200/50 rounded cursor-pointer shrink-0 ml-2"
           title={isCollapsed ? 'Expand metric strip' : 'Collapse metric strip'}
           aria-expanded={!isCollapsed}
         >

@@ -130,6 +130,9 @@ async function run(): Promise<void> {
       `valid=${schemaIntegrity.valid}, verifiedTables=${schemaIntegrity.verifiedTables.length}, missing=${schemaIntegrity.missingTables.length}`
     );
 
+    // Seed isolated test connections inside tmpRuntimeDir for Blocks 79.2–79.4 OAuth/dispatch verification
+    connectorRegistry.seedCanonicalConnectionsForTesting();
+
     // =========================================================================
     // BLOCK 79.2 — OAUTH REVOKED GRANT DETECTION & VAULT PURGE
     // =========================================================================

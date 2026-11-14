@@ -3079,6 +3079,29 @@ export class GoogleWorkspaceAdapter {
       this.syncAuditLogs.length = 200;
     }
   }
+
+  /**
+   * Phase 79.1: Clears tokens, OAuth states, sync cursors, checkpoints, delivery logs,
+   * and operational mailbox list on clean installation reset.
+   */
+  public resetOperationalStateForCleanInstall(): void {
+    this.mailboxes = [];
+    this.secureTokenVault.clear();
+    this.activeOAuthStates.clear();
+    this.syncCursors.clear();
+    this.syncCheckpoints.clear();
+    this.syncAuditLogs = [];
+    this.dispatchedIdempotencyKeys.clear();
+    this.deliveryStates.clear();
+    this.recoverySnapshots.clear();
+    this.evidenceRegistry = [];
+    this.approvedPilotRecipients.clear();
+    this.pilotEnabled = false;
+    this.liveSendingEnabled = false;
+    this.activePilotApproval = null;
+    this.config.status = 'AUTHORIZATION_REQUIRED';
+    this.config.lastCheckedAt = new Date().toISOString();
+  }
 }
 
 export const googleWorkspaceAdapter = GoogleWorkspaceAdapter.getInstance();

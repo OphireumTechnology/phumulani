@@ -201,17 +201,17 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
           mailboxes.length === 0 ? (
             <div className="p-8 text-center text-slate-500 text-xs flex flex-col items-center justify-center h-full">
               <Inbox className="w-10 h-10 mx-auto mb-3 text-slate-400" />
-              <p className="font-bold text-slate-800 text-sm">No email accounts connected.</p>
-              <p className="text-xs text-slate-600 mt-1 max-w-xs text-center">
-                Connect an email account to start managing your messages.
+              <p className="font-bold text-slate-800 text-sm">No Email Accounts Connected</p>
+              <p className="text-xs text-slate-600 mt-1.5 max-w-xs text-center leading-relaxed">
+                Your Email Command Center is ready. Connect and authorize your organizational email accounts to begin receiving and managing messages.
               </p>
               {onOpenManageAccounts && (
                 <button
                   onClick={onOpenManageAccounts}
-                  className="mt-4 px-3.5 py-1.5 text-xs font-semibold bg-[#104F57] hover:bg-teal-900 text-white rounded-lg transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
+                  className="mt-4 px-3.5 py-2 text-xs font-semibold bg-[#104F57] hover:bg-teal-900 text-white rounded-lg transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
                 >
                   <Inbox className="w-3.5 h-3.5" />
-                  <span>Connect an Email Account</span>
+                  <span>Connect Email Account</span>
                 </button>
               )}
             </div>

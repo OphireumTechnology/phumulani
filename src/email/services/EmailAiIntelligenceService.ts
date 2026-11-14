@@ -649,6 +649,9 @@ ${injectionWrap.wrapped}`;
     latencyMs: number;
   }> {
     await this.initialize();
+    if (!params.subject?.trim() && !params.incomingBody?.trim()) {
+      throw new Error('EMAIL_OPERATION_DISABLED: AI reply generation is disabled for nonexistent or empty email messages.');
+    }
     const t0 = Date.now();
     const classification = await this.classifyEmail({
       subject: params.subject,

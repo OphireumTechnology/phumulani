@@ -81,12 +81,16 @@ interface UniversalEmailConnectionsProps {
   selectedMailboxId?: string;
   onSelectActiveMailbox?: (mailboxEmail: string, mailboxId: string) => void;
   onClose?: () => void;
+  openWizardSignal?: number;
+  onConnectionsUpdated?: (connections: EmailConnectionRecord[]) => void;
 }
 
 export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps> = ({
   selectedMailboxId,
   onSelectActiveMailbox,
   onClose,
+  openWizardSignal = 0,
+  onConnectionsUpdated,
 }) => {
   const [connections, setConnections] = useState<EmailConnectionRecord[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -141,13 +145,19 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
     missingEnvVars?: string[];
   } | null>(null);
 
-  // Admin Safe Demo Data Cleanup State (Block 76.2)
+  // Admin Safe Demo Data Cleanup State (Block 76.2) & Complete Reset State (Phase 79.1)
   const [showCleanupPanel, setShowCleanupPanel] = useState<boolean>(false);
   const [cleanupDryRun, setCleanupDryRun] = useState<any | null>(null);
   const [cleanupLoading, setCleanupLoading] = useState<boolean>(false);
   const [cleanupApprovalChecked, setCleanupApprovalChecked] = useState<boolean>(false);
   const [cleanupExecuting, setCleanupExecuting] = useState<boolean>(false);
   const [cleanupResult, setCleanupResult] = useState<any | null>(null);
+
+  const [completeResetDryRun, setCompleteResetDryRun] = useState<any | null>(null);
+  const [completeResetLoading, setCompleteResetLoading] = useState<boolean>(false);
+  const [completeResetApprovalChecked, setCompleteResetApprovalChecked] = useState<boolean>(false);
+  const [completeResetExecuting, setCompleteResetExecuting] = useState<boolean>(false);
+  const [completeResetResult, setCompleteResetResult] = useState<any | null>(null);
 
   // Edit Permissions Modal
   const [editingPermissionsConn, setEditingPermissionsConn] = useState<EmailConnectionRecord | null>(null);
@@ -201,7 +211,9 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       const res = await authFetch('/api/admin/email/connectors');
       const data = await res.json();
       if (data.success) {
-        setConnections(data.connections || []);
+        const list = data.connections || [];
+        setConnections(list);
+        onConnectionsUpdated?.(list);
       } else {
         setError(data.error || 'Failed to fetch email connections');
       }
@@ -215,6 +227,13 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
   useEffect(() => {
     fetchConnections();
   }, []);
+
+  useEffect(() => {
+    if (openWizardSignal > 0) {
+      resetWizard();
+      setIsWizardOpen(true);
+    }
+  }, [openWizardSignal]);
 
   useEffect(() => {
     const handleOAuthPopupMessage = (event: MessageEvent) => {
@@ -310,6 +329,50 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       showToast(err instanceof Error ? err.message : 'Cleanup execution failed', 'error');
     } finally {
       setCleanupExecuting(false);
+    }
+  };
+
+  const handleRunCompleteResetDryRun = async () => {
+    setCompleteResetLoading(true);
+    setCompleteResetResult(null);
+    setCompleteResetApprovalChecked(false);
+    try {
+      const res = await phumulaniApiClient.dryRunCompleteEmailReset();
+      if (res.success && res.report) {
+        setCompleteResetDryRun(res.report);
+        showToast('Complete email reset dry-run & SHA-256 verified backup created.', 'info');
+      } else {
+        showToast('Complete reset dry-run returned no report.', 'error');
+      }
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Complete reset dry-run failed', 'error');
+    } finally {
+      setCompleteResetLoading(false);
+    }
+  };
+
+  const handleExecuteCompleteReset = async () => {
+    if (!completeResetDryRun?.approvalToken || !completeResetApprovalChecked) return;
+    setCompleteResetExecuting(true);
+    try {
+      const res = await phumulaniApiClient.executeCompleteEmailReset({
+        approvalToken: completeResetDryRun.approvalToken,
+        adminApproved: true,
+        attemptProviderRevocation: true,
+      });
+      db.executeClientCompleteEmailReset();
+      setCompleteResetResult(res);
+      setCompleteResetDryRun(null);
+      setCompleteResetApprovalChecked(false);
+      await fetchConnections();
+      showToast(
+        `Complete email reset finished: ${res.totalDeleted} records removed and ${res.vaultEntriesPurged} vaulted credentials purged.`,
+        'success'
+      );
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Complete email reset failed', 'error');
+    } finally {
+      setCompleteResetExecuting(false);
     }
   };
 
@@ -992,6 +1055,74 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               <div className="font-mono text-[11px]">Audit Ledger ID: {cleanupResult.auditLedgerId}</div>
             </div>
           )}
+
+          {/* Phase 79.1 Complete Email Data Reset & Clean Installation */}
+          <div className="pt-4 mt-4 border-t border-slate-200 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h4 className="text-sm font-bold text-slate-900">Complete Email Data Reset & Clean Installation</h4>
+                <p className="text-slate-600 mt-0.5">
+                  Removes all email messages, threads, drafts, approvals, mailbox connections, and vaulted OAuth credentials after SHA-256 backup verification. Unrelated donor CRM, grants, safeguarding, and audit ledger records are untouched.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={handleRunCompleteResetDryRun}
+                disabled={completeResetLoading}
+                className="px-3.5 py-2 bg-rose-800 hover:bg-rose-900 text-white rounded-xl font-semibold disabled:opacity-50 shrink-0"
+              >
+                {completeResetLoading ? 'Preparing Backup...' : 'Run Complete Reset Dry-Run'}
+              </button>
+            </div>
+
+            {completeResetDryRun && (
+              <div className="bg-rose-50/70 border border-rose-200 rounded-xl p-4 space-y-3">
+                <div className="font-bold text-slate-900">Complete Email Reset Dry-Run (Explicit Admin Confirmation Required)</div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <div className="bg-white p-2.5 rounded-lg border border-rose-200">
+                    <div className="text-slate-500">Operational Email Items</div>
+                    <div className="text-lg font-bold text-rose-700">{completeResetDryRun.totalOperationalItemsFound}</div>
+                  </div>
+                  <div className="bg-white p-2.5 rounded-lg border border-rose-200">
+                    <div className="text-slate-500">Mailbox Connections</div>
+                    <div className="text-lg font-bold text-rose-700">{completeResetDryRun.mailboxConnectionsToRemove?.length || 0}</div>
+                  </div>
+                  <div className="bg-white p-2.5 rounded-lg border border-emerald-200">
+                    <div className="text-slate-500">Legal Holds Preserved</div>
+                    <div className="text-lg font-bold text-emerald-700">{completeResetDryRun.legalHoldPreservedCount || 0}</div>
+                  </div>
+                </div>
+                <div className="font-mono text-[11px] text-slate-700 break-all">
+                  <strong>SHA-256 Verified Backup:</strong> {completeResetDryRun.backupFilePath} ({String(completeResetDryRun.backupChecksum || '').slice(0, 16)}…)
+                </div>
+                <label className="flex items-center gap-2 text-slate-800 font-semibold cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={completeResetApprovalChecked}
+                    onChange={(e) => setCompleteResetApprovalChecked(e.target.checked)}
+                    className="rounded border-slate-300"
+                  />
+                  <span>I confirm permanent removal of all persisted operational email data and vaulted mailbox credentials after backup verification.</span>
+                </label>
+                <button
+                  type="button"
+                  onClick={handleExecuteCompleteReset}
+                  disabled={!completeResetApprovalChecked || completeResetExecuting}
+                  className="px-4 py-2 bg-rose-700 hover:bg-rose-800 text-white rounded-xl font-bold disabled:opacity-50"
+                >
+                  {completeResetExecuting ? 'Resetting Email System...' : 'Confirm & Execute Complete Email Reset'}
+                </button>
+              </div>
+            )}
+
+            {completeResetResult && (
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-3 text-emerald-900 space-y-1">
+                <div className="font-bold">Complete Email Reset Executed ({completeResetResult.resetMarkerVersion})</div>
+                <div>Deleted records: {completeResetResult.totalDeleted} | Vault entries purged: {completeResetResult.vaultEntriesPurged} | Legal holds preserved: {completeResetResult.legalHoldPreservedCount}</div>
+                <div className="font-mono text-[11px]">Audit Ledger ID: {completeResetResult.auditLedgerId}</div>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -1024,20 +1155,20 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
           </div>
         ) : connections.length === 0 ? (
           <div className="p-12 text-center text-slate-500 text-sm space-y-3">
-            <div className="font-semibold text-slate-800 text-base">
-              No email accounts connected. Connect an email account to start managing your messages.
+            <div className="font-semibold text-slate-900 text-base">
+              No Email Accounts Connected
             </div>
-            <p className="text-xs text-slate-500 max-w-md mx-auto">
-              Add your organization&apos;s Google Workspace or Microsoft 365 mailboxes to activate real synchronized email pipelines.
+            <p className="text-xs text-slate-600 max-w-md mx-auto leading-relaxed">
+              Your Email Command Center is ready. Connect and authorize your organizational email accounts to begin receiving and managing messages.
             </p>
             <button
               onClick={() => {
                 resetWizard();
                 setIsWizardOpen(true);
               }}
-              className="px-4 py-2 bg-teal-600 text-white rounded-xl text-xs font-semibold shadow hover:bg-teal-700"
+              className="px-4 py-2 bg-[#104F57] text-white rounded-xl text-xs font-semibold shadow hover:bg-teal-900 cursor-pointer"
             >
-              Connect an Email Account
+              Connect Email Account
             </button>
           </div>
         ) : (

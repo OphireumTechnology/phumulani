@@ -55,18 +55,13 @@ test.describe('Phase 76 — Email Command Center Clean State & Discovery', () =>
     await openEmailCommandCenter(page);
 
     // Clean empty inbox (zero fabricated demo emails)
-    await expect(page.getByText(/No email accounts connected/i).first()).toBeVisible();
+    await expect(page.getByText(/No Email Accounts Connected/i).first()).toBeVisible();
     await expect(page.getByText('Sarah Jenkins').first()).toHaveCount(0);
 
-    // Navigate via CTA to Email Connections Manager
-    await page.getByRole('button', { name: /Connect an Email Account/i }).first().click();
+    // Clicking "Connect Email Account" CTA navigates to Universal Connectors & launches the Connection Wizard
+    await page.getByRole('button', { name: 'Connect Email Account', exact: true }).first().click();
     await expect(page.getByText(/Enterprise Connected Mailboxes & Provider Manager/i)).toBeVisible();
 
-    // Verify truthful BLOCKED_BY_CONFIGURATION status on unconfigured OAuth mailboxes
-    await expect(page.getByText(/BLOCKED_BY_CONFIGURATION/i).first()).toBeVisible();
-
-    // Open Connect Email Account Wizard and test email validation + DNS MX discovery
-    await page.getByRole('button', { name: /Connect Email Account/i }).first().click();
     const emailInput = page.locator('input[type="email"][placeholder*="phumulani.org"]');
     await expect(emailInput).toBeVisible();
 
@@ -96,8 +91,9 @@ test.describe('Phase 76 — Email Command Center Clean State & Discovery', () =>
 
     // Close wizard cleanly
     await page.locator('button:has-text("✕")').first().click();
+    await expect(page.getByText(/No Email Accounts Connected/i).first()).toBeVisible();
 
-    // Verify Safe Demo Cleanup dry-run workflow works without error
+    // Verify Safe Demo Cleanup & Complete Email Reset dry-run workflow works without error
     await page.getByRole('button', { name: /Safe Demo Cleanup/i }).click();
     await page.getByRole('button', { name: /Run Dry-Run & Create Backup/i }).click();
     await expect(page.getByText(/Dry-Run Inspection Report/i)).toBeVisible();
@@ -106,7 +102,7 @@ test.describe('Phase 76 — Email Command Center Clean State & Discovery', () =>
     expect(consoleErrors).toEqual([]);
   });
 
-  test('compose modal renders all 5 organizational mailboxes and saves persistent draft cleanly', async ({ page }) => {
+  test('compose modal disables outbound drafts and dispatches when 0 mailboxes are connected', async ({ page }) => {
     const pageErrors: string[] = [];
     page.on('pageerror', (err) => {
       if (!err.message.includes('WebSocket')) pageErrors.push(err.message);
@@ -120,19 +116,12 @@ test.describe('Phase 76 — Email Command Center Clean State & Discovery', () =>
     await composeBtn.click();
 
     await expect(page.getByText(/Compose Authorized Email/i)).toBeVisible();
-    await expect(page.locator('option[value="grants@phumulani.org"]')).toHaveCount(1);
-    await expect(page.locator('option[value="donations@phumulani.org"]')).toHaveCount(1);
+    await expect(page.getByText(/No Email Accounts Connected/i).first()).toBeVisible();
+    await expect(page.locator('option[value="grants@phumulani.org"]')).toHaveCount(0);
+    await expect(page.locator('option[value="donations@phumulani.org"]')).toHaveCount(0);
 
-    await page.locator('input[placeholder="recipient@organization.org"]').fill('foundation@example.org');
-    await page.locator('input[placeholder="Subject line..."]').fill('Phase 76 Persistent Draft Verification');
-    await page.locator('textarea[placeholder*="official Phumulani"]').fill('Draft verification body.');
-
-    const draftPromise = page.waitForResponse(
-      (res) => res.url().includes('/api/admin/email/drafts') && res.request().method() === 'POST'
-    );
-    await page.getByRole('button', { name: /Save Persistent Draft/i }).click();
-    const draftRes = await draftPromise;
-    expect(draftRes.status()).toBe(201);
+    await expect(page.getByRole('button', { name: /Save Persistent Draft/i })).toBeDisabled();
+    await expect(page.getByRole('button', { name: /Stage Outbound Dispatch/i })).toBeDisabled();
 
     expect(pageErrors).toEqual([]);
   });

@@ -4990,11 +4990,25 @@ app.get('/api/admin/email/google-workspace/health', (req: Request, res: Response
   res.json(health);
 });
 
+function areMailboxesConfiguredInSystem(): boolean {
+  return (
+    connectorRegistry.getAllConnections().length > 0 ||
+    db.getState().connectedMailboxes.length > 0
+  );
+}
+
 // 2d. Inbound Historical Import Simulation (M49.05)
 app.post('/api/admin/email/google-workspace/sync/historical', (req: Request, res: Response) => {
   const actor = getEmailAdminActor(req);
   if (actor.role === 'visitor') {
     return res.status(403).json({ error: 'Staff role required to trigger historical sync.' });
+  }
+  if (!areMailboxesConfiguredInSystem()) {
+    return res.status(409).json({
+      success: false,
+      code: 'EMAIL_OPERATIONS_DISABLED',
+      error: 'Historical email import is disabled until an administrator connects at least one organizational mailbox.',
+    });
   }
   const { mailboxEmail, maxMessages } = req.body;
   if (!mailboxEmail) {
@@ -5010,6 +5024,13 @@ app.post('/api/admin/email/google-workspace/sync/incremental', (req: Request, re
   if (actor.role === 'visitor') {
     return res.status(403).json({ error: 'Staff role required to trigger incremental sync.' });
   }
+  if (!areMailboxesConfiguredInSystem()) {
+    return res.status(409).json({
+      success: false,
+      code: 'EMAIL_OPERATIONS_DISABLED',
+      error: 'Email synchronization is disabled until an administrator connects at least one organizational mailbox.',
+    });
+  }
   const { mailboxEmail, cursor } = req.body;
   if (!mailboxEmail) {
     return res.status(400).json({ error: 'mailboxEmail is required.' });
@@ -5020,13 +5041,17 @@ app.post('/api/admin/email/google-workspace/sync/incremental', (req: Request, re
 
 // 3. List connected organizational mailboxes
 app.get('/api/admin/email/mailboxes', (_req: Request, res: Response) => {
+  const configured = areMailboxesConfiguredInSystem();
   const mailboxes = db.getState().connectedMailboxes;
-  const gwMailboxes = googleWorkspaceAdapter.getMailboxes();
+  const gwMailboxes = configured ? googleWorkspaceAdapter.getMailboxes() : [];
   res.json({
     mailboxes,
     googleWorkspaceProfiles: gwMailboxes,
     operationalMode: EnvironmentService.getOperationalMode(),
-    googleWorkspaceStatus: 'AUTHORIZATION_REQUIRED',
+    googleWorkspaceStatus: configured ? 'AUTHORIZATION_REQUIRED' : 'NO_MAILBOXES_CONNECTED',
+    operationsDisabled: !configured,
+    autoSyncEnabled: false,
+    autoSendingEnabled: false,
   });
 });
 
@@ -5189,6 +5214,13 @@ app.post('/api/admin/email/triage', (req: Request, res: Response) => {
 
 // 9. Generate AI Email Draft OR Persist New Outbound Draft (Phase 62 + Phase 68)
 app.post('/api/admin/email/drafts', async (req: Request, res: Response) => {
+  if (!areMailboxesConfiguredInSystem()) {
+    return res.status(409).json({
+      success: false,
+      code: 'EMAIL_OPERATIONS_DISABLED',
+      error: 'Email draft creation and AI reply generation are disabled until an administrator connects at least one organizational mailbox.',
+    });
+  }
   const actor = getEmailAdminActor(req);
   const { threadId, tone = 'professional', mailboxId, to, cc, subject, bodyText, bodyHtml, isAiGenerated, isSafeguarded } = req.body || {};
 
@@ -5269,6 +5301,13 @@ app.post('/api/admin/email/dispatch', async (req: Request, res: Response) => {
     return res.status(503).json({
       success: false,
       error: 'EMERGENCY_SHUTDOWN: Outbound email dispatch is suspended by administrator kill switch.',
+    });
+  }
+  if (!areMailboxesConfiguredInSystem()) {
+    return res.status(409).json({
+      success: false,
+      code: 'EMAIL_OPERATIONS_DISABLED',
+      error: 'Outbound email dispatch is disabled until an administrator connects at least one organizational mailbox.',
     });
   }
 
@@ -5413,11 +5452,18 @@ app.post('/api/admin/email/compose', (req: Request, res: Response) => {
   if (actor.role === 'visitor') {
     return res.status(403).json({ error: 'Staff role required to send outbound email.' });
   }
+  if (!areMailboxesConfiguredInSystem()) {
+    return res.status(409).json({
+      success: false,
+      code: 'EMAIL_OPERATIONS_DISABLED',
+      error: 'Outbound email composition is disabled until an administrator connects at least one organizational mailbox.',
+    });
+  }
   const { mailboxId, mailboxEmail, recipientEmail, subject, bodyText, category, priority, idempotencyKey } = req.body;
   if (!recipientEmail || !subject || !bodyText) {
     return res.status(400).json({ error: 'recipientEmail, subject, and bodyText are required.' });
   }
-  const resolvedMailboxId = mailboxId || db.getState().connectedMailboxes[0]?.id;
+  const resolvedMailboxId = mailboxId || db.getState().connectedMailboxes[0]?.id || connectorRegistry.getAllConnections()[0]?.id;
   if (!resolvedMailboxId && !mailboxEmail) {
     return res.status(400).json({ error: 'A configured mailboxId or mailboxEmail is required to stage outbound correspondence.' });
   }
@@ -5431,6 +5477,9 @@ app.post('/api/admin/email/compose', (req: Request, res: Response) => {
     priority,
     idempotencyKey,
   });
+  if (!result.success) {
+    return res.status(409).json(result);
+  }
   res.json(result);
 });
 
@@ -6988,6 +7037,13 @@ app.post('/api/admin/email/oauth/exchange', requireSessionMiddleware(PRIVILEGED_
 // 3b. Mailbox synchronization trigger
 app.post(['/api/admin/email/mailboxes/:id/sync', '/api/admin/email/connections/:id/sync'], requireSessionMiddleware(STAFF_ADMIN_ROLES), async (req: Request, res: Response) => {
   try {
+    if (!areMailboxesConfiguredInSystem() || connectorRegistry.getAllConnections().length === 0) {
+      return res.status(409).json({
+        success: false,
+        code: 'EMAIL_OPERATIONS_DISABLED',
+        error: 'Email synchronization is disabled until an administrator connects at least one organizational mailbox.',
+      });
+    }
     const conn = connectorRegistry.getConnection(req.params.id);
     if (!conn) {
       return res.status(404).json({ success: false, error: 'Connection not found.' });
@@ -7075,6 +7131,13 @@ app.get('/api/admin/email/messages/:id', (req: Request, res: Response) => {
 // 5. Draft submission, approval review, and outbound send (Phase 62 + Phase 68 Persistent Lifecycle)
 app.post('/api/admin/email/drafts/:id/submit', async (req: Request, res: Response) => {
   try {
+    if (!areMailboxesConfiguredInSystem()) {
+      return res.status(409).json({
+        success: false,
+        code: 'EMAIL_OPERATIONS_DISABLED',
+        error: 'Draft submission is disabled until an administrator connects at least one organizational mailbox.',
+      });
+    }
     const actor = getEmailAdminActor(req);
     const existingPersistentDraft = (await emailDispatchService.listDrafts()).find((d) => d.id === req.params.id);
     if (existingPersistentDraft) {
@@ -7084,9 +7147,18 @@ app.post('/api/admin/email/drafts/:id/submit', async (req: Request, res: Respons
     }
 
     const { connectionId, subject, bodyText, recipients, isAiGenerated } = req.body || {};
+    const fallbackConn = connectorRegistry.getAllConnections()[0];
+    const resolvedConnectionId = connectionId || fallbackConn?.id;
+    if (!resolvedConnectionId) {
+      return res.status(409).json({
+        success: false,
+        code: 'EMAIL_OPERATIONS_DISABLED',
+        error: 'A connected mailbox connectionId is required to submit a draft for approval.',
+      });
+    }
     const approval = emailApprovalService.createApprovalRequest({
       draftId: req.params.id,
-      connectionId: connectionId || 'conn-google-primary',
+      connectionId: resolvedConnectionId,
       subject: subject || 'Draft Message',
       bodyText: bodyText || '',
       recipients: recipients || ['recipient@example.org'],
@@ -7128,6 +7200,13 @@ app.post('/api/admin/email/dispatch/:id/send', requireSessionMiddleware(EXEC_APP
         error: 'EMERGENCY_SHUTDOWN: Outbound email dispatch is suspended by administrator kill switch.',
       });
     }
+    if (!areMailboxesConfiguredInSystem()) {
+      return res.status(409).json({
+        success: false,
+        code: 'EMAIL_OPERATIONS_DISABLED',
+        error: 'Outbound email dispatch is disabled until an administrator connects at least one organizational mailbox.',
+      });
+    }
 
     const actor = getEmailAdminActor(req);
     const {
@@ -7142,11 +7221,22 @@ app.post('/api/admin/email/dispatch/:id/send', requireSessionMiddleware(EXEC_APP
       approvedAt,
     } = req.body || {};
 
+    const firstConn = connectorRegistry.getAllConnections()[0];
+    const resolvedConnectionId = connectionId || firstConn?.id;
+    const resolvedSenderAccount = senderAccount || firstConn?.emailAddress;
+    if (!resolvedConnectionId || !resolvedSenderAccount) {
+      return res.status(409).json({
+        success: false,
+        code: 'EMAIL_OPERATIONS_DISABLED',
+        error: 'Explicit connected mailbox connectionId and senderAccount are required for dispatch.',
+      });
+    }
+
     const recipients = Array.isArray(to) ? to : to ? [to] : [];
     const dispatchResult = await emailDispatchService.dispatchApprovedMessage({
       id: req.params.id,
-      connectionId: connectionId || 'conn-google-primary',
-      senderAccount: senderAccount || 'donations@phumulani.org',
+      connectionId: resolvedConnectionId,
+      senderAccount: resolvedSenderAccount,
       to: recipients,
       subject: subject || '',
       bodyText: bodyText || '',
@@ -7160,7 +7250,7 @@ app.post('/api/admin/email/dispatch/:id/send', requireSessionMiddleware(EXEC_APP
       deliveryState: 'QUEUED',
     });
 
-    const conn = connectorRegistry.getConnection(connectionId || 'conn-google-primary');
+    const conn = connectorRegistry.getConnection(resolvedConnectionId);
     if (
       dispatchResult.success &&
       conn?.safeguardingClassification !== 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP'
@@ -7177,11 +7267,11 @@ app.post('/api/admin/email/dispatch/:id/send', requireSessionMiddleware(EXEC_APP
               donorName: dbDonor.name,
               activityType: 'OUTBOUND_EMAIL',
               title: `Outbound Email Dispatched: ${subject || 'Approved Communication'}`,
-              summary: `Approved dispatch from ${senderAccount || 'donations@phumulani.org'} to ${rcptNorm} by ${actor.name}.`,
+              summary: `Approved dispatch from ${resolvedSenderAccount} to ${rcptNorm} by ${actor.name}.`,
               sourceProviderMsgId: dispatchResult.providerMessageId,
               staffActor: actor.name,
               requiresFollowUp: false,
-              metadata: { mailbox: senderAccount || 'donations@phumulani.org', direction: 'outbound' },
+              metadata: { mailbox: resolvedSenderAccount, direction: 'outbound' },
             });
           }
           const unified = fundingCmd.getDonors().find((d) => d.email.toLowerCase() === rcptNorm);
@@ -7393,7 +7483,25 @@ app.post('/api/admin/email/ai/classify', async (req: Request, res: Response) => 
 
 app.post('/api/admin/email/ai/draft', async (req: Request, res: Response) => {
   try {
-    const { subject = '', body = '', senderEmail = '', senderName, mailboxEmail, tone = 'formal', staffInstructions } = req.body || {};
+    if (!areMailboxesConfiguredInSystem()) {
+      return res.status(409).json({
+        success: false,
+        code: 'EMAIL_OPERATIONS_DISABLED',
+        error: 'AI reply generation is disabled until an administrator connects at least one organizational mailbox.',
+      });
+    }
+    const { threadId, subject = '', body = '', senderEmail = '', senderName, mailboxEmail, tone = 'formal', staffInstructions } = req.body || {};
+    if (threadId) {
+      const legacyExists = db.getState().enterpriseEmailThreads.some((t) => t.id === threadId);
+      const persistent = await emailSyncService.getPersistentThread(String(threadId)).catch(() => ({ thread: null, messages: [] }));
+      if (!legacyExists && !persistent.thread && persistent.messages.length === 0) {
+        return res.status(404).json({
+          success: false,
+          code: 'THREAD_NOT_FOUND',
+          error: 'Cannot generate AI reply against nonexistent message or thread.',
+        });
+      }
+    }
     const result = await emailAiIntelligenceService.generateDraftReply({
       subject,
       incomingBody: body,
@@ -7405,6 +7513,9 @@ app.post('/api/admin/email/ai/draft', async (req: Request, res: Response) => {
     });
     if (result.safeguardingBlocked) {
       return res.status(403).json({ success: false, code: 'VAWA_SAFEGUARDING_HALT', ...result });
+    }
+    if ((result as any).aiBlocked) {
+      return res.status(409).json({ success: false, code: 'NO_MESSAGE_CONTEXT', ...result });
     }
     res.json({ success: true, ...result });
   } catch (err: any) {
@@ -7473,6 +7584,13 @@ app.post('/api/admin/email/drafts/:id/approve', requireSessionMiddleware(EXEC_AP
 
 app.post('/api/admin/email/drafts/:id/schedule', requireSessionMiddleware(EXEC_APPROVER_ROLES), async (req: Request, res: Response) => {
   try {
+    if (!areMailboxesConfiguredInSystem()) {
+      return res.status(409).json({
+        success: false,
+        code: 'EMAIL_OPERATIONS_DISABLED',
+        error: 'Scheduled email sending is disabled until an administrator connects at least one organizational mailbox.',
+      });
+    }
     const actor = getEmailAdminActor(req);
     const { scheduledFor } = req.body || {};
     if (!scheduledFor) {
@@ -7491,6 +7609,13 @@ app.post('/api/admin/email/drafts/:id/send', requireSessionMiddleware(EXEC_APPRO
       return res.status(503).json({
         success: false,
         error: 'EMERGENCY_SHUTDOWN: Outbound email dispatch is suspended by administrator kill switch.',
+      });
+    }
+    if (!areMailboxesConfiguredInSystem()) {
+      return res.status(409).json({
+        success: false,
+        code: 'EMAIL_OPERATIONS_DISABLED',
+        error: 'Outbound email dispatch is disabled until an administrator connects at least one organizational mailbox.',
       });
     }
     const actor = getEmailAdminActor(req);
@@ -7803,6 +7928,55 @@ app.post('/api/admin/email/demo-cleanup/execute', requireSessionMiddleware(PRIVI
       adminApproved: adminApproved === true,
       approvalToken: String(approvalToken || ''),
     });
+    res.json(result);
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err.message });
+  }
+});
+
+// Phase 79.1 — Complete Email Data Reset & Clean Installation
+app.get('/api/admin/email/reset/status', (_req: Request, res: Response) => {
+  const connectedMailboxesCount = connectorRegistry.getAllConnections().length;
+  const resetMarker = connectorRegistry.getResetMarker();
+  const operationsDisabled = connectedMailboxesCount === 0 && db.getState().connectedMailboxes.length === 0;
+  res.json({
+    success: true,
+    cleanInstallation: operationsDisabled,
+    connectedMailboxesCount,
+    operationsDisabled,
+    autoSyncEnabled: false,
+    autoSendingEnabled: false,
+    resetMarker,
+  });
+});
+
+app.post('/api/admin/email/reset/dry-run', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const report = await demoDataCleanupService.createCompleteResetDryRun({
+      actorId: actor.id,
+      actorName: actor.name,
+      actorRole: actor.role,
+    });
+    res.json({ success: true, report });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
+app.post('/api/admin/email/reset/execute', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (req: Request, res: Response) => {
+  try {
+    const actor = getEmailAdminActor(req);
+    const { approvalToken, adminApproved, attemptProviderRevocation } = req.body || {};
+    const result = await demoDataCleanupService.executeCompleteReset({
+      actorId: actor.id,
+      actorName: actor.name,
+      actorRole: actor.role,
+      adminApproved: adminApproved === true,
+      approvalToken: String(approvalToken || ''),
+      attemptProviderRevocation: attemptProviderRevocation !== false,
+    });
+    db.executeClientCompleteEmailReset();
     res.json(result);
   } catch (err: any) {
     res.status(400).json({ success: false, error: err.message });

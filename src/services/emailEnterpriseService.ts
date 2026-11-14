@@ -472,6 +472,9 @@ Draft a professional, compassionate response following Phumulani's organizationa
     toneStyle: ResponseToneStyle = 'professional',
     actorName: string = 'Staff Caseworker'
   ): EmailDraft {
+    if (!thread || !Array.isArray(thread.messages) || thread.messages.length === 0) {
+      throw new Error('EMAIL_OPERATION_DISABLED: Cannot generate AI reply against a nonexistent email message.');
+    }
     // MANDATORY SAFEGUARDING AIR-GAP: Prohibit general AI drafting on confidential survivor records (M53.16 / M53.17)
     if (
       thread.classification === '01_safeguarding' ||

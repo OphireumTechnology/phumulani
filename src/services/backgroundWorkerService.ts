@@ -17,6 +17,7 @@ import { emailDispatchService } from '../email/services/EmailDispatchService';
 import { emailAiIntelligenceService } from '../email/services/EmailAiIntelligenceService';
 import { emailHealthService } from '../email/services/EmailHealthService';
 import { calendarIntegrationService } from './calendarIntegrationService';
+import { connectorRegistry } from './connectors/connectorRegistry';
 
 export type BackgroundJobType =
   | 'HISTORICAL_MAILBOX_IMPORT'
@@ -100,7 +101,17 @@ export class BackgroundWorkerService {
 
   private registerDefaultHandlers(): void {
     this.registerHandler('HISTORICAL_MAILBOX_IMPORT', async (job) => {
-      const { connectionId = 'conn-google-donations_phumulani_org', mailboxEmail = 'donations@phumulani.org', maxMessages = 50 } = job.payload;
+      if (connectorRegistry.listConnections().length === 0) {
+        return {
+          disabled: true,
+          reason: 'NO_MAILBOXES_CONNECTED: Historical import disabled until an administrator connects a mailbox.',
+          messagesImported: 0,
+        };
+      }
+      const { connectionId, mailboxEmail, maxMessages = 50 } = job.payload || {};
+      if (!connectionId || !mailboxEmail) {
+        return { success: false, messagesImported: 0, error: 'connectionId and mailboxEmail are required.' };
+      }
       const syncRes = await emailSyncService.syncMailbox({
         connectionId,
         mailboxEmail,
@@ -117,10 +128,18 @@ export class BackgroundWorkerService {
     });
 
     this.registerHandler('INCREMENTAL_EMAIL_SYNC', async (job) => {
+      if (connectorRegistry.listConnections().length === 0) {
+        return {
+          disabled: true,
+          reason: 'NO_MAILBOXES_CONNECTED: Incremental sync disabled until an administrator connects a mailbox.',
+          mailboxesSynced: 0,
+          totalImported: 0,
+        };
+      }
       if (job.payload?.connectionId) {
         const res = await emailSyncService.syncMailbox({
           connectionId: job.payload.connectionId,
-          mailboxEmail: job.payload.mailboxEmail || 'info@phumulani.org',
+          mailboxEmail: job.payload.mailboxEmail || '',
         });
         return {
           connectionId: job.payload.connectionId,
@@ -202,10 +221,16 @@ export class BackgroundWorkerService {
     });
 
     this.registerHandler('SCHEDULED_DISPATCH', async () => {
+      if (connectorRegistry.listConnections().length === 0) {
+        return { processed: 0, sent: 0, failed: 0, disabled: true, reason: 'NO_MAILBOXES_CONNECTED' };
+      }
       return emailDispatchService.processDueScheduledDispatches();
     });
 
     this.registerHandler('RECONCILIATION_PROCESSING', async (job) => {
+      if (connectorRegistry.listConnections().length === 0) {
+        return { reconciledConfirmedCount: 0, disabled: true, reason: 'NO_MAILBOXES_CONNECTED', timestamp: new Date().toISOString() };
+      }
       const confirmed = await emailSyncService.reconcileSentMessages(job.payload?.connectionId);
       return {
         reconciledConfirmedCount: confirmed,
@@ -214,6 +239,15 @@ export class BackgroundWorkerService {
     });
 
     this.registerHandler('HEALTH_PROBE_MONITOR', async () => {
+      if (connectorRegistry.listConnections().length === 0) {
+        return {
+          totalMailboxes: 0,
+          healthyCount: 0,
+          disabled: true,
+          reason: 'NO_MAILBOXES_CONNECTED',
+          timestamp: new Date().toISOString(),
+        };
+      }
       const health = await emailHealthService.checkAllMailboxes();
       return {
         totalMailboxes: health.totalMailboxes,

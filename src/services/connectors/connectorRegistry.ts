@@ -43,13 +43,14 @@ export class ConnectorRegistry {
   private auditEvents: EmailConnectionAuditEvent[] = [];
   private idempotencyKeys: Map<string, { timestamp: number; result: SendResult }> = new Map();
   private persistenceFilePath: string;
+  private resetMarkerFilePath: string;
 
   private constructor() {
     const runtimeDir = process.env.PHUMULANI_RUNTIME_DATA_DIR?.trim()
       ? path.resolve(process.env.PHUMULANI_RUNTIME_DATA_DIR.trim())
       : path.resolve(os.tmpdir(), 'phumulani-runtime-data');
     this.persistenceFilePath = path.resolve(runtimeDir, '.email_connections_registry.json');
-    this.seedCanonicalConnections();
+    this.resetMarkerFilePath = path.resolve(runtimeDir, '.email_reset_marker.json');
     this.loadDurableRegistry();
   }
 
@@ -1540,11 +1541,106 @@ export class ConnectorRegistry {
    * Reloads durable state from disk (useful for restart verification in tests).
    */
   public reloadDurableState(): void {
+    this.connections.clear();
+    this.connectors.clear();
+    this.auditEvents = [];
     this.loadDurableRegistry();
   }
 
   /**
-   * Reset in-memory state for clean test isolation.
+   * @internal TEST FIXTURE ONLY — Never called on application boot or reset.
+   * Explicitly blocked in PRODUCTION_ONLY mode.
+   */
+  public seedCanonicalConnectionsForTesting(): void {
+    if (EnvironmentService.isProductionOnly()) {
+      throw new Error('PRODUCTION_GUARD: Cannot seed canonical demo mailbox connections in PRODUCTION_ONLY mode.');
+    }
+    this.seedCanonicalConnections();
+  }
+
+  /**
+   * Phase 79.1: Reads the durable clean email reset marker (if present).
+   */
+  public getResetMarker(): {
+    version: string;
+    resetAt: string;
+    actorId?: string;
+    reason?: string;
+    removedEmails?: string[];
+  } | null {
+    try {
+      if (fs.existsSync(this.resetMarkerFilePath)) {
+        const raw = fs.readFileSync(this.resetMarkerFilePath, 'utf8');
+        return JSON.parse(raw);
+      }
+    } catch {
+      // Non-fatal read fallback
+    }
+    return null;
+  }
+
+  /**
+   * Phase 79.1 Block 1 & 2: Purge every configured mailbox connection & write versioned reset marker
+   * so no previously configured mailboxes can automatically reappear across restarts.
+   */
+  public clearAllConnectionsAndPersistReset(params: {
+    version: string;
+    resetAt?: string;
+    actorId?: string;
+    reason?: string;
+  }): { removedConnectionIds: string[]; removedEmails: string[]; resetMarkerVersion: string; resetAt: string } {
+    const resetAt = params.resetAt || new Date().toISOString();
+    const removedConnectionIds = Array.from(this.connections.keys());
+    const removedEmails = Array.from(this.connections.values()).map((c) => c.emailAddress);
+
+    this.connections.clear();
+    this.connectors.clear();
+    this.auditEvents = [];
+    this.idempotencyKeys.clear();
+
+    const dir = path.dirname(this.persistenceFilePath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true, mode: 0o700 });
+    }
+
+    const tmpReg = `${this.persistenceFilePath}.tmp.${process.pid}.${crypto.randomBytes(6).toString('hex')}`;
+    fs.writeFileSync(
+      tmpReg,
+      JSON.stringify(
+        {
+          savedAt: resetAt,
+          resetMarkerVersion: params.version,
+          connections: [],
+          auditEvents: [],
+        },
+        null,
+        2
+      ),
+      { encoding: 'utf8', mode: 0o600 }
+    );
+    fs.renameSync(tmpReg, this.persistenceFilePath);
+
+    const markerPayload = {
+      version: params.version,
+      resetAt,
+      actorId: params.actorId || 'admin',
+      reason: params.reason || 'Phase 79.1 complete email data reset',
+      removedEmails,
+    };
+    const tmpMarker = `${this.resetMarkerFilePath}.tmp.${process.pid}.${crypto.randomBytes(6).toString('hex')}`;
+    fs.writeFileSync(tmpMarker, JSON.stringify(markerPayload, null, 2), { encoding: 'utf8', mode: 0o600 });
+    fs.renameSync(tmpMarker, this.resetMarkerFilePath);
+
+    return {
+      removedConnectionIds,
+      removedEmails,
+      resetMarkerVersion: params.version,
+      resetAt,
+    };
+  }
+
+  /**
+   * Reset in-memory & persisted state for clean test isolation (0 mailboxes on clean reset).
    */
   public resetForTesting(): void {
     this.connections.clear();
@@ -1555,8 +1651,10 @@ export class ConnectorRegistry {
       if (fs.existsSync(this.persistenceFilePath)) {
         fs.unlinkSync(this.persistenceFilePath);
       }
+      if (fs.existsSync(this.resetMarkerFilePath)) {
+        fs.unlinkSync(this.resetMarkerFilePath);
+      }
     } catch {}
-    this.seedCanonicalConnections();
   }
 }
 

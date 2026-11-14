@@ -291,35 +291,54 @@ async function main() {
       'executive@phumulani.org',
       'partnerships@phumulani.org',
     ];
-    const conns = emailConnectorRegistry.listConnections();
-    for (const email of orgEmails) {
-      const match = conns.find((c) => c.emailAddress.toLowerCase() === email);
-      assert.ok(match, `Canonical organizational mailbox missing from connector registry: ${email}`);
-      assert.notEqual(match.authStatus, 'CONNECTED', `Unconfigured mailbox ${email} must never be CONNECTED`);
+    try {
+      emailConnectorRegistry.seedCanonicalConnectionsForTesting();
+      const conns = emailConnectorRegistry.listConnections();
+      for (const email of orgEmails) {
+        const match = conns.find((c) => c.emailAddress.toLowerCase() === email);
+        assert.ok(match, `Canonical organizational mailbox missing from connector registry: ${email}`);
+        assert.notEqual(match.authStatus, 'CONNECTED', `Unconfigured mailbox ${email} must never be CONNECTED`);
+      }
+      assert.equal(oAuthService.isProviderConfigured('GOOGLE'), false, 'Google OAuth unconfigured in container');
+      return 'All 5 organizational mailboxes present when registered and truthfully un-connected (BLOCKED_BY_CONFIGURATION without OAuth client creds).';
+    } finally {
+      emailConnectorRegistry.clearAllConnectionsAndPersistReset({
+        version: 'phase79_1_clean_email_v1',
+        actorId: 'verify-phase76',
+        reason: 'P76-10 test cleanup',
+      });
     }
-    assert.equal(oAuthService.isProviderConfigured('GOOGLE'), false, 'Google OAuth unconfigured in container');
-    return 'All 5 organizational mailboxes present and truthfully un-connected (BLOCKED_BY_CONFIGURATION without OAuth client creds).';
   });
 
   // 11. Persistent Drafts + Maker-Checker + STAGED vs DELIVERY_CONFIRMED
   await runCheck('P76-11-DRAFT-MAKER-CHECKER-DISPATCH', async () => {
-    const draft = await emailDispatchService.createDraft({
-      mailboxId: 'conn-google-grants_phumulani_org',
-      to: ['program.officer@foundation.example.org'],
-      subject: 'Phase 76 Persistent Grant Follow-Up',
-      bodyText: 'Thank you for reviewing our housing readiness report.',
-      authorId: 'staff-writer-01',
-      authorRole: 'staff',
-    });
-    await emailDispatchService.submitDraftForApproval(draft.id, 'staff-writer-01');
-    await assert.rejects(
-      () => emailDispatchService.approveDraft(draft.id, 'staff-writer-01', 'executive_director'),
-      /MAKER_CHECKER_VIOLATION/
-    );
-    await emailDispatchService.approveDraft(draft.id, 'exec-reviewer-01', 'executive_director', 'Verified accurate.');
-    const sendRes = await emailDispatchService.sendApprovedEmail(draft.id, 'exec-reviewer-01');
-    assert.notEqual(sendRes.deliveryStatus, 'DELIVERY_CONFIRMED', 'Staged/sandbox send must never claim DELIVERY_CONFIRMED');
-    return `Maker-checker enforced; send status=${sendRes.deliveryStatus}, lifecycle=${sendRes.lifecycleStage}.`;
+    const { connectorRegistry: emailConnectorRegistry } = await import('../src/email');
+    try {
+      emailConnectorRegistry.seedCanonicalConnectionsForTesting();
+      const draft = await emailDispatchService.createDraft({
+        mailboxId: 'conn-google-grants_phumulani_org',
+        to: ['program.officer@foundation.example.org'],
+        subject: 'Phase 76 Persistent Grant Follow-Up',
+        bodyText: 'Thank you for reviewing our housing readiness report.',
+        authorId: 'staff-writer-01',
+        authorRole: 'staff',
+      });
+      await emailDispatchService.submitDraftForApproval(draft.id, 'staff-writer-01');
+      await assert.rejects(
+        () => emailDispatchService.approveDraft(draft.id, 'staff-writer-01', 'executive_director'),
+        /MAKER_CHECKER_VIOLATION/
+      );
+      await emailDispatchService.approveDraft(draft.id, 'exec-reviewer-01', 'executive_director', 'Verified accurate.');
+      const sendRes = await emailDispatchService.sendApprovedEmail(draft.id, 'exec-reviewer-01');
+      assert.notEqual(sendRes.deliveryStatus, 'DELIVERY_CONFIRMED', 'Staged/sandbox send must never claim DELIVERY_CONFIRMED');
+      return `Maker-checker enforced; send status=${sendRes.deliveryStatus}, lifecycle=${sendRes.lifecycleStage}.`;
+    } finally {
+      emailConnectorRegistry.clearAllConnectionsAndPersistReset({
+        version: 'phase79_1_clean_email_v1',
+        actorId: 'verify-phase76',
+        reason: 'P76-11 test cleanup',
+      });
+    }
   });
 
   // 12. VAWA § 1367 Safeguarding Air-Gap
@@ -398,12 +417,11 @@ async function main() {
       const discoverJson: any = await goodDiscover.json();
       assert.equal(discoverJson.discovery?.mxIsRoutingOnly, true);
 
-      // Connectors list exposes BLOCKED_BY_CONFIGURATION
+      // Clean installation starts with 0 configured connectors (Phase 79.1)
       const connRes = await fetch(`${baseUrl}/api/admin/email/connectors`, { headers });
       assert.equal(connRes.status, 200);
       const connJson: any = await connRes.json();
-      assert.ok(connJson.connections.length >= 5);
-      assert.ok(connJson.connections.some((c: any) => c.configurationStatus === 'BLOCKED_BY_CONFIGURATION'));
+      assert.equal(connJson.connections.length, 0, 'Clean install starts with 0 connectors');
 
       // Google OAuth start fails closed cleanly with 503 OAUTH_CREDENTIALS_MISSING
       const oauthRes = await fetch(`${baseUrl}/api/admin/email/oauth/google/start?email=info@phumulani.org`, { headers });
@@ -411,7 +429,7 @@ async function main() {
       const oauthJson: any = await oauthRes.json();
       assert.equal(oauthJson.code, 'OAUTH_CREDENTIALS_MISSING');
 
-      // Compose with empty connectedMailboxes does not throw 500
+      // Compose with 0 connected mailboxes is cleanly locked with 409 EMAIL_OPERATIONS_DISABLED
       const composeRes = await fetch(`${baseUrl}/api/admin/email/compose`, {
         method: 'POST',
         headers,
@@ -420,12 +438,14 @@ async function main() {
           mailboxEmail: 'info@phumulani.org',
           recipientEmail: 'partner@example.org',
           subject: 'Phase 76 HTTP Compose Check',
-          bodyText: 'Testing compose resilience without pre-seeded demo mailboxes.',
+          bodyText: 'Testing compose lock when 0 mailboxes are connected.',
         }),
       });
-      assert.equal(composeRes.status, 200, 'Compose with empty connectedMailboxes must succeed cleanly');
+      assert.equal(composeRes.status, 409, 'Compose with 0 connected mailboxes must return 409 EMAIL_OPERATIONS_DISABLED');
+      const composeJson: any = await composeRes.json();
+      assert.equal(composeJson.code, 'EMAIL_OPERATIONS_DISABLED');
 
-      return 'HTTP 401/400/503/200 RBAC, DNS MX discovery, BLOCKED_BY_CONFIGURATION, and clean compose verified.';
+      return 'HTTP 401/400/503/409 RBAC, DNS MX discovery, 0-mailbox clean boot, and operation lock verified.';
     } finally {
       await stopChild(proc);
     }

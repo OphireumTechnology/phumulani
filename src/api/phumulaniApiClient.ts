@@ -580,6 +580,36 @@ class PhumulaniApiClient {
       body: JSON.stringify(payload),
     });
   }
+
+  public async getEmailResetStatus(): Promise<{
+    success: boolean;
+    cleanInstallation: boolean;
+    connectedMailboxesCount: number;
+    operationsDisabled: boolean;
+    autoSyncEnabled: boolean;
+    autoSendingEnabled: boolean;
+    resetMarker: { version: string; resetAt: string; resetBy: string } | null;
+  }> {
+    return this.request('/api/admin/email/reset/status');
+  }
+
+  public async dryRunCompleteEmailReset(): Promise<{ success: boolean; report: any }> {
+    return this.request('/api/admin/email/reset/dry-run', {
+      method: 'POST',
+      body: JSON.stringify({}),
+    });
+  }
+
+  public async executeCompleteEmailReset(payload: {
+    approvalToken: string;
+    adminApproved: boolean;
+    attemptProviderRevocation?: boolean;
+  }): Promise<any> {
+    return this.request('/api/admin/email/reset/execute', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
 }
 
 export const phumulaniApiClient = new PhumulaniApiClient();
