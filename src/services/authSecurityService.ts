@@ -97,7 +97,7 @@ export class AuthSecurityService {
   private revokedSessionIds: Set<string> = new Set();
   private failedAttempts: Map<string, { count: number; lockedUntil: number }> = new Map();
   private passwordResetTokens: Map<string, PasswordResetRecord> = new Map();
-  private tempMfaSessions: Map<string, { userId: string; email: string; role: StaffRole; departmentId: string; expectedCode?: string; expiresAt: number }> = new Map();
+  private tempMfaSessions: Map<string, { userId: string; email: string; role: StaffRole; departmentId: string; expectedCode?: string; expiresAt: number; attempts: number }> = new Map();
   private durableStorePath: string = '';
 
   private constructor() {
@@ -503,11 +503,16 @@ export class AuthSecurityService {
       return { success: false, error: 'MFA challenge expired. Please authenticate again.' };
     }
 
-    const trimmedCode = code.trim();
+    const trimmedCode = String(code || '').trim();
     const isTotp = /^\d{6}$/.test(trimmedCode);
     const isBackupCode = /^[a-zA-Z0-9]{8,12}$/.test(trimmedCode);
 
     if (!isTotp && !isBackupCode) {
+      temp.attempts = (temp.attempts || 0) + 1;
+      if (temp.attempts >= 5) {
+        this.tempMfaSessions.delete(tempToken);
+        return { success: false, error: 'MFA challenge invalidated after too many failed attempts. Please authenticate again.' };
+      }
       return { success: false, error: 'Invalid MFA verification code format.' };
     }
 
@@ -521,6 +526,11 @@ export class AuthSecurityService {
       const a = Buffer.from(trimmedCode);
       const b = Buffer.from(temp.expectedCode);
       if (a.length !== b.length || !crypto.timingSafeEqual(a, b)) {
+        temp.attempts = (temp.attempts || 0) + 1;
+        if (temp.attempts >= 5) {
+          this.tempMfaSessions.delete(tempToken);
+          return { success: false, error: 'MFA challenge invalidated after too many failed attempts. Please authenticate again.' };
+        }
         return { success: false, error: 'MFA verification code does not match challenge.' };
       }
     } else if (isStrictMfaMode) {
@@ -565,6 +575,7 @@ export class AuthSecurityService {
       departmentId: user.departmentId,
       expectedCode,
       expiresAt: Date.now() + 5 * 60 * 1000,
+      attempts: 0,
     });
     return tempToken;
   }
@@ -650,7 +661,8 @@ export class AuthSecurityService {
     };
 
     await this.dbAdapter.insert('staff_members', userRecord);
-    return { success: true, user: userRecord };
+    const { passwordHash: _ph, passwordSalt: _ps, passwordIterations: _pi, ...safeUser } = userRecord;
+    return { success: true, user: safeUser };
   }
 
   /**

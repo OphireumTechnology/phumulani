@@ -27,17 +27,32 @@ import {
   ChevronRight,
   ShieldAlert,
 } from 'lucide-react';
-import { operationalReportingService, type ReportingPeriod, type StaffOperationsMetrics, type ExecutiveDashboardReport, type BoardGovernanceReport, type ReportSnapshotRecord } from '../../server/operationalReportingService';
-import { authSecurityService, type UserSession } from '../../services/authSecurityService';
-import { multilingualAccessibilityService } from '../../services/multilingualAccessibilityService';
+import { phumulaniApiClient } from '../../api/phumulaniApiClient';
+import type {
+  ReportingPeriod,
+  ReportingCategory,
+  StaffOperationsMetrics,
+  ExecutiveDashboardReport,
+  BoardGovernanceReport,
+  ReportSnapshotRecord,
+  FinancialClassificationSummary,
+} from '../../types/reporting';
 
 interface IntegratedReportingTabProps {
   currentUser?: any;
   defaultLevel?: 'staff' | 'executive' | 'board';
 }
 
+const DEFAULT_FINANCIAL_SUMMARY: FinancialClassificationSummary = {
+  pledgedAmount: 0,
+  internallyRecordedAmount: 0,
+  externallyVerifiedAmount: 0,
+  pendingGrantAmount: 0,
+  unreconciledVariancesCount: 0,
+  accountingIntegrityNotice: 'Authoritative financial segregation requires an authenticated staff or executive session.',
+};
+
 export const IntegratedReportingTab: React.FC<IntegratedReportingTabProps> = ({
-  currentUser,
   defaultLevel = 'executive',
 }) => {
   const [activeLevel, setActiveLevel] = useState<'staff' | 'executive' | 'board'>(defaultLevel);
@@ -48,6 +63,7 @@ export const IntegratedReportingTab: React.FC<IntegratedReportingTabProps> = ({
   const [staffMetrics, setStaffMetrics] = useState<StaffOperationsMetrics | null>(null);
   const [execReport, setExecReport] = useState<ExecutiveDashboardReport | null>(null);
   const [boardReport, setBoardReport] = useState<BoardGovernanceReport | null>(null);
+  const [fundraisingSummary, setFundraisingSummary] = useState<FinancialClassificationSummary | null>(null);
   const [snapshots, setSnapshots] = useState<ReportSnapshotRecord[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [actionNotice, setActionNotice] = useState<string | null>(null);
@@ -56,49 +72,28 @@ export const IntegratedReportingTab: React.FC<IntegratedReportingTabProps> = ({
   const [isRunningScenario, setIsRunningScenario] = useState<boolean>(false);
   const [scenarioResults, setScenarioResults] = useState<{ step: number; name: string; success: boolean; details: string }[] | null>(null);
   const [scenarioSummary, setScenarioSummary] = useState<string | null>(null);
-
-  // Snapshot modal state
-  const [newSnapshotTitle, setNewSnapshotTitle] = useState('');
   const [isCreatingSnapshot, setIsCreatingSnapshot] = useState(false);
-
-  // Mock staff session for authorized dashboard queries in demo/client view
-  const currentSession: UserSession = {
-    sessionId: 'session-reporting-demo',
-    userId: currentUser?.id || 'usr-admin-01',
-    userEmail: currentUser?.email || 'comfort.dondo@phumulani.org',
-    role: (currentUser?.role as any) || 'executive_director',
-    departmentId: 'DEPT-EXEC',
-    mfaVerified: true,
-    csrfToken: 'csrf-demo-token',
-    isRevoked: false,
-    createdAt: new Date().toISOString(),
-    expiresAt: new Date(Date.now() + 86400000).toISOString(),
-    lastActiveAt: new Date().toISOString(),
-  };
 
   const loadData = async () => {
     setIsLoading(true);
     try {
-      await operationalReportingService.initialize();
-      const staffRes = await operationalReportingService.getStaffOperationsReport(
-        { period: selectedPeriod, departmentId: departmentFilter !== 'ALL' ? departmentFilter : undefined },
-        currentSession
-      );
+      const [staffRes, execRes, boardRes, fundRes, snaps] = await Promise.all([
+        phumulaniApiClient.getStaffOperationsReport({
+          period: selectedPeriod,
+          departmentId: departmentFilter !== 'ALL' ? departmentFilter : undefined,
+        }),
+        phumulaniApiClient.getExecutiveDashboardReport({ period: selectedPeriod }),
+        phumulaniApiClient.getBoardGovernanceReport(),
+        phumulaniApiClient.getFundraisingPerformanceSummary(),
+        phumulaniApiClient.getReportSnapshots(),
+      ]);
       setStaffMetrics(staffRes);
-
-      const execRes = await operationalReportingService.getExecutiveDashboardReport(
-        { period: selectedPeriod },
-        currentSession
-      );
       setExecReport(execRes);
-
-      const boardRes = await operationalReportingService.getBoardGovernanceReport(currentSession);
       setBoardReport(boardRes);
-
-      const snaps = operationalReportingService.getSnapshots(currentSession);
+      setFundraisingSummary(fundRes);
       setSnapshots(snaps);
     } catch (err: any) {
-      console.error('Failed to load reports:', err);
+      setActionNotice(`Authorization or connectivity notice: ${err?.message || 'Unable to load server reports.'}`);
     } finally {
       setIsLoading(false);
     }
@@ -112,13 +107,13 @@ export const IntegratedReportingTab: React.FC<IntegratedReportingTabProps> = ({
     try {
       setIsCreatingSnapshot(true);
       const dataToSave = activeLevel === 'staff' ? staffMetrics : activeLevel === 'executive' ? execReport : boardReport;
-      const reportType = activeLevel === 'staff' ? 'STAFF_OPERATIONAL' : activeLevel === 'executive' ? 'EXECUTIVE_DASHBOARD' : 'BOARD_GOVERNANCE';
-      const snap = await operationalReportingService.createReportSnapshot(
-        reportType as any,
-        selectedPeriod,
-        dataToSave,
-        currentSession
-      );
+      const reportType: ReportingCategory =
+        activeLevel === 'staff' ? 'STAFF_OPERATIONAL' : activeLevel === 'executive' ? 'EXECUTIVE_DASHBOARD' : 'BOARD_GOVERNANCE';
+      const snap = await phumulaniApiClient.createReportSnapshot({
+        reportType,
+        period: selectedPeriod,
+        data: dataToSave,
+      });
       setSnapshots((prev) => [snap, ...prev]);
       setActionNotice(`Immutable snapshot created: ${snap.id} (Checksum: ${snap.reportDataChecksum.slice(0, 8)})`);
       setTimeout(() => setActionNotice(null), 5000);
@@ -131,11 +126,10 @@ export const IntegratedReportingTab: React.FC<IntegratedReportingTabProps> = ({
 
   const handleApproveSnapshot = async (id: string, decision: 'APPROVED' | 'REJECTED') => {
     try {
-      const updated = await operationalReportingService.updateSnapshotApproval(
+      const updated = await phumulaniApiClient.approveReportSnapshot(
         id,
         decision,
-        'Executive governance review completed',
-        currentSession
+        'Executive governance review completed'
       );
       setSnapshots((prev) => prev.map((s) => (s.id === id ? updated : s)));
       setActionNotice(`Snapshot ${id} marked ${decision}`);
@@ -145,14 +139,18 @@ export const IntegratedReportingTab: React.FC<IntegratedReportingTabProps> = ({
     }
   };
 
-  const handleExport = (format: 'CSV' | 'JSON') => {
+  const handleExport = async (format: 'CSV' | 'JSON') => {
     try {
       const dataToExport = activeLevel === 'staff' ? staffMetrics : activeLevel === 'executive' ? execReport : boardReport;
-      const reportType = activeLevel === 'staff' ? 'STAFF_OPERATIONAL' : activeLevel === 'executive' ? 'EXECUTIVE_DASHBOARD' : 'BOARD_GOVERNANCE';
-      const res = operationalReportingService.generateExport(reportType as any, format, dataToExport, currentSession);
+      const reportType: ReportingCategory =
+        activeLevel === 'staff' ? 'STAFF_OPERATIONAL' : activeLevel === 'executive' ? 'EXECUTIVE_DASHBOARD' : 'BOARD_GOVERNANCE';
+      const res = await phumulaniApiClient.exportOperationalReport({
+        reportType,
+        format,
+        data: dataToExport,
+      });
 
-      const blob = new Blob([res.content], { type: res.mimeType });
-      const url = URL.createObjectURL(blob);
+      const url = URL.createObjectURL(res.blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = res.filename;
@@ -171,7 +169,7 @@ export const IntegratedReportingTab: React.FC<IntegratedReportingTabProps> = ({
     setScenarioResults(null);
     setScenarioSummary('Executing 45-Step Operational to Governance Scenario...');
     try {
-      const res = await operationalReportingService.execute45StepReportingScenario();
+      const res = await phumulaniApiClient.runScenario45Step();
       setScenarioResults(res.stepResults);
       if (res.success) {
         setScenarioSummary(`SUCCESS: All 45/45 steps passed with 100% assertion integrity.`);
@@ -186,7 +184,7 @@ export const IntegratedReportingTab: React.FC<IntegratedReportingTabProps> = ({
     }
   };
 
-  const finSummary = execReport?.financialSummary || operationalReportingService.getFinancialClassificationSummary();
+  const finSummary = execReport?.financialSummary || fundraisingSummary || DEFAULT_FINANCIAL_SUMMARY;
 
   return (
     <div className="space-y-6" data-testid="m4108-reporting-tab">

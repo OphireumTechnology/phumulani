@@ -326,7 +326,8 @@ export class Phase38Service {
   // ===========================================================================
   public async runPersistenceRestartVerification(): Promise<PersistenceRestartResult> {
     if (typeof window === 'undefined') {
-      const { serverVerificationService } = await import('../server/serverVerificationService');
+      const serverVerifModule = '../server/serverVerificationService';
+      const { serverVerificationService } = await import(/* @vite-ignore */ serverVerifModule);
       return serverVerificationService.executeServerProcessRestartVerification();
     }
 

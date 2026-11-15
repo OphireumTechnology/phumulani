@@ -7,7 +7,6 @@
  */
 
 import crypto from 'crypto';
-import { Type } from '@google/genai';
 import { PostgresPersistenceAdapter } from '../../services/postgresPersistenceAdapter';
 import { localInferenceAdapter, PHUMULANI_AI_SYSTEM_PROMPT } from '../../services/localInferenceAdapter';
 import { EmailEnterpriseService } from '../../services/emailEnterpriseService';
@@ -517,6 +516,7 @@ export class EmailAiIntelligenceService {
 
     if (useGemini) {
       try {
+        const { Type } = await import('@google/genai');
         const schema = {
           type: Type.OBJECT,
           properties: {

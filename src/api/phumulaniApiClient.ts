@@ -29,6 +29,16 @@ import {
   KnowledgeRetrievalResult,
   SourceApprovalAuditReport,
 } from '../types/verifiedKnowledge';
+import type { TestSuiteSummary } from '../types/verification';
+import type {
+  ReportingPeriod,
+  ReportingCategory,
+  StaffOperationsMetrics,
+  ExecutiveDashboardReport,
+  BoardGovernanceReport,
+  ReportSnapshotRecord,
+  FinancialClassificationSummary,
+} from '../types/reporting';
 
 import { authFetch, sessionTokenStore } from '../services/sessionTokenStore';
 
@@ -608,6 +618,129 @@ class PhumulaniApiClient {
     return this.request('/api/admin/email/reset/execute', {
       method: 'POST',
       body: JSON.stringify(payload),
+    });
+  }
+
+  // --- Verification Suite (Server-Side Execution) ---
+  public async runVerificationSuite(): Promise<TestSuiteSummary> {
+    const res = await this.request<{ success: boolean; summary: TestSuiteSummary }>('/api/admin/verification/run-suite', {
+      method: 'POST',
+      body: JSON.stringify({}),
+    });
+    return res.summary;
+  }
+
+  // --- Operational Reporting (Server-Authoritative M41.08) ---
+  public async getStaffOperationsReport(params: {
+    period: ReportingPeriod;
+    departmentId?: string;
+  }): Promise<StaffOperationsMetrics> {
+    const qs = new URLSearchParams({ period: params.period });
+    if (params.departmentId && params.departmentId !== 'ALL') {
+      qs.set('departmentId', params.departmentId);
+    }
+    const res = await this.request<{ success: boolean; report: StaffOperationsMetrics }>(
+      `/api/reports/staff-operations?${qs.toString()}`
+    );
+    return res.report;
+  }
+
+  public async getExecutiveDashboardReport(params: {
+    period: ReportingPeriod;
+  }): Promise<ExecutiveDashboardReport> {
+    const qs = new URLSearchParams({ period: params.period });
+    const res = await this.request<{ success: boolean; report: ExecutiveDashboardReport }>(
+      `/api/reports/executive-dashboard?${qs.toString()}`
+    );
+    return res.report;
+  }
+
+  public async getBoardGovernanceReport(): Promise<BoardGovernanceReport> {
+    const res = await this.request<{ success: boolean; report: BoardGovernanceReport }>(
+      '/api/reports/board-governance'
+    );
+    return res.report;
+  }
+
+  public async getFundraisingPerformanceSummary(): Promise<FinancialClassificationSummary> {
+    const res = await this.request<{ success: boolean; summary: FinancialClassificationSummary }>(
+      '/api/reports/fundraising-performance'
+    );
+    return res.summary;
+  }
+
+  public async getReportSnapshots(): Promise<ReportSnapshotRecord[]> {
+    const res = await this.request<{ success: boolean; snapshots: ReportSnapshotRecord[] }>(
+      '/api/reports/snapshots'
+    );
+    return res.snapshots || [];
+  }
+
+  public async createReportSnapshot(payload: {
+    reportType: ReportingCategory;
+    period: ReportingPeriod;
+    data: any;
+  }): Promise<ReportSnapshotRecord> {
+    const res = await this.request<{ success: boolean; snapshot: ReportSnapshotRecord }>(
+      '/api/reports/snapshots',
+      {
+        method: 'POST',
+        body: JSON.stringify(payload),
+      }
+    );
+    return res.snapshot;
+  }
+
+  public async approveReportSnapshot(
+    id: string,
+    decision: 'APPROVED' | 'REJECTED',
+    notes = ''
+  ): Promise<ReportSnapshotRecord> {
+    const res = await this.request<{ success: boolean; snapshot: ReportSnapshotRecord }>(
+      `/api/reports/snapshots/${encodeURIComponent(id)}/approval`,
+      {
+        method: 'POST',
+        body: JSON.stringify({ decision, notes }),
+      }
+    );
+    return res.snapshot;
+  }
+
+  public async exportOperationalReport(payload: {
+    reportType: ReportingCategory;
+    format: 'CSV' | 'JSON';
+    data: any;
+  }): Promise<{ blob: Blob; filename: string }> {
+    const res = await authFetch('/api/reports/export', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!res.ok) {
+      let msg = `HTTP ${res.status}: ${res.statusText}`;
+      try {
+        const body = await res.json();
+        if (body.error) msg = body.error;
+      } catch {
+        // ignore
+      }
+      throw new Error(msg);
+    }
+    const disposition = res.headers.get('Content-Disposition') || '';
+    const match = disposition.match(/filename="([^"]+)"/);
+    const filename = match?.[1] || `phumulani-${payload.reportType.toLowerCase()}.${payload.format.toLowerCase()}`;
+    const blob = await res.blob();
+    return { blob, filename };
+  }
+
+  public async runScenario45Step(): Promise<{
+    success: boolean;
+    stepResults: { step: number; name: string; success: boolean; details: string }[];
+    error?: string;
+  }> {
+    return this.request('/api/reports/scenario-45-step', {
+      method: 'POST',
+      body: JSON.stringify({}),
     });
   }
 }

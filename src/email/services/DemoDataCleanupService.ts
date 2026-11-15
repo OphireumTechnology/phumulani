@@ -32,6 +32,7 @@ import { EmailGovernanceService } from './EmailGovernanceService';
 import { oAuthService } from './OAuthService';
 import { connectorRegistry } from '../../services/connectors/connectorRegistry';
 import { googleWorkspaceAdapter } from '../../services/googleWorkspaceAdapter';
+import { EnvironmentService } from '../../services/environmentService';
 import { EmailAuditService } from './EmailAuditService';
 
 export const CLEAN_EMAIL_RESET_MARKER_VERSION = 'phase79_1_clean_email_v1' as const;
@@ -234,6 +235,20 @@ export class DemoDataCleanupService {
       process.env.SESSION_SECRET?.trim() || crypto.randomBytes(32).toString('hex');
   }
 
+  private resolveSigningSecret(): string {
+    const configured = process.env.SESSION_SECRET?.trim() || '';
+    const policy = EnvironmentService.getDatabasePolicy();
+    if (policy.requireLiveDatabase || policy.nodeEnv === 'production') {
+      if (!configured || configured.length < 32) {
+        throw new Error(
+          'SESSION_SECRET_MISSING_IN_PRODUCTION: SESSION_SECRET (minimum 32 characters) is required for reset approval HMAC signing in production.'
+        );
+      }
+      return configured;
+    }
+    return configured || this.ephemeralHmacKey;
+  }
+
   public static getInstance(): DemoDataCleanupService {
     if (!DemoDataCleanupService.instance) {
       DemoDataCleanupService.instance = new DemoDataCleanupService();
@@ -393,8 +408,9 @@ export class DemoDataCleanupService {
 
   private signApprovalToken(dryRunId: string, backupChecksum: string, prefix = 'cleanup-appr'): string {
     const nonce = crypto.randomBytes(12).toString('hex');
+    const secret = this.resolveSigningSecret();
     const sig = crypto
-      .createHmac('sha256', this.ephemeralHmacKey)
+      .createHmac('sha256', secret)
       .update(`${dryRunId}|${backupChecksum}|${nonce}`)
       .digest('hex')
       .slice(0, 24);
@@ -406,6 +422,7 @@ export class DemoDataCleanupService {
     actorName: string;
     actorRole: string;
   }): Promise<DemoCleanupDryRunReport> {
+    this.resolveSigningSecret();
     const dryRunId = `dryrun-${Date.now()}-${crypto.randomBytes(3).toString('hex')}`;
     const createdAt = new Date().toISOString();
     const expiresAtMs = Date.now() + 15 * 60 * 1000;
@@ -640,6 +657,7 @@ export class DemoDataCleanupService {
     actorName: string;
     actorRole: string;
   }): Promise<CompleteEmailResetDryRunReport> {
+    this.resolveSigningSecret();
     await emailThreadService.initialize();
     await emailDispatchService.initialize();
     await emailApprovalService.initialize();

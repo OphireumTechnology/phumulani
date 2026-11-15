@@ -6,26 +6,18 @@
  * VAWA § 1367 Safeguarding Air-Gap, 24h Idempotency, and CI Integrity.
  */
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
-import {
-  ConnectorFactory,
-  validateSafeMailHost,
-  MailboxConnectionService,
-  OAuthService,
-  EmailSyncService,
-  EmailDispatchService,
-  EmailThreadService,
-  EmailAttachmentService,
-  EmailApprovalService,
-  EmailAuditService,
-  EmailHealthService,
-  EmailRecoveryService,
-  EmailProviderType,
-  OutboundApprovalStatus,
-  EmailDeliveryStatus
-} from '../src/email';
-import { DatabaseMigrationService } from '../src/services/databaseMigrationService';
-import { PostgresPersistenceAdapter } from '../src/services/postgresPersistenceAdapter';
+
+const createdTempRuntimeDir = !process.env.PHUMULANI_RUNTIME_DATA_DIR
+  ? fs.mkdtempSync(path.join(os.tmpdir(), 'phumulani-phase62-'))
+  : null;
+if (createdTempRuntimeDir) {
+  process.env.PHUMULANI_RUNTIME_DATA_DIR = createdTempRuntimeDir;
+}
+if (!process.env.PHUMULANI_OPERATIONAL_MODE) {
+  process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
+}
 
 interface TestResult {
   id: string;
@@ -35,6 +27,26 @@ interface TestResult {
 }
 
 export async function runPhase62AcceptanceTests(): Promise<{ total: number; passed: number; failed: number; results: TestResult[] }> {
+  const {
+    ConnectorFactory,
+    validateSafeMailHost,
+    MailboxConnectionService,
+    OAuthService,
+    EmailSyncService,
+    EmailDispatchService,
+    EmailThreadService,
+    EmailAttachmentService,
+    EmailApprovalService,
+    EmailAuditService,
+    EmailHealthService,
+    EmailRecoveryService,
+    EmailProviderType,
+    OutboundApprovalStatus,
+    EmailDeliveryStatus,
+  } = await import('../src/email');
+  const { DatabaseMigrationService } = await import('../src/services/databaseMigrationService');
+  const { PostgresPersistenceAdapter } = await import('../src/services/postgresPersistenceAdapter');
+
   const results: TestResult[] = [];
   const rootDir = process.cwd();
 
@@ -397,7 +409,7 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
   try {
     const mbService = MailboxConnectionService.getInstance();
     const mailboxes = mbService.getMailboxes();
-    const pilot = mailboxes.find(m => m.emailAddress === 'donations@phumulani.org');
+    const pilot = mailboxes.find(m => m.emailAddress === 'pilot-test-donations@phumulani.org');
     const passed = pilot ? !('clientSecret' in pilot) && !('refreshToken' in pilot) : false;
     record(
       'TEST-P62-18',
@@ -412,7 +424,7 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
   // TEST-P62-19: Real-Time Sync Concurrency Lock
   try {
     const syncService = EmailSyncService.getInstance();
-    const pilot = MailboxConnectionService.getInstance().getMailboxes().find(m => m.emailAddress === 'donations@phumulani.org');
+    const pilot = MailboxConnectionService.getInstance().getMailboxes().find(m => m.emailAddress === 'pilot-test-donations@phumulani.org');
     if (!pilot) throw new Error('Pilot mailbox not found');
     
     // Acquire lock
@@ -434,7 +446,7 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
   // TEST-P62-20: Synchronization Cursor Recovery & Durability
   try {
     const syncService = EmailSyncService.getInstance();
-    const pilot = MailboxConnectionService.getInstance().getMailboxes().find(m => m.emailAddress === 'donations@phumulani.org');
+    const pilot = MailboxConnectionService.getInstance().getMailboxes().find(m => m.emailAddress === 'pilot-test-donations@phumulani.org');
     if (!pilot) throw new Error('Pilot mailbox not found');
 
     await syncService.saveCursor(pilot.id, 'INBOX', 'checkpoint-cursor-9000');
@@ -453,7 +465,7 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
   // TEST-P62-21: Outbound Quad-Action Workflow Transitions
   try {
     const dispatchService = EmailDispatchService.getInstance();
-    const pilot = MailboxConnectionService.getInstance().getMailboxes().find(m => m.emailAddress === 'donations@phumulani.org');
+    const pilot = MailboxConnectionService.getInstance().getMailboxes().find(m => m.emailAddress === 'pilot-test-donations@phumulani.org');
     if (!pilot) throw new Error('Pilot mailbox not found');
 
     const draft = await dispatchService.createDraft({
@@ -484,7 +496,7 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
   // TEST-P62-22: Anti-AI Self-Approval Guard
   try {
     const dispatchService = EmailDispatchService.getInstance();
-    const pilot = MailboxConnectionService.getInstance().getMailboxes().find(m => m.emailAddress === 'donations@phumulani.org');
+    const pilot = MailboxConnectionService.getInstance().getMailboxes().find(m => m.emailAddress === 'pilot-test-donations@phumulani.org');
     if (!pilot) throw new Error('Pilot mailbox not found');
 
     const aiDraft = await dispatchService.createDraft({
@@ -523,8 +535,14 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
   try {
     const dispatchService = EmailDispatchService.getInstance();
     const mbService = MailboxConnectionService.getInstance();
-    const safeMb = mbService.getMailboxes().find(m => m.emailAddress === 'safeguarding@phumulani.org');
-    if (!safeMb) throw new Error('Safeguarding mailbox not found');
+    const safeMb = await mbService.registerMailbox({
+      emailAddress: 'phase62-safeguarding-test@phumulani.invalid',
+      displayName: 'Phase 62 Safeguarding Test',
+      providerType: EmailProviderType.GOOGLE_WORKSPACE,
+      purpose: 'SAFEGUARDING',
+      isSafeguarded: true,
+      organizationId: 'org-phumulani-main'
+    });
 
     const safeDraft = await dispatchService.createDraft({
       mailboxId: safeMb.id,
@@ -787,7 +805,7 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
     const dispatchService = EmailDispatchService.getInstance();
 
     // 1. Get or register mailbox
-    const pilot = mbService.getMailboxes().find(m => m.emailAddress === 'donations@phumulani.org')!;
+    const pilot = mbService.getMailboxes().find(m => m.emailAddress === 'pilot-test-donations@phumulani.org')!;
     
     // 2. Perform inbound sync
     const syncRes = await syncService.syncMailbox(pilot.id);
@@ -847,6 +865,9 @@ export async function runPhase62AcceptanceTests(): Promise<{ total: number; pass
 
 if (process.argv[1] && process.argv[1].endsWith('verify_phase62_production_email.ts')) {
   runPhase62AcceptanceTests().then(summary => {
+    if (createdTempRuntimeDir) {
+      fs.rmSync(createdTempRuntimeDir, { recursive: true, force: true });
+    }
     if (summary.failed > 0) {
       process.exit(1);
     } else {
@@ -854,6 +875,9 @@ if (process.argv[1] && process.argv[1].endsWith('verify_phase62_production_email
     }
   }).catch(err => {
     console.error('Fatal test error:', err);
+    if (createdTempRuntimeDir) {
+      fs.rmSync(createdTempRuntimeDir, { recursive: true, force: true });
+    }
     process.exit(1);
   });
 }

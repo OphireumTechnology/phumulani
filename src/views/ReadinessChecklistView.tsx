@@ -31,7 +31,8 @@ import {
 } from 'lucide-react';
 import { PortalLayout } from '../components/PortalLayout';
 import { getDatabaseMetadata, generateDatabaseBackupJson } from '../db/databaseDefinition';
-import type { TestSuiteSummary } from '../services/automatedTestRunner';
+import { phumulaniApiClient } from '../api/phumulaniApiClient';
+import type { TestSuiteSummary } from '../types/verification';
 
 interface ReadinessChecklistViewProps {
   currentUser: User;
@@ -394,8 +395,7 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
   const runAcceptanceTests = async () => {
     setIsRunningTests(true);
     try {
-      const { AutomatedTestRunner } = await import('../services/automatedTestRunner');
-      const summary = await AutomatedTestRunner.runAllTests();
+      const summary = await phumulaniApiClient.runVerificationSuite();
       setTestSummary(summary);
       if (summary.failed === 0) {
         setGates((prev) =>

@@ -27,7 +27,7 @@ import {
 } from 'lucide-react';
 
 import { NotificationCenterModal } from './NotificationCenterModal';
-import { operationalEventService } from '../services/operationalEventService';
+import { clientNotificationService } from '../services/clientNotificationService';
 import { PhumulaniLogo } from './branding/PhumulaniLogo';
 
 export interface PortalNavItem {
@@ -103,32 +103,22 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
     let isMounted = true;
     const fetchUnread = async () => {
       try {
-        const session = {
-          sessionId: `sess-${currentUser.id}`,
-          userId: currentUser.id,
-          userEmail: currentUser.email,
-          name: currentUser.name,
-          email: currentUser.email,
+        const res = await clientNotificationService.getNotificationsForUser({
           role: currentUser.role,
-          departmentId: currentUser.department || '',
-          department: currentUser.department,
-          token: `tok-${currentUser.id}`,
-          createdAt: new Date().toISOString(),
-          expiresAt: new Date(Date.now() + 3600000).toISOString(),
-        };
-        const res = await operationalEventService.getNotificationsForUser(session, { unreadOnly: true });
+          unreadOnly: true,
+        });
         if (isMounted && res.success) {
           setUnreadCount(res.unreadCount);
         }
       } catch {
-        // Safe development fallback
+        // Ignore when unauthenticated or offline
       }
     };
     fetchUnread();
     return () => {
       isMounted = false;
     };
-  }, [currentUser.id]);
+  }, [currentUser.id, currentUser.role]);
 
   const portals = [
     { id: 'public', label: 'Public Website', icon: Globe },
@@ -471,22 +461,11 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
         isOpen={notificationModalOpen}
         onClose={() => {
           setNotificationModalOpen(false);
-          const session = {
-            sessionId: `sess-${currentUser.id}`,
-            userId: currentUser.id,
-            userEmail: currentUser.email,
-            name: currentUser.name,
-            email: currentUser.email,
-            role: currentUser.role,
-            departmentId: currentUser.department || '',
-            department: currentUser.department,
-            token: `tok-${currentUser.id}`,
-            createdAt: new Date().toISOString(),
-            expiresAt: new Date(Date.now() + 3600000).toISOString(),
-          };
-          operationalEventService.getNotificationsForUser(session, { unreadOnly: true }).then((res) => {
-            if (res.success) setUnreadCount(res.unreadCount);
-          });
+          clientNotificationService
+            .getNotificationsForUser({ role: currentUser.role, unreadOnly: true })
+            .then((res) => {
+              if (res.success) setUnreadCount(res.unreadCount);
+            });
         }}
         currentUser={currentUser}
         currentLang="en"

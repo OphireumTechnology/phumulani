@@ -32,6 +32,7 @@ import { programEnrollmentService, isStaffUser } from './src/services/programEnr
 import { volunteerOperationsService, isVolunteerCoordinatorOrStaff, isSafeguardingLeadOrExec } from './src/services/volunteerOperationsService';
 import { serverVerificationService } from './src/server/serverVerificationService';
 import { operationalReportingService, type ReportingPeriod } from './src/server/operationalReportingService';
+import { operationalEventService } from './src/server/operationalEventService';
 import type { AgentDivision } from './src/types/aiWorkforce';
 import type { PermissionDomain } from './src/types/masterAdmin';
 import { db } from './src/services/db';
@@ -309,15 +310,19 @@ const handleHealthCheck = async (_req: Request, res: Response) => {
     SECURITY_MONITORING: auditDegraded ? ('DEGRADED' as const) : ('HEALTHY' as const),
   };
 
+  const vaultError = oAuthService.getVaultLoadError();
+  const vaultKeyConfig = oAuthService.validateProductionKeyConfiguration();
   const isDbBlocked =
     dbInfo.applicationReadiness === 'BLOCKED' ||
     (isProdRequired && (dbInfo.engine !== 'POSTGRESQL' || dbInfo.databaseStatus !== 'HEALTHY'));
-  const isBlocked = isDbBlocked || (isProdRequired && !safeguardingStatus.ready);
+  const isBlocked = isDbBlocked || (isProdRequired && (!safeguardingStatus.ready || !vaultKeyConfig.valid || Boolean(vaultError)));
   const overallStatus = isBlocked ? 'BLOCKED' : auditDegraded ? 'DEGRADED' : 'HEALTHY';
 
   res.status(isBlocked ? 503 : 200).json({
     status: overallStatus,
     operationalMode: envConfig.operationalMode,
+    isProductionReady: dbInfo.isProductionReady && safeguardingStatus.ready && vaultKeyConfig.valid && !vaultError,
+    nonProductionNotice: envConfig.nonProductionNotice,
     applicationReadiness: isBlocked ? 'BLOCKED' : dbInfo.applicationReadiness,
     service: 'Phumulani AI Community Platform',
     version: '1.0.0-phase29',
@@ -329,6 +334,11 @@ const handleHealthCheck = async (_req: Request, res: Response) => {
     model: ACTIVE_GEMINI_MODEL,
     auditLogCount: serverAuditLogs.length,
     auditHealth,
+    oauthVault: {
+      ready: !vaultError && (!isProdRequired || vaultKeyConfig.valid),
+      keySource: isProdRequired ? vaultKeyConfig.keySource : oAuthService.isUsingEphemeralKey() ? 'STAGED_EPHEMERAL' : vaultKeyConfig.keySource,
+      decryptionFailureCount: oAuthService.getVaultDecryptionFailureCount(),
+    },
     database: {
       engine: dbInfo.engine,
       connected: dbInfo.connected,
@@ -339,6 +349,7 @@ const handleHealthCheck = async (_req: Request, res: Response) => {
       tablesVerifiedCount: dbInfo.tablesVerifiedCount,
       totalRecordsCount: dbInfo.totalRecordsCount,
       readinessClassification: dbInfo.readinessClassification,
+      isProductionReady: dbInfo.isProductionReady,
       policyCode: dbPolicy.policyCode,
       lastHealthPingAt: dbInfo.lastHealthPingAt,
       connectionError: dbInfo.connectionError || undefined,
@@ -394,6 +405,7 @@ app.get('/readyz', async (_req: Request, res: Response) => {
       foreignKeysVerified: false,
     }));
   const vaultError = oAuthService.getVaultLoadError();
+  const vaultKeyConfig = oAuthService.validateProductionKeyConfiguration();
   const isProdRequired = dbPolicy.requireLiveDatabase;
   const isDbReady = isProdRequired
     ? dbInfo.engine === 'POSTGRESQL' && dbInfo.databaseStatus === 'HEALTHY' && dbInfo.applicationReadiness === 'READY'
@@ -402,24 +414,52 @@ app.get('/readyz', async (_req: Request, res: Response) => {
     isDbReady &&
     schemaIntegrity.valid &&
     !vaultError &&
-    (!isProdRequired || safeguardingStatus.ready);
+    (!isProdRequired || (safeguardingStatus.ready && vaultKeyConfig.valid));
   res.status(isHealthy ? 200 : 503).json({
     status: isHealthy ? 'ready' : 'not_ready',
     database: dbInfo.databaseStatus,
     engine: dbInfo.engine,
+    operationalMode: dbInfo.operationalMode,
+    isProductionReady: isHealthy && dbInfo.isProductionReady,
     applicationReadiness: isHealthy ? 'READY' : 'BLOCKED',
     policyCode: dbPolicy.policyCode,
     schemaValid: schemaIntegrity.valid,
     missingTablesCount: schemaIntegrity.missingTables.length,
-    vaultReady: !vaultError,
+    vaultReady: !vaultError && (!isProdRequired || vaultKeyConfig.valid),
     safeguardingReady: safeguardingStatus.ready,
     timestamp: new Date().toISOString(),
   });
 });
 
+const authRateLimitBuckets = new Map<string, number[]>();
+const checkAuthRateLimit = (
+  req: Request,
+  res: Response,
+  keySuffix: string,
+  maxRequests = Number(process.env.AUTH_RATE_LIMIT_MAX || 15),
+  windowMs = 15 * 60 * 1000
+): boolean => {
+  const ip = String(req.ip || req.socket?.remoteAddress || 'unknown');
+  const key = `${ip}:${keySuffix}`;
+  const now = Date.now();
+  const recent = (authRateLimitBuckets.get(key) || []).filter((ts) => now - ts < windowMs);
+  if (recent.length >= maxRequests) {
+    res.status(429).json({
+      success: false,
+      error: 'Too many authentication attempts. Please try again later.',
+      code: 'RATE_LIMITED',
+    });
+    return false;
+  }
+  recent.push(now);
+  authRateLimitBuckets.set(key, recent);
+  return true;
+};
+
 // Production Authentication & Session Endpoints
 app.post('/api/auth/login', async (req: Request, res: Response) => {
   try {
+    if (!checkAuthRateLimit(req, res, 'login', Number(process.env.AUTH_LOGIN_RATE_LIMIT_MAX || 25))) return;
     const { email, password, mfaCode } = req.body;
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required.' });
@@ -506,6 +546,7 @@ app.post('/api/auth/login', async (req: Request, res: Response) => {
 
 app.post('/api/auth/verify-mfa', async (req: Request, res: Response) => {
   try {
+    if (!checkAuthRateLimit(req, res, 'verify-mfa', Number(process.env.AUTH_MFA_RATE_LIMIT_MAX || 10))) return;
     const { tempMfaToken, code } = req.body;
     if (!tempMfaToken || !code) {
       return res.status(400).json({ error: 'tempMfaToken and code are required.' });
@@ -536,31 +577,6 @@ app.post('/api/auth/logout', async (req: Request, res: Response) => {
   await authSecurityService.revokeSession(sessionId);
   res.json({ success: true, message: 'Logged out successfully.' });
 });
-
-const authRateLimitBuckets = new Map<string, number[]>();
-const checkAuthRateLimit = (
-  req: Request,
-  res: Response,
-  keySuffix: string,
-  maxRequests = Number(process.env.AUTH_RATE_LIMIT_MAX || 15),
-  windowMs = 15 * 60 * 1000
-): boolean => {
-  const ip = String(req.ip || req.socket?.remoteAddress || 'unknown');
-  const key = `${ip}:${keySuffix}`;
-  const now = Date.now();
-  const recent = (authRateLimitBuckets.get(key) || []).filter((ts) => now - ts < windowMs);
-  if (recent.length >= maxRequests) {
-    res.status(429).json({
-      success: false,
-      error: 'Too many password recovery attempts. Please try again later.',
-      code: 'RATE_LIMITED',
-    });
-    return false;
-  }
-  recent.push(now);
-  authRateLimitBuckets.set(key, recent);
-  return true;
-};
 
 app.post('/api/auth/password-reset/request', async (req: Request, res: Response) => {
   try {
@@ -791,6 +807,30 @@ function getSafeguardingEncryptionStatus(): { ready: boolean; keySource: 'CONFIG
     return { ready: false, keySource: 'UNCONFIGURED_BLOCKED' };
   }
   return { ready: true, keySource: 'STAGED_EPHEMERAL' };
+}
+
+function validateProductionSecurityKeys(dbPolicy: ReturnType<typeof EnvironmentService.getDatabasePolicy>): void {
+  if (!dbPolicy.requireLiveDatabase) {
+    return;
+  }
+  const errors: string[] = [];
+  const safeguardingKey = (process.env.SAFEGUARDING_MASTER_KEY || '').trim();
+  if (isWeakSafeguardingKey(safeguardingKey)) {
+    errors.push('SAFEGUARDING_MASTER_KEY (minimum 32 high-entropy characters required)');
+  }
+  const oauthVaultKey = (process.env.OAUTH_TOKEN_ENCRYPTION_KEY || '').trim();
+  if (isWeakSafeguardingKey(oauthVaultKey)) {
+    errors.push('OAUTH_TOKEN_ENCRYPTION_KEY (minimum 32 high-entropy characters required)');
+  }
+  const sessionSecret = (process.env.SESSION_SECRET || '').trim();
+  if (isWeakSafeguardingKey(sessionSecret)) {
+    errors.push('SESSION_SECRET (minimum 32 high-entropy characters required)');
+  }
+  if (errors.length > 0) {
+    throw new Error(
+      `[Phumulani Security Vault] FATAL: ${dbPolicy.policyCode} requires persistent encryption & session keys. Invalid or missing: ${errors.join('; ')}.`
+    );
+  }
 }
 
 function resolveSafeguardingSecretMaterial(): Buffer | string {
@@ -1559,6 +1599,23 @@ app.post('/api/reports/export', (req: Request, res: Response) => {
   } catch (err: any) {
     const status = err.message.includes('Unauthorized') ? 401 : err.message.includes('Forbidden') ? 403 : 400;
     res.status(status).json({ success: false, error: err.message });
+  }
+});
+
+// 11. 45-Step Operational to Governance Reporting Scenario (Restricted to Privileged Admin Roles)
+app.post('/api/reports/scenario-45-step', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (_req: Request, res: Response) => {
+  try {
+    if (EnvironmentService.getOperationalMode() === 'PRODUCTION_ONLY') {
+      return res.status(403).json({
+        success: false,
+        error: 'Forbidden: Synthetic 45-step reporting test scenario cannot execute in PRODUCTION_ONLY mode.',
+        code: 'PRODUCTION_DIAGNOSTIC_BLOCKED',
+      });
+    }
+    const result = await operationalReportingService.execute45StepReportingScenario();
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || '45-step scenario execution failed' });
   }
 });
 
@@ -4257,6 +4314,23 @@ app.post('/api/v1/verification/persistence-concurrency', async (_req: Request, r
   }
 });
 
+app.post('/api/admin/verification/run-suite', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), async (_req: Request, res: Response) => {
+  try {
+    if (EnvironmentService.getOperationalMode() === 'PRODUCTION_ONLY') {
+      return res.status(403).json({
+        success: false,
+        error: 'Forbidden: Interactive staged test runner cannot execute in PRODUCTION_ONLY mode.',
+        code: 'PRODUCTION_DIAGNOSTIC_BLOCKED',
+      });
+    }
+    const { AutomatedTestRunner } = await import('./src/services/automatedTestRunner');
+    const summary = await AutomatedTestRunner.runAllTests();
+    res.json({ success: true, summary });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || 'Verification suite execution failed' });
+  }
+});
+
 // M39.01: Repository & Baseline Reconciliation
 app.get('/api/v1/phase39/baseline', (_req: Request, res: Response) => {
   res.json(phase39Service.getBaselineReconciliation());
@@ -4315,6 +4389,86 @@ const extractSession = (req: Request): { valid: boolean; session?: UserSession; 
   }
   return authSecurityService.validateSession(sessionId);
 };
+
+// M41.09: Server-Authoritative Operational Notifications & Preferences (Strict Session & Anti-IDOR Enforcement)
+app.get('/api/v1/operational/notifications', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, notifications: [], unreadCount: 0, error: auth.error });
+  }
+  try {
+    const category = typeof req.query.category === 'string' ? req.query.category : undefined;
+    const unreadOnly = req.query.unreadOnly === 'true' || req.query.unreadOnly === '1';
+    const limit = req.query.limit ? Number(req.query.limit) : undefined;
+    const result = await operationalEventService.getNotificationsForUser(auth.session, { category, unreadOnly, limit });
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ success: false, notifications: [], unreadCount: 0, error: err?.message || 'Failed to load notifications' });
+  }
+});
+
+app.post('/api/v1/operational/notifications/:id/read', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  try {
+    const result = await operationalEventService.markNotificationRead(req.params.id, auth.session);
+    if (!result.success) {
+      const status = result.error?.includes('Forbidden') ? 403 : result.error?.includes('not found') ? 404 : 400;
+      return res.status(status).json(result);
+    }
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || 'Failed to mark notification read' });
+  }
+});
+
+app.post('/api/v1/operational/notifications/:id/archive', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  try {
+    const result = await operationalEventService.archiveNotification(req.params.id, auth.session);
+    if (!result.success) {
+      const status = result.error?.includes('Forbidden') ? 403 : result.error?.includes('not found') ? 404 : 400;
+      return res.status(status).json(result);
+    }
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || 'Failed to archive notification' });
+  }
+});
+
+app.get('/api/v1/operational/notification-preferences', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  try {
+    const preferences = await operationalEventService.getNotificationPreferences(auth.session.userId);
+    res.json({ success: true, preferences });
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || 'Failed to fetch notification preferences' });
+  }
+});
+
+app.patch('/api/v1/operational/notification-preferences', async (req: Request, res: Response) => {
+  const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
+  try {
+    const result = await operationalEventService.updateNotificationPreferences(auth.session.userId, req.body || {}, auth.session);
+    if (!result.success) {
+      return res.status(403).json(result);
+    }
+    res.json(result);
+  } catch (err: any) {
+    res.status(500).json({ success: false, error: err?.message || 'Failed to update notification preferences' });
+  }
+});
 
 // M41.03: Member Registration
 app.post('/api/v1/member/register', async (req: Request, res: Response) => {
@@ -4671,9 +4825,12 @@ app.post('/api/v1/volunteers/register', async (req: Request, res: Response) => {
   }
 });
 
-// M41.06: Volunteer Profile Retrieval (Anti-IDOR protected)
+// M41.06: Volunteer Profile Retrieval (Authenticated & Anti-IDOR protected)
 app.get('/api/v1/volunteers/profile/:id', (req: Request, res: Response) => {
   const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
   const result = volunteerOperationsService.getVolunteerProfile(req.params.id, auth.session);
   if (!result.success) {
     return res.status(result.error?.includes('Forbidden') ? 403 : 404).json(result);
@@ -4681,9 +4838,12 @@ app.get('/api/v1/volunteers/profile/:id', (req: Request, res: Response) => {
   res.json(result);
 });
 
-// M41.06: Volunteer Profile Update (Anti-IDOR protected)
+// M41.06: Volunteer Profile Update (Authenticated & Anti-IDOR protected)
 app.post('/api/v1/volunteers/profile/:id', async (req: Request, res: Response) => {
   const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
   const result = await volunteerOperationsService.updateVolunteerProfile(req.params.id, req.body, auth.session);
   if (!result.success) {
     return res.status(result.error?.includes('Forbidden') ? 403 : 400).json(result);
@@ -4818,9 +4978,12 @@ app.post('/api/v1/staff/volunteers/hours/:id/verify', async (req: Request, res: 
   res.json(result);
 });
 
-// M41.06: Volunteer Service Hours History (Anti-IDOR protected)
+// M41.06: Volunteer Service Hours History (Authenticated & Anti-IDOR protected)
 app.get('/api/v1/volunteers/hours/:id/history', (req: Request, res: Response) => {
   const auth = extractSession(req);
+  if (!auth.valid || !auth.session) {
+    return res.status(401).json({ success: false, error: auth.error });
+  }
   const result = volunteerOperationsService.getVolunteerServiceHistory(req.params.id, auth.session);
   if (!result.success) {
     return res.status(result.error?.includes('Forbidden') ? 403 : 404).json(result);
@@ -7034,6 +7197,28 @@ app.post('/api/admin/email/oauth/exchange', requireSessionMiddleware(PRIVILEGED_
   }
 });
 
+// Rotate OAuth/Mail vault entries from *_PREVIOUS key to active OAUTH_TOKEN_ENCRYPTION_KEY
+app.post('/api/admin/security/rotate-vault-keys', requireSessionMiddleware(PRIVILEGED_ADMIN_ROLES), (req: Request, res: Response) => {
+  try {
+    const session = getAuthenticatedSession(req)!;
+    const outcome = oAuthService.rotateVaultEncryptionKey();
+    logAudit({
+      agentId: 'OAUTH_VAULT_SECURITY',
+      action: 'admin:security:rotate_vault_keys',
+      requesterRole: String(session.role),
+      status: outcome.failedCount === 0 ? 'allowed' : 'blocked_policy',
+      reason: `Rotated ${outcome.rotatedCount} encrypted credential entries (${outcome.failedCount} failed).`,
+    });
+    res.json({
+      success: outcome.failedCount === 0,
+      rotatedCount: outcome.rotatedCount,
+      failedCount: outcome.failedCount,
+    });
+  } catch (err: any) {
+    res.status(400).json({ success: false, error: err?.message || 'Vault key rotation failed.' });
+  }
+});
+
 // 3b. Mailbox synchronization trigger
 app.post(['/api/admin/email/mailboxes/:id/sync', '/api/admin/email/connections/:id/sync'], requireSessionMiddleware(STAFF_ADMIN_ROLES), async (req: Request, res: Response) => {
   try {
@@ -7061,6 +7246,20 @@ app.post(['/api/admin/email/mailboxes/:id/sync', '/api/admin/email/connections/:
 // 4. Mailbox folders and messages retrieval
 app.get('/api/admin/email/mailboxes/:id/folders', async (req: Request, res: Response) => {
   try {
+    const actor = getEmailAdminActor(req);
+    const conn = connectorRegistry.getConnection(req.params.id);
+    if (
+      conn &&
+      (conn.safeguardingClassification === 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP' ||
+        conn.emailAddress.toLowerCase().includes('safeguarding')) &&
+      !actor.isSafeguarding
+    ) {
+      return res.status(403).json({
+        success: false,
+        error: 'ACCESS DENIED: Confidential safeguarding mailbox folders are restricted under VAWA policy.',
+        safeguardingQuarantined: true,
+      });
+    }
     const folders = await connectorRegistry.inspectFolders(req.params.id);
     res.json({ success: true, folders });
   } catch (err: any) {
@@ -7369,9 +7568,42 @@ app.get('/api/admin/email/unified/threads/:threadId', async (req: Request, res: 
   }
 });
 
+async function verifyActorMessageAccess(
+  messageId: string,
+  actor: { role: string; email: string; isSafeguarding: boolean; mfaVerified: boolean }
+): Promise<{ allowed: boolean; status?: number; error?: string; code?: string }> {
+  const msgs = await dbAdapter.select<any>('email_messages', (m: any) => m.id === messageId);
+  const existing = msgs[0];
+  if (!existing) {
+    return { allowed: false, status: 404, error: `Message ${messageId} not found.` };
+  }
+  const isSafe =
+    Boolean(existing.isSafeguarded) ||
+    String(existing.mailboxEmail || '').toLowerCase().includes('safeguarding');
+  if (isSafe && !actor.isSafeguarding) {
+    return { allowed: false, status: 403, error: 'VAWA_SECTION_1367_FORBIDDEN: Safeguarding message restricted.', code: 'VAWA_SECTION_1367_FORBIDDEN' };
+  }
+  if (existing.mailboxEmail) {
+    const acl = await emailGovernanceService.checkMailboxAccess({
+      mailboxEmail: existing.mailboxEmail,
+      userRole: actor.role,
+      userEmail: actor.email,
+      mfaVerified: actor.mfaVerified,
+    });
+    if (!acl.allowed) {
+      return { allowed: false, status: 403, error: acl.reason, code: 'MAILBOX_ACL_DENIED' };
+    }
+  }
+  return { allowed: true };
+}
+
 app.post('/api/admin/email/messages/:messageId/read', async (req: Request, res: Response) => {
   try {
     const actor = getEmailAdminActor(req);
+    const access = await verifyActorMessageAccess(req.params.messageId, actor);
+    if (!access.allowed) {
+      return res.status(access.status || 403).json({ success: false, error: access.error, code: access.code });
+    }
     const read = req.body?.read !== undefined ? Boolean(req.body.read) : true;
     const message = await emailSyncService.markMessageReadUnread(req.params.messageId, read, actor.id);
     res.json({ success: true, message });
@@ -7384,6 +7616,10 @@ app.post('/api/admin/email/messages/:messageId/read', async (req: Request, res: 
 app.post('/api/admin/email/messages/:messageId/move', async (req: Request, res: Response) => {
   try {
     const actor = getEmailAdminActor(req);
+    const access = await verifyActorMessageAccess(req.params.messageId, actor);
+    if (!access.allowed) {
+      return res.status(access.status || 403).json({ success: false, error: access.error, code: access.code });
+    }
     const destination = String(req.body?.destinationFolder || '').toUpperCase();
     if (!['INBOX', 'ARCHIVE', 'TRASH', 'SPAM'].includes(destination)) {
       return res.status(400).json({ success: false, error: 'destinationFolder must be INBOX, ARCHIVE, TRASH, or SPAM.' });
@@ -7402,6 +7638,10 @@ app.post('/api/admin/email/messages/:messageId/move', async (req: Request, res: 
 app.post('/api/admin/email/messages/:messageId/restore', async (req: Request, res: Response) => {
   try {
     const actor = getEmailAdminActor(req);
+    const access = await verifyActorMessageAccess(req.params.messageId, actor);
+    if (!access.allowed) {
+      return res.status(access.status || 403).json({ success: false, error: access.error, code: access.code });
+    }
     const message = await emailSyncService.moveMessageFolder(req.params.messageId, 'INBOX', actor.id);
     const connector = connectorRegistry.getConnectorInstance(message.connectionId) as any;
     if (connector && typeof connector.restoreMessage === 'function') {
@@ -8673,13 +8913,11 @@ app.get('/api/phumulani-ai/knowledge/audit-report', (req: Request, res: Response
 async function startServer() {
   if (
     process.env.NODE_ENV === 'production' &&
-    !process.env.DATABASE_URL?.trim() &&
-    !process.env.PHUMULANI_OPERATIONAL_MODE?.trim()
+    process.env.PHUMULANI_OPERATIONAL_MODE?.trim() === 'LOCAL_DEVELOPMENT'
   ) {
-    console.warn(
-      '[Phumulani Platform] No DATABASE_URL configured; defaulting PHUMULANI_OPERATIONAL_MODE=STAGED_DEVELOPMENT for embedded durable storage.'
+    throw new Error(
+      '[Phumulani Platform] FATAL: PHUMULANI_OPERATIONAL_MODE=LOCAL_DEVELOPMENT is strictly forbidden when NODE_ENV=production.'
     );
-    process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
   }
 
   const dbPolicy = EnvironmentService.getDatabasePolicy();
@@ -8705,6 +8943,15 @@ async function startServer() {
       throw migErr;
     }
     console.warn('[Phumulani Platform] Migration notice (non-fatal in staged development):', migErr);
+  }
+
+  // Block 80.3: Enforce mandatory persistent encryption & session keys in PRODUCTION_ONLY mode
+  validateProductionSecurityKeys(dbPolicy);
+  if (oAuthService.getVaultLoadError()) {
+    if (dbPolicy.requireLiveDatabase) {
+      throw new Error(`[Phumulani Platform] FATAL: ${oAuthService.getVaultLoadError()}`);
+    }
+    console.warn(`[Phumulani Platform] OAuth vault notice: ${oAuthService.getVaultLoadError()}`);
   }
 
   try {

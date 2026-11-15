@@ -23,13 +23,17 @@
  * 16. Offline Model Fallback & Anti-Hallucination Integrity (15% MTDC indirect cost ceiling)
  */
 
-import { authSecurityService, UserSession } from '../src/services/authSecurityService';
-import { phumulaniAiAgentService, APPROVED_COMMUNITY_PROGRAMS } from '../src/services/phumulaniAiAgentService';
-import { localKnowledgeRetrievalService } from '../src/services/localKnowledgeRetrievalService';
-import { EmailEnterpriseService } from '../src/services/emailEnterpriseService';
-import { FundingCommandService } from '../src/services/fundingCommandService';
-import { localInferenceAdapter } from '../src/services/localInferenceAdapter';
-import { db } from '../src/services/db';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import type { UserSession } from '../src/services/authSecurityService';
+
+if (!process.env.PHUMULANI_RUNTIME_DATA_DIR) {
+  process.env.PHUMULANI_RUNTIME_DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'phumulani-m4-'));
+}
+if (!process.env.PHUMULANI_OPERATIONAL_MODE) {
+  process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
+}
 
 interface TestResult {
   id: string;
@@ -51,6 +55,14 @@ function recordTest(id: string, category: string, name: string, passed: boolean,
 }
 
 async function runMilestone4Suite() {
+  const { authSecurityService } = await import('../src/services/authSecurityService');
+  const { phumulaniAiAgentService, APPROVED_COMMUNITY_PROGRAMS } = await import('../src/services/phumulaniAiAgentService');
+  const { localKnowledgeRetrievalService } = await import('../src/services/localKnowledgeRetrievalService');
+  const { EmailEnterpriseService } = await import('../src/services/emailEnterpriseService');
+  const { FundingCommandService } = await import('../src/services/fundingCommandService');
+  const { localInferenceAdapter } = await import('../src/services/localInferenceAdapter');
+  const { db } = await import('../src/services/db');
+
   console.log('\n======================================================================');
   console.log(' PHUMULANI AI — MILESTONE 4: SECURE EMAIL COMMAND CENTER & CRM SUITE');
   console.log('======================================================================\n');

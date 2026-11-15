@@ -9,7 +9,8 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { db } from '../services/db';
 import { User, UserRole, SystemSettingItem } from '../types';
 import { ProductionHealthService, SystemVerificationProbeReport } from '../services/productionHealthService';
-import type { TestSuiteSummary } from '../services/automatedTestRunner';
+import { phumulaniApiClient } from '../api/phumulaniApiClient';
+import type { TestSuiteSummary } from '../types/verification';
 import { EnvironmentService } from '../services/environmentService';
 
 const EmailCommandCenterView = React.lazy(() => import('./EmailCommandCenterView').then((m) => ({ default: m.EmailCommandCenterView })));
@@ -235,8 +236,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
   const handleRunAcceptanceTests = async () => {
     setIsRunningTests(true);
     try {
-      const { AutomatedTestRunner } = await import('../services/automatedTestRunner');
-      const summary = await AutomatedTestRunner.runAllTests();
+      const summary = await phumulaniApiClient.runVerificationSuite();
       setTestSummary(summary);
       setActionNotice({
         type: summary.failed === 0 ? 'success' : 'warning',

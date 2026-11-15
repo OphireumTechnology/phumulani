@@ -228,25 +228,83 @@ async function main() {
 
   // B20.1 / B20.2: Failed sends never poison idempotency & sendApprovedEmail honors kill switch + STAGED
   await check('B20.1/B20.2 Failed outbound send is not cached in idempotency & sendApprovedEmail enforces kill-switch', async () => {
-    const badIdem = `idem-fail-${Date.now()}`;
-    const failRes = await emailDispatchService.dispatchApprovedMessage({
-      id: 'msg-fail-1',
+    // With 0 mailboxes (Phase 79.1 clean boot), outbound dispatch fails closed as CANCELLED without caching idempotency
+    const emptyIdem = `idem-empty-${Date.now()}`;
+    const emptyRes = await emailDispatchService.dispatchApprovedMessage({
+      id: 'msg-empty-1',
       connectionId: 'nonexistent-connection-id',
       senderAccount: 'donations@phumulani.org',
       to: ['donor@example.org'],
-      subject: 'Test Failure Non-Caching',
-      bodyText: 'Should fail cleanly without caching idempotency.',
-      idempotencyKey: badIdem,
-      approvalRecordId: 'apr-fail-1',
+      subject: 'Zero-Mailbox Fail-Closed Check',
+      bodyText: 'Should fail closed when 0 mailboxes are connected.',
+      idempotencyKey: emptyIdem,
+      approvalRecordId: 'apr-fail-0',
       approvedByUserId: 'usr-exec-01',
       approvedByName: 'Comfort Dondo',
       approvedAt: new Date().toISOString(),
       approvalVersion: 1,
       deliveryState: 'APPROVED',
     });
-    assert.equal(failRes.success, false);
-    assert.equal(failRes.deliveryState, 'FAILED');
-    assert.equal(failRes.providerMessageId, undefined);
+    assert.equal(emptyRes.success, false);
+    assert.equal(emptyRes.deliveryState, 'CANCELLED');
+    assert.equal((await dbAdapter.select<any>('email_idempotency_keys', (r) => r.id === emptyIdem)).length, 0);
+
+    // Seed canonical test connections and verify missing connection rejects cleanly + provider failure never poisons idempotency
+    connectorRegistry.seedCanonicalConnectionsForTesting();
+    const missingIdem = `idem-missing-${Date.now()}`;
+    await assert.rejects(
+      () =>
+        emailDispatchService.dispatchApprovedMessage({
+          id: 'msg-missing-1',
+          connectionId: 'nonexistent-connection-id',
+          senderAccount: 'donations@phumulani.org',
+          to: ['donor@example.org'],
+          subject: 'Missing Connection Reject Check',
+          bodyText: 'Must throw MAILBOX_CONNECTION_NOT_FOUND.',
+          idempotencyKey: missingIdem,
+          approvalRecordId: 'apr-fail-1',
+          approvedByUserId: 'usr-exec-01',
+          approvedByName: 'Comfort Dondo',
+          approvedAt: new Date().toISOString(),
+          approvalVersion: 1,
+          deliveryState: 'APPROVED',
+        }),
+      /MAILBOX_CONNECTION_NOT_FOUND/
+    );
+    assert.equal((await dbAdapter.select<any>('email_idempotency_keys', (r) => r.id === missingIdem)).length, 0);
+
+    // Real registered connection failure (connector fails during transmission) must return FAILED and clear idempotency
+    const badIdem = `idem-fail-${Date.now()}`;
+    const origTransmit = connectorRegistry.transmitApprovedMessage.bind(connectorRegistry);
+    (connectorRegistry as any).transmitApprovedMessage = async () => ({
+      success: false,
+      dispatchId: 'disp-sim-fail',
+      deliveryState: 'FAILED',
+      dispatchedAt: new Date().toISOString(),
+      error: 'Simulated pre-acceptance provider rejection (400)',
+    });
+    try {
+      const failRes = await emailDispatchService.dispatchApprovedMessage({
+        id: 'msg-fail-1',
+        connectionId: 'conn-google-donations_phumulani_org',
+        senderAccount: 'donations@phumulani.org',
+        to: ['donor@example.org'],
+        subject: 'Test Failure Non-Caching',
+        bodyText: 'Should fail cleanly without caching idempotency.',
+        idempotencyKey: badIdem,
+        approvalRecordId: 'apr-fail-1',
+        approvedByUserId: 'usr-exec-01',
+        approvedByName: 'Comfort Dondo',
+        approvedAt: new Date().toISOString(),
+        approvalVersion: 1,
+        deliveryState: 'APPROVED',
+      });
+      assert.equal(failRes.success, false);
+      assert.equal(failRes.deliveryState, 'FAILED');
+      assert.equal(failRes.providerMessageId, undefined);
+    } finally {
+      (connectorRegistry as any).transmitApprovedMessage = origTransmit;
+    }
 
     const idemRows = await dbAdapter.select<any>('email_idempotency_keys', (r) => r.id === badIdem);
     assert.equal(idemRows.length, 0, 'Failed send must NOT be persisted in email_idempotency_keys');

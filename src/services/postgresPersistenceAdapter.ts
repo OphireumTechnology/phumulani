@@ -11,7 +11,7 @@ import path from 'path';
 import crypto from 'crypto';
 import pg from 'pg';
 import { PostgresDetailedState } from '../types/emailEnterprise';
-import { EnvironmentService } from './environmentService';
+import { EnvironmentService, type PhumulaniOperationalMode } from './environmentService';
 
 const { Pool } = pg;
 
@@ -35,6 +35,8 @@ export interface DatabaseConnectionInfo {
   transactionSupport: boolean;
   concurrencyLockActive: boolean;
   readinessClassification: string;
+  operationalMode: PhumulaniOperationalMode;
+  isProductionReady: boolean;
   policyCode?: string;
   policyReason?: string;
   lastHealthPingAt?: string;
@@ -350,7 +352,8 @@ export class PostgresPersistenceAdapter {
 
     if (!this.txStorage && typeof process !== 'undefined' && process.versions?.node) {
       try {
-        const asyncHooksModule = await import('node:async_hooks');
+        const asyncHooksSpec = 'node:async_hooks';
+        const asyncHooksModule = await import(/* @vite-ignore */ asyncHooksSpec);
         if (asyncHooksModule?.AsyncLocalStorage) {
           this.txStorage = new asyncHooksModule.AsyncLocalStorage();
         }
@@ -359,10 +362,25 @@ export class PostgresPersistenceAdapter {
       }
     }
 
+    if (policy.nodeEnv === 'production' && policy.rawOperationalMode === 'LOCAL_DEVELOPMENT') {
+      this.connectionError = 'LOCAL_DEVELOPMENT_FORBIDDEN_IN_PRODUCTION: LOCAL_DEVELOPMENT cannot run when NODE_ENV=production.';
+      this.isInitialized = false;
+      throw new Error(`[PostgresAdapter] FATAL: ${this.connectionError}`);
+    }
+
     if (dbUrl) {
       const urlCheck = PostgresPersistenceAdapter.validateDatabaseUrl(dbUrl);
       if (!urlCheck.valid) {
         this.connectionError = urlCheck.error || 'Invalid DATABASE_URL';
+        this.isInitialized = false;
+        this.pool = null;
+        throw new Error(`[PostgresAdapter] FATAL: ${this.connectionError}`);
+      }
+      if (
+        policy.effectiveMode !== 'PRODUCTION_ONLY' &&
+        (dbUrl.toLowerCase().includes('prod') || dbUrl.toLowerCase().includes('production'))
+      ) {
+        this.connectionError = `PRODUCTION_NOT_AUTHORIZED: Non-production mode (${policy.effectiveMode}) cannot connect automatically to a production database target.`;
         this.isInitialized = false;
         this.pool = null;
         throw new Error(`[PostgresAdapter] FATAL: ${this.connectionError}`);
@@ -615,7 +633,7 @@ export class PostgresPersistenceAdapter {
     } else {
       databaseStatus = 'HEALTHY';
       applicationReadiness = 'READY';
-      readinessClassification = isPgActive ? 'PRODUCTION_VERIFIED' : 'INTEGRATION_COMPLETE_STAGED_READY';
+      readinessClassification = isPgActive ? 'STAGED_NON_PRODUCTION_DATABASE' : 'INTEGRATION_COMPLETE_STAGED_READY';
     }
 
     let totalRecords = 0;
@@ -684,6 +702,8 @@ export class PostgresPersistenceAdapter {
       transactionSupport: true,
       concurrencyLockActive: true,
       readinessClassification,
+      operationalMode: policy.effectiveMode,
+      isProductionReady: isProdRequired && isPgActive && databaseStatus === 'HEALTHY' && applicationReadiness === 'READY',
       policyCode: policy.policyCode,
       policyReason: policy.reason,
       lastHealthPingAt: this.lastHealthPingAt,

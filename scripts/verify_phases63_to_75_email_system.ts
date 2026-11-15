@@ -6,25 +6,15 @@
  */
 import crypto from 'node:crypto';
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
-import {
-  connectorRegistry,
-  oAuthService,
-  EmailSyncService,
-  EmailDispatchService,
-  EmailThreadService,
-  EmailAiIntelligenceService,
-  EmailGrantFinancialService,
-  EmailGovernanceService,
-  EmailAuditService,
-  EmailApprovalService,
-  EmailDeliveryStatus,
-  validateSafeMailHost,
-} from '../src/email';
-import { DatabaseMigrationService } from '../src/services/databaseMigrationService';
-import { PhumulaniAiAgentService } from '../src/services/phumulaniAiAgentService';
-import { CalendarIntegrationService } from '../src/services/calendarIntegrationService';
-import { BackgroundWorkerService } from '../src/services/backgroundWorkerService';
+
+if (!process.env.PHUMULANI_RUNTIME_DATA_DIR) {
+  process.env.PHUMULANI_RUNTIME_DATA_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'phumulani-p63-75-'));
+}
+if (!process.env.PHUMULANI_OPERATIONAL_MODE) {
+  process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
+}
 
 interface TestResult {
   id: string;
@@ -43,6 +33,25 @@ export async function runPhases63To75Verification(): Promise<{
   failed: number;
   results: TestResult[];
 }> {
+  const {
+    connectorRegistry,
+    oAuthService,
+    EmailSyncService,
+    EmailDispatchService,
+    EmailThreadService,
+    EmailAiIntelligenceService,
+    EmailGrantFinancialService,
+    EmailGovernanceService,
+    EmailAuditService,
+    EmailApprovalService,
+    EmailDeliveryStatus,
+    validateSafeMailHost,
+  } = await import('../src/email');
+  const { DatabaseMigrationService } = await import('../src/services/databaseMigrationService');
+  const { PhumulaniAiAgentService } = await import('../src/services/phumulaniAiAgentService');
+  const { CalendarIntegrationService } = await import('../src/services/calendarIntegrationService');
+  const { BackgroundWorkerService } = await import('../src/services/backgroundWorkerService');
+
   const results: TestResult[] = [];
   const rootDir = process.cwd();
   const originalFetch = globalThis.fetch;

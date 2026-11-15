@@ -30,7 +30,8 @@ import {
   OpportunityStatus,
 } from '../types/fundraising';
 import { FundraisingService, FundraisingKPIOverview } from '../services/fundraisingService';
-import type { TestSuiteSummary } from '../services/automatedTestRunner';
+import { phumulaniApiClient } from '../api/phumulaniApiClient';
+import type { TestSuiteSummary } from '../types/verification';
 import {
   Sparkles,
   DollarSign,
@@ -312,8 +313,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
   const handleRunAllTests = async () => {
     setIsRunningTests(true);
     try {
-      const { AutomatedTestRunner } = await import('../services/automatedTestRunner');
-      const summary = await AutomatedTestRunner.runAllTests();
+      const summary = await phumulaniApiClient.runVerificationSuite();
       setTestSummary(summary);
       notify(`Test suite complete: ${summary.passed}/${summary.total} tests passed in ${summary.durationMs}ms`);
     } catch {

@@ -64,6 +64,7 @@ export class OAuthService {
   private ephemeralVaultSecret: Buffer | null = null;
   private vaultPersistencePath: string;
   private vaultLoadError: string | null = null;
+  private decryptionFailureCount = 0;
 
   private constructor() {
     const runtimeDir = process.env.PHUMULANI_RUNTIME_DATA_DIR?.trim()
@@ -124,11 +125,10 @@ export class OAuthService {
     if (rawSafeguarding && !this.isWeakKeyMaterial(rawSafeguarding)) {
       return rawSafeguarding;
     }
-    const dbPolicy = EnvironmentService.getDatabasePolicy();
     if (
       EnvironmentService.isProductionOnly() ||
       process.env.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT' ||
-      (process.env.NODE_ENV === 'production' && !dbPolicy.allowEmbeddedFallback) ||
+      process.env.NODE_ENV === 'production' ||
       process.env.SAFEGUARDING_REQUIRE_CONFIGURED_KEY === 'true'
     ) {
       throw new Error('OAUTH_TOKEN_ENCRYPTION_KEY (minimum 32 high-entropy characters) is required for encrypted OAuth token storage in production.');
@@ -137,6 +137,41 @@ export class OAuthService {
       this.ephemeralVaultSecret = crypto.randomBytes(32);
     }
     return this.ephemeralVaultSecret;
+  }
+
+  public validateProductionKeyConfiguration(): { valid: boolean; reason?: string; keySource: 'OAUTH_TOKEN_ENCRYPTION_KEY' | 'SAFEGUARDING_FALLBACK' | 'EPHEMERAL_DISALLOWED' } {
+    const rawPrimary = process.env.OAUTH_TOKEN_ENCRYPTION_KEY?.trim();
+    if (rawPrimary && rawPrimary.length > 0) {
+      if (this.isWeakKeyMaterial(rawPrimary)) {
+        return {
+          valid: false,
+          keySource: 'OAUTH_TOKEN_ENCRYPTION_KEY',
+          reason: 'OAUTH_TOKEN_ENCRYPTION_KEY is weak (requires >=32 high-entropy characters).',
+        };
+      }
+      return { valid: true, keySource: 'OAUTH_TOKEN_ENCRYPTION_KEY' };
+    }
+    const rawSafeguarding = process.env.SAFEGUARDING_MASTER_KEY?.trim();
+    if (rawSafeguarding && !this.isWeakKeyMaterial(rawSafeguarding)) {
+      return { valid: true, keySource: 'SAFEGUARDING_FALLBACK' };
+    }
+    return {
+      valid: false,
+      keySource: 'EPHEMERAL_DISALLOWED',
+      reason: 'OAUTH_TOKEN_ENCRYPTION_KEY (minimum 32 high-entropy characters) is missing in production.',
+    };
+  }
+
+  public isUsingEphemeralKey(): boolean {
+    const rawPrimary = process.env.OAUTH_TOKEN_ENCRYPTION_KEY?.trim();
+    if (rawPrimary && !this.isWeakKeyMaterial(rawPrimary)) return false;
+    const rawSafeguarding = process.env.SAFEGUARDING_MASTER_KEY?.trim();
+    if (rawSafeguarding && !this.isWeakKeyMaterial(rawSafeguarding)) return false;
+    return true;
+  }
+
+  public getVaultDecryptionFailureCount(): number {
+    return this.decryptionFailureCount;
   }
 
   private resolvePreviousVaultSecret(): string | null {
@@ -269,9 +304,11 @@ export class OAuthService {
           this.saveEncryptedVault();
           return decrypted;
         } catch {
+          this.decryptionFailureCount++;
           return null;
         }
       }
+      this.decryptionFailureCount++;
       return null;
     }
   }

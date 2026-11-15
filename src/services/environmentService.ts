@@ -5,7 +5,7 @@
  * Grounded in Master Directive Phase 19 (M19.01, M19.02, M19.03, M19.14)
  */
 
-export type PhumulaniOperationalMode = 'PRODUCTION_ONLY' | 'STAGED_DEVELOPMENT';
+export type PhumulaniOperationalMode = 'LOCAL_DEVELOPMENT' | 'STAGED_DEVELOPMENT' | 'PRODUCTION_ONLY';
 
 export interface DatabaseEnvironmentPolicy {
   nodeEnv: string;
@@ -27,6 +27,8 @@ export interface PhumulaniEnvironmentConfig {
   nodeEnv: string;
   phumulaniEnvironment: string;
   operationalMode: PhumulaniOperationalMode;
+  isProductionReady: boolean;
+  nonProductionNotice: string | null;
   enableDemoMode: boolean;
   enableSyntheticData: boolean;
   enableFixtureSeeding: boolean;
@@ -58,7 +60,8 @@ export class EnvironmentService {
    * Rules:
    * 1. PHUMULANI_OPERATIONAL_MODE=PRODUCTION_ONLY or PRODUCTION_AUTHORIZED -> live PostgreSQL mandatory; JSON fallback prohibited.
    * 2. NODE_ENV=production without explicit PHUMULANI_OPERATIONAL_MODE=STAGED_DEVELOPMENT -> live PostgreSQL mandatory; JSON fallback prohibited.
-   * 3. PHUMULANI_OPERATIONAL_MODE=STAGED_DEVELOPMENT (or non-production development/testing) -> isolated embedded JSON permitted ONLY when DATABASE_URL is omitted.
+   * 3. PHUMULANI_OPERATIONAL_MODE=LOCAL_DEVELOPMENT -> isolated embedded storage (never allowed in NODE_ENV=production).
+   * 4. PHUMULANI_OPERATIONAL_MODE=STAGED_DEVELOPMENT -> isolated test infrastructure / embedded fallback when DATABASE_URL is omitted; never reported as production-ready.
    */
   public static getDatabasePolicy(): DatabaseEnvironmentPolicy {
     const nodeEnv =
@@ -94,6 +97,31 @@ export class EnvironmentService {
       };
     }
 
+    if (rawOperationalMode === 'LOCAL_DEVELOPMENT') {
+      if (nodeEnv === 'production') {
+        return {
+          nodeEnv,
+          rawOperationalMode,
+          effectiveMode: 'PRODUCTION_ONLY',
+          requireLiveDatabase: true,
+          allowEmbeddedFallback: false,
+          requireStrictTls: true,
+          policyCode: 'NODE_ENV_PRODUCTION_DEFAULT',
+          reason: 'LOCAL_DEVELOPMENT is prohibited when NODE_ENV=production; failing closed into PRODUCTION_ONLY.',
+        };
+      }
+      return {
+        nodeEnv,
+        rawOperationalMode,
+        effectiveMode: 'LOCAL_DEVELOPMENT',
+        requireLiveDatabase: false,
+        allowEmbeddedFallback: true,
+        requireStrictTls: false,
+        policyCode: 'LOCAL_DEVELOPMENT',
+        reason: 'LOCAL_DEVELOPMENT permits isolated embedded storage and explicit development fixture opt-in without touching production data.',
+      };
+    }
+
     if (rawOperationalMode === 'STAGED_DEVELOPMENT') {
       return {
         nodeEnv,
@@ -103,7 +131,7 @@ export class EnvironmentService {
         allowEmbeddedFallback: true,
         requireStrictTls: nodeEnv === 'production',
         policyCode: 'STAGED_DEVELOPMENT_AUTHORIZED',
-        reason: 'PHUMULANI_OPERATIONAL_MODE=STAGED_DEVELOPMENT explicitly authorizes isolated embedded durable storage when DATABASE_URL is omitted.',
+        reason: 'PHUMULANI_OPERATIONAL_MODE=STAGED_DEVELOPMENT permits isolated non-production test infrastructure and is never production-ready.',
       };
     }
 
@@ -143,17 +171,38 @@ export class EnvironmentService {
     }
   }
 
+  public static isLocalDevelopment(): boolean {
+    return this.getOperationalMode() === 'LOCAL_DEVELOPMENT';
+  }
+
+  public static getNonProductionStatusBanner(): string | null {
+    const mode = this.getOperationalMode();
+    if (mode === 'PRODUCTION_ONLY') return null;
+    if (mode === 'LOCAL_DEVELOPMENT') {
+      return 'NON-PRODUCTION MODE (LOCAL_DEVELOPMENT): Isolated local embedded storage active; production data connections blocked.';
+    }
+    return 'NON-PRODUCTION MODE (STAGED_DEVELOPMENT): Isolated staging test infrastructure active; not certified for live production traffic.';
+  }
+
   public static getConfig(): PhumulaniEnvironmentConfig {
     const policy = this.getDatabasePolicy();
     const isProdOnly = policy.effectiveMode === 'PRODUCTION_ONLY';
+    const isLocalDev = policy.effectiveMode === 'LOCAL_DEVELOPMENT';
+    const explicitDevFixturesEnabled =
+      typeof process !== 'undefined' &&
+      (process.env?.PHUMULANI_ENABLE_DEV_FIXTURES === 'true' ||
+        process.env?.PHUMULANI_EMAIL_TEST_FIXTURES === 'true' ||
+        process.env?.PHUMULANI_EMAIL_TEST_FIXTURES === '1');
 
     return {
       nodeEnv: isProdOnly ? 'production' : policy.nodeEnv || 'development',
-      phumulaniEnvironment: isProdOnly ? 'production' : 'staged-development',
+      phumulaniEnvironment: isProdOnly ? 'production' : isLocalDev ? 'local-development' : 'staged-development',
       operationalMode: policy.effectiveMode,
+      isProductionReady: isProdOnly,
+      nonProductionNotice: this.getNonProductionStatusBanner(),
       enableDemoMode: !isProdOnly,
       enableSyntheticData: !isProdOnly,
-      enableFixtureSeeding: !isProdOnly,
+      enableFixtureSeeding: isProdOnly ? false : isLocalDev ? explicitDevFixturesEnabled : true,
       enableMockEmail: !isProdOnly,
       enableMockPayments: false, // Never enable mock payments
       enableMockCrm: !isProdOnly,

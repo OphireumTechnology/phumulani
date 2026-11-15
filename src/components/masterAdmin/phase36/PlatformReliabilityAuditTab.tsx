@@ -27,7 +27,7 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import { phase36Service } from '../../../services/phase36Service';
-import { AutomatedTestRunner } from '../../../services/automatedTestRunner';
+import { phumulaniApiClient } from '../../../api/phumulaniApiClient';
 
 export const PlatformReliabilityAuditTab: React.FC = () => {
   const [activeSection, setActiveSection] = useState<
@@ -60,9 +60,9 @@ export const PlatformReliabilityAuditTab: React.FC = () => {
     setTestRunning(true);
     setTestResult(null);
     try {
-      const summary = await AutomatedTestRunner.runAllTests();
+      const summary = await phumulaniApiClient.runVerificationSuite();
       setTestResult(
-        `Suite Passed: ${summary.passed}/${summary.total} tests passing in ${summary.durationMs}ms with 0 failures.`
+        `Suite Passed: ${summary.passed}/${summary.total} tests passing in ${summary.durationMs}ms with ${summary.failed} failures.`
       );
     } catch (err: any) {
       setTestResult(`Suite execution error: ${err.message}`);

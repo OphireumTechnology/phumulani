@@ -80,32 +80,50 @@ jobs:
           echo "=== CI STAGE 2: TYPESCRIPT TYPE-CHECKING ==="
           npx tsc --noEmit
 
-      # CI Stage 3 — Application build (client, Pages base path, and production server)
-      - name: CI Stage 3 — Application Build
+      # CI Stage 3 — Application build (client, bundle isolation audit, Pages base path, and production server)
+      - name: CI Stage 3 — Application Build & Bundle Isolation Guard
         run: |
           echo "=== CI STAGE 3: APPLICATION & SERVER BUNDLE BUILD ==="
           npm run build
           test -f dist/index.html
           test -f dist-server/server.mjs
+          echo "=== VERIFYING CLIENT BUNDLE ARCHITECTURAL ISOLATION ==="
+          node -e "const fs=require('fs'),path=require('path');const d=path.join('dist','assets');const files=fs.readdirSync(d).filter(f=>f.endsWith('.js'));const bad=['imapflow','nodemailer','child_process','GoogleGenAI','AutomatedTestRunner','ServerVerificationService','__vite-browser-external_node_async_hooks'];const leaks=[];for(const f of files){if(f.includes('async_hooks'))leaks.push('chunk:'+f);const c=fs.readFileSync(path.join(d,f),'utf8');for(const b of bad){if(c.includes(b))leaks.push(f+':'+b);}}if(leaks.length){console.error('CLIENT BUNDLE LEAK DETECTED:',leaks);process.exit(1);}console.log('Verified clean client bundle isolation across',files.length,'JS assets.');"
           BASE_PATH=/phumulani/ npm run build:client
           if grep -rn '/phumulani/phumulani/' dist/; then
             echo "ERROR: Duplicate /phumulani/phumulani/ prefix detected in Pages build"
             exit 1
           fi
 
-      # CI Stage 4 — Security Isolation, Phase 62 Email & Full Regression Suites
-      - name: CI Stage 4 — Security Isolation, Email & Authoritative Regression Suites
+      # CI Stage 4 — Security Isolation, Email, Database, Vault & Authoritative Regression Suites
+      - name: CI Stage 4 — Security Isolation, Email, Database & Authoritative Regression Suites
         run: |
           echo "=== CI STAGE 4A: SECURITY & KNOWLEDGE ISOLATION SUITE ==="
           npx tsx scripts/verify_security_and_knowledge_isolation.ts
           echo "=== CI STAGE 4B: PHASE 62 PRODUCTION EMAIL INTEGRATION SUITE (35 TESTS) ==="
           npx tsx scripts/verify_phase62_production_email.ts
-          echo "=== CI STAGE 4C: AUTHORITATIVE REGRESSION SUITE ==="
-          npx tsx scripts/verify_suite.ts
+          echo "=== CI STAGE 4C: BLOCK 70 DATABASE INTEGRITY SUITE ==="
+          npx tsx scripts/verify_block70_database_integrity.ts
           echo "=== CI STAGE 4D: BLOCKS 6-13 SECURITY & PERSISTENCE REGRESSION SUITE ==="
           npx tsx scripts/verify_blocks6_to_13.ts
-          echo "=== CI STAGE 4E: PHASE 79 PRODUCTION REPAIR VERIFICATION SUITE ==="
+          echo "=== CI STAGE 4E: BLOCKS 16-25 EMAIL, OAUTH & DLQ VERIFICATION SUITE ==="
+          npx tsx scripts/verify_blocks16_to_25.ts
+          echo "=== CI STAGE 4F: PHASES 63-75 ENTERPRISE EMAIL SYSTEM SUITE ==="
+          npx tsx scripts/verify_phases63_to_75_email_system.ts
+          echo "=== CI STAGE 4G: MILESTONE 4 EMAIL INTELLIGENCE SUITE ==="
+          npx tsx scripts/verify_milestone4_email_intelligence.ts
+          echo "=== CI STAGE 4H: PHASE 76 PRODUCTION EMAIL ACTIVATION SUITE ==="
+          npx tsx scripts/verify_phase76_production_email_activation.ts
+          echo "=== CI STAGE 4I: PHASE 77 STABILIZATION SUITE ==="
+          npx tsx scripts/verify_phase77_stabilization.ts
+          echo "=== CI STAGE 4J: PHASE 79 PRODUCTION REPAIR VERIFICATION SUITE ==="
           npx tsx scripts/verify_phase79_production_repairs.ts
+          echo "=== CI STAGE 4K: PHASE 79.1 EMAIL DATA RESET & ANTI-RESEEDING SUITE ==="
+          npx tsx scripts/verify_phase79_1_email_reset.ts
+          echo "=== CI STAGE 4L: PHASE 80 SECURITY HARDENING & VAULT SUITE ==="
+          npx tsx scripts/verify_phase80_security_hardening.ts
+          echo "=== CI STAGE 4M: AUTHORITATIVE REGRESSION SUITE ==="
+          npx tsx scripts/verify_suite.ts
 
   # CI STAGES 5 - 9: BROWSER TEST DISCOVERY & CROSS-BROWSER MATRIX
   browser-tests:

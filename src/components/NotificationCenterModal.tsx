@@ -21,10 +21,10 @@ import {
   Sparkles,
 } from 'lucide-react';
 import {
-  operationalEventService,
-  ScopedInAppNotification,
-  UserNotificationPreferences,
-} from '../services/operationalEventService';
+  clientNotificationService,
+  type ScopedInAppNotification,
+  type UserNotificationPreferences,
+} from '../services/clientNotificationService';
 import type { User } from '../types';
 import type { SupportedLanguageCode } from '../types/phase33';
 
@@ -55,24 +55,11 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
     ? currentLang
     : 'en') as SupportedLanguageCode;
 
-  const userSession = {
-    sessionId: `sess-${currentUser.id}`,
-    userId: currentUser.id,
-    userEmail: currentUser.email,
-    name: currentUser.name,
-    email: currentUser.email,
-    role: currentUser.role,
-    departmentId: currentUser.department || '',
-    department: currentUser.department,
-    token: `tok-${currentUser.id}`,
-    createdAt: new Date().toISOString(),
-    expiresAt: new Date(Date.now() + 3600000).toISOString(),
-  };
-
   const loadData = async () => {
     setLoading(true);
     try {
-      const res = await operationalEventService.getNotificationsForUser(userSession, {
+      const res = await clientNotificationService.getNotificationsForUser({
+        role: currentUser.role,
         category: selectedCategory === 'ALL' ? undefined : selectedCategory,
         unreadOnly,
       });
@@ -80,7 +67,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
         setNotifications(res.notifications);
         setUnreadCount(res.unreadCount);
       }
-      const prefs = await operationalEventService.getNotificationPreferences(currentUser.id);
+      const prefs = await clientNotificationService.getNotificationPreferences();
       setPreferences(prefs);
     } catch (err) {
       console.error('Failed to load notifications:', err);
@@ -97,7 +84,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
 
   const handleMarkRead = async (notifId: string) => {
     try {
-      const res = await operationalEventService.markNotificationRead(notifId, userSession);
+      const res = await clientNotificationService.markNotificationRead(notifId);
       if (res.success) {
         setNotifications((prev) =>
           prev.map((n) => (n.notificationId === notifId ? { ...n, readAt: new Date().toISOString() } : n))
@@ -111,7 +98,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
 
   const handleArchive = async (notifId: string) => {
     try {
-      const res = await operationalEventService.archiveNotification(notifId, userSession);
+      const res = await clientNotificationService.archiveNotification(notifId);
       if (res.success) {
         setNotifications((prev) => prev.filter((n) => n.notificationId !== notifId));
       }
@@ -124,11 +111,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
     if (!preferences) return;
     setSavingPrefs(true);
     try {
-      const res = await operationalEventService.updateNotificationPreferences(
-        currentUser.id,
-        updates,
-        userSession
-      );
+      const res = await clientNotificationService.updateNotificationPreferences(updates);
       if (res.success && res.preferences) {
         setPreferences(res.preferences);
         setFeedbackMsg('Preferences saved successfully.');
@@ -164,7 +147,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
             </div>
             <div>
               <h2 id="notification-center-title" className="text-base sm:text-lg font-bold font-serif leading-tight">
-                {operationalEventService.localizeKey('notif.center.title', langCode) || 'Notification Center'}
+                {clientNotificationService.localizeKey('notif.center.title', langCode) || 'Notification Center'}
               </h2>
               <p className="text-xs text-emerald-100 font-sans">
                 {unreadCount} unread • {currentUser.name} ({currentUser.role.replace('_', ' ')})
@@ -265,12 +248,12 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
               ) : (
                 notifications.map((notif) => {
                   const isUnread = !notif.readAt;
-                  const localizedTitle = operationalEventService.localizeKey(
+                  const localizedTitle = clientNotificationService.localizeKey(
                     notif.titleKey,
                     langCode,
                     notif.interpolationParams
                   );
-                  const localizedMessage = operationalEventService.localizeKey(
+                  const localizedMessage = clientNotificationService.localizeKey(
                     notif.messageKey,
                     langCode,
                     notif.interpolationParams

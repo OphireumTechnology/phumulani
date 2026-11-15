@@ -29,7 +29,7 @@ import {
 
 import { SUPPORTED_LANGUAGES } from '../services/multilingualAccessibilityService';
 import { NotificationCenterModal } from './NotificationCenterModal';
-import { operationalEventService } from '../services/operationalEventService';
+import { clientNotificationService } from '../services/clientNotificationService';
 
 interface HeaderProps {
   currentUser: User;
@@ -92,32 +92,22 @@ export const Header: React.FC<HeaderProps> = ({
     let isMounted = true;
     const fetchUnread = async () => {
       try {
-        const session = {
-          sessionId: `sess-${currentUser.id}`,
-          userId: currentUser.id,
-          userEmail: currentUser.email,
-          name: currentUser.name,
-          email: currentUser.email,
+        const res = await clientNotificationService.getNotificationsForUser({
           role: currentUser.role,
-          departmentId: currentUser.department || '',
-          department: currentUser.department,
-          token: `tok-${currentUser.id}`,
-          createdAt: new Date().toISOString(),
-          expiresAt: new Date(Date.now() + 3600000).toISOString(),
-        };
-        const res = await operationalEventService.getNotificationsForUser(session, { unreadOnly: true });
+          unreadOnly: true,
+        });
         if (isMounted && res.success) {
           setUnreadCount(res.unreadCount);
         }
       } catch {
-        // Safe development fallback
+        // Ignore when unauthenticated or offline
       }
     };
     fetchUnread();
     return () => {
       isMounted = false;
     };
-  }, [currentUser.id]);
+  }, [currentUser.id, currentUser.role]);
 
   // Safe Exit function: replaces browser history and opens neutral destination
   const handleSafeExit = () => {
@@ -499,23 +489,11 @@ export const Header: React.FC<HeaderProps> = ({
         isOpen={notificationModalOpen}
         onClose={() => {
           setNotificationModalOpen(false);
-          // Refresh unread count on modal close
-          const session = {
-            sessionId: `sess-${currentUser.id}`,
-            userId: currentUser.id,
-            userEmail: currentUser.email,
-            name: currentUser.name,
-            email: currentUser.email,
-            role: currentUser.role,
-            departmentId: currentUser.department || '',
-            department: currentUser.department,
-            token: `tok-${currentUser.id}`,
-            createdAt: new Date().toISOString(),
-            expiresAt: new Date(Date.now() + 3600000).toISOString(),
-          };
-          operationalEventService.getNotificationsForUser(session, { unreadOnly: true }).then((res) => {
-            if (res.success) setUnreadCount(res.unreadCount);
-          });
+          clientNotificationService
+            .getNotificationsForUser({ role: currentUser.role, unreadOnly: true })
+            .then((res) => {
+              if (res.success) setUnreadCount(res.unreadCount);
+            });
         }}
         currentUser={currentUser}
         currentLang={currentLang}
