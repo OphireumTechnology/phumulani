@@ -8671,15 +8671,12 @@ app.get('/api/phumulani-ai/knowledge/audit-report', (req: Request, res: Response
 
 
 async function startServer() {
-  if (
-    process.env.NODE_ENV === 'production' &&
-    !process.env.DATABASE_URL?.trim() &&
-    !process.env.PHUMULANI_OPERATIONAL_MODE?.trim()
-  ) {
-    console.warn(
-      '[Phumulani Platform] No DATABASE_URL configured; defaulting PHUMULANI_OPERATIONAL_MODE=STAGED_DEVELOPMENT for embedded durable storage.'
+  // Never silently downgrade a production process to staged embedded storage.
+  // An explicitly configured isolated staging environment must use NODE_ENV=development.
+  if (process.env.NODE_ENV === 'production' && !process.env.DATABASE_URL?.trim()) {
+    throw new Error(
+      'PRODUCTION_DATABASE_REQUIRED: DATABASE_URL must be configured for production startup.'
     );
-    process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
   }
 
   const dbPolicy = EnvironmentService.getDatabasePolicy();
