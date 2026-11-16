@@ -9053,6 +9053,9 @@ async function startServer() {
   };
   process.once('SIGTERM', () => void gracefulShutdown('SIGTERM'));
   process.once('SIGINT', () => void gracefulShutdown('SIGINT'));
+  process.on('unhandledRejection', (reason) => {
+    console.error('[Phumulani Platform] Unhandled promise rejection:', reason);
+  });
 }
 
 startServer().catch(async (err) => {
