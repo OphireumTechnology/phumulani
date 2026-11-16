@@ -140,14 +140,14 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
       .find((i) => i.id === activeItemId)?.label || 'Dashboard';
 
   return (
-    <div className="min-h-screen bg-[#F7F9FA] flex flex-col">
+    <div className="min-h-screen bg-phumulani-cream flex flex-col">
       {/* Top Portal Header Bar */}
-      <div className="bg-white border-b border-slate-200 px-4 sm:px-6 h-14 flex items-center justify-between z-30 sticky top-0 shadow-2xs">
+      <div className="bg-white border-b border-phumulani-cream px-4 sm:px-6 h-14 flex items-center justify-between z-30 sticky top-0 shadow-2xs">
         <div className="flex items-center gap-3">
           {/* Mobile sidebar trigger */}
           <button
             onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-            className="md:hidden p-1.5 rounded-lg text-slate-600 hover:bg-slate-100"
+            className="md:hidden p-1.5 rounded-lg text-phumulani-charcoal hover:bg-phumulani-cream"
             aria-label="Toggle Navigation Sidebar"
             aria-expanded={mobileSidebarOpen}
             aria-controls="portal-mobile-sidebar"
@@ -158,7 +158,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
           {/* Desktop sidebar collapse toggle */}
           <button
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            className="hidden md:flex p-1.5 rounded-lg text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition-colors"
+            className="hidden md:flex p-1.5 rounded-lg text-phumulani-charcoal hover:text-phumulani-earth hover:bg-phumulani-cream transition-colors"
             title={isSidebarCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
           >
             {isSidebarCollapsed ? (
@@ -172,14 +172,14 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
           <div className="flex items-center gap-2 text-xs font-heading">
             <button
               onClick={() => onViewChange('public')}
-              className="text-slate-500 hover:text-[#006D6F] font-medium hidden sm:inline"
+              className="text-phumulani-charcoal hover:text-phumulani-earth font-medium hidden sm:inline"
             >
               Phumulani
             </button>
-            <span className="text-slate-300 hidden sm:inline">/</span>
-            <span className="font-semibold text-slate-700">{portalTitle}</span>
-            <span className="text-slate-300">/</span>
-            <span className="font-bold text-[#006D6F]">{activeItemLabel}</span>
+            <span className="text-phumulani-earth hidden sm:inline">/</span>
+            <span className="font-semibold text-phumulani-charcoal">{portalTitle}</span>
+            <span className="text-phumulani-earth">/</span>
+            <span className="font-bold text-phumulani-earth">{activeItemLabel}</span>
           </div>
         </div>
 
@@ -188,7 +188,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
           {/* Return to Public Website */}
           <button
             onClick={() => onViewChange('public')}
-            className="hidden sm:flex items-center gap-1.5 text-xs font-heading font-semibold text-slate-600 hover:text-[#006D6F] px-2.5 py-1 rounded-md hover:bg-slate-100 transition-colors cursor-pointer"
+            className="hidden sm:flex items-center gap-1.5 text-xs font-heading font-semibold text-phumulani-charcoal hover:text-phumulani-earth px-2.5 py-1 rounded-md hover:bg-phumulani-cream transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Public Website</span>
@@ -200,19 +200,19 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
               onClick={() => setPortalsDropdownOpen(!portalsDropdownOpen)}
               aria-haspopup="menu"
               aria-expanded={portalsDropdownOpen}
-              className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200/80 text-slate-700 border border-slate-200 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#006D6F]"
+              className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1 rounded-lg bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-charcoal border border-phumulani-earth transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth"
             >
               <span>Portals</span>
-              <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform ${portalsDropdownOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`w-3 h-3 text-phumulani-charcoal transition-transform ${portalsDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {portalsDropdownOpen && (
               <div
                 role="menu"
                 aria-label="Switch Portal"
-                className="absolute right-0 mt-1.5 w-64 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100"
+                className="absolute right-0 mt-1.5 w-64 bg-white rounded-xl shadow-xl border border-phumulani-earth py-1.5 z-50 animate-in fade-in zoom-in-95 duration-100"
               >
-                <div className="px-3 py-1 text-[10px] uppercase font-bold text-slate-400">
+                <div className="px-3 py-1 text-[10px] uppercase font-bold text-phumulani-earth">
                   Switch Portal
                 </div>
                 {portals.map((p) => {
@@ -225,8 +225,8 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
                         onViewChange(p.id);
                         setPortalsDropdownOpen(false);
                       }}
-                      className={`w-full text-left px-3 py-2 text-xs flex items-center gap-2 hover:bg-slate-50 transition-colors cursor-pointer ${
-                        p.id === portalId ? 'font-bold text-[#006D6F] bg-teal-50/70 font-heading' : 'text-slate-700 font-sans'
+                      className={`w-full text-left px-3 py-2 text-xs flex items-center gap-2 hover:bg-phumulani-cream transition-colors cursor-pointer ${
+                        p.id === portalId ? 'font-bold text-phumulani-earth bg-phumulani-cream font-heading' : 'text-phumulani-charcoal font-sans'
                       }`}
                     >
                       <Icon className="w-3.5 h-3.5 shrink-0" />
@@ -241,13 +241,13 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
           {/* In-App Notification Center Bell */}
           <button
             onClick={() => setNotificationModalOpen(true)}
-            className="relative p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
+            className="relative p-1.5 rounded-lg bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-charcoal transition-colors cursor-pointer"
             title="Open Notification Center"
             aria-label="Open Notification Center"
           >
-            <Bell className="w-4 h-4 text-[#006D6F]" />
+            <Bell className="w-4 h-4 text-phumulani-earth" />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-amber-500 text-white font-bold text-[9px] px-1.5 py-0.2 rounded-full ring-2 ring-white">
+              <span className="absolute -top-1 -right-1 bg-phumulani-earth text-white font-bold text-[9px] px-1.5 py-0.2 rounded-full ring-2 ring-white">
                 {unreadCount}
               </span>
             )}
@@ -256,7 +256,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
           {/* Safe Exit */}
           <button
             onClick={handleSafeExit}
-            className="bg-rose-700 hover:bg-rose-800 text-white font-bold px-2.5 py-1 rounded text-xs transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
+            className="bg-phumulani-earth hover:bg-phumulani-orange text-white font-bold px-2.5 py-1 rounded text-xs transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
             title="Instant safe exit to Weather.com (replaces browser history)"
           >
             <span>SAFE EXIT</span>
@@ -269,20 +269,20 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
       <div className="flex-1 flex overflow-hidden">
         {/* DESKTOP SIDEBAR */}
         <aside
-          className={`hidden md:flex flex-col bg-white border-r border-slate-200 transition-all duration-200 select-none ${
+          className={`hidden md:flex flex-col bg-white border-r border-phumulani-cream transition-all duration-200 select-none ${
             isSidebarCollapsed ? 'w-18' : 'w-64'
           }`}
         >
           {/* Sidebar Top: Portal Identity */}
-          <div className="p-4 border-b border-slate-100">
+          <div className="p-4 border-b border-phumulani-cream">
             {!isSidebarCollapsed ? (
               <div className="flex items-start gap-2.5">
                 <PhumulaniLogo variant="mark" size={32} className="shrink-0 mt-0.5" />
                 <div className="min-w-0 flex-1">
-                  <div className="font-heading font-bold text-sm text-[#006D6F] leading-tight truncate">
+                  <div className="font-heading font-bold text-sm text-phumulani-earth leading-tight truncate">
                     {portalTitle}
                   </div>
-                  <div className="text-[10px] text-slate-500 font-sans truncate mt-0.5">
+                  <div className="text-[10px] text-phumulani-charcoal font-sans truncate mt-0.5">
                     {portalSubtitle}
                   </div>
                 </div>
@@ -299,7 +299,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
             {navGroups.map((group, gIdx) => (
               <div key={gIdx} className="space-y-1">
                 {!isSidebarCollapsed && group.groupLabel && (
-                  <div className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  <div className="px-2 text-[10px] font-bold text-phumulani-earth uppercase tracking-wider">
                     {group.groupLabel}
                   </div>
                 )}
@@ -314,8 +314,8 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
                         isSidebarCollapsed ? 'justify-center p-2.5' : 'justify-between px-3 py-2'
                       } ${
                         isActive
-                          ? 'bg-[#006D6F] text-white shadow-xs'
-                          : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                          ? 'bg-phumulani-earth text-white shadow-xs'
+                          : 'text-phumulani-charcoal hover:text-phumulani-earth hover:bg-phumulani-cream'
                       }`}
                       title={item.label}
                     >
@@ -327,7 +327,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
                       {!isSidebarCollapsed && item.badge !== undefined && (
                         <span
                           className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                            isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                            isActive ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-cream text-phumulani-charcoal'
                           }`}
                         >
                           {item.badge}
@@ -341,23 +341,23 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
           </div>
 
           {/* Sidebar Footer: Active User & Security Status */}
-          <div className="p-3 border-t border-slate-100 bg-slate-50/50">
+          <div className="p-3 border-t border-phumulani-cream bg-phumulani-cream">
             {!isSidebarCollapsed ? (
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-full bg-[#006D6F]/10 text-[#006D6F] flex items-center justify-center font-bold text-xs shrink-0">
+                <div className="w-7 h-7 rounded-full bg-phumulani-earth text-white flex items-center justify-center font-bold text-xs shrink-0">
                   {currentUser.name.charAt(0)}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="text-xs font-heading font-bold text-slate-800 truncate leading-tight">
+                  <div className="text-xs font-heading font-bold text-phumulani-charcoal truncate leading-tight">
                     {currentUser.name}
                   </div>
-                  <div className="text-[10px] text-slate-500 capitalize truncate font-sans">
+                  <div className="text-[10px] text-phumulani-charcoal capitalize truncate font-sans">
                     {currentUser.role.replace('_', ' ')}
                   </div>
                 </div>
               </div>
             ) : (
-              <div className="w-7 h-7 rounded-full bg-[#006D6F]/10 text-[#006D6F] flex items-center justify-center font-bold text-xs mx-auto">
+              <div className="w-7 h-7 rounded-full bg-phumulani-earth text-white flex items-center justify-center font-bold text-xs mx-auto">
                 {currentUser.name.charAt(0)}
               </div>
             )}
@@ -368,25 +368,25 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
         {mobileSidebarOpen && (
           <div className="md:hidden fixed inset-0 z-50 flex">
             <div
-              className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs"
+              className="fixed inset-0 bg-phumulani-charcoal/80 backdrop-blur-xs"
               onClick={() => setMobileSidebarOpen(false)}
             />
             <nav id="portal-mobile-sidebar" aria-label="Mobile portal navigation" className="relative w-72 max-w-[calc(100vw-1rem)] bg-white h-full shadow-2xl flex flex-col z-10">
-              <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+              <div className="p-4 border-b border-phumulani-cream flex items-center justify-between">
                 <div className="flex items-center gap-2.5 min-w-0">
                   <PhumulaniLogo variant="mark" size={28} className="shrink-0" />
                   <div className="min-w-0">
-                    <div className="font-heading font-bold text-sm text-[#006D6F] truncate">
+                    <div className="font-heading font-bold text-sm text-phumulani-earth truncate">
                       {portalTitle}
                     </div>
-                    <div className="text-[10px] text-slate-500 font-sans truncate">
+                    <div className="text-[10px] text-phumulani-charcoal font-sans truncate">
                       {currentUser.name} ({currentUser.role})
                     </div>
                   </div>
                 </div>
                 <button
                   onClick={() => setMobileSidebarOpen(false)}
-                  className="p-1 text-slate-500"
+                  className="p-1 text-phumulani-charcoal"
                   aria-label="Close mobile portal navigation"
                 >
                   <X className="w-4 h-4" />
@@ -394,13 +394,13 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
               </div>
 
               {/* Quick Return to Public Website */}
-              <div className="p-3 border-b border-slate-100">
+              <div className="p-3 border-b border-phumulani-cream">
                 <button
                   onClick={() => {
                     onViewChange('public');
                     setMobileSidebarOpen(false);
                   }}
-                  className="min-h-[44px] w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-teal-50 hover:bg-teal-100 text-[#006D6F] font-heading font-semibold text-xs transition-colors cursor-pointer"
+                  className="min-h-[44px] w-full flex items-center gap-2 px-3 py-2 rounded-lg bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-earth hover:text-phumulani-charcoal font-heading font-semibold text-xs transition-colors cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4 shrink-0" />
                   <span>Return to Public Website</span>
@@ -411,7 +411,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
                 {navGroups.map((group, gIdx) => (
                   <div key={gIdx} className="space-y-1">
                     {group.groupLabel && (
-                      <div className="px-2 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                      <div className="px-2 text-[10px] font-bold text-phumulani-earth uppercase tracking-wider">
                         {group.groupLabel}
                       </div>
                     )}
@@ -427,8 +427,8 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
                           }}
                           className={`min-h-[44px] w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-heading font-semibold transition-colors cursor-pointer ${
                             isActive
-                              ? 'bg-[#006D6F] text-white shadow-xs'
-                              : 'text-slate-600 hover:bg-slate-50'
+                              ? 'bg-phumulani-earth text-white shadow-xs'
+                              : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                           }`}
                         >
                           <div className="flex items-center gap-2">
@@ -436,7 +436,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
                             <span>{item.label}</span>
                           </div>
                           {item.badge !== undefined && (
-                            <span className="text-[10px] px-1.5 py-0.2 rounded-full font-bold bg-slate-100 text-slate-600">
+                            <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${isActive ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-cream text-phumulani-charcoal'}`}>
                               {item.badge}
                             </span>
                           )}

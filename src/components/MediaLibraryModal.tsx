@@ -49,41 +49,41 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 no-print">
-      <div className="bg-white rounded-2xl max-w-5xl w-full border border-slate-200 shadow-2xl flex flex-col max-h-[92vh] overflow-hidden animate-in fade-in">
+    <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 no-print">
+      <div className="bg-white rounded-2xl max-w-5xl w-full border border-phumulani-earth shadow-2xl flex flex-col max-h-[92vh] overflow-hidden animate-in fade-in">
         {/* Header */}
-        <div className="bg-[#104F57] text-white p-5 flex items-center justify-between">
+        <div className="bg-phumulani-earth text-white p-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-teal-800 flex items-center justify-center border border-teal-600">
-              <ShieldCheck className="w-5 h-5 text-amber-300" />
+            <div className="w-10 h-10 rounded-xl bg-phumulani-charcoal flex items-center justify-center border border-phumulani-gold">
+              <ShieldCheck className="w-5 h-5 text-phumulani-gold" />
             </div>
             <div>
-              <h3 className="font-serif text-lg sm:text-xl font-bold">
+              <h3 className="font-serif text-lg sm:text-xl font-bold text-white">
                 Phumulani Media Preservation &amp; Safeguarding Registry
               </h3>
-              <p className="text-xs text-teal-200">
+              <p className="text-xs text-phumulani-cream">
                 Audited visual assets, SHA-256 checksums &amp; survivor protection clearance
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-teal-200 hover:text-white hover:bg-teal-800 rounded-lg cursor-pointer"
+            className="p-1.5 text-phumulani-cream hover:text-white hover:bg-phumulani-charcoal rounded-lg cursor-pointer"
           >
             ✕
           </button>
         </div>
 
         {/* Toolbar: Search, Filters & Export Manifest */}
-        <div className="p-4 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="p-4 bg-phumulani-cream border-b border-phumulani-earth flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-2 flex-1 min-w-[240px]">
-            <Search className="w-4 h-4 text-slate-400" />
+            <Search className="w-4 h-4 text-phumulani-charcoal" />
             <input
               type="text"
               placeholder="Search title, caption, ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-white border border-slate-300 rounded-lg px-3 py-1.5 outline-none focus:ring-1 focus:ring-[#104F57]"
+              className="w-full bg-white border border-phumulani-earth rounded-lg px-3 py-1.5 outline-none focus:ring-1 focus:ring-phumulani-orange text-phumulani-charcoal"
             />
           </div>
 
@@ -94,8 +94,8 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-colors cursor-pointer whitespace-nowrap ${
                   selectedCategory === cat.id
-                    ? 'bg-[#104F57] text-white'
-                    : 'bg-white text-slate-700 hover:bg-slate-200 border border-slate-300'
+                    ? 'bg-phumulani-earth text-white'
+                    : 'bg-white text-phumulani-charcoal hover:bg-phumulani-cream border border-phumulani-earth'
                 }`}
               >
                 {cat.label}
@@ -105,22 +105,22 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
 
           <button
             onClick={handleCopyManifest}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-teal-50 text-[#104F57] border border-teal-300 rounded-lg font-bold transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-phumulani-cream text-phumulani-earth border border-phumulani-earth rounded-lg font-bold transition-colors cursor-pointer"
           >
-            {copiedId === 'manifest' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+            {copiedId === 'manifest' ? <Check className="w-3.5 h-3.5 text-phumulani-green" /> : <Copy className="w-3.5 h-3.5" />}
             <span>{copiedId === 'manifest' ? 'Manifest Copied!' : 'Copy JSON Manifest'}</span>
           </button>
         </div>
 
         {/* Safeguarding Notice Banner */}
-        <div className="bg-amber-50 border-b border-amber-200 px-4 py-2 text-[11px] text-amber-900 flex items-center justify-between">
+        <div className="bg-phumulani-gold border-b border-phumulani-earth px-4 py-2 text-[11px] text-phumulani-charcoal flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-amber-700 shrink-0" />
+            <ShieldAlert className="w-4 h-4 text-phumulani-charcoal shrink-0" />
             <span>
               <strong>Section 6 Safeguarding Protocol:</strong> Only assets with confirmed consent &amp; cleared safeguarding review are published to the public website.
             </span>
           </div>
-          <span className="font-mono text-[10px] text-amber-800 font-bold hidden sm:inline">
+          <span className="font-mono text-[10px] text-phumulani-charcoal font-bold hidden sm:inline">
             Local Backup: D:\Phumulani\Backups\MediaArchive
           </span>
         </div>
@@ -132,18 +132,18 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
               key={asset.id}
               className={`rounded-xl border p-4 space-y-3 flex flex-col justify-between ${
                 asset.safeguardingReviewStatus === 'cleared_for_public_web'
-                  ? 'bg-white border-slate-200 shadow-2xs'
-                  : 'bg-rose-50/50 border-rose-300 shadow-2xs'
+                  ? 'bg-white border-phumulani-earth shadow-2xs'
+                  : 'bg-phumulani-cream border-phumulani-earth shadow-2xs'
               }`}
             >
               <div className="space-y-2">
                 {/* Media Preview or Icon */}
-                <div className="aspect-video bg-slate-100 rounded-lg overflow-hidden border border-slate-200 flex items-center justify-center relative">
+                <div className="aspect-video bg-phumulani-cream rounded-lg overflow-hidden border border-phumulani-earth flex items-center justify-center relative">
                   {asset.mediaType === 'video_embed' ? (
-                    <div className="w-full h-full bg-slate-900 flex flex-col items-center justify-center p-3 text-center">
-                      <span className="text-[10px] text-amber-400 font-bold uppercase tracking-wider">Video Stream</span>
+                    <div className="w-full h-full bg-phumulani-charcoal flex flex-col items-center justify-center p-3 text-center">
+                      <span className="text-[10px] text-phumulani-gold font-bold uppercase tracking-wider">Video Stream</span>
                       <span className="text-xs text-white font-bold mt-1">{asset.title}</span>
-                      <span className="text-[10px] text-slate-400 mt-1">Provider: {asset.videoMetadata?.provider}</span>
+                      <span className="text-[10px] text-phumulani-cream mt-1">Provider: {asset.videoMetadata?.provider}</span>
                     </div>
                   ) : (
                     <SafeImage
@@ -156,8 +156,8 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
                   <span
                     className={`absolute top-2 right-2 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
                       asset.safeguardingReviewStatus === 'cleared_for_public_web'
-                        ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                        : 'bg-rose-100 text-rose-800 border border-rose-300'
+                        ? 'bg-phumulani-green text-phumulani-charcoal border border-phumulani-charcoal'
+                        : 'bg-phumulani-earth text-white border border-phumulani-earth'
                     }`}
                   >
                     {asset.safeguardingReviewStatus.replace(/_/g, ' ')}
@@ -165,32 +165,32 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                  <div className="flex items-center justify-between text-[10px] text-phumulani-charcoal font-mono">
                     <span>{asset.id}</span>
                     <span className="capitalize">{asset.category}</span>
                   </div>
-                  <h4 className="font-serif font-bold text-sm text-slate-900 mt-0.5 leading-snug">
+                  <h4 className="font-serif font-bold text-sm text-phumulani-earth mt-0.5 leading-snug">
                     {asset.title}
                   </h4>
-                  <p className="text-[11px] text-slate-600 mt-1 line-clamp-2">
+                  <p className="text-[11px] text-phumulani-charcoal mt-1 line-clamp-2">
                     {asset.caption}
                   </p>
                 </div>
               </div>
 
               {/* Technical & Audit Details */}
-              <div className="pt-2 border-t border-slate-100 space-y-1 text-[10px] text-slate-500 font-mono">
+              <div className="pt-2 border-t border-phumulani-cream space-y-1 text-[10px] text-phumulani-charcoal font-mono">
                 <div className="truncate">Owner: {asset.copyrightOwner}</div>
                 <div className="truncate">Checksum: {asset.checksumSha256.slice(0, 20)}...</div>
                 <div className="flex justify-between items-center pt-1 font-sans">
-                  <span className="text-[10px] text-[#104F57] font-semibold">
+                  <span className="text-[10px] text-phumulani-earth font-semibold">
                     Usage: {asset.usageAuthorization.slice(0, 32)}...
                   </span>
                   <a
                     href={asset.sourceUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[#104F57] hover:underline flex items-center gap-0.5"
+                    className="text-phumulani-earth hover:text-phumulani-orange hover:underline flex items-center gap-0.5"
                   >
                     <span>Source</span>
                     <ExternalLink className="w-2.5 h-2.5" />
@@ -202,13 +202,13 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
         </div>
 
         {/* Footer */}
-        <div className="p-4 bg-slate-100 border-t border-slate-200 flex justify-between items-center text-xs">
-          <span className="text-slate-600">
+        <div className="p-4 bg-phumulani-cream border-t border-phumulani-earth flex justify-between items-center text-xs">
+          <span className="text-phumulani-charcoal">
             Total Preserved Assets: <strong>{PHUMULANI_MEDIA_INVENTORY.length}</strong> (All verified &amp; checksummed)
           </span>
           <button
             onClick={onClose}
-            className="px-5 py-2 bg-[#104F57] hover:bg-[#0c3e44] text-white rounded-lg font-bold cursor-pointer"
+            className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold cursor-pointer"
           >
             Close Registry
           </button>

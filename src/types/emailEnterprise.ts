@@ -69,11 +69,11 @@ export const PRIORITY_CONFIG: Record<
   EmailPriorityLevel,
   { label: string; slaHours: number; description: string; badgeColor: string }
 > = {
-  P0: { label: 'P0 — Critical', slaHours: 1, description: 'Safeguarding emergency, serious security, imminent service jeopardy. Route to human officer immediately.', badgeColor: 'bg-rose-100 text-rose-800 border-rose-300' },
-  P1: { label: 'P1 — Urgent', slaHours: 4, description: 'Grant deadline < 24h, executive decision, time-sensitive funding, immediate meeting.', badgeColor: 'bg-orange-100 text-orange-800 border-orange-300' },
-  P2: { label: 'P2 — High', slaHours: 24, description: 'Major donor inquiry, corporate sponsorship proposal, grant invitation, significant partnership.', badgeColor: 'bg-amber-100 text-amber-800 border-amber-300' },
-  P3: { label: 'P3 — Normal', slaHours: 48, description: 'Volunteer inquiries, event registration questions, administrative correspondence.', badgeColor: 'bg-blue-100 text-blue-800 border-blue-300' },
-  P4: { label: 'P4 — Low', slaHours: 72, description: 'Newsletters, general announcements, non-urgent updates, marketing.', badgeColor: 'bg-slate-100 text-slate-700 border-slate-300' },
+  P0: { label: 'P0 — Critical', slaHours: 1, description: 'Safeguarding emergency, serious security, imminent service jeopardy. Route to human officer immediately.', badgeColor: 'bg-phumulani-earth text-white border-phumulani-earth' },
+  P1: { label: 'P1 — Urgent', slaHours: 4, description: 'Grant deadline < 24h, executive decision, time-sensitive funding, immediate meeting.', badgeColor: 'bg-phumulani-orange text-phumulani-charcoal border-phumulani-earth' },
+  P2: { label: 'P2 — High', slaHours: 24, description: 'Major donor inquiry, corporate sponsorship proposal, grant invitation, significant partnership.', badgeColor: 'bg-phumulani-gold text-phumulani-charcoal border-phumulani-charcoal' },
+  P3: { label: 'P3 — Normal', slaHours: 48, description: 'Volunteer inquiries, event registration questions, administrative correspondence.', badgeColor: 'bg-phumulani-teal text-phumulani-charcoal border-phumulani-charcoal' },
+  P4: { label: 'P4 — Low', slaHours: 72, description: 'Newsletters, general announcements, non-urgent updates, marketing.', badgeColor: 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-charcoal' },
 };
 
 export type EmailFolder = 'INBOX' | 'SENT' | 'ARCHIVE' | 'TRASH' | 'SPAM' | 'DRAFTS';

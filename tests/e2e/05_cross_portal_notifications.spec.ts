@@ -43,7 +43,7 @@ test.describe('M41.09 — Cross-Portal Notifications & Operational Coordination'
     const memberBtn = page.getByRole('button', { name: 'MEMBER', exact: true });
     if (await memberBtn.isVisible()) {
       await memberBtn.click();
-      await expect(memberBtn).toHaveClass(/bg-\[#104F57\]/);
+      await expect(memberBtn).toHaveClass(/bg-phumulani-earth/);
     }
   });
 

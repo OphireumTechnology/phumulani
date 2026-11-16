@@ -63,14 +63,14 @@ export const PhumulaniLogo: React.FC<PhumulaniLogoProps> = ({
         onClick={onClick}
         className={`inline-flex items-center gap-2 select-none ${onClick ? 'cursor-pointer' : ''} ${className}`}
       >
-        <div className="w-9 h-9 rounded-lg bg-[#006D6F] flex items-center justify-center text-white font-bold text-sm tracking-wider shadow-xs">
+        <div className="w-9 h-9 rounded-lg bg-phumulani-earth flex items-center justify-center text-white font-bold text-sm tracking-wider shadow-xs">
           PH
         </div>
         <div>
-          <div className="font-heading font-extrabold text-base tracking-tight text-[#F05A28] leading-none">
+          <div className="font-heading font-extrabold text-base tracking-tight text-phumulani-earth leading-none">
             PHUMULANI
           </div>
-          <div className="font-merriweather italic text-[11px] text-[#7A9B29] leading-tight">
+          <div className="font-merriweather italic text-[11px] text-phumulani-charcoal leading-tight">
             The voice of immigrants and refugees in America
           </div>
         </div>

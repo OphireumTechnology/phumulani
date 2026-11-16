@@ -115,49 +115,49 @@ export const VolunteerDeploymentTab: React.FC<Props> = ({ currentUserRole, curre
     <div className="space-y-6">
       {/* METRIC STRIP */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
+        <div className="bg-white p-5 rounded-2xl border border-phumulani-cream shadow-xs">
+          <div className="flex items-center justify-between text-phumulani-charcoal mb-2">
             <span className="text-[11px] font-bold uppercase tracking-wider">Scheduled Shifts</span>
-            <Calendar className="w-4 h-4 text-teal-700" />
+            <Calendar className="w-4 h-4 text-phumulani-earth" />
           </div>
-          <div className="text-2xl font-bold font-serif text-slate-900">{deployments.length}</div>
-          <div className="text-[10px] text-slate-400 mt-0.5">Community programs coverage</div>
+          <div className="text-2xl font-bold font-serif text-phumulani-charcoal">{deployments.length}</div>
+          <div className="text-[10px] text-phumulani-charcoal mt-0.5">Community programs coverage</div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
+        <div className="bg-white p-5 rounded-2xl border border-phumulani-cream shadow-xs">
+          <div className="flex items-center justify-between text-phumulani-charcoal mb-2">
             <span className="text-[11px] font-bold uppercase tracking-wider">Verified Hours Total</span>
-            <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <ShieldCheck className="w-4 h-4 text-phumulani-earth" />
           </div>
-          <div className="text-2xl font-bold font-serif text-emerald-700">{totalVerifiedHours} hrs</div>
-          <div className="text-[10px] text-slate-400 mt-0.5">Supervisor certified service</div>
+          <div className="text-2xl font-bold font-serif text-phumulani-earth">{totalVerifiedHours} hrs</div>
+          <div className="text-[10px] text-phumulani-charcoal mt-0.5">Supervisor certified service</div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-2">
+        <div className="bg-white p-5 rounded-2xl border border-phumulani-cream shadow-xs">
+          <div className="flex items-center justify-between text-phumulani-charcoal mb-2">
             <span className="text-[11px] font-bold uppercase tracking-wider">Screening Policy</span>
-            <Award className="w-4 h-4 text-amber-600" />
+            <Award className="w-4 h-4 text-phumulani-earth" />
           </div>
-          <div className="text-sm font-bold text-slate-800">100% Cleared Only</div>
-          <div className="text-[10px] text-slate-400 mt-0.5">Mandatory BCA background checks</div>
+          <div className="text-sm font-bold text-phumulani-charcoal">100% Cleared Only</div>
+          <div className="text-[10px] text-phumulani-charcoal mt-0.5">Mandatory BCA background checks</div>
         </div>
       </div>
 
       {/* TOP HEADER */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-[10px] font-mono font-bold bg-teal-50 text-teal-800 px-2.5 py-0.5 rounded-full border border-teal-200 uppercase">
+          <span className="text-[10px] font-mono font-bold bg-phumulani-cream text-phumulani-earth px-2.5 py-0.5 rounded-full border border-phumulani-teal uppercase">
             M25.06 · VOLUNTEER WORKFORCE DEPLOYMENT
           </span>
-          <h2 className="text-xl font-bold font-serif text-slate-900 mt-1">Volunteer Deployment & Scheduling</h2>
-          <p className="text-slate-500 text-xs mt-0.5">
+          <h2 className="text-xl font-bold font-serif text-phumulani-charcoal mt-1">Volunteer Deployment & Scheduling</h2>
+          <p className="text-phumulani-charcoal text-xs mt-0.5">
             Deploy background-screened volunteers into community pantry logistics, youth tutoring labs, and language interpretation.
           </p>
         </div>
 
         <button
           onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-teal-800 hover:bg-teal-900 text-white rounded-xl text-xs font-bold transition-all shadow-xs shrink-0 cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold transition-all shadow-xs shrink-0 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Schedule Volunteer Shift</span>
@@ -169,46 +169,46 @@ export const VolunteerDeploymentTab: React.FC<Props> = ({ currentUserRole, curre
         <div
           className={`p-3.5 rounded-xl text-xs font-semibold flex items-center justify-between transition-all ${
             feedbackNotice.type === 'success'
-              ? 'bg-emerald-50 text-emerald-900 border border-emerald-200'
-              : 'bg-rose-50 text-rose-900 border border-rose-200'
+              ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green'
+              : 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth'
           }`}
         >
           <div className="flex items-center gap-2">
             {feedbackNotice.type === 'success' ? (
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-phumulani-earth shrink-0" />
             ) : (
-              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+              <AlertTriangle className="w-4 h-4 text-phumulani-earth shrink-0" />
             )}
             <span>{feedbackNotice.message}</span>
           </div>
-          <button onClick={() => setFeedbackNotice(null)} className="text-slate-400 font-bold px-2">
+          <button onClick={() => setFeedbackNotice(null)} className="text-phumulani-charcoal font-bold px-2">
             ✕
           </button>
         </div>
       )}
 
       {/* SEARCH BAR */}
-      <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+      <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs flex items-center justify-between">
         <div className="relative w-full md:w-80">
-          <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+          <Search className="w-4 h-4 absolute left-3 top-2.5 text-phumulani-charcoal" />
           <input
             type="text"
             placeholder="Search volunteer name, activity, program..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-teal-700"
+            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-phumulani-cream bg-phumulani-cream focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-phumulani-earth"
           />
         </div>
-        <button onClick={refreshData} className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100">
+        <button onClick={refreshData} className="p-1.5 rounded-lg border border-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream">
           <RefreshCw className="w-4 h-4" />
         </button>
       </div>
 
       {/* DEPLOYMENT ROSTER TABLE */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+      <div className="bg-white rounded-2xl border border-phumulani-cream shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-[10px] uppercase font-bold text-slate-500">
+            <thead className="bg-phumulani-cream border-b border-phumulani-cream text-[10px] uppercase font-bold text-phumulani-charcoal">
               <tr>
                 <th className="py-3 px-4">Deployment Ref</th>
                 <th className="py-3 px-4">Volunteer</th>
@@ -218,37 +218,37 @@ export const VolunteerDeploymentTab: React.FC<Props> = ({ currentUserRole, curre
                 <th className="py-3 px-4">Hours Certification</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
+            <tbody className="divide-y divide-phumulani-cream text-phumulani-charcoal">
               {filtered.map((dep) => (
-                <tr key={dep.id} className="hover:bg-slate-50/70 transition-colors">
-                  <td className="py-3 px-4 whitespace-nowrap font-mono font-bold text-slate-900">{dep.id}</td>
+                <tr key={dep.id} className="hover:bg-phumulani-cream transition-colors">
+                  <td className="py-3 px-4 whitespace-nowrap font-mono font-bold text-phumulani-charcoal">{dep.id}</td>
                   <td className="py-3 px-4 whitespace-nowrap">
-                    <span className="font-bold text-slate-900">{dep.volunteerName}</span>
-                    <div className="text-[10px] text-emerald-700 flex items-center gap-1">
+                    <span className="font-bold text-phumulani-charcoal">{dep.volunteerName}</span>
+                    <div className="text-[10px] text-phumulani-earth flex items-center gap-1">
                       <ShieldCheck className="w-3 h-3" /> Cleared BCA & Trained
                     </div>
                   </td>
                   <td className="py-3 px-4">
-                    <div className="font-semibold text-slate-800">{dep.activityTitle}</div>
-                    <div className="text-[10px] text-teal-800">{dep.programName}</div>
+                    <div className="font-semibold text-phumulani-charcoal">{dep.activityTitle}</div>
+                    <div className="text-[10px] text-phumulani-earth">{dep.programName}</div>
                   </td>
                   <td className="py-3 px-4 whitespace-nowrap">
-                    <span className="font-mono text-slate-700">{dep.shiftDate}</span>
-                    <div className="text-[10px] text-slate-500 font-semibold">{dep.shiftHours} hrs scheduled</div>
+                    <span className="font-mono text-phumulani-charcoal">{dep.shiftDate}</span>
+                    <div className="text-[10px] text-phumulani-charcoal font-semibold">{dep.shiftHours} hrs scheduled</div>
                   </td>
                   <td className="py-3 px-4 whitespace-nowrap">
-                    <span className="font-medium text-slate-800">{dep.supervisorStaffName}</span>
+                    <span className="font-medium text-phumulani-charcoal">{dep.supervisorStaffName}</span>
                   </td>
                   <td className="py-3 px-4 whitespace-nowrap">
                     {dep.supervisorSignOff ? (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-earth" />
                         <span>{dep.verifiedHours} hrs Verified</span>
                       </span>
                     ) : (
                       <button
                         onClick={() => handleVerifyHours(dep.id, dep.shiftHours)}
-                        className="px-3 py-1 bg-teal-800 hover:bg-teal-900 text-white rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer"
+                        className="px-3 py-1 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer"
                       >
                         Sign Off ({dep.shiftHours} hrs)
                       </button>
@@ -263,25 +263,25 @@ export const VolunteerDeploymentTab: React.FC<Props> = ({ currentUserRole, curre
 
       {/* SCHEDULE VOLUNTEER MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 animate-fadeIn">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-lg w-full p-6 text-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4 animate-fadeIn">
+          <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream max-w-lg w-full p-6 text-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div>
-                <span className="text-[10px] font-mono text-teal-800 font-bold uppercase">Volunteer Scheduling</span>
-                <h3 className="text-base font-bold text-slate-900">Schedule Vetted Volunteer</h3>
+                <span className="text-[10px] font-mono text-phumulani-earth font-bold uppercase">Volunteer Scheduling</span>
+                <h3 className="text-base font-bold text-phumulani-charcoal">Schedule Vetted Volunteer</h3>
               </div>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600 font-bold">
+              <button onClick={() => setIsModalOpen(false)} className="text-phumulani-charcoal hover:text-phumulani-earth font-bold">
                 ✕
               </button>
             </div>
 
             <form onSubmit={handleScheduleVolunteer} className="space-y-3">
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Select Volunteer *</label>
+                <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Select Volunteer *</label>
                 <select
                   value={selectedVolunteerId}
                   onChange={(e) => setSelectedVolunteerId(e.target.value)}
-                  className="w-full px-2.5 py-2 rounded-lg border border-slate-200 bg-slate-50 font-medium"
+                  className="w-full px-2.5 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream font-medium"
                 >
                   {volunteersList.map((v) => (
                     <option key={v.id} value={v.id}>
@@ -292,11 +292,11 @@ export const VolunteerDeploymentTab: React.FC<Props> = ({ currentUserRole, curre
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Program *</label>
+                <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Program *</label>
                 <select
                   value={selectedProgramId}
                   onChange={(e) => setSelectedProgramId(e.target.value)}
-                  className="w-full px-2.5 py-2 rounded-lg border border-slate-200 bg-slate-50 font-medium"
+                  className="w-full px-2.5 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream font-medium"
                 >
                   <option value="PROG-003">PROG-003: Cultural Nutrition Pantry</option>
                   <option value="PROG-002">PROG-002: Youth STEM Mentorship Circle</option>
@@ -306,58 +306,58 @@ export const VolunteerDeploymentTab: React.FC<Props> = ({ currentUserRole, curre
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Activity Title *</label>
+                <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Activity Title *</label>
                 <input
                   type="text"
                   required
                   value={activityTitle}
                   onChange={(e) => setActivityTitle(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white"
+                  className="w-full px-3 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream focus:bg-white"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Shift Date *</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Shift Date *</label>
                   <input
                     type="date"
                     required
                     value={shiftDate}
                     onChange={(e) => setShiftDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50"
+                    className="w-full px-3 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Hours *</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Hours *</label>
                   <input
                     type="number"
                     min="1"
                     max="12"
                     value={shiftHours}
                     onChange={(e) => setShiftHours(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50"
+                    className="w-full px-3 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream"
                   />
                 </div>
               </div>
 
-              <div className="p-3 bg-teal-50 border border-teal-200 rounded-xl text-teal-900 text-[11px] flex items-start gap-2">
-                <ShieldCheck className="w-4 h-4 text-teal-700 shrink-0 mt-0.5" />
+              <div className="p-3 bg-phumulani-cream border border-phumulani-teal rounded-xl text-phumulani-earth text-[11px] flex items-start gap-2">
+                <ShieldCheck className="w-4 h-4 text-phumulani-earth shrink-0 mt-0.5" />
                 <span>
                   <strong>Screening Enforcement:</strong> The system automatically verifies that the volunteer has a verified <strong>CLEARED</strong> background check and completed safeguarding training before creating the shift assignment.
                 </span>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+              <div className="flex justify-end gap-2 pt-2 border-t border-phumulani-cream">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 border border-slate-200 text-slate-700 font-semibold rounded-xl hover:bg-slate-50"
+                  className="px-4 py-2 border border-phumulani-cream text-phumulani-charcoal font-semibold rounded-xl hover:bg-phumulani-cream"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-teal-800 hover:bg-teal-900 text-white font-bold rounded-xl shadow-xs"
+                  className="px-5 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white font-bold rounded-xl shadow-xs"
                 >
                   Schedule Shift
                 </button>

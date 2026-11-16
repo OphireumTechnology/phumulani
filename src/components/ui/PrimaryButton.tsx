@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  * PrimaryButton — Brand-Consistent Accessible Button Component
- * Palette: Ubuntu Orange (#F05A28), Unity Teal (#006D6F), Heritage Red (#C62828)
+ * Palette: Deep Earth (#B3340F), Peace Orange (#EF5C2C), Healing Teal (#62C4B4), Charcoal (#333333)
  */
 
 import React from 'react';
@@ -36,15 +36,15 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
 
   const variantClasses: Record<ButtonVariant, string> = {
     primary:
-      'bg-[#F05A28] hover:bg-[#d94819] text-white font-heading font-bold shadow-xs hover:shadow transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#F05A28]',
+      'bg-phumulani-earth hover:bg-phumulani-orange text-white font-heading font-bold shadow-xs hover:shadow transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth',
     secondary:
-      'bg-[#006D6F] hover:bg-[#004A4C] text-white font-heading font-bold shadow-xs hover:shadow transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#006D6F]',
+      'bg-phumulani-teal hover:bg-phumulani-cream text-phumulani-charcoal font-heading font-bold shadow-xs hover:shadow border border-phumulani-charcoal transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth',
     outline:
-      'bg-white hover:bg-[#FFF7E6] text-[#006D6F] border-2 border-[#006D6F] font-heading font-semibold transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#006D6F]',
+      'bg-white hover:bg-phumulani-cream text-phumulani-earth border-2 border-phumulani-earth font-heading font-semibold transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth',
     danger:
-      'bg-[#C62828] hover:bg-[#a51d1d] text-white font-heading font-bold shadow-xs transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#C62828]',
+      'bg-phumulani-earth hover:bg-phumulani-orange text-white font-heading font-bold shadow-xs transition-all focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth',
     ghost:
-      'bg-transparent hover:bg-slate-100 text-slate-700 font-heading font-medium transition-colors',
+      'bg-transparent hover:bg-phumulani-cream text-phumulani-charcoal font-heading font-medium transition-colors',
   };
 
   return (

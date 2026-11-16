@@ -184,27 +184,27 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
   return (
     <div className="space-y-6">
       {/* Top Banner & Emergency Controls */}
-      <div className="bg-slate-900 text-white rounded-2xl p-6 shadow-sm border border-slate-800">
+      <div className="bg-phumulani-charcoal text-white rounded-2xl p-6 shadow-sm border border-phumulani-teal">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-teal-500/20 text-teal-300 border border-teal-500/30">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-phumulani-teal text-phumulani-charcoal border border-phumulani-cream">
                 Phase 29 Master Unified Architecture
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-phumulani-charcoal text-phumulani-gold border border-phumulani-teal">
                 36 Autonomous Agents
               </span>
               {kpis.globalEmergencyHaltActive && (
-                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30 animate-pulse">
+                <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-phumulani-earth text-white border border-phumulani-gold animate-pulse">
                   EMERGENCY HALT ACTIVE
                 </span>
               )}
             </div>
             <h2 className="font-serif text-2xl font-bold tracking-tight text-white flex items-center gap-2">
-              <Bot className="w-6 h-6 text-teal-400" />
+              <Bot className="w-6 h-6 text-phumulani-gold" />
               Unified AI Workforce Command Center
             </h2>
-            <p className="text-xs text-slate-400 max-w-3xl">
+            <p className="text-xs text-phumulani-cream max-w-3xl">
               Centralized orchestration and human supervision across Division A (18 Organizational AI Roles) and Division B (18 Fundraising AI Agents). Enforces strict VAWA Section 1367 safeguarding boundaries and least-privilege tool allowlists.
             </p>
           </div>
@@ -213,7 +213,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
           <div className="flex items-center gap-2.5 flex-wrap">
             <button
               onClick={refreshData}
-              className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold rounded-lg border border-slate-700 flex items-center gap-1.5 transition-all"
+              className="px-3 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-phumulani-cream text-xs font-semibold rounded-lg border border-phumulani-teal flex items-center gap-1.5 transition-all"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               <span>Refresh</span>
@@ -221,23 +221,23 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
             {kpis.globalEmergencyHaltActive ? (
               <button
                 onClick={handleResumeAll}
-                className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg shadow-xs flex items-center gap-1.5 transition-all"
+                className="px-3.5 py-1.5 bg-phumulani-green hover:bg-phumulani-teal text-phumulani-charcoal text-xs font-bold rounded-lg shadow-xs flex items-center gap-1.5 transition-all"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Resume All 36 Agents</span>
               </button>
             ) : confirmHalt ? (
-              <div className="inline-flex items-center gap-1.5 bg-rose-950/90 border border-rose-500/60 px-2.5 py-1 rounded-lg">
-                <span className="text-[11px] font-semibold text-rose-200">Halt all 36 agents?</span>
+              <div className="inline-flex items-center gap-1.5 bg-phumulani-charcoal border border-phumulani-earth px-2.5 py-1 rounded-lg">
+                <span className="text-[11px] font-semibold text-phumulani-cream">Halt all 36 agents?</span>
                 <button
                   onClick={handleEmergencyHalt}
-                  className="px-2 py-0.5 bg-rose-600 hover:bg-rose-500 text-white text-[11px] font-bold rounded cursor-pointer"
+                  className="px-2 py-0.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-[11px] font-bold rounded cursor-pointer"
                 >
                   Confirm
                 </button>
                 <button
                   onClick={() => setConfirmHalt(false)}
-                  className="px-2 py-0.5 bg-slate-700 hover:bg-slate-600 text-slate-200 text-[11px] font-medium rounded cursor-pointer"
+                  className="px-2 py-0.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-phumulani-cream text-[11px] font-medium rounded cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -245,7 +245,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
             ) : (
               <button
                 onClick={() => setConfirmHalt(true)}
-                className="px-3.5 py-1.5 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold rounded-lg shadow-xs flex items-center gap-1.5 transition-all"
+                className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-bold rounded-lg shadow-xs flex items-center gap-1.5 transition-all"
               >
                 <Power className="w-3.5 h-3.5" />
                 <span>Halt All 36 Agents</span>
@@ -259,61 +259,61 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
           <div
             className={`mt-4 p-2.5 rounded-lg text-xs font-medium flex items-center justify-between ${
               actionMessage.type === 'success'
-                ? 'bg-emerald-950/50 text-emerald-300 border border-emerald-800/50'
-                : 'bg-rose-950/50 text-rose-300 border border-rose-800/50'
+                ? 'bg-phumulani-charcoal text-phumulani-cream border border-phumulani-green'
+                : 'bg-phumulani-charcoal text-phumulani-gold border border-phumulani-earth'
             }`}
           >
             <span>{actionMessage.text}</span>
-            <button onClick={() => setActionMessage(null)} className="text-slate-400 hover:text-white">
+            <button onClick={() => setActionMessage(null)} className="text-phumulani-cream hover:text-white">
               <X className="w-3.5 h-3.5" />
             </button>
           </div>
         )}
 
         {/* KPI Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-6 pt-6 border-t border-slate-800">
-          <div className="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50">
-            <div className="text-[11px] font-medium text-slate-400">Total Workforce</div>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mt-6 pt-6 border-t border-phumulani-earth">
+          <div className="bg-phumulani-charcoal p-3 rounded-xl border border-phumulani-teal">
+            <div className="text-[11px] font-medium text-phumulani-cream">Total Workforce</div>
             <div className="text-xl font-bold font-mono text-white mt-0.5">{kpis.totalDistinctAgents} Agents</div>
-            <div className="text-[10px] text-teal-400 font-medium">18 Org + 18 Fund</div>
+            <div className="text-[10px] text-phumulani-gold font-medium">18 Org + 18 Fund</div>
           </div>
-          <div className="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50">
-            <div className="text-[11px] font-medium text-slate-400">Active / Operational</div>
-            <div className="text-xl font-bold font-mono text-emerald-400 mt-0.5">{kpis.activeAgentsCount} Active</div>
-            <div className="text-[10px] text-slate-400 font-medium">{kpis.pausedAgentsCount} Paused by Policy</div>
+          <div className="bg-phumulani-charcoal p-3 rounded-xl border border-phumulani-teal">
+            <div className="text-[11px] font-medium text-phumulani-cream">Active / Operational</div>
+            <div className="text-xl font-bold font-mono text-phumulani-cream mt-0.5">{kpis.activeAgentsCount} Active</div>
+            <div className="text-[10px] text-phumulani-cream font-medium">{kpis.pausedAgentsCount} Paused by Policy</div>
           </div>
-          <div className="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50">
-            <div className="text-[11px] font-medium text-slate-400">Human Review Queue</div>
-            <div className="text-xl font-bold font-mono text-amber-400 mt-0.5">{kpis.pendingApprovalsCount} Pending</div>
-            <div className="text-[10px] text-amber-300/80 font-medium">Consequential gates active</div>
+          <div className="bg-phumulani-charcoal p-3 rounded-xl border border-phumulani-teal">
+            <div className="text-[11px] font-medium text-phumulani-cream">Human Review Queue</div>
+            <div className="text-xl font-bold font-mono text-phumulani-gold mt-0.5">{kpis.pendingApprovalsCount} Pending</div>
+            <div className="text-[10px] text-phumulani-gold font-medium">Consequential gates active</div>
           </div>
-          <div className="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50">
-            <div className="text-[11px] font-medium text-slate-400">Monthly Executions</div>
+          <div className="bg-phumulani-charcoal p-3 rounded-xl border border-phumulani-teal">
+            <div className="text-[11px] font-medium text-phumulani-cream">Monthly Executions</div>
             <div className="text-xl font-bold font-mono text-white mt-0.5">{kpis.totalExecutions.toLocaleString()}</div>
-            <div className="text-[10px] text-slate-400 font-medium">0 Unrecovered failures</div>
+            <div className="text-[10px] text-phumulani-cream font-medium">0 Unrecovered failures</div>
           </div>
-          <div className="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50">
-            <div className="text-[11px] font-medium text-slate-400">Estimated Cost</div>
+          <div className="bg-phumulani-charcoal p-3 rounded-xl border border-phumulani-teal">
+            <div className="text-[11px] font-medium text-phumulani-cream">Estimated Cost</div>
             <div className="text-xl font-bold font-mono text-white mt-0.5">${kpis.totalMonthlyCostUSD.toFixed(2)}</div>
-            <div className="text-[10px] text-teal-400 font-medium">Under $50/mo ceiling</div>
+            <div className="text-[10px] text-phumulani-gold font-medium">Under $50/mo ceiling</div>
           </div>
-          <div className="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50">
-            <div className="text-[11px] font-medium text-slate-400">Safeguarding Status</div>
-            <div className="text-xl font-bold font-mono text-emerald-400 mt-0.5">VAWA SEC 1367</div>
-            <div className="text-[10px] text-emerald-400 font-medium">Zero-disclosure vault</div>
+          <div className="bg-phumulani-charcoal p-3 rounded-xl border border-phumulani-teal">
+            <div className="text-[11px] font-medium text-phumulani-cream">Safeguarding Status</div>
+            <div className="text-xl font-bold font-mono text-phumulani-cream mt-0.5">VAWA SEC 1367</div>
+            <div className="text-[10px] text-phumulani-cream font-medium">Zero-disclosure vault</div>
           </div>
         </div>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="bg-white rounded-xl border border-slate-200 p-2 flex flex-wrap items-center justify-between gap-3 shadow-2xs">
+      <div className="bg-white rounded-xl border border-phumulani-cream p-2 flex flex-wrap items-center justify-between gap-3 shadow-2xs">
         <div className="flex items-center gap-1 overflow-x-auto">
           <button
             onClick={() => setActiveTab('ALL')}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${
               activeTab === 'ALL'
-                ? 'bg-slate-900 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                ? 'bg-phumulani-charcoal text-white shadow-xs'
+                : 'text-phumulani-charcoal hover:bg-phumulani-cream hover:text-phumulani-earth'
             }`}
           >
             All Agents (36)
@@ -322,34 +322,34 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
             onClick={() => setActiveTab('ORGANIZATIONAL')}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
               activeTab === 'ORGANIZATIONAL'
-                ? 'bg-teal-700 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                ? 'bg-phumulani-earth text-white shadow-xs'
+                : 'text-phumulani-charcoal hover:bg-phumulani-cream hover:text-phumulani-earth'
             }`}
           >
             <span>Division A: Organizational</span>
-            <span className="px-1.5 py-0.2 bg-teal-800 text-teal-100 rounded text-[10px]">18</span>
+            <span className="px-1.5 py-0.2 bg-phumulani-charcoal text-phumulani-teal rounded text-[10px]">18</span>
           </button>
           <button
             onClick={() => setActiveTab('FUNDRAISING')}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
               activeTab === 'FUNDRAISING'
-                ? 'bg-indigo-700 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                ? 'bg-phumulani-earth text-white shadow-xs'
+                : 'text-phumulani-charcoal hover:bg-phumulani-cream hover:text-phumulani-earth'
             }`}
           >
             <span>Division B: Fundraising</span>
-            <span className="px-1.5 py-0.2 bg-indigo-800 text-indigo-100 rounded text-[10px]">18</span>
+            <span className="px-1.5 py-0.2 bg-phumulani-earth text-phumulani-cream rounded text-[10px]">18</span>
           </button>
           <button
             onClick={() => setActiveTab('APPROVALS')}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
               activeTab === 'APPROVALS'
-                ? 'bg-amber-600 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                ? 'bg-phumulani-gold text-phumulani-charcoal shadow-xs'
+                : 'text-phumulani-charcoal hover:bg-phumulani-cream hover:text-phumulani-earth'
             }`}
           >
             <span>Human Approvals</span>
-            <span className="px-1.5 py-0.2 bg-amber-700 text-amber-100 rounded text-[10px]">
+            <span className="px-1.5 py-0.2 bg-phumulani-gold text-phumulani-charcoal rounded text-[10px]">
               {kpis.pendingApprovalsCount}
             </span>
           </button>
@@ -357,8 +357,8 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
             onClick={() => setActiveTab('COLLABORATION')}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
               activeTab === 'COLLABORATION'
-                ? 'bg-purple-700 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                ? 'bg-phumulani-earth text-white shadow-xs'
+                : 'text-phumulani-charcoal hover:bg-phumulani-cream hover:text-phumulani-earth'
             }`}
           >
             <ArrowRightLeft className="w-3.5 h-3.5" />
@@ -368,8 +368,8 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
             onClick={() => setActiveTab('SECURITY')}
             className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 ${
               activeTab === 'SECURITY'
-                ? 'bg-rose-700 text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                ? 'bg-phumulani-earth text-white shadow-xs'
+                : 'text-phumulani-charcoal hover:bg-phumulani-cream hover:text-phumulani-earth'
             }`}
           >
             <Shield className="w-3.5 h-3.5" />
@@ -379,13 +379,13 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
 
         {/* Search Input */}
         <div className="relative min-w-[220px]">
-          <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-3.5 h-3.5 text-phumulani-charcoal absolute left-2.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search agents, roles, supervisors..."
-            className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-900 placeholder:text-slate-400 focus:outline-hidden focus:ring-1 focus:ring-teal-500"
+            className="w-full pl-8 pr-3 py-1.5 bg-phumulani-cream border border-phumulani-cream rounded-lg text-xs text-phumulani-charcoal placeholder:text-phumulani-charcoal focus:outline-hidden focus:ring-1 focus:ring-phumulani-cream"
           />
         </div>
       </div>
@@ -394,7 +394,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
       {(activeTab === 'ALL' || activeTab === 'ORGANIZATIONAL' || activeTab === 'FUNDRAISING') && (
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <div className="text-xs font-semibold text-slate-600">
+            <div className="text-xs font-semibold text-phumulani-charcoal">
               Showing {filteredAgents.length} of 36 Registered AI Agents
             </div>
           </div>
@@ -403,7 +403,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
             {filteredAgents.map((ag) => (
               <div
                 key={ag.id}
-                className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs hover:shadow-xs transition-all flex flex-col justify-between space-y-3"
+                className="bg-white rounded-xl border border-phumulani-cream p-4 shadow-2xs hover:shadow-xs transition-all flex flex-col justify-between space-y-3"
               >
                 <div className="space-y-2">
                   <div className="flex items-center justify-between">
@@ -411,21 +411,21 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                       <span
                         className={`font-mono text-[11px] font-bold px-2 py-0.5 rounded ${
                           ag.division === 'ORGANIZATIONAL'
-                            ? 'bg-teal-50 text-teal-800 border border-teal-200'
-                            : 'bg-indigo-50 text-indigo-800 border border-indigo-200'
+                            ? 'bg-phumulani-cream text-phumulani-earth border border-phumulani-teal'
+                            : 'bg-phumulani-cream text-phumulani-earth border border-phumulani-teal'
                         }`}
                       >
                         {ag.id}
                       </span>
-                      <span className="text-[10px] font-semibold text-slate-500">{ag.ownerDepartment}</span>
+                      <span className="text-[10px] font-semibold text-phumulani-charcoal">{ag.ownerDepartment}</span>
                     </div>
                     <span
                       className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                         ag.lifecycle === 'PAUSED'
-                          ? 'bg-rose-100 text-rose-800'
+                          ? 'bg-phumulani-cream text-phumulani-earth'
                           : ag.lifecycle === 'ACTIVE'
-                          ? 'bg-emerald-100 text-emerald-800'
-                          : 'bg-slate-100 text-slate-800'
+                          ? 'bg-phumulani-cream text-phumulani-charcoal'
+                          : 'bg-phumulani-cream text-phumulani-charcoal'
                       }`}
                     >
                       {ag.lifecycle}
@@ -433,38 +433,38 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                   </div>
 
                   <div>
-                    <h4 className="font-serif font-bold text-sm text-slate-900">{ag.name}</h4>
-                    <div className="text-[11px] font-medium text-slate-500">{ag.role}</div>
+                    <h4 className="font-serif font-bold text-sm text-phumulani-charcoal">{ag.name}</h4>
+                    <div className="text-[11px] font-medium text-phumulani-charcoal">{ag.role}</div>
                   </div>
 
-                  <p className="text-xs text-slate-600 line-clamp-2">{ag.purpose}</p>
+                  <p className="text-xs text-phumulani-charcoal line-clamp-2">{ag.purpose}</p>
 
                   <div className="flex flex-wrap gap-1 pt-1">
-                    <span className="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded font-mono">
+                    <span className="text-[9px] bg-phumulani-cream text-phumulani-charcoal px-1.5 py-0.5 rounded font-mono">
                       {ag.modelConfigurationId}
                     </span>
-                    <span className="text-[9px] bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">
+                    <span className="text-[9px] bg-phumulani-cream text-phumulani-charcoal px-1.5 py-0.5 rounded">
                       Sup: {ag.supervisorName}
                     </span>
                     {ag.requiresHumanApproval && (
-                      <span className="text-[9px] bg-amber-50 text-amber-700 border border-amber-200 px-1.5 py-0.5 rounded font-semibold">
+                      <span className="text-[9px] bg-phumulani-cream text-phumulani-earth border border-phumulani-gold px-1.5 py-0.5 rounded font-semibold">
                         Approval Required
                       </span>
                     )}
                   </div>
                 </div>
 
-                <div className="space-y-2 pt-2 border-t border-slate-100 text-[11px]">
-                  <div className="flex justify-between text-slate-500">
+                <div className="space-y-2 pt-2 border-t border-phumulani-cream text-[11px]">
+                  <div className="flex justify-between text-phumulani-charcoal">
                     <span>Calls: {ag.callsThisMonth.toLocaleString()}</span>
                     <span>Cost: ${ag.costEstimateUSD.toFixed(3)}</span>
-                    <span className="text-emerald-700 font-semibold">{ag.lastEvaluationScore.toFixed(1)}% Score</span>
+                    <span className="text-phumulani-earth font-semibold">{ag.lastEvaluationScore.toFixed(1)}% Score</span>
                   </div>
 
                   <div className="flex items-center justify-between pt-1">
                     <button
                       onClick={() => setSelectedAgent(ag)}
-                      className="text-xs text-teal-800 hover:text-teal-950 font-bold flex items-center gap-1"
+                      className="text-xs text-phumulani-earth hover:text-phumulani-earth font-bold flex items-center gap-1"
                     >
                       <Eye className="w-3.5 h-3.5" />
                       <span>Inspect</span>
@@ -478,9 +478,9 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                           setTaskInput('');
                           setExecutionResult(null);
                         }}
-                        className="text-xs bg-slate-100 hover:bg-slate-200 text-slate-800 px-2 py-1 rounded font-bold flex items-center gap-1"
+                        className="text-xs bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal px-2 py-1 rounded font-bold flex items-center gap-1"
                       >
-                        <Play className="w-3 h-3 text-slate-700" />
+                        <Play className="w-3 h-3 text-phumulani-charcoal" />
                         <span>Run</span>
                       </button>
 
@@ -488,8 +488,8 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                         onClick={() => handleToggleLifecycle(ag.id, ag.lifecycle)}
                         className={`text-xs px-2 py-1 rounded font-bold ${
                           ag.lifecycle === 'PAUSED'
-                            ? 'bg-emerald-700 hover:bg-emerald-800 text-white'
-                            : 'bg-rose-50 hover:bg-rose-100 text-rose-800 border border-rose-200'
+                            ? 'bg-phumulani-earth hover:bg-phumulani-orange text-white'
+                            : 'bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-earth border border-phumulani-earth'
                         }`}
                       >
                         {ag.lifecycle === 'PAUSED' ? 'Activate' : 'Pause'}
@@ -505,13 +505,13 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
 
       {/* VIEW: HUMAN APPROVALS QUEUE */}
       {activeTab === 'APPROVALS' && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="bg-white rounded-2xl border border-phumulani-cream p-6 shadow-xs space-y-4">
+          <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
             <div>
-              <h3 className="font-serif text-lg font-bold text-slate-900">
+              <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                 Human Approval Gateway ({approvals.filter((a) => a.status === 'PENDING').length} Pending Review)
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-phumulani-charcoal">
                 Consequential actions (donor correspondence, grant submissions, partnership MOUs) are held in fail-closed review.
               </p>
             </div>
@@ -521,53 +521,53 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
             {approvals.map((appr) => (
               <div
                 key={appr.id}
-                className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 space-y-3"
+                className="p-4 rounded-xl border border-phumulani-cream bg-phumulani-cream space-y-3"
               >
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                   <div className="flex items-center gap-2">
                     <span
                       className={`text-[10px] font-bold px-2 py-0.5 rounded ${
-                        appr.division === 'ORGANIZATIONAL' ? 'bg-teal-100 text-teal-800' : 'bg-indigo-100 text-indigo-800'
+                        appr.division === 'ORGANIZATIONAL' ? 'bg-phumulani-cream text-phumulani-earth' : 'bg-phumulani-cream text-phumulani-earth'
                       }`}
                     >
                       {appr.agentName} ({appr.agentId})
                     </span>
-                    <span className="font-semibold text-xs text-slate-900">{appr.actionType}</span>
-                    <span className="text-xs text-slate-500">• Target: {appr.targetEntity}</span>
+                    <span className="font-semibold text-xs text-phumulani-charcoal">{appr.actionType}</span>
+                    <span className="text-xs text-phumulani-charcoal">• Target: {appr.targetEntity}</span>
                   </div>
                   <span
                     className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                       appr.status === 'PENDING'
-                        ? 'bg-amber-100 text-amber-800'
+                        ? 'bg-phumulani-cream text-phumulani-charcoal'
                         : appr.status === 'APPROVED'
-                        ? 'bg-emerald-100 text-emerald-800'
-                        : 'bg-rose-100 text-rose-800'
+                        ? 'bg-phumulani-cream text-phumulani-charcoal'
+                        : 'bg-phumulani-cream text-phumulani-earth'
                     }`}
                   >
                     {appr.status}
                   </span>
                 </div>
 
-                <div className="bg-white p-3 rounded-lg border border-slate-200 text-xs font-mono text-slate-800 whitespace-pre-wrap">
+                <div className="bg-white p-3 rounded-lg border border-phumulani-cream text-xs font-mono text-phumulani-charcoal whitespace-pre-wrap">
                   {appr.draftContent}
                 </div>
 
                 {appr.status === 'PENDING' && (
                   <div className="flex items-center justify-between pt-1">
-                    <span className="text-[11px] text-slate-500">
-                      Required Signoff: <strong className="text-slate-700">{appr.requiredApproverRole}</strong>
+                    <span className="text-[11px] text-phumulani-charcoal">
+                      Required Signoff: <strong className="text-phumulani-charcoal">{appr.requiredApproverRole}</strong>
                     </span>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => handleApprovalDecision(appr.id, 'REJECTED')}
-                        className="px-3 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded text-xs font-bold flex items-center gap-1"
+                        className="px-3 py-1 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-earth border border-phumulani-earth rounded text-xs font-bold flex items-center gap-1"
                       >
                         <X className="w-3.5 h-3.5" />
                         <span>Reject</span>
                       </button>
                       <button
                         onClick={() => handleApprovalDecision(appr.id, 'APPROVED')}
-                        className="px-3 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded text-xs font-bold flex items-center gap-1"
+                        className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded text-xs font-bold flex items-center gap-1"
                       >
                         <Check className="w-3.5 h-3.5" />
                         <span>Approve & Authorize</span>
@@ -583,29 +583,29 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
 
       {/* VIEW: CROSS-DIVISION COLLABORATION HANDOFFS */}
       {activeTab === 'COLLABORATION' && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-6">
-          <div className="border-b border-slate-100 pb-3">
-            <h3 className="font-serif text-lg font-bold text-slate-900 flex items-center gap-2">
-              <ArrowRightLeft className="w-5 h-5 text-purple-600" />
+        <div className="bg-white rounded-2xl border border-phumulani-cream p-6 shadow-xs space-y-6">
+          <div className="border-b border-phumulani-cream pb-3">
+            <h3 className="font-serif text-lg font-bold text-phumulani-charcoal flex items-center gap-2">
+              <ArrowRightLeft className="w-5 h-5 text-phumulani-earth" />
               Cross-Division Agent Collaboration Gateway
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-phumulani-charcoal mt-0.5">
               Enforces the non-delegable authority principle: Agent A cannot grant Agent B more authority than the human requester possesses.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-phumulani-charcoal">
                 Initiate Authorized Collaboration Handoff
               </h4>
               <div className="space-y-3 text-xs">
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Source Agent (Division A or B)</label>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Source Agent (Division A or B)</label>
                   <select
                     value={handoffSource}
                     onChange={(e) => setHandoffSource(e.target.value)}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 font-mono"
+                    className="w-full p-2 bg-phumulani-cream border border-phumulani-cream rounded-lg text-phumulani-charcoal font-mono"
                   >
                     {agents.map((a) => (
                       <option key={a.id} value={a.id}>
@@ -616,11 +616,11 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Target Agent (Division A or B)</label>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Target Agent (Division A or B)</label>
                   <select
                     value={handoffTarget}
                     onChange={(e) => setHandoffTarget(e.target.value)}
-                    className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900 font-mono"
+                    className="w-full p-2 bg-phumulani-cream border border-phumulani-cream rounded-lg text-phumulani-charcoal font-mono"
                   >
                     {agents.map((a) => (
                       <option key={a.id} value={a.id}>
@@ -631,19 +631,19 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Handoff Payload (JSON)</label>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Handoff Payload (JSON)</label>
                   <textarea
                     rows={4}
                     value={handoffPayload}
                     onChange={(e) => setHandoffPayload(e.target.value)}
-                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-lg font-mono text-[11px] text-slate-900 focus:outline-hidden"
+                    className="w-full p-2.5 bg-phumulani-cream border border-phumulani-cream rounded-lg font-mono text-[11px] text-phumulani-charcoal focus:outline-hidden"
                   />
                 </div>
 
                 <button
                   disabled={isHandoffRunning}
                   onClick={handleRunHandoff}
-                  className="w-full py-2 bg-purple-700 hover:bg-purple-800 text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-all"
+                  className="w-full py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-all"
                 >
                   <ArrowRightLeft className="w-3.5 h-3.5" />
                   <span>{isHandoffRunning ? 'Evaluating Handoff...' : 'Execute Authorized Handoff'}</span>
@@ -652,15 +652,15 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
             </div>
 
             <div className="space-y-4">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+              <h4 className="text-xs font-bold uppercase tracking-wider text-phumulani-charcoal">
                 Handoff Verification & Propagated Permissions
               </h4>
               {handoffResult ? (
                 <div
                   className={`p-4 rounded-xl border space-y-2 text-xs ${
                     handoffResult.status === 'BLOCKED_BY_POLICY'
-                      ? 'bg-rose-50 text-rose-900 border-rose-200'
-                      : 'bg-slate-50 text-slate-900 border-slate-200'
+                      ? 'bg-phumulani-cream text-phumulani-earth border-phumulani-earth'
+                      : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream'
                   }`}
                 >
                   <div className="flex items-center justify-between font-bold">
@@ -668,12 +668,12 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                     <span className="font-mono text-[10px]">{handoffResult.id}</span>
                   </div>
                   <p className="text-xs leading-relaxed">{handoffResult.resultSummary}</p>
-                  <div className="pt-2 border-t border-slate-200/60 font-mono text-[10px]">
+                  <div className="pt-2 border-t border-phumulani-cream font-mono text-[10px]">
                     Propagated Tool Permissions: [{handoffResult.propagatedPermissions.join(', ')}]
                   </div>
                 </div>
               ) : (
-                <div className="p-8 border border-dashed border-slate-200 rounded-xl text-center text-xs text-slate-400">
+                <div className="p-8 border border-dashed border-phumulani-cream rounded-xl text-center text-xs text-phumulani-charcoal">
                   Select a source and target agent and execute handoff to inspect least-privilege permission propagation and audit traces.
                 </div>
               )}
@@ -684,49 +684,49 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
 
       {/* VIEW: VAWA SAFEGUARDING & PRIVACY SENTINEL */}
       {activeTab === 'SECURITY' && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-6">
-          <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+        <div className="bg-white rounded-2xl border border-phumulani-cream p-6 shadow-xs space-y-6">
+          <div className="border-b border-phumulani-cream pb-3 flex items-center justify-between">
             <div>
-              <h3 className="font-serif text-lg font-bold text-slate-900 flex items-center gap-2">
-                <Shield className="w-5 h-5 text-emerald-700" />
+              <h3 className="font-serif text-lg font-bold text-phumulani-charcoal flex items-center gap-2">
+                <Shield className="w-5 h-5 text-phumulani-earth" />
                 VAWA Section 1367 Safeguarding & Privacy Architecture
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-phumulani-charcoal mt-0.5">
                 Strict statutory firewall isolating confidential survivor cases (SAFE-MN-*) from general organizational and fundraising AI.
               </p>
             </div>
-            <span className="px-3 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-bold">
+            <span className="px-3 py-1 bg-phumulani-cream text-phumulani-charcoal rounded-full text-xs font-bold">
               100% Policy Isolation Active
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-              <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                <Lock className="w-4 h-4 text-emerald-700" />
+            <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-2">
+              <div className="text-xs font-bold text-phumulani-charcoal flex items-center gap-1.5">
+                <Lock className="w-4 h-4 text-phumulani-earth" />
                 Zero-Disclosure Database Vault
               </div>
-              <p className="text-xs text-slate-600">
-                Confidential survivor intakes are partitioned into <code className="text-slate-800 bg-slate-200 px-1 py-0.5 rounded">restricted_intakes</code> with anonymous tracking codes. AI agents receive default-deny foreign key restrictions.
+              <p className="text-xs text-phumulani-charcoal">
+                Confidential survivor intakes are partitioned into <code className="text-phumulani-charcoal bg-phumulani-cream px-1 py-0.5 rounded">restricted_intakes</code> with anonymous tracking codes. AI agents receive default-deny foreign key restrictions.
               </p>
             </div>
 
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-              <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                <AlertTriangle className="w-4 h-4 text-amber-600" />
+            <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-2">
+              <div className="text-xs font-bold text-phumulani-charcoal flex items-center gap-1.5">
+                <AlertTriangle className="w-4 h-4 text-phumulani-earth" />
                 Real-Time Crisis Interception
               </div>
-              <p className="text-xs text-slate-600">
+              <p className="text-xs text-phumulani-charcoal">
                 Trauma, abuse, or danger keywords halt all automated model processing immediately. Requests are evicted and routed directly to Sister Miriam K. and MN Day One Hotline.
               </p>
             </div>
 
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-              <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                <Shield className="w-4 h-4 text-teal-700" />
+            <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-2">
+              <div className="text-xs font-bold text-phumulani-charcoal flex items-center gap-1.5">
+                <Shield className="w-4 h-4 text-phumulani-earth" />
                 Sentinel Agent ORG-AI-018
               </div>
-              <p className="text-xs text-slate-600">
+              <p className="text-xs text-phumulani-charcoal">
                 Audits append-only SHA-256 logs continuously to detect anomalous query attempts without ever accessing private case files or shelter locations.
               </p>
             </div>
@@ -736,43 +736,43 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
 
       {/* AGENT DETAIL INSPECTION MODAL */}
       {selectedAgent && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="fixed inset-0 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-xl border border-phumulani-cream space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div>
-                <span className="font-mono text-xs font-bold bg-teal-100 text-teal-800 px-2 py-0.5 rounded">
+                <span className="font-mono text-xs font-bold bg-phumulani-cream text-phumulani-earth px-2 py-0.5 rounded">
                   {selectedAgent.id} ({selectedAgent.division})
                 </span>
-                <h3 className="font-serif text-lg font-bold text-slate-900 mt-1">{selectedAgent.name}</h3>
-                <div className="text-xs text-slate-500">{selectedAgent.role} • {selectedAgent.ownerDepartment}</div>
+                <h3 className="font-serif text-lg font-bold text-phumulani-charcoal mt-1">{selectedAgent.name}</h3>
+                <div className="text-xs text-phumulani-charcoal">{selectedAgent.role} • {selectedAgent.ownerDepartment}</div>
               </div>
-              <button onClick={() => setSelectedAgent(null)} className="text-slate-400 hover:text-slate-700">
+              <button onClick={() => setSelectedAgent(null)} className="text-phumulani-charcoal hover:text-phumulani-earth">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="space-y-3 text-xs">
               <div>
-                <span className="font-bold text-slate-700">System Instruction & Purpose:</span>
-                <p className="text-slate-600 mt-0.5">{selectedAgent.purpose}</p>
+                <span className="font-bold text-phumulani-charcoal">System Instruction & Purpose:</span>
+                <p className="text-phumulani-charcoal mt-0.5">{selectedAgent.purpose}</p>
               </div>
 
-              <div className="bg-slate-50 p-3 rounded-lg border border-slate-200 font-mono text-[11px] whitespace-pre-wrap text-slate-800">
+              <div className="bg-phumulani-cream p-3 rounded-lg border border-phumulani-cream font-mono text-[11px] whitespace-pre-wrap text-phumulani-charcoal">
                 {selectedAgent.systemPrompt}
               </div>
 
               <div className="grid grid-cols-2 gap-3">
-                <div className="bg-emerald-50 p-2.5 rounded-lg border border-emerald-200">
-                  <div className="font-bold text-emerald-800 mb-1">Allowed Tools ({selectedAgent.allowedToolIds.length})</div>
-                  <ul className="list-disc list-inside text-emerald-900 text-[11px] space-y-0.5">
+                <div className="bg-phumulani-cream p-2.5 rounded-lg border border-phumulani-green">
+                  <div className="font-bold text-phumulani-charcoal mb-1">Allowed Tools ({selectedAgent.allowedToolIds.length})</div>
+                  <ul className="list-disc list-inside text-phumulani-charcoal text-[11px] space-y-0.5">
                     {selectedAgent.allowedToolIds.map((t) => (
                       <li key={t}>{t}</li>
                     ))}
                   </ul>
                 </div>
-                <div className="bg-rose-50 p-2.5 rounded-lg border border-rose-200">
-                  <div className="font-bold text-rose-800 mb-1">Prohibited Tools ({selectedAgent.prohibitedActionIds.length})</div>
-                  <ul className="list-disc list-inside text-rose-900 text-[11px] space-y-0.5">
+                <div className="bg-phumulani-cream p-2.5 rounded-lg border border-phumulani-earth">
+                  <div className="font-bold text-phumulani-earth mb-1">Prohibited Tools ({selectedAgent.prohibitedActionIds.length})</div>
+                  <ul className="list-disc list-inside text-phumulani-earth text-[11px] space-y-0.5">
                     {selectedAgent.prohibitedActionIds.map((t) => (
                       <li key={t}>{t}</li>
                     ))}
@@ -780,7 +780,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                 </div>
               </div>
 
-              <div className="flex justify-between items-center text-slate-500 pt-2 border-t border-slate-100">
+              <div className="flex justify-between items-center text-phumulani-charcoal pt-2 border-t border-phumulani-cream">
                 <span>Supervisor: <strong>{selectedAgent.supervisorName} ({selectedAgent.supervisorRole})</strong></span>
                 <span>Model: <strong>{selectedAgent.modelConfigurationId}</strong></span>
               </div>
@@ -789,7 +789,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
             <div className="flex justify-end pt-2">
               <button
                 onClick={() => setSelectedAgent(null)}
-                className="px-4 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold"
+                className="px-4 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold"
               >
                 Close Inspector
               </button>
@@ -800,53 +800,53 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
 
       {/* AGENT TEST EXECUTION MODAL */}
       {executionModalAgent && (
-        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-xl border border-slate-200 space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="fixed inset-0 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-xl border border-phumulani-cream space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div>
-                <h3 className="font-serif text-lg font-bold text-slate-900">
+                <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                   Execute Agent: {executionModalAgent.name} ({executionModalAgent.id})
                 </h3>
-                <div className="text-xs text-slate-500">Division: {executionModalAgent.division} • Supervisor: {executionModalAgent.supervisorName}</div>
+                <div className="text-xs text-phumulani-charcoal">Division: {executionModalAgent.division} • Supervisor: {executionModalAgent.supervisorName}</div>
               </div>
-              <button onClick={() => setExecutionModalAgent(null)} className="text-slate-400 hover:text-slate-700">
+              <button onClick={() => setExecutionModalAgent(null)} className="text-phumulani-charcoal hover:text-phumulani-earth">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             <div className="space-y-3 text-xs">
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Task Title</label>
+                <label className="block font-semibold text-phumulani-charcoal mb-1">Task Title</label>
                 <input
                   type="text"
                   value={taskTitle}
                   onChange={(e) => setTaskTitle(e.target.value)}
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg text-slate-900"
+                  className="w-full p-2 bg-phumulani-cream border border-phumulani-cream rounded-lg text-phumulani-charcoal"
                 />
               </div>
 
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Input Payload (JSON or Prompt Text)</label>
+                <label className="block font-semibold text-phumulani-charcoal mb-1">Input Payload (JSON or Prompt Text)</label>
                 <textarea
                   rows={3}
                   value={taskInput}
                   onChange={(e) => setTaskInput(e.target.value)}
                   placeholder='{"donorName": "Generous Donor", "giftAmount": 5000}'
-                  className="w-full p-2 bg-slate-50 border border-slate-200 rounded-lg font-mono text-[11px] text-slate-900"
+                  className="w-full p-2 bg-phumulani-cream border border-phumulani-cream rounded-lg font-mono text-[11px] text-phumulani-charcoal"
                 />
               </div>
 
               <div className="flex justify-end gap-2">
                 <button
                   onClick={() => setExecutionModalAgent(null)}
-                  className="px-3 py-1.5 text-slate-600 hover:bg-slate-100 rounded-lg text-xs font-semibold"
+                  className="px-3 py-1.5 text-phumulani-charcoal hover:bg-phumulani-cream rounded-lg text-xs font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   disabled={isExecuting}
                   onClick={handleExecuteTask}
-                  className="px-4 py-1.5 bg-teal-700 hover:bg-teal-800 text-white rounded-lg text-xs font-bold flex items-center gap-1.5"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold flex items-center gap-1.5"
                 >
                   <Play className="w-3.5 h-3.5" />
                   <span>{isExecuting ? 'Executing...' : 'Run Agent Task'}</span>
@@ -857,15 +857,15 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                 <div
                   className={`p-3.5 rounded-xl border mt-3 text-xs space-y-1.5 ${
                     executionResult.blockedByPolicy
-                      ? 'bg-rose-50 text-rose-900 border-rose-200'
-                      : 'bg-emerald-50 text-emerald-900 border-emerald-200'
+                      ? 'bg-phumulani-cream text-phumulani-earth border-phumulani-earth'
+                      : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green'
                   }`}
                 >
                   <div className="font-bold flex items-center gap-1.5">
                     {executionResult.blockedByPolicy ? (
-                      <AlertTriangle className="w-4 h-4 text-rose-600" />
+                      <AlertTriangle className="w-4 h-4 text-phumulani-earth" />
                     ) : (
-                      <CheckCircle2 className="w-4 h-4 text-emerald-700" />
+                      <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
                     )}
                     <span>{executionResult.blockedByPolicy ? 'Policy Halt / Blocked' : 'Execution Succeeded'}</span>
                   </div>
@@ -873,11 +873,11 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                     <p className="text-[11px] font-medium">{executionResult.policyReason}</p>
                   )}
                   {executionResult.output && (
-                    <div className="bg-white p-2.5 rounded border border-slate-200 font-mono text-[11px] whitespace-pre-wrap text-slate-800 mt-2">
+                    <div className="bg-white p-2.5 rounded border border-phumulani-cream font-mono text-[11px] whitespace-pre-wrap text-phumulani-charcoal mt-2">
                       {executionResult.output}
                     </div>
                   )}
-                  <div className="text-[10px] text-slate-500 pt-1 flex justify-between">
+                  <div className="text-[10px] text-phumulani-charcoal pt-1 flex justify-between">
                     <span>Task ID: {executionResult.taskId}</span>
                     <span>Approval Required: {String(executionResult.requiresHumanApproval)}</span>
                   </div>

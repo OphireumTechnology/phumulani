@@ -33,15 +33,15 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
   return (
     <div id={id} className={`max-w-3xl space-y-2 mb-8 sm:mb-10 ${alignClasses} ${className}`}>
       {eyebrow && (
-        <div className="text-xs font-bold text-[#006D6F] font-heading uppercase tracking-wider">
+        <div className="text-xs font-bold text-phumulani-earth font-heading uppercase tracking-wider">
           {eyebrow}
         </div>
       )}
-      <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-slate-900 leading-tight">
+      <h2 className="font-heading text-2xl sm:text-3xl lg:text-4xl font-extrabold text-phumulani-earth leading-tight">
         {title}
       </h2>
       {subtitle && (
-        <p className="text-xs sm:text-sm text-slate-600 font-sans leading-relaxed">
+        <p className="text-xs sm:text-sm text-phumulani-charcoal font-sans leading-relaxed">
           {subtitle}
         </p>
       )}

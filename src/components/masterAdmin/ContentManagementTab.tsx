@@ -385,93 +385,93 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
     <div className="space-y-6">
       {/* 1. TOP METRICS STRIP */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-1">
+        <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
+          <div className="flex items-center justify-between text-phumulani-charcoal mb-1">
             <span className="text-xs font-semibold uppercase tracking-wider">Total Pages</span>
-            <Globe className="w-4 h-4 text-teal-600" />
+            <Globe className="w-4 h-4 text-phumulani-earth" />
           </div>
-          <div className="text-2xl font-bold text-slate-900">{items.length}</div>
-          <div className="text-[11px] text-teal-700 font-medium mt-1">15 Core Sections</div>
+          <div className="text-2xl font-bold text-phumulani-charcoal">{items.length}</div>
+          <div className="text-[11px] text-phumulani-earth font-medium mt-1">15 Core Sections</div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-1">
+        <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
+          <div className="flex items-center justify-between text-phumulani-charcoal mb-1">
             <span className="text-xs font-semibold uppercase tracking-wider">Published</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
           </div>
-          <div className="text-2xl font-bold text-slate-900">
+          <div className="text-2xl font-bold text-phumulani-charcoal">
             {items.filter((i) => i.status === 'PUBLISHED').length}
           </div>
-          <div className="text-[11px] text-emerald-700 font-medium mt-1">100% Verified Live</div>
+          <div className="text-[11px] text-phumulani-earth font-medium mt-1">100% Verified Live</div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-1">
+        <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
+          <div className="flex items-center justify-between text-phumulani-charcoal mb-1">
             <span className="text-xs font-semibold uppercase tracking-wider">Drafts/Review</span>
-            <Clock className="w-4 h-4 text-amber-600" />
+            <Clock className="w-4 h-4 text-phumulani-earth" />
           </div>
-          <div className="text-2xl font-bold text-slate-900">
+          <div className="text-2xl font-bold text-phumulani-charcoal">
             {items.filter((i) => i.status === 'DRAFT' || i.status === 'IN_REVIEW').length}
           </div>
-          <div className="text-[11px] text-amber-700 font-medium mt-1">Human-in-the-Loop</div>
+          <div className="text-[11px] text-phumulani-earth font-medium mt-1">Human-in-the-Loop</div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-1">
+        <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
+          <div className="flex items-center justify-between text-phumulani-charcoal mb-1">
             <span className="text-xs font-semibold uppercase tracking-wider">Broken Links</span>
-            <Link2 className="w-4 h-4 text-blue-600" />
+            <Link2 className="w-4 h-4 text-phumulani-earth" />
           </div>
-          <div className="text-2xl font-bold text-slate-900">
+          <div className="text-2xl font-bold text-phumulani-charcoal">
             {linkScanReport?.brokenCount || 0}
           </div>
-          <div className="text-[11px] text-emerald-700 font-medium mt-1">54/54 Health 200 OK</div>
+          <div className="text-[11px] text-phumulani-earth font-medium mt-1">54/54 Health 200 OK</div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-1">
+        <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
+          <div className="flex items-center justify-between text-phumulani-charcoal mb-1">
             <span className="text-xs font-semibold uppercase tracking-wider">Media Assets</span>
-            <Image className="w-4 h-4 text-purple-600" />
+            <Image className="w-4 h-4 text-phumulani-earth" />
           </div>
-          <div className="text-2xl font-bold text-slate-900">24</div>
-          <div className="text-[11px] text-purple-700 font-medium mt-1">100% Alt-Text Audited</div>
+          <div className="text-2xl font-bold text-phumulani-charcoal">24</div>
+          <div className="text-[11px] text-phumulani-earth font-medium mt-1">100% Alt-Text Audited</div>
         </div>
 
-        <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs">
-          <div className="flex items-center justify-between text-slate-500 mb-1">
+        <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
+          <div className="flex items-center justify-between text-phumulani-charcoal mb-1">
             <span className="text-xs font-semibold uppercase tracking-wider">SEO Compliance</span>
-            <ShieldCheck className="w-4 h-4 text-teal-600" />
+            <ShieldCheck className="w-4 h-4 text-phumulani-earth" />
           </div>
-          <div className="text-2xl font-bold text-slate-900">100%</div>
-          <div className="text-[11px] text-teal-700 font-medium mt-1">OpenGraph + JSON-LD</div>
+          <div className="text-2xl font-bold text-phumulani-charcoal">100%</div>
+          <div className="text-[11px] text-phumulani-earth font-medium mt-1">OpenGraph + JSON-LD</div>
         </div>
       </div>
 
       {/* 2. AUDIT FEEDBACK BANNER */}
       {auditMessage && (
-        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-xl text-xs font-semibold text-emerald-900 flex items-center justify-between">
+        <div className="p-3 bg-phumulani-cream border border-phumulani-green rounded-xl text-xs font-semibold text-phumulani-charcoal flex items-center justify-between">
           <span>{auditMessage}</span>
-          <button onClick={() => setAuditMessage(null)} className="text-emerald-700 hover:text-emerald-900">✕</button>
+          <button onClick={() => setAuditMessage(null)} className="text-phumulani-earth hover:text-phumulani-charcoal">✕</button>
         </div>
       )}
 
       {/* 3. TOOLBAR CONTROLS & LINK SCANNER */}
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
+      <div className="bg-white p-4 rounded-xl border border-phumulani-cream shadow-xs flex flex-wrap items-center justify-between gap-3">
         <div className="flex flex-wrap items-center gap-2 flex-1 min-w-[280px]">
           <div className="relative flex-1 min-w-[200px]">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+            <Search className="w-4 h-4 text-phumulani-charcoal absolute left-3 top-2.5" />
             <input
               type="text"
               placeholder="Search content pages, slugs, or text..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-lg outline-none focus:border-teal-600"
+              className="w-full pl-9 pr-3 py-2 text-xs border border-phumulani-cream rounded-lg outline-none focus:border-phumulani-earth"
             />
           </div>
 
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-3 py-2 text-xs border border-slate-300 rounded-lg outline-none bg-white text-slate-700"
+            className="px-3 py-2 text-xs border border-phumulani-cream rounded-lg outline-none bg-white text-phumulani-charcoal"
           >
             <option value="ALL">All Categories</option>
             <option value="PAGE">Core Pages</option>
@@ -485,7 +485,7 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-3 py-2 text-xs border border-slate-300 rounded-lg outline-none bg-white text-slate-700"
+            className="px-3 py-2 text-xs border border-phumulani-cream rounded-lg outline-none bg-white text-phumulani-charcoal"
           >
             <option value="ALL">All Statuses</option>
             <option value="PUBLISHED">Published</option>
@@ -500,19 +500,19 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
           <button
             onClick={handleRunLinkScan}
             disabled={linkScanRunning}
-            className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+            className="px-3 py-2 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
             title="Scan all public anchors and canonical URLs for 404s"
           >
-            <RefreshCw className={`w-3.5 h-3.5 text-slate-600 ${linkScanRunning ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 text-phumulani-charcoal ${linkScanRunning ? 'animate-spin' : ''}`} />
             <span>{linkScanRunning ? 'Scanning Links...' : 'Verify Links (404 Scan)'}</span>
           </button>
 
           {onOpenMediaRegistry && (
             <button
               onClick={onOpenMediaRegistry}
-              className="px-3 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
+              className="px-3 py-2 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-earth border border-phumulani-earth rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
             >
-              <Image className="w-3.5 h-3.5 text-purple-600" />
+              <Image className="w-3.5 h-3.5 text-phumulani-earth" />
               <span>Media Library</span>
             </button>
           )}
@@ -536,7 +536,7 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
               };
               setEditingItem(newDraft);
             }}
-            className="px-3 py-2 bg-[#104F57] hover:bg-[#0c3e44] text-white rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+            className="px-3 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Create Draft</span>
@@ -545,49 +545,49 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
       </div>
 
       {/* 4. CONTENT ITEMS TABLE */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="px-4 py-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between text-xs font-bold text-slate-700">
+      <div className="bg-white rounded-xl border border-phumulani-cream shadow-xs overflow-hidden">
+        <div className="px-4 py-3 bg-phumulani-cream border-b border-phumulani-cream flex items-center justify-between text-xs font-bold text-phumulani-charcoal">
           <span>Active Website Content & Pages ({filteredItems.length})</span>
-          <span className="text-[11px] font-normal text-slate-500">
+          <span className="text-[11px] font-normal text-phumulani-charcoal">
             Last verified against GitHub Pages build target: <strong>/phumulani/</strong>
           </span>
         </div>
 
-        <div className="divide-y divide-slate-100">
+        <div className="divide-y divide-phumulani-cream">
           {filteredItems.map((item) => (
-            <div key={item.id} className="p-4 hover:bg-slate-50/70 transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div key={item.id} className="p-4 hover:bg-phumulani-cream transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1.5 flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-semibold text-slate-900 text-sm">{item.title}</span>
-                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
+                  <span className="font-semibold text-phumulani-charcoal text-sm">{item.title}</span>
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-phumulani-cream text-phumulani-charcoal border border-phumulani-cream">
                     /{item.slug}
                   </span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-teal-50 text-teal-800 border border-teal-200">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-phumulani-cream text-phumulani-earth border border-phumulani-teal">
                     {item.category}
                   </span>
                   <span
                     className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${
                       item.status === 'PUBLISHED'
-                        ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
+                        ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green'
                         : item.status === 'IN_REVIEW'
-                        ? 'bg-amber-50 text-amber-800 border border-amber-200'
+                        ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold'
                         : item.status === 'ARCHIVED'
-                        ? 'bg-gray-100 text-gray-600 border border-gray-300'
-                        : 'bg-slate-100 text-slate-700 border border-slate-200'
+                        ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-cream'
+                        : 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-cream'
                     }`}
                   >
                     {item.status} (v{item.version})
                   </span>
                 </div>
 
-                <p className="text-xs text-slate-600 line-clamp-1">{item.content}</p>
+                <p className="text-xs text-phumulani-charcoal line-clamp-1">{item.content}</p>
 
-                <div className="flex flex-wrap items-center gap-3 text-[11px] text-slate-500">
+                <div className="flex flex-wrap items-center gap-3 text-[11px] text-phumulani-charcoal">
                   <span>Last edited by: <strong>{item.lastEditedBy}</strong> ({new Date(item.lastEditedAt).toLocaleDateString()})</span>
                   {item.approvedBy && (
                     <span>Approved by: <strong>{item.approvedBy}</strong></span>
                   )}
-                  <span className="text-emerald-700 flex items-center gap-1 font-medium">
+                  <span className="text-phumulani-earth flex items-center gap-1 font-medium">
                     <ShieldCheck className="w-3.5 h-3.5" />
                     <span>SEO & Accessibility Passed</span>
                   </span>
@@ -597,16 +597,16 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
               <div className="flex items-center gap-2 shrink-0">
                 <button
                   onClick={() => setEditingItem(item)}
-                  className="px-2.5 py-1.5 border border-slate-300 text-slate-700 hover:bg-slate-100 rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer"
+                  className="px-2.5 py-1.5 border border-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer"
                 >
-                  <FileText className="w-3 h-3 text-slate-500" />
+                  <FileText className="w-3 h-3 text-phumulani-charcoal" />
                   <span>Edit Draft</span>
                 </button>
 
                 {item.status !== 'PUBLISHED' && (
                   <button
                     onClick={() => handleApprovePublish(item.id)}
-                    className="px-2.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer"
+                    className="px-2.5 py-1.5 bg-phumulani-green hover:bg-phumulani-teal text-phumulani-charcoal rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer"
                   >
                     <Check className="w-3 h-3" />
                     <span>Approve & Publish</span>
@@ -616,16 +616,16 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
                 {item.status !== 'ARCHIVED' ? (
                   <button
                     onClick={() => handleArchiveItem(item.id)}
-                    className="px-2.5 py-1.5 border border-amber-300 text-amber-700 hover:bg-amber-50 rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer"
+                    className="px-2.5 py-1.5 border border-phumulani-gold text-phumulani-earth hover:bg-phumulani-cream rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer"
                     title="Archive this content item"
                   >
-                    <Clock className="w-3 h-3 text-amber-600" />
+                    <Clock className="w-3 h-3 text-phumulani-earth" />
                     <span>Archive</span>
                   </button>
                 ) : (
                   <button
                     onClick={() => handleApprovePublish(item.id)}
-                    className="px-2.5 py-1.5 bg-teal-600 hover:bg-teal-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer"
+                    className="px-2.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer"
                     title="Restore and publish content"
                   >
                     <Check className="w-3 h-3" />
@@ -640,10 +640,10 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
                     const el = document.getElementById(item.slug) || document.getElementById(`${item.slug}-section`);
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer"
+                  className="px-2.5 py-1.5 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer"
                   title="View live section on public website"
                 >
-                  <Eye className="w-3 h-3 text-slate-500" />
+                  <Eye className="w-3 h-3 text-phumulani-charcoal" />
                   <span>Live Section</span>
                 </a>
               </div>
@@ -654,20 +654,20 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
 
       {/* 5. EDIT DRAFT MODAL */}
       {editingItem && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div>
-                <h3 className="font-serif text-lg font-bold text-slate-900">
+                <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                   Edit Content Item: {editingItem.title}
                 </h3>
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-phumulani-charcoal">
                   Slug: /{editingItem.slug} · Version {editingItem.version}
                 </div>
               </div>
               <button
                 onClick={() => setEditingItem(null)}
-                className="text-slate-400 hover:text-slate-600 p-1 cursor-pointer"
+                className="text-phumulani-charcoal hover:text-phumulani-earth p-1 cursor-pointer"
               >
                 ✕
               </button>
@@ -675,23 +675,23 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
 
             <form onSubmit={handleSaveEdit} className="space-y-4 text-xs">
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Title</label>
+                <label className="block font-semibold text-phumulani-charcoal mb-1">Title</label>
                 <input
                   type="text"
                   required
                   value={editingItem.title}
                   onChange={(e) => setEditingItem({ ...editingItem, title: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-teal-600"
+                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none focus:border-phumulani-earth"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Category</label>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Category</label>
                   <select
                     value={editingItem.category}
                     onChange={(e) => setEditingItem({ ...editingItem, category: e.target.value as any })}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white"
+                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white"
                   >
                     <option value="PAGE">Core Page</option>
                     <option value="PROGRAM">Program</option>
@@ -703,11 +703,11 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Status</label>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Status</label>
                   <select
                     value={editingItem.status}
                     onChange={(e) => setEditingItem({ ...editingItem, status: e.target.value as any })}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white"
+                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white"
                   >
                     <option value="DRAFT">Draft</option>
                     <option value="IN_REVIEW">In Human Review</option>
@@ -719,64 +719,64 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
               </div>
 
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Content Body</label>
+                <label className="block font-semibold text-phumulani-charcoal mb-1">Content Body</label>
                 <textarea
                   rows={4}
                   required
                   value={editingItem.content}
                   onChange={(e) => setEditingItem({ ...editingItem, content: e.target.value })}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-teal-600 font-sans"
+                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none focus:border-phumulani-earth font-sans"
                 />
               </div>
 
-              <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-3">
-                <div className="font-bold text-slate-800 flex items-center gap-1.5">
-                  <Globe className="w-3.5 h-3.5 text-teal-700" />
+              <div className="bg-phumulani-cream p-3 rounded-xl border border-phumulani-cream space-y-3">
+                <div className="font-bold text-phumulani-charcoal flex items-center gap-1.5">
+                  <Globe className="w-3.5 h-3.5 text-phumulani-earth" />
                   <span>SEO & Canonical Metadata</span>
                 </div>
 
                 <div>
-                  <label className="block font-medium text-slate-600 mb-1">SEO Meta Title</label>
+                  <label className="block font-medium text-phumulani-charcoal mb-1">SEO Meta Title</label>
                   <input
                     type="text"
                     value={editingItem.seoTitle}
                     onChange={(e) => setEditingItem({ ...editingItem, seoTitle: e.target.value })}
-                    className="w-full px-3 py-1.5 border border-slate-300 rounded-md outline-none bg-white"
+                    className="w-full px-3 py-1.5 border border-phumulani-cream rounded-md outline-none bg-white"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-medium text-slate-600 mb-1">SEO Meta Description</label>
+                  <label className="block font-medium text-phumulani-charcoal mb-1">SEO Meta Description</label>
                   <input
                     type="text"
                     value={editingItem.seoDescription}
                     onChange={(e) => setEditingItem({ ...editingItem, seoDescription: e.target.value })}
-                    className="w-full px-3 py-1.5 border border-slate-300 rounded-md outline-none bg-white"
+                    className="w-full px-3 py-1.5 border border-phumulani-cream rounded-md outline-none bg-white"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-medium text-slate-600 mb-1">Canonical URL</label>
+                  <label className="block font-medium text-phumulani-charcoal mb-1">Canonical URL</label>
                   <input
                     type="url"
                     value={editingItem.canonicalUrl}
                     onChange={(e) => setEditingItem({ ...editingItem, canonicalUrl: e.target.value })}
-                    className="w-full px-3 py-1.5 border border-slate-300 rounded-md outline-none bg-white font-mono text-[11px]"
+                    className="w-full px-3 py-1.5 border border-phumulani-cream rounded-md outline-none bg-white font-mono text-[11px]"
                   />
                 </div>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-200">
+              <div className="flex justify-end gap-2 pt-2 border-t border-phumulani-cream">
                 <button
                   type="button"
                   onClick={() => setEditingItem(null)}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-50 cursor-pointer"
+                  className="px-4 py-2 border border-phumulani-cream text-phumulani-charcoal rounded-lg font-semibold hover:bg-phumulani-cream cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#104F57] hover:bg-[#0c3e44] text-white rounded-lg font-bold cursor-pointer"
+                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold cursor-pointer"
                 >
                   Save Draft Changes
                 </button>

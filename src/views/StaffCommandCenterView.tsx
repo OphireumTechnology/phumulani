@@ -242,60 +242,60 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
     >
       <div className="space-y-6">
         {/* Top Banner */}
-        <div className="bg-slate-900 text-white rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-sm border border-slate-800">
+        <div className="bg-phumulani-charcoal text-white rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-sm border border-phumulani-teal">
           <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-2 text-xs font-semibold text-teal-400 bg-slate-800 px-3 py-0.5 rounded-full border border-slate-700">
-              <Briefcase className="w-3.5 h-3.5 text-teal-400" />
+            <div className="inline-flex items-center gap-2 text-xs font-semibold text-phumulani-teal bg-phumulani-charcoal px-3 py-0.5 rounded-full border border-phumulani-teal">
+              <Briefcase className="w-3.5 h-3.5 text-phumulani-teal" />
               <span>STAFF COMMAND CENTER</span>
             </div>
             <h1 className="font-serif text-2xl font-bold">
               Operations & Triage Command
             </h1>
-            <p className="text-xs text-slate-300 max-w-xl">
+            <p className="text-xs text-phumulani-cream max-w-xl">
               Human-in-the-loop operational management: review AI-triaged email, screen volunteer candidates, reconcile financial ledgers, and oversee events.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <div className="bg-slate-800/90 border border-slate-700 rounded-xl p-3 text-center min-w-[100px]">
-              <div className="font-serif text-lg font-bold text-amber-400">{pendingInboxCount}</div>
-              <div className="text-[10px] text-slate-400">Pending Triage</div>
+            <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl p-3 text-center min-w-[100px]">
+              <div className="font-serif text-lg font-bold text-phumulani-gold">{pendingInboxCount}</div>
+              <div className="text-[10px] text-phumulani-cream">Pending Triage</div>
             </div>
-            <div className="bg-slate-800/90 border border-slate-700 rounded-xl p-3 text-center min-w-[100px]">
-              <div className="font-serif text-lg font-bold text-teal-400">{pendingVolunteersCount}</div>
-              <div className="text-[10px] text-slate-400">To Screen</div>
+            <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl p-3 text-center min-w-[100px]">
+              <div className="font-serif text-lg font-bold text-phumulani-gold">{pendingVolunteersCount}</div>
+              <div className="text-[10px] text-phumulani-cream">To Screen</div>
             </div>
-            <div className="bg-slate-800/90 border border-slate-700 rounded-xl p-3 text-center min-w-[100px]">
-              <div className="font-serif text-lg font-bold text-rose-400">{restrictedIntakes.length}</div>
-              <div className="text-[10px] text-slate-400">Safeguarding</div>
+            <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl p-3 text-center min-w-[100px]">
+              <div className="font-serif text-lg font-bold text-phumulani-gold">{restrictedIntakes.length}</div>
+              <div className="text-[10px] text-phumulani-cream">Safeguarding</div>
             </div>
             <div
               onClick={() => setActiveTab('media')}
-              className="bg-slate-800/90 border border-slate-700 hover:border-emerald-500/50 rounded-xl p-3 text-center min-w-[100px] cursor-pointer transition-colors"
+              className="bg-phumulani-charcoal border border-phumulani-teal hover:border-phumulani-green rounded-xl p-3 text-center min-w-[100px] cursor-pointer transition-colors"
             >
-              <div className="font-serif text-lg font-bold text-emerald-400">{PHUMULANI_MEDIA_INVENTORY.length}</div>
-              <div className="text-[10px] text-slate-400">Media Vault</div>
+              <div className="font-serif text-lg font-bold text-phumulani-cream">{PHUMULANI_MEDIA_INVENTORY.length}</div>
+              <div className="text-[10px] text-phumulani-cream">Media Vault</div>
             </div>
             <div
               onClick={() => onViewChange('email-command')}
-              className="bg-[#104F57] hover:bg-teal-900 border border-teal-400/50 rounded-xl p-3 text-center min-w-[110px] cursor-pointer transition-colors text-white"
+              className="bg-phumulani-earth hover:bg-phumulani-orange border border-phumulani-teal rounded-xl p-3 text-center min-w-[110px] cursor-pointer transition-colors text-white"
               title="Open Master Email Administration (/admin/master/email)"
             >
-              <div className="font-serif text-lg font-bold text-teal-200">Email Admin</div>
-              <div className="text-[10px] text-teal-300">Command Center →</div>
+              <div className="font-serif text-lg font-bold text-white">Email Admin</div>
+              <div className="text-[10px] text-white">Command Center →</div>
             </div>
           </div>
         </div>
 
         {actionFeedback && (
-          <div className="bg-emerald-50 border border-emerald-300 text-emerald-950 px-4 py-3 rounded-xl text-xs font-medium flex items-center justify-between shadow-xs animate-in fade-in">
+          <div className="bg-phumulani-cream border border-phumulani-green text-phumulani-charcoal px-4 py-3 rounded-xl text-xs font-medium flex items-center justify-between shadow-xs animate-in fade-in">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-phumulani-earth shrink-0" />
               <span>{actionFeedback}</span>
             </div>
             <button
               onClick={() => setActionFeedback(null)}
-              className="text-emerald-700 hover:text-emerald-900 font-bold ml-2 cursor-pointer"
+              className="text-phumulani-earth hover:text-phumulani-charcoal font-bold ml-2 cursor-pointer"
             >
               ✕
             </button>
@@ -304,22 +304,22 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
 
       {/* TAB 1: UNIFIED INBOX & AI TRIAGE (WORKFLOW A) */}
       {activeTab === 'inbox' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs min-h-[580px]">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white rounded-xl border border-phumulani-cream overflow-hidden shadow-xs min-h-[580px]">
           {/* Left Column: Messages List */}
-          <div className="lg:col-span-5 border-r border-slate-200 divide-y divide-slate-100 overflow-y-auto max-h-[700px]">
-            <div className="p-3 bg-slate-50 border-b border-slate-200 flex justify-between items-center text-xs font-semibold text-slate-600">
+          <div className="lg:col-span-5 border-r border-phumulani-cream divide-y divide-phumulani-cream overflow-y-auto max-h-[700px]">
+            <div className="p-3 bg-phumulani-cream border-b border-phumulani-cream flex justify-between items-center text-xs font-semibold text-phumulani-charcoal">
               <div className="flex items-center gap-2">
                 <span>Inbox Queue (Workflow A)</span>
                 <button
                   type="button"
                   onClick={() => onViewChange('email-command')}
-                  className="text-[10px] font-bold text-teal-800 hover:text-teal-950 bg-teal-50 border border-teal-300 px-2 py-0.5 rounded-full cursor-pointer"
+                  className="text-[10px] font-bold text-phumulani-earth hover:text-phumulani-earth bg-phumulani-cream border border-phumulani-teal px-2 py-0.5 rounded-full cursor-pointer"
                   title="Open Master Email Administration (/admin/master/email)"
                 >
                   Full Email Admin →
                 </button>
               </div>
-              <span className="text-[11px] text-slate-400">Classified by Agent A02</span>
+              <span className="text-[11px] text-phumulani-charcoal">Classified by Agent A02</span>
             </div>
 
             {messages.map((msg) => {
@@ -332,33 +332,33 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                     setDraftEditText(msg.aiDraftReply || '');
                   }}
                   className={`p-4 transition-all cursor-pointer ${
-                    isSelected ? 'bg-teal-50/70 border-l-4 border-[#104F57]' : 'hover:bg-slate-50'
+                    isSelected ? 'bg-phumulani-cream border-l-4 border-phumulani-earth' : 'hover:bg-phumulani-cream'
                   }`}
                 >
                   <div className="flex justify-between items-start text-xs">
-                    <span className="font-bold text-slate-900">{msg.fromName}</span>
-                    <span className="text-[10px] text-slate-400 font-mono">
+                    <span className="font-bold text-phumulani-charcoal">{msg.fromName}</span>
+                    <span className="text-[10px] text-phumulani-charcoal font-mono">
                       {new Date(msg.receivedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   </div>
 
-                  <div className="font-semibold text-xs text-slate-800 mt-1 line-clamp-1">
+                  <div className="font-semibold text-xs text-phumulani-charcoal mt-1 line-clamp-1">
                     {msg.subject}
                   </div>
 
-                  <div className="text-[11px] text-slate-500 line-clamp-2 mt-1">
+                  <div className="text-[11px] text-phumulani-charcoal line-clamp-2 mt-1">
                     {msg.body}
                   </div>
 
                   <div className="mt-3 flex items-center justify-between text-[10px]">
                     <div className="flex items-center gap-1.5">
                       {msg.isSafeguardingAlert ? (
-                        <span className="text-rose-800 bg-rose-100 font-bold px-2 py-0.5 rounded flex items-center gap-1">
+                        <span className="text-phumulani-earth bg-phumulani-cream font-bold px-2 py-0.5 rounded flex items-center gap-1">
                           <ShieldAlert className="w-3 h-3" />
                           <span>SAFEGUARDING HALT</span>
                         </span>
                       ) : (
-                        <span className="text-slate-600 bg-slate-100 px-2 py-0.5 rounded capitalize">
+                        <span className="text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded capitalize">
                           {msg.category.replace('_', ' ')}
                         </span>
                       )}
@@ -367,10 +367,10 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                     <span
                       className={`font-semibold px-2 py-0.5 rounded ${
                         msg.status === 'sent'
-                          ? 'text-emerald-700 bg-emerald-50'
+                          ? 'text-phumulani-earth bg-phumulani-cream'
                           : msg.status === 'escalated'
-                          ? 'text-rose-700 bg-rose-50'
-                          : 'text-amber-700 bg-amber-50'
+                          ? 'text-phumulani-earth bg-phumulani-cream'
+                          : 'text-phumulani-earth bg-phumulani-cream'
                       }`}
                     >
                       {msg.status.replace('_', ' ')}
@@ -386,24 +386,24 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
             {selectedMessage ? (
               <div className="space-y-6">
                 {/* Header */}
-                <div className="border-b border-slate-200 pb-4 space-y-2">
+                <div className="border-b border-phumulani-cream pb-4 space-y-2">
                   <div className="flex justify-between items-start">
                     <div>
-                      <h3 className="font-serif text-lg font-bold text-slate-900">
+                      <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                         {selectedMessage.subject}
                       </h3>
-                      <div className="text-xs text-slate-500 mt-0.5">
+                      <div className="text-xs text-phumulani-charcoal mt-0.5">
                         From: <strong>{selectedMessage.fromName}</strong> ({selectedMessage.fromEmail})
                       </div>
                     </div>
-                    <span className="text-xs text-slate-400 font-mono">
+                    <span className="text-xs text-phumulani-charcoal font-mono">
                       {new Date(selectedMessage.receivedAt).toLocaleString()}
                     </span>
                   </div>
 
                   {selectedMessage.isSafeguardingAlert && (
-                    <div className="p-3 bg-rose-50 border border-rose-300 rounded-lg text-xs text-rose-950 font-medium flex items-center gap-2">
-                      <ShieldAlert className="w-4 h-4 text-rose-700 shrink-0" />
+                    <div className="p-3 bg-phumulani-cream border border-phumulani-earth rounded-lg text-xs text-phumulani-earth font-medium flex items-center gap-2">
+                      <ShieldAlert className="w-4 h-4 text-phumulani-earth shrink-0" />
                       <span>
                         SAFEGUARDING ISOLATION: Message contains trauma/crisis disclosure. Automated AI responses are permanently halted per Principle 1.4. Assigned to Sister Miriam K.
                       </span>
@@ -412,24 +412,24 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                 </div>
 
                 {/* Original Body */}
-                <div className="bg-slate-50 rounded-xl p-4 border border-slate-200 text-xs text-slate-800 leading-relaxed whitespace-pre-wrap">
+                <div className="bg-phumulani-cream rounded-xl p-4 border border-phumulani-cream text-xs text-phumulani-charcoal leading-relaxed whitespace-pre-wrap">
                   {selectedMessage.body}
                 </div>
 
                 {/* AI Triage & Draft Section (Disabled if safeguarding alert) */}
                 {!selectedMessage.isSafeguardingAlert ? (
-                  <div className="bg-white rounded-xl border border-teal-200 p-5 space-y-4 shadow-2xs">
+                  <div className="bg-white rounded-xl border border-phumulani-teal p-5 space-y-4 shadow-2xs">
                     <div className="flex justify-between items-center">
                       <div className="flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-[#104F57]" />
-                        <span className="font-serif text-xs font-bold text-slate-900">
+                        <Sparkles className="w-4 h-4 text-phumulani-earth" />
+                        <span className="font-serif text-xs font-bold text-phumulani-charcoal">
                           AI Draft Proposal (Agent A02 · Email Manager)
                         </span>
                       </div>
                       <button
                         onClick={() => handleGenerateDraft(selectedMessage)}
                         disabled={isGeneratingDraft}
-                        className="text-xs text-[#104F57] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
+                        className="text-xs text-phumulani-earth hover:underline font-semibold flex items-center gap-1 cursor-pointer"
                       >
                         <Sparkles className="w-3 h-3" />
                         <span>Regenerate Draft</span>
@@ -437,39 +437,39 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                     </div>
 
                     {selectedMessage.aiReasoning && (
-                      <div className="text-[11px] text-teal-800 bg-teal-50 p-2.5 rounded-lg border border-teal-200/60">
+                      <div className="text-[11px] text-phumulani-earth bg-phumulani-cream p-2.5 rounded-lg border border-phumulani-teal">
                         <strong>Triage Reasoning:</strong> {selectedMessage.aiReasoning}
                       </div>
                     )}
 
                     <div>
-                      <label className="block text-[11px] font-semibold text-slate-600 mb-1">
+                      <label className="block text-[11px] font-semibold text-phumulani-charcoal mb-1">
                         Staff Review & Edit (Changes will be audited):
                       </label>
                       <textarea
                         rows={6}
                         value={draftEditText}
                         onChange={(e) => setDraftEditText(e.target.value)}
-                        className="w-full p-3 border border-slate-300 rounded-lg text-xs outline-none focus:ring-1 focus:ring-[#104F57] font-sans leading-relaxed"
+                        className="w-full p-3 border border-phumulani-cream rounded-lg text-xs outline-none focus:ring-1 focus:ring-phumulani-earth font-sans leading-relaxed"
                         disabled={selectedMessage.status === 'sent'}
                       />
                     </div>
 
                     <div className="flex items-center justify-between pt-2">
-                      <div className="text-[11px] text-slate-500 flex items-center gap-1">
-                        <Lock className="w-3 h-3 text-slate-400" />
+                      <div className="text-[11px] text-phumulani-charcoal flex items-center gap-1">
+                        <Lock className="w-3 h-3 text-phumulani-charcoal" />
                         <span>Requires human staff sign-off before transmission</span>
                       </div>
 
                       {selectedMessage.status === 'sent' ? (
-                        <span className="text-xs font-bold text-emerald-700 flex items-center gap-1 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                        <span className="text-xs font-bold text-phumulani-earth flex items-center gap-1 bg-phumulani-cream px-3 py-1.5 rounded-lg border border-phumulani-green">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-earth" />
                           <span>Sent & Logged by {selectedMessage.approvedBy || currentUser.name}</span>
                         </span>
                       ) : (
                         <button
                           onClick={() => handleApproveSend(selectedMessage.id)}
-                          className="px-4 py-2 bg-[#104F57] hover:bg-[#0c3e44] text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
+                          className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
                         >
                           <Send className="w-3.5 h-3.5" />
                           <span>Authorize & Send Email</span>
@@ -478,8 +478,8 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                     </div>
                   </div>
                 ) : (
-                  <div className="p-4 bg-slate-100 rounded-xl border border-slate-200 text-xs text-slate-600 space-y-2">
-                    <div className="font-bold text-slate-800">Restricted Human Handling:</div>
+                  <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream text-xs text-phumulani-charcoal space-y-2">
+                    <div className="font-bold text-phumulani-charcoal">Restricted Human Handling:</div>
                     <p>
                       This message was isolated from ordinary CRM and AI workflows. Please open the "Restricted Survivor Route" tab to review emergency safety notes and manage confidential outreach.
                     </p>
@@ -487,7 +487,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                 )}
               </div>
             ) : (
-              <div className="flex items-center justify-center h-full text-xs text-slate-400">
+              <div className="flex items-center justify-center h-full text-xs text-phumulani-charcoal">
                 Select a message from the queue to view triage notes.
               </div>
             )}
@@ -497,10 +497,10 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
 
       {/* TAB 2: VOLUNTEER SCREENING QUEUE (WORKFLOW B) */}
       {activeTab === 'volunteers' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white rounded-xl border border-slate-200 p-6 shadow-xs">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs">
           {/* Applications list */}
-          <div className="lg:col-span-5 border-r border-slate-200 pr-4 space-y-3">
-            <h3 className="font-serif text-base font-bold text-slate-900 pb-2 border-b border-slate-100">
+          <div className="lg:col-span-5 border-r border-phumulani-cream pr-4 space-y-3">
+            <h3 className="font-serif text-base font-bold text-phumulani-charcoal pb-2 border-b border-phumulani-cream">
               Applications to Screen
             </h3>
             {applications.map((app) => (
@@ -509,18 +509,18 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                 onClick={() => setScreeningApp(app)}
                 className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
                   screeningApp?.id === app.id
-                    ? 'bg-teal-50 border-[#104F57]'
-                    : 'bg-white border-slate-200 hover:border-slate-300'
+                    ? 'bg-phumulani-cream border-phumulani-earth'
+                    : 'bg-white border-phumulani-cream hover:border-phumulani-cream'
                 }`}
               >
                 <div className="flex justify-between items-start text-xs">
-                  <span className="font-bold text-slate-900">{app.fullName}</span>
-                  <span className="font-mono text-[10px] text-slate-500">{app.trackingId}</span>
+                  <span className="font-bold text-phumulani-charcoal">{app.fullName}</span>
+                  <span className="font-mono text-[10px] text-phumulani-charcoal">{app.trackingId}</span>
                 </div>
-                <div className="text-[11px] text-slate-600 mt-1">{app.opportunityTitle}</div>
+                <div className="text-[11px] text-phumulani-charcoal mt-1">{app.opportunityTitle}</div>
                 <div className="mt-2 flex justify-between items-center text-[10px]">
-                  <span className="text-slate-500">{app.preferredLanguage}</span>
-                  <span className="font-semibold text-teal-800 bg-teal-100/70 px-2 py-0.5 rounded capitalize">
+                  <span className="text-phumulani-charcoal">{app.preferredLanguage}</span>
+                  <span className="font-semibold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded capitalize">
                     {app.status.replace('_', ' ')}
                   </span>
                 </div>
@@ -532,45 +532,45 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
           <div className="lg:col-span-7 pl-2 space-y-5">
             {screeningApp ? (
               <div className="space-y-5 text-xs">
-                <div className="flex justify-between items-start border-b border-slate-100 pb-3">
+                <div className="flex justify-between items-start border-b border-phumulani-cream pb-3">
                   <div>
-                    <span className="font-mono text-[11px] font-bold text-[#104F57] bg-teal-50 px-2 py-0.5 rounded">
+                    <span className="font-mono text-[11px] font-bold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded">
                       {screeningApp.trackingId}
                     </span>
-                    <h3 className="font-serif text-xl font-bold text-slate-900 mt-1">
+                    <h3 className="font-serif text-xl font-bold text-phumulani-charcoal mt-1">
                       {screeningApp.fullName}
                     </h3>
-                    <div className="text-slate-500 mt-0.5">
+                    <div className="text-phumulani-charcoal mt-0.5">
                       Email: {screeningApp.email} · Phone: {screeningApp.phone}
                     </div>
                   </div>
-                  <span className="font-bold text-xs uppercase text-slate-700 bg-slate-100 px-2.5 py-1 rounded">
+                  <span className="font-bold text-xs uppercase text-phumulani-charcoal bg-phumulani-cream px-2.5 py-1 rounded">
                     Status: {screeningApp.status.replace('_', ' ')}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <div className="grid grid-cols-2 gap-4 bg-phumulani-cream p-4 rounded-xl border border-phumulani-cream">
                   <div>
-                    <span className="text-slate-500">Stated Skills:</span>
-                    <div className="font-semibold text-slate-800 mt-0.5">{screeningApp.skills.join(', ')}</div>
+                    <span className="text-phumulani-charcoal">Stated Skills:</span>
+                    <div className="font-semibold text-phumulani-charcoal mt-0.5">{screeningApp.skills.join(', ')}</div>
                   </div>
                   <div>
-                    <span className="text-slate-500">Availability:</span>
-                    <div className="font-semibold text-slate-800 mt-0.5">{screeningApp.availability.join(', ')}</div>
+                    <span className="text-phumulani-charcoal">Availability:</span>
+                    <div className="font-semibold text-phumulani-charcoal mt-0.5">{screeningApp.availability.join(', ')}</div>
                   </div>
                 </div>
 
                 <div>
-                  <span className="font-semibold text-slate-700">Applicant Motivation:</span>
-                  <p className="mt-1 p-3 bg-white border border-slate-200 rounded-lg text-slate-700 leading-relaxed">
+                  <span className="font-semibold text-phumulani-charcoal">Applicant Motivation:</span>
+                  <p className="mt-1 p-3 bg-white border border-phumulani-cream rounded-lg text-phumulani-charcoal leading-relaxed">
                     "{screeningApp.motivation}"
                   </p>
                 </div>
 
                 {screeningApp.aiSuggestedMatchNotes && (
-                  <div className="p-3 bg-teal-50 border border-teal-200 rounded-lg text-slate-800 space-y-1">
-                    <div className="font-bold text-[#104F57] flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-[#104F57]" />
+                  <div className="p-3 bg-phumulani-cream border border-phumulani-teal rounded-lg text-phumulani-charcoal space-y-1">
+                    <div className="font-bold text-phumulani-earth flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-phumulani-earth" />
                       <span>Agent A04 (Volunteer Recruiter) Advisory Matching:</span>
                     </div>
                     <p className="text-[11px]">{screeningApp.aiSuggestedMatchNotes}</p>
@@ -578,7 +578,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                 )}
 
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">
                     Coordinator Screening Notes:
                   </label>
                   <textarea
@@ -586,7 +586,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                     value={screeningNotes}
                     onChange={(e) => setScreeningNotes(e.target.value)}
                     placeholder="Enter interview feedback, background check reference numbers, or orientation schedule notes..."
-                    className="w-full p-2.5 border border-slate-300 rounded-lg outline-none text-xs"
+                    className="w-full p-2.5 border border-phumulani-cream rounded-lg outline-none text-xs"
                   />
                 </div>
 
@@ -594,19 +594,19 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                 <div className="pt-2 flex flex-wrap gap-2">
                   <button
                     onClick={() => handleUpdateVolunteerStatus(screeningApp.id, 'screening_review')}
-                    className="px-3 py-2 bg-blue-50 text-blue-800 border border-blue-200 rounded-lg font-semibold hover:bg-blue-100 cursor-pointer"
+                    className="px-3 py-2 bg-phumulani-cream text-phumulani-earth border border-phumulani-teal rounded-lg font-semibold hover:bg-phumulani-cream cursor-pointer"
                   >
                     Mark Screening In-Progress
                   </button>
                   <button
                     onClick={() => handleUpdateVolunteerStatus(screeningApp.id, 'orientation_scheduled')}
-                    className="px-3 py-2 bg-purple-50 text-purple-800 border border-purple-200 rounded-lg font-semibold hover:bg-purple-100 cursor-pointer"
+                    className="px-3 py-2 bg-phumulani-cream text-phumulani-earth border border-phumulani-earth rounded-lg font-semibold hover:bg-phumulani-cream cursor-pointer"
                   >
                     Schedule Orientation
                   </button>
                   <button
                     onClick={() => handleUpdateVolunteerStatus(screeningApp.id, 'approved_active')}
-                    className="px-4 py-2 bg-emerald-700 text-white rounded-lg font-bold hover:bg-emerald-800 cursor-pointer flex items-center gap-1.5"
+                    className="px-4 py-2 bg-phumulani-earth text-white rounded-lg font-bold hover:bg-phumulani-orange cursor-pointer flex items-center gap-1.5"
                   >
                     <CheckCircle2 className="w-4 h-4" />
                     <span>Approve Active Placement</span>
@@ -614,7 +614,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="text-slate-400 text-xs">Select an applicant to review.</div>
+              <div className="text-phumulani-charcoal text-xs">Select an applicant to review.</div>
             )}
           </div>
         </div>
@@ -622,19 +622,19 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
 
       {/* TAB 3: EVENT OPERATIONS (WORKFLOW D) */}
       {activeTab === 'events' && (
-        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-6">
+        <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-6">
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="font-serif text-lg font-bold text-slate-900">
+              <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                 Community Events & Workshops (Workflow D)
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-phumulani-charcoal mt-1">
                 Enforce venue capacity limits, manage attendee registration, and promote waitlist entries.
               </p>
             </div>
             <button
               onClick={() => setShowNewEventModal(true)}
-              className="px-4 py-2 bg-[#104F57] hover:bg-[#0c3e44] text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
+              className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <PlusCircle className="w-3.5 h-3.5" />
               <span>Create New Event</span>
@@ -643,7 +643,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-500 border-y border-slate-200">
+              <thead className="bg-phumulani-cream text-phumulani-charcoal border-y border-phumulani-cream">
                 <tr>
                   <th className="py-2.5 px-3 font-semibold">Event Title</th>
                   <th className="py-2.5 px-3 font-semibold">Date & Time</th>
@@ -654,30 +654,30 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                   <th className="py-2.5 px-3 font-semibold">Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-phumulani-cream">
                 {events.map((evt) => (
-                  <tr key={evt.id} className="hover:bg-slate-50">
-                    <td className="py-3 px-3 font-bold text-slate-900">{evt.title}</td>
-                    <td className="py-3 px-3 text-slate-600">
+                  <tr key={evt.id} className="hover:bg-phumulani-cream">
+                    <td className="py-3 px-3 font-bold text-phumulani-charcoal">{evt.title}</td>
+                    <td className="py-3 px-3 text-phumulani-charcoal">
                       <div>{evt.date}</div>
-                      <div className="text-[11px] text-slate-400">{evt.time}</div>
+                      <div className="text-[11px] text-phumulani-charcoal">{evt.time}</div>
                     </td>
-                    <td className="py-3 px-3 text-slate-700">{evt.category}</td>
-                    <td className="py-3 px-3 font-mono font-bold text-slate-800">{evt.capacity} max</td>
-                    <td className="py-3 px-3 font-bold text-[#104F57]">
+                    <td className="py-3 px-3 text-phumulani-charcoal">{evt.category}</td>
+                    <td className="py-3 px-3 font-mono font-bold text-phumulani-charcoal">{evt.capacity} max</td>
+                    <td className="py-3 px-3 font-bold text-phumulani-earth">
                       {evt.registeredCount} booked
                     </td>
                     <td className="py-3 px-3">
                       {evt.waitlistCount > 0 ? (
-                        <span className="text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-bold">
+                        <span className="text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded font-bold">
                           {evt.waitlistCount} waiting
                         </span>
                       ) : (
-                        <span className="text-slate-400">0</span>
+                        <span className="text-phumulani-charcoal">0</span>
                       )}
                     </td>
                     <td className="py-3 px-3">
-                      <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-semibold text-[11px]">
+                      <span className="text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded font-semibold text-[11px]">
                         Published
                       </span>
                     </td>
@@ -691,25 +691,25 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
 
       {/* TAB 4: DONATIONS & LEDGER (WORKFLOW C) */}
       {activeTab === 'finance' && (
-        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-6">
+        <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-6">
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="font-serif text-lg font-bold text-slate-900">
+              <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                 Financial Ledger & Webhook Reconciliation (Workflow C)
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-phumulani-charcoal mt-1">
                 Only provider-verified transactions write to ledger. Dual human control for any refund or bank change.
               </p>
             </div>
-            <div className="flex items-center gap-2 text-xs font-semibold text-emerald-800 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <div className="flex items-center gap-2 text-xs font-semibold text-phumulani-charcoal bg-phumulani-cream px-3 py-1.5 rounded-lg border border-phumulani-green">
+              <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
               <span>100% Transactions Reconciled</span>
             </div>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-500 border-y border-slate-200">
+              <thead className="bg-phumulani-cream text-phumulani-charcoal border-y border-phumulani-cream">
                 <tr>
                   <th className="py-2.5 px-3 font-semibold">Txn ID</th>
                   <th className="py-2.5 px-3 font-semibold">Donor</th>
@@ -720,22 +720,22 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                   <th className="py-2.5 px-3 font-semibold">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-phumulani-cream">
                 {donations.map((don) => (
-                  <tr key={don.id} className="hover:bg-slate-50">
-                    <td className="py-3 px-3 font-mono text-slate-600">{don.transactionId}</td>
-                    <td className="py-3 px-3 font-medium text-slate-900">{don.donorName}</td>
-                    <td className="py-3 px-3 text-slate-700">{don.campaignTitle}</td>
-                    <td className="py-3 px-3 font-bold text-slate-900">${don.amount.toLocaleString()}.00</td>
-                    <td className="py-3 px-3 font-mono font-bold text-[#104F57]">{don.receiptNumber}</td>
+                  <tr key={don.id} className="hover:bg-phumulani-cream">
+                    <td className="py-3 px-3 font-mono text-phumulani-charcoal">{don.transactionId}</td>
+                    <td className="py-3 px-3 font-medium text-phumulani-charcoal">{don.donorName}</td>
+                    <td className="py-3 px-3 text-phumulani-charcoal">{don.campaignTitle}</td>
+                    <td className="py-3 px-3 font-bold text-phumulani-charcoal">${don.amount.toLocaleString()}.00</td>
+                    <td className="py-3 px-3 font-mono font-bold text-phumulani-earth">{don.receiptNumber}</td>
                     <td className="py-3 px-3">
                       {don.reconciled ? (
-                        <span className="text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded font-semibold text-[11px] flex items-center gap-1 w-fit">
+                        <span className="text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded font-semibold text-[11px] flex items-center gap-1 w-fit">
                           <CheckCircle2 className="w-3 h-3" />
                           <span>Reconciled</span>
                         </span>
                       ) : (
-                        <span className="text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-semibold text-[11px]">
+                        <span className="text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded font-semibold text-[11px]">
                           Pending batch
                         </span>
                       )}
@@ -743,7 +743,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                     <td className="py-3 px-3">
                       <button
                         onClick={() => onOpenReceipt(don)}
-                        className="text-xs font-semibold text-[#104F57] hover:underline"
+                        className="text-xs font-semibold text-phumulani-earth hover:underline"
                       >
                         Inspect
                       </button>
@@ -758,12 +758,12 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
 
       {/* TAB 5: AI APPROVAL QUEUE (SECTION 7.3 & 11.6) */}
       {activeTab === 'ai_queue' && (
-        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-6">
+        <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-6">
           <div>
-            <h3 className="font-serif text-lg font-bold text-slate-900">
+            <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
               Centralized AI Approval Queue
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-phumulani-charcoal mt-1">
               "AI drafts, humans decide." Outbound communications, grant narratives, public events, and campaign texts require authorized staff approval.
             </p>
           </div>
@@ -772,17 +772,17 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
             {approvalTasks.map((task) => (
               <div
                 key={task.id}
-                className="p-5 rounded-xl border border-slate-200 hover:border-slate-300 transition-all space-y-4"
+                className="p-5 rounded-xl border border-phumulani-cream hover:border-phumulani-cream transition-all space-y-4"
               >
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                      <span className="font-mono text-xs font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded">
                         {task.agentId} ({task.agentName})
                       </span>
-                      <h4 className="font-serif font-bold text-base text-slate-900">{task.title}</h4>
+                      <h4 className="font-serif font-bold text-base text-phumulani-charcoal">{task.title}</h4>
                     </div>
-                    <div className="text-xs text-slate-500 mt-1">
+                    <div className="text-xs text-phumulani-charcoal mt-1">
                       Context: {task.contextSummary} · Queued at {new Date(task.createdAt).toLocaleString()}
                     </div>
                   </div>
@@ -790,19 +790,19 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                   <span
                     className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${
                       task.status === 'approved'
-                        ? 'bg-emerald-100 text-emerald-800'
+                        ? 'bg-phumulani-cream text-phumulani-charcoal'
                         : task.status === 'rejected'
-                        ? 'bg-rose-100 text-rose-800'
-                        : 'bg-amber-100 text-amber-800'
+                        ? 'bg-phumulani-cream text-phumulani-earth'
+                        : 'bg-phumulani-cream text-phumulani-charcoal'
                     }`}
                   >
                     {task.status}
                   </span>
                 </div>
 
-                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs text-slate-800 leading-relaxed">
+                <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream text-xs text-phumulani-charcoal leading-relaxed">
                   <strong>Proposed Output:</strong>
-                  <p className="mt-1 font-serif text-slate-700 whitespace-pre-wrap">
+                  <p className="mt-1 font-serif text-phumulani-charcoal whitespace-pre-wrap">
                     {task.proposedContent}
                   </p>
                 </div>
@@ -814,7 +814,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                         db.resolveApprovalTask(task.id, 'rejected', 'Staff requested revision.');
                         setActionFeedback(`Task ${task.id} rejected.`);
                       }}
-                      className="px-4 py-2 border border-slate-300 text-rose-700 hover:bg-rose-50 rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                      className="px-4 py-2 border border-phumulani-cream text-phumulani-earth hover:bg-phumulani-cream rounded-lg text-xs font-bold transition-colors cursor-pointer"
                     >
                       Reject
                     </button>
@@ -823,7 +823,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                         db.resolveApprovalTask(task.id, 'approved', 'Staff approved without change.');
                         setActionFeedback(`Task ${task.id} approved and executed.`);
                       }}
-                      className="px-5 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
+                      className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
                     >
                       <Check className="w-4 h-4" />
                       <span>Approve & Authorize Action</span>
@@ -838,25 +838,25 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
 
       {/* TAB 6: RESTRICTED SURVIVOR ROUTE (WORKFLOW E & SECTION 13) */}
       {activeTab === 'restricted' && (
-        <div className="bg-rose-50/50 border-2 border-rose-200 rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs">
+        <div className="bg-phumulani-cream border-2 border-phumulani-earth rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs">
           <div className="flex justify-between items-start">
             <div className="space-y-1">
-              <div className="inline-flex items-center gap-2 text-xs font-bold text-rose-900 bg-rose-100 px-3 py-1 rounded-full border border-rose-200">
-                <ShieldAlert className="w-3.5 h-3.5 text-rose-700" />
+              <div className="inline-flex items-center gap-2 text-xs font-bold text-phumulani-earth bg-phumulani-cream px-3 py-1 rounded-full border border-phumulani-earth">
+                <ShieldAlert className="w-3.5 h-3.5 text-phumulani-earth" />
                 <span>RESTRICTED SURVIVOR SERVICES BOUNDARY (SECTION 13)</span>
               </div>
-              <h3 className="font-serif text-2xl font-bold text-rose-950">
+              <h3 className="font-serif text-2xl font-bold text-phumulani-earth">
                 Isolated Confidential Intake Queue
               </h3>
-              <p className="text-xs text-slate-700 max-w-2xl leading-relaxed">
+              <p className="text-xs text-phumulani-charcoal max-w-2xl leading-relaxed">
                 This environment is completely segregated from the public CRM, general analytics, and external AI agents. Only certified Safeguarding Officers and trauma advocates have access.
               </p>
             </div>
 
-            <div className="bg-white p-3 rounded-xl border border-rose-200 text-xs text-right">
-              <div className="text-slate-500">Authorized Officer:</div>
-              <div className="font-bold text-rose-900">{currentUser.name}</div>
-              <div className="text-[10px] text-emerald-700 font-semibold mt-0.5">Role Verified</div>
+            <div className="bg-white p-3 rounded-xl border border-phumulani-earth text-xs text-right">
+              <div className="text-phumulani-charcoal">Authorized Officer:</div>
+              <div className="font-bold text-phumulani-earth">{currentUser.name}</div>
+              <div className="text-[10px] text-phumulani-earth font-semibold mt-0.5">Role Verified</div>
             </div>
           </div>
 
@@ -864,49 +864,49 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
             {restrictedIntakes.map((item) => (
               <div
                 key={item.id}
-                className="bg-white rounded-xl border border-rose-200 p-5 shadow-xs space-y-3"
+                className="bg-white rounded-xl border border-phumulani-earth p-5 shadow-xs space-y-3"
               >
                 <div className="flex justify-between items-start">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-rose-800 bg-rose-50 px-2 py-0.5 rounded">
+                    <span className="font-mono text-xs font-bold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded">
                       {item.anonymousCode}
                     </span>
                     <span
                       className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${
                         item.urgencyLevel === 'immediate_safety'
-                          ? 'bg-rose-700 text-white animate-pulse'
-                          : 'bg-amber-100 text-amber-900'
+                          ? 'bg-phumulani-earth text-white animate-pulse'
+                          : 'bg-phumulani-cream text-phumulani-charcoal'
                       }`}
                     >
                       {item.urgencyLevel.replace('_', ' ')}
                     </span>
                   </div>
-                  <span className="text-xs text-slate-400 font-mono">
+                  <span className="text-xs text-phumulani-charcoal font-mono">
                     Received: {new Date(item.createdAt).toLocaleString()}
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs bg-slate-50 p-3 rounded-lg border border-slate-200">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs bg-phumulani-cream p-3 rounded-lg border border-phumulani-cream">
                   <div>
-                    <span className="text-slate-500">Language:</span>
-                    <div className="font-semibold text-slate-800">{item.languageNeeded}</div>
+                    <span className="text-phumulani-charcoal">Language:</span>
+                    <div className="font-semibold text-phumulani-charcoal">{item.languageNeeded}</div>
                   </div>
                   <div>
-                    <span className="text-slate-500">Contact Method:</span>
-                    <div className="font-semibold text-slate-800 capitalize">{item.preferredContactMethod.replace('_', ' ')}</div>
+                    <span className="text-phumulani-charcoal">Contact Method:</span>
+                    <div className="font-semibold text-phumulani-charcoal capitalize">{item.preferredContactMethod.replace('_', ' ')}</div>
                   </div>
                   <div>
-                    <span className="text-slate-500">Safe Window:</span>
-                    <div className="font-semibold text-slate-800">{item.safeTimeToContact}</div>
+                    <span className="text-phumulani-charcoal">Safe Window:</span>
+                    <div className="font-semibold text-phumulani-charcoal">{item.safeTimeToContact}</div>
                   </div>
                 </div>
 
-                <div className="p-3 bg-rose-50/60 rounded-lg text-xs font-mono text-slate-700">
+                <div className="p-3 bg-phumulani-cream rounded-lg text-xs font-mono text-phumulani-charcoal">
                   {item.notesEncryptedSummary}
                 </div>
 
                 <div className="flex justify-between items-center text-xs pt-1">
-                  <span className="text-slate-500">
+                  <span className="text-phumulani-charcoal">
                     Lead Advocate: <strong>{item.assignedSpecialist}</strong>
                   </span>
                   <button
@@ -914,7 +914,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                       setActionFeedback(`Confidential safety protocol initiated for reference ${item.anonymousCode}. A certified trauma advocate will make discreet contact during the designated safe window.`);
                       setTimeout(() => setActionFeedback(null), 6000);
                     }}
-                    className="px-4 py-1.5 bg-rose-800 hover:bg-rose-900 text-white rounded-lg font-bold cursor-pointer"
+                    className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold cursor-pointer"
                   >
                     Initiate Safe Outreach
                   </button>
@@ -929,16 +929,16 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
       {activeTab === 'media' && (
         <div className="space-y-6">
           {/* Top safeguard header & actions */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="bg-white rounded-2xl border border-phumulani-cream p-6 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
-              <div className="flex items-center gap-2 text-xs font-bold text-[#104F57] uppercase tracking-wider mb-1">
-                <Camera className="w-4 h-4 text-[#104F57]" />
+              <div className="flex items-center gap-2 text-xs font-bold text-phumulani-earth uppercase tracking-wider mb-1">
+                <Camera className="w-4 h-4 text-phumulani-earth" />
                 <span>Authentic Media Preservation & Safeguarding Registry</span>
               </div>
-              <h2 className="font-serif text-xl font-bold text-slate-900">
+              <h2 className="font-serif text-xl font-bold text-phumulani-charcoal">
                 Visual Assets & Digital Dignity Protocol
               </h2>
-              <p className="text-xs text-slate-600 mt-1 max-w-2xl leading-relaxed">
+              <p className="text-xs text-phumulani-charcoal mt-1 max-w-2xl leading-relaxed">
                 Phumulani maintains a strict Zero-AI Generation Rule for real individuals. All 19 media assets represent real community members, founder Comfort Dondo, board leaders, publications, and cultural programs. Identifiable survivor records are never published without written re-consent.
               </p>
             </div>
@@ -948,7 +948,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                 <button
                   type="button"
                   onClick={onOpenMediaRegistry}
-                  className="px-4 py-2.5 bg-[#104F57] hover:bg-[#0c3e44] text-white text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-2 cursor-pointer"
+                  className="px-4 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-2 cursor-pointer"
                 >
                   <Eye className="w-4 h-4" />
                   <span>Inspect Full Registry Modal</span>
@@ -959,72 +959,72 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
 
           {/* Backup Location & Integrity Notice */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 space-y-1">
-              <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Local Backup Path</span>
-              <p className="font-mono text-xs font-semibold text-slate-900 break-all">
+            <div className="bg-phumulani-cream border border-phumulani-cream rounded-xl p-4 space-y-1">
+              <span className="text-[11px] font-bold text-phumulani-charcoal uppercase tracking-wider">Local Backup Path</span>
+              <p className="font-mono text-xs font-semibold text-phumulani-charcoal break-all">
                 D:\Phumulani\Backups\MediaArchive
               </p>
-              <p className="text-[10px] text-slate-500">Automated mirror with SHA-256 integrity verification.</p>
+              <p className="text-[10px] text-phumulani-charcoal">Automated mirror with SHA-256 integrity verification.</p>
             </div>
 
-            <div className="bg-emerald-50/70 border border-emerald-200 rounded-xl p-4 space-y-1">
-              <span className="text-[11px] font-bold text-emerald-800 uppercase tracking-wider">Public Web Cleared</span>
-              <div className="font-serif text-2xl font-bold text-emerald-900">17 Assets</div>
-              <p className="text-[10px] text-emerald-700">All rights verified, founder approved, zero synthetic faces.</p>
+            <div className="bg-phumulani-cream border border-phumulani-green rounded-xl p-4 space-y-1">
+              <span className="text-[11px] font-bold text-phumulani-charcoal uppercase tracking-wider">Public Web Cleared</span>
+              <div className="font-serif text-2xl font-bold text-phumulani-charcoal">17 Assets</div>
+              <p className="text-[10px] text-phumulani-earth">All rights verified, founder approved, zero synthetic faces.</p>
             </div>
 
-            <div className="bg-rose-50/70 border border-rose-200 rounded-xl p-4 space-y-1">
-              <span className="text-[11px] font-bold text-rose-800 uppercase tracking-wider">Withheld / Staged (Safeguarding)</span>
-              <div className="font-serif text-2xl font-bold text-rose-900">
+            <div className="bg-phumulani-cream border border-phumulani-earth rounded-xl p-4 space-y-1">
+              <span className="text-[11px] font-bold text-phumulani-earth uppercase tracking-wider">Withheld / Staged (Safeguarding)</span>
+              <div className="font-serif text-2xl font-bold text-phumulani-earth">
                 {stagedMediaList.filter((m) => m.publicationStatus !== 'published').length} Assets
               </div>
-              <p className="text-[10px] text-rose-700">Protected under VAWA & Minnesota confidentiality laws.</p>
+              <p className="text-[10px] text-phumulani-earth">Protected under VAWA & Minnesota confidentiality laws.</p>
             </div>
           </div>
 
           {/* Staged & Withheld Media Safeguarding Queue */}
-          <div className="bg-white rounded-2xl border border-rose-200 shadow-xs overflow-hidden">
-            <div className="p-4 bg-rose-50/80 border-b border-rose-200 flex justify-between items-center">
+          <div className="bg-white rounded-2xl border border-phumulani-earth shadow-xs overflow-hidden">
+            <div className="p-4 bg-phumulani-cream border-b border-phumulani-earth flex justify-between items-center">
               <div className="flex items-center gap-2">
-                <ShieldAlert className="w-4 h-4 text-rose-700" />
-                <h3 className="font-serif text-sm font-bold text-rose-950">
+                <ShieldAlert className="w-4 h-4 text-phumulani-earth" />
+                <h3 className="font-serif text-sm font-bold text-phumulani-earth">
                   Safeguarding Review Queue — Staged & Withheld Assets
                 </h3>
               </div>
-              <span className="text-[11px] bg-rose-200 text-rose-900 font-bold px-2.5 py-0.5 rounded-full">
+              <span className="text-[11px] bg-phumulani-cream text-phumulani-earth font-bold px-2.5 py-0.5 rounded-full">
                 Review Gate Active
               </span>
             </div>
 
-            <div className="divide-y divide-slate-100 p-4 space-y-4">
+            <div className="divide-y divide-phumulani-cream p-4 space-y-4">
               {stagedMediaList.map((asset) => (
-                <div key={asset.id} className="p-4 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div key={asset.id} className="p-4 rounded-xl border border-phumulani-cream bg-phumulani-cream flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                   <div className="space-y-1.5 flex-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-mono text-xs font-bold text-slate-800 bg-white px-2 py-0.5 rounded border border-slate-200">
+                      <span className="font-mono text-xs font-bold text-phumulani-charcoal bg-white px-2 py-0.5 rounded border border-phumulani-cream">
                         {asset.id}
                       </span>
                       <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${
                         asset.publicationStatus === 'withheld'
-                          ? 'bg-rose-100 text-rose-800 border border-rose-200'
+                          ? 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth'
                           : asset.publicationStatus === 'staged'
-                          ? 'bg-amber-100 text-amber-800 border border-amber-200'
-                          : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                          ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold'
+                          : 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green'
                       }`}>
                         {asset.publicationStatus}
                       </span>
-                      <span className="text-xs font-bold text-slate-900">{asset.title}</span>
+                      <span className="text-xs font-bold text-phumulani-charcoal">{asset.title}</span>
                     </div>
 
-                    <p className="text-xs text-slate-600">{asset.caption}</p>
+                    <p className="text-xs text-phumulani-charcoal">{asset.caption}</p>
 
                     {asset.sensitiveContextNotes && (
-                      <div className="p-2.5 bg-rose-100/60 rounded-lg text-[11px] text-rose-900 border border-rose-200/60 font-medium">
+                      <div className="p-2.5 bg-phumulani-cream rounded-lg text-[11px] text-phumulani-earth border border-phumulani-earth font-medium">
                         <strong>Safeguarding Note:</strong> {asset.sensitiveContextNotes}
                       </div>
                     )}
 
-                    <div className="text-[10px] text-slate-400 font-mono">
+                    <div className="text-[10px] text-phumulani-charcoal font-mono">
                       Checksum: {asset.checksumSha256.slice(0, 16)}... | Rights: {asset.usageAuthorization}
                     </div>
                   </div>
@@ -1035,20 +1035,20 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                         <button
                           type="button"
                           onClick={() => handleWithholdMediaRelease(asset.id, 'Withheld per active protection order precautions.')}
-                          className="px-3 py-1.5 bg-rose-100 hover:bg-rose-200 text-rose-800 text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+                          className="px-3 py-1.5 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-earth text-xs font-semibold rounded-lg transition-colors cursor-pointer"
                         >
                           Enforce Withhold
                         </button>
                         <button
                           type="button"
                           onClick={() => handleApproveMediaRelease(asset.id)}
-                          className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold rounded-lg transition-colors shadow-xs cursor-pointer"
+                          className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-bold rounded-lg transition-colors shadow-xs cursor-pointer"
                         >
                           Authorize Release
                         </button>
                       </>
                     ) : (
-                      <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 flex items-center gap-1.5">
+                      <span className="text-xs font-bold text-phumulani-earth bg-phumulani-cream px-3 py-1.5 rounded-lg border border-phumulani-green flex items-center gap-1.5">
                         <CheckCircle2 className="w-3.5 h-3.5" />
                         <span>Cleared for Web</span>
                       </span>
@@ -1060,13 +1060,13 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
           </div>
 
           {/* Published Media Inventory Gallery */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
+          <div className="bg-white rounded-2xl border border-phumulani-cream p-6 shadow-xs space-y-4">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <div>
-                <h3 className="font-serif text-lg font-bold text-slate-900">
+                <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                   Approved Public Visual Assets ({PHUMULANI_MEDIA_INVENTORY.filter((m) => m.publicationStatus === 'published').length})
                 </h3>
-                <p className="text-xs text-slate-500">Live on public portal views, founder profile, and programs.</p>
+                <p className="text-xs text-phumulani-charcoal">Live on public portal views, founder profile, and programs.</p>
               </div>
 
               {/* Category pills */}
@@ -1077,8 +1077,8 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                     onClick={() => setMediaCategoryFilter(cat)}
                     className={`px-3 py-1 rounded-lg text-xs font-semibold capitalize transition-all cursor-pointer ${
                       mediaCategoryFilter === cat
-                        ? 'bg-[#104F57] text-white shadow-xs'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        ? 'bg-phumulani-earth text-white shadow-xs'
+                        : 'bg-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream'
                     }`}
                   >
                     {cat}
@@ -1093,9 +1093,9 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
               ).map((asset) => (
                 <div
                   key={asset.id}
-                  className="rounded-xl border border-slate-200 bg-slate-50/50 overflow-hidden hover:border-teal-500/50 hover:shadow-sm transition-all flex flex-col justify-between"
+                  className="rounded-xl border border-phumulani-cream bg-phumulani-cream overflow-hidden hover:border-phumulani-cream hover:shadow-sm transition-all flex flex-col justify-between"
                 >
-                  <div className="aspect-video bg-slate-900/10 relative overflow-hidden flex items-center justify-center">
+                  <div className="aspect-video bg-phumulani-charcoal relative overflow-hidden flex items-center justify-center">
                     {asset.localPath.endsWith('.svg') || asset.localPath.endsWith('.png') ? (
                       <SafeImage
                         src={asset.localPath}
@@ -1105,27 +1105,27 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                       />
                     ) : (
                       <div className="p-4 text-center">
-                        <ImageIcon className="w-8 h-8 text-slate-400 mx-auto mb-1" />
-                        <span className="text-[11px] font-bold text-slate-600 uppercase">{asset.mediaType}</span>
+                        <ImageIcon className="w-8 h-8 text-phumulani-cream mx-auto mb-1" />
+                        <span className="text-[11px] font-bold text-phumulani-cream uppercase">{asset.mediaType}</span>
                       </div>
                     )}
-                    <span className="absolute top-2 left-2 bg-slate-950/75 backdrop-blur-xs text-white text-[9px] font-mono px-2 py-0.5 rounded">
+                    <span className="absolute top-2 left-2 bg-phumulani-charcoal backdrop-blur-xs text-white text-[9px] font-mono px-2 py-0.5 rounded">
                       {asset.category}
                     </span>
                   </div>
 
                   <div className="p-3.5 space-y-1.5 flex-1 flex flex-col justify-between">
                     <div>
-                      <h4 className="font-serif text-xs font-bold text-slate-900 line-clamp-1">{asset.title}</h4>
-                      <p className="text-[11px] text-slate-500 line-clamp-2 mt-0.5 leading-snug">{asset.caption}</p>
+                      <h4 className="font-serif text-xs font-bold text-phumulani-charcoal line-clamp-1">{asset.title}</h4>
+                      <p className="text-[11px] text-phumulani-charcoal line-clamp-2 mt-0.5 leading-snug">{asset.caption}</p>
                     </div>
 
-                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-[10px]">
-                      <span className="font-mono text-slate-400">{asset.checksumSha256.slice(0, 10)}...</span>
+                    <div className="pt-2 border-t border-phumulani-cream flex items-center justify-between text-[10px]">
+                      <span className="font-mono text-phumulani-charcoal">{asset.checksumSha256.slice(0, 10)}...</span>
                       <span className={`px-2 py-0.5 rounded font-bold uppercase ${
                         asset.safeguardingReviewStatus === 'cleared_for_public_web'
-                          ? 'bg-emerald-100 text-emerald-800'
-                          : 'bg-rose-100 text-rose-800'
+                          ? 'bg-phumulani-cream text-phumulani-charcoal'
+                          : 'bg-phumulani-cream text-phumulani-earth'
                       }`}>
                         {asset.safeguardingReviewStatus === 'cleared_for_public_web' ? 'Cleared' : 'Restricted'}
                       </span>
@@ -1145,67 +1145,67 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
 
       {/* CREATE EVENT MODAL */}
       {showNewEventModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full border border-slate-200 shadow-2xl p-6 space-y-4">
-            <div className="flex justify-between items-start border-b border-slate-100 pb-3">
-              <h3 className="font-serif text-lg font-bold text-slate-900">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full border border-phumulani-cream shadow-2xl p-6 space-y-4">
+            <div className="flex justify-between items-start border-b border-phumulani-cream pb-3">
+              <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                 Create & Publish Community Event
               </h3>
-              <button onClick={() => setShowNewEventModal(false)} className="text-slate-400 hover:text-slate-700">
+              <button onClick={() => setShowNewEventModal(false)} className="text-phumulani-charcoal hover:text-phumulani-earth">
                 ✕
               </button>
             </div>
 
             <form onSubmit={handleCreateEvent} className="space-y-4 text-xs">
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Event Title</label>
+                <label className="block font-semibold text-phumulani-charcoal mb-1">Event Title</label>
                 <input
                   type="text"
                   required
                   value={newEventTitle}
                   onChange={(e) => setNewEventTitle(e.target.value)}
                   placeholder="e.g. Immigrant Small Business Tax Clinic"
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none"
+                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Date</label>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Date</label>
                   <input
                     type="date"
                     required
                     value={newEventDate}
                     onChange={(e) => setNewEventDate(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none"
+                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Time</label>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Time</label>
                   <input
                     type="text"
                     required
                     value={newEventTime}
                     onChange={(e) => setNewEventTime(e.target.value)}
                     placeholder="10:00 AM - 1:00 PM CST"
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none"
+                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Location</label>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Location</label>
                   <input
                     type="text"
                     required
                     value={newEventLocation}
                     onChange={(e) => setNewEventLocation(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none"
+                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Capacity Limit</label>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Capacity Limit</label>
                   <input
                     type="number"
                     min="5"
@@ -1213,20 +1213,20 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                     required
                     value={newEventCapacity}
                     onChange={(e) => setNewEventCapacity(Number(e.target.value))}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none font-bold"
+                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none font-bold"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Description</label>
+                <label className="block font-semibold text-phumulani-charcoal mb-1">Description</label>
                 <textarea
                   rows={3}
                   required
                   value={newEventDesc}
                   onChange={(e) => setNewEventDesc(e.target.value)}
                   placeholder="Briefly describe the workshop, agenda, and targeted immigrant community cohort..."
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none"
+                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
                 />
               </div>
 
@@ -1234,13 +1234,13 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowNewEventModal(false)}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 rounded-lg"
+                  className="px-4 py-2 border border-phumulani-cream text-phumulani-charcoal rounded-lg"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#104F57] hover:bg-[#0c3e44] text-white rounded-lg font-bold"
+                  className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold"
                 >
                   Publish Event
                 </button>

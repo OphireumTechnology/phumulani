@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  * DashboardSidebar — Restrained Professional Responsive Sidebar Component
- * Active Token: Deep Teal (#006D6F), Clear Hierarchy, Accessible Contrast
+ * Active Token: Deep Earth (#B3340F), Charcoal (#333333), Accessible Contrast
  */
 
 import React from 'react';
@@ -48,21 +48,21 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 }) => {
   return (
     <aside
-      className={`hidden md:flex flex-col bg-white border-r border-slate-200 transition-all duration-200 select-none ${
+      className={`hidden md:flex flex-col bg-white border-r border-phumulani-cream transition-all duration-200 select-none ${
         isCollapsed ? 'w-18' : 'w-64'
       } ${className}`}
     >
       {/* Header / Brand */}
-      <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+      <div className="p-4 border-b border-phumulani-cream flex items-center justify-between">
         {!isCollapsed ? (
           <div className="flex items-center gap-2.5 min-w-0">
             <BrandLogo variant="mark" size={32} className="shrink-0" />
             <div className="min-w-0">
-              <div className="font-heading font-bold text-sm text-[#006D6F] truncate leading-tight">
+              <div className="font-heading font-bold text-sm text-phumulani-earth truncate leading-tight">
                 {portalTitle}
               </div>
               {portalSubtitle && (
-                <div className="text-[10px] text-slate-500 font-sans truncate mt-0.5">
+                <div className="text-[10px] text-phumulani-charcoal font-sans truncate mt-0.5">
                   {portalSubtitle}
                 </div>
               )}
@@ -77,7 +77,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
         {onToggleCollapse && (
           <button
             onClick={onToggleCollapse}
-            className="p-1 rounded text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+            className="p-1 rounded text-phumulani-charcoal hover:text-phumulani-earth hover:bg-phumulani-cream transition-colors"
             title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -90,7 +90,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
         {groups.map((group, gIdx) => (
           <div key={gIdx} className="space-y-1">
             {!isCollapsed && group.groupLabel && (
-              <div className="px-2 text-[10px] font-heading font-bold text-slate-400 uppercase tracking-wider">
+              <div className="px-2 text-[10px] font-heading font-bold text-phumulani-earth uppercase tracking-wider">
                 {group.groupLabel}
               </div>
             )}
@@ -105,8 +105,8 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                     isCollapsed ? 'justify-center p-2.5' : 'justify-between px-3 py-2'
                   } ${
                     isActive
-                      ? 'bg-[#006D6F] text-white shadow-xs'
-                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                      ? 'bg-phumulani-earth text-white shadow-xs'
+                      : 'text-phumulani-charcoal hover:text-phumulani-earth hover:bg-phumulani-cream'
                   }`}
                   title={item.label}
                 >
@@ -118,7 +118,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                   {!isCollapsed && item.badge !== undefined && (
                     <span
                       className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                        isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                        isActive ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-cream text-phumulani-charcoal'
                       }`}
                     >
                       {item.badge}
@@ -133,25 +133,25 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 
       {/* Footer / User Profile */}
       {userName && (
-        <div className="p-3 border-t border-slate-100 bg-slate-50/50">
+        <div className="p-3 border-t border-phumulani-cream bg-phumulani-cream">
           {!isCollapsed ? (
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-full bg-[#006D6F]/10 text-[#006D6F] flex items-center justify-center font-heading font-bold text-xs shrink-0">
+              <div className="w-7 h-7 rounded-full bg-phumulani-earth text-white flex items-center justify-center font-heading font-bold text-xs shrink-0">
                 {userName.charAt(0)}
               </div>
               <div className="min-w-0 flex-1">
-                <div className="text-xs font-heading font-bold text-slate-800 truncate leading-tight">
+                <div className="text-xs font-heading font-bold text-phumulani-charcoal truncate leading-tight">
                   {userName}
                 </div>
                 {userRole && (
-                  <div className="text-[10px] text-slate-500 font-sans capitalize truncate">
+                  <div className="text-[10px] text-phumulani-charcoal font-sans capitalize truncate">
                     {userRole.replace('_', ' ')}
                   </div>
                 )}
               </div>
             </div>
           ) : (
-            <div className="w-7 h-7 rounded-full bg-[#006D6F]/10 text-[#006D6F] flex items-center justify-center font-heading font-bold text-xs mx-auto">
+            <div className="w-7 h-7 rounded-full bg-phumulani-earth text-white flex items-center justify-center font-heading font-bold text-xs mx-auto">
               {userName.charAt(0)}
             </div>
           )}

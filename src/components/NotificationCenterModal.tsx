@@ -131,16 +131,16 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
       role="dialog"
       aria-modal="true"
       aria-labelledby="notification-center-title"
-      className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6"
+      className="fixed inset-0 z-50 overflow-y-auto bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6"
     >
-      <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-150">
+      <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-earth w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-150">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#104F57] to-[#176B76] text-white p-4 sm:p-5 flex items-center justify-between">
+        <div className="bg-phumulani-earth text-white p-4 sm:p-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-white/10 rounded-xl relative">
-              <Bell className="w-5 h-5 text-amber-300" />
+            <div className="p-2 bg-phumulani-charcoal rounded-xl relative">
+              <Bell className="w-5 h-5 text-phumulani-gold" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.2 rounded-full ring-2 ring-[#104F57]">
+                <span className="absolute -top-1 -right-1 bg-phumulani-gold text-phumulani-charcoal text-[10px] font-bold px-1.5 py-0.2 rounded-full ring-2 ring-phumulani-earth">
                   {unreadCount}
                 </span>
               )}
@@ -149,7 +149,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
               <h2 id="notification-center-title" className="text-base sm:text-lg font-bold font-serif leading-tight">
                 {clientNotificationService.localizeKey('notif.center.title', langCode) || 'Notification Center'}
               </h2>
-              <p className="text-xs text-emerald-100 font-sans">
+              <p className="text-xs text-phumulani-cream font-sans">
                 {unreadCount} unread • {currentUser.name} ({currentUser.role.replace('_', ' ')})
               </p>
             </div>
@@ -159,7 +159,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
             <button
               onClick={loadData}
               disabled={loading}
-              className="p-1.5 rounded-lg hover:bg-white/15 text-white transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg hover:bg-phumulani-orange text-white transition-colors cursor-pointer"
               title="Refresh notifications"
               aria-label="Refresh notifications"
             >
@@ -167,7 +167,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg hover:bg-white/15 text-white transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg hover:bg-phumulani-orange text-white transition-colors cursor-pointer"
               title="Close modal"
               aria-label="Close modal"
             >
@@ -177,13 +177,13 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
         </div>
 
         {/* Tab Navigation */}
-        <div className="flex border-b border-slate-200 bg-slate-50 px-4">
+        <div className="flex border-b border-phumulani-cream bg-phumulani-cream px-4">
           <button
             onClick={() => setActiveTab('notifications')}
             className={`py-3 px-4 text-xs font-bold border-b-2 transition-colors cursor-pointer flex items-center gap-2 ${
               activeTab === 'notifications'
-                ? 'border-[#104F57] text-[#104F57]'
-                : 'border-transparent text-slate-500 hover:text-slate-700'
+                ? 'border-phumulani-earth text-phumulani-earth'
+                : 'border-transparent text-phumulani-charcoal hover:text-phumulani-earth'
             }`}
           >
             <Bell className="w-3.5 h-3.5" />
@@ -193,8 +193,8 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
             onClick={() => setActiveTab('preferences')}
             className={`py-3 px-4 text-xs font-bold border-b-2 transition-colors cursor-pointer flex items-center gap-2 ${
               activeTab === 'preferences'
-                ? 'border-[#104F57] text-[#104F57]'
-                : 'border-transparent text-slate-500 hover:text-slate-700'
+                ? 'border-phumulani-earth text-phumulani-earth'
+                : 'border-transparent text-phumulani-charcoal hover:text-phumulani-earth'
             }`}
           >
             <Settings className="w-3.5 h-3.5" />
@@ -206,9 +206,9 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
         {activeTab === 'notifications' && (
           <div className="flex flex-col flex-1 overflow-hidden">
             {/* Filter Bar */}
-            <div className="p-3 bg-slate-50 border-b border-slate-200 flex flex-wrap items-center justify-between gap-2 text-xs">
+            <div className="p-3 bg-phumulani-cream border-b border-phumulani-cream flex flex-wrap items-center justify-between gap-2 text-xs">
               <div className="flex items-center gap-1.5 overflow-x-auto py-1">
-                <Filter className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                <Filter className="w-3.5 h-3.5 text-phumulani-earth shrink-0" />
                 {['ALL', 'MEMBER', 'CASEWORKER', 'PROGRAM', 'VOLUNTEER', 'DONOR', 'REPORTING', 'SECURITY'].map(
                   (cat) => (
                     <button
@@ -216,8 +216,8 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                       onClick={() => setSelectedCategory(cat)}
                       className={`px-2.5 py-1 rounded-full text-[11px] font-semibold transition-colors cursor-pointer shrink-0 ${
                         selectedCategory === cat
-                          ? 'bg-[#104F57] text-white shadow-2xs'
-                          : 'bg-white text-slate-600 hover:bg-slate-200 border border-slate-200'
+                          ? 'bg-phumulani-earth text-white shadow-2xs'
+                          : 'bg-white text-phumulani-charcoal hover:bg-phumulani-gold border border-phumulani-earth'
                       }`}
                     >
                       {cat}
@@ -226,24 +226,24 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                 )}
               </div>
 
-              <label className="flex items-center gap-1.5 text-xs text-slate-600 font-medium cursor-pointer shrink-0">
+              <label className="flex items-center gap-1.5 text-xs text-phumulani-charcoal font-medium cursor-pointer shrink-0">
                 <input
                   type="checkbox"
                   checked={unreadOnly}
                   onChange={(e) => setUnreadOnly(e.target.checked)}
-                  className="rounded text-[#104F57] focus:ring-[#104F57]"
+                  className="rounded text-phumulani-earth focus:ring-phumulani-earth"
                 />
                 Unread only
               </label>
             </div>
 
             {/* Notification List */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-2.5 divide-y divide-slate-100">
+            <div className="flex-1 overflow-y-auto p-4 space-y-2.5 divide-y divide-phumulani-cream">
               {notifications.length === 0 ? (
-                <div className="py-12 text-center text-slate-400">
-                  <Bell className="w-10 h-10 mx-auto mb-2 opacity-30 text-slate-400" />
+                <div className="py-12 text-center text-phumulani-charcoal">
+                  <Bell className="w-10 h-10 mx-auto mb-2 text-phumulani-earth" />
                   <p className="text-sm font-medium">No notifications in this view.</p>
-                  <p className="text-xs text-slate-400 mt-1">You are all caught up on operational activities.</p>
+                  <p className="text-xs text-phumulani-charcoal mt-1">You are all caught up on operational activities.</p>
                 </div>
               ) : (
                 notifications.map((notif) => {
@@ -264,38 +264,38 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                       key={notif.notificationId}
                       className={`pt-3 first:pt-0 p-3 rounded-xl transition-all ${
                         isUnread
-                          ? 'bg-amber-50/60 border border-amber-200/80 shadow-2xs'
-                          : 'bg-white hover:bg-slate-50 border border-transparent hover:border-slate-200'
+                          ? 'bg-phumulani-cream border border-phumulani-gold shadow-2xs'
+                          : 'bg-white hover:bg-phumulani-cream border border-transparent hover:border-phumulani-cream'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="flex items-start gap-2.5 min-w-0 flex-1">
                           {isUnread ? (
-                            <span className="w-2 h-2 mt-1.5 rounded-full bg-amber-500 shrink-0 ring-4 ring-amber-100" />
+                            <span className="w-2 h-2 mt-1.5 rounded-full bg-phumulani-orange shrink-0 ring-4 ring-phumulani-gold" />
                           ) : (
-                            <CheckCheck className="w-3.5 h-3.5 mt-1 text-slate-300 shrink-0" />
+                            <CheckCheck className="w-3.5 h-3.5 mt-1 text-phumulani-green shrink-0" />
                           )}
 
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2 flex-wrap">
-                              <span className="text-xs font-bold text-slate-900 leading-tight">
+                              <span className="text-xs font-bold text-phumulani-charcoal leading-tight">
                                 {localizedTitle}
                               </span>
-                              <span className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider bg-slate-100 text-slate-600">
+                              <span className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider bg-phumulani-cream text-phumulani-charcoal border border-phumulani-earth">
                                 {notif.category}
                               </span>
                               {notif.confidentialityLevel === 'SAFEGUARDING_RESTRICTED' && (
-                                <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-rose-100 text-rose-700 flex items-center gap-1">
+                                <span className="text-[10px] px-2 py-0.5 rounded-full font-bold bg-phumulani-earth text-white flex items-center gap-1">
                                   <ShieldAlert className="w-3 h-3" /> RESTRICTED
                                 </span>
                               )}
                             </div>
 
-                            <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                            <p className="text-xs text-phumulani-charcoal mt-1 leading-relaxed">
                               {localizedMessage}
                             </p>
 
-                            <div className="flex items-center gap-3 mt-2 text-[10px] text-slate-400">
+                            <div className="flex items-center gap-3 mt-2 text-[10px] text-phumulani-charcoal">
                               <span className="flex items-center gap-1">
                                 <Clock className="w-3 h-3" />
                                 {new Date(notif.createdAt).toLocaleTimeString([], {
@@ -308,7 +308,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                               {notif.externalDeliveryStatus && (
                                 <>
                                   <span>•</span>
-                                  <span className="text-slate-400 italic">
+                                  <span className="text-phumulani-charcoal italic">
                                     Delivery: Staged (OAuth Deferred)
                                   </span>
                                 </>
@@ -322,7 +322,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                           {isUnread && (
                             <button
                               onClick={() => handleMarkRead(notif.notificationId)}
-                              className="p-1.5 text-xs text-slate-500 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer"
+                              className="p-1.5 text-xs text-phumulani-charcoal hover:text-phumulani-charcoal hover:bg-phumulani-green rounded-lg transition-colors cursor-pointer"
                               title="Mark as read"
                               aria-label="Mark as read"
                             >
@@ -331,7 +331,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                           )}
                           <button
                             onClick={() => handleArchive(notif.notificationId)}
-                            className="p-1.5 text-xs text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                            className="p-1.5 text-xs text-phumulani-charcoal hover:text-phumulani-earth hover:bg-phumulani-cream rounded-lg transition-colors cursor-pointer"
                             title="Archive notification"
                             aria-label="Archive notification"
                           >
@@ -350,27 +350,27 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
         {/* Preferences Tab Content */}
         {activeTab === 'preferences' && preferences && (
           <div className="p-5 flex-1 overflow-y-auto space-y-4">
-            <div className="p-3 bg-amber-50 rounded-xl border border-amber-200 text-xs text-amber-900 leading-relaxed">
-              <strong className="font-bold block mb-1">Strict Policy Invariant:</strong>
+            <div className="p-3 bg-phumulani-cream rounded-xl border border-phumulani-gold text-xs text-phumulani-charcoal leading-relaxed">
+              <strong className="font-bold block mb-1 text-phumulani-earth">Strict Policy Invariant:</strong>
               Mandatory operational and security notices (direct case assignments, safeguarding crisis alerts,
               and security policy violations) cannot be suppressed by communication preferences.
             </div>
 
             {feedbackMsg && (
-              <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-800 font-semibold">
+              <div className="p-3 bg-phumulani-green rounded-xl border border-phumulani-charcoal text-xs text-phumulani-charcoal font-semibold">
                 {feedbackMsg}
               </div>
             )}
 
             <div className="space-y-3 pt-2">
-              <h3 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+              <h3 className="text-xs font-bold text-phumulani-earth uppercase tracking-wider">
                 Optional Notification Categories
               </h3>
 
-              <label className="flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
+              <label className="flex items-center justify-between p-3 rounded-xl border border-phumulani-cream hover:bg-phumulani-cream cursor-pointer">
                 <div>
-                  <div className="text-xs font-bold text-slate-800">Community Program Updates</div>
-                  <div className="text-[11px] text-slate-500">
+                  <div className="text-xs font-bold text-phumulani-charcoal">Community Program Updates</div>
+                  <div className="text-[11px] text-phumulani-charcoal">
                     Notifications about new workshops, capacity updates, and event reminders.
                   </div>
                 </div>
@@ -379,14 +379,14 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                   checked={preferences.programUpdates}
                   onChange={(e) => handleSavePreferences({ programUpdates: e.target.checked })}
                   disabled={savingPrefs}
-                  className="rounded text-[#104F57] focus:ring-[#104F57] w-4 h-4"
+                  className="rounded text-phumulani-earth focus:ring-phumulani-earth w-4 h-4"
                 />
               </label>
 
-              <label className="flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
+              <label className="flex items-center justify-between p-3 rounded-xl border border-phumulani-cream hover:bg-phumulani-cream cursor-pointer">
                 <div>
-                  <div className="text-xs font-bold text-slate-800">Volunteer Opportunities & Shifts</div>
-                  <div className="text-[11px] text-slate-500">
+                  <div className="text-xs font-bold text-phumulani-charcoal">Volunteer Opportunities & Shifts</div>
+                  <div className="text-[11px] text-phumulani-charcoal">
                     Notifications about available volunteer shifts, orientations, and community projects.
                   </div>
                 </div>
@@ -395,14 +395,14 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                   checked={preferences.volunteerUpdates}
                   onChange={(e) => handleSavePreferences({ volunteerUpdates: e.target.checked })}
                   disabled={savingPrefs}
-                  className="rounded text-[#104F57] focus:ring-[#104F57] w-4 h-4"
+                  className="rounded text-phumulani-earth focus:ring-phumulani-earth w-4 h-4"
                 />
               </label>
 
-              <label className="flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
+              <label className="flex items-center justify-between p-3 rounded-xl border border-phumulani-cream hover:bg-phumulani-cream cursor-pointer">
                 <div>
-                  <div className="text-xs font-bold text-slate-800">Fundraising & Campaign News</div>
-                  <div className="text-[11px] text-slate-500">
+                  <div className="text-xs font-bold text-phumulani-charcoal">Fundraising & Campaign News</div>
+                  <div className="text-[11px] text-phumulani-charcoal">
                     Quarterly impact statements, donor stewardship letters, and capital campaign updates.
                   </div>
                 </div>
@@ -411,14 +411,14 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                   checked={preferences.fundraisingCommunications}
                   onChange={(e) => handleSavePreferences({ fundraisingCommunications: e.target.checked })}
                   disabled={savingPrefs}
-                  className="rounded text-[#104F57] focus:ring-[#104F57] w-4 h-4"
+                  className="rounded text-phumulani-earth focus:ring-phumulani-earth w-4 h-4"
                 />
               </label>
 
-              <label className="flex items-center justify-between p-3 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer">
+              <label className="flex items-center justify-between p-3 rounded-xl border border-phumulani-cream hover:bg-phumulani-cream cursor-pointer">
                 <div>
-                  <div className="text-xs font-bold text-slate-800">General Community Announcements</div>
-                  <div className="text-[11px] text-slate-500">
+                  <div className="text-xs font-bold text-phumulani-charcoal">General Community Announcements</div>
+                  <div className="text-[11px] text-phumulani-charcoal">
                     Phumulani organizational announcements and holiday operational schedule.
                   </div>
                 </div>
@@ -427,7 +427,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
                   checked={preferences.generalAnnouncements}
                   onChange={(e) => handleSavePreferences({ generalAnnouncements: e.target.checked })}
                   disabled={savingPrefs}
-                  className="rounded text-[#104F57] focus:ring-[#104F57] w-4 h-4"
+                  className="rounded text-phumulani-earth focus:ring-phumulani-earth w-4 h-4"
                 />
               </label>
             </div>
@@ -435,14 +435,14 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
         )}
 
         {/* Footer */}
-        <div className="bg-slate-50 border-t border-slate-200 p-3 px-5 flex items-center justify-between text-xs text-slate-500">
+        <div className="bg-phumulani-cream border-t border-phumulani-cream p-3 px-5 flex items-center justify-between text-xs text-phumulani-charcoal">
           <span className="flex items-center gap-1.5 text-[11px]">
-            <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+            <Sparkles className="w-3.5 h-3.5 text-phumulani-earth" />
             VAWA §1367 Safeguarding Protected • Zero PII in Notifications
           </span>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs transition-colors cursor-pointer"
+            className="px-4 py-1.5 rounded-lg bg-phumulani-earth hover:bg-phumulani-orange text-white font-bold text-xs transition-colors cursor-pointer"
           >
             Close
           </button>

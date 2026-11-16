@@ -251,27 +251,27 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-teal-900 to-slate-900 text-white rounded-2xl p-6 shadow-xl border border-teal-800">
+      <div className="bg-phumulani-charcoal text-white rounded-2xl p-6 shadow-xl border border-phumulani-teal">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="px-2.5 py-1 bg-teal-500/20 text-teal-300 rounded-full text-xs font-semibold tracking-wide border border-teal-500/30">
+              <span className="px-2.5 py-1 bg-phumulani-teal text-phumulani-charcoal rounded-full text-xs font-semibold tracking-wide border border-phumulani-cream">
                 PHASE 35 MASTER DIRECTIVE
               </span>
-              <span className="px-2.5 py-1 bg-emerald-500/20 text-emerald-300 rounded-full text-xs font-semibold tracking-wide border border-emerald-500/30">
+              <span className="px-2.5 py-1 bg-phumulani-green text-phumulani-charcoal rounded-full text-xs font-semibold tracking-wide border border-phumulani-green">
                 M35.01 – M35.15
               </span>
             </div>
             <h2 className="text-2xl font-bold text-white tracking-tight">
               Intelligent Community Service Delivery & Automation
             </h2>
-            <p className="text-teal-200/80 text-sm mt-1 max-w-3xl">
+            <p className="text-phumulani-teal text-sm mt-1 max-w-3xl">
               Unified cross-module coordination connecting Member Service Journeys, Resource Referrals, Program Enrollments, Volunteer Lifecycles, Donor Stewardship, Grants, Workflows, 36 AI Agents, and Executive Accountability.
             </p>
           </div>
           <button
             onClick={refreshAll}
-            className="flex items-center gap-2 px-4 py-2 bg-teal-700/60 hover:bg-teal-600 text-white text-sm font-medium rounded-xl border border-teal-500/40 transition"
+            className="flex items-center gap-2 px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-sm font-medium rounded-xl border border-phumulani-cream transition"
           >
             <RefreshCw className="w-4 h-4" />
             Refresh Operational Data
@@ -279,8 +279,8 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
         </div>
 
         {actionFeedback && (
-          <div className="mt-4 p-3 bg-teal-500/20 border border-teal-400/40 rounded-xl text-teal-100 text-sm flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-teal-300" />
+          <div className="mt-4 p-3 bg-phumulani-teal border border-phumulani-teal rounded-xl text-phumulani-charcoal text-sm flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-phumulani-charcoal" />
             {actionFeedback}
           </div>
         )}
@@ -288,13 +288,13 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
         {actionError && (
           <div
             role="alert"
-            className="mt-4 p-3 bg-rose-950/70 border border-rose-400/50 rounded-xl text-rose-100 text-sm flex items-center justify-between gap-2"
+            className="mt-4 p-3 bg-phumulani-charcoal border border-phumulani-earth rounded-xl text-phumulani-cream text-sm flex items-center justify-between gap-2"
           >
             <span>{actionError}</span>
             <button
               type="button"
               onClick={() => setActionError(null)}
-              className="px-2 py-0.5 rounded bg-rose-900/80 hover:bg-rose-800 text-xs font-bold cursor-pointer"
+              className="px-2 py-0.5 rounded bg-phumulani-charcoal hover:bg-phumulani-orange text-xs font-bold cursor-pointer"
             >
               Dismiss
             </button>
@@ -302,7 +302,7 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
         )}
 
         {/* Sub-navigation tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto mt-6 pt-4 border-t border-teal-800/60 scrollbar-none">
+        <div className="flex items-center gap-2 overflow-x-auto mt-6 pt-4 border-t border-phumulani-teal scrollbar-none">
           {[
             { id: 'service_queue', label: 'Service Queue (M35.01-02)', icon: LifeBuoy },
             { id: 'referrals', label: 'Resource Referrals (M35.03)', icon: Compass },
@@ -322,8 +322,8 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                 onClick={() => setSubTab(t.id as any)}
                 className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
                   active
-                    ? 'bg-teal-500 text-white shadow-md'
-                    : 'bg-teal-950/40 text-teal-200/70 hover:bg-teal-900/40 hover:text-white'
+                    ? 'bg-phumulani-teal text-phumulani-charcoal shadow-md'
+                    : 'bg-phumulani-charcoal text-phumulani-teal hover:bg-phumulani-orange hover:text-white'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -338,13 +338,13 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
       {subTab === 'service_queue' && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left: Queue List */}
-          <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 space-y-4">
+          <div className="bg-white rounded-2xl p-5 shadow-sm border border-phumulani-cream space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-bold text-slate-900 text-sm flex items-center gap-2">
-                <LifeBuoy className="w-4 h-4 text-teal-600" />
+              <h3 className="font-bold text-phumulani-charcoal text-sm flex items-center gap-2">
+                <LifeBuoy className="w-4 h-4 text-phumulani-earth" />
                 Unified Service Delivery Queue
               </h3>
-              <span className="text-xs px-2 py-0.5 bg-teal-50 text-teal-700 font-semibold rounded-full border border-teal-100">
+              <span className="text-xs px-2 py-0.5 bg-phumulani-cream text-phumulani-earth font-semibold rounded-full border border-phumulani-cream">
                 {serviceRequests.length} Requests
               </span>
             </div>
@@ -358,29 +358,29 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                     onClick={() => setSelectedReq(r)}
                     className={`w-full text-left p-3.5 rounded-xl border transition ${
                       isSelected
-                        ? 'border-teal-500 bg-teal-50/60 shadow-sm'
-                        : 'border-slate-200 hover:border-slate-300 bg-white'
+                        ? 'border-phumulani-cream bg-phumulani-cream shadow-sm'
+                        : 'border-phumulani-cream hover:border-phumulani-cream bg-white'
                     }`}
                   >
                     <div className="flex items-center justify-between text-xs mb-1">
-                      <span className="font-mono font-bold text-slate-800">{r.trackingReference}</span>
+                      <span className="font-mono font-bold text-phumulani-charcoal">{r.trackingReference}</span>
                       <span
                         className={`px-2 py-0.5 rounded-md font-semibold text-[11px] ${
                           r.status === 'RESOLVED'
-                            ? 'bg-emerald-100 text-emerald-800'
+                            ? 'bg-phumulani-cream text-phumulani-charcoal'
                             : r.status === 'IN_PROGRESS'
-                            ? 'bg-blue-100 text-blue-800'
+                            ? 'bg-phumulani-cream text-phumulani-earth'
                             : r.status === 'ASSIGNED'
-                            ? 'bg-purple-100 text-purple-800'
-                            : 'bg-amber-100 text-amber-800'
+                            ? 'bg-phumulani-cream text-phumulani-earth'
+                            : 'bg-phumulani-cream text-phumulani-charcoal'
                         }`}
                       >
                         {r.status}
                       </span>
                     </div>
-                    <div className="font-semibold text-slate-900 text-sm line-clamp-1">{r.memberName}</div>
-                    <div className="text-xs text-slate-500 line-clamp-2 mt-1">{r.intakeSummary}</div>
-                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-100 text-[11px] text-slate-400">
+                    <div className="font-semibold text-phumulani-charcoal text-sm line-clamp-1">{r.memberName}</div>
+                    <div className="text-xs text-phumulani-charcoal line-clamp-2 mt-1">{r.intakeSummary}</div>
+                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-phumulani-cream text-[11px] text-phumulani-charcoal">
                       <span>{r.serviceCategory.replace('_', ' ')}</span>
                       <span>SLA: {r.priority}</span>
                     </div>
@@ -393,45 +393,45 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
           {/* Right: Selected Request Details & Actions */}
           <div className="lg:col-span-2 space-y-6">
             {selectedReq ? (
-              <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-6">
+              <div className="bg-white rounded-2xl p-6 shadow-sm border border-phumulani-cream space-y-6">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-slate-100">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 border-b border-phumulani-cream">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-bold text-teal-800 text-sm">{selectedReq.trackingReference}</span>
-                      <span className="text-xs text-slate-400">({selectedReq.id})</span>
-                      <span className="px-2 py-0.5 bg-slate-100 text-slate-700 text-xs rounded font-medium">
+                      <span className="font-mono font-bold text-phumulani-earth text-sm">{selectedReq.trackingReference}</span>
+                      <span className="text-xs text-phumulani-charcoal">({selectedReq.id})</span>
+                      <span className="px-2 py-0.5 bg-phumulani-cream text-phumulani-charcoal text-xs rounded font-medium">
                         {selectedReq.serviceCategory}
                       </span>
                     </div>
-                    <h3 className="text-lg font-bold text-slate-900 mt-1">{selectedReq.memberName}</h3>
-                    <p className="text-xs text-slate-500">{selectedReq.memberEmail} • {selectedReq.memberPhone || 'No phone'}</p>
+                    <h3 className="text-lg font-bold text-phumulani-charcoal mt-1">{selectedReq.memberName}</h3>
+                    <p className="text-xs text-phumulani-charcoal">{selectedReq.memberEmail} • {selectedReq.memberPhone || 'No phone'}</p>
                   </div>
                   <div className="text-right">
-                    <span className="text-xs font-semibold px-2.5 py-1 bg-teal-100 text-teal-800 rounded-full">
+                    <span className="text-xs font-semibold px-2.5 py-1 bg-phumulani-cream text-phumulani-earth rounded-full">
                       Status: {selectedReq.status}
                     </span>
-                    <p className="text-[11px] text-slate-400 mt-1">SLA Due: {new Date(selectedReq.slaDeadline).toLocaleDateString()}</p>
+                    <p className="text-[11px] text-phumulani-charcoal mt-1">SLA Due: {new Date(selectedReq.slaDeadline).toLocaleDateString()}</p>
                   </div>
                 </div>
 
                 {/* Intake Summary */}
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200">
-                  <span className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">Intake Summary</span>
-                  <p className="text-sm text-slate-800">{selectedReq.intakeSummary}</p>
+                <div className="bg-phumulani-cream p-4 rounded-xl border border-phumulani-cream">
+                  <span className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wider block mb-1">Intake Summary</span>
+                  <p className="text-sm text-phumulani-charcoal">{selectedReq.intakeSummary}</p>
                 </div>
 
                 {/* Staff Assignment & State Transition Controls */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* Transition Form */}
-                  <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                    <span className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                  <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-3">
+                    <span className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wider block">
                       Transition Lifecycle Status
                     </span>
                     <select
                       value={newStatus}
                       onChange={(e) => setNewStatus(e.target.value as any)}
-                      className="w-full text-xs p-2 bg-white border border-slate-300 rounded-lg"
+                      className="w-full text-xs p-2 bg-white border border-phumulani-cream rounded-lg"
                     >
                       <option value="SUBMITTED">SUBMITTED</option>
                       <option value="UNDER_REVIEW">UNDER_REVIEW</option>
@@ -448,25 +448,25 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                       placeholder="Public note for member timeline..."
                       value={statusNote}
                       onChange={(e) => setStatusNote(e.target.value)}
-                      className="w-full text-xs p-2 bg-white border border-slate-300 rounded-lg"
+                      className="w-full text-xs p-2 bg-white border border-phumulani-cream rounded-lg"
                     />
                     <button
                       onClick={handleStatusChange}
-                      className="w-full py-2 bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold rounded-lg transition"
+                      className="w-full py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg transition"
                     >
                       Update Lifecycle Status
                     </button>
                   </div>
 
                   {/* Staff Assignment */}
-                  <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-                    <span className="text-xs font-bold text-slate-700 uppercase tracking-wider block">
+                  <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-3">
+                    <span className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wider block">
                       Department & Staff Assignment
                     </span>
                     <select
                       value={assignDept}
                       onChange={(e) => setAssignDept(e.target.value)}
-                      className="w-full text-xs p-2 bg-white border border-slate-300 rounded-lg"
+                      className="w-full text-xs p-2 bg-white border border-phumulani-cream rounded-lg"
                     >
                       <option value="DEPT-PROG">Community Programs (DEPT-PROG)</option>
                       <option value="DEPT-WORKFORCE">Workforce Pathways (DEPT-WORKFORCE)</option>
@@ -478,11 +478,11 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                       placeholder="Assignee Name..."
                       value={assignStaff}
                       onChange={(e) => setAssignStaff(e.target.value)}
-                      className="w-full text-xs p-2 bg-white border border-slate-300 rounded-lg"
+                      className="w-full text-xs p-2 bg-white border border-phumulani-cream rounded-lg"
                     />
                     <button
                       onClick={handleAssign}
-                      className="w-full py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg transition"
+                      className="w-full py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg transition"
                     >
                       Assign Staff Member
                     </button>
@@ -491,15 +491,15 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
 
                 {/* Resolution Confirmation Box */}
                 {selectedReq.status !== 'RESOLVED' && selectedReq.status !== 'CLOSED' && (
-                  <div className="p-4 bg-emerald-50/70 border border-emerald-200 rounded-xl space-y-3">
-                    <span className="text-xs font-bold text-emerald-900 uppercase tracking-wider block">
+                  <div className="p-4 bg-phumulani-cream border border-phumulani-green rounded-xl space-y-3">
+                    <span className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wider block">
                       Final Service Resolution
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <select
                         value={resCode}
                         onChange={(e) => setResCode(e.target.value as any)}
-                        className="text-xs p-2 bg-white border border-emerald-300 rounded-lg"
+                        className="text-xs p-2 bg-white border border-phumulani-green rounded-lg"
                       >
                         <option value="RESOLVED_FULFILLED">RESOLVED_FULFILLED (Service Provided)</option>
                         <option value="RESOLVED_REFERRED">RESOLVED_REFERRED (Connected to Partner)</option>
@@ -511,12 +511,12 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                         placeholder="Resolution summary notes..."
                         value={resSummary}
                         onChange={(e) => setResSummary(e.target.value)}
-                        className="text-xs p-2 bg-white border border-emerald-300 rounded-lg"
+                        className="text-xs p-2 bg-white border border-phumulani-green rounded-lg"
                       />
                     </div>
                     <button
                       onClick={handleResolve}
-                      className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-semibold rounded-lg transition"
+                      className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg transition"
                     >
                       Verify & Close Request
                     </button>
@@ -525,39 +525,39 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
 
                 {/* Member Timeline */}
                 <div>
-                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                    <Clock className="w-3.5 h-3.5 text-slate-500" />
+                  <h4 className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                    <Clock className="w-3.5 h-3.5 text-phumulani-charcoal" />
                     Auditable Member-Visible Timeline ({selectedReq.timeline.length} Events)
                   </h4>
-                  <div className="space-y-2 border-l-2 border-teal-200 pl-4 ml-2">
+                  <div className="space-y-2 border-l-2 border-phumulani-teal pl-4 ml-2">
                     {selectedReq.timeline.map((t) => (
                       <div key={t.id} className="text-xs relative">
-                        <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-teal-500 ring-4 ring-white" />
+                        <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-phumulani-teal ring-4 ring-white" />
                         <div className="flex items-center gap-2">
-                          <span className="font-semibold text-slate-900">{t.actorName}</span>
-                          <span className="text-slate-400">({t.actorRole})</span>
-                          <span className="text-[11px] text-slate-400">{new Date(t.timestamp).toLocaleString()}</span>
+                          <span className="font-semibold text-phumulani-charcoal">{t.actorName}</span>
+                          <span className="text-phumulani-charcoal">({t.actorRole})</span>
+                          <span className="text-[11px] text-phumulani-charcoal">{new Date(t.timestamp).toLocaleString()}</span>
                         </div>
-                        <p className="text-slate-600 mt-0.5">{t.notes}</p>
+                        <p className="text-phumulani-charcoal mt-0.5">{t.notes}</p>
                       </div>
                     ))}
                   </div>
                 </div>
 
                 {/* Role-Based Internal Staff Notes */}
-                <div className="pt-4 border-t border-slate-100">
-                  <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                    <ShieldCheck className="w-3.5 h-3.5 text-slate-500" />
+                <div className="pt-4 border-t border-phumulani-cream">
+                  <h4 className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                    <ShieldCheck className="w-3.5 h-3.5 text-phumulani-charcoal" />
                     Confidential Staff Collaboration Notes ({selectedReq.staffNotes.length})
                   </h4>
                   <div className="space-y-2 mb-3">
                     {selectedReq.staffNotes.map((n) => (
-                      <div key={n.id} className="p-3 bg-amber-50/60 border border-amber-200 rounded-lg text-xs">
-                        <div className="flex items-center justify-between font-semibold text-amber-900 mb-1">
+                      <div key={n.id} className="p-3 bg-phumulani-cream border border-phumulani-gold rounded-lg text-xs">
+                        <div className="flex items-center justify-between font-semibold text-phumulani-charcoal mb-1">
                           <span>{n.authorName} ({n.authorRole})</span>
-                          <span className="text-[10px] text-amber-700">Min Role: {n.minRoleToView}</span>
+                          <span className="text-[10px] text-phumulani-earth">Min Role: {n.minRoleToView}</span>
                         </div>
-                        <p className="text-amber-800">{n.noteText}</p>
+                        <p className="text-phumulani-charcoal">{n.noteText}</p>
                       </div>
                     ))}
                   </div>
@@ -567,11 +567,11 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                       placeholder="Add confidential internal staff note..."
                       value={internalNote}
                       onChange={(e) => setInternalNote(e.target.value)}
-                      className="flex-1 text-xs p-2 bg-slate-50 border border-slate-300 rounded-lg"
+                      className="flex-1 text-xs p-2 bg-phumulani-cream border border-phumulani-cream rounded-lg"
                     />
                     <button
                       onClick={handleAddNote}
-                      className="px-3 py-2 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg"
+                      className="px-3 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg"
                     >
                       Add Note
                     </button>
@@ -579,7 +579,7 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <div className="bg-white rounded-2xl p-12 text-center text-slate-400 border border-slate-200">
+              <div className="bg-white rounded-2xl p-12 text-center text-phumulani-charcoal border border-phumulani-cream">
                 Select a service request from the queue to review details.
               </div>
             )}
@@ -589,25 +589,25 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
 
       {/* 2. RESOURCE REFERRALS (M35.03) */}
       {subTab === 'referrals' && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-phumulani-cream space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-                <Compass className="w-5 h-5 text-teal-600" />
+              <h3 className="font-bold text-phumulani-charcoal text-base flex items-center gap-2">
+                <Compass className="w-5 h-5 text-phumulani-earth" />
                 Community Resource Referral Management (M35.03)
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-phumulani-charcoal mt-1">
                 Approved referrals linked to verified Directory organizations with public contact information. Confidential shelter locations strictly safeguarded.
               </p>
             </div>
-            <span className="text-xs font-semibold px-3 py-1 bg-teal-50 text-teal-800 rounded-full border border-teal-200">
+            <span className="text-xs font-semibold px-3 py-1 bg-phumulani-cream text-phumulani-earth rounded-full border border-phumulani-teal">
               {referrals.length} Active Referrals
             </span>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border border-slate-200 rounded-xl overflow-hidden">
-              <thead className="bg-slate-50 text-slate-700 uppercase font-bold text-[11px] border-b border-slate-200">
+            <table className="w-full text-left text-xs border border-phumulani-cream rounded-xl overflow-hidden">
+              <thead className="bg-phumulani-cream text-phumulani-charcoal uppercase font-bold text-[11px] border-b border-phumulani-cream">
                 <tr>
                   <th className="p-3">Referral ID</th>
                   <th className="p-3">Member</th>
@@ -619,27 +619,27 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                   <th className="p-3">Follow-Up Due</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-phumulani-cream">
                 {referrals.map((ref) => (
-                  <tr key={ref.id} className="hover:bg-slate-50/70">
-                    <td className="p-3 font-mono font-bold text-slate-800">{ref.id}</td>
-                    <td className="p-3 font-medium text-slate-900">{ref.memberName}</td>
+                  <tr key={ref.id} className="hover:bg-phumulani-cream">
+                    <td className="p-3 font-mono font-bold text-phumulani-charcoal">{ref.id}</td>
+                    <td className="p-3 font-medium text-phumulani-charcoal">{ref.memberName}</td>
                     <td className="p-3">
-                      <div className="font-semibold text-slate-900">{ref.resourceTitle}</div>
-                      <div className="text-[11px] text-slate-500">{ref.organizationName}</div>
+                      <div className="font-semibold text-phumulani-charcoal">{ref.resourceTitle}</div>
+                      <div className="text-[11px] text-phumulani-charcoal">{ref.organizationName}</div>
                     </td>
-                    <td className="p-3 text-slate-600">{ref.resourceCategory}</td>
-                    <td className="p-3 text-[11px] text-slate-500">
+                    <td className="p-3 text-phumulani-charcoal">{ref.resourceCategory}</td>
+                    <td className="p-3 text-[11px] text-phumulani-charcoal">
                       <div>{ref.publicContactInfo.phone}</div>
                       <div>{ref.publicContactInfo.email}</div>
                     </td>
-                    <td className="p-3 text-slate-700">{ref.staffApproverName}</td>
+                    <td className="p-3 text-phumulani-charcoal">{ref.staffApproverName}</td>
                     <td className="p-3">
-                      <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-semibold rounded text-[11px]">
+                      <span className="px-2 py-0.5 bg-phumulani-cream text-phumulani-charcoal font-semibold rounded text-[11px]">
                         {ref.status}
                       </span>
                     </td>
-                    <td className="p-3 text-slate-500">{new Date(ref.followUpDueAt).toLocaleDateString()}</td>
+                    <td className="p-3 text-phumulani-charcoal">{new Date(ref.followUpDueAt).toLocaleDateString()}</td>
                   </tr>
                 ))}
               </tbody>
@@ -650,46 +650,46 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
 
       {/* 3. PROGRAM ENROLLMENTS (M35.04) */}
       {subTab === 'enrollments' && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-phumulani-cream space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-teal-600" />
+              <h3 className="font-bold text-phumulani-charcoal text-base flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-phumulani-earth" />
                 Program Enrollment & Participation Journey (M35.04)
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-phumulani-charcoal mt-1">
                 Auditable application review, capacity validation, milestone completions, and verified outcomes.
               </p>
             </div>
-            <span className="text-xs font-semibold px-3 py-1 bg-teal-50 text-teal-800 rounded-full border border-teal-200">
+            <span className="text-xs font-semibold px-3 py-1 bg-phumulani-cream text-phumulani-earth rounded-full border border-phumulani-teal">
               {enrollments.length} Active Records
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {enrollments.map((enr) => (
-              <div key={enr.id} className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+              <div key={enr.id} className="p-5 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono font-bold text-xs text-teal-800">{enr.id}</span>
-                  <span className="px-2 py-0.5 bg-blue-100 text-blue-800 font-semibold text-xs rounded">
+                  <span className="font-mono font-bold text-xs text-phumulani-earth">{enr.id}</span>
+                  <span className="px-2 py-0.5 bg-phumulani-cream text-phumulani-earth font-semibold text-xs rounded">
                     {enr.status}
                   </span>
                 </div>
-                <div className="font-bold text-slate-900 text-sm">{enr.programTitle}</div>
-                <div className="text-xs text-slate-600">Member: {enr.memberName} ({enr.memberEmail})</div>
-                <div className="text-xs text-slate-500">
+                <div className="font-bold text-phumulani-charcoal text-sm">{enr.programTitle}</div>
+                <div className="text-xs text-phumulani-charcoal">Member: {enr.memberName} ({enr.memberEmail})</div>
+                <div className="text-xs text-phumulani-charcoal">
                   Reviewed by: {enr.reviewedByStaffName || 'Pending'} ({enr.reviewedByStaffRole || 'Staff'})
                 </div>
 
                 {/* Progress */}
-                <div className="space-y-1 pt-2 border-t border-slate-200">
-                  <div className="flex justify-between text-xs font-medium text-slate-700">
+                <div className="space-y-1 pt-2 border-t border-phumulani-cream">
+                  <div className="flex justify-between text-xs font-medium text-phumulani-charcoal">
                     <span>Attendance: {enr.sessionsAttended} / {enr.totalSessions} sessions</span>
                     <span>{Math.round((enr.sessionsAttended / enr.totalSessions) * 100)}%</span>
                   </div>
-                  <div className="w-full bg-slate-200 rounded-full h-2">
+                  <div className="w-full bg-phumulani-cream rounded-full h-2">
                     <div
-                      className="bg-teal-600 h-2 rounded-full"
+                      className="bg-phumulani-earth h-2 rounded-full"
                       style={{ width: `${Math.round((enr.sessionsAttended / enr.totalSessions) * 100)}%` }}
                     />
                   </div>
@@ -698,8 +698,8 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                 {/* Milestones */}
                 {enr.milestonesCompleted.length > 0 && (
                   <div className="pt-2 text-xs">
-                    <span className="font-semibold text-slate-700 block mb-1">Completed Milestones:</span>
-                    <ul className="list-disc list-inside text-slate-600 space-y-0.5">
+                    <span className="font-semibold text-phumulani-charcoal block mb-1">Completed Milestones:</span>
+                    <ul className="list-disc list-inside text-phumulani-charcoal space-y-0.5">
                       {enr.milestonesCompleted.map((m, idx) => (
                         <li key={idx}>{m}</li>
                       ))}
@@ -714,64 +714,64 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
 
       {/* 4. VOLUNTEER LIFECYCLE (M35.05) */}
       {subTab === 'volunteers' && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-phumulani-cream space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-                <Users className="w-5 h-5 text-teal-600" />
+              <h3 className="font-bold text-phumulani-charcoal text-base flex items-center gap-2">
+                <Users className="w-5 h-5 text-phumulani-earth" />
                 Volunteer Onboarding-to-Service Lifecycle (M35.05)
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-phumulani-charcoal mt-1">
                 Continuous onboarding from registration, required TRN-SAFE-01 training, human clearance certification, to verified service hours.
               </p>
             </div>
-            <span className="text-xs font-semibold px-3 py-1 bg-teal-50 text-teal-800 rounded-full border border-teal-200">
+            <span className="text-xs font-semibold px-3 py-1 bg-phumulani-cream text-phumulani-earth rounded-full border border-phumulani-teal">
               {volunteers.length} Active Volunteers
             </span>
           </div>
 
           <div className="space-y-4">
             {volunteers.map((vol) => (
-              <div key={vol.id} className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+              <div key={vol.id} className="p-5 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
-                    <span className="font-mono font-bold text-xs text-teal-800">{vol.id}</span>
-                    <h4 className="font-bold text-slate-900 text-base mt-0.5">{vol.name}</h4>
-                    <p className="text-xs text-slate-500">{vol.email} • Languages: {vol.languages.join(', ')}</p>
+                    <span className="font-mono font-bold text-xs text-phumulani-earth">{vol.id}</span>
+                    <h4 className="font-bold text-phumulani-charcoal text-base mt-0.5">{vol.name}</h4>
+                    <p className="text-xs text-phumulani-charcoal">{vol.email} • Languages: {vol.languages.join(', ')}</p>
                   </div>
                   <div className="text-right">
-                    <span className="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded font-semibold text-xs">
+                    <span className="px-2.5 py-1 bg-phumulani-cream text-phumulani-charcoal rounded font-semibold text-xs">
                       {vol.onboardingStatus}
                     </span>
-                    <p className="text-xs text-slate-500 mt-1">
+                    <p className="text-xs text-phumulani-charcoal mt-1">
                       Verified Service: <strong>{vol.verifiedServiceHours} hrs</strong> ({vol.verifiedAttendanceSessions} shifts)
                     </p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs">
-                  <div className="p-2.5 bg-white rounded-lg border border-slate-200">
-                    <span className="text-slate-400 block text-[11px]">Training Status:</span>
-                    <span className="font-semibold text-slate-800">
+                  <div className="p-2.5 bg-white rounded-lg border border-phumulani-cream">
+                    <span className="text-phumulani-charcoal block text-[11px]">Training Status:</span>
+                    <span className="font-semibold text-phumulani-charcoal">
                       {vol.trainingCompletedAt ? 'TRN-SAFE-01 Completed' : 'Pending Training'}
                     </span>
                   </div>
-                  <div className="p-2.5 bg-white rounded-lg border border-slate-200">
-                    <span className="text-slate-400 block text-[11px]">Supervisor Clearance:</span>
-                    <span className="font-semibold text-slate-800">
+                  <div className="p-2.5 bg-white rounded-lg border border-phumulani-cream">
+                    <span className="text-phumulani-charcoal block text-[11px]">Supervisor Clearance:</span>
+                    <span className="font-semibold text-phumulani-charcoal">
                       {vol.clearanceVerifiedByHumanSupervisor || 'Pending Human Review'}
                     </span>
                   </div>
-                  <div className="p-2.5 bg-white rounded-lg border border-slate-200">
-                    <span className="text-slate-400 block text-[11px]">Availability:</span>
-                    <span className="font-semibold text-slate-800">{vol.availabilityDays.join(', ')}</span>
+                  <div className="p-2.5 bg-white rounded-lg border border-phumulani-cream">
+                    <span className="text-phumulani-charcoal block text-[11px]">Availability:</span>
+                    <span className="font-semibold text-phumulani-charcoal">{vol.availabilityDays.join(', ')}</span>
                   </div>
                 </div>
 
                 {!vol.clearanceVerifiedByHumanSupervisor && (
                   <button
                     onClick={() => handleVerifyVolunteerClearance(vol.id)}
-                    className="px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold rounded-lg transition"
+                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg transition"
                   >
                     Authorize Human Clearance Gate
                   </button>
@@ -784,58 +784,58 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
 
       {/* 5. DONOR STEWARDSHIP (M35.06) */}
       {subTab === 'donors' && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-phumulani-cream space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-                <Heart className="w-5 h-5 text-teal-600" />
+              <h3 className="font-bold text-phumulani-charcoal text-base flex items-center gap-2">
+                <Heart className="w-5 h-5 text-phumulani-earth" />
                 Donor Stewardship & Campaign Engagement (M35.06)
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-phumulani-charcoal mt-1">
                 Strict segregation between Pledged ($) vs Settled ($) revenue. Human approval required for thank-you acknowledgment letters.
               </p>
             </div>
-            <span className="text-xs font-semibold px-3 py-1 bg-teal-50 text-teal-800 rounded-full border border-teal-200">
+            <span className="text-xs font-semibold px-3 py-1 bg-phumulani-cream text-phumulani-earth rounded-full border border-phumulani-teal">
               {donors.length} Stewardship Records
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {donors.map((d) => (
-              <div key={d.id} className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+              <div key={d.id} className="p-5 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono font-bold text-xs text-teal-800">{d.id}</span>
-                  <span className="px-2 py-0.5 bg-purple-100 text-purple-800 text-xs font-semibold rounded">
+                  <span className="font-mono font-bold text-xs text-phumulani-earth">{d.id}</span>
+                  <span className="px-2 py-0.5 bg-phumulani-cream text-phumulani-earth text-xs font-semibold rounded">
                     {d.givingTier}
                   </span>
                 </div>
-                <h4 className="font-bold text-slate-900 text-sm">{d.donorName}</h4>
-                <p className="text-xs text-slate-500">{d.donorEmail} • Campaign: {d.campaignTitle}</p>
+                <h4 className="font-bold text-phumulani-charcoal text-sm">{d.donorName}</h4>
+                <p className="text-xs text-phumulani-charcoal">{d.donorEmail} • Campaign: {d.campaignTitle}</p>
 
-                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 text-xs">
-                  <div className="p-2.5 bg-white rounded-lg border border-slate-200">
-                    <span className="text-slate-400 block text-[11px]">Pledge Commitment:</span>
-                    <span className="font-bold text-amber-700 text-sm">
+                <div className="grid grid-cols-2 gap-2 pt-2 border-t border-phumulani-cream text-xs">
+                  <div className="p-2.5 bg-white rounded-lg border border-phumulani-cream">
+                    <span className="text-phumulani-charcoal block text-[11px]">Pledge Commitment:</span>
+                    <span className="font-bold text-phumulani-earth text-sm">
                       ${d.pledgedAmount.toLocaleString()} ({d.pledgeStatus})
                     </span>
                   </div>
-                  <div className="p-2.5 bg-white rounded-lg border border-slate-200">
-                    <span className="text-slate-400 block text-[11px]">Settled Revenue:</span>
-                    <span className="font-bold text-emerald-700 text-sm">
+                  <div className="p-2.5 bg-white rounded-lg border border-phumulani-cream">
+                    <span className="text-phumulani-charcoal block text-[11px]">Settled Revenue:</span>
+                    <span className="font-bold text-phumulani-earth text-sm">
                       ${d.totalSettledAmount.toLocaleString()} ({d.settledContributionsCount} gifts)
                     </span>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between pt-2 text-xs">
-                  <span className="text-slate-600">
+                  <span className="text-phumulani-charcoal">
                     Thank-You Approved:{' '}
                     <strong>{d.thankYouLetterApproved ? `Yes (${d.thankYouLetterApprovedBy})` : 'Pending Review'}</strong>
                   </span>
                   {!d.thankYouLetterApproved && (
                     <button
                       onClick={() => handleApproveThankYou(d.id)}
-                      className="px-3 py-1.5 bg-teal-700 hover:bg-teal-800 text-white rounded text-xs font-semibold"
+                      className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded text-xs font-semibold"
                     >
                       Approve Thank-You
                     </button>
@@ -849,53 +849,53 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
 
       {/* 6. GRANT LIFECYCLE (M35.07) */}
       {subTab === 'grants' && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-phumulani-cream space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-                <Building className="w-5 h-5 text-teal-600" />
+              <h3 className="font-bold text-phumulani-charcoal text-base flex items-center gap-2">
+                <Building className="w-5 h-5 text-phumulani-earth" />
                 Grant Application Lifecycle Integration (M35.07)
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-phumulani-charcoal mt-1">
                 Full 15-stage grant pipeline with verified submission evidence hashes and post-award milestone tracking.
               </p>
             </div>
-            <span className="text-xs font-semibold px-3 py-1 bg-teal-50 text-teal-800 rounded-full border border-teal-200">
+            <span className="text-xs font-semibold px-3 py-1 bg-phumulani-cream text-phumulani-earth rounded-full border border-phumulani-teal">
               {grants.length} Tracked Grants
             </span>
           </div>
 
           <div className="space-y-4">
             {grants.map((g) => (
-              <div key={g.id} className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+              <div key={g.id} className="p-5 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
-                    <span className="font-mono font-bold text-xs text-teal-800">{g.id}</span>
-                    <h4 className="font-bold text-slate-900 text-base mt-0.5">{g.opportunityTitle}</h4>
-                    <p className="text-xs text-slate-500">Funder: {g.funderName} • Lead: {g.leadStaffAssignee}</p>
+                    <span className="font-mono font-bold text-xs text-phumulani-earth">{g.id}</span>
+                    <h4 className="font-bold text-phumulani-charcoal text-base mt-0.5">{g.opportunityTitle}</h4>
+                    <p className="text-xs text-phumulani-charcoal">Funder: {g.funderName} • Lead: {g.leadStaffAssignee}</p>
                   </div>
                   <div className="text-right">
-                    <span className="px-2.5 py-1 bg-teal-100 text-teal-800 font-semibold text-xs rounded">
+                    <span className="px-2.5 py-1 bg-phumulani-cream text-phumulani-earth font-semibold text-xs rounded">
                       Stage: {g.currentStage}
                     </span>
-                    <p className="font-bold text-slate-900 text-sm mt-1">${g.requestedAmount.toLocaleString()} requested</p>
+                    <p className="font-bold text-phumulani-charcoal text-sm mt-1">${g.requestedAmount.toLocaleString()} requested</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2 text-xs">
-                  <div className="p-2.5 bg-white rounded-lg border border-slate-200">
-                    <span className="text-slate-400 block text-[11px]">Go/No-Go Decision:</span>
-                    <span className="font-semibold text-slate-800">{g.goNoGoDecision} ({g.goNoGoApprovedBy})</span>
+                  <div className="p-2.5 bg-white rounded-lg border border-phumulani-cream">
+                    <span className="text-phumulani-charcoal block text-[11px]">Go/No-Go Decision:</span>
+                    <span className="font-semibold text-phumulani-charcoal">{g.goNoGoDecision} ({g.goNoGoApprovedBy})</span>
                   </div>
-                  <div className="p-2.5 bg-white rounded-lg border border-slate-200">
-                    <span className="text-slate-400 block text-[11px]">Submission Evidence:</span>
-                    <span className="font-mono text-[10px] text-slate-700 truncate block">
+                  <div className="p-2.5 bg-white rounded-lg border border-phumulani-cream">
+                    <span className="text-phumulani-charcoal block text-[11px]">Submission Evidence:</span>
+                    <span className="font-mono text-[10px] text-phumulani-charcoal truncate block">
                       {g.submissionEvidenceHash || 'Pending Submission'}
                     </span>
                   </div>
-                  <div className="p-2.5 bg-white rounded-lg border border-slate-200">
-                    <span className="text-slate-400 block text-[11px]">Award Status:</span>
-                    <span className="font-bold text-emerald-700">
+                  <div className="p-2.5 bg-white rounded-lg border border-phumulani-cream">
+                    <span className="text-phumulani-charcoal block text-[11px]">Award Status:</span>
+                    <span className="font-bold text-phumulani-earth">
                       {g.awardStatus} (${g.verifiedAwardAmount.toLocaleString()})
                     </span>
                   </div>
@@ -903,12 +903,12 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
 
                 {g.postAwardMilestones.length > 0 && (
                   <div className="pt-2 text-xs">
-                    <span className="font-semibold text-slate-700 block mb-1">Post-Award Compliance Milestones:</span>
+                    <span className="font-semibold text-phumulani-charcoal block mb-1">Post-Award Compliance Milestones:</span>
                     <div className="space-y-1">
                       {g.postAwardMilestones.map((m, idx) => (
-                        <div key={idx} className="flex items-center justify-between p-2 bg-white rounded border border-slate-200">
-                          <span className="text-slate-800">{m.milestone}</span>
-                          <span className="text-slate-400">Due: {new Date(m.dueDate).toLocaleDateString()}</span>
+                        <div key={idx} className="flex items-center justify-between p-2 bg-white rounded border border-phumulani-cream">
+                          <span className="text-phumulani-charcoal">{m.milestone}</span>
+                          <span className="text-phumulani-charcoal">Due: {new Date(m.dueDate).toLocaleDateString()}</span>
                         </div>
                       ))}
                     </div>
@@ -922,33 +922,33 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
 
       {/* 7. CROSS-DEPARTMENT WORKFLOWS (M35.08) */}
       {subTab === 'workflows' && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-phumulani-cream space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-                <Layers className="w-5 h-5 text-teal-600" />
+              <h3 className="font-bold text-phumulani-charcoal text-base flex items-center gap-2">
+                <Layers className="w-5 h-5 text-phumulani-earth" />
                 Cross-Department Workflow Orchestration (M35.08)
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-phumulani-charcoal mt-1">
                 8-stage cross-department journey powered by the Phase 33 state machine engine with strict idempotency and audit trails.
               </p>
             </div>
-            <span className="text-xs font-semibold px-3 py-1 bg-teal-50 text-teal-800 rounded-full border border-teal-200">
+            <span className="text-xs font-semibold px-3 py-1 bg-phumulani-cream text-phumulani-earth rounded-full border border-phumulani-teal">
               {workflows.length} Workflows
             </span>
           </div>
 
           <div className="space-y-4">
             {workflows.map((wf) => (
-              <div key={wf.id} className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-4">
+              <div key={wf.id} className="p-5 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="font-mono font-bold text-xs text-teal-800">{wf.id}</span>
-                    <h4 className="font-bold text-slate-900 text-sm mt-0.5">{wf.name}</h4>
+                    <span className="font-mono font-bold text-xs text-phumulani-earth">{wf.id}</span>
+                    <h4 className="font-bold text-phumulani-charcoal text-sm mt-0.5">{wf.name}</h4>
                   </div>
                   <button
                     onClick={() => handleAdvanceWorkflow(wf.id)}
-                    className="px-3 py-1.5 bg-teal-700 hover:bg-teal-800 text-white rounded text-xs font-semibold transition"
+                    className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded text-xs font-semibold transition"
                   >
                     Advance Step
                   </button>
@@ -961,10 +961,10 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                       key={s.stepIndex}
                       className={`p-2 rounded-lg border text-center ${
                         s.status === 'COMPLETED'
-                          ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+                          ? 'bg-phumulani-cream border-phumulani-green text-phumulani-charcoal'
                           : s.status === 'IN_PROGRESS'
-                          ? 'bg-blue-50 border-blue-300 text-blue-800 font-bold'
-                          : 'bg-white border-slate-200 text-slate-400'
+                          ? 'bg-phumulani-cream border-phumulani-teal text-phumulani-earth font-bold'
+                          : 'bg-white border-phumulani-cream text-phumulani-charcoal'
                       }`}
                     >
                       <div className="text-[10px] uppercase font-mono">Step {idx + 1}</div>
@@ -981,51 +981,51 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
 
       {/* 8. AI WORKFORCE VERIFICATION (M35.09) */}
       {subTab === 'ai_workforce' && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-4">
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-phumulani-cream space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-                <Bot className="w-5 h-5 text-teal-600" />
+              <h3 className="font-bold text-phumulani-charcoal text-base flex items-center gap-2">
+                <Bot className="w-5 h-5 text-phumulani-earth" />
                 AI Workforce Execution & Evidence Verification (M35.09)
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-phumulani-charcoal mt-1">
                 Truthful execution state tracking across 36 agents. Distinguishes live Gemini execution from deterministic offline fallback.
               </p>
             </div>
-            <span className="text-xs font-semibold px-3 py-1 bg-teal-50 text-teal-800 rounded-full border border-teal-200">
+            <span className="text-xs font-semibold px-3 py-1 bg-phumulani-cream text-phumulani-earth rounded-full border border-phumulani-teal">
               36 Agents Registered
             </span>
           </div>
 
           <div className="space-y-3">
             {aiExecutions.map((exec) => (
-              <div key={exec.id} className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+              <div key={exec.id} className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-2">
                 <div className="flex items-center justify-between text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono font-bold text-teal-800">{exec.agentId}</span>
-                    <span className="font-bold text-slate-900">{exec.agentName}</span>
-                    <span className="px-2 py-0.5 bg-slate-200 text-slate-700 rounded text-[10px]">{exec.division}</span>
+                    <span className="font-mono font-bold text-phumulani-earth">{exec.agentId}</span>
+                    <span className="font-bold text-phumulani-charcoal">{exec.agentName}</span>
+                    <span className="px-2 py-0.5 bg-phumulani-cream text-phumulani-charcoal rounded text-[10px]">{exec.division}</span>
                   </div>
                   <span
                     className={`px-2.5 py-0.5 rounded font-semibold text-xs ${
                       exec.executionStatus === 'COMPLETED_VERIFIED'
-                        ? 'bg-emerald-100 text-emerald-800'
+                        ? 'bg-phumulani-cream text-phumulani-charcoal'
                         : exec.executionStatus === 'COMPLETED_REVIEW_REQUIRED'
-                        ? 'bg-amber-100 text-amber-800'
-                        : 'bg-red-100 text-red-800'
+                        ? 'bg-phumulani-cream text-phumulani-charcoal'
+                        : 'bg-phumulani-cream text-phumulani-earth'
                     }`}
                   >
                     {exec.executionStatus}
                   </span>
                 </div>
-                <p className="text-xs text-slate-700">{exec.outputResult}</p>
-                <div className="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-200">
+                <p className="text-xs text-phumulani-charcoal">{exec.outputResult}</p>
+                <div className="flex items-center justify-between text-[11px] text-phumulani-charcoal pt-2 border-t border-phumulani-cream">
                   <span>Provider: {exec.providerAvailability}</span>
                   <span>Sources: {exec.evidenceSources.join(', ')}</span>
                   {exec.requiresHumanApproval && exec.executionStatus === 'COMPLETED_REVIEW_REQUIRED' && (
                     <button
                       onClick={() => handleApproveAiTask(exec.id)}
-                      className="px-2.5 py-1 bg-teal-700 hover:bg-teal-800 text-white rounded font-medium"
+                      className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded font-medium"
                     >
                       Co-Sign & Approve
                     </button>
@@ -1039,79 +1039,79 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
 
       {/* 9. EXECUTIVE ACCOUNTABILITY (M35.12) */}
       {subTab === 'executive_accountability' && (
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-6">
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-phumulani-cream space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-bold text-slate-900 text-base flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-teal-600" />
+              <h3 className="font-bold text-phumulani-charcoal text-base flex items-center gap-2">
+                <BarChart3 className="w-5 h-5 text-phumulani-earth" />
                 Executive Operational Performance & Accountability (M35.12)
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-phumulani-charcoal mt-1">
                 Live verified metrics tagged with confidence ratings (ACTUAL_VERIFIED / ESTIMATED). Fabricated telemetry is strictly prohibited.
               </p>
             </div>
-            <span className="text-xs font-semibold px-3 py-1 bg-emerald-50 text-emerald-800 rounded-full border border-emerald-200">
+            <span className="text-xs font-semibold px-3 py-1 bg-phumulani-cream text-phumulani-charcoal rounded-full border border-phumulani-green">
               100% Audit Verified
             </span>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {/* Service Requests */}
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-              <span className="text-xs font-bold text-slate-500 uppercase">Service Requests</span>
-              <div className="text-2xl font-bold text-slate-900">{execSummary.serviceRequests.volume}</div>
-              <p className="text-xs text-slate-600">SLA Performance: {execSummary.serviceRequests.slaPerformancePercent}%</p>
-              <span className="inline-block px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded text-[10px] font-semibold">
+            <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-1">
+              <span className="text-xs font-bold text-phumulani-charcoal uppercase">Service Requests</span>
+              <div className="text-2xl font-bold text-phumulani-charcoal">{execSummary.serviceRequests.volume}</div>
+              <p className="text-xs text-phumulani-charcoal">SLA Performance: {execSummary.serviceRequests.slaPerformancePercent}%</p>
+              <span className="inline-block px-2 py-0.5 bg-phumulani-cream text-phumulani-charcoal rounded text-[10px] font-semibold">
                 {execSummary.serviceRequests.confidence}
               </span>
             </div>
 
             {/* Program Enrollment */}
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-              <span className="text-xs font-bold text-slate-500 uppercase">Program Enrollment</span>
-              <div className="text-2xl font-bold text-slate-900">{execSummary.programEnrollment.totalEnrolled}</div>
-              <p className="text-xs text-slate-600">Completion Rate: {execSummary.programEnrollment.completionRatePercent}%</p>
-              <span className="inline-block px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded text-[10px] font-semibold">
+            <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-1">
+              <span className="text-xs font-bold text-phumulani-charcoal uppercase">Program Enrollment</span>
+              <div className="text-2xl font-bold text-phumulani-charcoal">{execSummary.programEnrollment.totalEnrolled}</div>
+              <p className="text-xs text-phumulani-charcoal">Completion Rate: {execSummary.programEnrollment.completionRatePercent}%</p>
+              <span className="inline-block px-2 py-0.5 bg-phumulani-cream text-phumulani-charcoal rounded text-[10px] font-semibold">
                 {execSummary.programEnrollment.confidence}
               </span>
             </div>
 
             {/* Volunteer Hours */}
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-              <span className="text-xs font-bold text-slate-500 uppercase">Verified Volunteer Hours</span>
-              <div className="text-2xl font-bold text-slate-900">{execSummary.volunteerEngagement.verifiedHours} hrs</div>
-              <p className="text-xs text-slate-600">Active Volunteers: {execSummary.volunteerEngagement.activeVolunteers}</p>
-              <span className="inline-block px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded text-[10px] font-semibold">
+            <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-1">
+              <span className="text-xs font-bold text-phumulani-charcoal uppercase">Verified Volunteer Hours</span>
+              <div className="text-2xl font-bold text-phumulani-charcoal">{execSummary.volunteerEngagement.verifiedHours} hrs</div>
+              <p className="text-xs text-phumulani-charcoal">Active Volunteers: {execSummary.volunteerEngagement.activeVolunteers}</p>
+              <span className="inline-block px-2 py-0.5 bg-phumulani-cream text-phumulani-charcoal rounded text-[10px] font-semibold">
                 {execSummary.volunteerEngagement.confidence}
               </span>
             </div>
 
             {/* Resource Referrals */}
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-              <span className="text-xs font-bold text-slate-500 uppercase">Resource Referrals</span>
-              <div className="text-2xl font-bold text-slate-900">{execSummary.resourceReferrals.totalReferrals}</div>
-              <p className="text-xs text-slate-600">Outcome Rate: {execSummary.resourceReferrals.verifiedOutcomePercent}%</p>
-              <span className="inline-block px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded text-[10px] font-semibold">
+            <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-1">
+              <span className="text-xs font-bold text-phumulani-charcoal uppercase">Resource Referrals</span>
+              <div className="text-2xl font-bold text-phumulani-charcoal">{execSummary.resourceReferrals.totalReferrals}</div>
+              <p className="text-xs text-phumulani-charcoal">Outcome Rate: {execSummary.resourceReferrals.verifiedOutcomePercent}%</p>
+              <span className="inline-block px-2 py-0.5 bg-phumulani-cream text-phumulani-charcoal rounded text-[10px] font-semibold">
                 {execSummary.resourceReferrals.confidence}
               </span>
             </div>
 
             {/* Fundraising Settled vs Pledged */}
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-              <span className="text-xs font-bold text-slate-500 uppercase">Settled Revenue</span>
-              <div className="text-2xl font-bold text-emerald-700">${execSummary.fundraising.settledRevenue.toLocaleString()}</div>
-              <p className="text-xs text-slate-600">Pledged (Segregated): ${execSummary.fundraising.pledgedAmount.toLocaleString()}</p>
-              <span className="inline-block px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded text-[10px] font-semibold">
+            <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-1">
+              <span className="text-xs font-bold text-phumulani-charcoal uppercase">Settled Revenue</span>
+              <div className="text-2xl font-bold text-phumulani-earth">${execSummary.fundraising.settledRevenue.toLocaleString()}</div>
+              <p className="text-xs text-phumulani-charcoal">Pledged (Segregated): ${execSummary.fundraising.pledgedAmount.toLocaleString()}</p>
+              <span className="inline-block px-2 py-0.5 bg-phumulani-cream text-phumulani-charcoal rounded text-[10px] font-semibold">
                 {execSummary.fundraising.confidence}
               </span>
             </div>
 
             {/* AI Workforce */}
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-1">
-              <span className="text-xs font-bold text-slate-500 uppercase">AI Workforce Readiness</span>
-              <div className="text-2xl font-bold text-slate-900">{execSummary.aiWorkforce.readinessRatio}</div>
-              <p className="text-xs text-slate-600">Pending Approvals: {execSummary.aiWorkforce.pendingApprovalsCount}</p>
-              <span className="inline-block px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded text-[10px] font-semibold">
+            <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-1">
+              <span className="text-xs font-bold text-phumulani-charcoal uppercase">AI Workforce Readiness</span>
+              <div className="text-2xl font-bold text-phumulani-charcoal">{execSummary.aiWorkforce.readinessRatio}</div>
+              <p className="text-xs text-phumulani-charcoal">Pending Approvals: {execSummary.aiWorkforce.pendingApprovalsCount}</p>
+              <span className="inline-block px-2 py-0.5 bg-phumulani-cream text-phumulani-charcoal rounded text-[10px] font-semibold">
                 {execSummary.aiWorkforce.confidence}
               </span>
             </div>

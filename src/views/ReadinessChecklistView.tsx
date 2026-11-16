@@ -461,45 +461,45 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
     >
       <div className="space-y-6">
         {/* Banner */}
-        <div className="bg-[#104F57] text-white rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-sm">
+        <div className="bg-phumulani-charcoal text-white rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-sm">
           <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-2 text-xs font-semibold text-teal-200 bg-teal-900/60 px-3 py-0.5 rounded-full border border-teal-700">
-              <ShieldCheck className="w-3.5 h-3.5 text-teal-300" />
+            <div className="inline-flex items-center gap-2 text-xs font-semibold text-phumulani-teal bg-phumulani-charcoal px-3 py-0.5 rounded-full border border-phumulani-teal">
+              <ShieldCheck className="w-3.5 h-3.5 text-phumulani-teal" />
               <span>PHASE 6 ENTERPRISE INTEGRATION VERIFICATION</span>
             </div>
             <h1 className="font-serif text-2xl font-bold">
               Production Release & Enterprise Audit Suite
             </h1>
-            <p className="text-xs text-teal-100/90 max-w-2xl leading-relaxed">
-              Complete architectural audit, PostgreSQL schema definition, immutable audit logging, authentic media verification, and disaster recovery targeting local root <code className="bg-teal-950/70 px-1.5 py-0.5 rounded text-amber-300 font-mono">D:\Phumulani\Backups</code>.
+            <p className="text-xs text-phumulani-cream max-w-2xl leading-relaxed">
+              Complete architectural audit, PostgreSQL schema definition, immutable audit logging, authentic media verification, and disaster recovery targeting local root <code className="bg-phumulani-charcoal px-1.5 py-0.5 rounded text-phumulani-gold font-mono">D:\Phumulani\Backups</code>.
             </p>
           </div>
 
           <div className="flex items-center gap-3">
             <button
               onClick={handleDownloadDbBackup}
-              className="px-3.5 py-2 bg-amber-400 hover:bg-amber-300 text-slate-900 rounded-xl font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all"
+              className="px-3.5 py-2 bg-phumulani-gold hover:bg-phumulani-gold text-phumulani-charcoal rounded-xl font-bold text-xs flex items-center gap-1.5 shadow-sm transition-all"
             >
               <Download className="w-4 h-4" />
               <span>Export DB Snapshot</span>
             </button>
-            <div className="bg-white/10 backdrop-blur-xs border border-white/20 rounded-xl p-3 text-center min-w-[110px]">
-              <div className="font-serif text-2xl font-bold text-emerald-300">
+            <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl p-3 text-center min-w-[110px]">
+              <div className="font-serif text-2xl font-bold text-phumulani-cream">
                 20 / 20
               </div>
-              <div className="text-[10px] text-teal-200 mt-0.5">Audits Verified</div>
+              <div className="text-[10px] text-phumulani-cream mt-0.5">Audits Verified</div>
             </div>
           </div>
         </div>
 
         {/* View Switcher Tabs */}
-        <div className="flex border-b border-slate-200 bg-white rounded-t-xl px-4 pt-2 gap-2 overflow-x-auto">
+        <div className="flex border-b border-phumulani-cream bg-white rounded-t-xl px-4 pt-2 gap-2 overflow-x-auto">
           <button
             onClick={() => setActiveTab('gates')}
             className={`px-4 py-2.5 text-xs font-bold border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === 'gates'
-                ? 'border-[#104F57] text-[#104F57]'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                ? 'border-phumulani-earth text-phumulani-earth'
+                : 'border-transparent text-phumulani-charcoal hover:text-phumulani-earth'
             }`}
           >
             <ShieldCheck className="w-4 h-4" />
@@ -509,14 +509,14 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
             onClick={() => setActiveTab('automated_tests')}
             className={`px-4 py-2.5 text-xs font-bold border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === 'automated_tests'
-                ? 'border-[#104F57] text-[#104F57]'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                ? 'border-phumulani-earth text-phumulani-earth'
+                : 'border-transparent text-phumulani-charcoal hover:text-phumulani-earth'
             }`}
           >
             <Play className="w-4 h-4" />
             <span>Acceptance Test Suite</span>
             {testSummary && (
-              <span className={`text-[10px] px-1.5 py-0.2 rounded font-bold ${testSummary.failed === 0 ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}`}>
+              <span className={`text-[10px] px-1.5 py-0.2 rounded font-bold ${testSummary.failed === 0 ? 'bg-phumulani-cream text-phumulani-charcoal' : 'bg-phumulani-cream text-phumulani-earth'}`}>
                 {testSummary.passed}/{testSummary.total}
               </span>
             )}
@@ -525,8 +525,8 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
             onClick={() => setActiveTab('audit_register')}
             className={`px-4 py-2.5 text-xs font-bold border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === 'audit_register'
-                ? 'border-[#104F57] text-[#104F57]'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                ? 'border-phumulani-earth text-phumulani-earth'
+                : 'border-transparent text-phumulani-charcoal hover:text-phumulani-earth'
             }`}
           >
             <FileCheck2 className="w-4 h-4" />
@@ -536,8 +536,8 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
             onClick={() => setActiveTab('database_schema')}
             className={`px-4 py-2.5 text-xs font-bold border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === 'database_schema'
-                ? 'border-[#104F57] text-[#104F57]'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                ? 'border-phumulani-earth text-phumulani-earth'
+                : 'border-transparent text-phumulani-charcoal hover:text-phumulani-earth'
             }`}
           >
             <Database className="w-4 h-4" />
@@ -547,8 +547,8 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
             onClick={() => setActiveTab('devops_backup')}
             className={`px-4 py-2.5 text-xs font-bold border-b-2 flex items-center gap-2 transition-colors whitespace-nowrap ${
               activeTab === 'devops_backup'
-                ? 'border-[#104F57] text-[#104F57]'
-                : 'border-transparent text-slate-500 hover:text-slate-800'
+                ? 'border-phumulani-earth text-phumulani-earth'
+                : 'border-transparent text-phumulani-charcoal hover:text-phumulani-earth'
             }`}
           >
             <Terminal className="w-4 h-4" />
@@ -558,13 +558,13 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
 
         {/* TAB 1: 12 RELEASE GATES */}
         {activeTab === 'gates' && (
-          <div className="bg-white rounded-b-xl rounded-tr-xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
+          <div className="bg-white rounded-b-xl rounded-tr-xl border border-phumulani-cream p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-phumulani-cream pb-4">
               <div>
-                <h3 className="font-serif text-lg font-bold text-slate-900">
+                <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                   Production Release Evidence Register (Section 19 — Gates G01 through G12)
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-phumulani-charcoal mt-0.5">
                   Mandatory sign-off criteria approved by Phumulani Executive Leadership & Safeguarding Lead
                 </p>
               </div>
@@ -572,14 +572,14 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
                 <button
                   onClick={runAcceptanceTests}
                   disabled={isRunningTests}
-                  className="px-3.5 py-1.5 bg-[#104F57] text-white rounded-lg text-xs font-semibold hover:bg-teal-900 flex items-center gap-1.5 shadow-xs disabled:opacity-50"
+                  className="px-3.5 py-1.5 bg-phumulani-earth text-white rounded-lg text-xs font-semibold hover:bg-phumulani-orange flex items-center gap-1.5 shadow-xs disabled:opacity-50"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isRunningTests ? 'animate-spin' : ''}`} />
                   <span>{isRunningTests ? 'Executing Tests...' : 'Run Automated Verification'}</span>
                 </button>
                 <button
                   onClick={() => window.print()}
-                  className="px-3 py-1.5 border border-slate-300 rounded-lg text-xs font-semibold text-slate-700 hover:bg-slate-50 flex items-center gap-1.5"
+                  className="px-3 py-1.5 border border-phumulani-cream rounded-lg text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream flex items-center gap-1.5"
                 >
                   <Printer className="w-3.5 h-3.5" />
                   <span>Print Report</span>
@@ -588,65 +588,65 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
             </div>
 
             {gateReviewNotice && (
-              <div className="bg-amber-50 border border-amber-300 rounded-xl p-3 flex items-start justify-between gap-3 text-amber-900 text-xs">
+              <div className="bg-phumulani-cream border border-phumulani-gold rounded-xl p-3 flex items-start justify-between gap-3 text-phumulani-charcoal text-xs">
                 <div className="flex items-start gap-2">
-                  <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                  <AlertTriangle className="w-4 h-4 text-phumulani-earth shrink-0 mt-0.5" />
                   <span>{gateReviewNotice}</span>
                 </div>
                 <button
                   onClick={() => setGateReviewNotice(null)}
-                  className="text-amber-700 hover:text-amber-950 font-bold px-1.5 py-0.5 rounded text-[11px]"
+                  className="text-phumulani-earth hover:text-phumulani-charcoal font-bold px-1.5 py-0.5 rounded text-[11px]"
                 >
                   Dismiss
                 </button>
               </div>
             )}
 
-            <div className="divide-y divide-slate-100">
+            <div className="divide-y divide-phumulani-cream">
               {gates.map((gate) => {
                 const isPassed = gate.status === 'PASSED' || gate.status === 'APPROVED';
                 return (
                   <div
                     key={gate.id}
-                    className="py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-slate-50/70 rounded-lg px-3 transition-colors"
+                    className="py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-phumulani-cream rounded-lg px-3 transition-colors"
                   >
                     <div className="space-y-1.5 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-mono text-xs font-bold text-teal-800 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded">
+                        <span className="font-mono text-xs font-bold text-phumulani-earth bg-phumulani-cream border border-phumulani-teal px-2 py-0.5 rounded">
                           {gate.code}
                         </span>
-                        <h4 className="font-serif font-bold text-sm text-slate-900">{gate.name} — {gate.title}</h4>
-                        <span className="text-[10px] font-semibold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                        <h4 className="font-serif font-bold text-sm text-phumulani-charcoal">{gate.name} — {gate.title}</h4>
+                        <span className="text-[10px] font-semibold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded">
                           {gate.scope}
                         </span>
                         {gate.isHumanGate && (
-                          <span className="text-[10px] font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5 rounded flex items-center gap-1">
+                          <span className="text-[10px] font-bold text-phumulani-earth bg-phumulani-cream border border-phumulani-earth px-2 py-0.5 rounded flex items-center gap-1">
                             <Lock className="w-2.5 h-2.5" />
                             <span>Executive Sign-Off</span>
                           </span>
                         )}
                       </div>
-                      <p className="text-xs text-slate-600 leading-relaxed">{gate.evidence}</p>
+                      <p className="text-xs text-phumulani-charcoal leading-relaxed">{gate.evidence}</p>
                     </div>
 
                     <div className="text-right shrink-0 space-y-1">
-                      <div className="text-xs font-medium text-slate-600">Reviewer: <span className="font-semibold text-slate-800">{gate.reviewer}</span></div>
+                      <div className="text-xs font-medium text-phumulani-charcoal">Reviewer: <span className="font-semibold text-phumulani-charcoal">{gate.reviewer}</span></div>
                       <button
                         onClick={() => cycleGateStatus(gate.code)}
                         title="Click to cycle status or review gate"
                         className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-all cursor-pointer ${
                           gate.status === 'APPROVED'
-                            ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
+                            ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green'
                             : gate.status === 'PASSED'
-                            ? 'bg-teal-100 text-teal-800 border-teal-300'
+                            ? 'bg-phumulani-cream text-phumulani-earth border-phumulani-teal'
                             : gate.status === 'AWAITING APPROVAL'
-                            ? 'bg-amber-100 text-amber-800 border-amber-300'
+                            ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-gold'
                             : gate.status === 'IN PROGRESS'
-                            ? 'bg-blue-100 text-blue-800 border-blue-300'
-                            : 'bg-slate-100 text-slate-700 border-slate-300'
+                            ? 'bg-phumulani-cream text-phumulani-earth border-phumulani-teal'
+                            : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream'
                         }`}
                       >
-                        {isPassed ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" /> : <Clock className="w-3.5 h-3.5 text-amber-700" />}
+                        {isPassed ? <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-earth" /> : <Clock className="w-3.5 h-3.5 text-phumulani-earth" />}
                         <span>{gate.status}</span>
                       </button>
                     </div>
@@ -656,18 +656,18 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
             </div>
 
             {/* Milestone M5 Final Production Seal */}
-            <div className="p-6 bg-slate-50 rounded-xl border border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs">
+            <div className="p-6 bg-phumulani-cream rounded-xl border border-phumulani-cream flex flex-col sm:flex-row justify-between items-center gap-4 text-xs">
               <div className="space-y-1 text-center sm:text-left">
-                <div className="font-bold text-slate-900 text-sm">
+                <div className="font-bold text-phumulani-charcoal text-sm">
                   Milestone M5 — Production Sign-Off Status ({confirmedCount}/12 Gates Confirmed)
                 </div>
-                <div className="text-slate-600">
+                <div className="text-phumulani-charcoal">
                   All 12 gates validated with signed audit evidence under human-in-the-loop executive control.
                 </div>
               </div>
 
-              <div className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-900 border border-emerald-300 px-4 py-2 rounded-xl font-bold">
-                <Award className="w-4 h-4 text-emerald-700" />
+              <div className="inline-flex items-center gap-2 bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green px-4 py-2 rounded-xl font-bold">
+                <Award className="w-4 h-4 text-phumulani-earth" />
                 <span>APPROVED FOR ENTERPRISE RELEASE</span>
               </div>
             </div>
@@ -676,17 +676,17 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
 
         {/* TAB: AUTOMATED ACCEPTANCE TESTS */}
         {activeTab === 'automated_tests' && (
-          <div className="bg-white rounded-b-xl rounded-tr-xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
+          <div className="bg-white rounded-b-xl rounded-tr-xl border border-phumulani-cream p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-phumulani-cream pb-4">
               <div>
-                <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-teal-800 bg-teal-50 border border-teal-200 px-2.5 py-0.5 rounded-full mb-1">
-                  <Play className="w-3 h-3 text-teal-700" />
+                <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-phumulani-earth bg-phumulani-cream border border-phumulani-teal px-2.5 py-0.5 rounded-full mb-1">
+                  <Play className="w-3 h-3 text-phumulani-earth" />
                   <span>IN-BROWSER ACCEPTANCE RUNNER</span>
                 </div>
-                <h3 className="font-serif text-lg font-bold text-slate-900">
+                <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                   Automated Enterprise Acceptance Test Suite
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-phumulani-charcoal mt-0.5">
                   Validates RBAC, PostgreSQL state, AI Policy Gateway, End-to-End Workflows, and Safeguarding Invariants
                 </p>
               </div>
@@ -695,7 +695,7 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
                 <button
                   onClick={runAcceptanceTests}
                   disabled={isRunningTests}
-                  className="px-4 py-2 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl font-bold text-xs flex items-center gap-2 shadow-sm transition-all disabled:opacity-50"
+                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold text-xs flex items-center gap-2 shadow-sm transition-all disabled:opacity-50"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isRunningTests ? 'animate-spin' : ''}`} />
                   <span>{isRunningTests ? 'Running Test Suite...' : 'Run All Acceptance Tests'}</span>
@@ -706,40 +706,40 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
             {/* Test Summary Scoreboard */}
             {testSummary ? (
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                  <div className="text-slate-500 text-xs font-medium">Total Test Cases</div>
-                  <div className="font-serif text-2xl font-bold text-slate-900 mt-1">{testSummary.total}</div>
-                  <div className="text-[11px] text-slate-400 mt-0.5">Across 5 domains</div>
+                <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream">
+                  <div className="text-phumulani-charcoal text-xs font-medium">Total Test Cases</div>
+                  <div className="font-serif text-2xl font-bold text-phumulani-charcoal mt-1">{testSummary.total}</div>
+                  <div className="text-[11px] text-phumulani-charcoal mt-0.5">Across 5 domains</div>
                 </div>
 
-                <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200">
-                  <div className="text-emerald-700 text-xs font-medium">Passed Assertions</div>
-                  <div className="font-serif text-2xl font-bold text-emerald-800 mt-1">{testSummary.passed}</div>
-                  <div className="text-[11px] text-emerald-600 mt-0.5">100% of critical paths</div>
+                <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-green">
+                  <div className="text-phumulani-earth text-xs font-medium">Passed Assertions</div>
+                  <div className="font-serif text-2xl font-bold text-phumulani-charcoal mt-1">{testSummary.passed}</div>
+                  <div className="text-[11px] text-phumulani-earth mt-0.5">100% of critical paths</div>
                 </div>
 
-                <div className="p-4 bg-rose-50 rounded-xl border border-rose-200">
-                  <div className="text-rose-700 text-xs font-medium">Failures Detected</div>
-                  <div className="font-serif text-2xl font-bold text-rose-800 mt-1">{testSummary.failed}</div>
-                  <div className="text-[11px] text-rose-600 mt-0.5">Zero tolerance threshold</div>
+                <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-earth">
+                  <div className="text-phumulani-earth text-xs font-medium">Failures Detected</div>
+                  <div className="font-serif text-2xl font-bold text-phumulani-earth mt-1">{testSummary.failed}</div>
+                  <div className="text-[11px] text-phumulani-earth mt-0.5">Zero tolerance threshold</div>
                 </div>
 
-                <div className="p-4 bg-teal-50 rounded-xl border border-teal-200">
-                  <div className="text-teal-700 text-xs font-medium">Execution Latency</div>
-                  <div className="font-serif text-2xl font-bold text-teal-800 mt-1">{testSummary.durationMs} ms</div>
-                  <div className="text-[11px] text-teal-600 mt-0.5">Timestamp: {new Date(testSummary.timestamp).toLocaleTimeString()}</div>
+                <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-teal">
+                  <div className="text-phumulani-earth text-xs font-medium">Execution Latency</div>
+                  <div className="font-serif text-2xl font-bold text-phumulani-earth mt-1">{testSummary.durationMs} ms</div>
+                  <div className="text-[11px] text-phumulani-earth mt-0.5">Timestamp: {new Date(testSummary.timestamp).toLocaleTimeString()}</div>
                 </div>
               </div>
             ) : (
-              <div className="p-6 bg-slate-50 rounded-xl border border-dashed border-slate-300 text-center space-y-2">
-                <Sparkles className="w-8 h-8 text-teal-700 mx-auto" />
-                <h4 className="font-bold text-sm text-slate-800">Test Suite Standing By</h4>
-                <p className="text-xs text-slate-500 max-w-md mx-auto">
+              <div className="p-6 bg-phumulani-cream rounded-xl border border-dashed border-phumulani-cream text-center space-y-2">
+                <Sparkles className="w-8 h-8 text-phumulani-earth mx-auto" />
+                <h4 className="font-bold text-sm text-phumulani-charcoal">Test Suite Standing By</h4>
+                <p className="text-xs text-phumulani-charcoal max-w-md mx-auto">
                   Click the button above to execute live test assertions directly against the active in-memory database, AI Policy Gateway, and Safeguarding partitions.
                 </p>
                 <button
                   onClick={runAcceptanceTests}
-                  className="mt-2 px-4 py-2 bg-[#104F57] text-white text-xs font-bold rounded-lg hover:bg-teal-900 inline-flex items-center gap-1.5"
+                  className="mt-2 px-4 py-2 bg-phumulani-earth text-white text-xs font-bold rounded-lg hover:bg-phumulani-orange inline-flex items-center gap-1.5"
                 >
                   <Play className="w-3.5 h-3.5" />
                   <span>Execute Acceptance Suite</span>
@@ -751,49 +751,49 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
             {testSummary && (
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
-                  <h4 className="font-serif text-sm font-bold text-slate-900">
+                  <h4 className="font-serif text-sm font-bold text-phumulani-charcoal">
                     Detailed Test Results ({testSummary.results.length} Assertions)
                   </h4>
-                  <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                  <span className="text-[11px] font-semibold text-phumulani-earth bg-phumulani-cream border border-phumulani-green px-2.5 py-0.5 rounded-full">
                     Gate Alignment Active
                   </span>
                 </div>
 
-                <div className="divide-y divide-slate-100 border border-slate-200 rounded-xl overflow-hidden">
+                <div className="divide-y divide-phumulani-cream border border-phumulani-cream rounded-xl overflow-hidden">
                   {testSummary.results.map((res) => (
                     <div
                       key={res.id}
-                      className="p-4 hover:bg-slate-50 transition-colors flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+                      className="p-4 hover:bg-phumulani-cream transition-colors flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
                     >
                       <div className="space-y-1 flex-1">
                         <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-mono text-xs font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                          <span className="font-mono text-xs font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded">
                             {res.id}
                           </span>
-                          <span className="text-xs font-bold text-slate-900">{res.name}</span>
-                          <span className="text-[10px] font-semibold text-teal-800 bg-teal-50 border border-teal-200 px-2 py-0.5 rounded">
+                          <span className="text-xs font-bold text-phumulani-charcoal">{res.name}</span>
+                          <span className="text-[10px] font-semibold text-phumulani-earth bg-phumulani-cream border border-phumulani-teal px-2 py-0.5 rounded">
                             {res.category}
                           </span>
-                          <span className="text-[10px] font-mono text-slate-400">
+                          <span className="text-[10px] font-mono text-phumulani-charcoal">
                             {res.durationMs}ms
                           </span>
                         </div>
-                        <p className="text-xs text-slate-500">{res.description}</p>
-                        <div className="text-[11px] font-mono text-slate-700 bg-slate-50 border border-slate-200/80 p-2 rounded-md mt-1">
-                          <span className="text-emerald-700 font-bold mr-1.5">✓</span>
+                        <p className="text-xs text-phumulani-charcoal">{res.description}</p>
+                        <div className="text-[11px] font-mono text-phumulani-charcoal bg-phumulani-cream border border-phumulani-cream p-2 rounded-md mt-1">
+                          <span className="text-phumulani-earth font-bold mr-1.5">✓</span>
                           {res.details}
                         </div>
                       </div>
 
                       <div className="shrink-0">
                         {res.passed ? (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-earth" />
                             <span>PASS</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-800 border border-rose-300">
-                            <XCircle className="w-3.5 h-3.5 text-rose-700" />
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-earth">
+                            <XCircle className="w-3.5 h-3.5 text-phumulani-earth" />
                             <span>FAIL</span>
                           </span>
                         )}
@@ -808,25 +808,25 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
 
         {/* TAB 2: 20-MODULE ENTERPRISE AUDIT REGISTER */}
         {activeTab === 'audit_register' && (
-          <div className="bg-white rounded-b-xl rounded-tr-xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
+          <div className="bg-white rounded-b-xl rounded-tr-xl border border-phumulani-cream p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-phumulani-cream pb-4">
               <div>
-                <h3 className="font-serif text-lg font-bold text-slate-900">
+                <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                   20-Module Enterprise Development Audit Register
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-phumulani-charcoal mt-0.5">
                   Complete status registry required by Master Execution Directive Phase 6
                 </p>
               </div>
 
               <div className="relative w-full sm:w-64">
-                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+                <Search className="w-3.5 h-3.5 text-phumulani-charcoal absolute left-3 top-2.5" />
                 <input
                   type="text"
                   placeholder="Filter audit modules..."
                   value={searchAudit}
                   onChange={(e) => setSearchAudit(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-700"
+                  className="w-full pl-9 pr-3 py-1.5 text-xs border border-phumulani-cream rounded-lg focus:outline-none focus:ring-1 focus:ring-phumulani-earth"
                 />
               </div>
             </div>
@@ -834,7 +834,7 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
-                  <tr className="bg-slate-50 border-b border-slate-200 text-slate-700 font-bold uppercase tracking-wider">
+                  <tr className="bg-phumulani-cream border-b border-phumulani-cream text-phumulani-charcoal font-bold uppercase tracking-wider">
                     <th className="p-3 w-12 text-center">#</th>
                     <th className="p-3">Application Module / Domain</th>
                     <th className="p-3">Status</th>
@@ -843,30 +843,30 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
                     <th className="p-3">Responsible Lead</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-phumulani-cream">
                   {filteredAuditModules.map((item) => (
-                    <tr key={item.id} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="p-3 text-center font-mono font-bold text-slate-500">
+                    <tr key={item.id} className="hover:bg-phumulani-cream transition-colors">
+                      <td className="p-3 text-center font-mono font-bold text-phumulani-charcoal">
                         {item.id}
                       </td>
-                      <td className="p-3 font-bold text-slate-900 font-serif">
+                      <td className="p-3 font-bold text-phumulani-charcoal font-serif">
                         {item.domain}
                       </td>
                       <td className="p-3 whitespace-nowrap">
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                          <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green">
+                          <CheckCircle2 className="w-3 h-3 text-phumulani-earth" />
                           <span>{item.status}</span>
                         </span>
                       </td>
                       <td className="p-3 whitespace-nowrap">
-                        <span className="font-mono text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded border border-slate-200">
+                        <span className="font-mono text-[10px] bg-phumulani-cream text-phumulani-charcoal px-2 py-0.5 rounded border border-phumulani-cream">
                           {item.classification}
                         </span>
                       </td>
-                      <td className="p-3 text-slate-600 max-w-md leading-relaxed">
+                      <td className="p-3 text-phumulani-charcoal max-w-md leading-relaxed">
                         {item.evidence}
                       </td>
-                      <td className="p-3 text-slate-700 font-medium whitespace-nowrap">
+                      <td className="p-3 text-phumulani-charcoal font-medium whitespace-nowrap">
                         {item.responsibleOfficer}
                       </td>
                     </tr>
@@ -875,16 +875,16 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
               </table>
             </div>
 
-            <div className="bg-teal-50 border border-teal-200 rounded-xl p-4 text-xs text-teal-900 flex items-center justify-between">
+            <div className="bg-phumulani-cream border border-phumulani-teal rounded-xl p-4 text-xs text-phumulani-earth flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-teal-700 shrink-0" />
+                <ShieldCheck className="w-4 h-4 text-phumulani-earth shrink-0" />
                 <span>
                   <strong>Full Audit Conclusion:</strong> All 20 application domains verified functional with working code, transactional persistence, and zero mock fallbacks.
                 </span>
               </div>
               <button
                 onClick={handleDownloadDbBackup}
-                className="px-3 py-1.5 bg-teal-800 hover:bg-teal-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1"
+                className="px-3 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold flex items-center gap-1"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Save Full Audit Snapshot</span>
@@ -895,21 +895,21 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
 
         {/* TAB 3: DATABASE ARCHITECTURE */}
         {activeTab === 'database_schema' && (
-          <div className="bg-white rounded-b-xl rounded-tr-xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
-            <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+          <div className="bg-white rounded-b-xl rounded-tr-xl border border-phumulani-cream p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="flex justify-between items-center border-b border-phumulani-cream pb-4">
               <div>
-                <h3 className="font-serif text-lg font-bold text-slate-900">
+                <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                   Enterprise Relational Database Architecture (PostgreSQL 15+)
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Production DDL schema defined in <code className="bg-slate-100 px-1 py-0.5 rounded text-teal-800">src/db/schema.sql</code> with Row-Level Security on VAWA survivor records
+                <p className="text-xs text-phumulani-charcoal mt-0.5">
+                  Production DDL schema defined in <code className="bg-phumulani-cream px-1 py-0.5 rounded text-phumulani-earth">src/db/schema.sql</code> with Row-Level Security on VAWA survivor records
                 </p>
               </div>
 
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleDownloadDbBackup}
-                  className="px-3 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5"
+                  className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold flex items-center gap-1.5"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Download Backup JSON</span>
@@ -920,26 +920,26 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
             {/* Tables Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {tableMetas.map((t, idx) => (
-                <div key={idx} className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
+                <div key={idx} className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-2">
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold text-teal-900 bg-teal-100 px-2 py-0.5 rounded">
+                    <span className="font-mono text-xs font-bold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded">
                       {t.tableName}
                     </span>
-                    <span className="text-[11px] font-bold text-slate-600 bg-white px-2 py-0.5 rounded border border-slate-200">
+                    <span className="text-[11px] font-bold text-phumulani-charcoal bg-white px-2 py-0.5 rounded border border-phumulani-cream">
                       {t.rowCount} records
                     </span>
                   </div>
-                  <div className="text-[11px] font-medium text-slate-500">Domain: {t.domain}</div>
-                  <p className="text-xs text-slate-600 line-clamp-2">{t.description}</p>
-                  <div className="pt-2 border-t border-slate-200 flex justify-between items-center text-[10px]">
-                    <span className="text-slate-500">PK: {t.primaryKey}</span>
+                  <div className="text-[11px] font-medium text-phumulani-charcoal">Domain: {t.domain}</div>
+                  <p className="text-xs text-phumulani-charcoal line-clamp-2">{t.description}</p>
+                  <div className="pt-2 border-t border-phumulani-cream flex justify-between items-center text-[10px]">
+                    <span className="text-phumulani-charcoal">PK: {t.primaryKey}</span>
                     <span
                       className={`font-mono font-bold px-1.5 py-0.5 rounded ${
                         t.securityClassification === 'RESTRICTED_VAWA_SAFEGUARDING'
-                          ? 'bg-rose-100 text-rose-800 border border-rose-300'
+                          ? 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth'
                           : t.securityClassification === 'AUDIT_APPEND_ONLY'
-                          ? 'bg-purple-100 text-purple-800 border border-purple-300'
-                          : 'bg-slate-200 text-slate-700'
+                          ? 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth'
+                          : 'bg-phumulani-cream text-phumulani-charcoal'
                       }`}
                     >
                       {t.securityClassification}
@@ -952,16 +952,16 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
             {/* DDL Schema Code Preview */}
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs">
-                <span className="font-bold text-slate-700">PostgreSQL Schema Definition Highlights (src/db/schema.sql)</span>
+                <span className="font-bold text-phumulani-charcoal">PostgreSQL Schema Definition Highlights (src/db/schema.sql)</span>
                 <button
                   onClick={() => copyToClipboard('src/db/schema.sql', 'schema_path')}
-                  className="text-teal-700 hover:text-teal-900 flex items-center gap-1 font-semibold"
+                  className="text-phumulani-earth hover:text-phumulani-earth flex items-center gap-1 font-semibold"
                 >
-                  {copiedCode === 'schema_path' ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copiedCode === 'schema_path' ? <Check className="w-3.5 h-3.5 text-phumulani-earth" /> : <Copy className="w-3.5 h-3.5" />}
                   <span>{copiedCode === 'schema_path' ? 'Copied' : 'Copy Path'}</span>
                 </button>
               </div>
-              <pre className="p-4 bg-slate-900 text-slate-100 rounded-xl font-mono text-[11px] overflow-x-auto max-h-60 leading-relaxed">
+              <pre className="p-4 bg-phumulani-charcoal text-phumulani-cream rounded-xl font-mono text-[11px] overflow-x-auto max-h-60 leading-relaxed">
 {`-- Excerpt from src/db/schema.sql
 CREATE TABLE restricted_intakes (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -986,37 +986,37 @@ CREATE POLICY restricted_intakes_safeguarding_only ON restricted_intakes
 
         {/* TAB 4: DEVOPS & LOCAL BACKUP */}
         {activeTab === 'devops_backup' && (
-          <div className="bg-white rounded-b-xl rounded-tr-xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
-            <div className="flex justify-between items-center border-b border-slate-100 pb-4">
+          <div className="bg-white rounded-b-xl rounded-tr-xl border border-phumulani-cream p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="flex justify-between items-center border-b border-phumulani-cream pb-4">
               <div>
-                <h3 className="font-serif text-lg font-bold text-slate-900">
+                <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                   DevOps, Local Backup & Disaster Recovery Automation
                 </h3>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Automated scripts targeting <code className="bg-slate-100 px-1 py-0.5 rounded text-teal-800">D:\Phumulani\Backups</code> with SHA-256 integrity checks
+                <p className="text-xs text-phumulani-charcoal mt-0.5">
+                  Automated scripts targeting <code className="bg-phumulani-cream px-1 py-0.5 rounded text-phumulani-earth">D:\Phumulani\Backups</code> with SHA-256 integrity checks
                 </p>
               </div>
             </div>
 
             {/* Unified Master Service Control CLI Card (Section 18 Directive) */}
-            <div className="p-6 bg-slate-900 text-white rounded-2xl border border-slate-800 space-y-4">
+            <div className="p-6 bg-phumulani-charcoal text-white rounded-2xl border border-phumulani-teal space-y-4">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                 <div className="flex items-center gap-2.5">
-                  <Terminal className="w-5 h-5 text-teal-400" />
+                  <Terminal className="w-5 h-5 text-phumulani-teal" />
                   <div>
                     <h4 className="font-serif font-bold text-sm text-white">Unified Service Control & Disaster Recovery CLI</h4>
-                    <p className="text-[11px] text-slate-400 font-mono">scripts/phumulani-service-control.ps1 (PowerShell) & scripts/phumulani-service-control.sh (POSIX)</p>
+                    <p className="text-[11px] text-phumulani-cream font-mono">scripts/phumulani-service-control.ps1 (PowerShell) & scripts/phumulani-service-control.sh (POSIX)</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] font-mono font-bold bg-teal-900 text-teal-200 border border-teal-700 px-2.5 py-0.5 rounded-full">
+                  <span className="text-[10px] font-mono font-bold bg-phumulani-charcoal text-phumulani-teal border border-phumulani-teal px-2.5 py-0.5 rounded-full">
                     6 Standard Verbs
                   </span>
                 </div>
               </div>
 
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Master operations interface providing standard verbs across local workstation <code className="text-amber-300 font-mono">D:\Phumulani\Development\phumulani-platform</code> and backup repository <code className="text-amber-300 font-mono">D:\Phumulani\Backups</code>.
+              <p className="text-xs text-phumulani-cream leading-relaxed">
+                Master operations interface providing standard verbs across local workstation <code className="text-phumulani-gold font-mono">D:\Phumulani\Development\phumulani-platform</code> and backup repository <code className="text-phumulani-gold font-mono">D:\Phumulani\Backups</code>.
               </p>
 
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 pt-1">
@@ -1031,20 +1031,20 @@ CREATE POLICY restricted_intakes_safeguarding_only ON restricted_intakes
                   <button
                     key={v.verb}
                     onClick={() => copyToClipboard(v.cmd, `verb_${v.verb}`)}
-                    className="p-2.5 bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 rounded-xl text-left transition-all group flex flex-col justify-between"
+                    className="p-2.5 bg-phumulani-charcoal hover:bg-phumulani-orange border border-phumulani-teal rounded-xl text-left transition-all group flex flex-col justify-between"
                   >
                     <div>
                       <div className="flex justify-between items-center">
-                        <span className="font-mono text-xs font-bold text-teal-300 group-hover:text-teal-200">{v.verb}</span>
+                        <span className="font-mono text-xs font-bold text-phumulani-teal group-hover:text-phumulani-teal">{v.verb}</span>
                         {copiedCode === `verb_${v.verb}` ? (
-                          <Check className="w-3.5 h-3.5 text-emerald-400" />
+                          <Check className="w-3.5 h-3.5 text-phumulani-green" />
                         ) : (
-                          <Copy className="w-3.5 h-3.5 text-slate-500 group-hover:text-slate-300" />
+                          <Copy className="w-3.5 h-3.5 text-phumulani-cream group-hover:text-phumulani-cream" />
                         )}
                       </div>
-                      <div className="text-[10px] text-slate-400 mt-1 line-clamp-2">{v.desc}</div>
+                      <div className="text-[10px] text-phumulani-cream mt-1 line-clamp-2">{v.desc}</div>
                     </div>
-                    <div className="text-[9px] font-mono text-slate-500 mt-1.5 truncate">{copiedCode === `verb_${v.verb}` ? 'Copied to clipboard' : 'Click to copy command'}</div>
+                    <div className="text-[9px] font-mono text-phumulani-cream mt-1.5 truncate">{copiedCode === `verb_${v.verb}` ? 'Copied to clipboard' : 'Click to copy command'}</div>
                   </button>
                 ))}
               </div>
@@ -1052,101 +1052,101 @@ CREATE POLICY restricted_intakes_safeguarding_only ON restricted_intakes
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* PowerShell Windows Master Script */}
-              <div className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+              <div className="p-5 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Terminal className="w-4 h-4 text-teal-700" />
-                    <span className="font-bold text-xs text-slate-900">Windows PowerShell Master Suite</span>
+                    <Terminal className="w-4 h-4 text-phumulani-earth" />
+                    <span className="font-bold text-xs text-phumulani-charcoal">Windows PowerShell Master Suite</span>
                   </div>
-                  <span className="text-[10px] bg-sky-100 text-sky-800 px-2 py-0.5 rounded font-mono font-bold">
+                  <span className="text-[10px] bg-phumulani-cream text-phumulani-earth px-2 py-0.5 rounded font-mono font-bold">
                     PowerShell 7+
                   </span>
                 </div>
-                <p className="text-xs text-slate-600">
+                <p className="text-xs text-phumulani-charcoal">
                   Executes MediaArchive, Database schema snapshots, and zip code checkpoint with SHA-256 validation.
                 </p>
-                <div className="p-3 bg-slate-900 rounded-lg text-slate-100 font-mono text-[11px] flex justify-between items-center">
+                <div className="p-3 bg-phumulani-charcoal rounded-lg text-phumulani-cream font-mono text-[11px] flex justify-between items-center">
                   <span>powershell -File scripts\phumulani-backup-all.ps1</span>
                   <button
                     onClick={() => copyToClipboard('powershell -File scripts\\phumulani-backup-all.ps1', 'ps_all')}
-                    className="text-slate-400 hover:text-white"
+                    className="text-phumulani-cream hover:text-white"
                   >
-                    {copiedCode === 'ps_all' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copiedCode === 'ps_all' ? <Check className="w-3.5 h-3.5 text-phumulani-green" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
                 </div>
               </div>
 
               {/* Database Backup Script */}
-              <div className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+              <div className="p-5 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Database className="w-4 h-4 text-teal-700" />
-                    <span className="font-bold text-xs text-slate-900">PostgreSQL Database Snapshot Script</span>
+                    <Database className="w-4 h-4 text-phumulani-earth" />
+                    <span className="font-bold text-xs text-phumulani-charcoal">PostgreSQL Database Snapshot Script</span>
                   </div>
-                  <span className="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-mono font-bold">
+                  <span className="text-[10px] bg-phumulani-cream text-phumulani-charcoal px-2 py-0.5 rounded font-mono font-bold">
                     Database DDL
                   </span>
                 </div>
-                <p className="text-xs text-slate-600">
+                <p className="text-xs text-phumulani-charcoal">
                   Archives schema-latest.sql and emits SHA-256 db-backup-manifest.json to D:\Phumulani\Backups\Database.
                 </p>
-                <div className="p-3 bg-slate-900 rounded-lg text-slate-100 font-mono text-[11px] flex justify-between items-center">
+                <div className="p-3 bg-phumulani-charcoal rounded-lg text-phumulani-cream font-mono text-[11px] flex justify-between items-center">
                   <span>powershell -File scripts\phumulani-db-backup.ps1</span>
                   <button
                     onClick={() => copyToClipboard('powershell -File scripts\\phumulani-db-backup.ps1', 'ps_db')}
-                    className="text-slate-400 hover:text-white"
+                    className="text-phumulani-cream hover:text-white"
                   >
-                    {copiedCode === 'ps_db' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copiedCode === 'ps_db' ? <Check className="w-3.5 h-3.5 text-phumulani-green" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
                 </div>
               </div>
 
               {/* Git Sync Safety Checker */}
-              <div className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+              <div className="p-5 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Terminal className="w-4 h-4 text-teal-700" />
-                    <span className="font-bold text-xs text-slate-900">GitHub Sync & Safety Checker</span>
+                    <Terminal className="w-4 h-4 text-phumulani-earth" />
+                    <span className="font-bold text-xs text-phumulani-charcoal">GitHub Sync & Safety Checker</span>
                   </div>
-                  <span className="text-[10px] bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-mono font-bold">
+                  <span className="text-[10px] bg-phumulani-cream text-phumulani-earth px-2 py-0.5 rounded font-mono font-bold">
                     Git Safety
                   </span>
                 </div>
-                <p className="text-xs text-slate-600">
+                <p className="text-xs text-phumulani-charcoal">
                   Verifies branch <code>feature/phumulani-phase6-enterprise-integration</code> and enforces NO force-push.
                 </p>
-                <div className="p-3 bg-slate-900 rounded-lg text-slate-100 font-mono text-[11px] flex justify-between items-center">
+                <div className="p-3 bg-phumulani-charcoal rounded-lg text-phumulani-cream font-mono text-[11px] flex justify-between items-center">
                   <span>powershell -File scripts\phumulani-git-sync.ps1</span>
                   <button
                     onClick={() => copyToClipboard('powershell -File scripts\\phumulani-git-sync.ps1', 'ps_git')}
-                    className="text-slate-400 hover:text-white"
+                    className="text-phumulani-cream hover:text-white"
                   >
-                    {copiedCode === 'ps_git' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copiedCode === 'ps_git' ? <Check className="w-3.5 h-3.5 text-phumulani-green" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
                 </div>
               </div>
 
               {/* POSIX Shell Linux Master Backup */}
-              <div className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+              <div className="p-5 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Terminal className="w-4 h-4 text-teal-700" />
-                    <span className="font-bold text-xs text-slate-900">POSIX Master Backup (Linux / Cloud)</span>
+                    <Terminal className="w-4 h-4 text-phumulani-earth" />
+                    <span className="font-bold text-xs text-phumulani-charcoal">POSIX Master Backup (Linux / Cloud)</span>
                   </div>
-                  <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-mono font-bold">
+                  <span className="text-[10px] bg-phumulani-cream text-phumulani-charcoal px-2 py-0.5 rounded font-mono font-bold">
                     Bash
                   </span>
                 </div>
-                <p className="text-xs text-slate-600">
+                <p className="text-xs text-phumulani-charcoal">
                   Creates tar.gz snapshots and synchronizes media/database directories in POSIX server environments.
                 </p>
-                <div className="p-3 bg-slate-900 rounded-lg text-slate-100 font-mono text-[11px] flex justify-between items-center">
+                <div className="p-3 bg-phumulani-charcoal rounded-lg text-phumulani-cream font-mono text-[11px] flex justify-between items-center">
                   <span>bash scripts/phumulani-backup-all.sh /tmp/phumulani_backups</span>
                   <button
                     onClick={() => copyToClipboard('bash scripts/phumulani-backup-all.sh /tmp/phumulani_backups', 'sh_all')}
-                    className="text-slate-400 hover:text-white"
+                    className="text-phumulani-cream hover:text-white"
                   >
-                    {copiedCode === 'sh_all' ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copiedCode === 'sh_all' ? <Check className="w-3.5 h-3.5 text-phumulani-green" /> : <Copy className="w-3.5 h-3.5" />}
                   </button>
                 </div>
               </div>

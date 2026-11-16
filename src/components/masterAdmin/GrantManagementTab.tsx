@@ -61,20 +61,20 @@ export const GrantManagementTab: React.FC<GrantManagementTabProps> = ({ currentU
   return (
     <div className="space-y-6">
       {/* Top Header */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white p-5 rounded-xl border border-phumulani-cream shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <FileText className="w-5 h-5 text-emerald-800" />
-            <h2 className="text-lg font-bold text-slate-900">Institutional Grant Management Operations</h2>
+            <FileText className="w-5 h-5 text-phumulani-charcoal" />
+            <h2 className="text-lg font-bold text-phumulani-charcoal">Institutional Grant Management Operations</h2>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-phumulani-charcoal mt-1">
             Institutional RFP tracking, submission checklists, AI research synthesis, and executive approval gates
           </p>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-950 text-right">
-            <div className="text-[10px] uppercase font-bold text-emerald-700">Active Pipeline Value</div>
+          <div className="p-2.5 bg-phumulani-cream border border-phumulani-green rounded-lg text-phumulani-charcoal text-right">
+            <div className="text-[10px] uppercase font-bold text-phumulani-earth">Active Pipeline Value</div>
             <div className="text-base font-bold">${totalPipelineUSD.toLocaleString()}</div>
           </div>
         </div>
@@ -84,12 +84,12 @@ export const GrantManagementTab: React.FC<GrantManagementTabProps> = ({ currentU
         <div
           className={`p-3.5 rounded-lg text-xs font-medium flex items-center justify-between ${
             actionNotice.type === 'success'
-              ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-              : 'bg-rose-50 text-rose-800 border border-rose-200'
+              ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green'
+              : 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth'
           }`}
         >
           <span>{actionNotice.message}</span>
-          <button onClick={() => setActionNotice(null)} className="text-slate-400 hover:text-slate-600">
+          <button onClick={() => setActionNotice(null)} className="text-phumulani-charcoal hover:text-phumulani-earth">
             <XCircle className="w-4 h-4" />
           </button>
         </div>
@@ -98,37 +98,37 @@ export const GrantManagementTab: React.FC<GrantManagementTabProps> = ({ currentU
       {/* Grant Cards List */}
       <div className="space-y-4">
         {filteredGrants.map((grant) => (
-          <div key={grant.id} className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-4">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 pb-3 border-b border-slate-100">
+          <div key={grant.id} className="bg-white p-5 rounded-xl border border-phumulani-cream shadow-xs space-y-4">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 pb-3 border-b border-phumulani-cream">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-900 px-2 py-0.5 rounded">
+                  <span className="text-[10px] font-mono font-bold bg-phumulani-cream text-phumulani-charcoal px-2 py-0.5 rounded">
                     {grant.id}
                   </span>
-                  <span className="text-xs font-mono font-bold text-slate-500">{grant.funderOrganization}</span>
+                  <span className="text-xs font-mono font-bold text-phumulani-charcoal">{grant.funderOrganization}</span>
                   <span
                     className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${
                       grant.pipelineStage === 'AWARDED'
-                        ? 'bg-emerald-100 text-emerald-800'
+                        ? 'bg-phumulani-cream text-phumulani-charcoal'
                         : grant.pipelineStage === 'EXECUTIVE_APPROVAL'
-                        ? 'bg-purple-100 text-purple-800'
+                        ? 'bg-phumulani-cream text-phumulani-earth'
                         : grant.pipelineStage === 'SUBMITTED'
-                        ? 'bg-blue-100 text-blue-800'
-                        : 'bg-slate-100 text-slate-700'
+                        ? 'bg-phumulani-cream text-phumulani-earth'
+                        : 'bg-phumulani-cream text-phumulani-charcoal'
                     }`}
                   >
                     {grant.pipelineStage.replace('_', ' ')}
                   </span>
                 </div>
-                <h3 className="text-sm font-bold text-slate-900 mt-1">{grant.opportunityTitle}</h3>
+                <h3 className="text-sm font-bold text-phumulani-charcoal mt-1">{grant.opportunityTitle}</h3>
               </div>
 
               <div className="text-right">
-                <div className="text-base font-bold text-slate-900">
+                <div className="text-base font-bold text-phumulani-charcoal">
                   ${grant.fundingAmountRequested.toLocaleString()}
                 </div>
-                <div className="text-[11px] text-slate-500 flex items-center gap-1 justify-end">
-                  <Clock className="w-3 h-3 text-slate-400" /> Deadline: {grant.applicationDeadline}
+                <div className="text-[11px] text-phumulani-charcoal flex items-center gap-1 justify-end">
+                  <Clock className="w-3 h-3 text-phumulani-charcoal" /> Deadline: {grant.applicationDeadline}
                 </div>
               </div>
             </div>
@@ -136,38 +136,38 @@ export const GrantManagementTab: React.FC<GrantManagementTabProps> = ({ currentU
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
               <div className="space-y-2">
                 <div>
-                  <span className="text-slate-500">Program Target:</span>{' '}
-                  <strong className="text-slate-800">{grant.programTarget}</strong>
+                  <span className="text-phumulani-charcoal">Program Target:</span>{' '}
+                  <strong className="text-phumulani-charcoal">{grant.programTarget}</strong>
                 </div>
                 <div>
-                  <span className="text-slate-500">Proposal Owner:</span>{' '}
-                  <strong className="text-slate-800">{grant.proposalOwner}</strong>
+                  <span className="text-phumulani-charcoal">Proposal Owner:</span>{' '}
+                  <strong className="text-phumulani-charcoal">{grant.proposalOwner}</strong>
                 </div>
                 <div>
-                  <span className="text-slate-500">Eligibility Notes:</span>{' '}
-                  <span className="text-slate-700">{grant.eligibilityNotes}</span>
+                  <span className="text-phumulani-charcoal">Eligibility Notes:</span>{' '}
+                  <span className="text-phumulani-charcoal">{grant.eligibilityNotes}</span>
                 </div>
                 {grant.aiResearchAssistanceSummary && (
-                  <div className="p-2.5 bg-sky-50 border border-sky-200 rounded-lg text-sky-900 text-[11px] flex items-start gap-2">
-                    <Sparkles className="w-4 h-4 text-sky-600 shrink-0 mt-0.5" />
+                  <div className="p-2.5 bg-phumulani-cream border border-phumulani-teal rounded-lg text-phumulani-earth text-[11px] flex items-start gap-2">
+                    <Sparkles className="w-4 h-4 text-phumulani-earth shrink-0 mt-0.5" />
                     <span>{grant.aiResearchAssistanceSummary}</span>
                   </div>
                 )}
               </div>
 
               {/* Submission Checklist */}
-              <div className="space-y-1.5 p-3 bg-slate-50 rounded-lg border border-slate-100">
-                <div className="text-[10px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+              <div className="space-y-1.5 p-3 bg-phumulani-cream rounded-lg border border-phumulani-cream">
+                <div className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal mb-1">
                   Submission Readiness Checklist
                 </div>
                 {grant.submissionChecklist.map((item) => (
                   <div key={item.id} className="flex items-center gap-2 text-[11px]">
                     {item.isCompleted ? (
-                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-earth shrink-0" />
                     ) : (
-                      <XCircle className="w-3.5 h-3.5 text-slate-300 shrink-0" />
+                      <XCircle className="w-3.5 h-3.5 text-phumulani-charcoal shrink-0" />
                     )}
-                    <span className={item.isCompleted ? 'text-slate-800' : 'text-slate-400'}>
+                    <span className={item.isCompleted ? 'text-phumulani-charcoal' : 'text-phumulani-charcoal'}>
                       {item.label}
                     </span>
                   </div>
@@ -176,10 +176,10 @@ export const GrantManagementTab: React.FC<GrantManagementTabProps> = ({ currentU
             </div>
 
             {/* Pipeline Advancement Buttons */}
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-              <div className="flex items-center gap-2 text-slate-500">
+            <div className="pt-3 border-t border-phumulani-cream flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2 text-phumulani-charcoal">
                 <span>Executive Sign-off:</span>
-                <span className={grant.executiveApproved ? 'text-emerald-700 font-bold' : 'text-amber-700 font-bold'}>
+                <span className={grant.executiveApproved ? 'text-phumulani-earth font-bold' : 'text-phumulani-earth font-bold'}>
                   {grant.executiveApproved ? 'Approved by Comfort Dondo' : 'Awaiting Approval'}
                 </span>
               </div>
@@ -188,7 +188,7 @@ export const GrantManagementTab: React.FC<GrantManagementTabProps> = ({ currentU
                 {grant.pipelineStage === 'RESEARCH' && (
                   <button
                     onClick={() => handleAdvanceStage(grant.id, 'PROPOSAL_DRAFT')}
-                    className="px-3 py-1.5 bg-teal-800 text-white rounded font-medium hover:bg-teal-900"
+                    className="px-3 py-1.5 bg-phumulani-charcoal text-white rounded font-medium hover:bg-phumulani-orange"
                   >
                     Advance to Proposal Draft
                   </button>
@@ -196,7 +196,7 @@ export const GrantManagementTab: React.FC<GrantManagementTabProps> = ({ currentU
                 {grant.pipelineStage === 'EXECUTIVE_APPROVAL' && (
                   <button
                     onClick={() => handleAdvanceStage(grant.id, 'SUBMISSION_READY')}
-                    className="px-3 py-1.5 bg-purple-800 text-white rounded font-medium hover:bg-purple-900"
+                    className="px-3 py-1.5 bg-phumulani-earth text-white rounded font-medium hover:bg-phumulani-orange"
                   >
                     Grant Executive Approval
                   </button>
@@ -204,7 +204,7 @@ export const GrantManagementTab: React.FC<GrantManagementTabProps> = ({ currentU
                 {grant.pipelineStage === 'SUBMISSION_READY' && (
                   <button
                     onClick={() => handleAdvanceStage(grant.id, 'SUBMITTED')}
-                    className="px-3 py-1.5 bg-blue-700 text-white rounded font-medium hover:bg-blue-800"
+                    className="px-3 py-1.5 bg-phumulani-earth text-white rounded font-medium hover:bg-phumulani-orange"
                   >
                     Confirm Submission to Funder
                   </button>
@@ -212,7 +212,7 @@ export const GrantManagementTab: React.FC<GrantManagementTabProps> = ({ currentU
                 {grant.pipelineStage === 'SUBMITTED' && (
                   <button
                     onClick={() => handleAdvanceStage(grant.id, 'AWARDED')}
-                    className="px-3 py-1.5 bg-emerald-700 text-white rounded font-medium hover:bg-emerald-800"
+                    className="px-3 py-1.5 bg-phumulani-earth text-white rounded font-medium hover:bg-phumulani-orange"
                   >
                     Record Award Receipt
                   </button>

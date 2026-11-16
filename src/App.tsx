@@ -164,11 +164,11 @@ export default function App() {
   const hasViewAccess = isRoleAuthorizedForView(dbState.currentUser.role, activeView);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white text-[#14213D] selection:bg-teal-100 selection:text-teal-900">
+    <div className="min-h-screen flex flex-col bg-white text-phumulani-charcoal selection:bg-phumulani-cream selection:text-phumulani-earth">
       {/* 0. ACCESSIBILITY: SKIP TO MAIN CONTENT ANCHOR (WCAG 2.2 AA) */}
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#104F57] focus:text-white focus:rounded focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-300 font-semibold text-xs"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:px-4 focus:py-2 focus:bg-phumulani-earth focus:text-white focus:rounded focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-phumulani-gold font-semibold text-xs"
       >
         Skip to Main Content
       </a>
@@ -200,14 +200,14 @@ export default function App() {
       {/* 3. ACTIVE APPLICATION PORTAL VIEW */}
       <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">
         {!hasViewAccess ? (
-          <div className="max-w-xl mx-auto my-20 p-8 bg-slate-50 border border-slate-200 rounded-2xl text-center space-y-4">
-            <h2 className="font-serif text-2xl font-bold text-[#104F57]">Portal Access Restricted</h2>
-            <p className="text-sm text-slate-600">
+          <div className="max-w-xl mx-auto my-20 p-8 bg-phumulani-cream border border-phumulani-earth rounded-2xl text-center space-y-4">
+            <h2 className="font-serif text-2xl font-bold text-phumulani-earth">Portal Access Restricted</h2>
+            <p className="text-sm text-phumulani-charcoal">
               Your active session role ({dbState.currentUser.role}) is not authorized to access this internal portal.
             </p>
             <button
               onClick={() => setActiveView('public')}
-              className="px-5 py-2.5 bg-[#104F57] text-white rounded-lg text-xs font-bold hover:bg-[#0d3f46] cursor-pointer"
+              className="px-5 py-2.5 bg-phumulani-earth text-white rounded-lg text-xs font-bold hover:bg-phumulani-orange cursor-pointer transition-colors"
             >
               Return to Public Website
             </button>
@@ -215,7 +215,7 @@ export default function App() {
         ) : (
           <Suspense
             fallback={
-              <div className="flex items-center justify-center py-24 text-sm font-medium text-slate-500">
+              <div className="flex items-center justify-center py-24 text-sm font-medium text-phumulani-charcoal">
                 Loading portal workspace...
               </div>
             }

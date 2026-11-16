@@ -120,22 +120,22 @@ export const CommunityOutreachTab: React.FC<Props> = ({ currentUserRole, current
   return (
     <div className="space-y-6">
       {/* HEADER */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[10px] font-mono font-bold bg-teal-50 text-teal-800 px-2.5 py-0.5 rounded-full border border-teal-200 uppercase">
+            <span className="text-[10px] font-mono font-bold bg-phumulani-cream text-phumulani-earth px-2.5 py-0.5 rounded-full border border-phumulani-teal uppercase">
               M25.03 · FIELD OPERATIONS
             </span>
           </div>
-          <h2 className="text-xl font-bold font-serif text-slate-900">Community Outreach Operations</h2>
-          <p className="text-slate-500 text-xs mt-0.5 max-w-xl">
+          <h2 className="text-xl font-bold font-serif text-phumulani-charcoal">Community Outreach Operations</h2>
+          <p className="text-phumulani-charcoal text-xs mt-0.5 max-w-xl">
             Coordinate public information distribution, aggregate demographic field outreach, and multilingual education without collecting confidential survivor data.
           </p>
         </div>
 
         <button
           onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-teal-800 hover:bg-teal-900 text-white rounded-xl text-xs font-bold transition-all shadow-xs shrink-0 cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold transition-all shadow-xs shrink-0 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>New Outreach Initiative</span>
@@ -147,34 +147,34 @@ export const CommunityOutreachTab: React.FC<Props> = ({ currentUserRole, current
         <div
           className={`p-3.5 rounded-xl text-xs font-semibold flex items-center justify-between transition-all ${
             feedbackNotice.type === 'success'
-              ? 'bg-emerald-50 text-emerald-900 border border-emerald-200'
-              : 'bg-rose-50 text-rose-900 border border-rose-200'
+              ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green'
+              : 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth'
           }`}
         >
           <div className="flex items-center gap-2">
             {feedbackNotice.type === 'success' ? (
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-phumulani-earth shrink-0" />
             ) : (
-              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+              <AlertTriangle className="w-4 h-4 text-phumulani-earth shrink-0" />
             )}
             <span>{feedbackNotice.message}</span>
           </div>
-          <button onClick={() => setFeedbackNotice(null)} className="text-slate-400 font-bold px-2">
+          <button onClick={() => setFeedbackNotice(null)} className="text-phumulani-charcoal font-bold px-2">
             ✕
           </button>
         </div>
       )}
 
       {/* SEARCH AND FILTER BAR */}
-      <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex flex-col md:flex-row gap-3 items-center justify-between">
+      <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs flex flex-col md:flex-row gap-3 items-center justify-between">
         <div className="relative w-full md:w-80">
-          <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+          <Search className="w-4 h-4 absolute left-3 top-2.5 text-phumulani-charcoal" />
           <input
             type="text"
             placeholder="Search outreach title, target areas..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-teal-700"
+            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-phumulani-cream bg-phumulani-cream focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-phumulani-earth"
           />
         </div>
 
@@ -182,7 +182,7 @@ export const CommunityOutreachTab: React.FC<Props> = ({ currentUserRole, current
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 bg-slate-50 font-medium text-slate-700"
+            className="text-xs px-2.5 py-1.5 rounded-lg border border-phumulani-cream bg-phumulani-cream font-medium text-phumulani-charcoal"
           >
             <option value="ALL">All Statuses</option>
             <option value="SCHEDULED">Scheduled</option>
@@ -192,7 +192,7 @@ export const CommunityOutreachTab: React.FC<Props> = ({ currentUserRole, current
           </select>
           <button
             onClick={refreshData}
-            className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100"
+            className="p-1.5 rounded-lg border border-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream"
           >
             <RefreshCw className="w-4 h-4" />
           </button>
@@ -202,42 +202,42 @@ export const CommunityOutreachTab: React.FC<Props> = ({ currentUserRole, current
       {/* OUTREACH CARDS */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {filtered.map((item) => (
-          <div key={item.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs space-y-3">
+          <div key={item.id} className="bg-white p-5 rounded-2xl border border-phumulani-cream shadow-xs space-y-3">
             <div className="flex items-start justify-between gap-3">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-[10px] font-mono font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
+                  <span className="text-[10px] font-mono font-bold bg-phumulani-cream text-phumulani-charcoal px-2 py-0.5 rounded">
                     {item.id}
                   </span>
-                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-100 text-teal-800 border border-teal-300">
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-phumulani-cream text-phumulani-earth border border-phumulani-teal">
                     {item.status}
                   </span>
                 </div>
-                <h3 className="font-bold text-slate-900 text-sm">{item.title}</h3>
+                <h3 className="font-bold text-phumulani-charcoal text-sm">{item.title}</h3>
               </div>
             </div>
 
-            <p className="text-slate-600 text-xs line-clamp-2 leading-relaxed">{item.description}</p>
+            <p className="text-phumulani-charcoal text-xs line-clamp-2 leading-relaxed">{item.description}</p>
 
-            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/60 space-y-1 text-[11px]">
-              <div className="flex items-center gap-1.5 text-slate-700">
-                <MapPin className="w-3.5 h-3.5 text-teal-700 shrink-0" />
+            <div className="bg-phumulani-cream p-3 rounded-xl border border-phumulani-cream space-y-1 text-[11px]">
+              <div className="flex items-center gap-1.5 text-phumulani-charcoal">
+                <MapPin className="w-3.5 h-3.5 text-phumulani-earth shrink-0" />
                 <span className="font-medium truncate">{item.targetArea}</span>
               </div>
-              <div className="flex items-center gap-1.5 text-slate-700">
-                <Calendar className="w-3.5 h-3.5 text-teal-700 shrink-0" />
+              <div className="flex items-center gap-1.5 text-phumulani-charcoal">
+                <Calendar className="w-3.5 h-3.5 text-phumulani-earth shrink-0" />
                 <span>Scheduled: {item.scheduledDate}</span>
               </div>
-              <div className="flex items-center gap-1.5 text-slate-700">
-                <Users className="w-3.5 h-3.5 text-teal-700 shrink-0" />
+              <div className="flex items-center gap-1.5 text-phumulani-charcoal">
+                <Users className="w-3.5 h-3.5 text-phumulani-earth shrink-0" />
                 <span>Est. Reach: {item.estimatedReach} individuals (Aggregate Only)</span>
               </div>
             </div>
 
             {/* Approved materials */}
             <div className="text-[11px]">
-              <span className="font-bold text-slate-700 block mb-1">Approved Materials:</span>
-              <ul className="list-disc list-inside text-slate-600 space-y-0.5">
+              <span className="font-bold text-phumulani-charcoal block mb-1">Approved Materials:</span>
+              <ul className="list-disc list-inside text-phumulani-charcoal space-y-0.5">
                 {item.approvedMaterials.map((mat, i) => (
                   <li key={i} className="truncate">{mat}</li>
                 ))}
@@ -245,12 +245,12 @@ export const CommunityOutreachTab: React.FC<Props> = ({ currentUserRole, current
             </div>
 
             {/* Status change action */}
-            <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-              <span className="text-[10px] text-slate-400">Lead: {item.leadStaffName}</span>
+            <div className="pt-2 border-t border-phumulani-cream flex items-center justify-between text-xs">
+              <span className="text-[10px] text-phumulani-charcoal">Lead: {item.leadStaffName}</span>
               <select
                 value={item.status}
                 onChange={(e) => handleStatusChange(item.id, e.target.value as OutreachStatus)}
-                className="text-[11px] font-semibold px-2 py-1 rounded-lg border border-slate-200 bg-slate-50 text-slate-800 cursor-pointer"
+                className="text-[11px] font-semibold px-2 py-1 rounded-lg border border-phumulani-cream bg-phumulani-cream text-phumulani-charcoal cursor-pointer"
               >
                 <option value="PLANNING">Planning</option>
                 <option value="SCHEDULED">Scheduled</option>
@@ -265,105 +265,105 @@ export const CommunityOutreachTab: React.FC<Props> = ({ currentUserRole, current
 
       {/* CREATE OUTREACH MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 animate-fadeIn">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-lg w-full p-6 text-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4 animate-fadeIn">
+          <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream max-w-lg w-full p-6 text-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div>
-                <span className="text-[10px] font-mono text-teal-800 font-bold uppercase">Field Operations</span>
-                <h3 className="text-base font-bold text-slate-900">Plan Community Outreach Initiative</h3>
+                <span className="text-[10px] font-mono text-phumulani-earth font-bold uppercase">Field Operations</span>
+                <h3 className="text-base font-bold text-phumulani-charcoal">Plan Community Outreach Initiative</h3>
               </div>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600 font-bold">
+              <button onClick={() => setIsModalOpen(false)} className="text-phumulani-charcoal hover:text-phumulani-earth font-bold">
                 ✕
               </button>
             </div>
 
             <form onSubmit={handleCreateOutreach} className="space-y-3">
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Initiative Title *</label>
+                <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Initiative Title *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Cedar-Riverside Community Health Fair Table"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white"
+                  className="w-full px-3 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream focus:bg-white"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Public Target Location *</label>
+                <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Public Target Location *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Cedar-Riverside Opportunity Center (Public Plaza)"
                   value={targetArea}
                   onChange={(e) => setTargetArea(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white"
+                  className="w-full px-3 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream focus:bg-white"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Scheduled Date *</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Scheduled Date *</label>
                   <input
                     type="date"
                     required
                     value={scheduledDate}
                     onChange={(e) => setScheduledDate(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50"
+                    className="w-full px-3 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Estimated Reach</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Estimated Reach</label>
                   <input
                     type="number"
                     value={estimatedReach}
                     onChange={(e) => setEstimatedReach(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50"
+                    className="w-full px-3 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Scope & Objectives</label>
+                <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Scope & Objectives</label>
                 <textarea
                   rows={2}
                   placeholder="Brief description of outreach goals..."
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50"
+                  className="w-full px-3 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Approved Distribution Materials</label>
+                <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Approved Distribution Materials</label>
                 <input
                   type="text"
                   placeholder="e.g. Nutrition Pantry Schedules & Multilingual Brochure"
                   value={approvedMaterial}
                   onChange={(e) => setApprovedMaterial(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50"
+                  className="w-full px-3 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream"
                 />
               </div>
 
-              <div className="p-3 bg-teal-50 border border-teal-200 rounded-xl text-teal-900 text-[11px] flex items-start gap-2">
-                <Shield className="w-4 h-4 text-teal-700 shrink-0 mt-0.5" />
+              <div className="p-3 bg-phumulani-cream border border-phumulani-teal rounded-xl text-phumulani-earth text-[11px] flex items-start gap-2">
+                <Shield className="w-4 h-4 text-phumulani-earth shrink-0 mt-0.5" />
                 <span>
                   <strong>Anti-Surveillance Safeguard:</strong> Outreach forms must never gather identifiable survivor data or domestic violence crisis information. Confidential shelter venues are prohibited fail-closed.
                 </span>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+              <div className="flex justify-end gap-2 pt-2 border-t border-phumulani-cream">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 border border-slate-200 text-slate-700 font-semibold rounded-xl hover:bg-slate-50"
+                  className="px-4 py-2 border border-phumulani-cream text-phumulani-charcoal font-semibold rounded-xl hover:bg-phumulani-cream"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-teal-800 hover:bg-teal-900 text-white font-bold rounded-xl shadow-xs"
+                  className="px-5 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white font-bold rounded-xl shadow-xs"
                 >
                   Schedule Outreach
                 </button>

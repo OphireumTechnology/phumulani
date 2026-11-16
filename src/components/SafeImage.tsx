@@ -73,9 +73,9 @@ export const SafeImage: React.FC<SafeImageProps> = ({
         <div
           role="img"
           aria-label={alt || 'Phumulani Organization Logo'}
-          className={`flex items-center justify-center bg-[#104F57] text-white rounded-lg shadow-xs select-none ${className}`}
+          className={`flex items-center justify-center bg-phumulani-earth text-white rounded-lg shadow-xs select-none ${className}`}
         >
-          <div className="flex items-center justify-center font-serif font-black text-amber-400 text-lg tracking-wider">
+          <div className="flex items-center justify-center font-serif font-black text-phumulani-gold text-lg tracking-wider">
             P
           </div>
         </div>
@@ -87,12 +87,12 @@ export const SafeImage: React.FC<SafeImageProps> = ({
         <div
           role="img"
           aria-label={alt || 'Comfort Dondo, Founder and Executive Director of Phumulani'}
-          className={`flex flex-col items-center justify-center bg-gradient-to-br from-[#104F57] via-[#1a4046] to-[#633C69] text-white shadow-md border-2 border-amber-400/40 select-none ${className}`}
+          className={`flex flex-col items-center justify-center bg-gradient-to-br from-phumulani-earth to-phumulani-charcoal text-white shadow-md border-2 border-phumulani-gold select-none ${className}`}
         >
-          <span className="font-serif font-black text-amber-300 text-xl tracking-wider">
+          <span className="font-serif font-black text-phumulani-gold text-xl tracking-wider">
             {initials || 'CD'}
           </span>
-          <span className="text-[9px] uppercase tracking-wider font-semibold text-teal-100 opacity-90 mt-0.5">
+          <span className="text-[9px] uppercase tracking-wider font-semibold text-phumulani-cream mt-0.5">
             Founder
           </span>
         </div>
@@ -104,20 +104,20 @@ export const SafeImage: React.FC<SafeImageProps> = ({
         <div
           role="img"
           aria-label={alt || 'Phumulani Community Sanctuary and Sisterhood'}
-          className={`relative overflow-hidden bg-gradient-to-br from-[#104F57] via-[#194b52] to-[#633C69] text-white flex flex-col justify-between p-6 ${className}`}
+          className={`relative overflow-hidden bg-gradient-to-br from-phumulani-earth to-phumulani-charcoal text-white flex flex-col justify-between p-6 ${className}`}
         >
           <div className="space-y-1">
-            <span className="text-[10px] uppercase tracking-widest font-bold text-amber-300 bg-white/10 px-2 py-0.5 rounded">
+            <span className="text-[10px] uppercase tracking-widest font-bold text-phumulani-charcoal bg-phumulani-gold px-2 py-0.5 rounded">
               Cultural Sanctuary
             </span>
             <h4 className="font-serif text-lg font-bold text-white pt-1">
               Phumulani Sisterhood &amp; Healing
             </h4>
           </div>
-          <p className="text-xs text-teal-50/90 leading-relaxed max-w-sm">
+          <p className="text-xs text-phumulani-cream leading-relaxed max-w-sm">
             {fallbackText || 'A safe, culturally grounded haven empowering African immigrant and refugee survivors in Minnesota.'}
           </p>
-          <div className="flex items-center gap-2 text-[10px] font-semibold text-amber-200">
+          <div className="flex items-center gap-2 text-[10px] font-semibold text-phumulani-gold">
             <Shield className="w-3.5 h-3.5" />
             <span>Peace · Rest · Autonomy</span>
           </div>
@@ -130,7 +130,7 @@ export const SafeImage: React.FC<SafeImageProps> = ({
         <div
           role="img"
           aria-label={alt || 'Leadership Representative'}
-          className={`flex items-center justify-center bg-gradient-to-br from-[#104F57] to-[#633C69] text-white rounded-xl shadow-xs select-none font-bold text-sm tracking-wider ${className}`}
+          className={`flex items-center justify-center bg-gradient-to-br from-phumulani-earth to-phumulani-charcoal text-white rounded-xl shadow-xs select-none font-bold text-sm tracking-wider ${className}`}
         >
           <span>{initials || (alt ? alt.split(' ').map((n) => n[0]).join('').slice(0, 2) : 'PL')}</span>
         </div>
@@ -142,13 +142,13 @@ export const SafeImage: React.FC<SafeImageProps> = ({
         <div
           role="img"
           aria-label={alt || 'Phumulani Community Program'}
-          className={`flex flex-col items-center justify-center bg-gradient-to-br from-[#E8F3F1] to-teal-100/60 text-[#104F57] border border-teal-200 p-4 text-center select-none ${className}`}
+          className={`flex flex-col items-center justify-center bg-phumulani-cream text-phumulani-earth border border-phumulani-earth p-4 text-center select-none ${className}`}
         >
-          <Sparkles className="w-8 h-8 text-[#104F57] opacity-80 mb-2" />
-          <span className="font-serif font-bold text-xs text-slate-800 line-clamp-1">
+          <Sparkles className="w-8 h-8 text-phumulani-earth mb-2" />
+          <span className="font-serif font-bold text-xs text-phumulani-charcoal line-clamp-1">
             {fallbackText || alt || 'Community Program'}
           </span>
-          <span className="text-[10px] text-teal-800 font-semibold mt-0.5">Phumulani Initiative</span>
+          <span className="text-[10px] text-phumulani-earth font-semibold mt-0.5">Phumulani Initiative</span>
         </div>
       );
     }
@@ -158,13 +158,13 @@ export const SafeImage: React.FC<SafeImageProps> = ({
         <div
           role="img"
           aria-label={alt || 'Community Event'}
-          className={`flex flex-col items-center justify-center bg-gradient-to-br from-purple-50 to-amber-50 text-[#633C69] border border-purple-200 p-4 text-center select-none ${className}`}
+          className={`flex flex-col items-center justify-center bg-phumulani-cream text-phumulani-earth border border-phumulani-gold p-4 text-center select-none ${className}`}
         >
-          <Calendar className="w-8 h-8 text-[#633C69] opacity-80 mb-2" />
-          <span className="font-serif font-bold text-xs text-slate-900 line-clamp-1">
+          <Calendar className="w-8 h-8 text-phumulani-earth mb-2" />
+          <span className="font-serif font-bold text-xs text-phumulani-charcoal line-clamp-1">
             {fallbackText || alt || 'Community Gathering'}
           </span>
-          <span className="text-[10px] text-purple-700 font-semibold mt-0.5">Phumulani Community</span>
+          <span className="text-[10px] text-phumulani-earth font-semibold mt-0.5">Phumulani Community</span>
         </div>
       );
     }
@@ -174,10 +174,10 @@ export const SafeImage: React.FC<SafeImageProps> = ({
         <div
           role="img"
           aria-label={alt || 'Volunteer Community'}
-          className={`flex flex-col items-center justify-center bg-[#E8F3F1] text-[#104F57] p-4 text-center select-none ${className}`}
+          className={`flex flex-col items-center justify-center bg-phumulani-cream text-phumulani-earth p-4 text-center select-none ${className}`}
         >
-          <Users className="w-8 h-8 text-[#104F57] opacity-80 mb-2" />
-          <span className="font-serif font-bold text-xs text-slate-800">
+          <Users className="w-8 h-8 text-phumulani-earth mb-2" />
+          <span className="font-serif font-bold text-xs text-phumulani-charcoal">
             {fallbackText || alt || 'Community Volunteer Service'}
           </span>
         </div>
@@ -189,13 +189,13 @@ export const SafeImage: React.FC<SafeImageProps> = ({
         <div
           role="img"
           aria-label={alt || 'Authored Publication'}
-          className={`flex flex-col items-center justify-center bg-slate-900 text-amber-300 p-4 border border-amber-400/30 text-center select-none ${className}`}
+          className={`flex flex-col items-center justify-center bg-phumulani-charcoal text-phumulani-gold p-4 border border-phumulani-gold text-center select-none ${className}`}
         >
-          <BookOpen className="w-8 h-8 text-amber-400 mb-2" />
+          <BookOpen className="w-8 h-8 text-phumulani-gold mb-2" />
           <span className="font-serif font-bold text-xs text-white line-clamp-2">
             {fallbackText || alt || 'Comfort Dondo Publication'}
           </span>
-          <span className="text-[9px] uppercase tracking-wider text-amber-300 font-semibold mt-1">
+          <span className="text-[9px] uppercase tracking-wider text-phumulani-gold font-semibold mt-1">
             Survivor Literature
           </span>
         </div>
@@ -207,9 +207,9 @@ export const SafeImage: React.FC<SafeImageProps> = ({
       <div
         role="img"
         aria-label={alt || 'Phumulani Visual Asset'}
-        className={`flex items-center justify-center bg-slate-100 text-slate-400 p-2 text-center text-xs select-none ${className}`}
+        className={`flex items-center justify-center bg-phumulani-cream text-phumulani-charcoal p-2 text-center text-xs select-none ${className}`}
       >
-        <span className="font-medium text-[11px] text-slate-500">{fallbackText || alt || 'Phumulani Asset'}</span>
+        <span className="font-medium text-[11px] text-phumulani-charcoal">{fallbackText || alt || 'Phumulani Asset'}</span>
       </div>
     );
   }

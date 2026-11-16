@@ -618,11 +618,11 @@ export class MealService {
       .map(
         (row) => `
         <tr>
-          <td style="border: 1px solid #ddd; padding: 8px;">${row.indicatorCode}</td>
-          <td style="border: 1px solid #ddd; padding: 8px;">${row.indicatorName}</td>
-          <td style="border: 1px solid #ddd; padding: 8px; text-align: right;">${row.target.toLocaleString()} ${row.unit}</td>
-          <td style="border: 1px solid #ddd; padding: 8px; text-align: right; font-weight: bold;">${row.achieved.toLocaleString()} ${row.unit}</td>
-          <td style="border: 1px solid #ddd; padding: 8px; text-align: center;">${row.status}</td>
+          <td style="border: 1px solid #EFEBD1; padding: 8px;">${row.indicatorCode}</td>
+          <td style="border: 1px solid #EFEBD1; padding: 8px;">${row.indicatorName}</td>
+          <td style="border: 1px solid #EFEBD1; padding: 8px; text-align: right;">${row.target.toLocaleString()} ${row.unit}</td>
+          <td style="border: 1px solid #EFEBD1; padding: 8px; text-align: right; font-weight: bold;">${row.achieved.toLocaleString()} ${row.unit}</td>
+          <td style="border: 1px solid #EFEBD1; padding: 8px; text-align: center;">${row.status}</td>
         </tr>`
       )
       .join('');
@@ -633,13 +633,13 @@ export class MealService {
   <meta charset="utf-8">
   <title>${report.title} — Phumulani Official Impact Report</title>
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1f2937; margin: 40px; }
-    h1 { color: #881337; border-bottom: 2px solid #881337; padding-bottom: 10px; }
-    .meta-box { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 6px; padding: 16px; margin: 20px 0; font-size: 14px; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333333; background: #FFFFFF; margin: 40px; }
+    h1 { color: #B3340F; border-bottom: 2px solid #B3340F; padding-bottom: 10px; }
+    .meta-box { background: #EFEBD1; border: 1px solid #B3340F; border-radius: 6px; padding: 16px; margin: 20px 0; font-size: 14px; color: #333333; }
     table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-    th { background: #881337; color: white; padding: 10px; text-align: left; }
-    .callout { background: #fff1f2; border-left: 4px solid #be123c; padding: 12px; margin: 20px 0; }
-    .footer { font-size: 12px; color: #6b7280; margin-top: 40px; border-top: 1px solid #e5e7eb; padding-top: 10px; }
+    th { background: #B3340F; color: #FFFFFF; padding: 10px; text-align: left; }
+    .callout { background: #EFEBD1; border-left: 4px solid #EF5C2C; padding: 12px; margin: 20px 0; color: #333333; }
+    .footer { font-size: 12px; color: #333333; margin-top: 40px; border-top: 1px solid #B3340F; padding-top: 10px; }
   </style>
 </head>
 <body>

@@ -953,7 +953,7 @@ export class Phase36Service {
       wcagAaCriteriaPassing: 24,
       wcagAaCriteriaTotal: 24,
       touchTargetCompliancePercent: 100, // 44x44px minimum touch targets
-      colorContrastPassing: true, // Brand deep teal #104F57 against #FFFFFF exceeds 7:1
+      colorContrastPassing: true, // Brand Deep Earth #B3340F (6.15:1) and Charcoal #333333 (12.63:1) against #FFFFFF exceed WCAG AA 4.5:1
       reducedMotionRespected: true,
       keyboardFocusOrderValid: true,
       screenReaderAnnouncementsFunctional: true,

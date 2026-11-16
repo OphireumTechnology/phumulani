@@ -380,21 +380,21 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-xs border border-gray-200 overflow-hidden flex flex-col min-h-[750px]">
+    <div className="bg-white rounded-xl shadow-xs border border-phumulani-cream overflow-hidden flex flex-col min-h-[750px]">
       {/* 1. TOP HEADER & MODEL STATUS BAR */}
-      <div className="bg-gradient-to-r from-[#104F57] via-[#165B64] to-[#0A3C42] text-white px-6 py-4 flex flex-wrap items-center justify-between gap-4 border-b border-teal-800">
+      <div className="bg-phumulani-charcoal text-white px-6 py-4 flex flex-wrap items-center justify-between gap-4 border-b border-phumulani-teal">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-teal-400/20 flex items-center justify-center border border-teal-300/30">
-            <Sparkles className="w-6 h-6 text-teal-200" />
+          <div className="w-10 h-10 rounded-lg bg-phumulani-teal flex items-center justify-center border border-phumulani-teal">
+            <Sparkles className="w-6 h-6 text-phumulani-charcoal" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-xl font-bold tracking-tight text-white font-serif">Phumulani Ai</h2>
-              <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-teal-500/30 text-teal-100 border border-teal-300/30">
+              <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-phumulani-teal text-phumulani-charcoal border border-phumulani-teal">
                 Phase 65 Local LLM
               </span>
             </div>
-            <p className="text-xs text-teal-100/90">
+            <p className="text-xs text-phumulani-teal">
               Autonomous Fundraising Intelligence & Donor Engagement Assistant
             </p>
           </div>
@@ -403,13 +403,13 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
         {/* Autonomy Level & Local Runtime Controls */}
         <div className="flex flex-wrap items-center gap-2.5 text-xs">
           {/* Autonomy Selector */}
-          <div className="flex items-center gap-1.5 bg-black/25 px-2.5 py-1 rounded-lg border border-teal-300/30">
-            <Shield className="w-3.5 h-3.5 text-teal-300" />
-            <span className="text-teal-200 font-medium">Autonomy:</span>
+          <div className="flex items-center gap-1.5 bg-phumulani-charcoal px-2.5 py-1 rounded-lg border border-phumulani-teal">
+            <Shield className="w-3.5 h-3.5 text-phumulani-teal" />
+            <span className="text-phumulani-teal font-medium">Autonomy:</span>
             <select
               value={policy?.autonomyLevel || 2}
               onChange={(e) => handleAutonomyChange(parseInt(e.target.value, 10) as AutonomyLevel)}
-              className="bg-teal-900/80 text-white font-semibold text-xs rounded px-1.5 py-0.5 border border-teal-400/40 focus:outline-none cursor-pointer"
+              className="bg-phumulani-charcoal text-white font-semibold text-xs rounded px-1.5 py-0.5 border border-phumulani-teal focus:outline-none cursor-pointer"
             >
               <option value={1}>Level 1: Analyze Only</option>
               <option value={2}>Level 2: Draft & Recommend</option>
@@ -419,10 +419,10 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
           </div>
 
           {/* Truthful Multi-Model AI Runtime Indicator */}
-          <div className="flex items-center gap-2 bg-black/20 px-3 py-1 rounded-lg border border-white/10">
+          <div className="flex items-center gap-2 bg-phumulani-charcoal px-3 py-1 rounded-lg border border-phumulani-cream">
             <div className="flex items-center gap-1.5">
-              <Cpu className="w-3.5 h-3.5 text-teal-300" />
-              <span className="text-teal-200 font-medium">AI Engine:</span>
+              <Cpu className="w-3.5 h-3.5 text-phumulani-teal" />
+              <span className="text-phumulani-teal font-medium">AI Engine:</span>
               <span className="font-semibold text-white">
                 {aiTelemetry?.config?.geminiConfigured
                   ? `Gemini (${aiTelemetry?.config?.geminiModel || 'gemini-4-hydrogen'})`
@@ -431,16 +431,16 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                   : 'Deterministic Fallback'}
               </span>
             </div>
-            <span className="text-teal-400/50">|</span>
+            <span className="text-phumulani-teal">|</span>
             <div className="flex items-center gap-1.5">
               <div
                 className={`w-2 h-2 rounded-full ${
                   aiTelemetry?.config?.geminiConfigured || healthStatus?.status === 'healthy'
-                    ? 'bg-emerald-400 animate-pulse'
-                    : 'bg-amber-400'
+                    ? 'bg-phumulani-green animate-pulse'
+                    : 'bg-phumulani-gold'
                 }`}
               />
-              <span className="text-teal-100">
+              <span className="text-phumulani-teal">
                 {aiTelemetry?.config?.geminiConfigured
                   ? 'Gemini Live Ready'
                   : healthStatus?.status === 'healthy'
@@ -450,8 +450,8 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
             </div>
             {aiTelemetry?.telemetry && (
               <>
-                <span className="text-teal-400/50">|</span>
-                <span className="text-teal-200" title="Persisted AI invocations">
+                <span className="text-phumulani-teal">|</span>
+                <span className="text-phumulani-teal" title="Persisted AI invocations">
                   {aiTelemetry.telemetry.totalCalls || 0} calls · {aiTelemetry.telemetry.avgLatencyMs || 0}ms
                 </span>
               </>
@@ -459,7 +459,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
             <button
               onClick={refreshData}
               disabled={isLoadingHealth}
-              className="p-1 text-teal-200 hover:text-white transition-colors cursor-pointer"
+              className="p-1 text-phumulani-teal hover:text-white transition-colors cursor-pointer"
               title="Refresh AI health status and metrics"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isLoadingHealth ? 'animate-spin' : ''}`} />
@@ -469,7 +469,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
       </div>
 
       {/* 2. 12-SECTION HORIZONTAL TAB NAVIGATION */}
-      <div className="bg-gray-50 border-b border-gray-200 px-4 flex items-center gap-1 overflow-x-auto text-xs py-1.5 scrollbar-thin">
+      <div className="bg-phumulani-cream border-b border-phumulani-cream px-4 flex items-center gap-1 overflow-x-auto text-xs py-1.5 scrollbar-thin">
         {[
           { id: 'overview', label: 'AI Overview', icon: Sparkles },
           { id: 'prospects', label: 'Prospect Database', icon: Users },
@@ -493,11 +493,11 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
               onClick={() => setActiveSection(tab.id as PhumulaniAiSection)}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-md font-medium whitespace-nowrap transition-all ${
                 isActive
-                  ? 'bg-[#104F57] text-white shadow-xs'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+                  ? 'bg-phumulani-earth text-white shadow-xs'
+                  : 'text-phumulani-charcoal hover:text-phumulani-earth hover:bg-phumulani-cream'
               }`}
             >
-              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-teal-200' : 'text-gray-500'}`} />
+              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-phumulani-charcoal' : 'text-phumulani-charcoal'}`} />
               <span>{tab.label}</span>
             </button>
           );
@@ -512,89 +512,89 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
         {activeSection === 'overview' && (
           <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <div className="p-4 rounded-xl border border-teal-100 bg-teal-50/50">
-                <div className="flex items-center justify-between text-teal-800">
+              <div className="p-4 rounded-xl border border-phumulani-cream bg-phumulani-cream">
+                <div className="flex items-center justify-between text-phumulani-earth">
                   <span className="text-xs font-semibold uppercase tracking-wider">Active Prospects</span>
-                  <Users className="w-4 h-4 text-teal-600" />
+                  <Users className="w-4 h-4 text-phumulani-earth" />
                 </div>
-                <div className="text-2xl font-bold text-gray-900 mt-2">{prospects.length}</div>
-                <div className="text-xs text-gray-600 mt-1">Foundations & CSR programs</div>
+                <div className="text-2xl font-bold text-phumulani-charcoal mt-2">{prospects.length}</div>
+                <div className="text-xs text-phumulani-charcoal mt-1">Foundations & CSR programs</div>
               </div>
 
-              <div className="p-4 rounded-xl border border-blue-100 bg-blue-50/50">
-                <div className="flex items-center justify-between text-blue-800">
+              <div className="p-4 rounded-xl border border-phumulani-cream bg-phumulani-cream">
+                <div className="flex items-center justify-between text-phumulani-earth">
                   <span className="text-xs font-semibold uppercase tracking-wider">Campaigns Staged</span>
-                  <Send className="w-4 h-4 text-blue-600" />
+                  <Send className="w-4 h-4 text-phumulani-earth" />
                 </div>
-                <div className="text-2xl font-bold text-gray-900 mt-2">{campaigns.length}</div>
-                <div className="text-xs text-gray-600 mt-1">Pending staff review</div>
+                <div className="text-2xl font-bold text-phumulani-charcoal mt-2">{campaigns.length}</div>
+                <div className="text-xs text-phumulani-charcoal mt-1">Pending staff review</div>
               </div>
 
-              <div className="p-4 rounded-xl border border-amber-100 bg-amber-50/50">
-                <div className="flex items-center justify-between text-amber-800">
+              <div className="p-4 rounded-xl border border-phumulani-cream bg-phumulani-cream">
+                <div className="flex items-center justify-between text-phumulani-charcoal">
                   <span className="text-xs font-semibold uppercase tracking-wider">High-Interest Leads</span>
-                  <Award className="w-4 h-4 text-amber-600" />
+                  <Award className="w-4 h-4 text-phumulani-earth" />
                 </div>
-                <div className="text-2xl font-bold text-gray-900 mt-2">{highInterestLeads.length}</div>
-                <div className="text-xs text-gray-600 mt-1">Score ≥ 80 / Meeting signals</div>
+                <div className="text-2xl font-bold text-phumulani-charcoal mt-2">{highInterestLeads.length}</div>
+                <div className="text-xs text-phumulani-charcoal mt-1">Score ≥ 80 / Meeting signals</div>
               </div>
 
-              <div className="p-4 rounded-xl border border-purple-100 bg-purple-50/50">
-                <div className="flex items-center justify-between text-purple-800">
+              <div className="p-4 rounded-xl border border-phumulani-cream bg-phumulani-cream">
+                <div className="flex items-center justify-between text-phumulani-earth">
                   <span className="text-xs font-semibold uppercase tracking-wider">Proposals Drafted</span>
-                  <FileCheck className="w-4 h-4 text-purple-600" />
+                  <FileCheck className="w-4 h-4 text-phumulani-earth" />
                 </div>
-                <div className="text-2xl font-bold text-gray-900 mt-2">{proposals.length}</div>
-                <div className="text-xs text-gray-600 mt-1">Grounded in approved budgets</div>
+                <div className="text-2xl font-bold text-phumulani-charcoal mt-2">{proposals.length}</div>
+                <div className="text-xs text-phumulani-charcoal mt-1">Grounded in approved budgets</div>
               </div>
             </div>
 
             {/* Model & Architecture Status Card */}
-            <div className="p-5 rounded-xl border border-gray-200 bg-gray-50/50">
-              <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-                <Cpu className="w-4 h-4 text-[#104F57]" />
+            <div className="p-5 rounded-xl border border-phumulani-cream bg-phumulani-cream">
+              <h3 className="text-sm font-bold text-phumulani-charcoal flex items-center gap-2">
+                <Cpu className="w-4 h-4 text-phumulani-earth" />
                 Local LLM Inference & Windows Host Configuration (D:\PhumulaniAI)
               </h3>
               <div className="mt-3 grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
                 <div>
-                  <span className="text-gray-500 block">Configured Model:</span>
-                  <span className="font-semibold text-gray-900">
+                  <span className="text-phumulani-charcoal block">Configured Model:</span>
+                  <span className="font-semibold text-phumulani-charcoal">
                     {healthStatus?.modelId || 'llama3.2:3b (Meta Llama 3.2 3B Instruct)'}
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-500 block">Local Inference Endpoint:</span>
-                  <span className="font-semibold text-gray-900">http://127.0.0.1:11434 (Ollama)</span>
+                  <span className="text-phumulani-charcoal block">Local Inference Endpoint:</span>
+                  <span className="font-semibold text-phumulani-charcoal">http://127.0.0.1:11434 (Ollama)</span>
                 </div>
                 <div>
-                  <span className="text-gray-500 block">Fallback & Fail-Safe:</span>
-                  <span className="font-semibold text-emerald-700">Deterministic Rules & Cloud Hybrid</span>
+                  <span className="text-phumulani-charcoal block">Fallback & Fail-Safe:</span>
+                  <span className="font-semibold text-phumulani-earth">Deterministic Rules & Cloud Hybrid</span>
                 </div>
               </div>
 
-              <div className="mt-4 pt-4 border-t border-gray-200 flex flex-wrap items-center justify-between gap-3 text-xs text-gray-600">
+              <div className="mt-4 pt-4 border-t border-phumulani-cream flex flex-wrap items-center justify-between gap-3 text-xs text-phumulani-charcoal">
                 <span>
                   <strong>Windows Scripts:</strong> Staged at <code>scripts/windows/</code> (install, start, stop, check, sync-github).
                 </span>
-                <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-medium">
+                <span className="px-2 py-0.5 rounded bg-phumulani-cream text-phumulani-charcoal font-medium">
                   VAWA Section 1367 Safeguarding Firewall Active
                 </span>
               </div>
             </div>
 
             {/* Coordinated 12-Task AI Fundraising Workforce (Phase 70) */}
-            <div className="p-5 rounded-xl border border-teal-200 bg-teal-50/30 space-y-4">
+            <div className="p-5 rounded-xl border border-phumulani-teal bg-phumulani-cream space-y-4">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <Target className="w-4 h-4 text-[#104F57]" />
+                  <h3 className="text-sm font-bold text-phumulani-charcoal flex items-center gap-2">
+                    <Target className="w-4 h-4 text-phumulani-earth" />
                     Coordinated 12-Task AI Fundraising Workforce (Phase 70)
                   </h3>
-                  <p className="text-xs text-slate-600 mt-0.5">
+                  <p className="text-xs text-phumulani-charcoal mt-0.5">
                     Structured human-gated task agents grounded in verified institutional budgets and strict VAWA isolation.
                   </p>
                 </div>
-                <span className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-teal-100 text-teal-900 border border-teal-300">
+                <span className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-phumulani-cream text-phumulani-earth border border-phumulani-teal">
                   {workforceTasks.length} Tasks Registered
                 </span>
               </div>
@@ -603,27 +603,27 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                 {workforceTasks.map((task) => (
                   <div
                     key={task.taskId}
-                    className="p-3.5 rounded-xl bg-white border border-slate-200 flex flex-col justify-between space-y-2 text-xs shadow-2xs"
+                    className="p-3.5 rounded-xl bg-white border border-phumulani-cream flex flex-col justify-between space-y-2 text-xs shadow-2xs"
                   >
                     <div>
                       <div className="flex items-center justify-between gap-2 mb-1">
-                        <span className="font-mono text-[10px] font-bold bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded">
+                        <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal px-1.5 py-0.5 rounded">
                           {task.taskId}
                         </span>
-                        <span className="text-[10px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">
+                        <span className="text-[10px] font-semibold text-phumulani-charcoal bg-phumulani-cream border border-phumulani-gold px-1.5 py-0.5 rounded">
                           {task.humanGate || 'Human Review'}
                         </span>
                       </div>
-                      <h4 className="font-bold text-slate-900">{task.title}</h4>
-                      <p className="text-[11px] text-slate-500 mt-0.5">{task.description}</p>
+                      <h4 className="font-bold text-phumulani-charcoal">{task.title}</h4>
+                      <p className="text-[11px] text-phumulani-charcoal mt-0.5">{task.description}</p>
                     </div>
-                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-                      <span className="text-[10px] font-mono text-slate-400">{task.scope}</span>
+                    <div className="pt-2 border-t border-phumulani-cream flex items-center justify-between">
+                      <span className="text-[10px] font-mono text-phumulani-charcoal">{task.scope}</span>
                       <button
                         type="button"
                         disabled={executingTaskId === task.taskId}
                         onClick={() => handleExecuteWorkforceTask(task.taskId)}
-                        className="px-2.5 py-1 bg-[#104F57] hover:bg-teal-800 text-white rounded-lg text-[11px] font-semibold cursor-pointer disabled:opacity-50"
+                        className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-[11px] font-semibold cursor-pointer disabled:opacity-50"
                       >
                         {executingTaskId === task.taskId ? 'Running...' : 'Run Task'}
                       </button>
@@ -633,23 +633,23 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
               </div>
 
               {workforceResult && (
-                <div className="p-3.5 rounded-xl bg-white border border-teal-300 text-xs space-y-1.5">
+                <div className="p-3.5 rounded-xl bg-white border border-phumulani-teal text-xs space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-teal-950">
+                    <span className="font-bold text-phumulani-earth">
                       Execution Result: {workforceResult.taskId} — {workforceResult.title || ''}
                     </span>
                     <button
                       type="button"
                       onClick={() => setWorkforceResult(null)}
-                      className="text-slate-400 hover:text-slate-700 font-bold"
+                      className="text-phumulani-charcoal hover:text-phumulani-earth font-bold"
                     >
                       ✕
                     </button>
                   </div>
                   {workforceResult.error ? (
-                    <p className="text-rose-700 font-medium">{workforceResult.error}</p>
+                    <p className="text-phumulani-earth font-medium">{workforceResult.error}</p>
                   ) : (
-                    <pre className="p-2.5 bg-slate-900 text-teal-200 rounded-lg font-mono text-[11px] overflow-x-auto max-h-48">
+                    <pre className="p-2.5 bg-phumulani-charcoal text-phumulani-teal rounded-lg font-mono text-[11px] overflow-x-auto max-h-48">
                       {JSON.stringify(workforceResult.artifact || workforceResult, null, 2)}
                     </pre>
                   )}
@@ -658,15 +658,15 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
             </div>
 
             {/* System Prompt Inspector */}
-            <div className="p-5 rounded-xl border border-gray-200 bg-white shadow-xs">
+            <div className="p-5 rounded-xl border border-phumulani-cream bg-white shadow-xs">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
-                  <ShieldCheck className="w-4 h-4 text-teal-700" />
+                <h3 className="text-sm font-bold text-phumulani-charcoal flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-phumulani-earth" />
                   Phumulani Ai Canonical System Prompt & Non-Delegable Constraints
                 </h3>
-                <span className="text-xs text-gray-500 font-mono">v65.1-canonical</span>
+                <span className="text-xs text-phumulani-charcoal font-mono">v65.1-canonical</span>
               </div>
-              <pre className="mt-3 p-4 bg-gray-900 text-teal-300 font-mono text-xs rounded-lg overflow-x-auto max-h-60 whitespace-pre-wrap leading-relaxed">
+              <pre className="mt-3 p-4 bg-phumulani-charcoal text-phumulani-teal font-mono text-xs rounded-lg overflow-x-auto max-h-60 whitespace-pre-wrap leading-relaxed">
                 {healthStatus?.canonicalSystemPrompt ||
                   'Phumulani Ai Canonical System Prompt: Autonomous fundraising intelligence bounded by Section 7 non-delegable donor safeguards, verifiable institutional source grounding, and mandatory human authorization for donor outbound communications.'}
               </pre>
@@ -681,15 +681,15 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-gray-900">Fundraising Prospect Database</h3>
-                <p className="text-xs text-gray-500">Verified Minnesota foundations, corporate CSR leads, and sponsors</p>
+                <h3 className="text-base font-bold text-phumulani-charcoal">Fundraising Prospect Database</h3>
+                <p className="text-xs text-phumulani-charcoal">Verified Minnesota foundations, corporate CSR leads, and sponsors</p>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-600">Selected for Matching:</span>
+                <span className="text-xs text-phumulani-charcoal">Selected for Matching:</span>
                 <select
                   value={selectedProspectId}
                   onChange={(e) => setSelectedProspectId(e.target.value)}
-                  className="px-3 py-1.5 text-xs border border-gray-300 rounded-lg bg-white font-medium text-gray-800"
+                  className="px-3 py-1.5 text-xs border border-phumulani-cream rounded-lg bg-white font-medium text-phumulani-charcoal"
                 >
                   {prospects.map((p) => (
                     <option key={p.id} value={p.id}>
@@ -700,9 +700,9 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
               </div>
             </div>
 
-            <div className="border border-gray-200 rounded-lg overflow-hidden">
-              <table className="min-w-full divide-y divide-gray-200 text-xs">
-                <thead className="bg-gray-50 text-gray-700 font-semibold">
+            <div className="border border-phumulani-cream rounded-lg overflow-hidden">
+              <table className="min-w-full divide-y divide-phumulani-cream text-xs">
+                <thead className="bg-phumulani-cream text-phumulani-charcoal font-semibold">
                   <tr>
                     <th className="px-4 py-3 text-left">Organization & Contact</th>
                     <th className="px-4 py-3 text-left">Type</th>
@@ -713,32 +713,32 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                     <th className="px-4 py-3 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+                <tbody className="divide-y divide-phumulani-cream bg-white">
                   {prospects.map((prospect) => (
                     <tr
                       key={prospect.id}
-                      className={`hover:bg-teal-50/40 transition-colors ${
-                        selectedProspectId === prospect.id ? 'bg-teal-50/60 font-medium' : ''
+                      className={`hover:bg-phumulani-cream transition-colors ${
+                        selectedProspectId === prospect.id ? 'bg-phumulani-cream font-medium' : ''
                       }`}
                     >
                       <td className="px-4 py-3">
-                        <div className="font-bold text-gray-900">{prospect.organizationName}</div>
-                        <div className="text-gray-500 text-[11px]">
+                        <div className="font-bold text-phumulani-charcoal">{prospect.organizationName}</div>
+                        <div className="text-phumulani-charcoal text-[11px]">
                           {prospect.contactName} • {prospect.contactEmail}
                         </div>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-gray-100 text-gray-700 capitalize">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-phumulani-cream text-phumulani-charcoal capitalize">
                           {prospect.prospectType.replace('_', ' ')}
                         </span>
                       </td>
-                      <td className="px-4 py-3 font-semibold text-gray-800">
+                      <td className="px-4 py-3 font-semibold text-phumulani-charcoal">
                         ${prospect.estimatedCapacity.toLocaleString()}
                       </td>
-                      <td className="px-4 py-3 text-gray-600">
+                      <td className="px-4 py-3 text-phumulani-charcoal">
                         <div className="flex flex-wrap gap-1 max-w-xs">
                           {prospect.areasOfInterest.map((a, i) => (
-                            <span key={i} className="px-1.5 py-0.5 rounded bg-gray-100 text-[10px] text-gray-600">
+                            <span key={i} className="px-1.5 py-0.5 rounded bg-phumulani-cream text-[10px] text-phumulani-charcoal">
                               {a}
                             </span>
                           ))}
@@ -746,20 +746,20 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                       </td>
                       <td className="px-4 py-3">
                         {prospect.optOut ? (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-700">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-phumulani-cream text-phumulani-earth">
                             OPTED OUT
                           </span>
                         ) : (
-                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-blue-100 text-blue-700 capitalize">
+                          <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-phumulani-cream text-phumulani-earth capitalize">
                             {prospect.status.replace('_', ' ')}
                           </span>
                         )}
                       </td>
                       <td className="px-4 py-3">
-                        <div className="flex items-center gap-1.5 font-bold text-teal-800">
+                        <div className="flex items-center gap-1.5 font-bold text-phumulani-earth">
                           <span className="w-7 text-right">{prospect.matchScore}%</span>
-                          <div className="w-16 h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                            <div className="h-full bg-teal-600 rounded-full" style={{ width: `${prospect.matchScore}%` }} />
+                          <div className="w-16 h-1.5 bg-phumulani-cream rounded-full overflow-hidden">
+                            <div className="h-full bg-phumulani-earth rounded-full" style={{ width: `${prospect.matchScore}%` }} />
                           </div>
                         </div>
                       </td>
@@ -769,7 +769,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                             setSelectedProspectId(prospect.id);
                             setActiveSection('program_matching');
                           }}
-                          className="px-2.5 py-1 rounded bg-[#104F57] text-white hover:bg-teal-800 transition-colors font-medium text-[11px]"
+                          className="px-2.5 py-1 rounded bg-phumulani-earth text-white hover:bg-phumulani-orange transition-colors font-medium text-[11px]"
                         >
                           Match Program
                         </button>
@@ -787,21 +787,21 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
         {/* ================================================================= */}
         {activeSection === 'program_matching' && (
           <div className="space-y-6">
-            <div className="p-4 rounded-xl bg-teal-50 border border-teal-200 flex flex-wrap items-center justify-between gap-4">
+            <div className="p-4 rounded-xl bg-phumulani-cream border border-phumulani-teal flex flex-wrap items-center justify-between gap-4">
               <div>
-                <h3 className="text-sm font-bold text-teal-950">
+                <h3 className="text-sm font-bold text-phumulani-earth">
                   Target Prospect: {prospects.find((p) => p.id === selectedProspectId)?.organizationName}
                 </h3>
-                <p className="text-xs text-teal-800 mt-0.5">
+                <p className="text-xs text-phumulani-earth mt-0.5">
                   Evaluated across 4 transparent criteria: Interest Fit (40%), Geographic Fit (20%), Budget Alignment (20%), Historical Fit (20%)
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-600">Switch Prospect:</span>
+                <span className="text-xs text-phumulani-charcoal">Switch Prospect:</span>
                 <select
                   value={selectedProspectId}
                   onChange={(e) => setSelectedProspectId(e.target.value)}
-                  className="px-3 py-1 text-xs border border-teal-300 rounded-lg bg-white"
+                  className="px-3 py-1 text-xs border border-phumulani-teal rounded-lg bg-white"
                 >
                   {prospects.map((p) => (
                     <option key={p.id} value={p.id}>
@@ -814,51 +814,51 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {matches.map((match) => (
-                <div key={match.programId} className="p-5 rounded-xl border border-gray-200 bg-white shadow-xs space-y-3">
+                <div key={match.programId} className="p-5 rounded-xl border border-phumulani-cream bg-white shadow-xs space-y-3">
                   <div className="flex items-start justify-between">
                     <div>
-                      <div className="text-xs font-semibold text-teal-700">{match.programId}</div>
-                      <h4 className="text-sm font-bold text-gray-900">{match.programTitle}</h4>
+                      <div className="text-xs font-semibold text-phumulani-earth">{match.programId}</div>
+                      <h4 className="text-sm font-bold text-phumulani-charcoal">{match.programTitle}</h4>
                     </div>
                     <div className="flex flex-col items-end">
-                      <span className="text-xl font-bold text-teal-800">{match.matchScore}%</span>
-                      <span className="text-[10px] text-gray-500 uppercase font-medium">Match Score</span>
+                      <span className="text-xl font-bold text-phumulani-earth">{match.matchScore}%</span>
+                      <span className="text-[10px] text-phumulani-charcoal uppercase font-medium">Match Score</span>
                     </div>
                   </div>
 
                   {/* Criteria Score Breakdown */}
-                  <div className="grid grid-cols-4 gap-2 pt-2 border-t border-gray-100 text-[11px] text-center">
-                    <div className="p-2 rounded bg-gray-50">
-                      <span className="text-gray-500 block text-[10px]">Interest Fit</span>
-                      <span className="font-bold text-gray-900">{match.criteriaScores.interestFit}/40</span>
+                  <div className="grid grid-cols-4 gap-2 pt-2 border-t border-phumulani-cream text-[11px] text-center">
+                    <div className="p-2 rounded bg-phumulani-cream">
+                      <span className="text-phumulani-charcoal block text-[10px]">Interest Fit</span>
+                      <span className="font-bold text-phumulani-charcoal">{match.criteriaScores.interestFit}/40</span>
                     </div>
-                    <div className="p-2 rounded bg-gray-50">
-                      <span className="text-gray-500 block text-[10px]">Geographic</span>
-                      <span className="font-bold text-gray-900">{match.criteriaScores.geographicFit}/20</span>
+                    <div className="p-2 rounded bg-phumulani-cream">
+                      <span className="text-phumulani-charcoal block text-[10px]">Geographic</span>
+                      <span className="font-bold text-phumulani-charcoal">{match.criteriaScores.geographicFit}/20</span>
                     </div>
-                    <div className="p-2 rounded bg-gray-50">
-                      <span className="text-gray-500 block text-[10px]">Budget</span>
-                      <span className="font-bold text-gray-900">{match.criteriaScores.budgetAlignment}/20</span>
+                    <div className="p-2 rounded bg-phumulani-cream">
+                      <span className="text-phumulani-charcoal block text-[10px]">Budget</span>
+                      <span className="font-bold text-phumulani-charcoal">{match.criteriaScores.budgetAlignment}/20</span>
                     </div>
-                    <div className="p-2 rounded bg-gray-50">
-                      <span className="text-gray-500 block text-[10px]">Historical</span>
-                      <span className="font-bold text-gray-900">{match.criteriaScores.historicalFit}/20</span>
+                    <div className="p-2 rounded bg-phumulani-cream">
+                      <span className="text-phumulani-charcoal block text-[10px]">Historical</span>
+                      <span className="font-bold text-phumulani-charcoal">{match.criteriaScores.historicalFit}/20</span>
                     </div>
                   </div>
 
-                  <p className="text-xs text-gray-700 leading-relaxed bg-gray-50/80 p-2.5 rounded border border-gray-100">
+                  <p className="text-xs text-phumulani-charcoal leading-relaxed bg-phumulani-cream p-2.5 rounded border border-phumulani-cream">
                     <strong>Evidence:</strong> {match.rationale}
                   </p>
 
-                  <div className="flex items-center justify-between text-xs text-gray-600 pt-2 border-t border-gray-100">
+                  <div className="flex items-center justify-between text-xs text-phumulani-charcoal pt-2 border-t border-phumulani-cream">
                     <span>
-                      Recommended Ask: <strong className="text-teal-900">${match.recommendedAsk.toLocaleString()}</strong>
+                      Recommended Ask: <strong className="text-phumulani-earth">${match.recommendedAsk.toLocaleString()}</strong>
                     </span>
                     <button
                       onClick={() => {
                         setActiveSection('campaign_builder');
                       }}
-                      className="px-3 py-1 bg-[#104F57] text-white rounded text-xs hover:bg-teal-800 font-medium"
+                      className="px-3 py-1 bg-phumulani-earth text-white rounded text-xs hover:bg-phumulani-orange font-medium"
                     >
                       Stage in Campaign
                     </button>
@@ -874,18 +874,18 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
         {/* ================================================================= */}
         {activeSection === 'campaign_builder' && (
           <div className="space-y-6">
-            <div className="p-4 rounded-xl border border-blue-200 bg-blue-50/60">
-              <h3 className="text-sm font-bold text-blue-950 flex items-center gap-2">
-                <Send className="w-4 h-4 text-blue-700" />
+            <div className="p-4 rounded-xl border border-phumulani-teal bg-phumulani-cream">
+              <h3 className="text-sm font-bold text-phumulani-earth flex items-center gap-2">
+                <Send className="w-4 h-4 text-phumulani-earth" />
                 AI Campaign Builder with Mandatory Human-in-the-Loop Gate
               </h3>
-              <p className="text-xs text-blue-900 mt-1">
+              <p className="text-xs text-phumulani-earth mt-1">
                 Phumulani Ai generates individualized prospect solicitations. In accordance with Section 7 of the Platform Policy, initial outreach campaigns require explicit human staff approval prior to email queueing.
               </p>
             </div>
 
             <div className="flex justify-between items-center">
-              <h4 className="text-sm font-bold text-gray-900">Active & Staged Campaigns ({campaigns.length})</h4>
+              <h4 className="text-sm font-bold text-phumulani-charcoal">Active & Staged Campaigns ({campaigns.length})</h4>
               <button
                 onClick={async () => {
                   await phumulaniApiClient.generateCampaign({
@@ -897,7 +897,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                   });
                   refreshData();
                 }}
-                className="px-3 py-1.5 bg-[#104F57] text-white rounded-lg text-xs hover:bg-teal-800 font-medium flex items-center gap-1.5"
+                className="px-3 py-1.5 bg-phumulani-earth text-white rounded-lg text-xs hover:bg-phumulani-orange font-medium flex items-center gap-1.5"
               >
                 <Plus className="w-3.5 h-3.5" />
                 Generate New Campaign
@@ -906,27 +906,27 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
 
             <div className="space-y-3">
               {campaigns.length === 0 ? (
-                <div className="text-center py-8 text-gray-500 text-xs border border-dashed rounded-lg">
+                <div className="text-center py-8 text-phumulani-charcoal text-xs border border-dashed rounded-lg">
                   No campaigns currently staged. Click "Generate New Campaign" above.
                 </div>
               ) : (
                 campaigns.map((camp) => (
-                  <div key={camp.id} className="p-4 rounded-xl border border-gray-200 bg-white shadow-xs space-y-3">
+                  <div key={camp.id} className="p-4 rounded-xl border border-phumulani-cream bg-white shadow-xs space-y-3">
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="flex items-center gap-2">
-                          <h4 className="text-sm font-bold text-gray-900">{camp.title}</h4>
+                          <h4 className="text-sm font-bold text-phumulani-charcoal">{camp.title}</h4>
                           <span
                             className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
                               camp.approvalStatus === 'approved'
-                                ? 'bg-emerald-100 text-emerald-800'
-                                : 'bg-amber-100 text-amber-800'
+                                ? 'bg-phumulani-cream text-phumulani-charcoal'
+                                : 'bg-phumulani-cream text-phumulani-charcoal'
                             }`}
                           >
                             {camp.approvalStatus === 'approved' ? 'Staff Approved' : 'Pending Human Approval'}
                           </span>
                         </div>
-                        <p className="text-xs text-gray-500 mt-0.5">
+                        <p className="text-xs text-phumulani-charcoal mt-0.5">
                           Target Program: {camp.programName} • Sender: {camp.senderMailbox} • Prospects: {camp.prospectCount}
                         </p>
                       </div>
@@ -934,7 +934,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                       {camp.approvalStatus === 'pending' && (
                         <button
                           onClick={() => handleApproveCampaign(camp.id)}
-                          className="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 flex items-center gap-1.5 shadow-xs"
+                          className="px-3 py-1.5 rounded-lg bg-phumulani-green text-phumulani-charcoal text-xs font-semibold hover:bg-phumulani-teal flex items-center gap-1.5 shadow-xs"
                         >
                           <Check className="w-3.5 h-3.5" />
                           Approve Campaign
@@ -942,7 +942,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                       )}
                     </div>
 
-                    <div className="bg-gray-50 p-3 rounded border border-gray-100 text-xs text-gray-700 font-mono whitespace-pre-wrap">
+                    <div className="bg-phumulani-cream p-3 rounded border border-phumulani-cream text-xs text-phumulani-charcoal font-mono whitespace-pre-wrap">
                       <strong>Subject:</strong> {camp.templateSubject}
                       <br />
                       <br />
@@ -960,31 +960,31 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
         {/* ================================================================= */}
         {activeSection === 'priority_inbox' && (
           <div className="space-y-6">
-            <div className="p-4 rounded-xl border border-gray-200 bg-gray-50/70">
-              <h3 className="text-sm font-bold text-gray-900">Phumulani Ai Email Priority Engine (P0–P4)</h3>
-              <p className="text-xs text-gray-600 mt-1">
+            <div className="p-4 rounded-xl border border-phumulani-cream bg-phumulani-cream">
+              <h3 className="text-sm font-bold text-phumulani-charcoal">Phumulani Ai Email Priority Engine (P0–P4)</h3>
+              <p className="text-xs text-phumulani-charcoal mt-1">
                 Evaluates incoming donor and community correspondence, separating operational urgency from donor interest. Automatically intercepts crisis safeguarding content into P0 quarantine.
               </p>
 
               {/* Priority Tier Guide */}
               <div className="grid grid-cols-5 gap-2 mt-3 text-center text-xs">
-                <div className="p-2 rounded bg-red-100 border border-red-200 text-red-900">
+                <div className="p-2 rounded bg-phumulani-cream border border-phumulani-earth text-phumulani-earth">
                   <div className="font-bold">P0</div>
                   <div className="text-[10px]">Restricted Safety Quarantine</div>
                 </div>
-                <div className="p-2 rounded bg-amber-100 border border-amber-200 text-amber-900">
+                <div className="p-2 rounded bg-phumulani-cream border border-phumulani-gold text-phumulani-charcoal">
                   <div className="font-bold">P1</div>
                   <div className="text-[10px]">Urgent Funding / Meeting</div>
                 </div>
-                <div className="p-2 rounded bg-blue-100 border border-blue-200 text-blue-900">
+                <div className="p-2 rounded bg-phumulani-cream border border-phumulani-teal text-phumulani-earth">
                   <div className="font-bold">P2</div>
                   <div className="text-[10px]">Positive Funding Interest</div>
                 </div>
-                <div className="p-2 rounded bg-gray-100 border border-gray-200 text-gray-800">
+                <div className="p-2 rounded bg-phumulani-cream border border-phumulani-cream text-phumulani-charcoal">
                   <div className="font-bold">P3</div>
                   <div className="text-[10px]">Routine Correspondence</div>
                 </div>
-                <div className="p-2 rounded bg-slate-100 border border-slate-200 text-slate-700">
+                <div className="p-2 rounded bg-phumulani-cream border border-phumulani-cream text-phumulani-charcoal">
                   <div className="font-bold">P4</div>
                   <div className="text-[10px]">Informational / General</div>
                 </div>
@@ -992,30 +992,30 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
             </div>
 
             {/* Live Interactive Tester */}
-            <div className="p-5 rounded-xl border border-gray-200 bg-white space-y-4">
-              <h4 className="text-xs font-bold text-gray-900 uppercase tracking-wider">Test Priority Classification</h4>
+            <div className="p-5 rounded-xl border border-phumulani-cream bg-white space-y-4">
+              <h4 className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wider">Test Priority Classification</h4>
               <div>
-                <label className="text-xs font-medium text-gray-700 block mb-1">Incoming Email Subject:</label>
+                <label className="text-xs font-medium text-phumulani-charcoal block mb-1">Incoming Email Subject:</label>
                 <input
                   type="text"
                   value={emailSubjectInput}
                   onChange={(e) => setEmailSubjectInput(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg"
+                  className="w-full px-3 py-2 text-xs border border-phumulani-cream rounded-lg"
                 />
               </div>
               <div>
-                <label className="text-xs font-medium text-gray-700 block mb-1">Incoming Email Body:</label>
+                <label className="text-xs font-medium text-phumulani-charcoal block mb-1">Incoming Email Body:</label>
                 <textarea
                   rows={4}
                   value={emailBodyInput}
                   onChange={(e) => setEmailBodyInput(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg font-mono"
+                  className="w-full px-3 py-2 text-xs border border-phumulani-cream rounded-lg font-mono"
                 />
               </div>
 
               <button
                 onClick={handleTestEmailClassification}
-                className="px-4 py-2 bg-[#104F57] text-white rounded-lg text-xs font-semibold hover:bg-teal-800"
+                className="px-4 py-2 bg-phumulani-earth text-white rounded-lg text-xs font-semibold hover:bg-phumulani-orange"
               >
                 Analyze & Classify Correspondence
               </button>
@@ -1024,10 +1024,10 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                 <div
                   className={`mt-4 p-4 rounded-xl border text-xs space-y-2 ${
                     classificationResult.priority === 'P0'
-                      ? 'bg-red-50 border-red-300 text-red-950'
+                      ? 'bg-phumulani-cream border-phumulani-earth text-phumulani-earth'
                       : classificationResult.priority === 'P1'
-                      ? 'bg-amber-50 border-amber-300 text-amber-950'
-                      : 'bg-emerald-50 border-emerald-300 text-emerald-950'
+                      ? 'bg-phumulani-cream border-phumulani-gold text-phumulani-charcoal'
+                      : 'bg-phumulani-cream border-phumulani-green text-phumulani-charcoal'
                   }`}
                 >
                   <div className="flex items-center justify-between">
@@ -1053,30 +1053,30 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
         {/* ================================================================= */}
         {activeSection === 'donor_interest' && (
           <div className="space-y-6">
-            <div className="p-4 rounded-xl border border-gray-200 bg-teal-50/50">
-              <h3 className="text-sm font-bold text-teal-950">Donor Interest Scoring (0–100 Scale)</h3>
-              <p className="text-xs text-teal-900 mt-1">
+            <div className="p-4 rounded-xl border border-phumulani-cream bg-phumulani-cream">
+              <h3 className="text-sm font-bold text-phumulani-earth">Donor Interest Scoring (0–100 Scale)</h3>
+              <p className="text-xs text-phumulani-earth mt-1">
                 Estimates funder engagement from observable signals (responsiveness, specificity, meeting willingness).
-                <strong className="block mt-1 text-red-700">Hard Rule: An explicit opt-out overrides all scoring and permanently halts solicitation.</strong>
+                <strong className="block mt-1 text-phumulani-earth">Hard Rule: An explicit opt-out overrides all scoring and permanently halts solicitation.</strong>
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {prospects.map((p) => (
-                <div key={p.id} className="p-4 rounded-xl border border-gray-200 bg-white shadow-xs space-y-3">
+                <div key={p.id} className="p-4 rounded-xl border border-phumulani-cream bg-white shadow-xs space-y-3">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h4 className="text-sm font-bold text-gray-900">{p.organizationName}</h4>
-                      <p className="text-xs text-gray-500">{p.contactName} ({p.contactEmail})</p>
+                      <h4 className="text-sm font-bold text-phumulani-charcoal">{p.organizationName}</h4>
+                      <p className="text-xs text-phumulani-charcoal">{p.contactName} ({p.contactEmail})</p>
                     </div>
                     {p.optOut ? (
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-red-100 text-red-700">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-phumulani-cream text-phumulani-earth">
                         OPTED OUT (0/100)
                       </span>
                     ) : (
                       <div className="text-right">
-                        <span className="text-xl font-bold text-teal-800">{p.interestScore}/100</span>
-                        <div className="text-[10px] text-gray-500 uppercase font-semibold">
+                        <span className="text-xl font-bold text-phumulani-earth">{p.interestScore}/100</span>
+                        <div className="text-[10px] text-phumulani-charcoal uppercase font-semibold">
                           {p.interestScore >= 80
                             ? 'High Engagement'
                             : p.interestScore >= 60
@@ -1091,22 +1091,22 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                     )}
                   </div>
 
-                  <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+                  <div className="w-full h-2 bg-phumulani-cream rounded-full overflow-hidden">
                     <div
                       className={`h-full rounded-full ${
                         p.optOut
-                          ? 'bg-red-400'
+                          ? 'bg-phumulani-orange'
                           : p.interestScore >= 80
-                          ? 'bg-emerald-500'
+                          ? 'bg-phumulani-green'
                           : p.interestScore >= 60
-                          ? 'bg-teal-500'
-                          : 'bg-amber-400'
+                          ? 'bg-phumulani-teal'
+                          : 'bg-phumulani-gold'
                       }`}
                       style={{ width: `${p.optOut ? 0 : p.interestScore}%` }}
                     />
                   </div>
 
-                  <div className="flex items-center justify-between text-[11px] text-gray-600 pt-2 border-t border-gray-100">
+                  <div className="flex items-center justify-between text-[11px] text-phumulani-charcoal pt-2 border-t border-phumulani-cream">
                     <span>Program: {p.matchedProgramName || 'Healing Homes Housing'}</span>
                     {!p.optOut && (
                       <button
@@ -1114,7 +1114,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                           await phumulaniApiClient.optOutProspect(p.id);
                           refreshData();
                         }}
-                        className="text-red-600 hover:text-red-800 font-semibold"
+                        className="text-phumulani-earth hover:text-phumulani-earth font-semibold"
                       >
                         Simulate Opt-Out
                       </button>
@@ -1124,7 +1124,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
               ))}
             </div>
 
-            <p className="text-xs text-gray-500 italic text-center">
+            <p className="text-xs text-phumulani-charcoal italic text-center">
               Notice: Engagement scores represent internal behavioral classifications based on email signals; they do not represent statistical guarantees of grant awards.
             </p>
           </div>
@@ -1137,8 +1137,8 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-gray-900">Context-Aware AI Reply Drafts</h3>
-                <p className="text-xs text-gray-500">Grounded in verified program budgets and objectives</p>
+                <h3 className="text-sm font-bold text-phumulani-charcoal">Context-Aware AI Reply Drafts</h3>
+                <p className="text-xs text-phumulani-charcoal">Grounded in verified program budgets and objectives</p>
               </div>
               <button
                 onClick={async () => {
@@ -1151,7 +1151,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                   });
                   refreshData();
                 }}
-                className="px-3 py-1.5 bg-[#104F57] text-white rounded text-xs hover:bg-teal-800 font-semibold flex items-center gap-1.5"
+                className="px-3 py-1.5 bg-phumulani-earth text-white rounded text-xs hover:bg-phumulani-orange font-semibold flex items-center gap-1.5"
               >
                 <Plus className="w-3.5 h-3.5" />
                 Draft Grounded Reply
@@ -1160,29 +1160,29 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
 
             <div className="space-y-3">
               {replyDrafts.length === 0 ? (
-                <div className="text-center py-8 text-gray-500 text-xs border border-dashed rounded-lg">
+                <div className="text-center py-8 text-phumulani-charcoal text-xs border border-dashed rounded-lg">
                   No reply drafts pending review. Click "Draft Grounded Reply" above.
                 </div>
               ) : (
                 replyDrafts.map((draft) => (
-                  <div key={draft.id} className="p-4 rounded-xl border border-gray-200 bg-white shadow-xs space-y-3">
+                  <div key={draft.id} className="p-4 rounded-xl border border-phumulani-cream bg-white shadow-xs space-y-3">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h4 className="text-sm font-bold text-gray-900">{draft.suggestedSubject}</h4>
-                        <p className="text-xs text-gray-500">
+                        <h4 className="text-sm font-bold text-phumulani-charcoal">{draft.suggestedSubject}</h4>
+                        <p className="text-xs text-phumulani-charcoal">
                           To: {draft.prospectName} ({draft.prospectEmail}) • Program: {draft.programName}
                         </p>
                       </div>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 uppercase">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal uppercase">
                         Pending Staff Review
                       </span>
                     </div>
 
-                    <div className="p-3 bg-gray-50 rounded border border-gray-100 text-xs text-gray-800 font-mono whitespace-pre-wrap leading-relaxed">
+                    <div className="p-3 bg-phumulani-cream rounded border border-phumulani-cream text-xs text-phumulani-charcoal font-mono whitespace-pre-wrap leading-relaxed">
                       {draft.suggestedBody}
                     </div>
 
-                    <div className="flex flex-wrap items-center justify-between text-[11px] text-gray-500 pt-2 border-t border-gray-100">
+                    <div className="flex flex-wrap items-center justify-between text-[11px] text-phumulani-charcoal pt-2 border-t border-phumulani-cream">
                       <span>Verified Facts: {draft.verifiedFactsUsed.join(' • ')}</span>
                       <div className="flex gap-2">
                         <button
@@ -1190,7 +1190,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                             draft.approvalStatus = 'approved';
                             refreshData();
                           }}
-                          className="px-2.5 py-1 bg-emerald-600 text-white rounded font-medium hover:bg-emerald-700"
+                          className="px-2.5 py-1 bg-phumulani-green text-phumulani-charcoal rounded font-medium hover:bg-phumulani-teal"
                         >
                           Approve Draft
                         </button>
@@ -1199,7 +1199,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                             draft.approvalStatus = 'rejected';
                             refreshData();
                           }}
-                          className="px-2.5 py-1 bg-gray-200 text-gray-700 rounded font-medium hover:bg-gray-300"
+                          className="px-2.5 py-1 bg-phumulani-cream text-phumulani-charcoal rounded font-medium hover:bg-phumulani-cream"
                         >
                           Reject
                         </button>
@@ -1219,8 +1219,8 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-sm font-bold text-gray-900">Follow-Up Coordinator</h3>
-                <p className="text-xs text-gray-500">Respectful outreach sequence (Days 3, 7, 14) with automatic cancellation</p>
+                <h3 className="text-sm font-bold text-phumulani-charcoal">Follow-Up Coordinator</h3>
+                <p className="text-xs text-phumulani-charcoal">Respectful outreach sequence (Days 3, 7, 14) with automatic cancellation</p>
               </div>
               <button
                 onClick={async () => {
@@ -1232,15 +1232,15 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                   });
                   refreshData();
                 }}
-                className="px-3 py-1.5 bg-[#104F57] text-white rounded text-xs hover:bg-teal-800 font-semibold"
+                className="px-3 py-1.5 bg-phumulani-earth text-white rounded text-xs hover:bg-phumulani-orange font-semibold"
               >
                 Schedule Follow-Up
               </button>
             </div>
 
-            <div className="border border-gray-200 rounded-lg overflow-hidden">
-              <table className="min-w-full divide-y divide-gray-200 text-xs">
-                <thead className="bg-gray-50 text-gray-700 font-semibold">
+            <div className="border border-phumulani-cream rounded-lg overflow-hidden">
+              <table className="min-w-full divide-y divide-phumulani-cream text-xs">
+                <thead className="bg-phumulani-cream text-phumulani-charcoal font-semibold">
                   <tr>
                     <th className="px-4 py-3 text-left">Prospect</th>
                     <th className="px-4 py-3 text-left">Step</th>
@@ -1249,36 +1249,36 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                     <th className="px-4 py-3 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
+                <tbody className="divide-y divide-phumulani-cream bg-white">
                   {followUps.length === 0 ? (
                     <tr>
-                      <td colSpan={5} className="px-4 py-6 text-center text-gray-500">
+                      <td colSpan={5} className="px-4 py-6 text-center text-phumulani-charcoal">
                         No active follow-ups in queue.
                       </td>
                     </tr>
                   ) : (
                     followUps.map((f) => (
                       <tr key={f.id}>
-                        <td className="px-4 py-3 font-semibold text-gray-900">
+                        <td className="px-4 py-3 font-semibold text-phumulani-charcoal">
                           {f.prospectName}
-                          <div className="text-[10px] text-gray-500 font-normal">{f.prospectEmail}</div>
+                          <div className="text-[10px] text-phumulani-charcoal font-normal">{f.prospectEmail}</div>
                         </td>
                         <td className="px-4 py-3">Step {f.sequenceStep}</td>
-                        <td className="px-4 py-3 text-gray-700">{f.dueDate}</td>
+                        <td className="px-4 py-3 text-phumulani-charcoal">{f.dueDate}</td>
                         <td className="px-4 py-3">
                           <span
                             className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
                               f.status === 'scheduled'
-                                ? 'bg-blue-100 text-blue-800'
+                                ? 'bg-phumulani-cream text-phumulani-earth'
                                 : f.status === 'cancelled_reply_received'
-                                ? 'bg-emerald-100 text-emerald-800'
-                                : 'bg-red-100 text-red-800'
+                                ? 'bg-phumulani-cream text-phumulani-charcoal'
+                                : 'bg-phumulani-cream text-phumulani-earth'
                             }`}
                           >
                             {f.status.replace(/_/g, ' ').toUpperCase()}
                           </span>
                           {f.cancellationReason && (
-                            <div className="text-[10px] text-gray-500 mt-0.5">{f.cancellationReason}</div>
+                            <div className="text-[10px] text-phumulani-charcoal mt-0.5">{f.cancellationReason}</div>
                           )}
                         </td>
                         <td className="px-4 py-3 text-right">
@@ -1291,7 +1291,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                                 );
                                 refreshData();
                               }}
-                              className="px-2 py-1 text-xs text-red-600 hover:text-red-800 font-medium"
+                              className="px-2 py-1 text-xs text-phumulani-earth hover:text-phumulani-earth font-medium"
                             >
                               Cancel (Reply Received)
                             </button>
@@ -1311,28 +1311,28 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
         {/* ================================================================= */}
         {activeSection === 'high_interest_leads' && (
           <div className="space-y-4">
-            <h3 className="text-sm font-bold text-gray-900">Qualified High-Interest Leads & Briefing Dossiers</h3>
-            <p className="text-xs text-gray-500">Funders demonstrating explicit meeting willingness or score ≥ 80</p>
+            <h3 className="text-sm font-bold text-phumulani-charcoal">Qualified High-Interest Leads & Briefing Dossiers</h3>
+            <p className="text-xs text-phumulani-charcoal">Funders demonstrating explicit meeting willingness or score ≥ 80</p>
 
             <div className="space-y-4">
               {highInterestLeads.map((lead) => (
-                <div key={lead.id} className="p-5 rounded-xl border border-amber-200 bg-amber-50/30 shadow-xs space-y-4">
+                <div key={lead.id} className="p-5 rounded-xl border border-phumulani-gold bg-phumulani-cream shadow-xs space-y-4">
                   <div className="flex items-start justify-between">
                     <div>
                       <div className="flex items-center gap-2">
-                        <h4 className="text-base font-bold text-gray-900">{lead.organization}</h4>
-                        <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-xs">
+                        <h4 className="text-base font-bold text-phumulani-charcoal">{lead.organization}</h4>
+                        <span className="px-2 py-0.5 rounded bg-phumulani-cream text-phumulani-charcoal font-bold text-xs">
                           Score: {lead.interestScore}/100
                         </span>
                       </div>
-                      <p className="text-xs text-gray-600 mt-0.5">
+                      <p className="text-xs text-phumulani-charcoal mt-0.5">
                         Contact: {lead.prospectName} ({lead.contactEmail}) • Assigned Rep: {lead.assignedRepresentativeName}
                       </p>
                     </div>
 
                     <button
                       onClick={() => setActiveSection('meeting_scheduler')}
-                      className="px-3 py-1.5 bg-[#104F57] text-white rounded-lg text-xs font-semibold hover:bg-teal-800 flex items-center gap-1.5"
+                      className="px-3 py-1.5 bg-phumulani-earth text-white rounded-lg text-xs font-semibold hover:bg-phumulani-orange flex items-center gap-1.5"
                     >
                       <Calendar className="w-3.5 h-3.5" />
                       Schedule Meeting
@@ -1340,23 +1340,23 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                   </div>
 
                   {/* Executive Briefing Dossier */}
-                  <div className="p-3 bg-white rounded-lg border border-gray-200 text-xs space-y-2">
-                    <div className="font-bold text-gray-900 text-xs uppercase tracking-wider text-teal-800">
+                  <div className="p-3 bg-white rounded-lg border border-phumulani-cream text-xs space-y-2">
+                    <div className="font-bold text-phumulani-charcoal text-xs uppercase tracking-wider text-phumulani-earth">
                       Executive Briefing Dossier for Comfort Dondo
                     </div>
-                    <p className="text-gray-700">{lead.briefingDossier.executiveSummary}</p>
-                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-gray-100 text-[11px]">
+                    <p className="text-phumulani-charcoal">{lead.briefingDossier.executiveSummary}</p>
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-phumulani-cream text-[11px]">
                       <div>
-                        <strong className="text-gray-500">Giving Capacity:</strong> $
+                        <strong className="text-phumulani-charcoal">Giving Capacity:</strong> $
                         {lead.briefingDossier.givingCapacityEstimate.toLocaleString()}
                       </div>
                       <div>
-                        <strong className="text-gray-500">Primary Program:</strong> {lead.briefingDossier.primaryProgramInterest}
+                        <strong className="text-phumulani-charcoal">Primary Program:</strong> {lead.briefingDossier.primaryProgramInterest}
                       </div>
                     </div>
-                    <div className="pt-2 border-t border-gray-100">
-                      <strong className="text-gray-700 block mb-1">Key Discussion Points:</strong>
-                      <ul className="list-disc list-inside text-gray-600 space-y-0.5">
+                    <div className="pt-2 border-t border-phumulani-cream">
+                      <strong className="text-phumulani-charcoal block mb-1">Key Discussion Points:</strong>
+                      <ul className="list-disc list-inside text-phumulani-charcoal space-y-0.5">
                         {lead.briefingDossier.keyQuestionsToAddress.map((q, i) => (
                           <li key={i}>{q}</li>
                         ))}
@@ -1374,18 +1374,18 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
         {/* ================================================================= */}
         {activeSection === 'meeting_scheduler' && (
           <div className="space-y-6">
-            <div className="p-4 rounded-xl border border-gray-200 bg-gray-50 flex flex-wrap items-center justify-between gap-4">
+            <div className="p-4 rounded-xl border border-phumulani-cream bg-phumulani-cream flex flex-wrap items-center justify-between gap-4">
               <div>
-                <h3 className="text-sm font-bold text-gray-900">Google Calendar & Microsoft 365 Meeting Scheduler</h3>
-                <p className="text-xs text-gray-600">Double-booking prevention & authenticated free/busy slot selection</p>
+                <h3 className="text-sm font-bold text-phumulani-charcoal">Google Calendar & Microsoft 365 Meeting Scheduler</h3>
+                <p className="text-xs text-phumulani-charcoal">Double-booking prevention & authenticated free/busy slot selection</p>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-xs text-gray-500">Calendar Provider:</span>
+                <span className="text-xs text-phumulani-charcoal">Calendar Provider:</span>
                 <select
                   value={calendarProvider}
                   onChange={(e) => setCalendarProvider(e.target.value as any)}
-                  className="px-2.5 py-1 text-xs border border-gray-300 rounded bg-white font-medium"
+                  className="px-2.5 py-1 text-xs border border-phumulani-cream rounded bg-white font-medium"
                 >
                   <option value="google">Google Calendar (Workspace)</option>
                   <option value="microsoft">Microsoft Outlook (M365 Graph)</option>
@@ -1394,7 +1394,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
             </div>
 
             {bookingNotice && (
-              <div className="p-3 rounded-lg bg-teal-50 border border-teal-300 text-teal-900 text-xs font-semibold">
+              <div className="p-3 rounded-lg bg-phumulani-cream border border-phumulani-teal text-phumulani-earth text-xs font-semibold">
                 {bookingNotice}
               </div>
             )}
@@ -1402,7 +1402,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Available Slots */}
               <div className="md:col-span-2 space-y-3">
-                <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider">
+                <h4 className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wider">
                   Available Slots for Comfort Dondo (Twin Cities Business Hours)
                 </h4>
                 <div className="grid grid-cols-2 gap-2 max-h-72 overflow-y-auto pr-1">
@@ -1413,18 +1413,18 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                       onClick={() => setSelectedSlot(slot)}
                       className={`p-3 rounded-lg border text-left text-xs transition-all ${
                         !slot.isAvailable
-                          ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                          ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream cursor-not-allowed'
                           : selectedSlot?.slotId === slot.slotId
-                          ? 'border-teal-600 bg-teal-50 font-bold text-teal-950 ring-2 ring-teal-400'
-                          : 'border-gray-200 hover:border-teal-300 bg-white text-gray-800'
+                          ? 'border-phumulani-earth bg-phumulani-cream font-bold text-phumulani-earth ring-2 ring-phumulani-teal'
+                          : 'border-phumulani-cream hover:border-phumulani-orange bg-white text-phumulani-charcoal'
                       }`}
                     >
                       <div className="font-semibold">{new Date(slot.startTime).toLocaleDateString()}</div>
-                      <div className="text-[11px] text-gray-500 mt-0.5">
+                      <div className="text-[11px] text-phumulani-charcoal mt-0.5">
                         {new Date(slot.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} -{' '}
                         {new Date(slot.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </div>
-                      <div className="text-[10px] mt-1 text-teal-700 font-medium">
+                      <div className="text-[10px] mt-1 text-phumulani-earth font-medium">
                         {slot.isAvailable ? 'Available' : 'Booked'}
                       </div>
                     </button>
@@ -1433,49 +1433,49 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
               </div>
 
               {/* Confirmation Panel */}
-              <div className="p-4 rounded-xl border border-gray-200 bg-gray-50 space-y-4 text-xs">
-                <h4 className="font-bold text-gray-900">Confirm Booking</h4>
+              <div className="p-4 rounded-xl border border-phumulani-cream bg-phumulani-cream space-y-4 text-xs">
+                <h4 className="font-bold text-phumulani-charcoal">Confirm Booking</h4>
                 {selectedSlot ? (
                   <div className="space-y-2">
                     <div>
-                      <span className="text-gray-500 block">Staff Member:</span>
-                      <span className="font-semibold text-gray-800">{selectedSlot.staffName}</span>
+                      <span className="text-phumulani-charcoal block">Staff Member:</span>
+                      <span className="font-semibold text-phumulani-charcoal">{selectedSlot.staffName}</span>
                     </div>
                     <div>
-                      <span className="text-gray-500 block">Selected Time:</span>
-                      <span className="font-semibold text-gray-800">
+                      <span className="text-phumulani-charcoal block">Selected Time:</span>
+                      <span className="font-semibold text-phumulani-charcoal">
                         {new Date(selectedSlot.startTime).toLocaleString()}
                       </span>
                     </div>
                     <div>
-                      <span className="text-gray-500 block">Funder Prospect:</span>
-                      <span className="font-semibold text-gray-800">
+                      <span className="text-phumulani-charcoal block">Funder Prospect:</span>
+                      <span className="font-semibold text-phumulani-charcoal">
                         {prospects.find((p) => p.id === selectedProspectId)?.organizationName}
                       </span>
                     </div>
 
                     <button
                       onClick={handleBookMeeting}
-                      className="w-full mt-3 py-2 bg-emerald-600 text-white rounded-lg font-bold hover:bg-emerald-700 shadow-xs"
+                      className="w-full mt-3 py-2 bg-phumulani-green text-phumulani-charcoal rounded-lg font-bold hover:bg-phumulani-teal shadow-xs"
                     >
                       Book & Send Calendar Invite
                     </button>
                   </div>
                 ) : (
-                  <p className="text-gray-500 text-xs">Select an available slot on the left to confirm an appointment.</p>
+                  <p className="text-phumulani-charcoal text-xs">Select an available slot on the left to confirm an appointment.</p>
                 )}
 
-                <div className="pt-3 border-t border-gray-200 text-[11px] space-y-1">
-                  <div className="font-semibold text-gray-700">Live Calendar Provider Status:</div>
+                <div className="pt-3 border-t border-phumulani-cream text-[11px] space-y-1">
+                  <div className="font-semibold text-phumulani-charcoal">Live Calendar Provider Status:</div>
                   <div className="flex items-center justify-between">
                     <span>Google Calendar:</span>
-                    <span className={calendarProviderStatus?.googleConnected ? 'text-emerald-700 font-bold' : 'text-amber-700 font-semibold'}>
+                    <span className={calendarProviderStatus?.googleConnected ? 'text-phumulani-earth font-bold' : 'text-phumulani-earth font-semibold'}>
                       {calendarProviderStatus?.googleConnected ? 'CONNECTED' : 'AUTHORIZATION_REQUIRED'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Microsoft Graph:</span>
-                    <span className={calendarProviderStatus?.microsoftConnected ? 'text-emerald-700 font-bold' : 'text-amber-700 font-semibold'}>
+                    <span className={calendarProviderStatus?.microsoftConnected ? 'text-phumulani-earth font-bold' : 'text-phumulani-earth font-semibold'}>
                       {calendarProviderStatus?.microsoftConnected ? 'CONNECTED' : 'AUTHORIZATION_REQUIRED'}
                     </span>
                   </div>
@@ -1484,24 +1484,24 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
             </div>
 
             {/* Scheduled Bookings & Reschedule / Cancel Controls */}
-            <div className="border border-gray-200 rounded-xl p-4 bg-white space-y-3">
+            <div className="border border-phumulani-cream rounded-xl p-4 bg-white space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
+                <h4 className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wider">
                   Scheduled Meetings & Reminders ({scheduledBookings.length} Bookings · {calendarReminders.length} Reminders)
                 </h4>
               </div>
               {scheduledBookings.length === 0 ? (
-                <p className="text-xs text-gray-500">No donor meetings currently scheduled.</p>
+                <p className="text-xs text-phumulani-charcoal">No donor meetings currently scheduled.</p>
               ) : (
                 <div className="space-y-2">
                   {scheduledBookings.map((booking) => (
                     <div
                       key={booking.id}
-                      className="p-3 rounded-lg border border-gray-200 bg-gray-50 flex flex-wrap items-center justify-between gap-2 text-xs"
+                      className="p-3 rounded-lg border border-phumulani-cream bg-phumulani-cream flex flex-wrap items-center justify-between gap-2 text-xs"
                     >
                       <div>
-                        <div className="font-bold text-gray-900">{booking.title}</div>
-                        <div className="text-[11px] text-gray-600">
+                        <div className="font-bold text-phumulani-charcoal">{booking.title}</div>
+                        <div className="text-[11px] text-phumulani-charcoal">
                           {new Date(booking.startTime).toLocaleString()} · {booking.prospectName} ({booking.prospectEmail}) · Status:{' '}
                           <span className="font-mono font-bold">{booking.status}</span>
                         </div>
@@ -1511,14 +1511,14 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                           <button
                             type="button"
                             onClick={() => handleRescheduleBooking(booking)}
-                            className="px-2.5 py-1 rounded bg-white border border-gray-300 text-gray-700 hover:bg-gray-100 font-semibold text-[11px] cursor-pointer"
+                            className="px-2.5 py-1 rounded bg-white border border-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream font-semibold text-[11px] cursor-pointer"
                           >
                             Reschedule (+24h)
                           </button>
                           <button
                             type="button"
                             onClick={() => handleCancelBooking(booking.id)}
-                            className="px-2.5 py-1 rounded bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 font-semibold text-[11px] cursor-pointer"
+                            className="px-2.5 py-1 rounded bg-phumulani-cream border border-phumulani-earth text-phumulani-earth hover:bg-phumulani-cream font-semibold text-[11px] cursor-pointer"
                           >
                             Cancel
                           </button>
@@ -1537,40 +1537,40 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
         {/* ================================================================= */}
         {activeSection === 'funding_proposals' && (
           <div className="space-y-6">
-            <div className="p-4 rounded-xl border border-gray-200 bg-gray-50/70 flex flex-wrap items-center justify-between gap-4">
+            <div className="p-4 rounded-xl border border-phumulani-cream bg-phumulani-cream flex flex-wrap items-center justify-between gap-4">
               <div>
-                <h3 className="text-sm font-bold text-gray-900">Funding Concept Notes & Grant Proposal Generator</h3>
-                <p className="text-xs text-gray-600">
+                <h3 className="text-sm font-bold text-phumulani-charcoal">Funding Concept Notes & Grant Proposal Generator</h3>
+                <p className="text-xs text-phumulani-charcoal">
                   Prepares editable drafts conforming to 15% de minimis non-profit indirect cost guidelines. Watermarked for human executive review.
                 </p>
               </div>
             </div>
 
             {proposalNotice && (
-              <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-300 text-emerald-900 text-xs font-semibold">
+              <div className="p-3 rounded-lg bg-phumulani-cream border border-phumulani-green text-phumulani-charcoal text-xs font-semibold">
                 {proposalNotice}
               </div>
             )}
 
             {/* Proposal Generator Form */}
-            <form onSubmit={handleCreateProposal} className="p-4 rounded-xl border border-gray-200 bg-white grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+            <form onSubmit={handleCreateProposal} className="p-4 rounded-xl border border-phumulani-cream bg-white grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
               <div>
-                <label className="font-semibold text-gray-700 block mb-1">Target Grantmaker:</label>
+                <label className="font-semibold text-phumulani-charcoal block mb-1">Target Grantmaker:</label>
                 <input
                   type="text"
                   value={proposalGrantmaker}
                   onChange={(e) => setProposalGrantmaker(e.target.value)}
-                  className="w-full px-2.5 py-1.5 border border-gray-300 rounded"
+                  className="w-full px-2.5 py-1.5 border border-phumulani-cream rounded"
                   required
                 />
               </div>
 
               <div>
-                <label className="font-semibold text-gray-700 block mb-1">Target Program:</label>
+                <label className="font-semibold text-phumulani-charcoal block mb-1">Target Program:</label>
                 <select
                   value={proposalProgramId}
                   onChange={(e) => setProposalProgramId(e.target.value)}
-                  className="w-full px-2.5 py-1.5 border border-gray-300 rounded bg-white"
+                  className="w-full px-2.5 py-1.5 border border-phumulani-cream rounded bg-white"
                 >
                   {(programs.length > 0
                     ? programs
@@ -1590,12 +1590,12 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
               </div>
 
               <div>
-                <label className="font-semibold text-gray-700 block mb-1">Requested Amount ($):</label>
+                <label className="font-semibold text-phumulani-charcoal block mb-1">Requested Amount ($):</label>
                 <input
                   type="number"
                   value={proposalAmount}
                   onChange={(e) => setProposalAmount(parseInt(e.target.value, 10))}
-                  className="w-full px-2.5 py-1.5 border border-gray-300 rounded"
+                  className="w-full px-2.5 py-1.5 border border-phumulani-cream rounded"
                   required
                 />
               </div>
@@ -1603,7 +1603,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
               <div className="flex items-end">
                 <button
                   type="submit"
-                  className="w-full py-2 bg-[#104F57] text-white rounded font-bold hover:bg-teal-800"
+                  className="w-full py-2 bg-phumulani-earth text-white rounded font-bold hover:bg-phumulani-orange"
                 >
                   Generate Proposal Draft
                 </button>
@@ -1612,32 +1612,32 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
 
             <div className="space-y-4">
               {proposals.map((prop) => (
-                <div key={prop.id} className="p-5 rounded-xl border border-gray-200 bg-white shadow-xs space-y-3">
+                <div key={prop.id} className="p-5 rounded-xl border border-phumulani-cream bg-white shadow-xs space-y-3">
                   <div className="flex items-start justify-between">
                     <div>
                       <div className="flex items-center gap-2">
-                        <h4 className="text-base font-bold text-gray-900">{prop.title}</h4>
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 uppercase">
+                        <h4 className="text-base font-bold text-phumulani-charcoal">{prop.title}</h4>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal uppercase">
                           DRAFT — REQUIRES REVIEW
                         </span>
                       </div>
-                      <p className="text-xs text-gray-500 mt-0.5">
+                      <p className="text-xs text-phumulani-charcoal mt-0.5">
                         Target: {prop.targetGrantmaker} • Amount: ${prop.requestedAmount.toLocaleString()} • Program: {prop.programTitle}
                       </p>
                     </div>
                   </div>
 
-                  <p className="text-xs text-gray-700 leading-relaxed bg-gray-50 p-3 rounded border border-gray-100">
+                  <p className="text-xs text-phumulani-charcoal leading-relaxed bg-phumulani-cream p-3 rounded border border-phumulani-cream">
                     <strong>Executive Summary:</strong> {prop.executiveSummary}
                   </p>
 
-                  <div className="p-3 rounded border border-gray-200 bg-white text-xs">
-                    <strong className="text-gray-800 block mb-1">Approved Budget Breakdown:</strong>
+                  <div className="p-3 rounded border border-phumulani-cream bg-white text-xs">
+                    <strong className="text-phumulani-charcoal block mb-1">Approved Budget Breakdown:</strong>
                     <div className="space-y-1">
                       {prop.budgetBreakdown.map((b, i) => (
-                        <div key={i} className="flex justify-between text-gray-600">
+                        <div key={i} className="flex justify-between text-phumulani-charcoal">
                           <span>{b.item}</span>
-                          <span className="font-semibold text-gray-900">${b.amount.toLocaleString()}</span>
+                          <span className="font-semibold text-phumulani-charcoal">${b.amount.toLocaleString()}</span>
                         </div>
                       ))}
                     </div>
@@ -1653,24 +1653,24 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
         {/* ================================================================= */}
         {activeSection === 'fundraising_pipeline' && (
           <div className="space-y-6">
-            <div className="p-4 rounded-xl border border-gray-200 bg-gray-50">
-              <h3 className="text-sm font-bold text-gray-900">Fundraising Pipeline Overview</h3>
-              <p className="text-xs text-gray-600 mt-0.5">
+            <div className="p-4 rounded-xl border border-phumulani-cream bg-phumulani-cream">
+              <h3 className="text-sm font-bold text-phumulani-charcoal">Fundraising Pipeline Overview</h3>
+              <p className="text-xs text-phumulani-charcoal mt-0.5">
                 Stage progression of active institutional, corporate CSR, and foundation partnerships
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs">
               {[
-                { title: '1. Identified', count: prospects.filter((p) => p.status === 'uncontacted').length, color: 'border-gray-300' },
-                { title: '2. Solicited', count: prospects.filter((p) => p.status === 'solicited').length, color: 'border-blue-300' },
-                { title: '3. Meeting Staged', count: prospects.filter((p) => p.status === 'meeting_scheduled').length, color: 'border-amber-300' },
-                { title: '4. Proposal Review', count: proposals.length, color: 'border-purple-300' },
-                { title: '5. Funded Deals', count: 1, color: 'border-emerald-300' },
+                { title: '1. Identified', count: prospects.filter((p) => p.status === 'uncontacted').length, color: 'border-phumulani-cream' },
+                { title: '2. Solicited', count: prospects.filter((p) => p.status === 'solicited').length, color: 'border-phumulani-teal' },
+                { title: '3. Meeting Staged', count: prospects.filter((p) => p.status === 'meeting_scheduled').length, color: 'border-phumulani-gold' },
+                { title: '4. Proposal Review', count: proposals.length, color: 'border-phumulani-earth' },
+                { title: '5. Funded Deals', count: 1, color: 'border-phumulani-green' },
               ].map((col, idx) => (
-                <div key={idx} className={`p-3 rounded-lg border-t-4 ${col.color} bg-gray-50 shadow-2xs`}>
-                  <div className="font-bold text-gray-800">{col.title}</div>
-                  <div className="text-xl font-bold text-gray-900 mt-2">{col.count} Deals</div>
+                <div key={idx} className={`p-3 rounded-lg border-t-4 ${col.color} bg-phumulani-cream shadow-2xs`}>
+                  <div className="font-bold text-phumulani-charcoal">{col.title}</div>
+                  <div className="text-xl font-bold text-phumulani-charcoal mt-2">{col.count} Deals</div>
                 </div>
               ))}
             </div>
@@ -1683,67 +1683,67 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
         {activeSection === 'verified_knowledge' && (
           <div className="space-y-6">
             {/* Header Banner */}
-            <div className="p-5 rounded-xl border border-teal-200 bg-teal-50/70 space-y-2">
+            <div className="p-5 rounded-xl border border-phumulani-teal bg-phumulani-cream space-y-2">
               <div className="flex items-center gap-2">
-                <ShieldCheck className="w-5 h-5 text-teal-700" />
-                <h3 className="text-base font-bold text-teal-900 font-serif">
+                <ShieldCheck className="w-5 h-5 text-phumulani-earth" />
+                <h3 className="text-base font-bold text-phumulani-earth font-serif">
                   Local Institutional Source-of-Truth & Grounding Registry
                 </h3>
-                <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-teal-200 text-teal-900 border border-teal-300">
+                <span className="px-2 py-0.5 rounded text-[11px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal">
                   D:\Phumulani\data\knowledge\approved
                 </span>
               </div>
-              <p className="text-xs text-teal-800 leading-relaxed">
+              <p className="text-xs text-phumulani-earth leading-relaxed">
                 Phumulani Ai strictly rejects unverified fundraising claims, unratified capital forecasts, and simulated metrics. All donor-facing communications, solicitation emails, and grant proposals must cite verified institutional source document IDs. If an approved record is absent, the system explicitly states that verified figures are unavailable rather than hallucinating estimates.
               </p>
             </div>
 
             {/* Financial Ledger Distinction Cards */}
             <div>
-              <h4 className="text-xs font-bold text-gray-800 uppercase tracking-wider mb-2">
+              <h4 className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wider mb-2">
                 FY2026 Institutional Financial Reality vs Projections (DOC-FIN-001)
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
-                <div className="p-3.5 rounded-lg border-2 border-emerald-300 bg-emerald-50/50">
-                  <div className="flex items-center justify-between text-emerald-800 font-bold">
+                <div className="p-3.5 rounded-lg border-2 border-phumulani-green bg-phumulani-cream">
+                  <div className="flex items-center justify-between text-phumulani-charcoal font-bold">
                     <span>Settled Actual Cash</span>
-                    <span className="text-[10px] bg-emerald-200 px-1.5 py-0.2 rounded font-mono">AUDITED</span>
+                    <span className="text-[10px] bg-phumulani-cream px-1.5 py-0.2 rounded font-mono">AUDITED</span>
                   </div>
-                  <div className="text-2xl font-bold text-emerald-950 mt-1">$296,800</div>
-                  <p className="text-[11px] text-emerald-700 mt-1">
+                  <div className="text-2xl font-bold text-phumulani-charcoal mt-1">$296,800</div>
+                  <p className="text-[11px] text-phumulani-earth mt-1">
                     Verified bank receipts. Legally recognized 501(c)(3) revenues.
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-lg border border-blue-300 bg-blue-50/50">
-                  <div className="flex items-center justify-between text-blue-800 font-bold">
+                <div className="p-3.5 rounded-lg border border-phumulani-teal bg-phumulani-cream">
+                  <div className="flex items-center justify-between text-phumulani-earth font-bold">
                     <span>Confirmed Commitments</span>
-                    <span className="text-[10px] bg-blue-200 px-1.5 py-0.2 rounded font-mono">BINDING</span>
+                    <span className="text-[10px] bg-phumulani-cream px-1.5 py-0.2 rounded font-mono">BINDING</span>
                   </div>
-                  <div className="text-2xl font-bold text-blue-950 mt-1">$65,000</div>
-                  <p className="text-[11px] text-blue-700 mt-1">
+                  <div className="text-2xl font-bold text-phumulani-earth mt-1">$65,000</div>
+                  <p className="text-[11px] text-phumulani-earth mt-1">
                     Signed grant agreements & recurring donor contracts.
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-lg border border-amber-300 bg-amber-50/50">
-                  <div className="flex items-center justify-between text-amber-800 font-bold">
+                <div className="p-3.5 rounded-lg border border-phumulani-gold bg-phumulani-cream">
+                  <div className="flex items-center justify-between text-phumulani-charcoal font-bold">
                     <span>Pending Applications</span>
-                    <span className="text-[10px] bg-amber-200 px-1.5 py-0.2 rounded font-mono">UNDER REVIEW</span>
+                    <span className="text-[10px] bg-phumulani-cream px-1.5 py-0.2 rounded font-mono">UNDER REVIEW</span>
                   </div>
-                  <div className="text-2xl font-bold text-amber-950 mt-1">$115,000</div>
-                  <p className="text-[11px] text-amber-700 mt-1">
+                  <div className="text-2xl font-bold text-phumulani-charcoal mt-1">$115,000</div>
+                  <p className="text-[11px] text-phumulani-earth mt-1">
                     Submitted proposals (McKnight, Bush, Otto Bremer).
                   </p>
                 </div>
 
-                <div className="p-3.5 rounded-lg border border-purple-300 bg-purple-50/50">
-                  <div className="flex items-center justify-between text-purple-800 font-bold">
+                <div className="p-3.5 rounded-lg border border-phumulani-earth bg-phumulani-cream">
+                  <div className="flex items-center justify-between text-phumulani-earth font-bold">
                     <span>Indirect Cost Cap</span>
-                    <span className="text-[10px] bg-purple-200 px-1.5 py-0.2 rounded font-mono">15% DE MINIMIS</span>
+                    <span className="text-[10px] bg-phumulani-cream px-1.5 py-0.2 rounded font-mono">15% DE MINIMIS</span>
                   </div>
-                  <div className="text-2xl font-bold text-purple-950 mt-1">$66,000 Max</div>
-                  <p className="text-[11px] text-purple-700 mt-1">
+                  <div className="text-2xl font-bold text-phumulani-earth mt-1">$66,000 Max</div>
+                  <p className="text-[11px] text-phumulani-earth mt-1">
                     Strict federal standard cap across all funding asks.
                   </p>
                 </div>
@@ -1752,20 +1752,20 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
 
             {/* Source Approval Audit Status Banner */}
             {auditReport && (
-              <div className="p-4 rounded-xl border border-amber-300 bg-amber-50/60 text-xs space-y-2">
+              <div className="p-4 rounded-xl border border-phumulani-gold bg-phumulani-cream text-xs space-y-2">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 font-bold text-amber-950">
-                    <Shield className="w-4 h-4 text-amber-700" />
+                  <div className="flex items-center gap-2 font-bold text-phumulani-charcoal">
+                    <Shield className="w-4 h-4 text-phumulani-earth" />
                     <span>Institutional Source Approval Audit Status</span>
                   </div>
-                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-200 text-amber-900 border border-amber-300">
+                  <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold">
                     PROVISIONAL BENCHMARK ENFORCED
                   </span>
                 </div>
-                <p className="text-amber-900 leading-relaxed">
+                <p className="text-phumulani-charcoal leading-relaxed">
                   {auditReport.institutionalIntegrityNotice}
                 </p>
-                <div className="flex flex-wrap gap-4 pt-1 font-medium text-amber-950 text-[11px]">
+                <div className="flex flex-wrap gap-4 pt-1 font-medium text-phumulani-charcoal text-[11px]">
                   <span>Total Documents Audited: <strong>{auditReport.totalDocumentsAudited}</strong></span>
                   <span>Provisional Development Benchmarks: <strong>{auditReport.provisionalBenchmarkCount}</strong></span>
                   <span>Expired / Review Pending: <strong>{auditReport.expiredCount}</strong></span>
@@ -1777,32 +1777,32 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
             {/* Approved Knowledge Documents Inventory */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <h4 className="text-xs font-bold text-gray-800 uppercase tracking-wider">
+                <h4 className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wider">
                   Role-Controlled Knowledge Documents ({knowledgeDocs.length} Active for Current Role)
                 </h4>
-                <span className="text-[11px] text-gray-500 font-medium">
+                <span className="text-[11px] text-phumulani-charcoal font-medium">
                   Authenticated API • Zero Raw Knowledge in Browser Bundle
                 </span>
               </div>
               <div className="space-y-2.5">
                 {(knowledgeDocs.length > 0 ? knowledgeDocs : []).map((doc) => (
-                  <div key={doc.id} className="p-3.5 rounded-lg border border-gray-200 bg-white hover:border-teal-300 transition-colors text-xs flex flex-col md:flex-row md:items-center justify-between gap-2 shadow-2xs">
+                  <div key={doc.id} className="p-3.5 rounded-lg border border-phumulani-cream bg-white hover:border-phumulani-orange transition-colors text-xs flex flex-col md:flex-row md:items-center justify-between gap-2 shadow-2xs">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+                        <span className="font-mono font-bold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded border border-phumulani-teal">
                           {doc.metadata?.sourceDocumentId || doc.id}
                         </span>
-                        <span className="font-semibold text-gray-900">{doc.title}</span>
-                        <span className="text-[10px] px-1.5 py-0.2 rounded font-semibold bg-amber-100 text-amber-800 border border-amber-200">
+                        <span className="font-semibold text-phumulani-charcoal">{doc.title}</span>
+                        <span className="text-[10px] px-1.5 py-0.2 rounded font-semibold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold">
                           {doc.metadata?.sourceApprovalStatus || 'PROVISIONAL_BENCHMARK'}
                         </span>
                       </div>
-                      <p className="text-[11px] text-gray-500">
+                      <p className="text-[11px] text-phumulani-charcoal">
                         Owner: <strong>{doc.metadata?.recordOwner}</strong> • Approved: {doc.metadata?.approvalDate} • Evidence: {doc.metadata?.evidenceReference}
                       </p>
                     </div>
                     <div className="flex items-center gap-2 self-start md:self-auto">
-                      <span className="text-[10px] px-2 py-0.5 rounded bg-gray-100 text-gray-700 font-mono">
+                      <span className="text-[10px] px-2 py-0.5 rounded bg-phumulani-cream text-phumulani-charcoal font-mono">
                         {doc.metadata?.accessClassification || 'DONOR_FACING'}
                       </span>
                     </div>
@@ -1812,13 +1812,13 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
             </div>
 
             {/* Quarantine & Anti-Contamination Invariant Notice */}
-            <div className="p-4 rounded-xl border border-red-200 bg-red-50/60 text-xs space-y-1.5">
-              <div className="flex items-center gap-1.5 font-bold text-red-900">
-                <AlertTriangle className="w-4 h-4 text-red-600" />
+            <div className="p-4 rounded-xl border border-phumulani-earth bg-phumulani-cream text-xs space-y-1.5">
+              <div className="flex items-center gap-1.5 font-bold text-phumulani-earth">
+                <AlertTriangle className="w-4 h-4 text-phumulani-earth" />
                 <span>Simulated Sandbox & Pending-Review Quarantine (Fail-Closed Enforcement)</span>
               </div>
-              <p className="text-red-800 leading-relaxed">
-                Any document located in <code className="font-mono bg-red-100 px-1 rounded">data/knowledge/pending-review/</code> (e.g., draft capital expansion proposals) or marked with <code className="font-mono bg-red-100 px-1 rounded">isDemoData: true</code> is barred from live donor-facing solicitation generation. In accordance with anti-commercial contamination protocols, Phumulani maintains 0% TaxGuard or commercial tax preparation software.
+              <p className="text-phumulani-earth leading-relaxed">
+                Any document located in <code className="font-mono bg-phumulani-cream px-1 rounded">data/knowledge/pending-review/</code> (e.g., draft capital expansion proposals) or marked with <code className="font-mono bg-phumulani-cream px-1 rounded">isDemoData: true</code> is barred from live donor-facing solicitation generation. In accordance with anti-commercial contamination protocols, Phumulani maintains 0% TaxGuard or commercial tax preparation software.
               </p>
             </div>
           </div>

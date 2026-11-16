@@ -95,6 +95,10 @@ jobs:
             exit 1
           fi
 
+      # CI Stage 3B — Brand Palette & Contrast Compliance Gate
+      - name: CI Stage 3B — Brand Palette & Contrast Compliance Audit
+        run: npx tsx scripts/verify_brand_palette.ts
+
       # CI Stage 4 — Security Isolation, Email, Database, Vault & Authoritative Regression Suites
       - name: CI Stage 4 — Security Isolation, Email, Database & Authoritative Regression Suites
         run: |

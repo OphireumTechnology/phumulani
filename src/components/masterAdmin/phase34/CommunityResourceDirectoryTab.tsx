@@ -84,24 +84,24 @@ export const CommunityResourceDirectoryTab: React.FC<Props> = ({ currentUser }) 
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-xs">
+      <div className="bg-white p-6 rounded-xl border border-phumulani-cream shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-mono font-bold bg-teal-100 text-teal-800 px-2 py-0.5 rounded">
+              <span className="text-xs font-mono font-bold bg-phumulani-cream text-phumulani-earth px-2 py-0.5 rounded">
                 M34.02
               </span>
-              <h2 className="text-xl font-bold font-serif text-slate-900">
+              <h2 className="text-xl font-bold font-serif text-phumulani-charcoal">
                 Community Resource Directory
               </h2>
             </div>
-            <p className="text-sm text-slate-600 max-w-2xl">
+            <p className="text-sm text-phumulani-charcoal max-w-2xl">
               Verified community partner organizations, public contact details, eligibility criteria, and multilingual service descriptions.
             </p>
           </div>
           <button
             onClick={() => setIsSubmitModalOpen(true)}
-            className="px-4 py-2 bg-teal-800 hover:bg-teal-900 text-white rounded-lg text-sm font-semibold transition-all shadow-xs flex items-center gap-2 cursor-pointer shrink-0"
+            className="px-4 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-lg text-sm font-semibold transition-all shadow-xs flex items-center gap-2 cursor-pointer shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>Submit Resource</span>
@@ -111,7 +111,7 @@ export const CommunityResourceDirectoryTab: React.FC<Props> = ({ currentUser }) 
         {/* Filter Controls */}
         <div className="mt-6 flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
-            <Search className="absolute left-3.5 top-3 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3.5 top-3 w-4 h-4 text-phumulani-charcoal" />
             <input
               type="text"
               value={searchQuery}
@@ -123,7 +123,7 @@ export const CommunityResourceDirectoryTab: React.FC<Props> = ({ currentUser }) 
                 }));
               }}
               placeholder="Search resource name, organization, or language..."
-              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-800 focus:outline-hidden focus:ring-2 focus:ring-teal-700/20"
+              className="w-full pl-10 pr-4 py-2 bg-phumulani-cream border border-phumulani-cream rounded-lg text-sm text-phumulani-charcoal focus:outline-hidden focus:ring-2 focus:ring-phumulani-earth"
             />
           </div>
           <select
@@ -135,7 +135,7 @@ export const CommunityResourceDirectoryTab: React.FC<Props> = ({ currentUser }) 
                 search: searchQuery,
               }));
             }}
-            className="px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm text-slate-700 font-medium focus:outline-hidden"
+            className="px-3 py-2 bg-phumulani-cream border border-phumulani-cream rounded-lg text-sm text-phumulani-charcoal font-medium focus:outline-hidden"
           >
             <option value="ALL">All Categories</option>
             <option value="FOOD_ASSISTANCE">Food Assistance</option>
@@ -150,45 +150,45 @@ export const CommunityResourceDirectoryTab: React.FC<Props> = ({ currentUser }) 
       {/* Directory Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {resources.map((res) => (
-          <div key={res.id} className="bg-white rounded-xl border border-slate-200 p-5 shadow-xs flex flex-col justify-between space-y-4">
+          <div key={res.id} className="bg-white rounded-xl border border-phumulani-cream p-5 shadow-xs flex flex-col justify-between space-y-4">
             <div className="space-y-3">
               <div className="flex items-start justify-between gap-2">
-                <span className="text-[10px] font-mono font-bold bg-teal-50 text-teal-800 px-2 py-0.5 rounded border border-teal-200">
+                <span className="text-[10px] font-mono font-bold bg-phumulani-cream text-phumulani-earth px-2 py-0.5 rounded border border-phumulani-teal">
                   {res.category}
                 </span>
                 <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                  res.approvalStatus === 'PUBLISHED' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                  res.approvalStatus === 'PUBLISHED' ? 'bg-phumulani-cream text-phumulani-charcoal' : 'bg-phumulani-cream text-phumulani-charcoal'
                 }`}>
                   {res.approvalStatus}
                 </span>
               </div>
 
               <div>
-                <h3 className="font-bold text-slate-900 text-base">{res.title}</h3>
-                <p className="text-xs font-semibold text-teal-700">{res.organizationName}</p>
+                <h3 className="font-bold text-phumulani-charcoal text-base">{res.title}</h3>
+                <p className="text-xs font-semibold text-phumulani-earth">{res.organizationName}</p>
               </div>
 
-              <p className="text-xs text-slate-600 line-clamp-3">{res.serviceDescription}</p>
+              <p className="text-xs text-phumulani-charcoal line-clamp-3">{res.serviceDescription}</p>
 
               {/* Contact Info */}
-              <div className="space-y-1.5 pt-2 border-t border-slate-100 text-xs text-slate-600">
+              <div className="space-y-1.5 pt-2 border-t border-phumulani-cream text-xs text-phumulani-charcoal">
                 {res.publicContact.phone && (
                   <div className="flex items-center gap-2">
-                    <Phone className="w-3.5 h-3.5 text-slate-400" />
+                    <Phone className="w-3.5 h-3.5 text-phumulani-charcoal" />
                     <span>{res.publicContact.phone}</span>
                   </div>
                 )}
                 {res.publicContact.website && (
                   <div className="flex items-center gap-2">
-                    <Globe className="w-3.5 h-3.5 text-slate-400" />
-                    <a href={res.publicContact.website} target="_blank" rel="noreferrer" className="text-teal-700 hover:underline">
+                    <Globe className="w-3.5 h-3.5 text-phumulani-charcoal" />
+                    <a href={res.publicContact.website} target="_blank" rel="noreferrer" className="text-phumulani-earth hover:underline">
                       {res.publicContact.website}
                     </a>
                   </div>
                 )}
                 {res.publicContact.publicAddress && (
                   <div className="flex items-center gap-2">
-                    <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <MapPin className="w-3.5 h-3.5 text-phumulani-charcoal shrink-0" />
                     <span className="truncate">{res.publicContact.publicAddress}</span>
                   </div>
                 )}
@@ -197,7 +197,7 @@ export const CommunityResourceDirectoryTab: React.FC<Props> = ({ currentUser }) 
               {/* Languages */}
               <div className="flex flex-wrap gap-1 pt-1">
                 {res.languagesSupported.map((l) => (
-                  <span key={l} className="text-[10px] bg-slate-100 text-slate-700 px-1.5 py-0.5 rounded">
+                  <span key={l} className="text-[10px] bg-phumulani-cream text-phumulani-charcoal px-1.5 py-0.5 rounded">
                     {l}
                   </span>
                 ))}
@@ -205,12 +205,12 @@ export const CommunityResourceDirectoryTab: React.FC<Props> = ({ currentUser }) 
             </div>
 
             {/* Approval Footer for privileged staff */}
-            <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-              <span className="text-slate-400">Reviewed: {res.lastReviewedDate}</span>
+            <div className="pt-3 border-t border-phumulani-cream flex items-center justify-between text-xs">
+              <span className="text-phumulani-charcoal">Reviewed: {res.lastReviewedDate}</span>
               {res.approvalStatus !== 'PUBLISHED' && (
                 <button
                   onClick={() => handleApprove(res.id)}
-                  className="px-2.5 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded text-xs font-semibold cursor-pointer"
+                  className="px-2.5 py-1 bg-phumulani-green hover:bg-phumulani-teal text-phumulani-charcoal rounded text-xs font-semibold cursor-pointer"
                 >
                   Approve & Publish
                 </button>
@@ -222,56 +222,56 @@ export const CommunityResourceDirectoryTab: React.FC<Props> = ({ currentUser }) 
 
       {/* Submit Modal */}
       {isSubmitModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-          <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl border border-slate-200 space-y-4">
-            <h3 className="text-lg font-bold font-serif text-slate-900">Submit Verified Community Resource</h3>
-            <p className="text-xs text-slate-600">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 p-4">
+          <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl border border-phumulani-cream space-y-4">
+            <h3 className="text-lg font-bold font-serif text-phumulani-charcoal">Submit Verified Community Resource</h3>
+            <p className="text-xs text-phumulani-charcoal">
               Only public, verified organizational services may be listed. Confidential shelter locations are strictly prohibited.
             </p>
 
             {submitError && (
-              <div className="p-3 bg-rose-50 border border-rose-200 rounded text-rose-800 text-xs font-medium">
+              <div className="p-3 bg-phumulani-cream border border-phumulani-earth rounded text-phumulani-earth text-xs font-medium">
                 {submitError}
               </div>
             )}
             {submitSuccess && (
-              <div className="p-3 bg-emerald-50 border border-emerald-200 rounded text-emerald-800 text-xs font-medium">
+              <div className="p-3 bg-phumulani-cream border border-phumulani-green rounded text-phumulani-charcoal text-xs font-medium">
                 {submitSuccess}
               </div>
             )}
 
             <form onSubmit={handleSubmitResource} className="space-y-3">
               <div>
-                <label className="text-xs font-semibold text-slate-700 block mb-1">Resource Title *</label>
+                <label className="text-xs font-semibold text-phumulani-charcoal block mb-1">Resource Title *</label>
                 <input
                   type="text"
                   required
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. Immigrant Legal Clinic"
-                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm text-slate-800"
+                  className="w-full px-3 py-2 border border-phumulani-cream rounded text-sm text-phumulani-charcoal"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-700 block mb-1">Organization Name *</label>
+                <label className="text-xs font-semibold text-phumulani-charcoal block mb-1">Organization Name *</label>
                 <input
                   type="text"
                   required
                   value={organizationName}
                   onChange={(e) => setOrganizationName(e.target.value)}
                   placeholder="e.g. Minnesota Immigrant Law Center"
-                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm text-slate-800"
+                  className="w-full px-3 py-2 border border-phumulani-cream rounded text-sm text-phumulani-charcoal"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-xs font-semibold text-slate-700 block mb-1">Category</label>
+                  <label className="text-xs font-semibold text-phumulani-charcoal block mb-1">Category</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as ResourceCategory)}
-                    className="w-full px-3 py-2 border border-slate-300 rounded text-sm text-slate-800"
+                    className="w-full px-3 py-2 border border-phumulani-cream rounded text-sm text-phumulani-charcoal"
                   >
                     <option value="FOOD_ASSISTANCE">Food Assistance</option>
                     <option value="IMMIGRATION_LEGAL">Immigration Legal</option>
@@ -281,26 +281,26 @@ export const CommunityResourceDirectoryTab: React.FC<Props> = ({ currentUser }) 
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-700 block mb-1">Public Phone</label>
+                  <label className="text-xs font-semibold text-phumulani-charcoal block mb-1">Public Phone</label>
                   <input
                     type="text"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="(612) 555-0100"
-                    className="w-full px-3 py-2 border border-slate-300 rounded text-sm text-slate-800"
+                    className="w-full px-3 py-2 border border-phumulani-cream rounded text-sm text-phumulani-charcoal"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-slate-700 block mb-1">Service Description *</label>
+                <label className="text-xs font-semibold text-phumulani-charcoal block mb-1">Service Description *</label>
                 <textarea
                   required
                   rows={2}
                   value={serviceDescription}
                   onChange={(e) => setServiceDescription(e.target.value)}
                   placeholder="Describe services provided..."
-                  className="w-full px-3 py-2 border border-slate-300 rounded text-sm text-slate-800"
+                  className="w-full px-3 py-2 border border-phumulani-cream rounded text-sm text-phumulani-charcoal"
                 />
               </div>
 
@@ -308,13 +308,13 @@ export const CommunityResourceDirectoryTab: React.FC<Props> = ({ currentUser }) 
                 <button
                   type="button"
                   onClick={() => setIsSubmitModalOpen(false)}
-                  className="px-4 py-2 border border-slate-300 text-slate-700 rounded text-xs font-semibold hover:bg-slate-50 cursor-pointer"
+                  className="px-4 py-2 border border-phumulani-cream text-phumulani-charcoal rounded text-xs font-semibold hover:bg-phumulani-cream cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-teal-800 hover:bg-teal-900 text-white rounded text-xs font-semibold cursor-pointer"
+                  className="px-4 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded text-xs font-semibold cursor-pointer"
                 >
                   Submit for Approval
                 </button>

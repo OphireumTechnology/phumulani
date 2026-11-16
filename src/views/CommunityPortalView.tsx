@@ -307,28 +307,28 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
     >
       <div className="space-y-6">
         {/* Top Banner / Welcome */}
-        <div className="bg-[#104F57] text-white rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-sm">
+        <div className="bg-phumulani-charcoal text-white rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-sm">
           <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-2 text-xs font-semibold text-teal-200 bg-teal-900/60 px-3 py-0.5 rounded-full border border-teal-700">
-              <Users className="w-3.5 h-3.5 text-teal-300" />
+            <div className="inline-flex items-center gap-2 text-xs font-semibold text-phumulani-teal bg-phumulani-charcoal px-3 py-0.5 rounded-full border border-phumulani-teal">
+              <Users className="w-3.5 h-3.5 text-phumulani-teal" />
               <span>COMMUNITY &amp; VOLUNTEER PORTAL</span>
             </div>
             <h1 className="font-serif text-2xl font-bold">
               Community Member &amp; Volunteer Self-Service Portal — Welcome back, {currentUser.name}
             </h1>
-            <p className="text-xs text-teal-100/90 max-w-xl">
+            <p className="text-xs text-phumulani-cream max-w-xl">
               Track your volunteer applications, verify service hours, complete safeguarding credentials, and support immigrant families across Minnesota.
             </p>
           </div>
 
           <div className="flex gap-3">
-            <div className="bg-white/10 backdrop-blur-xs border border-white/20 rounded-xl p-3 text-center min-w-[110px]">
-              <div className="font-serif text-xl font-bold text-amber-300">{totalVerifiedHours} hrs</div>
-              <div className="text-[10px] text-teal-200 mt-0.5">Verified Service</div>
+            <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl p-3 text-center min-w-[110px]">
+              <div className="font-serif text-xl font-bold text-phumulani-gold">{totalVerifiedHours} hrs</div>
+              <div className="text-[10px] text-phumulani-cream mt-0.5">Verified Service</div>
             </div>
-            <div className="bg-white/10 backdrop-blur-xs border border-white/20 rounded-xl p-3 text-center min-w-[110px]">
+            <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl p-3 text-center min-w-[110px]">
               <div className="font-serif text-xl font-bold text-white">{applications.length}</div>
-              <div className="text-[10px] text-teal-200 mt-0.5">Applications</div>
+              <div className="text-[10px] text-phumulani-cream mt-0.5">Applications</div>
             </div>
           </div>
         </div>
@@ -358,37 +358,37 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
           {/* Left Column: Quick Stats & Active Assignment */}
           <div className="lg:col-span-8 space-y-6">
             {/* Active Assignment Card */}
-            <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
+            <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-4">
               <div className="flex justify-between items-start">
                 <div>
-                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded">
+                  <span className="text-[10px] font-bold text-phumulani-charcoal bg-phumulani-cream px-2.5 py-0.5 rounded">
                     Active Placement
                   </span>
-                  <h3 className="font-serif text-lg font-bold text-slate-900 mt-2">
+                  <h3 className="font-serif text-lg font-bold text-phumulani-charcoal mt-2">
                     Bilingual Youth Mentor & Tutor
                   </h3>
-                  <div className="text-xs text-slate-500 mt-0.5">
+                  <div className="text-xs text-phumulani-charcoal mt-0.5">
                     Program: Youth & Sisterhood Mentorship Circles · Lead Coordinator: Amina Yusuf
                   </div>
                 </div>
                 <div className="text-right">
-                  <span className="text-xs font-semibold text-slate-700">Next Circle:</span>
-                  <div className="text-xs text-emerald-700 font-bold">Thursday, 5:30 PM CST</div>
+                  <span className="text-xs font-semibold text-phumulani-charcoal">Next Circle:</span>
+                  <div className="text-xs text-phumulani-earth font-bold">Thursday, 5:30 PM CST</div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t border-slate-100 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t border-phumulani-cream text-xs">
                 <div>
-                  <div className="text-slate-500">Weekly Commitment</div>
-                  <div className="font-semibold text-slate-800 mt-0.5">2.0 Hours / Week</div>
+                  <div className="text-phumulani-charcoal">Weekly Commitment</div>
+                  <div className="font-semibold text-phumulani-charcoal mt-0.5">2.0 Hours / Week</div>
                 </div>
                 <div>
-                  <div className="text-slate-500">Current Mentees</div>
-                  <div className="font-semibold text-slate-800 mt-0.5">2 Immigrant High Schoolers</div>
+                  <div className="text-phumulani-charcoal">Current Mentees</div>
+                  <div className="font-semibold text-phumulani-charcoal mt-0.5">2 Immigrant High Schoolers</div>
                 </div>
                 <div>
-                  <div className="text-slate-500">Screening Status</div>
-                  <div className="font-semibold text-emerald-700 flex items-center gap-1 mt-0.5">
+                  <div className="text-phumulani-charcoal">Screening Status</div>
+                  <div className="font-semibold text-phumulani-earth flex items-center gap-1 mt-0.5">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     <span>Cleared & Active</span>
                   </div>
@@ -397,14 +397,14 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
             </div>
 
             {/* Recent Volunteer Hours Table */}
-            <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
+            <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="font-serif text-base font-bold text-slate-900">
+                <h3 className="font-serif text-base font-bold text-phumulani-charcoal">
                   Service Hours History
                 </h3>
                 <button
                   onClick={() => setActiveTab('log_hours')}
-                  className="text-xs font-semibold text-[#104F57] hover:underline flex items-center gap-1"
+                  className="text-xs font-semibold text-phumulani-earth hover:underline flex items-center gap-1"
                 >
                   <PlusCircle className="w-3.5 h-3.5" />
                   <span>Log New Hours</span>
@@ -413,7 +413,7 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 text-slate-500 border-y border-slate-200">
+                  <thead className="bg-phumulani-cream text-phumulani-charcoal border-y border-phumulani-cream">
                     <tr>
                       <th className="py-2.5 px-3 font-semibold">Date</th>
                       <th className="py-2.5 px-3 font-semibold">Activity</th>
@@ -421,23 +421,23 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
                       <th className="py-2.5 px-3 font-semibold">Verification</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-phumulani-cream">
                     {hours.map((h) => (
-                      <tr key={h.id} className="hover:bg-slate-50">
-                        <td className="py-2.5 px-3 text-slate-600 font-mono">{h.date}</td>
+                      <tr key={h.id} className="hover:bg-phumulani-cream">
+                        <td className="py-2.5 px-3 text-phumulani-charcoal font-mono">{h.date}</td>
                         <td className="py-2.5 px-3">
-                          <div className="font-medium text-slate-800">{h.opportunityTitle}</div>
-                          <div className="text-[11px] text-slate-500">{h.activityDescription}</div>
+                          <div className="font-medium text-phumulani-charcoal">{h.opportunityTitle}</div>
+                          <div className="text-[11px] text-phumulani-charcoal">{h.activityDescription}</div>
                         </td>
-                        <td className="py-2.5 px-3 font-bold text-slate-800">{h.hours} hrs</td>
+                        <td className="py-2.5 px-3 font-bold text-phumulani-charcoal">{h.hours} hrs</td>
                         <td className="py-2.5 px-3">
                           {h.verified ? (
-                            <span className="text-[11px] font-semibold text-emerald-700 flex items-center gap-1">
+                            <span className="text-[11px] font-semibold text-phumulani-earth flex items-center gap-1">
                               <CheckCircle2 className="w-3.5 h-3.5" />
                               <span>Verified by {h.verifiedBy}</span>
                             </span>
                           ) : (
-                            <span className="text-[11px] text-amber-700 bg-amber-50 px-2 py-0.5 rounded font-medium">
+                            <span className="text-[11px] text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded font-medium">
                               Pending Review
                             </span>
                           )}
@@ -452,54 +452,54 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
 
           {/* Right Column: Orientation & Credentials */}
           <div className="lg:col-span-4 space-y-6">
-            <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
-              <h3 className="font-serif text-base font-bold text-slate-900 flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-4">
+              <h3 className="font-serif text-base font-bold text-phumulani-charcoal flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-phumulani-earth" />
                 <span>Safeguarding Credentials</span>
               </h3>
-              <p className="text-xs text-slate-600 leading-relaxed">
+              <p className="text-xs text-phumulani-charcoal leading-relaxed">
                 Phumulani requires all volunteers to maintain annual trauma-informed safeguarding certification before accessing community spaces.
               </p>
 
               <div className="space-y-3 pt-2 text-xs">
-                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center justify-between">
+                <div className="p-3 bg-phumulani-cream border border-phumulani-green rounded-lg flex items-center justify-between">
                   <div>
-                    <div className="font-semibold text-emerald-900">Survivor Confidentiality</div>
-                    <div className="text-[11px] text-emerald-700">Valid through Oct 2027</div>
+                    <div className="font-semibold text-phumulani-charcoal">Survivor Confidentiality</div>
+                    <div className="text-[11px] text-phumulani-earth">Valid through Oct 2027</div>
                   </div>
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
                 </div>
 
-                <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center justify-between">
+                <div className="p-3 bg-phumulani-cream border border-phumulani-green rounded-lg flex items-center justify-between">
                   <div>
-                    <div className="font-semibold text-emerald-900">Criminal Background Check</div>
-                    <div className="text-[11px] text-emerald-700">BCA Minnesota Cleared</div>
+                    <div className="font-semibold text-phumulani-charcoal">Criminal Background Check</div>
+                    <div className="text-[11px] text-phumulani-earth">BCA Minnesota Cleared</div>
                   </div>
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
                 </div>
 
-                <div className="p-3 bg-teal-50 border border-teal-200 rounded-lg flex items-center justify-between">
+                <div className="p-3 bg-phumulani-cream border border-phumulani-teal rounded-lg flex items-center justify-between">
                   <div>
-                    <div className="font-semibold text-teal-950">Youth Mentorship Training</div>
-                    <div className="text-[11px] text-teal-700">Completed 4-Hour Cohort</div>
+                    <div className="font-semibold text-phumulani-earth">Youth Mentorship Training</div>
+                    <div className="text-[11px] text-phumulani-earth">Completed 4-Hour Cohort</div>
                   </div>
-                  <CheckCircle2 className="w-4 h-4 text-teal-600" />
+                  <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
                 </div>
               </div>
             </div>
 
             {/* Mentor Toolkit Link */}
-            <div className="bg-gradient-to-br from-purple-50 to-teal-50 rounded-xl p-6 border border-purple-200/80 space-y-3">
-              <div className="font-serif font-bold text-sm text-[#633C69] flex items-center gap-2">
+            <div className="bg-phumulani-cream rounded-xl p-6 border border-phumulani-earth space-y-3">
+              <div className="font-serif font-bold text-sm text-phumulani-earth flex items-center gap-2">
                 <BookOpen className="w-4 h-4" />
                 <span>Volunteer Learning Toolkit</span>
               </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
+              <p className="text-xs text-phumulani-charcoal leading-relaxed">
                 Access culturally adapted curriculum guides, trauma-informed conversation starters, and Minnesota resource directories.
               </p>
               <button
                 onClick={() => setActiveTab('training')}
-                className="text-xs font-bold text-[#104F57] hover:underline flex items-center gap-1"
+                className="text-xs font-bold text-phumulani-earth hover:underline flex items-center gap-1"
               >
                 <span>Access Modules</span>
                 <ChevronRight className="w-3.5 h-3.5" />
@@ -511,68 +511,68 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
 
       {/* TAB: MEMBER PROFILE (M30.06) */}
       {activeTab === 'member_profile' && (
-        <div className="max-w-3xl bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
-          <div className="flex items-start justify-between border-b border-slate-100 pb-4">
+        <div className="max-w-3xl bg-white rounded-xl border border-phumulani-cream p-6 sm:p-8 shadow-xs space-y-6">
+          <div className="flex items-start justify-between border-b border-phumulani-cream pb-4">
             <div>
-              <h3 className="font-serif text-lg font-bold text-slate-900">
+              <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                 Community Member Profile & Preferences
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-phumulani-charcoal mt-1">
                 Manage your identity, communication preferences, and accessibility requirements.
               </p>
             </div>
-            <span className="text-xs font-mono font-bold text-[#104F57] bg-teal-50 px-2.5 py-1 rounded">
+            <span className="text-xs font-mono font-bold text-phumulani-earth bg-phumulani-cream px-2.5 py-1 rounded">
               ID: {currentUser.id}
             </span>
           </div>
 
           {profileSavedFeedback && (
-            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-xs font-semibold text-emerald-800 flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+            <div className="p-4 bg-phumulani-cream border border-phumulani-green rounded-lg text-xs font-semibold text-phumulani-charcoal flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-phumulani-earth flex-shrink-0" />
               <span>{profileSavedFeedback}</span>
             </div>
           )}
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">Full Legal / Preferred Name</label>
+              <label className="block font-semibold text-phumulani-charcoal mb-1">Full Legal / Preferred Name</label>
               <input
                 type="text"
                 disabled
                 value={currentUser.name}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg bg-slate-50 text-slate-600 cursor-not-allowed"
+                className="w-full px-3 py-2 border border-phumulani-cream rounded-lg bg-phumulani-cream text-phumulani-charcoal cursor-not-allowed"
               />
-              <span className="text-[10px] text-slate-400 mt-1 block">Managed via core identity register</span>
+              <span className="text-[10px] text-phumulani-charcoal mt-1 block">Managed via core identity register</span>
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">Primary Email Address</label>
+              <label className="block font-semibold text-phumulani-charcoal mb-1">Primary Email Address</label>
               <input
                 type="email"
                 disabled
                 value={currentUser.email}
-                className="w-full px-3 py-2 border border-slate-200 rounded-lg bg-slate-50 text-slate-600 cursor-not-allowed"
+                className="w-full px-3 py-2 border border-phumulani-cream rounded-lg bg-phumulani-cream text-phumulani-charcoal cursor-not-allowed"
               />
-              <span className="text-[10px] text-slate-400 mt-1 block">Account authentication login</span>
+              <span className="text-[10px] text-phumulani-charcoal mt-1 block">Account authentication login</span>
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">Safe Contact Phone Number</label>
+              <label className="block font-semibold text-phumulani-charcoal mb-1">Safe Contact Phone Number</label>
               <input
                 type="tel"
                 value={memberPhone}
                 onChange={(e) => setMemberPhone(e.target.value)}
                 placeholder="+1 (612) 555-0149"
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-[#104F57]"
+                className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none focus:border-phumulani-earth"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">Preferred Language</label>
+              <label className="block font-semibold text-phumulani-charcoal mb-1">Preferred Language</label>
               <select
                 value={memberLanguage}
                 onChange={(e) => setMemberLanguage(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white focus:border-[#104F57]"
+                className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white focus:border-phumulani-earth"
               >
                 <option value="English">English</option>
                 <option value="Somali">Somali (Af-Soomaali)</option>
@@ -585,11 +585,11 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">Safe Contact Preference</label>
+              <label className="block font-semibold text-phumulani-charcoal mb-1">Safe Contact Preference</label>
               <select
                 value={memberContactPref}
                 onChange={(e) => setMemberContactPref(e.target.value as 'email' | 'phone' | 'signal')}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white focus:border-[#104F57]"
+                className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white focus:border-phumulani-earth"
               >
                 <option value="email">Email Only (Safe encrypted address)</option>
                 <option value="phone">Phone Call (Daytime 9am-5pm)</option>
@@ -598,25 +598,25 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">Accessibility & Accommodations</label>
+              <label className="block font-semibold text-phumulani-charcoal mb-1">Accessibility & Accommodations</label>
               <input
                 type="text"
                 value={memberAccommodations}
                 onChange={(e) => setMemberAccommodations(e.target.value)}
                 placeholder="e.g. Wheelchair access, ASL interpreter, large print materials"
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none focus:border-[#104F57]"
+                className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none focus:border-phumulani-earth"
               />
             </div>
           </div>
 
-          <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-            <span className="text-[11px] text-slate-500">
+          <div className="pt-4 border-t border-phumulani-cream flex items-center justify-between">
+            <span className="text-[11px] text-phumulani-charcoal">
               Changes update your persistent community record immediately.
             </span>
             <button
               type="button"
               onClick={handleSaveProfile}
-              className="px-5 py-2.5 bg-[#104F57] hover:bg-[#0c3e44] text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
+              className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
             >
               Save Profile Updates
             </button>
@@ -627,24 +627,24 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
       {/* TAB: GENERAL SERVICE REQUESTS (M30.06 Legacy) */}
       {activeTab === 'legacy_service_requests' && (
         <div className="space-y-6">
-          <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-slate-100 pb-4">
+          <div className="bg-white rounded-xl border border-phumulani-cream p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-phumulani-cream pb-4">
               <div>
-                <h3 className="font-serif text-lg font-bold text-slate-900">
+                <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                   Request Community Services & Support
                 </h3>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-phumulani-charcoal mt-1">
                   Connect with culturally responsive navigation, educational resources, career circles, or material aid.
                 </p>
               </div>
-              <div className="p-2.5 bg-amber-50 border border-amber-200 rounded-lg text-amber-900 text-[11px] max-w-sm">
+              <div className="p-2.5 bg-phumulani-cream border border-phumulani-gold rounded-lg text-phumulani-charcoal text-[11px] max-w-sm">
                 <strong>Emergency Notice:</strong> If you are in immediate physical danger, please call <strong>911</strong> or the <strong>Minnesota Day One Crisis Hotline at 1-866-223-1111</strong>.
               </div>
             </div>
 
             {serviceRequestFeedback && (
-              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-xs font-semibold text-emerald-800 flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+              <div className="p-4 bg-phumulani-cream border border-phumulani-green rounded-lg text-xs font-semibold text-phumulani-charcoal flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-phumulani-earth flex-shrink-0" />
                 <span>{serviceRequestFeedback}</span>
               </div>
             )}
@@ -652,11 +652,11 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
             <form onSubmit={handleCreateServiceRequest} className="space-y-4 text-xs">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Service Program Need</label>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Service Program Need</label>
                   <select
                     value={serviceCategory}
                     onChange={(e) => setServiceCategory(e.target.value as any)}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white"
+                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white"
                   >
                     <option value="COMMUNITY_RESOURCE">Community Resource & Essentials</option>
                     <option value="EMPLOYMENT_ASSISTANCE">Career & Employment Pathways</option>
@@ -666,11 +666,11 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Preferred Spoken Language</label>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Preferred Spoken Language</label>
                   <select
                     value={serviceLanguage}
                     onChange={(e) => setServiceLanguage(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white"
+                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white"
                   >
                     <option value="English">English</option>
                     <option value="Somali">Somali</option>
@@ -682,11 +682,11 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Safest Time for Contact</label>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Safest Time for Contact</label>
                   <select
                     value={serviceSafeTime}
                     onChange={(e) => setServiceSafeTime(e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white"
+                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white"
                   >
                     <option value="Mornings (9am - 12pm)">Mornings (9am - 12pm)</option>
                     <option value="Afternoons (12pm - 4pm)">Afternoons (12pm - 4pm)</option>
@@ -697,24 +697,24 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
               </div>
 
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Details & Specific Requests</label>
+                <label className="block font-semibold text-phumulani-charcoal mb-1">Details & Specific Requests</label>
                 <textarea
                   rows={3}
                   required
                   value={serviceDescription}
                   onChange={(e) => setServiceDescription(e.target.value)}
                   placeholder="Describe the support you are seeking or any questions for our advocates..."
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none"
+                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
                 />
               </div>
 
               <div className="flex items-center justify-between pt-2">
-                <span className="text-[11px] text-slate-500">
+                <span className="text-[11px] text-phumulani-charcoal">
                   Protected under Phumulani's Trauma-Informed Privacy Shield.
                 </span>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 bg-[#104F57] hover:bg-[#0c3e44] text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
+                  className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
                 >
                   Submit Service Request
                 </button>
@@ -723,32 +723,32 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
           </div>
 
           {/* Past / Active Requests */}
-          <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
-            <h4 className="font-serif text-sm font-bold text-slate-900">
+          <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-4">
+            <h4 className="font-serif text-sm font-bold text-phumulani-charcoal">
               Your Submitted Requests ({memberServiceRequests.length})
             </h4>
 
             {memberServiceRequests.length === 0 ? (
-              <div className="p-6 text-center text-xs text-slate-400 bg-slate-50 rounded-lg">
+              <div className="p-6 text-center text-xs text-phumulani-charcoal bg-phumulani-cream rounded-lg">
                 No active service requests recorded yet.
               </div>
             ) : (
               <div className="space-y-3">
                 {memberServiceRequests.map((req) => (
-                  <div key={req.id} className="p-4 border border-slate-200 rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                  <div key={req.id} className="p-4 border border-phumulani-cream rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-[11px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded">
+                        <span className="font-mono text-[11px] font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded">
                           {req.id}
                         </span>
-                        <span className="font-semibold text-xs text-slate-900">{req.category}</span>
+                        <span className="font-semibold text-xs text-phumulani-charcoal">{req.category}</span>
                       </div>
-                      <p className="text-xs text-slate-600">{req.notes}</p>
-                      <div className="text-[10px] text-slate-400">
+                      <p className="text-xs text-phumulani-charcoal">{req.notes}</p>
+                      <div className="text-[10px] text-phumulani-charcoal">
                         Language: {req.preferredLanguage} · Safe Contact: {req.safeContactTime} · Submitted: {new Date(req.submittedAt).toLocaleDateString()}
                       </div>
                     </div>
-                    <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase bg-teal-50 text-[#104F57] border border-teal-200">
+                    <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase bg-phumulani-cream text-phumulani-earth border border-phumulani-teal">
                       {req.status}
                     </span>
                   </div>
@@ -762,24 +762,24 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
       {/* TAB: PROGRAM ENROLLMENTS (M30.06 Legacy) */}
       {activeTab === 'legacy_programs' && (
         <div className="space-y-6">
-          <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
+          <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-4">
             <div className="flex justify-between items-center">
               <div>
-                <h3 className="font-serif text-lg font-bold text-slate-900">
+                <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                   Community Program Directory & Cohorts
                 </h3>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-phumulani-charcoal mt-1">
                   Enroll in our community-led initiatives, workshops, and mentorship cohorts.
                 </p>
               </div>
-              <span className="text-xs font-bold text-[#104F57] bg-teal-50 px-3 py-1 rounded-full border border-teal-100">
+              <span className="text-xs font-bold text-phumulani-earth bg-phumulani-cream px-3 py-1 rounded-full border border-phumulani-cream">
                 {enrolledProgramIds.length} Enrolled
               </span>
             </div>
 
             {enrollmentNotice && (
-              <div className="p-4 bg-teal-50 border border-teal-200 rounded-lg text-xs font-semibold text-[#104F57] flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-teal-600 flex-shrink-0" />
+              <div className="p-4 bg-phumulani-cream border border-phumulani-teal rounded-lg text-xs font-semibold text-phumulani-earth flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-phumulani-earth flex-shrink-0" />
                 <span>{enrollmentNotice}</span>
               </div>
             )}
@@ -791,24 +791,24 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
                   <div
                     key={prog.id}
                     className={`p-5 rounded-xl border transition-all space-y-3 ${
-                      isEnrolled ? 'border-teal-500 bg-teal-50/30' : 'border-slate-200 bg-white'
+                      isEnrolled ? 'border-phumulani-cream bg-phumulani-cream' : 'border-phumulani-cream bg-white'
                     }`}
                   >
                     <div className="flex justify-between items-start">
-                      <span className="text-[10px] font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded uppercase">
+                      <span className="text-[10px] font-mono font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded uppercase">
                         {prog.slug}
                       </span>
                       {isEnrolled && (
-                        <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full flex items-center gap-1">
+                        <span className="text-[10px] font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded-full flex items-center gap-1">
                           <CheckCircle2 className="w-3 h-3" /> Enrolled
                         </span>
                       )}
                     </div>
 
-                    <h4 className="font-serif font-bold text-sm text-slate-900">{prog.name}</h4>
-                    <p className="text-xs text-slate-600 leading-relaxed">{prog.description}</p>
+                    <h4 className="font-serif font-bold text-sm text-phumulani-charcoal">{prog.name}</h4>
+                    <p className="text-xs text-phumulani-charcoal leading-relaxed">{prog.description}</p>
 
-                    <div className="text-[11px] text-slate-500 space-y-0.5 pt-2 border-t border-slate-100">
+                    <div className="text-[11px] text-phumulani-charcoal space-y-0.5 pt-2 border-t border-phumulani-cream">
                       <div><strong>Lead Coordinator:</strong> {prog.leadCoordinator}</div>
                       <div><strong>Focus:</strong> {prog.tagline}</div>
                     </div>
@@ -819,8 +819,8 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
                         onClick={() => handleToggleEnrollment(prog.id, prog.name)}
                         className={`w-full py-2 px-3 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
                           isEnrolled
-                            ? 'bg-rose-50 text-rose-700 hover:bg-rose-100 border border-rose-200'
-                            : 'bg-[#104F57] hover:bg-[#0c3e44] text-white'
+                            ? 'bg-phumulani-cream text-phumulani-earth hover:bg-phumulani-cream border border-phumulani-earth'
+                            : 'bg-phumulani-earth hover:bg-phumulani-orange text-white'
                         }`}
                       >
                         {isEnrolled ? 'Withdraw from Program' : 'Enroll in Next Cohort'}
@@ -836,40 +836,40 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
 
       {/* TAB: PRIVACY, CONSENT & DATA RIGHTS (M30.06) */}
       {activeTab === 'privacy_consent' && (
-        <div className="max-w-3xl bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
-          <div className="space-y-1 border-b border-slate-100 pb-4">
-            <h3 className="font-serif text-lg font-bold text-slate-900">
+        <div className="max-w-3xl bg-white rounded-xl border border-phumulani-cream p-6 sm:p-8 shadow-xs space-y-6">
+          <div className="space-y-1 border-b border-phumulani-cream pb-4">
+            <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
               Data Rights, Consents & Privacy Safeguards
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-phumulani-charcoal">
               Manage how Phumulani uses your information and download your complete personal data record.
             </p>
           </div>
 
           {dataExportStatus && (
-            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-xs font-semibold text-emerald-800 flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+            <div className="p-4 bg-phumulani-cream border border-phumulani-green rounded-lg text-xs font-semibold text-phumulani-charcoal flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-phumulani-earth flex-shrink-0" />
               <span>{dataExportStatus}</span>
             </div>
           )}
 
           {/* VAWA 1367 Certification Banner */}
-          <div className="p-4 bg-teal-50 border border-teal-200 rounded-xl space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-[#104F57]">
-              <ShieldCheck className="w-4 h-4 text-teal-700" />
+          <div className="p-4 bg-phumulani-cream border border-phumulani-teal rounded-xl space-y-2">
+            <div className="flex items-center gap-2 text-xs font-bold text-phumulani-earth">
+              <ShieldCheck className="w-4 h-4 text-phumulani-earth" />
               <span>Statutory Privacy Certification (VAWA Section 1367)</span>
             </div>
-            <p className="text-xs text-slate-700 leading-relaxed">
+            <p className="text-xs text-phumulani-charcoal leading-relaxed">
               Phumulani maintains an absolute quarantine firewall for all beneficiary intake records and sensitive case files. AI workforce agents, third-party analytics, and unauthorized personnel possess zero access to survivor identities or case narratives under 8 U.S.C. § 1367.
             </p>
           </div>
 
           {/* Consent Toggles */}
           <div className="space-y-4 text-xs pt-2">
-            <div className="flex items-start justify-between gap-4 p-4 border border-slate-200 rounded-lg">
+            <div className="flex items-start justify-between gap-4 p-4 border border-phumulani-cream rounded-lg">
               <div>
-                <div className="font-bold text-slate-900">Anonymized Impact & Outcome Research</div>
-                <p className="text-slate-500 mt-0.5">
+                <div className="font-bold text-phumulani-charcoal">Anonymized Impact & Outcome Research</div>
+                <p className="text-phumulani-charcoal mt-0.5">
                   Allow Phumulani to include aggregated, non-personally identifiable program graduation numbers in philanthropic grant reports.
                 </p>
               </div>
@@ -877,14 +877,14 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
                 type="checkbox"
                 checked={consentOutcomeResearch}
                 onChange={(e) => setConsentOutcomeResearch(e.target.checked)}
-                className="w-4 h-4 mt-1 accent-[#104F57] cursor-pointer"
+                className="w-4 h-4 mt-1 accent-phumulani-earth cursor-pointer"
               />
             </div>
 
-            <div className="flex items-start justify-between gap-4 p-4 border border-slate-200 rounded-lg">
+            <div className="flex items-start justify-between gap-4 p-4 border border-phumulani-cream rounded-lg">
               <div>
-                <div className="font-bold text-slate-900">Cohort Scheduling & Urgent Service SMS</div>
-                <p className="text-slate-500 mt-0.5">
+                <div className="font-bold text-phumulani-charcoal">Cohort Scheduling & Urgent Service SMS</div>
+                <p className="text-phumulani-charcoal mt-0.5">
                   Receive SMS reminders for upcoming mentorship meetings, tutoring sessions, and program updates.
                 </p>
               </div>
@@ -892,14 +892,14 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
                 type="checkbox"
                 checked={consentNotifications}
                 onChange={(e) => setConsentNotifications(e.target.checked)}
-                className="w-4 h-4 mt-1 accent-[#104F57] cursor-pointer"
+                className="w-4 h-4 mt-1 accent-phumulani-earth cursor-pointer"
               />
             </div>
 
-            <div className="flex items-start justify-between gap-4 p-4 border border-slate-200 rounded-lg">
+            <div className="flex items-start justify-between gap-4 p-4 border border-phumulani-cream rounded-lg">
               <div>
-                <div className="font-bold text-slate-900">Community Monthly Newsletter</div>
-                <p className="text-slate-500 mt-0.5">
+                <div className="font-bold text-phumulani-charcoal">Community Monthly Newsletter</div>
+                <p className="text-phumulani-charcoal mt-0.5">
                   Receive our monthly community bulletin featuring cultural celebrations, new program launches, and donor highlights.
                 </p>
               </div>
@@ -907,23 +907,23 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
                 type="checkbox"
                 checked={consentNewsletter}
                 onChange={(e) => setConsentNewsletter(e.target.checked)}
-                className="w-4 h-4 mt-1 accent-[#104F57] cursor-pointer"
+                className="w-4 h-4 mt-1 accent-phumulani-earth cursor-pointer"
               />
             </div>
           </div>
 
           {/* Data Export & Portability */}
-          <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="pt-4 border-t border-phumulani-cream flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-              <div className="text-xs font-bold text-slate-900">Personal Data Portability Archive</div>
-              <p className="text-[11px] text-slate-500">Download a verified JSON copy of your profile, requests, and enrollments.</p>
+              <div className="text-xs font-bold text-phumulani-charcoal">Personal Data Portability Archive</div>
+              <p className="text-[11px] text-phumulani-charcoal">Download a verified JSON copy of your profile, requests, and enrollments.</p>
             </div>
             <button
               type="button"
               onClick={handleExportData}
-              className="px-4 py-2 border border-slate-300 hover:bg-slate-50 text-slate-800 rounded-lg font-bold text-xs flex items-center gap-2 cursor-pointer"
+              className="px-4 py-2 border border-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-lg font-bold text-xs flex items-center gap-2 cursor-pointer"
             >
-              <Download className="w-4 h-4 text-slate-600" />
+              <Download className="w-4 h-4 text-phumulani-charcoal" />
               <span>Export My Data Archive</span>
             </button>
           </div>
@@ -932,23 +932,23 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
 
       {/* TAB 2: APPLICATIONS TRACKING & 15-STAGE LIFECYCLE (M30.07) */}
       {activeTab === 'applications' && (
-        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-8">
+        <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-8">
           <div className="space-y-1">
-            <h3 className="font-serif text-lg font-bold text-slate-900">
+            <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
               Volunteer Lifecycle & Application Management (M30.07)
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-phumulani-charcoal">
               End-to-end 15-stage workflow governing recruitment, AI matching, safeguarding clearance, deployment, and service hour certification.
             </p>
           </div>
 
           {/* 15-Stage Master Lifecycle Flow Diagram */}
-          <div className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-4">
+          <div className="p-5 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-slate-800">
+              <span className="text-xs font-bold text-phumulani-charcoal">
                 Phumulani 15-Stage Volunteer Operational Pipeline
               </span>
-              <span className="text-[11px] font-mono text-[#104F57] bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+              <span className="text-[11px] font-mono text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded border border-phumulani-teal">
                 Standard M30.07 Protocol
               </span>
             </div>
@@ -973,15 +973,15 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
               ].map((stage) => (
                 <div
                   key={stage.num}
-                  className="p-2.5 rounded-lg border bg-white border-slate-200 space-y-1"
+                  className="p-2.5 rounded-lg border bg-white border-phumulani-cream space-y-1"
                 >
-                  <div className="flex items-center gap-1.5 font-bold text-slate-800">
-                    <span className="w-5 h-5 rounded-full bg-[#104F57] text-white flex items-center justify-center text-[9px] font-mono">
+                  <div className="flex items-center gap-1.5 font-bold text-phumulani-charcoal">
+                    <span className="w-5 h-5 rounded-full bg-phumulani-earth text-white flex items-center justify-center text-[9px] font-mono">
                       {stage.num}
                     </span>
                     <span className="truncate">{stage.name}</span>
                   </div>
-                  <p className="text-[10px] text-slate-500 leading-tight">{stage.desc}</p>
+                  <p className="text-[10px] text-phumulani-charcoal leading-tight">{stage.desc}</p>
                 </div>
               ))}
             </div>
@@ -989,26 +989,26 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
 
           {/* Active Volunteer Applications */}
           <div className="space-y-4">
-            <h4 className="font-serif text-sm font-bold text-slate-900">
+            <h4 className="font-serif text-sm font-bold text-phumulani-charcoal">
               Active Application Records ({applications.length})
             </h4>
 
             {applications.map((app) => (
               <div
                 key={app.id}
-                className="p-5 rounded-xl border border-slate-200 hover:border-teal-300 transition-all space-y-4"
+                className="p-5 rounded-xl border border-phumulani-cream hover:border-phumulani-orange transition-all space-y-4"
               >
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-[#104F57] bg-teal-50 px-2 py-0.5 rounded">
+                      <span className="font-mono text-xs font-bold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded">
                         {app.trackingId}
                       </span>
-                      <h4 className="font-serif font-bold text-base text-slate-900">
+                      <h4 className="font-serif font-bold text-base text-phumulani-charcoal">
                         {app.opportunityTitle}
                       </h4>
                     </div>
-                    <div className="text-xs text-slate-500 mt-1">
+                    <div className="text-xs text-phumulani-charcoal mt-1">
                       Applicant: <strong>{app.fullName}</strong> ({app.email}) · Submitted: {new Date(app.submittedAt).toLocaleDateString()}
                     </div>
                   </div>
@@ -1016,10 +1016,10 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
                   <span
                     className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${
                       app.status === 'approved_active'
-                        ? 'bg-emerald-100 text-emerald-800'
+                        ? 'bg-phumulani-cream text-phumulani-charcoal'
                         : app.status === 'screening_review'
-                        ? 'bg-blue-100 text-blue-800'
-                        : 'bg-amber-100 text-amber-800'
+                        ? 'bg-phumulani-cream text-phumulani-earth'
+                        : 'bg-phumulani-cream text-phumulani-charcoal'
                     }`}
                   >
                     {app.status.replace('_', ' ')}
@@ -1027,24 +1027,24 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
                 </div>
 
                 {/* Workflow B Step Indicator */}
-                <div className="bg-slate-50 p-3 rounded-lg flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-600">
-                  <span className={app.submittedAt ? 'font-bold text-emerald-700' : ''}>1. Application Received ✓</span>
+                <div className="bg-phumulani-cream p-3 rounded-lg flex flex-wrap items-center justify-between gap-2 text-[11px] text-phumulani-charcoal">
+                  <span className={app.submittedAt ? 'font-bold text-phumulani-earth' : ''}>1. Application Received ✓</span>
                   <span>→</span>
-                  <span className={app.aiSuggestedMatchNotes ? 'font-bold text-emerald-700' : ''}>2. AI Match Evaluated ✓</span>
+                  <span className={app.aiSuggestedMatchNotes ? 'font-bold text-phumulani-earth' : ''}>2. AI Match Evaluated ✓</span>
                   <span>→</span>
-                  <span className={app.status !== 'submitted' ? 'font-bold text-emerald-700' : 'text-slate-400'}>3. Coordinator Screening</span>
+                  <span className={app.status !== 'submitted' ? 'font-bold text-phumulani-earth' : 'text-phumulani-charcoal'}>3. Coordinator Screening</span>
                   <span>→</span>
-                  <span className={app.safeguardingAcknowledged ? 'font-bold text-emerald-700' : 'text-slate-400'}>4. Safeguarding Orientation</span>
+                  <span className={app.safeguardingAcknowledged ? 'font-bold text-phumulani-earth' : 'text-phumulani-charcoal'}>4. Safeguarding Orientation</span>
                   <span>→</span>
-                  <span className={app.status === 'approved_active' ? 'font-bold text-emerald-700' : 'text-slate-400'}>5. Placement Approved</span>
+                  <span className={app.status === 'approved_active' ? 'font-bold text-phumulani-earth' : 'text-phumulani-charcoal'}>5. Placement Approved</span>
                 </div>
 
                 {app.aiSuggestedMatchNotes && (
-                  <div className="p-3 bg-teal-50/70 border border-teal-200/80 rounded-lg text-xs space-y-1">
-                    <div className="font-semibold text-[#104F57] flex items-center gap-1.5">
+                  <div className="p-3 bg-phumulani-cream border border-phumulani-teal rounded-lg text-xs space-y-1">
+                    <div className="font-semibold text-phumulani-earth flex items-center gap-1.5">
                       <span>Agent A04 (Volunteer Recruiter) Advisory Assessment:</span>
                     </div>
-                    <p className="text-slate-700">{app.aiSuggestedMatchNotes}</p>
+                    <p className="text-phumulani-charcoal">{app.aiSuggestedMatchNotes}</p>
                   </div>
                 )}
               </div>
@@ -1055,19 +1055,19 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
 
       {/* TAB 3: LOG SERVICE HOURS */}
       {activeTab === 'log_hours' && (
-        <div className="max-w-2xl bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
+        <div className="max-w-2xl bg-white rounded-xl border border-phumulani-cream p-6 sm:p-8 shadow-xs space-y-6">
           <div>
-            <h3 className="font-serif text-lg font-bold text-slate-900">
+            <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
               Log Volunteer Service Hours
             </h3>
-            <p className="text-xs text-slate-500 mt-1">
+            <p className="text-xs text-phumulani-charcoal mt-1">
               Service hours are verified by program coordinators for community impact reporting and volunteer milestone recognition.
             </p>
           </div>
 
           {hoursFeedback && (
-            <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-lg text-xs font-semibold text-emerald-800 flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+            <div className="p-4 bg-phumulani-cream border border-phumulani-green rounded-lg text-xs font-semibold text-phumulani-charcoal flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
               <span>{hoursFeedback}</span>
             </div>
           )}
@@ -1075,17 +1075,17 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
           <form onSubmit={handleLogHoursSubmit} className="space-y-4 text-xs">
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Service Date</label>
+                <label className="block font-semibold text-phumulani-charcoal mb-1">Service Date</label>
                 <input
                   type="date"
                   required
                   value={logDate}
                   onChange={(e) => setLogDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none"
+                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
                 />
               </div>
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Total Hours</label>
+                <label className="block font-semibold text-phumulani-charcoal mb-1">Total Hours</label>
                 <input
                   type="number"
                   step="0.5"
@@ -1094,17 +1094,17 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
                   required
                   value={logHours}
                   onChange={(e) => setLogHours(Number(e.target.value))}
-                  className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none"
+                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">Program / Activity Assignment</label>
+              <label className="block font-semibold text-phumulani-charcoal mb-1">Program / Activity Assignment</label>
               <select
                 value={logOpportunityTitle}
                 onChange={(e) => setLogOpportunityTitle(e.target.value)}
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none bg-white text-xs"
+                className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white text-xs"
               >
                 {opportunities.map((o) => (
                   <option key={o.id} value={o.title}>
@@ -1115,20 +1115,20 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
             </div>
 
             <div>
-              <label className="block font-semibold text-slate-700 mb-1">Brief Description of Activities Completed</label>
+              <label className="block font-semibold text-phumulani-charcoal mb-1">Brief Description of Activities Completed</label>
               <textarea
                 rows={4}
                 required
                 value={logDescription}
                 onChange={(e) => setLogDescription(e.target.value)}
                 placeholder="e.g. Conducted 1-on-1 geometry tutoring, reviewed high school graduation requirements, assisted student with college scholarship search."
-                className="w-full px-3 py-2 border border-slate-300 rounded-lg outline-none"
+                className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
               />
             </div>
 
             <button
               type="submit"
-              className="py-2.5 px-5 bg-[#104F57] hover:bg-[#0c3e44] text-white rounded-lg font-bold transition-colors cursor-pointer"
+              className="py-2.5 px-5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold transition-colors cursor-pointer"
             >
               Submit Service Record
             </button>
@@ -1138,45 +1138,45 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
 
       {/* TAB 4: TRAINING & SAFEGUARDING */}
       {activeTab === 'training' && (
-        <div className="bg-white rounded-xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
+        <div className="bg-white rounded-xl border border-phumulani-cream p-6 sm:p-8 shadow-xs space-y-6">
           <div className="space-y-1">
-            <h3 className="font-serif text-lg font-bold text-slate-900">
+            <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
               Trauma-Informed Safeguarding & Orientation Curriculum
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-phumulani-charcoal">
               Mandatory orientation governed by Phumulani Safeguarding Lead Sister Miriam K.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-            <div className="p-5 border border-slate-200 rounded-xl space-y-3">
+            <div className="p-5 border border-phumulani-cream rounded-xl space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="font-serif font-bold text-sm text-slate-900">
+                <h4 className="font-serif font-bold text-sm text-phumulani-charcoal">
                   Module 1: Cultural Humility & Survivor Privacy
                 </h4>
-                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded">
                   Completed
                 </span>
               </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
+              <p className="text-xs text-phumulani-charcoal leading-relaxed">
                 Understanding Minnesota immigrant community dynamics, trauma triggers, language access rights, and the absolute prohibition on sharing beneficiary identities or locations.
               </p>
-              <div className="text-[11px] text-slate-400">Duration: 45 Minutes · Verified</div>
+              <div className="text-[11px] text-phumulani-charcoal">Duration: 45 Minutes · Verified</div>
             </div>
 
-            <div className="p-5 border border-slate-200 rounded-xl space-y-3">
+            <div className="p-5 border border-phumulani-cream rounded-xl space-y-3">
               <div className="flex items-center justify-between">
-                <h4 className="font-serif font-bold text-sm text-slate-900">
+                <h4 className="font-serif font-bold text-sm text-phumulani-charcoal">
                   Module 2: Mandatory Escalation & Emergency Protocols
                 </h4>
-                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded">
                   Completed
                 </span>
               </div>
-              <p className="text-xs text-slate-600 leading-relaxed">
+              <p className="text-xs text-phumulani-charcoal leading-relaxed">
                 How to recognize imminent threat indicators, Minnesota mandated reporting obligations for vulnerable adults and children, and immediate escalation channels to designated officers.
               </p>
-              <div className="text-[11px] text-slate-400">Duration: 60 Minutes · Verified</div>
+              <div className="text-[11px] text-phumulani-charcoal">Duration: 60 Minutes · Verified</div>
             </div>
           </div>
         </div>
@@ -1187,29 +1187,29 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row justify-between gap-4">
             <div className="relative flex-1 max-w-md">
-              <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+              <Search className="w-4 h-4 absolute left-3 top-2.5 text-phumulani-charcoal" />
               <input
                 type="text"
                 value={oppSearch}
                 onChange={(e) => setOppSearch(e.target.value)}
                 placeholder="Search volunteer opportunities..."
-                className="w-full pl-9 pr-3 py-2 text-xs border border-slate-300 rounded-lg outline-none bg-white"
+                className="w-full pl-9 pr-3 py-2 text-xs border border-phumulani-cream rounded-lg outline-none bg-white"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredOpps.map((o) => (
-              <div key={o.id} className="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
+              <div key={o.id} className="bg-white rounded-xl border border-phumulani-cream p-5 space-y-4">
                 <div className="flex justify-between items-start">
-                  <span className="text-[10px] font-semibold text-[#104F57] bg-teal-50 px-2 py-0.5 rounded">
+                  <span className="text-[10px] font-semibold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded">
                     {o.commitment}
                   </span>
-                  <span className="text-xs text-slate-400 font-mono">{o.openSlots} openings</span>
+                  <span className="text-xs text-phumulani-charcoal font-mono">{o.openSlots} openings</span>
                 </div>
-                <h4 className="font-serif font-bold text-base text-slate-900">{o.title}</h4>
-                <p className="text-xs text-slate-600">{o.description}</p>
-                <div className="pt-2 text-[11px] text-slate-500 space-y-1 border-t border-slate-100">
+                <h4 className="font-serif font-bold text-base text-phumulani-charcoal">{o.title}</h4>
+                <p className="text-xs text-phumulani-charcoal">{o.description}</p>
+                <div className="pt-2 text-[11px] text-phumulani-charcoal space-y-1 border-t border-phumulani-cream">
                   <div><strong>Location:</strong> {o.location}</div>
                   <div><strong>Languages:</strong> {o.languagesNeeded.join(', ')}</div>
                 </div>

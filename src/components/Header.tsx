@@ -164,43 +164,42 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="sticky top-0 z-40 bg-white">
       {/* ========================================================
           LEVEL 2: SAFETY & ACCESSIBILITY BAR
-          Refined, compact, non-dominating with prominent Safe Exit
           ======================================================== */}
-      <div className="bg-[#005A5C] text-white py-1.5 px-2 min-[400px]:px-4 text-xs max-w-full overflow-hidden border-b border-[#00484A]">
+      <div className="bg-phumulani-charcoal text-white py-1.5 px-2 min-[400px]:px-4 text-xs max-w-full overflow-hidden border-b border-phumulani-earth">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-1.5 min-[400px]:gap-2 sm:gap-4 min-w-0">
           <div className="flex items-center gap-1.5 min-[400px]:gap-2 min-w-0 flex-1 overflow-hidden">
-            <ShieldAlert className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-            <span className="text-[11px] text-teal-50 truncate font-lato">
-              Confidential Support &amp; Safety: Use <strong>Safe Exit</strong> or press <kbd className="bg-[#003B3D] px-1 py-0.2 rounded text-[10px] border border-teal-700/60 font-mono">ESC</kbd> twice.
+            <ShieldAlert className="w-3.5 h-3.5 text-phumulani-gold shrink-0" />
+            <span className="text-[11px] text-phumulani-cream truncate font-lato">
+              Confidential Support &amp; Safety: Use <strong>Safe Exit</strong> or press <kbd className="bg-phumulani-earth text-white px-1 py-0.2 rounded text-[10px] border border-phumulani-orange font-mono">ESC</kbd> twice.
             </span>
           </div>
 
           <div className="flex items-center gap-1.5 min-[400px]:gap-2 sm:gap-3 shrink-0">
             {/* Language Switcher */}
             <div className="flex items-center gap-1 min-[400px]:gap-1.5">
-              <Globe className="w-3.5 h-3.5 text-teal-200 shrink-0" />
+              <Globe className="w-3.5 h-3.5 text-phumulani-teal shrink-0" />
               <label htmlFor="header-lang-select" className="sr-only">Select Language</label>
               <select
                 id="header-lang-select"
                 aria-label="Select Language"
                 value={currentLang}
                 onChange={(e) => onLangChange(e.target.value)}
-                className="bg-[#004244] border border-teal-600/50 text-white rounded px-1.5 min-[400px]:px-2 py-0.5 text-[11px] font-medium max-w-[105px] min-[400px]:max-w-[155px] sm:max-w-none focus:ring-1 focus:ring-teal-300 outline-none cursor-pointer"
+                className="bg-phumulani-charcoal border border-phumulani-cream text-white rounded px-1.5 min-[400px]:px-2 py-0.5 text-[11px] font-medium max-w-[105px] min-[400px]:max-w-[155px] sm:max-w-none focus:ring-1 focus:ring-phumulani-gold outline-none cursor-pointer"
               >
                 {languages.map((l) => (
-                  <option key={l.code} value={l.code} className="bg-white text-slate-800">
+                  <option key={l.code} value={l.code} className="bg-white text-phumulani-charcoal">
                     {l.label}
                   </option>
                 ))}
               </select>
             </div>
 
-            <span className="text-teal-700/80">|</span>
+            <span className="text-phumulani-cream">|</span>
 
             {/* Quick Safe Exit Button */}
             <button
               onClick={handleSafeExit}
-              className="bg-[#C62828] hover:bg-[#B71C1C] text-white font-bold px-2 min-[400px]:px-2.5 py-1 rounded text-[11px] transition-colors flex items-center gap-1 cursor-pointer font-heading tracking-wide whitespace-nowrap"
+              className="bg-phumulani-earth hover:bg-phumulani-orange text-white font-bold px-2 min-[400px]:px-2.5 py-1 rounded text-[11px] transition-colors flex items-center gap-1 cursor-pointer font-heading tracking-wide whitespace-nowrap"
               title="Instant safe exit to Weather.com (replaces browser history)"
             >
               <span>SAFE EXIT</span>
@@ -212,11 +211,8 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* ========================================================
           LEVEL 3: MAIN WEBSITE NAVIGATION
-          Pure White Background (#FFFFFF) with subtle border (#E5E7EB)
-          Height: 80px (h-20), Max-width: 1280px (max-w-7xl)
-          Left: Logo | Center: Navigation | Right: Aligned Actions
           ======================================================== */}
-      <div className="bg-white border-b border-[#E5E7EB]">
+      <div className="bg-white border-b border-phumulani-cream">
         <div className="max-w-7xl mx-auto px-2 min-[400px]:px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-1 min-[400px]:gap-2 lg:gap-4 h-20 min-w-0 w-full">
             {/* LEFT: Official Phumulani Mosaic USA Logo */}
@@ -225,7 +221,7 @@ export const Header: React.FC<HeaderProps> = ({
                 onViewChange('public');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="flex items-center shrink min-w-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-[#006D6F] rounded-lg py-1 text-left group"
+              className="flex items-center shrink min-w-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded-lg py-1 text-left group"
               aria-label="Phumulani Home"
             >
               <PhumulaniLogo
@@ -236,51 +232,51 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
 
             {/* CENTER: Main Website Navigation (Desktop) */}
-            <nav className="hidden xl:flex items-center gap-6 2xl:gap-8 text-sm font-medium text-slate-700 font-heading whitespace-nowrap">
+            <nav className="hidden xl:flex items-center gap-6 2xl:gap-8 text-sm font-medium text-phumulani-charcoal font-heading whitespace-nowrap">
               <button
                 onClick={() => {
                   onViewChange('public');
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className={`hover:text-[#006D6F] transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-[#006D6F] rounded ${
-                  activeView === 'public' ? 'text-[#006D6F] font-semibold border-b-2 border-[#006D6F]' : 'text-slate-700'
+                className={`hover:text-phumulani-earth transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded ${
+                  activeView === 'public' ? 'text-phumulani-earth font-semibold border-b-2 border-phumulani-earth' : 'text-phumulani-charcoal'
                 }`}
               >
                 Home
               </button>
               <button
                 onClick={() => navigateToSection('founder-section')}
-                className="hover:text-[#006D6F] text-slate-700 transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-[#006D6F] rounded"
+                className="hover:text-phumulani-earth text-phumulani-charcoal transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
               >
                 Founder &amp; Legacy
               </button>
               <button
                 onClick={() => navigateToSection('programs-section')}
-                className="hover:text-[#006D6F] text-slate-700 transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-[#006D6F] rounded"
+                className="hover:text-phumulani-earth text-phumulani-charcoal transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
               >
                 Programs
               </button>
               <button
                 onClick={() => navigateToSection('get-involved-section')}
-                className="hover:text-[#006D6F] text-slate-700 transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-[#006D6F] rounded"
+                className="hover:text-phumulani-earth text-phumulani-charcoal transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
               >
                 Get Involved
               </button>
               <button
                 onClick={() => navigateToSection('about-section')}
-                className="hover:text-[#006D6F] text-slate-700 transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-[#006D6F] rounded"
+                className="hover:text-phumulani-earth text-phumulani-charcoal transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
               >
                 About
               </button>
               <button
                 onClick={() => navigateToSection('events-section')}
-                className="hover:text-[#006D6F] text-slate-700 transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-[#006D6F] rounded"
+                className="hover:text-phumulani-earth text-phumulani-charcoal transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
               >
                 Events
               </button>
               <button
                 onClick={() => navigateToSection('contact-section')}
-                className="hover:text-[#006D6F] text-slate-700 transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-[#006D6F] rounded"
+                className="hover:text-phumulani-earth text-phumulani-charcoal transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
               >
                 Contact
               </button>
@@ -291,21 +287,21 @@ export const Header: React.FC<HeaderProps> = ({
               {/* Get Help Accent Button */}
               <button
                 onClick={() => navigateToSection('get-help-section')}
-                className="hidden min-[400px]:flex h-10 min-w-[38px] items-center justify-center gap-1.5 bg-rose-50 hover:bg-rose-100 text-[#C62828] border border-rose-200 px-2.5 sm:px-3.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer font-heading shadow-2xs focus-visible:ring-2 focus-visible:ring-rose-500"
+                className="hidden min-[400px]:flex h-10 min-w-[38px] items-center justify-center gap-1.5 bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-earth hover:text-phumulani-charcoal border border-phumulani-earth px-2.5 sm:px-3.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer font-heading shadow-2xs focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 title="Discreet support routing & emergency help"
                 aria-label="Get Help"
               >
-                <LifeBuoy className="w-3.5 h-3.5 text-[#C62828] shrink-0" />
+                <LifeBuoy className="w-3.5 h-3.5 shrink-0" />
                 <span className="hidden sm:inline">Get Help</span>
               </button>
 
-              {/* Donate CTA Button in Brand Orange */}
+              {/* Donate CTA Button in Approved Brand Palette */}
               <button
                 onClick={() => navigateToSection('donate-section')}
-                className="h-10 min-w-[38px] flex items-center justify-center gap-1.5 bg-[#F05A28] hover:bg-[#D94819] text-white px-2.5 min-[400px]:px-3 sm:px-4 rounded-lg text-xs font-bold transition-all cursor-pointer font-heading tracking-wide shadow-xs hover:shadow-sm focus-visible:ring-2 focus-visible:ring-[#F05A28]"
+                className="h-10 min-w-[38px] flex items-center justify-center gap-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white px-2.5 min-[400px]:px-3 sm:px-4 rounded-lg text-xs font-bold transition-all cursor-pointer font-heading tracking-wide shadow-xs hover:shadow-sm focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 aria-label="Donate"
               >
-                <Heart className="w-3.5 h-3.5 fill-white/20 shrink-0" />
+                <Heart className="w-3.5 h-3.5 shrink-0" />
                 <span className="hidden xs:inline">Donate</span>
               </button>
 
@@ -315,21 +311,21 @@ export const Header: React.FC<HeaderProps> = ({
                   onClick={() => setPortalsDropdownOpen(!portalsDropdownOpen)}
                   aria-haspopup="menu"
                   aria-expanded={portalsDropdownOpen}
-                  className="h-10 flex items-center gap-1.5 text-xs font-medium px-3 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-[#E5E7EB] transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#006D6F]"
+                  className="h-10 flex items-center gap-1.5 text-xs font-medium px-3 rounded-lg bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-charcoal border border-phumulani-earth transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                   title="Access Portals &amp; Staff Command"
                 >
-                  <LogIn className="w-3.5 h-3.5 text-[#006D6F]" />
+                  <LogIn className="w-3.5 h-3.5 text-phumulani-earth" />
                   <span>Portals</span>
-                  <ChevronDown className={`w-3 h-3 text-slate-400 transition-transform ${portalsDropdownOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown className={`w-3 h-3 text-phumulani-charcoal transition-transform ${portalsDropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
 
                 {portalsDropdownOpen && (
                   <div
                     role="menu"
                     aria-label="Application Portals"
-                    className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-[#E5E7EB] py-2 z-50 animate-in fade-in zoom-in-95 duration-100"
+                    className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-phumulani-earth py-2 z-50 animate-in fade-in zoom-in-95 duration-100"
                   >
-                    <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-slate-400">
+                    <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-phumulani-earth">
                       Application Portals
                     </div>
                     {portals.map((portal) => {
@@ -343,18 +339,18 @@ export const Header: React.FC<HeaderProps> = ({
                             onViewChange(portal.id);
                             setPortalsDropdownOpen(false);
                           }}
-                          className={`w-full text-left px-3 py-2 flex items-start gap-2.5 hover:bg-slate-50 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#006D6F] ${
-                            isActive ? 'bg-teal-50 border-l-2 border-[#006D6F]' : ''
+                          className={`w-full text-left px-3 py-2 flex items-start gap-2.5 hover:bg-phumulani-cream transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth ${
+                            isActive ? 'bg-phumulani-cream border-l-2 border-phumulani-earth' : ''
                           }`}
                         >
-                          <div className={`p-1 rounded mt-0.5 ${isActive ? 'bg-[#006D6F] text-white' : 'bg-slate-100 text-slate-600'}`}>
+                          <div className={`p-1 rounded mt-0.5 ${isActive ? 'bg-phumulani-earth text-white' : 'bg-phumulani-cream text-phumulani-charcoal'}`}>
                             <Icon className="w-3.5 h-3.5" />
                           </div>
                           <div>
-                            <div className={`text-xs font-semibold ${isActive ? 'text-[#006D6F]' : 'text-slate-800'}`}>
+                            <div className={`text-xs font-semibold ${isActive ? 'text-phumulani-earth' : 'text-phumulani-charcoal'}`}>
                               {portal.label}
                             </div>
-                            <div className="text-[10px] text-slate-500 line-clamp-1">{portal.desc}</div>
+                            <div className="text-[10px] text-phumulani-charcoal line-clamp-1">{portal.desc}</div>
                           </div>
                         </button>
                       );
@@ -366,13 +362,13 @@ export const Header: React.FC<HeaderProps> = ({
               {/* In-App Notification Center Bell */}
               <button
                 onClick={() => setNotificationModalOpen(true)}
-                className="flex h-10 w-10 shrink-0 relative items-center justify-center rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-700 border border-[#E5E7EB] transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#006D6F]"
+                className="flex h-10 w-10 shrink-0 relative items-center justify-center rounded-lg bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-charcoal border border-phumulani-earth transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 title="Open Notification Center"
                 aria-label="Open Notification Center"
               >
-                <Bell className="w-4 h-4 text-[#006D6F]" />
+                <Bell className="w-4 h-4 text-phumulani-earth" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-[#F05A28] text-white font-bold text-[9px] px-1.5 py-0.2 rounded-full ring-2 ring-white">
+                  <span className="absolute -top-1 -right-1 bg-phumulani-earth text-white font-bold text-[9px] px-1.5 py-0.2 rounded-full ring-2 ring-white">
                     {unreadCount}
                   </span>
                 )}
@@ -381,7 +377,7 @@ export const Header: React.FC<HeaderProps> = ({
               {/* Mobile Drawer Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="xl:hidden h-10 w-10 shrink-0 flex items-center justify-center text-slate-700 hover:text-slate-900 rounded-lg hover:bg-slate-100 transition-colors focus-visible:ring-2 focus-visible:ring-[#006D6F]"
+                className="xl:hidden h-10 w-10 shrink-0 flex items-center justify-center text-phumulani-charcoal hover:text-phumulani-earth rounded-lg hover:bg-phumulani-cream transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 aria-label="Toggle Navigation Menu"
                 aria-expanded={mobileMenuOpen}
                 aria-controls="public-mobile-navigation"
@@ -398,9 +394,9 @@ export const Header: React.FC<HeaderProps> = ({
         <nav
           id="public-mobile-navigation"
           aria-label="Mobile website and portal navigation"
-          className="xl:hidden w-full max-w-full overflow-x-hidden border-t border-[#E5E7EB] bg-white px-3 min-[400px]:px-4 pt-3 pb-6 space-y-4 shadow-xl animate-in slide-in-from-top-2 duration-150"
+          className="xl:hidden w-full max-w-full overflow-x-hidden border-t border-phumulani-cream bg-white px-3 min-[400px]:px-4 pt-3 pb-6 space-y-4 shadow-xl animate-in slide-in-from-top-2 duration-150"
         >
-          <div className="font-bold text-xs text-slate-400 uppercase tracking-wider">
+          <div className="font-bold text-xs text-phumulani-earth uppercase tracking-wider">
             Main Navigation
           </div>
           <div className="grid grid-cols-2 gap-2 text-xs font-semibold min-w-0">
@@ -410,55 +406,55 @@ export const Header: React.FC<HeaderProps> = ({
                 setMobileMenuOpen(false);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-800 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#006D6F] text-left"
+              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-phumulani-cream text-phumulani-charcoal transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
             >
               <span className="truncate">Home</span>
             </button>
             <button
               onClick={() => navigateToSection('founder-section')}
-              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-800 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#006D6F] text-left"
+              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-phumulani-cream text-phumulani-charcoal transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
             >
               <span className="truncate">Founder &amp; Legacy</span>
             </button>
             <button
               onClick={() => navigateToSection('programs-section')}
-              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-800 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#006D6F] text-left"
+              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-phumulani-cream text-phumulani-charcoal transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
             >
               <span className="truncate">Programs</span>
             </button>
             <button
               onClick={() => navigateToSection('get-involved-section')}
-              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-800 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#006D6F] text-left"
+              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-phumulani-cream text-phumulani-charcoal transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
             >
               <span className="truncate">Get Involved</span>
             </button>
             <button
               onClick={() => navigateToSection('about-section')}
-              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-800 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#006D6F] text-left"
+              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-phumulani-cream text-phumulani-charcoal transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
             >
               <span className="truncate">About</span>
             </button>
             <button
               onClick={() => navigateToSection('events-section')}
-              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-800 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#006D6F] text-left"
+              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-phumulani-cream text-phumulani-charcoal transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
             >
               <span className="truncate">Events</span>
             </button>
             <button
               onClick={() => navigateToSection('contact-section')}
-              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-slate-50 text-slate-800 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#006D6F] text-left"
+              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-phumulani-cream text-phumulani-charcoal transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
             >
               <span className="truncate">Contact</span>
             </button>
             <button
               onClick={() => navigateToSection('get-help-section')}
-              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg bg-rose-50 text-[#C62828] font-bold transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-rose-500 text-left"
+              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg bg-phumulani-cream text-phumulani-earth border border-phumulani-earth font-bold transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
             >
               <span className="truncate">Get Help (Safe)</span>
             </button>
           </div>
 
-          <div className="pt-2 border-t border-slate-100 font-bold text-xs text-slate-400 uppercase tracking-wider">
+          <div className="pt-2 border-t border-phumulani-cream font-bold text-xs text-phumulani-earth uppercase tracking-wider">
             Connected Applications
           </div>
           <div className="space-y-1 min-w-0">
@@ -471,8 +467,8 @@ export const Header: React.FC<HeaderProps> = ({
                     onViewChange(p.id);
                     setMobileMenuOpen(false);
                   }}
-                  className={`min-h-[44px] w-full min-w-0 flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium text-left transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#006D6F] ${
-                    activeView === p.id ? 'bg-[#006D6F] text-white' : 'text-slate-700 hover:bg-slate-100'
+                  className={`min-h-[44px] w-full min-w-0 flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium text-left transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth ${
+                    activeView === p.id ? 'bg-phumulani-earth text-white' : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                   }`}
                 >
                   <Icon className="w-4 h-4 shrink-0" />

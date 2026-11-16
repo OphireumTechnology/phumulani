@@ -34,9 +34,9 @@ export function DataTable<T>({
 }: DataTableProps<T>) {
   if (isLoading) {
     return (
-      <div className="bg-white rounded-xl border border-slate-200 p-8 text-center">
-        <div className="w-8 h-8 border-3 border-[#006D6F] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-        <span className="text-xs text-slate-500 font-sans">Loading data...</span>
+      <div className="bg-white rounded-xl border border-phumulani-earth p-8 text-center">
+        <div className="w-8 h-8 border-3 border-phumulani-earth border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+        <span className="text-xs text-phumulani-charcoal font-sans">Loading data...</span>
       </div>
     );
   }
@@ -46,10 +46,10 @@ export function DataTable<T>({
   }
 
   return (
-    <div className={`overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-2xs ${className}`}>
+    <div className={`overflow-x-auto rounded-xl border border-phumulani-earth bg-white shadow-2xs ${className}`}>
       <table className="w-full text-left border-collapse text-xs">
         <thead>
-          <tr className="bg-slate-50/80 border-b border-slate-200">
+          <tr className="bg-phumulani-cream border-b border-phumulani-earth">
             {columns.map((col) => {
               const alignClass =
                 col.align === 'center'
@@ -61,7 +61,7 @@ export function DataTable<T>({
                 <th
                   key={col.key}
                   scope="col"
-                  className={`px-4 py-3 font-heading font-bold text-slate-700 tracking-wider uppercase text-[11px] ${alignClass} ${col.className || ''}`}
+                  className={`px-4 py-3 font-heading font-bold text-phumulani-earth tracking-wider uppercase text-[11px] ${alignClass} ${col.className || ''}`}
                 >
                   {col.header}
                 </th>
@@ -69,11 +69,11 @@ export function DataTable<T>({
             })}
           </tr>
         </thead>
-        <tbody className="divide-y divide-slate-100 font-sans">
+        <tbody className="divide-y divide-phumulani-cream font-sans">
           {data.map((item, rowIdx) => (
             <tr
               key={keyExtractor(item, rowIdx)}
-              className="hover:bg-slate-50/60 transition-colors"
+              className="hover:bg-phumulani-cream transition-colors"
             >
               {columns.map((col) => {
                 const alignClass =
@@ -85,7 +85,7 @@ export function DataTable<T>({
                 return (
                   <td
                     key={col.key}
-                    className={`px-4 py-3 text-slate-700 align-middle ${alignClass} ${col.className || ''}`}
+                    className={`px-4 py-3 text-phumulani-charcoal align-middle ${alignClass} ${col.className || ''}`}
                   >
                     {col.render
                       ? col.render(item, rowIdx)

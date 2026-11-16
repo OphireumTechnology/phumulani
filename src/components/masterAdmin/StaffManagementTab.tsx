@@ -107,20 +107,20 @@ export const StaffManagementTab: React.FC<StaffManagementTabProps> = ({ currentU
   return (
     <div className="space-y-6">
       {/* Top Controls & Header */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white p-5 rounded-xl border border-phumulani-cream shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <Users className="w-5 h-5 text-teal-800" />
-            <h2 className="text-lg font-bold text-slate-900">Enterprise Staff Management & Directory</h2>
+            <Users className="w-5 h-5 text-phumulani-earth" />
+            <h2 className="text-lg font-bold text-phumulani-charcoal">Enterprise Staff Management & Directory</h2>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-phumulani-charcoal mt-1">
             Authoritative directory, 10-stage staff lifecycle, role delegation, and access governance
           </p>
         </div>
 
         <button
           onClick={() => setIsInviteModalOpen(true)}
-          className="inline-flex items-center gap-2 px-3.5 py-2 bg-teal-800 text-white rounded-lg text-xs font-semibold hover:bg-teal-900 transition-colors cursor-pointer shadow-xs"
+          className="inline-flex items-center gap-2 px-3.5 py-2 bg-phumulani-charcoal text-white rounded-lg text-xs font-semibold hover:bg-phumulani-orange transition-colors cursor-pointer shadow-xs"
         >
           <UserPlus className="w-4 h-4" />
           <span>Invite Enterprise Staff</span>
@@ -131,27 +131,27 @@ export const StaffManagementTab: React.FC<StaffManagementTabProps> = ({ currentU
         <div
           className={`p-3.5 rounded-lg text-xs font-medium flex items-center justify-between ${
             actionNotice.type === 'success'
-              ? 'bg-emerald-50 text-emerald-800 border border-emerald-200'
-              : 'bg-rose-50 text-rose-800 border border-rose-200'
+              ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green'
+              : 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth'
           }`}
         >
           <span>{actionNotice.message}</span>
-          <button onClick={() => setActionNotice(null)} className="text-slate-400 hover:text-slate-600">
+          <button onClick={() => setActionNotice(null)} className="text-phumulani-charcoal hover:text-phumulani-earth">
             <XCircle className="w-4 h-4" />
           </button>
         </div>
       )}
 
       {/* Filter and Search Bar */}
-      <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs flex flex-col sm:flex-row gap-3 items-center justify-between">
+      <div className="bg-white p-4 rounded-xl border border-phumulani-cream shadow-xs flex flex-col sm:flex-row gap-3 items-center justify-between">
         <div className="relative flex-1 w-full">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+          <Search className="w-4 h-4 text-phumulani-charcoal absolute left-3 top-2.5" />
           <input
             type="text"
             placeholder="Search staff by name, title, or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-700"
+            className="w-full pl-9 pr-3 py-1.5 text-xs border border-phumulani-cream rounded-lg focus:outline-none focus:ring-1 focus:ring-phumulani-earth"
           />
         </div>
 
@@ -159,7 +159,7 @@ export const StaffManagementTab: React.FC<StaffManagementTabProps> = ({ currentU
           <select
             value={selectedDept}
             onChange={(e) => setSelectedDept(e.target.value)}
-            className="text-xs border border-slate-200 rounded-lg px-2.5 py-1.5 bg-white text-slate-700"
+            className="text-xs border border-phumulani-cream rounded-lg px-2.5 py-1.5 bg-white text-phumulani-charcoal"
           >
             <option value="all">All Departments ({departments.length})</option>
             {departments.map((d) => (
@@ -172,7 +172,7 @@ export const StaffManagementTab: React.FC<StaffManagementTabProps> = ({ currentU
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="text-xs border border-slate-200 rounded-lg px-2.5 py-1.5 bg-white text-slate-700"
+            className="text-xs border border-phumulani-cream rounded-lg px-2.5 py-1.5 bg-white text-phumulani-charcoal"
           >
             <option value="all">All Statuses</option>
             <option value="ACTIVE">Active</option>
@@ -184,10 +184,10 @@ export const StaffManagementTab: React.FC<StaffManagementTabProps> = ({ currentU
       </div>
 
       {/* Staff Table */}
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
+      <div className="bg-white rounded-xl border border-phumulani-cream overflow-hidden shadow-xs">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+            <thead className="bg-phumulani-cream border-b border-phumulani-cream text-phumulani-charcoal font-semibold uppercase tracking-wider">
               <tr>
                 <th className="py-3 px-4">Staff Member</th>
                 <th className="py-3 px-4">Department & Role</th>
@@ -197,41 +197,41 @@ export const StaffManagementTab: React.FC<StaffManagementTabProps> = ({ currentU
                 <th className="py-3 px-4 text-right">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-phumulani-cream">
               {filteredStaff.map((staff) => (
-                <tr key={staff.id} className="hover:bg-slate-50/70 transition-colors">
+                <tr key={staff.id} className="hover:bg-phumulani-cream transition-colors">
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-full bg-teal-100 text-teal-800 font-bold flex items-center justify-center text-xs">
+                      <div className="w-8 h-8 rounded-full bg-phumulani-cream text-phumulani-earth font-bold flex items-center justify-center text-xs">
                         {staff.name.charAt(0)}
                       </div>
                       <div>
-                        <div className="font-bold text-slate-900 flex items-center gap-1.5">
+                        <div className="font-bold text-phumulani-charcoal flex items-center gap-1.5">
                           <span>{staff.name}</span>
-                          <span className="text-[10px] font-mono text-slate-400">({staff.staffId})</span>
+                          <span className="text-[10px] font-mono text-phumulani-charcoal">({staff.staffId})</span>
                         </div>
-                        <div className="text-[11px] text-slate-500">{staff.email}</div>
+                        <div className="text-[11px] text-phumulani-charcoal">{staff.email}</div>
                       </div>
                     </div>
                   </td>
 
                   <td className="py-3 px-4">
-                    <div className="font-medium text-slate-800">{staff.jobTitle}</div>
-                    <div className="text-[11px] text-slate-500">{staff.departmentName}</div>
+                    <div className="font-medium text-phumulani-charcoal">{staff.jobTitle}</div>
+                    <div className="text-[11px] text-phumulani-charcoal">{staff.departmentName}</div>
                   </td>
 
                   <td className="py-3 px-4">
                     <span
                       className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${
                         staff.accessLevel === 'SUPER_ADMIN'
-                          ? 'bg-amber-100 text-amber-900 border border-amber-300'
+                          ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold'
                           : staff.accessLevel === 'RESTRICTED_SAFEGUARDING'
-                          ? 'bg-rose-100 text-rose-900 border border-rose-300'
+                          ? 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth'
                           : staff.accessLevel === 'EXECUTIVE'
-                          ? 'bg-purple-100 text-purple-900 border border-purple-300'
+                          ? 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth'
                           : staff.accessLevel === 'ELEVATED'
-                          ? 'bg-indigo-100 text-indigo-900'
-                          : 'bg-slate-100 text-slate-700'
+                          ? 'bg-phumulani-cream text-phumulani-earth'
+                          : 'bg-phumulani-cream text-phumulani-charcoal'
                       }`}
                     >
                       <Shield className="w-3 h-3" />
@@ -243,21 +243,21 @@ export const StaffManagementTab: React.FC<StaffManagementTabProps> = ({ currentU
                     <span
                       className={`inline-block px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                         staff.status === 'ACTIVE'
-                          ? 'bg-emerald-100 text-emerald-800'
+                          ? 'bg-phumulani-cream text-phumulani-charcoal'
                           : staff.status === 'INVITED'
-                          ? 'bg-blue-100 text-blue-800'
+                          ? 'bg-phumulani-cream text-phumulani-earth'
                           : staff.status === 'SUSPENDED'
-                          ? 'bg-amber-100 text-amber-800'
-                          : 'bg-rose-100 text-rose-800'
+                          ? 'bg-phumulani-cream text-phumulani-charcoal'
+                          : 'bg-phumulani-cream text-phumulani-earth'
                       }`}
                     >
                       {staff.status}
                     </span>
                   </td>
 
-                  <td className="py-3 px-4 text-slate-500 text-[11px]">
+                  <td className="py-3 px-4 text-phumulani-charcoal text-[11px]">
                     <div>MFA: {staff.mfaEnforced ? 'Enforced (FIDO2/TOTP)' : 'Pending'}</div>
-                    <div className="text-[10px] text-slate-400">Reviewed: {staff.lastAccessReviewAt.split('T')[0]}</div>
+                    <div className="text-[10px] text-phumulani-charcoal">Reviewed: {staff.lastAccessReviewAt.split('T')[0]}</div>
                   </td>
 
                   <td className="py-3 px-4 text-right">
@@ -265,7 +265,7 @@ export const StaffManagementTab: React.FC<StaffManagementTabProps> = ({ currentU
                       {staff.status === 'ACTIVE' && staff.staffId !== 'STF-001' && (
                         <button
                           onClick={() => handleUpdateStatus(staff.id, 'SUSPENDED')}
-                          className="p-1.5 text-amber-700 hover:bg-amber-50 rounded"
+                          className="p-1.5 text-phumulani-earth hover:bg-phumulani-cream rounded"
                           title="Suspend account access"
                         >
                           <UserX className="w-4 h-4" />
@@ -274,7 +274,7 @@ export const StaffManagementTab: React.FC<StaffManagementTabProps> = ({ currentU
                       {(staff.status === 'SUSPENDED' || staff.status === 'INVITED') && (
                         <button
                           onClick={() => handleUpdateStatus(staff.id, 'ACTIVE')}
-                          className="p-1.5 text-emerald-700 hover:bg-emerald-50 rounded"
+                          className="p-1.5 text-phumulani-earth hover:bg-phumulani-cream rounded"
                           title="Activate staff account"
                         >
                           <UserCheck className="w-4 h-4" />
@@ -291,62 +291,62 @@ export const StaffManagementTab: React.FC<StaffManagementTabProps> = ({ currentU
 
       {/* Invite Staff Modal */}
       {isInviteModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-xl border border-slate-200 space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <UserPlus className="w-5 h-5 text-teal-800" />
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-xl border border-phumulani-cream space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-phumulani-cream">
+              <h3 className="text-base font-bold text-phumulani-charcoal flex items-center gap-2">
+                <UserPlus className="w-5 h-5 text-phumulani-earth" />
                 Invite Enterprise Staff Member
               </h3>
-              <button onClick={() => setIsInviteModalOpen(false)} className="text-slate-400 hover:text-slate-600">
+              <button onClick={() => setIsInviteModalOpen(false)} className="text-phumulani-charcoal hover:text-phumulani-earth">
                 <XCircle className="w-5 h-5" />
               </button>
             </div>
 
             <form onSubmit={handleInviteSubmit} className="space-y-3 text-xs">
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Full Legal Name</label>
+                <label className="block text-phumulani-charcoal font-semibold mb-1">Full Legal Name</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Zainab Al-Mansoor"
                   value={inviteName}
                   onChange={(e) => setInviteName(e.target.value)}
-                  className="w-full p-2 border border-slate-300 rounded-lg focus:ring-1 focus:ring-teal-700"
+                  className="w-full p-2 border border-phumulani-cream rounded-lg focus:ring-1 focus:ring-phumulani-earth"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Work Email (@phumulani.org)</label>
+                <label className="block text-phumulani-charcoal font-semibold mb-1">Work Email (@phumulani.org)</label>
                 <input
                   type="email"
                   required
                   placeholder="zainab.m@phumulani.org"
                   value={inviteEmail}
                   onChange={(e) => setInviteEmail(e.target.value)}
-                  className="w-full p-2 border border-slate-300 rounded-lg focus:ring-1 focus:ring-teal-700"
+                  className="w-full p-2 border border-phumulani-cream rounded-lg focus:ring-1 focus:ring-phumulani-earth"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-700 font-semibold mb-1">Job Title</label>
+                <label className="block text-phumulani-charcoal font-semibold mb-1">Job Title</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Workforce Development Specialist"
                   value={inviteJobTitle}
                   onChange={(e) => setInviteJobTitle(e.target.value)}
-                  className="w-full p-2 border border-slate-300 rounded-lg focus:ring-1 focus:ring-teal-700"
+                  className="w-full p-2 border border-phumulani-cream rounded-lg focus:ring-1 focus:ring-phumulani-earth"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Department</label>
+                  <label className="block text-phumulani-charcoal font-semibold mb-1">Department</label>
                   <select
                     value={inviteDept}
                     onChange={(e) => setInviteDept(e.target.value)}
-                    className="w-full p-2 border border-slate-300 rounded-lg bg-white"
+                    className="w-full p-2 border border-phumulani-cream rounded-lg bg-white"
                   >
                     {departments.map((d) => (
                       <option key={d.id} value={d.id}>
@@ -357,11 +357,11 @@ export const StaffManagementTab: React.FC<StaffManagementTabProps> = ({ currentU
                 </div>
 
                 <div>
-                  <label className="block text-slate-700 font-semibold mb-1">Access Level</label>
+                  <label className="block text-phumulani-charcoal font-semibold mb-1">Access Level</label>
                   <select
                     value={inviteAccessLevel}
                     onChange={(e) => setInviteAccessLevel(e.target.value as StaffAccessLevel)}
-                    className="w-full p-2 border border-slate-300 rounded-lg bg-white"
+                    className="w-full p-2 border border-phumulani-cream rounded-lg bg-white"
                   >
                     <option value="STANDARD">STANDARD</option>
                     <option value="ELEVATED">ELEVATED</option>
@@ -370,17 +370,17 @@ export const StaffManagementTab: React.FC<StaffManagementTabProps> = ({ currentU
                 </div>
               </div>
 
-              <div className="pt-3 flex justify-end gap-2 border-t border-slate-100">
+              <div className="pt-3 flex justify-end gap-2 border-t border-phumulani-cream">
                 <button
                   type="button"
                   onClick={() => setIsInviteModalOpen(false)}
-                  className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg font-medium"
+                  className="px-3 py-1.5 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-lg font-medium"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-teal-800 hover:bg-teal-900 text-white rounded-lg font-semibold shadow-xs"
+                  className="px-4 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-lg font-semibold shadow-xs"
                 >
                   Dispatch Invitation
                 </button>

@@ -65,14 +65,14 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
 
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-xs">
+    <header className="bg-white border-b border-phumulani-cream sticky top-0 z-30 shadow-xs">
       <div className="px-3 sm:px-4 py-2 flex flex-wrap items-center justify-between gap-2 sm:gap-4">
         {/* Left: Brand & Return to Master Admin & Mailbox Selector */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1 flex-wrap sm:flex-nowrap">
           {onBackToMasterAdmin && (
             <button
               onClick={onBackToMasterAdmin}
-              className="p-1.5 rounded-lg text-slate-500 hover:text-teal-900 hover:bg-slate-100 transition-colors flex items-center gap-1 text-xs font-semibold cursor-pointer shrink-0"
+              className="p-1.5 rounded-lg text-phumulani-charcoal hover:text-phumulani-earth hover:bg-phumulani-cream transition-colors flex items-center gap-1 text-xs font-semibold cursor-pointer shrink-0"
               title="Return to Master Administrator Overview"
               aria-label="Return to Master Administrator Overview"
             >
@@ -82,30 +82,30 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
           )}
 
           <div className="flex items-center gap-2 min-w-0">
-            <div className="w-7 h-7 rounded-lg bg-[#104F57] text-white flex items-center justify-center shadow-xs shrink-0">
+            <div className="w-7 h-7 rounded-lg bg-phumulani-charcoal text-white flex items-center justify-center shadow-xs shrink-0">
               <Mail className="w-3.5 h-3.5" />
             </div>
             <div className="flex items-center gap-1.5 min-w-0">
-              <h1 className="font-serif font-bold text-slate-900 text-sm tracking-tight truncate">
+              <h1 className="font-serif font-bold text-phumulani-charcoal text-sm tracking-tight truncate">
                 Email Command Center
               </h1>
-              <span className="hidden sm:inline-block text-[10px] font-mono font-bold bg-teal-50 text-teal-800 border border-teal-200/80 px-1.5 py-0.2 rounded-md uppercase">
+              <span className="hidden sm:inline-block text-[10px] font-mono font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-1.5 py-0.2 rounded-md uppercase">
                 Staff
               </span>
             </div>
           </div>
 
-          <div className="hidden lg:block h-4 w-px bg-slate-200" />
+          <div className="hidden lg:block h-4 w-px bg-phumulani-cream" />
 
           {/* Mailbox Selector */}
-          <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 px-2 py-1 rounded-lg text-xs min-w-0 max-w-[140px] sm:max-w-[240px]">
-            <Inbox className="w-3.5 h-3.5 text-teal-800 shrink-0" />
+          <div className="flex items-center gap-1.5 bg-phumulani-cream border border-phumulani-cream px-2 py-1 rounded-lg text-xs min-w-0 max-w-[140px] sm:max-w-[240px]">
+            <Inbox className="w-3.5 h-3.5 text-phumulani-earth shrink-0" />
             <select
               id="header-mailbox-select"
               aria-label="Filter Mailbox"
               value={selectedMailboxId}
               onChange={(e) => onMailboxChange(e.target.value)}
-              className="bg-transparent font-medium text-slate-800 focus:outline-none cursor-pointer truncate w-full text-xs"
+              className="bg-transparent font-medium text-phumulani-charcoal focus:outline-none cursor-pointer truncate w-full text-xs"
             >
               <option value="all">All Mailboxes ({mailboxes.length})</option>
               {mailboxes.map((mbx) => (
@@ -121,11 +121,11 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
             <button
               id="btn-manage-email-accounts"
               onClick={onOpenManageAccounts}
-              className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg border border-teal-300 bg-teal-50/90 hover:bg-teal-100 text-teal-900 transition-colors cursor-pointer shrink-0 shadow-2xs"
+              className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold rounded-lg border border-phumulani-teal bg-phumulani-cream hover:bg-phumulani-teal text-phumulani-earth transition-colors cursor-pointer shrink-0 shadow-2xs"
               title="Manage Email Accounts, Connections & Official Provider Authorization"
               aria-label="Manage Email Accounts"
             >
-              <Settings className="w-3.5 h-3.5 text-teal-700 shrink-0" />
+              <Settings className="w-3.5 h-3.5 text-phumulani-earth shrink-0" />
               <span className="hidden sm:inline">Manage Email Accounts</span>
               <span className="sm:hidden">Accounts</span>
             </button>
@@ -135,19 +135,19 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
         {/* Center: Search Field */}
         <div className="flex-1 max-w-md hidden md:block">
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5 pointer-events-none" />
+            <Search className="w-3.5 h-3.5 text-phumulani-charcoal absolute left-2.5 top-2.5 pointer-events-none" />
             <input
               type="text"
               aria-label="Search all messages"
               placeholder="Search sender, subject, keywords..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-8 pr-7 py-1 text-xs bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:bg-white focus:border-teal-700 text-slate-800 transition-colors"
+              className="w-full pl-8 pr-7 py-1 text-xs bg-phumulani-cream border border-phumulani-cream rounded-lg focus:outline-none focus:bg-white focus:border-phumulani-earth text-phumulani-charcoal transition-colors"
             />
             {searchQuery && (
               <button
                 onClick={() => onSearchChange('')}
-                className="absolute right-2 top-2 text-slate-400 hover:text-slate-600"
+                className="absolute right-2 top-2 text-phumulani-charcoal hover:text-phumulani-earth"
                 aria-label="Clear search"
               >
                 <X className="w-3 h-3" />
@@ -163,7 +163,7 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
             <button
               onClick={() => setIsSearchExpanded(!isSearchExpanded)}
               aria-label="Toggle search input"
-              className="p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg"
+              className="p-1.5 text-phumulani-charcoal hover:text-phumulani-earth hover:bg-phumulani-cream rounded-lg"
             >
               <Search className="w-4 h-4" />
             </button>
@@ -182,10 +182,10 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
             if (liveAuthorizedCount > 0) {
               return (
                 <div
-                  className="hidden xl:flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-[11px] font-medium"
+                  className="hidden xl:flex items-center gap-1 px-2 py-0.5 rounded-full bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green text-[11px] font-medium"
                   title="Live Provider OAuth Sync Active"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-phumulani-green animate-pulse" />
                   <span>Live Sync ({liveAuthorizedCount}/{mailboxes.length})</span>
                 </div>
               );
@@ -193,20 +193,20 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
             if (activeStagedCount > 0) {
               return (
                 <div
-                  className="hidden xl:flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 text-amber-900 border border-amber-200 text-[11px] font-medium"
+                  className="hidden xl:flex items-center gap-1 px-2 py-0.5 rounded-full bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold text-[11px] font-medium"
                   title="Staged Sync Active — Live Provider OAuth Authorization Required"
                 >
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-phumulani-gold" />
                   <span>Staged Sync ({activeStagedCount}/{mailboxes.length} · OAuth Req)</span>
                 </div>
               );
             }
             return (
               <div
-                className="hidden xl:flex items-center gap-1 px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200 text-[11px] font-medium"
+                className="hidden xl:flex items-center gap-1 px-2 py-0.5 rounded-md bg-phumulani-cream text-phumulani-charcoal border border-phumulani-cream text-[11px] font-medium"
                 title="Active Email Synchronization Disabled Until a Mailbox Is Connected"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
+                <span className="w-1.5 h-1.5 rounded-full bg-phumulani-charcoal" />
                 <span>Sync Disabled</span>
               </div>
             );
@@ -217,12 +217,12 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
             <button
               onClick={onOpenAuditLogs}
               aria-label={`Security & System Notifications: ${pendingApprovalsCount} pending`}
-              className="p-1.5 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors relative cursor-pointer"
+              className="p-1.5 rounded-lg text-phumulani-charcoal hover:bg-phumulani-cream transition-colors relative cursor-pointer"
               title="Notifications & Audit Records"
             >
-              <Bell className="w-4 h-4 text-slate-600" />
+              <Bell className="w-4 h-4 text-phumulani-charcoal" />
               {pendingApprovalsCount > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-amber-500 text-white rounded-full text-[9px] font-bold w-4 h-4 flex items-center justify-center">
+                <span className="absolute -top-0.5 -right-0.5 bg-phumulani-gold text-phumulani-charcoal rounded-full text-[9px] font-bold w-4 h-4 flex items-center justify-center">
                   {pendingApprovalsCount}
                 </span>
               )}
@@ -232,7 +232,7 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
           {/* New Email Compose Action */}
           <button
             onClick={onOpenCompose}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer shrink-0"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer shrink-0"
             title="Compose New Outbound Email"
             aria-label="Compose New Outbound Email"
           >
@@ -246,7 +246,7 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
               onClick={() => setIsOverflowOpen(!isOverflowOpen)}
               aria-label="More administration actions"
               aria-expanded={isOverflowOpen}
-              className="p-1.5 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-lg cursor-pointer transition-colors"
+              className="p-1.5 text-phumulani-charcoal hover:text-phumulani-earth hover:bg-phumulani-cream rounded-lg cursor-pointer transition-colors"
               title="Mailbox Actions & Settings"
             >
               <MoreVertical className="w-4 h-4" />
@@ -254,12 +254,12 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
 
             {isOverflowOpen && (
               <div
-                className="absolute right-0 mt-1 w-56 bg-white rounded-xl shadow-lg border border-slate-200 p-1.5 z-50 text-xs animate-fadeIn space-y-0.5"
+                className="absolute right-0 mt-1 w-56 bg-white rounded-xl shadow-lg border border-phumulani-cream p-1.5 z-50 text-xs animate-fadeIn space-y-0.5"
                 role="menu"
               >
-                <div className="px-2.5 py-1.5 border-b border-slate-100 mb-1">
-                  <div className="font-bold text-slate-900 text-xs truncate">{currentUser.name}</div>
-                  <div className="text-[10px] text-slate-500 truncate">{currentUser.email}</div>
+                <div className="px-2.5 py-1.5 border-b border-phumulani-cream mb-1">
+                  <div className="font-bold text-phumulani-charcoal text-xs truncate">{currentUser.name}</div>
+                  <div className="text-[10px] text-phumulani-charcoal truncate">{currentUser.email}</div>
                 </div>
 
                 <button
@@ -268,10 +268,10 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
                     onSyncMailbox(selectedMailboxId === 'all' ? (mailboxes[0]?.id || '') : selectedMailboxId);
                   }}
                   disabled={isSyncing || mailboxes.length === 0}
-                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-slate-100 disabled:opacity-50 disabled:cursor-not-allowed text-slate-700 flex items-center gap-2 cursor-pointer font-medium"
+                  className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-phumulani-cream disabled:opacity-50 disabled:cursor-not-allowed text-phumulani-charcoal flex items-center gap-2 cursor-pointer font-medium"
                   role="menuitem"
                 >
-                  <RefreshCw className={`w-3.5 h-3.5 text-teal-700 ${isSyncing ? 'animate-spin' : ''}`} />
+                  <RefreshCw className={`w-3.5 h-3.5 text-phumulani-earth ${isSyncing ? 'animate-spin' : ''}`} />
                   <span>
                     {mailboxes.length === 0
                       ? 'Sync Disabled (No Accounts)'
@@ -287,10 +287,10 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
                       setIsOverflowOpen(false);
                       onOpenSettings();
                     }}
-                    className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-slate-100 text-slate-700 flex items-center gap-2 cursor-pointer font-medium"
+                    className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-phumulani-cream text-phumulani-charcoal flex items-center gap-2 cursor-pointer font-medium"
                     role="menuitem"
                   >
-                    <Sliders className="w-3.5 h-3.5 text-slate-500" />
+                    <Sliders className="w-3.5 h-3.5 text-phumulani-charcoal" />
                     <span>Email & Connector Settings</span>
                   </button>
                 )}
@@ -301,10 +301,10 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
                       setIsOverflowOpen(false);
                       onOpenAuditLogs();
                     }}
-                    className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-slate-100 text-slate-700 flex items-center gap-2 cursor-pointer font-medium"
+                    className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-phumulani-cream text-phumulani-charcoal flex items-center gap-2 cursor-pointer font-medium"
                     role="menuitem"
                   >
-                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                    <ShieldCheck className="w-3.5 h-3.5 text-phumulani-earth" />
                     <span>Security Audit Logs</span>
                   </button>
                 )}
@@ -316,16 +316,16 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
 
       {/* Mobile Search Expandable Field */}
       {isSearchExpanded && (
-        <div className="p-2 border-t border-slate-100 md:hidden bg-slate-50">
+        <div className="p-2 border-t border-phumulani-cream md:hidden bg-phumulani-cream">
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+            <Search className="w-3.5 h-3.5 text-phumulani-charcoal absolute left-2.5 top-2.5" />
             <input
               type="text"
               autoFocus
               placeholder="Search sender, subject, keywords..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-teal-700 text-slate-800"
+              className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-phumulani-cream rounded-lg focus:outline-none focus:border-phumulani-earth text-phumulani-charcoal"
             />
           </div>
         </div>

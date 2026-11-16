@@ -274,35 +274,35 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
   return (
     <div className="space-y-6">
       {/* HEADER BANNER */}
-      <div className="bg-gradient-to-r from-slate-900 via-teal-950 to-slate-900 border border-teal-800/40 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
           <div>
             <div className="flex items-center gap-3 mb-1">
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-teal-500/20 text-teal-300 border border-teal-500/40">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-phumulani-teal text-phumulani-charcoal border border-phumulani-cream">
                 Phase 27 • Unified Operations Command Center
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-mono font-bold bg-phumulani-gold text-phumulani-charcoal border border-phumulani-gold">
                 Production Readiness Active
               </span>
             </div>
             <h1 className="text-2xl font-serif font-bold tracking-tight text-white">
               Organizational Operations & Workflow Automation
             </h1>
-            <p className="text-sm text-slate-300 mt-1 max-w-2xl">
+            <p className="text-sm text-phumulani-cream mt-1 max-w-2xl">
               Cross-departmental orchestration, human-supervised AI workforce, executive decision barriers, and truthful infrastructure readiness monitoring.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={refreshData}
-              className="px-3 py-1.5 text-xs font-semibold bg-white/10 hover:bg-white/20 text-white rounded-lg transition-colors flex items-center gap-1.5 border border-white/20"
+              className="px-3 py-1.5 text-xs font-semibold bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded-lg transition-colors flex items-center gap-1.5 border border-phumulani-cream"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               Refresh Engine
             </button>
             <button
               onClick={() => setIsNewWorkflowModalOpen(true)}
-              className="px-3.5 py-1.5 text-xs font-semibold bg-teal-600 hover:bg-teal-500 text-white rounded-lg transition-colors flex items-center gap-1.5 shadow-xs"
+              className="px-3.5 py-1.5 text-xs font-semibold bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg transition-colors flex items-center gap-1.5 shadow-xs"
             >
               <Plus className="w-3.5 h-3.5" />
               New Workflow
@@ -311,7 +311,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
         </div>
 
         {/* SUBVIEW NAVIGATION BAR */}
-        <div className="flex items-center gap-1 mt-6 pt-4 border-t border-teal-800/30 overflow-x-auto text-xs font-medium">
+        <div className="flex items-center gap-1 mt-6 pt-4 border-t border-phumulani-teal overflow-x-auto text-xs font-medium">
           {[
             { id: 'overview', label: 'Overview', icon: Activity },
             { id: 'workflows', label: 'Workflows', count: workflows.length, icon: Layers },
@@ -332,8 +332,8 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                 onClick={() => setActiveSubView(tab.id as any)}
                 className={`px-3 py-1.5 rounded-lg whitespace-nowrap flex items-center gap-1.5 transition-colors ${
                   isActive
-                    ? 'bg-teal-500 text-slate-950 font-bold shadow-xs'
-                    : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                    ? 'bg-phumulani-teal text-phumulani-charcoal font-bold shadow-xs'
+                    : 'text-phumulani-cream hover:bg-phumulani-earth hover:text-white'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -341,7 +341,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                 {tab.count !== undefined && (
                   <span
                     className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
-                      isActive ? 'bg-slate-900 text-teal-300 font-bold' : 'bg-white/20 text-slate-200'
+                      isActive ? 'bg-phumulani-charcoal text-phumulani-teal font-bold' : 'bg-phumulani-charcoal text-phumulani-cream'
                     }`}
                   >
                     {tab.count}
@@ -358,17 +358,17 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
         <div
           className={`p-3.5 rounded-lg border text-sm flex items-center justify-between shadow-xs ${
             actionNotice.type === 'success'
-              ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+              ? 'bg-phumulani-cream border-phumulani-green text-phumulani-charcoal'
               : actionNotice.type === 'warning'
-              ? 'bg-amber-50 border-amber-200 text-amber-800'
-              : 'bg-rose-50 border-rose-200 text-rose-800'
+              ? 'bg-phumulani-cream border-phumulani-gold text-phumulani-charcoal'
+              : 'bg-phumulani-cream border-phumulani-earth text-phumulani-earth'
           }`}
         >
           <div className="flex items-center gap-2">
             {actionNotice.type === 'success' ? (
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-phumulani-earth shrink-0" />
             ) : (
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+              <AlertCircle className="w-4 h-4 text-phumulani-earth shrink-0" />
             )}
             <span>{actionNotice.message}</span>
           </div>
@@ -382,64 +382,64 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
       {activeSubView === 'overview' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
-              <div className="flex items-center justify-between text-slate-500 text-xs font-medium mb-1">
+            <div className="bg-white border border-phumulani-cream rounded-xl p-4 shadow-xs">
+              <div className="flex items-center justify-between text-phumulani-charcoal text-xs font-medium mb-1">
                 <span>Active Workflows</span>
-                <Layers className="w-4 h-4 text-teal-600" />
+                <Layers className="w-4 h-4 text-phumulani-earth" />
               </div>
-              <div className="text-2xl font-bold text-slate-900">{workflows.length}</div>
-              <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
-                <span className="text-teal-600 font-semibold">{workflows.filter((w) => w.status === 'IN_PROGRESS').length} in progress</span>
+              <div className="text-2xl font-bold text-phumulani-charcoal">{workflows.length}</div>
+              <div className="text-xs text-phumulani-charcoal mt-1 flex items-center gap-1">
+                <span className="text-phumulani-earth font-semibold">{workflows.filter((w) => w.status === 'IN_PROGRESS').length} in progress</span>
                 <span>• {workflows.filter((w) => w.status === 'APPROVED').length} approved</span>
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
-              <div className="flex items-center justify-between text-slate-500 text-xs font-medium mb-1">
+            <div className="bg-white border border-phumulani-cream rounded-xl p-4 shadow-xs">
+              <div className="flex items-center justify-between text-phumulani-charcoal text-xs font-medium mb-1">
                 <span>Executive Approvals</span>
-                <FileCheck2 className="w-4 h-4 text-amber-600" />
+                <FileCheck2 className="w-4 h-4 text-phumulani-earth" />
               </div>
-              <div className="text-2xl font-bold text-slate-900">{pendingApprovalsCount} Pending</div>
-              <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
-                <span className="text-emerald-600 font-semibold">{approvals.filter((a) => a.decision === 'APPROVED').length} finalized</span>
+              <div className="text-2xl font-bold text-phumulani-charcoal">{pendingApprovalsCount} Pending</div>
+              <div className="text-xs text-phumulani-charcoal mt-1 flex items-center gap-1">
+                <span className="text-phumulani-earth font-semibold">{approvals.filter((a) => a.decision === 'APPROVED').length} finalized</span>
                 <span>• Separation of duties active</span>
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
-              <div className="flex items-center justify-between text-slate-500 text-xs font-medium mb-1">
+            <div className="bg-white border border-phumulani-cream rounded-xl p-4 shadow-xs">
+              <div className="flex items-center justify-between text-phumulani-charcoal text-xs font-medium mb-1">
                 <span>AI Workforce Status</span>
-                <Bot className="w-4 h-4 text-indigo-600" />
+                <Bot className="w-4 h-4 text-phumulani-earth" />
               </div>
-              <div className="text-2xl font-bold text-slate-900">18 / 18 Active</div>
-              <div className="text-xs text-slate-500 mt-1 flex items-center gap-1">
-                <span className="text-indigo-600 font-semibold">5 Pipelines</span>
+              <div className="text-2xl font-bold text-phumulani-charcoal">18 / 18 Active</div>
+              <div className="text-xs text-phumulani-charcoal mt-1 flex items-center gap-1">
+                <span className="text-phumulani-earth font-semibold">5 Pipelines</span>
                 <span>• Human approval gates enforced</span>
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-4 shadow-xs">
-              <div className="flex items-center justify-between text-slate-500 text-xs font-medium mb-1">
+            <div className="bg-white border border-phumulani-cream rounded-xl p-4 shadow-xs">
+              <div className="flex items-center justify-between text-phumulani-charcoal text-xs font-medium mb-1">
                 <span>Readiness Probes</span>
-                <Shield className="w-4 h-4 text-emerald-600" />
+                <Shield className="w-4 h-4 text-phumulani-earth" />
               </div>
-              <div className="text-2xl font-bold text-slate-900">Fail-Closed Staged</div>
-              <div className="text-xs text-slate-500 mt-1 text-emerald-700 font-medium">
+              <div className="text-2xl font-bold text-phumulani-charcoal">Fail-Closed Staged</div>
+              <div className="text-xs text-phumulani-charcoal mt-1 text-phumulani-earth font-medium">
                 Truthful: No synthetic production claims
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 bg-white border border-slate-200 rounded-xl p-5 shadow-xs">
+            <div className="lg:col-span-2 bg-white border border-phumulani-cream rounded-xl p-5 shadow-xs">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h3 className="font-serif font-bold text-slate-900 text-base">Current Operational Workflows</h3>
-                  <p className="text-xs text-slate-500">Cross-department initiatives managed with optimistic concurrency</p>
+                  <h3 className="font-serif font-bold text-phumulani-charcoal text-base">Current Operational Workflows</h3>
+                  <p className="text-xs text-phumulani-charcoal">Cross-department initiatives managed with optimistic concurrency</p>
                 </div>
                 <button
                   onClick={() => setActiveSubView('workflows')}
-                  className="text-xs font-semibold text-teal-700 hover:text-teal-900 flex items-center gap-1"
+                  className="text-xs font-semibold text-phumulani-earth hover:text-phumulani-earth flex items-center gap-1"
                 >
                   View All ({workflows.length}) <ArrowRight className="w-3.5 h-3.5" />
                 </button>
@@ -449,30 +449,30 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                 {workflows.slice(0, 3).map((wf) => (
                   <div
                     key={wf.id}
-                    className="p-3.5 border border-slate-100 rounded-lg hover:border-teal-300 transition-colors bg-slate-50/60"
+                    className="p-3.5 border border-phumulani-cream rounded-lg hover:border-phumulani-orange transition-colors bg-phumulani-cream"
                   >
                     <div className="flex items-center justify-between gap-2 mb-1.5">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-bold text-teal-800">{wf.id}</span>
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-white border border-slate-200 text-slate-700">
+                        <span className="font-mono text-xs font-bold text-phumulani-earth">{wf.id}</span>
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-white border border-phumulani-cream text-phumulani-charcoal">
                           {wf.workflowType}
                         </span>
                       </div>
                       <span
                         className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
                           wf.status === 'APPROVED' || wf.status === 'COMPLETED'
-                            ? 'bg-emerald-100 text-emerald-800'
+                            ? 'bg-phumulani-cream text-phumulani-charcoal'
                             : wf.status === 'REVIEW_REQUIRED'
-                            ? 'bg-amber-100 text-amber-900'
-                            : 'bg-teal-100 text-teal-900'
+                            ? 'bg-phumulani-cream text-phumulani-charcoal'
+                            : 'bg-phumulani-cream text-phumulani-earth'
                         }`}
                       >
                         {wf.status} (v{wf.version})
                       </span>
                     </div>
-                    <div className="font-semibold text-slate-900 text-sm">{wf.title}</div>
-                    <div className="text-xs text-slate-600 mt-1 flex items-center gap-2">
-                      <span>Owner: <strong className="text-slate-800">{wf.assignedOwnerName}</strong></span>
+                    <div className="font-semibold text-phumulani-charcoal text-sm">{wf.title}</div>
+                    <div className="text-xs text-phumulani-charcoal mt-1 flex items-center gap-2">
+                      <span>Owner: <strong className="text-phumulani-charcoal">{wf.assignedOwnerName}</strong></span>
                       <span>• Stage: {wf.currentStage}</span>
                     </div>
                   </div>
@@ -480,29 +480,29 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
               </div>
             </div>
 
-            <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between">
+            <div className="bg-white border border-phumulani-cream rounded-xl p-5 shadow-xs flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-serif font-bold text-slate-900 text-base">Executive Approvals</h3>
-                  <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-mono font-bold">
+                  <h3 className="font-serif font-bold text-phumulani-charcoal text-base">Executive Approvals</h3>
+                  <span className="px-2 py-0.5 rounded-full bg-phumulani-cream text-phumulani-charcoal text-[10px] font-mono font-bold">
                     {pendingApprovalsCount} Action Required
                   </span>
                 </div>
-                <p className="text-xs text-slate-500 mb-4">
+                <p className="text-xs text-phumulani-charcoal mb-4">
                   Separation of duties strictly enforces that no requester can authorize their own operational proposal.
                 </p>
 
                 <div className="space-y-3">
                   {approvals.slice(0, 2).map((app) => (
-                    <div key={app.id} className="p-3 border border-amber-200 bg-amber-50/50 rounded-lg text-xs">
-                      <div className="font-bold text-slate-900 mb-1">{app.title}</div>
-                      <div className="text-slate-600 mb-2">Requester: {app.requesterName}</div>
+                    <div key={app.id} className="p-3 border border-phumulani-gold bg-phumulani-cream rounded-lg text-xs">
+                      <div className="font-bold text-phumulani-charcoal mb-1">{app.title}</div>
+                      <div className="text-phumulani-charcoal mb-2">Requester: {app.requesterName}</div>
                       <button
                         onClick={() => {
                           setSelectedApproval(app);
                           setIsApprovalModalOpen(true);
                         }}
-                        className="w-full py-1.5 bg-slate-900 text-white rounded font-semibold text-xs hover:bg-slate-800 transition-colors"
+                        className="w-full py-1.5 bg-phumulani-charcoal text-white rounded font-semibold text-xs hover:bg-phumulani-orange transition-colors"
                       >
                         Review Governance Decision
                       </button>
@@ -511,9 +511,9 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                <span className="text-slate-500">Human Approval Gate</span>
-                <span className="font-semibold text-emerald-700">100% Invariant Enforced</span>
+              <div className="mt-4 pt-3 border-t border-phumulani-cream flex items-center justify-between text-xs">
+                <span className="text-phumulani-charcoal">Human Approval Gate</span>
+                <span className="font-semibold text-phumulani-earth">100% Invariant Enforced</span>
               </div>
             </div>
           </div>
@@ -522,28 +522,28 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* 2. WORKFLOWS VIEW */}
       {activeSubView === 'workflows' && (
-        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
+        <div className="bg-white border border-phumulani-cream rounded-xl p-5 shadow-xs space-y-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
             <div>
-              <h2 className="font-serif font-bold text-slate-900 text-lg">Cross-Department Workflows</h2>
-              <p className="text-xs text-slate-500">
+              <h2 className="font-serif font-bold text-phumulani-charcoal text-lg">Cross-Department Workflows</h2>
+              <p className="text-xs text-phumulani-charcoal">
                 Auditable state transitions with version validation, department handoffs, and idempotency protection.
               </p>
             </div>
             <div className="flex items-center gap-2">
               <div className="relative">
-                <Search className="w-3.5 h-3.5 text-slate-400 absolute left-2.5 top-2.5" />
+                <Search className="w-3.5 h-3.5 text-phumulani-charcoal absolute left-2.5 top-2.5" />
                 <input
                   type="text"
                   placeholder="Search workflows..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-8 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-teal-500"
+                  className="pl-8 pr-3 py-1.5 text-xs border border-phumulani-cream rounded-lg focus:outline-none focus:ring-1 focus:ring-phumulani-cream"
                 />
               </div>
               <button
                 onClick={() => setIsNewWorkflowModalOpen(true)}
-                className="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-xs"
+                className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-xs"
               >
                 <Plus className="w-3.5 h-3.5" /> Add Workflow
               </button>
@@ -552,7 +552,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 uppercase font-mono text-[10px] border-y border-slate-200">
+              <thead className="bg-phumulani-cream text-phumulani-charcoal uppercase font-mono text-[10px] border-y border-phumulani-cream">
                 <tr>
                   <th className="py-2.5 px-3">Workflow ID</th>
                   <th className="py-2.5 px-3">Type & Source</th>
@@ -563,7 +563,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                   <th className="py-2.5 px-3 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-phumulani-cream">
                 {workflows
                   .filter(
                     (w) =>
@@ -572,28 +572,28 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                       w.workflowType.toLowerCase().includes(searchQuery.toLowerCase())
                   )
                   .map((wf) => (
-                    <tr key={wf.id} className="hover:bg-slate-50/80 transition-colors">
-                      <td className="py-3 px-3 font-mono font-bold text-teal-800">{wf.id}</td>
+                    <tr key={wf.id} className="hover:bg-phumulani-cream transition-colors">
+                      <td className="py-3 px-3 font-mono font-bold text-phumulani-earth">{wf.id}</td>
                       <td className="py-3 px-3">
-                        <span className="font-semibold text-slate-800">{wf.workflowType}</span>
-                        <div className="text-[10px] font-mono text-slate-500">{wf.sourceRecordId}</div>
+                        <span className="font-semibold text-phumulani-charcoal">{wf.workflowType}</span>
+                        <div className="text-[10px] font-mono text-phumulani-charcoal">{wf.sourceRecordId}</div>
                       </td>
                       <td className="py-3 px-3">
-                        <div className="font-semibold text-slate-900">{wf.title}</div>
-                        <div className="text-[11px] text-slate-500">{wf.currentStage}</div>
+                        <div className="font-semibold text-phumulani-charcoal">{wf.title}</div>
+                        <div className="text-[11px] text-phumulani-charcoal">{wf.currentStage}</div>
                       </td>
                       <td className="py-3 px-3">
-                        <div className="font-medium text-slate-800">{wf.assignedOwnerName}</div>
-                        <div className="text-[10px] text-slate-500">{wf.responsibleDepartmentId}</div>
+                        <div className="font-medium text-phumulani-charcoal">{wf.assignedOwnerName}</div>
+                        <div className="text-[10px] text-phumulani-charcoal">{wf.responsibleDepartmentId}</div>
                       </td>
                       <td className="py-3 px-3">
                         <span
                           className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
                             wf.priority === 'CRITICAL'
-                              ? 'bg-rose-100 text-rose-800'
+                              ? 'bg-phumulani-cream text-phumulani-earth'
                               : wf.priority === 'HIGH'
-                              ? 'bg-amber-100 text-amber-800'
-                              : 'bg-slate-100 text-slate-700'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal'
+                              : 'bg-phumulani-cream text-phumulani-charcoal'
                           }`}
                         >
                           {wf.priority}
@@ -603,15 +603,15 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                         <span
                           className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
                             wf.status === 'APPROVED' || wf.status === 'COMPLETED'
-                              ? 'bg-emerald-100 text-emerald-800'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal'
                               : wf.status === 'REVIEW_REQUIRED'
-                              ? 'bg-amber-100 text-amber-900'
-                              : 'bg-teal-100 text-teal-900'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal'
+                              : 'bg-phumulani-cream text-phumulani-earth'
                           }`}
                         >
                           {wf.status}
                         </span>
-                        <div className="text-[10px] font-mono text-slate-400 mt-0.5">ver {wf.version}</div>
+                        <div className="text-[10px] font-mono text-phumulani-charcoal mt-0.5">ver {wf.version}</div>
                       </td>
                       <td className="py-3 px-3 text-right">
                         <button
@@ -620,7 +620,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                             setTransitionStatus(wf.status === 'REVIEW_REQUIRED' ? 'APPROVED' : 'IN_PROGRESS');
                             setIsTransitionModalOpen(true);
                           }}
-                          className="px-2.5 py-1 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800 rounded transition-colors"
+                          className="px-2.5 py-1 text-xs font-semibold bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded transition-colors"
                         >
                           Transition
                         </button>
@@ -635,22 +635,22 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* 3. APPROVALS VIEW */}
       {activeSubView === 'approvals' && (
-        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
+        <div className="bg-white border border-phumulani-cream rounded-xl p-5 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-serif font-bold text-slate-900 text-lg">Organizational Approvals Register</h2>
-              <p className="text-xs text-slate-500">
+              <h2 className="font-serif font-bold text-phumulani-charcoal text-lg">Organizational Approvals Register</h2>
+              <p className="text-xs text-phumulani-charcoal">
                 Executive decisions, separation-of-duties governance, and cryptographic audit trace linking.
               </p>
             </div>
-            <div className="text-xs font-mono bg-amber-50 text-amber-800 border border-amber-200 px-3 py-1 rounded-lg">
+            <div className="text-xs font-mono bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold px-3 py-1 rounded-lg">
               Separation of Duties Active: Requester ≠ Approver
             </div>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 uppercase font-mono text-[10px] border-y border-slate-200">
+              <thead className="bg-phumulani-cream text-phumulani-charcoal uppercase font-mono text-[10px] border-y border-phumulani-cream">
                 <tr>
                   <th className="py-2.5 px-3">Approval ID</th>
                   <th className="py-2.5 px-3">Request Type</th>
@@ -661,31 +661,31 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                   <th className="py-2.5 px-3 text-right">Governance Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-phumulani-cream">
                 {approvals.map((app) => (
-                  <tr key={app.id} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-3 px-3 font-mono font-bold text-amber-800">{app.id}</td>
-                    <td className="py-3 px-3 font-semibold text-slate-800">{app.requestType}</td>
+                  <tr key={app.id} className="hover:bg-phumulani-cream transition-colors">
+                    <td className="py-3 px-3 font-mono font-bold text-phumulani-charcoal">{app.id}</td>
+                    <td className="py-3 px-3 font-semibold text-phumulani-charcoal">{app.requestType}</td>
                     <td className="py-3 px-3">
-                      <div className="font-semibold text-slate-900">{app.title}</div>
-                      <div className="text-[11px] text-slate-500">{app.description}</div>
+                      <div className="font-semibold text-phumulani-charcoal">{app.title}</div>
+                      <div className="text-[11px] text-phumulani-charcoal">{app.description}</div>
                       {app.comments && (
-                        <div className="text-[10px] text-teal-800 mt-0.5 italic">Note: {app.comments}</div>
+                        <div className="text-[10px] text-phumulani-earth mt-0.5 italic">Note: {app.comments}</div>
                       )}
                     </td>
                     <td className="py-3 px-3">
-                      <span className="font-medium text-slate-800">{app.requesterName}</span>
-                      <div className="text-[10px] font-mono text-slate-400">{app.requesterId}</div>
+                      <span className="font-medium text-phumulani-charcoal">{app.requesterName}</span>
+                      <div className="text-[10px] font-mono text-phumulani-charcoal">{app.requesterId}</div>
                     </td>
-                    <td className="py-3 px-3 font-mono text-[11px] text-slate-600">{app.requiredApproverRole}</td>
+                    <td className="py-3 px-3 font-mono text-[11px] text-phumulani-charcoal">{app.requiredApproverRole}</td>
                     <td className="py-3 px-3">
                       <span
                         className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
                           app.decision === 'APPROVED'
-                            ? 'bg-emerald-100 text-emerald-800'
+                            ? 'bg-phumulani-cream text-phumulani-charcoal'
                             : app.decision === 'REJECTED'
-                            ? 'bg-rose-100 text-rose-800'
-                            : 'bg-amber-100 text-amber-900'
+                            ? 'bg-phumulani-cream text-phumulani-earth'
+                            : 'bg-phumulani-cream text-phumulani-charcoal'
                         }`}
                       >
                         {app.decision} (v{app.recordVersion})
@@ -698,12 +698,12 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                             setSelectedApproval(app);
                             setIsApprovalModalOpen(true);
                           }}
-                          className="px-3 py-1 bg-teal-600 hover:bg-teal-700 text-white font-semibold text-xs rounded transition-colors shadow-xs"
+                          className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white font-semibold text-xs rounded transition-colors shadow-xs"
                         >
                           Decide
                         </button>
                       ) : (
-                        <span className="text-[11px] text-slate-400 font-medium">Decided by {app.approverName}</span>
+                        <span className="text-[11px] text-phumulani-charcoal font-medium">Decided by {app.approverName}</span>
                       )}
                     </td>
                   </tr>
@@ -716,35 +716,35 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* 4. TASKS VIEW */}
       {activeSubView === 'tasks' && (
-        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
+        <div className="bg-white border border-phumulani-cream rounded-xl p-5 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-serif font-bold text-slate-900 text-lg">Organizational Task Orchestration</h2>
-              <p className="text-xs text-slate-500">
+              <h2 className="font-serif font-bold text-phumulani-charcoal text-lg">Organizational Task Orchestration</h2>
+              <p className="text-xs text-phumulani-charcoal">
                 Tasks coordinated across departments, linked to active workflows, and audited for supervisor verification.
               </p>
             </div>
-            <span className="text-xs font-mono bg-teal-50 text-teal-800 border border-teal-200 px-3 py-1 rounded-lg">
+            <span className="text-xs font-mono bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-3 py-1 rounded-lg">
               10 Departments Synced
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {workflows.map((wf) => (
-              <div key={wf.id} className="p-4 border border-slate-200 rounded-xl bg-slate-50/50 flex flex-col justify-between">
+              <div key={wf.id} className="p-4 border border-phumulani-cream rounded-xl bg-phumulani-cream flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between text-xs mb-2">
-                    <span className="font-mono font-bold text-teal-800">{wf.id}</span>
-                    <span className="text-[10px] font-mono bg-white border px-2 py-0.5 rounded text-slate-700">
+                    <span className="font-mono font-bold text-phumulani-earth">{wf.id}</span>
+                    <span className="text-[10px] font-mono bg-white border px-2 py-0.5 rounded text-phumulani-charcoal">
                       {wf.responsibleDepartmentId}
                     </span>
                   </div>
-                  <h4 className="font-semibold text-slate-900 text-sm mb-1">{wf.title}</h4>
-                  <p className="text-xs text-slate-600 mb-3">{wf.description}</p>
+                  <h4 className="font-semibold text-phumulani-charcoal text-sm mb-1">{wf.title}</h4>
+                  <p className="text-xs text-phumulani-charcoal mb-3">{wf.description}</p>
                 </div>
-                <div className="pt-3 border-t border-slate-200 flex items-center justify-between text-xs">
-                  <span className="text-slate-500">Owner: {wf.assignedOwnerName}</span>
-                  <span className="font-semibold text-teal-700">{wf.status}</span>
+                <div className="pt-3 border-t border-phumulani-cream flex items-center justify-between text-xs">
+                  <span className="text-phumulani-charcoal">Owner: {wf.assignedOwnerName}</span>
+                  <span className="font-semibold text-phumulani-earth">{wf.status}</span>
                 </div>
               </div>
             ))}
@@ -754,15 +754,15 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* 5. MILESTONES VIEW */}
       {activeSubView === 'milestones' && (
-        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
+        <div className="bg-white border border-phumulani-cream rounded-xl p-5 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-serif font-bold text-slate-900 text-lg">Program & Grant Delivery Milestones</h2>
-              <p className="text-xs text-slate-500">
+              <h2 className="font-serif font-bold text-phumulani-charcoal text-lg">Program & Grant Delivery Milestones</h2>
+              <p className="text-xs text-phumulani-charcoal">
                 Real organizational deadlines, grant submission targets, and overdue detection.
               </p>
             </div>
-            <span className="text-xs font-mono bg-slate-100 text-slate-800 px-3 py-1 rounded-lg">
+            <span className="text-xs font-mono bg-phumulani-cream text-phumulani-charcoal px-3 py-1 rounded-lg">
               Zero Synthetic Deadlines
             </span>
           </div>
@@ -771,18 +771,18 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
             {milestones.map((ms) => (
               <div
                 key={ms.id}
-                className="p-4 border border-slate-200 rounded-xl hover:border-teal-300 transition-colors bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                className="p-4 border border-phumulani-cream rounded-xl hover:border-phumulani-orange transition-colors bg-white flex flex-col sm:flex-row sm:items-center justify-between gap-3"
               >
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-mono text-xs font-bold text-teal-800">{ms.id}</span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-100 text-slate-700">
+                    <span className="font-mono text-xs font-bold text-phumulani-earth">{ms.id}</span>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-phumulani-cream text-phumulani-charcoal">
                       {ms.milestoneType}
                     </span>
-                    <span className="text-[10px] font-mono text-slate-500">Source: {ms.sourceRecordId}</span>
+                    <span className="text-[10px] font-mono text-phumulani-charcoal">Source: {ms.sourceRecordId}</span>
                   </div>
-                  <h4 className="font-semibold text-slate-900 text-sm">{ms.title}</h4>
-                  <div className="text-xs text-slate-500 mt-1 flex items-center gap-3">
+                  <h4 className="font-semibold text-phumulani-charcoal text-sm">{ms.title}</h4>
+                  <div className="text-xs text-phumulani-charcoal mt-1 flex items-center gap-3">
                     <span>Due: <strong>{new Date(ms.dueDate).toLocaleDateString()}</strong></span>
                     <span>Owner: {ms.responsibleOwnerName}</span>
                     <span>Dept: {ms.responsibleDepartmentId}</span>
@@ -793,10 +793,10 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                   <span
                     className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-full ${
                       ms.completionStatus === 'COMPLETED'
-                        ? 'bg-emerald-100 text-emerald-800'
+                        ? 'bg-phumulani-cream text-phumulani-charcoal'
                         : ms.isOverdue
-                        ? 'bg-rose-100 text-rose-800'
-                        : 'bg-teal-100 text-teal-900'
+                        ? 'bg-phumulani-cream text-phumulani-earth'
+                        : 'bg-phumulani-cream text-phumulani-earth'
                     }`}
                   >
                     {ms.completionStatus}
@@ -811,7 +811,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                         });
                         refreshData();
                       }}
-                      className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs rounded transition-colors"
+                      className="px-3 py-1 bg-phumulani-green hover:bg-phumulani-teal text-phumulani-charcoal font-semibold text-xs rounded transition-colors"
                     >
                       Complete
                     </button>
@@ -825,37 +825,37 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* 6. AI WORKFORCE SUPERVISION */}
       {activeSubView === 'ai_workforce' && (
-        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
+        <div className="bg-white border border-phumulani-cream rounded-xl p-5 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-serif font-bold text-slate-900 text-lg">AI Workforce Supervision & Governance</h2>
-              <p className="text-xs text-slate-500">
+              <h2 className="font-serif font-bold text-phumulani-charcoal text-lg">AI Workforce Supervision & Governance</h2>
+              <p className="text-xs text-phumulani-charcoal">
                 18 registered agents across 5 pipelines operating strictly under human supervisory approval barriers.
               </p>
             </div>
-            <div className="text-xs font-mono bg-indigo-50 text-indigo-900 border border-indigo-200 px-3 py-1 rounded-lg">
+            <div className="text-xs font-mono bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-3 py-1 rounded-lg">
               Human-in-the-Loop Enforced
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {aiAgents.map((ag) => (
-              <div key={ag.agentId} className="p-4 border border-slate-200 rounded-xl bg-slate-50/60 flex flex-col justify-between">
+              <div key={ag.agentId} className="p-4 border border-phumulani-cream rounded-xl bg-phumulani-cream flex flex-col justify-between">
                 <div>
                   <div className="flex items-center justify-between text-xs mb-2">
-                    <span className="font-mono font-bold text-indigo-900">{ag.agentId}</span>
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 font-mono">
+                    <span className="font-mono font-bold text-phumulani-earth">{ag.agentId}</span>
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal font-mono">
                       {ag.status.toUpperCase()}
                     </span>
                   </div>
-                  <h4 className="font-semibold text-slate-900 text-sm mb-1">{ag.name}</h4>
-                  <p className="text-xs text-slate-600 mb-2">{ag.role}</p>
-                  <div className="text-[11px] text-slate-500 mb-2">Pipeline: {ag.assignedPipeline}</div>
+                  <h4 className="font-semibold text-phumulani-charcoal text-sm mb-1">{ag.name}</h4>
+                  <p className="text-xs text-phumulani-charcoal mb-2">{ag.role}</p>
+                  <div className="text-[11px] text-phumulani-charcoal mb-2">Pipeline: {ag.assignedPipeline}</div>
                 </div>
 
-                <div className="pt-3 border-t border-slate-200 text-xs text-slate-600 space-y-1">
-                  <div>Supervisor: <strong className="text-slate-800">{ag.humanSupervisor}</strong></div>
-                  <div className="text-[11px] text-emerald-700 font-semibold">Prohibited from self-approving grants/funds</div>
+                <div className="pt-3 border-t border-phumulani-cream text-xs text-phumulani-charcoal space-y-1">
+                  <div>Supervisor: <strong className="text-phumulani-charcoal">{ag.humanSupervisor}</strong></div>
+                  <div className="text-[11px] text-phumulani-earth font-semibold">Prohibited from self-approving grants/funds</div>
                 </div>
               </div>
             ))}
@@ -865,17 +865,17 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* 7. INCIDENTS VIEW */}
       {activeSubView === 'incidents' && (
-        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
+        <div className="bg-white border border-phumulani-cream rounded-xl p-5 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-serif font-bold text-slate-900 text-lg">Operational Incidents Register</h2>
-              <p className="text-xs text-slate-500">
+              <h2 className="font-serif font-bold text-phumulani-charcoal text-lg">Operational Incidents Register</h2>
+              <p className="text-xs text-phumulani-charcoal">
                 Tracking operational errors, service interruptions, and strict VAWA safeguarding crisis quarantine.
               </p>
             </div>
             <button
               onClick={() => setIsNewIncidentModalOpen(true)}
-              className="px-3 py-1.5 bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-xs"
+              className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-xs"
             >
               <Plus className="w-3.5 h-3.5" /> Report Incident
             </button>
@@ -887,40 +887,40 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                 key={inc.id}
                 className={`p-4 border rounded-xl transition-colors ${
                   inc.isSafeguardingCrisisQuarantine
-                    ? 'border-purple-300 bg-purple-50/70'
-                    : 'border-slate-200 bg-white'
+                    ? 'border-phumulani-earth bg-phumulani-cream'
+                    : 'border-phumulani-cream bg-white'
                 }`}
               >
                 <div className="flex items-center justify-between gap-2 mb-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-slate-800">{inc.id}</span>
+                    <span className="font-mono text-xs font-bold text-phumulani-charcoal">{inc.id}</span>
                     <span
                       className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
                         inc.severity === 'CRITICAL'
-                          ? 'bg-rose-100 text-rose-800'
+                          ? 'bg-phumulani-cream text-phumulani-earth'
                           : inc.severity === 'HIGH'
-                          ? 'bg-amber-100 text-amber-800'
-                          : 'bg-slate-100 text-slate-700'
+                          ? 'bg-phumulani-cream text-phumulani-charcoal'
+                          : 'bg-phumulani-cream text-phumulani-charcoal'
                       }`}
                     >
                       {inc.severity}
                     </span>
-                    <span className="text-[10px] font-mono text-slate-500">{inc.incidentCategory}</span>
+                    <span className="text-[10px] font-mono text-phumulani-charcoal">{inc.incidentCategory}</span>
                   </div>
-                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-800">
+                  <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-phumulani-cream text-phumulani-charcoal">
                     {inc.status}
                   </span>
                 </div>
 
-                <h4 className="font-semibold text-slate-900 text-sm">{inc.title}</h4>
-                <p className="text-xs text-slate-600 mt-1">{inc.description}</p>
+                <h4 className="font-semibold text-phumulani-charcoal text-sm">{inc.title}</h4>
+                <p className="text-xs text-phumulani-charcoal mt-1">{inc.description}</p>
                 {inc.resolutionSummary && (
-                  <div className="text-xs text-emerald-800 mt-2 bg-emerald-50 p-2 rounded border border-emerald-200">
+                  <div className="text-xs text-phumulani-charcoal mt-2 bg-phumulani-cream p-2 rounded border border-phumulani-green">
                     Resolution: {inc.resolutionSummary}
                   </div>
                 )}
 
-                <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                <div className="mt-3 pt-2 border-t border-phumulani-cream flex items-center justify-between text-xs text-phumulani-charcoal">
                   <span>Reported by: {inc.reportingUserName} • System: {inc.relatedSystem}</span>
                   {inc.status !== 'RESOLVED' && inc.status !== 'CLOSED' && (
                     <button
@@ -932,7 +932,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                         });
                         refreshData();
                       }}
-                      className="px-2.5 py-1 text-xs font-semibold bg-emerald-600 hover:bg-emerald-700 text-white rounded transition-colors"
+                      className="px-2.5 py-1 text-xs font-semibold bg-phumulani-green hover:bg-phumulani-teal text-phumulani-charcoal rounded transition-colors"
                     >
                       Resolve Incident
                     </button>
@@ -946,11 +946,11 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* 8. DATA QUALITY VIEW */}
       {activeSubView === 'data_quality' && (
-        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
+        <div className="bg-white border border-phumulani-cream rounded-xl p-5 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-serif font-bold text-slate-900 text-lg">Data Quality & Integrity Monitor</h2>
-              <p className="text-xs text-slate-500">
+              <h2 className="font-serif font-bold text-phumulani-charcoal text-lg">Data Quality & Integrity Monitor</h2>
+              <p className="text-xs text-phumulani-charcoal">
                 Automated cross-domain integrity verification, orphan reference checks, and non-fabrication audits.
               </p>
             </div>
@@ -963,7 +963,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                   message: `Data quality engine completed audit across 10 departments.`,
                 });
               }}
-              className="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-xs"
+              className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-xs"
             >
               <RefreshCw className="w-3.5 h-3.5" /> Run Integrity Audit
             </button>
@@ -971,22 +971,22 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
           <div className="space-y-3">
             {dataQualityChecks.map((dq) => (
-              <div key={dq.id} className="p-4 border border-slate-200 rounded-xl bg-slate-50/60 flex items-center justify-between">
+              <div key={dq.id} className="p-4 border border-phumulani-cream rounded-xl bg-phumulani-cream flex items-center justify-between">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-mono text-xs font-bold text-slate-800">{dq.id}</span>
-                    <span className="text-[10px] font-mono font-bold text-slate-600">{dq.checkType}</span>
-                    <span className="text-[10px] font-mono text-slate-400">Target: {dq.sourceRecordId}</span>
+                    <span className="font-mono text-xs font-bold text-phumulani-charcoal">{dq.id}</span>
+                    <span className="text-[10px] font-mono font-bold text-phumulani-charcoal">{dq.checkType}</span>
+                    <span className="text-[10px] font-mono text-phumulani-charcoal">Target: {dq.sourceRecordId}</span>
                   </div>
-                  <p className="text-xs text-slate-800 font-medium">{dq.description}</p>
+                  <p className="text-xs text-phumulani-charcoal font-medium">{dq.description}</p>
                 </div>
                 <span
                   className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-full ${
                     dq.state === 'VALID'
-                      ? 'bg-emerald-100 text-emerald-800'
+                      ? 'bg-phumulani-cream text-phumulani-charcoal'
                       : dq.state === 'WARNING'
-                      ? 'bg-amber-100 text-amber-900'
-                      : 'bg-rose-100 text-rose-800'
+                      ? 'bg-phumulani-cream text-phumulani-charcoal'
+                      : 'bg-phumulani-cream text-phumulani-earth'
                   }`}
                 >
                   {dq.state}
@@ -999,22 +999,22 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* 9. READINESS MATRIX VIEW */}
       {activeSubView === 'readiness' && (
-        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
+        <div className="bg-white border border-phumulani-cream rounded-xl p-5 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-serif font-bold text-slate-900 text-lg">Truthful Infrastructure Readiness Matrix</h2>
-              <p className="text-xs text-slate-500">
+              <h2 className="font-serif font-bold text-phumulani-charcoal text-lg">Truthful Infrastructure Readiness Matrix</h2>
+              <p className="text-xs text-phumulani-charcoal">
                 Ground-truth assessment of connected vs deferred infrastructure without synthetic live claims.
               </p>
             </div>
-            <span className="text-xs font-mono bg-emerald-50 text-emerald-800 border border-emerald-200 px-3 py-1 rounded-lg">
+            <span className="text-xs font-mono bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green px-3 py-1 rounded-lg">
               100% Truthful Policy
             </span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 uppercase font-mono text-[10px] border-y border-slate-200">
+              <thead className="bg-phumulani-cream text-phumulani-charcoal uppercase font-mono text-[10px] border-y border-phumulani-cream">
                 <tr>
                   <th className="py-2.5 px-3">Component</th>
                   <th className="py-2.5 px-3">Category</th>
@@ -1023,26 +1023,26 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                   <th className="py-2.5 px-3">Truthful Deferral Reason</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-phumulani-cream">
                 {readinessProbes.map((p) => (
-                  <tr key={p.componentId} className="hover:bg-slate-50/80 transition-colors">
-                    <td className="py-3 px-3 font-semibold text-slate-900">{p.componentName}</td>
-                    <td className="py-3 px-3 font-mono text-[11px] text-slate-500">{p.category}</td>
+                  <tr key={p.componentId} className="hover:bg-phumulani-cream transition-colors">
+                    <td className="py-3 px-3 font-semibold text-phumulani-charcoal">{p.componentName}</td>
+                    <td className="py-3 px-3 font-mono text-[11px] text-phumulani-charcoal">{p.category}</td>
                     <td className="py-3 px-3">
                       <span
                         className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full ${
                           p.status === 'CONNECTED'
-                            ? 'bg-emerald-100 text-emerald-800'
+                            ? 'bg-phumulani-cream text-phumulani-charcoal'
                             : p.status === 'AUTHORIZATION_REQUIRED'
-                            ? 'bg-amber-100 text-amber-900'
-                            : 'bg-rose-100 text-rose-800'
+                            ? 'bg-phumulani-cream text-phumulani-charcoal'
+                            : 'bg-phumulani-cream text-phumulani-earth'
                         }`}
                       >
                         {p.status}
                       </span>
                     </td>
-                    <td className="py-3 px-3 text-slate-700">{p.detail}</td>
-                    <td className="py-3 px-3 text-slate-500 italic">{p.truthfulReason}</td>
+                    <td className="py-3 px-3 text-phumulani-charcoal">{p.detail}</td>
+                    <td className="py-3 px-3 text-phumulani-charcoal italic">{p.truthfulReason}</td>
                   </tr>
                 ))}
               </tbody>
@@ -1053,24 +1053,24 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* 10. EXECUTIVE REPORTS VIEW */}
       {activeSubView === 'reports' && (
-        <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs space-y-4">
+        <div className="bg-white border border-phumulani-cream rounded-xl p-5 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="font-serif font-bold text-slate-900 text-lg">Executive Operations Reports</h2>
-              <p className="text-xs text-slate-500">
+              <h2 className="font-serif font-bold text-phumulani-charcoal text-lg">Executive Operations Reports</h2>
+              <p className="text-xs text-phumulani-charcoal">
                 Automated, auditable governance briefings generated strictly from verified records.
               </p>
             </div>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleGenerateReport('OPERATIONAL_STATUS_SUMMARY')}
-                className="px-3 py-1.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-semibold rounded-lg shadow-xs"
+                className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg shadow-xs"
               >
                 + Status Brief
               </button>
               <button
                 onClick={() => handleGenerateReport('DEPARTMENT_WORKLOAD_REPORT')}
-                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-900 text-white text-xs font-semibold rounded-lg shadow-xs"
+                className="px-3 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg shadow-xs"
               >
                 + Capacity Report
               </button>
@@ -1079,20 +1079,20 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
           <div className="space-y-3">
             {executiveReports.map((rep) => (
-              <div key={rep.id} className="p-4 border border-slate-200 rounded-xl bg-slate-50/50">
+              <div key={rep.id} className="p-4 border border-phumulani-cream rounded-xl bg-phumulani-cream">
                 <div className="flex items-center justify-between text-xs mb-1.5">
-                  <span className="font-mono font-bold text-teal-800">{rep.id}</span>
-                  <span className="font-mono text-[10px] bg-white border px-2 py-0.5 rounded text-slate-700">
+                  <span className="font-mono font-bold text-phumulani-earth">{rep.id}</span>
+                  <span className="font-mono text-[10px] bg-white border px-2 py-0.5 rounded text-phumulani-charcoal">
                     {rep.approvalStatus}
                   </span>
                 </div>
-                <h4 className="font-bold text-slate-900 text-sm mb-1">{rep.title}</h4>
-                <p className="text-xs text-slate-600 mb-2">{rep.summary}</p>
-                <div className="p-2.5 bg-white border border-slate-200 rounded-lg text-xs font-mono grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <h4 className="font-bold text-phumulani-charcoal text-sm mb-1">{rep.title}</h4>
+                <p className="text-xs text-phumulani-charcoal mb-2">{rep.summary}</p>
+                <div className="p-2.5 bg-white border border-phumulani-cream rounded-lg text-xs font-mono grid grid-cols-2 sm:grid-cols-4 gap-2">
                   {Object.entries(rep.keyMetrics).map(([k, v]) => (
                     <div key={k}>
-                      <span className="text-slate-400 text-[10px] block">{k}</span>
-                      <strong className="text-slate-900">{String(v)}</strong>
+                      <span className="text-phumulani-charcoal text-[10px] block">{k}</span>
+                      <strong className="text-phumulani-charcoal">{String(v)}</strong>
                     </div>
                   ))}
                 </div>
@@ -1104,22 +1104,22 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* TRANSITION WORKFLOW MODAL */}
       {isTransitionModalOpen && selectedWorkflow && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
-            <h3 className="font-serif font-bold text-slate-900 text-lg mb-1">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-phumulani-cream">
+            <h3 className="font-serif font-bold text-phumulani-charcoal text-lg mb-1">
               Transition Workflow {selectedWorkflow.id}
             </h3>
-            <p className="text-xs text-slate-500 mb-4">
+            <p className="text-xs text-phumulani-charcoal mb-4">
               Current Status: <strong>{selectedWorkflow.status}</strong> (Version {selectedWorkflow.version})
             </p>
 
             <form onSubmit={handleExecuteTransition} className="space-y-4 text-xs">
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Target Status</label>
+                <label className="font-semibold text-phumulani-charcoal block mb-1">Target Status</label>
                 <select
                   value={transitionStatus}
                   onChange={(e) => setTransitionStatus(e.target.value as any)}
-                  className="w-full border border-slate-300 rounded-lg p-2 focus:ring-1 focus:ring-teal-500"
+                  className="w-full border border-phumulani-cream rounded-lg p-2 focus:ring-1 focus:ring-phumulani-cream"
                 >
                   <option value="IN_PROGRESS">IN_PROGRESS</option>
                   <option value="REVIEW_REQUIRED">REVIEW_REQUIRED</option>
@@ -1132,13 +1132,13 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Stage Progress Note</label>
+                <label className="font-semibold text-phumulani-charcoal block mb-1">Stage Progress Note</label>
                 <textarea
                   rows={3}
                   value={transitionNote}
                   onChange={(e) => setTransitionNote(e.target.value)}
                   placeholder="Explain reason for transition and operational milestone progress..."
-                  className="w-full border border-slate-300 rounded-lg p-2 focus:ring-1 focus:ring-teal-500"
+                  className="w-full border border-phumulani-cream rounded-lg p-2 focus:ring-1 focus:ring-phumulani-cream"
                   required
                 />
               </div>
@@ -1147,13 +1147,13 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                 <button
                   type="button"
                   onClick={() => setIsTransitionModalOpen(false)}
-                  className="px-3 py-1.5 text-slate-600 hover:bg-slate-100 rounded-lg font-semibold"
+                  className="px-3 py-1.5 text-phumulani-charcoal hover:bg-phumulani-cream rounded-lg font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg shadow-xs"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white font-semibold rounded-lg shadow-xs"
                 >
                   Confirm Transition
                 </button>
@@ -1165,23 +1165,23 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* APPROVAL DECISION MODAL */}
       {isApprovalModalOpen && selectedApproval && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
-            <h3 className="font-serif font-bold text-slate-900 text-lg mb-1">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-phumulani-cream">
+            <h3 className="font-serif font-bold text-phumulani-charcoal text-lg mb-1">
               Executive Decision: {selectedApproval.id}
             </h3>
-            <p className="text-xs text-slate-500 mb-2">Subject: {selectedApproval.title}</p>
-            <div className="p-2.5 bg-amber-50 rounded-lg border border-amber-200 text-xs text-amber-900 mb-4">
+            <p className="text-xs text-phumulani-charcoal mb-2">Subject: {selectedApproval.title}</p>
+            <div className="p-2.5 bg-phumulani-cream rounded-lg border border-phumulani-gold text-xs text-phumulani-charcoal mb-4">
               Separation of Duties Check: Requester is <strong>{selectedApproval.requesterName}</strong>. You are acting as <strong>{currentUser.name}</strong>.
             </div>
 
             <form onSubmit={handleExecuteApproval} className="space-y-4 text-xs">
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Governance Decision</label>
+                <label className="font-semibold text-phumulani-charcoal block mb-1">Governance Decision</label>
                 <select
                   value={approvalDecision}
                   onChange={(e) => setApprovalDecision(e.target.value as any)}
-                  className="w-full border border-slate-300 rounded-lg p-2 focus:ring-1 focus:ring-teal-500"
+                  className="w-full border border-phumulani-cream rounded-lg p-2 focus:ring-1 focus:ring-phumulani-cream"
                 >
                   <option value="APPROVED">APPROVED — Grant Authorization</option>
                   <option value="RETURNED">RETURNED — Request Revisions</option>
@@ -1191,13 +1191,13 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Executive Decision Comments</label>
+                <label className="font-semibold text-phumulani-charcoal block mb-1">Executive Decision Comments</label>
                 <textarea
                   rows={3}
                   value={approvalComment}
                   onChange={(e) => setApprovalComment(e.target.value)}
                   placeholder="Record formal executive rationale for audit register..."
-                  className="w-full border border-slate-300 rounded-lg p-2 focus:ring-1 focus:ring-teal-500"
+                  className="w-full border border-phumulani-cream rounded-lg p-2 focus:ring-1 focus:ring-phumulani-cream"
                   required
                 />
               </div>
@@ -1206,13 +1206,13 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                 <button
                   type="button"
                   onClick={() => setIsApprovalModalOpen(false)}
-                  className="px-3 py-1.5 text-slate-600 hover:bg-slate-100 rounded-lg font-semibold"
+                  className="px-3 py-1.5 text-phumulani-charcoal hover:bg-phumulani-cream rounded-lg font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg shadow-xs"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white font-semibold rounded-lg shadow-xs"
                 >
                   Commit Decision
                 </button>
@@ -1224,31 +1224,31 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* NEW WORKFLOW MODAL */}
       {isNewWorkflowModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-200">
-            <h3 className="font-serif font-bold text-slate-900 text-lg mb-1">Create Cross-Department Workflow</h3>
-            <p className="text-xs text-slate-500 mb-4">Initialize a coordinated initiative with required approval milestones.</p>
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-phumulani-cream">
+            <h3 className="font-serif font-bold text-phumulani-charcoal text-lg mb-1">Create Cross-Department Workflow</h3>
+            <p className="text-xs text-phumulani-charcoal mb-4">Initialize a coordinated initiative with required approval milestones.</p>
 
             <form onSubmit={handleCreateWorkflow} className="space-y-3 text-xs">
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Workflow Title</label>
+                <label className="font-semibold text-phumulani-charcoal block mb-1">Workflow Title</label>
                 <input
                   type="text"
                   value={newWfTitle}
                   onChange={(e) => setNewWfTitle(e.target.value)}
                   placeholder="e.g. Winter Safe Shelter Intake Expansion"
-                  className="w-full border border-slate-300 rounded-lg p-2 focus:ring-1 focus:ring-teal-500"
+                  className="w-full border border-phumulani-cream rounded-lg p-2 focus:ring-1 focus:ring-phumulani-cream"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Workflow Type</label>
+                  <label className="font-semibold text-phumulani-charcoal block mb-1">Workflow Type</label>
                   <select
                     value={newWfType}
                     onChange={(e) => setNewWfType(e.target.value)}
-                    className="w-full border border-slate-300 rounded-lg p-2 focus:ring-1 focus:ring-teal-500"
+                    className="w-full border border-phumulani-cream rounded-lg p-2 focus:ring-1 focus:ring-phumulani-cream"
                   >
                     <option value="PROGRAM_APPROVAL">PROGRAM_APPROVAL</option>
                     <option value="GRANT_REVIEW">GRANT_REVIEW</option>
@@ -1259,11 +1259,11 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                 </div>
 
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Priority</label>
+                  <label className="font-semibold text-phumulani-charcoal block mb-1">Priority</label>
                   <select
                     value={newWfPriority}
                     onChange={(e) => setNewWfPriority(e.target.value as any)}
-                    className="w-full border border-slate-300 rounded-lg p-2 focus:ring-1 focus:ring-teal-500"
+                    className="w-full border border-phumulani-cream rounded-lg p-2 focus:ring-1 focus:ring-phumulani-cream"
                   >
                     <option value="LOW">LOW</option>
                     <option value="MEDIUM">MEDIUM</option>
@@ -1275,33 +1275,33 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Requesting Dept</label>
+                  <label className="font-semibold text-phumulani-charcoal block mb-1">Requesting Dept</label>
                   <input
                     type="text"
                     value={newWfDept}
                     onChange={(e) => setNewWfDept(e.target.value)}
-                    className="w-full border border-slate-300 rounded-lg p-2"
+                    className="w-full border border-phumulani-cream rounded-lg p-2"
                   />
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Responsible Dept</label>
+                  <label className="font-semibold text-phumulani-charcoal block mb-1">Responsible Dept</label>
                   <input
                     type="text"
                     value={newWfRespDept}
                     onChange={(e) => setNewWfRespDept(e.target.value)}
-                    className="w-full border border-slate-300 rounded-lg p-2"
+                    className="w-full border border-phumulani-cream rounded-lg p-2"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Description</label>
+                <label className="font-semibold text-phumulani-charcoal block mb-1">Description</label>
                 <textarea
                   rows={3}
                   value={newWfDesc}
                   onChange={(e) => setNewWfDesc(e.target.value)}
                   placeholder="Outline objectives, program milestones, and resource boundaries..."
-                  className="w-full border border-slate-300 rounded-lg p-2 focus:ring-1 focus:ring-teal-500"
+                  className="w-full border border-phumulani-cream rounded-lg p-2 focus:ring-1 focus:ring-phumulani-cream"
                 />
               </div>
 
@@ -1309,13 +1309,13 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                 <button
                   type="button"
                   onClick={() => setIsNewWorkflowModalOpen(false)}
-                  className="px-3 py-1.5 text-slate-600 hover:bg-slate-100 rounded-lg font-semibold"
+                  className="px-3 py-1.5 text-phumulani-charcoal hover:bg-phumulani-cream rounded-lg font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg shadow-xs"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white font-semibold rounded-lg shadow-xs"
                 >
                   Create Workflow
                 </button>
@@ -1327,33 +1327,33 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* NEW INCIDENT MODAL */}
       {isNewIncidentModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-200">
-            <h3 className="font-serif font-bold text-slate-900 text-lg mb-1">Report Operational Incident</h3>
-            <p className="text-xs text-slate-500 mb-4">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-phumulani-cream">
+            <h3 className="font-serif font-bold text-phumulani-charcoal text-lg mb-1">Report Operational Incident</h3>
+            <p className="text-xs text-phumulani-charcoal mb-4">
               All entries are scanned by VAWA filter. Domestic violence disclosures are automatically isolated to DEPT-SAFE.
             </p>
 
             <form onSubmit={handleCreateIncident} className="space-y-3 text-xs">
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Incident Title</label>
+                <label className="font-semibold text-phumulani-charcoal block mb-1">Incident Title</label>
                 <input
                   type="text"
                   value={newIncTitle}
                   onChange={(e) => setNewIncTitle(e.target.value)}
                   placeholder="e.g. Outreach Logistic Disruption"
-                  className="w-full border border-slate-300 rounded-lg p-2 focus:ring-1 focus:ring-rose-500"
+                  className="w-full border border-phumulani-cream rounded-lg p-2 focus:ring-1 focus:ring-phumulani-earth"
                   required
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Category</label>
+                  <label className="font-semibold text-phumulani-charcoal block mb-1">Category</label>
                   <select
                     value={newIncCategory}
                     onChange={(e) => setNewIncCategory(e.target.value)}
-                    className="w-full border border-slate-300 rounded-lg p-2"
+                    className="w-full border border-phumulani-cream rounded-lg p-2"
                   >
                     <option value="WORKFLOW_FAILURE">WORKFLOW_FAILURE</option>
                     <option value="SYSTEM_ERROR">SYSTEM_ERROR</option>
@@ -1363,11 +1363,11 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                   </select>
                 </div>
                 <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Severity</label>
+                  <label className="font-semibold text-phumulani-charcoal block mb-1">Severity</label>
                   <select
                     value={newIncSeverity}
                     onChange={(e) => setNewIncSeverity(e.target.value)}
-                    className="w-full border border-slate-300 rounded-lg p-2"
+                    className="w-full border border-phumulani-cream rounded-lg p-2"
                   >
                     <option value="LOW">LOW</option>
                     <option value="MEDIUM">MEDIUM</option>
@@ -1378,13 +1378,13 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
               </div>
 
               <div>
-                <label className="font-semibold text-slate-700 block mb-1">Description</label>
+                <label className="font-semibold text-phumulani-charcoal block mb-1">Description</label>
                 <textarea
                   rows={3}
                   value={newIncDesc}
                   onChange={(e) => setNewIncDesc(e.target.value)}
                   placeholder="Describe incident impact and immediate containment steps taken..."
-                  className="w-full border border-slate-300 rounded-lg p-2"
+                  className="w-full border border-phumulani-cream rounded-lg p-2"
                   required
                 />
               </div>
@@ -1393,13 +1393,13 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                 <button
                   type="button"
                   onClick={() => setIsNewIncidentModalOpen(false)}
-                  className="px-3 py-1.5 text-slate-600 hover:bg-slate-100 rounded-lg font-semibold"
+                  className="px-3 py-1.5 text-phumulani-charcoal hover:bg-phumulani-cream rounded-lg font-semibold"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-semibold rounded-lg shadow-xs"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white font-semibold rounded-lg shadow-xs"
                 >
                   Log Incident
                 </button>

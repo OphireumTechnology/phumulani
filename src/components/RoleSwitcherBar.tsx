@@ -140,7 +140,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
   }
 
   return (
-    <div className="bg-[#0B132B] text-slate-300 text-xs border-b border-slate-800/80 no-print z-50 w-full transition-all">
+    <div className="bg-phumulani-charcoal text-phumulani-cream text-xs border-b border-phumulani-earth no-print z-50 w-full transition-all">
       {/* COMPACT REFINED CONTROL BAR */}
       <div className="py-1 px-3 sm:px-4 flex items-center justify-between gap-2 max-w-7xl mx-auto">
         <div className="flex items-center gap-2 min-w-0">
@@ -148,28 +148,28 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
             onClick={toggleCollapsed}
             aria-expanded={!isCollapsed}
             aria-controls="demo-tools-panel"
-            className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-slate-900/90 hover:bg-slate-800 text-slate-200 font-medium text-[11px] border border-slate-700/70 transition-colors cursor-pointer shrink-0"
+            className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-phumulani-charcoal hover:bg-phumulani-earth text-white font-medium text-[11px] border border-phumulani-gold transition-colors cursor-pointer shrink-0"
             title="Toggle Demo Simulation Tools"
           >
-            <Sparkles className="w-3 h-3 text-amber-400 shrink-0" />
+            <Sparkles className="w-3 h-3 text-phumulani-gold shrink-0" />
             <span>Admin Tools</span>
-            <span className="text-[9px] text-slate-400">{isCollapsed ? '▼' : '▲'}</span>
+            <span className="text-[9px] text-phumulani-cream">{isCollapsed ? '▼' : '▲'}</span>
           </button>
 
-          <span className="text-slate-400 text-[11px] truncate hidden sm:inline">
-            <span className="text-slate-500">Active Role:</span>{' '}
-            <strong className="text-slate-200 font-semibold">{currentUser.name}</strong>{' '}
-            <span className="text-slate-500">({roleLabels[currentUser.role] || currentUser.role})</span>
+          <span className="text-phumulani-cream text-[11px] truncate hidden sm:inline">
+            <span className="text-phumulani-gold">Active Role:</span>{' '}
+            <strong className="text-white font-semibold">{currentUser.name}</strong>{' '}
+            <span className="text-phumulani-cream">({roleLabels[currentUser.role] || currentUser.role})</span>
           </span>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
-          <span className="text-[10px] text-slate-500 font-mono tracking-wider hidden md:inline">
+          <span className="text-[10px] text-phumulani-cream font-mono tracking-wider hidden md:inline">
             STAFF CONSOLE
           </span>
           <button
             onClick={toggleCollapsed}
-            className="text-slate-400 hover:text-slate-200 text-[11px] hover:underline cursor-pointer"
+            className="text-phumulani-gold hover:text-white text-[11px] hover:underline cursor-pointer"
           >
             {isCollapsed ? 'Show Options' : 'Hide Options'}
           </button>
@@ -180,12 +180,12 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
       {!isCollapsed && (
         <div
           id="demo-tools-panel"
-          className="border-t border-slate-800 bg-slate-900/95 py-2.5 px-3 sm:px-4 flex flex-col gap-2.5 animate-fadeIn"
+          className="border-t border-phumulani-earth bg-phumulani-charcoal py-2.5 px-3 sm:px-4 flex flex-col gap-2.5 animate-fadeIn"
         >
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-slate-800/80">
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-phumulani-earth">
             {/* Role Simulation Selector */}
             <div className="flex items-center gap-2 min-w-0">
-              <label htmlFor="role-simulation-select" className="text-slate-400 text-[11px] font-semibold shrink-0">
+              <label htmlFor="role-simulation-select" className="text-phumulani-cream text-[11px] font-semibold shrink-0">
                 Simulate Role:
               </label>
               <select
@@ -193,7 +193,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
                 aria-label="Role Simulation"
                 value={currentUser.id}
                 onChange={(e) => handleUserSelect(e.target.value)}
-                className="bg-slate-800 text-slate-100 border border-slate-700 rounded px-2.5 py-1 text-xs focus:ring-1 focus:ring-amber-400 outline-none font-medium cursor-pointer max-w-[260px] truncate"
+                className="bg-white text-phumulani-charcoal border border-phumulani-earth rounded px-2.5 py-1 text-xs focus:ring-1 focus:ring-phumulani-gold outline-none font-medium cursor-pointer max-w-[260px] truncate"
               >
                 {users.map((u) => (
                   <option key={u.id} value={u.id}>
@@ -204,8 +204,8 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1.5 text-slate-300 bg-slate-800 px-2.5 py-1 rounded border border-slate-700 text-[11px]">
-                <Shield className="w-3.5 h-3.5 text-emerald-400" />
+              <div className="flex items-center gap-1.5 text-white bg-phumulani-charcoal px-2.5 py-1 rounded border border-phumulani-green text-[11px]">
+                <Shield className="w-3.5 h-3.5 text-phumulani-green" />
                 <span>Simulated MFA: {currentUser.mfaEnabled ? 'Enforced' : 'Standard'}</span>
               </div>
 
@@ -213,14 +213,14 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
                 onClick={handleResetData}
                 className={`flex items-center gap-1.5 px-2.5 py-1 rounded border transition-colors text-[11px] cursor-pointer ${
                   resetStatus === 'confirming'
-                    ? 'bg-rose-900 border-rose-500 text-rose-100 font-bold animate-pulse'
+                    ? 'bg-phumulani-earth border-phumulani-gold text-white font-bold animate-pulse'
                     : resetStatus === 'done'
-                    ? 'bg-emerald-900 border-emerald-500 text-emerald-100 font-bold'
-                    : 'bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white border-slate-700'
+                    ? 'bg-phumulani-green border-phumulani-cream text-phumulani-charcoal font-bold'
+                    : 'bg-phumulani-charcoal hover:bg-phumulani-earth text-phumulani-cream hover:text-white border-phumulani-cream'
                 }`}
                 title="Restore baseline test records"
               >
-                <RefreshCw className={`w-3 h-3 ${resetStatus === 'done' ? 'text-emerald-400 rotate-180' : 'text-slate-400'}`} />
+                <RefreshCw className={`w-3 h-3 ${resetStatus === 'done' ? 'text-phumulani-charcoal rotate-180' : 'text-phumulani-gold'}`} />
                 <span>
                   {resetStatus === 'confirming'
                     ? 'Click to Confirm Reset'
@@ -234,7 +234,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
 
           {/* Quick Portal Switchers */}
           <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto py-0.5">
-            <span className="text-[10px] font-mono uppercase text-slate-500 font-bold mr-1 shrink-0">
+            <span className="text-[10px] font-mono uppercase text-phumulani-gold font-bold mr-1 shrink-0">
               Portals:
             </span>
 
@@ -242,8 +242,8 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
               onClick={() => onViewChange('public')}
               className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-colors ${
                 activeView === 'public'
-                  ? 'bg-slate-200 text-slate-950 border border-white'
-                  : 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700'
+                  ? 'bg-phumulani-cream text-phumulani-charcoal border border-white'
+                  : 'bg-phumulani-charcoal text-phumulani-cream hover:text-white border border-phumulani-cream'
               }`}
             >
               Public Website
@@ -253,8 +253,8 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
               onClick={() => onViewChange('community')}
               className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
                 activeView === 'community'
-                  ? 'bg-teal-400 text-slate-950 border border-teal-300'
-                  : 'bg-slate-800 text-teal-300 hover:text-white border border-teal-500/40'
+                  ? 'bg-phumulani-teal text-phumulani-charcoal border border-phumulani-cream'
+                  : 'bg-phumulani-charcoal text-phumulani-teal hover:text-white border border-phumulani-teal'
               }`}
             >
               Community Member
@@ -262,7 +262,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
 
             <button
               onClick={() => onViewChange('community')}
-              className="px-2 py-0.5 rounded text-[11px] font-bold bg-slate-800 text-emerald-300 hover:text-white border border-emerald-500/40 transition-colors"
+              className="px-2 py-0.5 rounded text-[11px] font-bold bg-phumulani-charcoal text-phumulani-green hover:text-white border border-phumulani-green transition-colors"
             >
               Volunteer
             </button>
@@ -271,8 +271,8 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
               onClick={() => onViewChange('donor')}
               className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
                 activeView === 'donor'
-                  ? 'bg-purple-400 text-slate-950 border border-purple-300'
-                  : 'bg-slate-800 text-purple-300 hover:text-white border border-purple-500/40'
+                  ? 'bg-phumulani-orange text-phumulani-charcoal border border-phumulani-cream'
+                  : 'bg-phumulani-charcoal text-phumulani-gold hover:text-white border border-phumulani-orange'
               }`}
             >
               Donor
@@ -282,8 +282,8 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
               onClick={() => onViewChange('staff')}
               className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
                 activeView === 'staff'
-                  ? 'bg-sky-400 text-slate-950 border border-sky-300'
-                  : 'bg-slate-800 text-sky-300 hover:text-white border border-sky-500/40'
+                  ? 'bg-phumulani-teal text-phumulani-charcoal border border-phumulani-cream'
+                  : 'bg-phumulani-charcoal text-phumulani-teal hover:text-white border border-phumulani-teal'
               }`}
             >
               Staff
@@ -293,11 +293,11 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
               onClick={() => onViewChange('master-admin')}
               className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
                 activeView === 'master-admin'
-                  ? 'bg-amber-400 text-slate-950 border border-amber-300'
-                  : 'bg-slate-800 text-amber-300 hover:text-white border border-amber-500/40'
+                  ? 'bg-phumulani-gold text-phumulani-charcoal border border-phumulani-cream'
+                  : 'bg-phumulani-charcoal text-phumulani-gold hover:text-white border border-phumulani-gold'
               }`}
             >
-              <Shield className="w-3 h-3 text-amber-400" />
+              <Shield className="w-3 h-3" />
               <span>Master Admin</span>
             </button>
 
@@ -305,11 +305,11 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
               onClick={() => onViewChange('email-command')}
               className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
                 activeView === 'email-command'
-                  ? 'bg-teal-400 text-slate-950 border border-teal-300'
-                  : 'bg-slate-800 text-teal-300 hover:text-white border border-teal-500/40'
+                  ? 'bg-phumulani-teal text-phumulani-charcoal border border-phumulani-cream'
+                  : 'bg-phumulani-charcoal text-phumulani-teal hover:text-white border border-phumulani-teal'
               }`}
             >
-              <Mail className="w-3 h-3 text-teal-400" />
+              <Mail className="w-3 h-3" />
               <span>Email Admin</span>
             </button>
 
@@ -317,11 +317,11 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
               onClick={() => onViewChange('client-development')}
               className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
                 activeView === 'client-development'
-                  ? 'bg-amber-400 text-slate-950 border border-amber-300'
-                  : 'bg-slate-800 text-amber-300 hover:text-white border border-amber-500/40'
+                  ? 'bg-phumulani-gold text-phumulani-charcoal border border-phumulani-cream'
+                  : 'bg-phumulani-charcoal text-phumulani-gold hover:text-white border border-phumulani-gold'
               }`}
             >
-              <Sparkles className="w-3 h-3 text-amber-400" />
+              <Sparkles className="w-3 h-3" />
               <span>Client Portal</span>
             </button>
 
@@ -329,8 +329,8 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
               onClick={() => onViewChange('development-ops')}
               className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
                 activeView === 'development-ops'
-                  ? 'bg-teal-400 text-slate-950 border border-teal-300'
-                  : 'bg-slate-800 text-teal-300 hover:text-white border border-teal-500/40'
+                  ? 'bg-phumulani-teal text-phumulani-charcoal border border-phumulani-cream'
+                  : 'bg-phumulani-charcoal text-phumulani-teal hover:text-white border border-phumulani-teal'
               }`}
             >
               DevOps
@@ -340,8 +340,8 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
               onClick={() => onViewChange('fundraising')}
               className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
                 activeView === 'fundraising'
-                  ? 'bg-teal-400 text-slate-950 border border-teal-300'
-                  : 'bg-slate-800 text-teal-300 hover:text-white border border-teal-500/40'
+                  ? 'bg-phumulani-teal text-phumulani-charcoal border border-phumulani-cream'
+                  : 'bg-phumulani-charcoal text-phumulani-teal hover:text-white border border-phumulani-teal'
               }`}
             >
               Fundraising CRM
@@ -351,8 +351,8 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
               onClick={() => onViewChange('email-command')}
               className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
                 activeView === 'email-command'
-                  ? 'bg-emerald-400 text-slate-950 border border-emerald-300'
-                  : 'bg-slate-800 text-emerald-300 hover:text-white border border-emerald-500/40'
+                  ? 'bg-phumulani-green text-phumulani-charcoal border border-phumulani-cream'
+                  : 'bg-phumulani-charcoal text-phumulani-green hover:text-white border border-phumulani-green'
               }`}
             >
               Email Command
@@ -362,8 +362,8 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
               onClick={() => onViewChange('production-status')}
               className={`px-2 py-0.5 rounded text-[11px] transition-colors ${
                 activeView === 'production-status'
-                  ? 'bg-teal-500/20 text-teal-300 border border-teal-500/40'
-                  : 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700'
+                  ? 'bg-phumulani-teal text-phumulani-charcoal border border-phumulani-cream font-bold'
+                  : 'bg-phumulani-charcoal text-phumulani-cream hover:text-white border border-phumulani-cream'
               }`}
             >
               Live Status
@@ -373,11 +373,11 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
               onClick={() => onViewChange('readiness')}
               className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] transition-colors ${
                 activeView === 'readiness'
-                  ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40'
-                  : 'bg-slate-800 text-slate-300 hover:text-white border border-slate-700'
+                  ? 'bg-phumulani-gold text-phumulani-charcoal border border-phumulani-cream font-bold'
+                  : 'bg-phumulani-charcoal text-phumulani-cream hover:text-white border border-phumulani-gold'
               }`}
             >
-              <UserCheck className="w-3 h-3 text-amber-400" />
+              <UserCheck className="w-3 h-3 text-phumulani-gold" />
               <span>12 Gates</span>
             </button>
           </div>

@@ -71,36 +71,36 @@ export const ProgramAiIntelligenceModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-fadeIn">
-      <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-2xl w-full p-6 text-xs space-y-4 max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4 animate-fadeIn">
+      <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream max-w-2xl w-full p-6 text-xs space-y-4 max-h-[90vh] overflow-y-auto">
+        <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-amber-100 text-amber-900 rounded-xl">
-              <Bot className="w-5 h-5 text-amber-800" />
+            <div className="p-2 bg-phumulani-cream text-phumulani-charcoal rounded-xl">
+              <Bot className="w-5 h-5 text-phumulani-charcoal" />
             </div>
             <div>
-              <span className="text-[10px] font-mono text-teal-800 font-bold uppercase">
+              <span className="text-[10px] font-mono text-phumulani-earth font-bold uppercase">
                 M25.10 · AI PROGRAM INTELLIGENCE
               </span>
-              <h3 className="text-base font-bold text-slate-900">Community Program Assistant</h3>
+              <h3 className="text-base font-bold text-phumulani-charcoal">Community Program Assistant</h3>
             </div>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 font-bold text-base">
+          <button onClick={onClose} className="text-phumulani-charcoal hover:text-phumulani-earth font-bold text-base">
             ✕
           </button>
         </div>
 
         {/* POLICY STATEMENT */}
-        <div className="p-3 bg-teal-50 border border-teal-200 rounded-xl text-teal-950 text-[11px] flex items-start gap-2 leading-relaxed">
-          <Shield className="w-4 h-4 text-teal-700 shrink-0 mt-0.5" />
+        <div className="p-3 bg-phumulani-cream border border-phumulani-teal rounded-xl text-phumulani-earth text-[11px] flex items-start gap-2 leading-relaxed">
+          <Shield className="w-4 h-4 text-phumulani-earth shrink-0 mt-0.5" />
           <span>
             <strong>Human Oversight Mandate:</strong> AI recommendations provide planning frameworks and pre-event checklists based on verified data. AI <strong>cannot unilaterally approve programs</strong>, authorize funding, or modify volunteer screenings.
           </span>
         </div>
 
         {errorMessage && (
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-900 text-xs flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+          <div className="p-3 bg-phumulani-cream border border-phumulani-earth rounded-xl text-phumulani-earth text-xs flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-phumulani-earth shrink-0" />
             <span>{errorMessage}</span>
           </div>
         )}
@@ -108,15 +108,15 @@ export const ProgramAiIntelligenceModal: React.FC<Props> = ({
         {/* PROMPT & ACTION TYPE FORM */}
         <form onSubmit={handleGenerate} className="space-y-3">
           <div>
-            <label className="block text-[11px] font-bold text-slate-700 mb-1">Assistance Mode</label>
+            <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Assistance Mode</label>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
               <button
                 type="button"
                 onClick={() => setActionType('PLANNING_ASSISTANCE')}
                 className={`p-2.5 rounded-xl border text-left font-semibold transition-all cursor-pointer ${
                   actionType === 'PLANNING_ASSISTANCE'
-                    ? 'bg-teal-800 text-white border-teal-800'
-                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                    ? 'bg-phumulani-charcoal text-white border-phumulani-teal'
+                    : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream hover:bg-phumulani-cream'
                 }`}
               >
                 <FileText className="w-3.5 h-3.5 mb-1" />
@@ -127,8 +127,8 @@ export const ProgramAiIntelligenceModal: React.FC<Props> = ({
                 onClick={() => setActionType('EVENT_CHECKLIST')}
                 className={`p-2.5 rounded-xl border text-left font-semibold transition-all cursor-pointer ${
                   actionType === 'EVENT_CHECKLIST'
-                    ? 'bg-teal-800 text-white border-teal-800'
-                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                    ? 'bg-phumulani-charcoal text-white border-phumulani-teal'
+                    : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream hover:bg-phumulani-cream'
                 }`}
               >
                 <Calendar className="w-3.5 h-3.5 mb-1" />
@@ -139,8 +139,8 @@ export const ProgramAiIntelligenceModal: React.FC<Props> = ({
                 onClick={() => setActionType('RESOURCE_ESTIMATION')}
                 className={`p-2.5 rounded-xl border text-left font-semibold transition-all cursor-pointer ${
                   actionType === 'RESOURCE_ESTIMATION'
-                    ? 'bg-teal-800 text-white border-teal-800'
-                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                    ? 'bg-phumulani-charcoal text-white border-phumulani-teal'
+                    : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream hover:bg-phumulani-cream'
                 }`}
               >
                 <Layers className="w-3.5 h-3.5 mb-1" />
@@ -151,8 +151,8 @@ export const ProgramAiIntelligenceModal: React.FC<Props> = ({
                 onClick={() => setActionType('IMPACT_NARRATIVE')}
                 className={`p-2.5 rounded-xl border text-left font-semibold transition-all cursor-pointer ${
                   actionType === 'IMPACT_NARRATIVE'
-                    ? 'bg-teal-800 text-white border-teal-800'
-                    : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+                    ? 'bg-phumulani-charcoal text-white border-phumulani-teal'
+                    : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream hover:bg-phumulani-cream'
                 }`}
               >
                 <Award className="w-3.5 h-3.5 mb-1" />
@@ -162,7 +162,7 @@ export const ProgramAiIntelligenceModal: React.FC<Props> = ({
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold text-slate-700 mb-1">
+            <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">
               Context Notes & Community Goals (Non-Confidential Only)
             </label>
             <textarea
@@ -170,7 +170,7 @@ export const ProgramAiIntelligenceModal: React.FC<Props> = ({
               placeholder="Provide general program parameters, venue details, or target community reach (zero survivor details)..."
               value={contextNotes}
               onChange={(e) => setContextNotes(e.target.value)}
-              className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-teal-700"
+              className="w-full px-3 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-phumulani-earth"
             />
           </div>
 
@@ -178,7 +178,7 @@ export const ProgramAiIntelligenceModal: React.FC<Props> = ({
             <button
               type="submit"
               disabled={isGenerating}
-              className="px-5 py-2 bg-teal-800 hover:bg-teal-900 text-white font-bold rounded-xl shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              className="px-5 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white font-bold rounded-xl shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>{isGenerating ? 'Analyzing Community Data...' : 'Generate Verified Recommendation'}</span>
@@ -188,31 +188,31 @@ export const ProgramAiIntelligenceModal: React.FC<Props> = ({
 
         {/* AI OUTPUT CONTAINER */}
         {recommendation && (
-          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
-            <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
+          <div className="p-4 rounded-xl bg-phumulani-cream border border-phumulani-cream space-y-3">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-2">
               <div>
-                <span className="text-[10px] font-mono text-slate-400 font-bold">{recommendation.id}</span>
-                <h4 className="font-bold text-slate-900 text-xs">{recommendation.title}</h4>
+                <span className="text-[10px] font-mono text-phumulani-charcoal font-bold">{recommendation.id}</span>
+                <h4 className="font-bold text-phumulani-charcoal text-xs">{recommendation.title}</h4>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-900 border border-amber-300">
+                <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold">
                   Human Sign-off Required
                 </span>
                 <button
                   onClick={handleCopy}
-                  className="p-1 rounded-md text-slate-500 hover:text-slate-800 hover:bg-slate-200"
+                  className="p-1 rounded-md text-phumulani-charcoal hover:text-phumulani-earth hover:bg-phumulani-cream"
                   title="Copy recommendation"
                 >
-                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+                  {copied ? <Check className="w-3.5 h-3.5 text-phumulani-earth" /> : <Copy className="w-3.5 h-3.5" />}
                 </button>
               </div>
             </div>
 
-            <pre className="font-sans text-[11px] text-slate-700 whitespace-pre-wrap leading-relaxed bg-white p-3 rounded-lg border border-slate-200/60 max-h-60 overflow-y-auto">
+            <pre className="font-sans text-[11px] text-phumulani-charcoal whitespace-pre-wrap leading-relaxed bg-white p-3 rounded-lg border border-phumulani-cream max-h-60 overflow-y-auto">
               {recommendation.recommendationText}
             </pre>
 
-            <div className="flex justify-between items-center text-[10px] text-slate-400 pt-1">
+            <div className="flex justify-between items-center text-[10px] text-phumulani-charcoal pt-1">
               <span>Source: {recommendation.sourceDataSource}</span>
               <span>Confidence: {(recommendation.confidenceScore * 100).toFixed(0)}%</span>
             </div>

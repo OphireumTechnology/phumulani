@@ -130,19 +130,19 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
   if (!thread) {
     if (!hasConnectedMailboxes) {
       return (
-        <div className="flex-1 bg-white border border-slate-200 rounded-2xl flex flex-col items-center justify-center p-10 text-center">
-          <div className="w-16 h-16 rounded-2xl bg-teal-50 border border-teal-200/80 flex items-center justify-center mb-4 text-[#104F57]">
+        <div className="flex-1 bg-white border border-phumulani-cream rounded-2xl flex flex-col items-center justify-center p-10 text-center">
+          <div className="w-16 h-16 rounded-2xl bg-phumulani-cream border border-phumulani-teal flex items-center justify-center mb-4 text-phumulani-earth">
             <Mail className="w-8 h-8 stroke-[1.5]" />
           </div>
-          <h3 className="text-lg font-bold text-slate-900">No Email Accounts Connected</h3>
-          <p className="text-xs sm:text-sm text-slate-600 max-w-md mt-2 leading-relaxed">
+          <h3 className="text-lg font-bold text-phumulani-charcoal">No Email Accounts Connected</h3>
+          <p className="text-xs sm:text-sm text-phumulani-charcoal max-w-md mt-2 leading-relaxed">
             Your Email Command Center is ready. Connect and authorize your organizational email accounts to begin receiving and managing messages.
           </p>
           {onOpenConnectWizard && (
             <button
               type="button"
               onClick={onOpenConnectWizard}
-              className="mt-5 px-4 py-2 bg-[#104F57] hover:bg-teal-900 text-white text-xs font-bold rounded-xl shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
+              className="mt-5 px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-bold rounded-xl shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Connect Email Account</span>
@@ -152,12 +152,12 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
       );
     }
     return (
-      <div className="flex-1 bg-white border border-slate-200 rounded-2xl flex flex-col items-center justify-center p-12 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-center mb-4 text-slate-400">
-          <Mail className="w-8 h-8 text-slate-300 stroke-[1.5]" />
+      <div className="flex-1 bg-white border border-phumulani-cream rounded-2xl flex flex-col items-center justify-center p-12 text-center">
+        <div className="w-16 h-16 rounded-2xl bg-phumulani-cream border border-phumulani-cream flex items-center justify-center mb-4 text-phumulani-charcoal">
+          <Mail className="w-8 h-8 text-phumulani-charcoal stroke-[1.5]" />
         </div>
-        <h3 className="text-base font-semibold text-slate-700">No message selected</h3>
-        <p className="text-xs text-slate-500 max-w-sm mt-1">
+        <h3 className="text-base font-semibold text-phumulani-charcoal">No message selected</h3>
+        <p className="text-xs text-phumulani-charcoal max-w-sm mt-1">
           Select an email conversation from the list to view the message history, compose responses, or inspect CRM details.
         </p>
       </div>
@@ -181,15 +181,15 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
   };
 
   return (
-    <div className="flex-1 bg-white border border-slate-200 rounded-2xl flex flex-col shadow-xs overflow-hidden h-full">
+    <div className="flex-1 bg-white border border-phumulani-cream rounded-2xl flex flex-col shadow-xs overflow-hidden h-full">
       {/* 1. Header Toolbar */}
-      <div className="p-4 border-b border-slate-200 bg-slate-50/60">
+      <div className="p-4 border-b border-phumulani-cream bg-phumulani-cream">
         <div className="flex items-center justify-between gap-3 mb-2">
           <div className="flex items-center gap-2 min-w-0">
             {onBackToList && (
               <button
                 onClick={onBackToList}
-                className="lg:hidden p-1.5 text-slate-600 hover:text-slate-900 bg-white border border-slate-200 rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer"
+                className="lg:hidden p-1.5 text-phumulani-charcoal hover:text-phumulani-earth bg-white border border-phumulani-cream rounded-lg text-xs font-medium flex items-center gap-1 cursor-pointer"
                 title="Back to email list"
               >
                 <ArrowLeft className="w-4 h-4" />
@@ -201,15 +201,15 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
               <span
                 className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
                   thread.priority === 'P0'
-                    ? 'bg-rose-100 text-rose-800 border border-rose-300'
-                    : 'bg-amber-100 text-amber-800 border border-amber-300'
+                    ? 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth'
+                    : 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold'
                 }`}
               >
                 {thread.priority} Urgent
               </span>
             )}
 
-            <span className="text-[11px] font-mono font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded truncate max-w-[200px]">
+            <span className="text-[11px] font-mono font-medium text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded truncate max-w-[200px]">
               {EMAIL_CATEGORY_METADATA[thread.classification as EmailClassificationCategory]?.label || thread.classification}
             </span>
           </div>
@@ -218,79 +218,79 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
           <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={() => onReply(thread, false)}
-              className="px-2.5 py-1 text-slate-700 hover:text-teal-900 border border-slate-200 hover:bg-white bg-white/70 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs transition-colors"
+              className="px-2.5 py-1 text-phumulani-charcoal hover:text-phumulani-earth border border-phumulani-cream hover:bg-white bg-white rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs transition-colors"
               title="Reply to sender"
             >
-              <Reply className="w-3.5 h-3.5 text-teal-800" />
+              <Reply className="w-3.5 h-3.5 text-phumulani-earth" />
               <span className="hidden sm:inline">Reply</span>
             </button>
             <button
               onClick={() => onReply(thread, true)}
-              className="px-2.5 py-1 text-slate-700 hover:text-teal-900 border border-slate-200 hover:bg-white bg-white/70 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs transition-colors"
+              className="px-2.5 py-1 text-phumulani-charcoal hover:text-phumulani-earth border border-phumulani-cream hover:bg-white bg-white rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs transition-colors"
               title="Reply all"
             >
-              <ReplyAll className="w-3.5 h-3.5 text-slate-600" />
+              <ReplyAll className="w-3.5 h-3.5 text-phumulani-charcoal" />
               <span className="hidden sm:inline">All</span>
             </button>
             <button
               onClick={() => onForward(thread)}
-              className="px-2.5 py-1 text-slate-700 hover:text-teal-900 border border-slate-200 hover:bg-white bg-white/70 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs transition-colors"
+              className="px-2.5 py-1 text-phumulani-charcoal hover:text-phumulani-earth border border-phumulani-cream hover:bg-white bg-white rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs transition-colors"
               title="Forward message"
             >
-              <Forward className="w-3.5 h-3.5 text-slate-600" />
+              <Forward className="w-3.5 h-3.5 text-phumulani-charcoal" />
               <span className="hidden sm:inline">Fwd</span>
             </button>
             <button
               onClick={() => onToggleArchive(thread.id, thread.isArchived ?? false)}
-              className="p-1.5 text-slate-700 hover:text-teal-900 border border-slate-200 hover:bg-white bg-white/70 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs transition-colors"
+              className="p-1.5 text-phumulani-charcoal hover:text-phumulani-earth border border-phumulani-cream hover:bg-white bg-white rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs transition-colors"
               title={thread.isArchived ? 'Unarchive' : 'Archive'}
             >
-              <Archive className="w-3.5 h-3.5 text-slate-600" />
+              <Archive className="w-3.5 h-3.5 text-phumulani-charcoal" />
               <span className="sr-only">Archive</span>
             </button>
             <button
               onClick={() => onToggleRead(thread.id, thread.isRead ?? true)}
-              className="p-1.5 text-slate-700 hover:text-teal-900 border border-slate-200 hover:bg-white bg-white/70 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs transition-colors"
+              className="p-1.5 text-phumulani-charcoal hover:text-phumulani-earth border border-phumulani-cream hover:bg-white bg-white rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer shadow-2xs transition-colors"
               title={thread.isRead ? 'Mark as Unread' : 'Mark as Read'}
             >
-              {thread.isRead ? <Eye className="w-3.5 h-3.5 text-slate-500" /> : <Mail className="w-3.5 h-3.5 text-teal-700" />}
+              {thread.isRead ? <Eye className="w-3.5 h-3.5 text-phumulani-charcoal" /> : <Mail className="w-3.5 h-3.5 text-phumulani-earth" />}
               <span className="sr-only">Toggle read</span>
             </button>
             <button
               onClick={() => onOpenNewTaskModal(thread)}
-              className="px-2 py-1 text-teal-900 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs transition-colors"
+              className="px-2 py-1 text-phumulani-earth bg-phumulani-cream hover:bg-phumulani-teal border border-phumulani-teal rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs transition-colors"
               title="Create linked follow-up task"
             >
-              <CheckSquare className="w-3.5 h-3.5 text-teal-700" />
+              <CheckSquare className="w-3.5 h-3.5 text-phumulani-earth" />
               <span className="hidden md:inline">Task</span>
             </button>
           </div>
         </div>
 
         {/* Subject & Core Meta */}
-        <h2 className="text-base font-bold text-slate-900 leading-snug">{thread.threadSubject}</h2>
-        <div className="flex flex-wrap items-center justify-between gap-y-1 gap-x-3 text-xs text-slate-600 mt-1.5 pt-1.5 border-t border-slate-200/50">
+        <h2 className="text-base font-bold text-phumulani-charcoal leading-snug">{thread.threadSubject}</h2>
+        <div className="flex flex-wrap items-center justify-between gap-y-1 gap-x-3 text-xs text-phumulani-charcoal mt-1.5 pt-1.5 border-t border-phumulani-cream">
           <div className="flex items-center gap-2">
-            <span className="font-semibold text-slate-900">{latestMsg?.senderName || 'Sender'}</span>
-            <span className="text-slate-400 font-mono text-[11px]">&lt;{latestMsg?.senderEmail}&gt;</span>
+            <span className="font-semibold text-phumulani-charcoal">{latestMsg?.senderName || 'Sender'}</span>
+            <span className="text-phumulani-charcoal font-mono text-[11px]">&lt;{latestMsg?.senderEmail}&gt;</span>
           </div>
-          <div className="flex items-center gap-2 text-slate-500 font-mono text-[11px]">
+          <div className="flex items-center gap-2 text-phumulani-charcoal font-mono text-[11px]">
             <span>{new Date(latestMsg?.receivedAt || thread.lastMessageAt).toLocaleString()}</span>
             <span>·</span>
-            <span>Mailbox: <strong className="text-slate-700">{thread.mailboxEmail}</strong></span>
+            <span>Mailbox: <strong className="text-phumulani-charcoal">{thread.mailboxEmail}</strong></span>
           </div>
         </div>
       </div>
 
       {/* 2. Critical Safeguarding Warning Banner (If Category 01) */}
       {thread.classification === '01_safeguarding' && (
-        <div className="bg-rose-50 border-b border-rose-200 p-4 flex items-start gap-3">
-          <ShieldAlert className="w-5 h-5 text-rose-600 shrink-0 mt-0.5" />
+        <div className="bg-phumulani-cream border-b border-phumulani-earth p-4 flex items-start gap-3">
+          <ShieldAlert className="w-5 h-5 text-phumulani-earth shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <h4 className="text-xs font-bold text-rose-900 uppercase tracking-wide">
+            <h4 className="text-xs font-bold text-phumulani-earth uppercase tracking-wide">
               CRITICAL SAFEGUARDING & SURVIVOR ISOLATION BOUNDARY ACTIVE
             </h4>
-            <p className="text-xs text-rose-800 leading-relaxed">
+            <p className="text-xs text-phumulani-earth leading-relaxed">
               This correspondence involves potential domestic danger or confidential survivor support. General AI auto-replies and automated external drafts are strictly withheld per Architecture Principle 1.4. This record is escalated to Safeguarding Lead Sister Miriam K. for human trauma-informed protocol.
             </p>
           </div>
@@ -298,7 +298,7 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
       )}
 
       {/* 3. Scrollable Message Body Stream */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50/30">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-phumulani-cream">
         {thread.messages.map((msg: EnterpriseEmailMessage) => {
           const isInbound = msg.direction === 'inbound';
           return (
@@ -306,40 +306,40 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
               key={msg.id}
               className={`rounded-2xl p-4 border transition-all ${
                 isInbound
-                  ? 'bg-white border-slate-200 shadow-2xs mr-4 sm:mr-8'
-                  : 'bg-teal-50/40 border-teal-200 shadow-2xs ml-4 sm:ml-8'
+                  ? 'bg-white border-phumulani-cream shadow-2xs mr-4 sm:mr-8'
+                  : 'bg-phumulani-cream border-phumulani-teal shadow-2xs ml-4 sm:ml-8'
               }`}
             >
-              <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-2 text-xs">
+              <div className="flex items-center justify-between border-b border-phumulani-cream pb-2 mb-2 text-xs">
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className="font-bold text-slate-900 truncate">{msg.senderName}</span>
-                  <span className="text-slate-400 font-mono text-[11px] truncate">&lt;{msg.senderEmail}&gt;</span>
+                  <span className="font-bold text-phumulani-charcoal truncate">{msg.senderName}</span>
+                  <span className="text-phumulani-charcoal font-mono text-[11px] truncate">&lt;{msg.senderEmail}&gt;</span>
                   {msg.isAutoResponse && (
-                    <span className="text-[10px] font-bold bg-teal-100 text-teal-800 px-1.5 py-0.2 rounded font-mono">
+                    <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-earth px-1.5 py-0.2 rounded font-mono">
                       Auto-Response ({msg.autoResponderRuleId})
                     </span>
                   )}
                 </div>
-                <span className="text-slate-400 text-[11px] font-mono shrink-0 ml-2">
+                <span className="text-phumulani-charcoal text-[11px] font-mono shrink-0 ml-2">
                   {new Date(msg.receivedAt).toLocaleString()}
                 </span>
               </div>
 
               {/* Message Body Content */}
-              <div className="text-xs text-slate-800 leading-relaxed whitespace-pre-wrap font-sans">
+              <div className="text-xs text-phumulani-charcoal leading-relaxed whitespace-pre-wrap font-sans">
                 {thread.classification === '01_safeguarding' &&
                 currentUser.id !== 'usr-002' &&
                 (currentUser.role as string) !== 'safeguarding_lead' &&
                 (currentUser.role as string) !== 'safeguarding_officer' ? (
-                  <div className="bg-rose-50 border border-rose-300 rounded-xl p-3 text-xs text-rose-950 space-y-1">
-                    <div className="flex items-center gap-1.5 font-bold text-rose-900">
-                      <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0" />
+                  <div className="bg-phumulani-cream border border-phumulani-earth rounded-xl p-3 text-xs text-phumulani-earth space-y-1">
+                    <div className="flex items-center gap-1.5 font-bold text-phumulani-earth">
+                      <ShieldAlert className="w-4 h-4 text-phumulani-earth shrink-0" />
                       <span>CONFIDENTIAL SAFEGUARDING INTAKE — VAWA ISOLATED</span>
                     </div>
-                    <p className="text-[11px] text-rose-800">
+                    <p className="text-[11px] text-phumulani-earth">
                       Communication restricted to Sister Miriam K. (DEPT-SAFE). Body text has been redacted pursuant to Phumulani safeguarding invariants.
                     </p>
-                    <div className="font-mono text-[11px] text-rose-700 bg-rose-100/60 p-2 rounded border border-rose-200 mt-1">
+                    <div className="font-mono text-[11px] text-phumulani-earth bg-phumulani-cream p-2 rounded border border-phumulani-earth mt-1">
                       [REDACTED PURSUANT TO VAWA SAFEGUARDING PROTOCOLS — AUTHORIZED OFFICER ACCESS ONLY]
                     </div>
                   </div>
@@ -350,22 +350,22 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
 
               {/* Secure Attachments */}
               {msg.attachments && msg.attachments.length > 0 && (
-                <div className="mt-3 pt-2.5 border-t border-slate-100 space-y-1.5">
-                  <span className="text-[11px] font-bold text-slate-600 flex items-center gap-1">
-                    <Paperclip className="w-3.5 h-3.5 text-slate-500" />
+                <div className="mt-3 pt-2.5 border-t border-phumulani-cream space-y-1.5">
+                  <span className="text-[11px] font-bold text-phumulani-charcoal flex items-center gap-1">
+                    <Paperclip className="w-3.5 h-3.5 text-phumulani-charcoal" />
                     Secure Attachments ({msg.attachments.length}):
                   </span>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {msg.attachments.map((att: any) => (
                       <div
                         key={att.id}
-                        className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200 text-xs"
+                        className="flex items-center justify-between p-2 rounded-xl bg-phumulani-cream border border-phumulani-cream text-xs"
                       >
                         <div className="flex items-center gap-2 min-w-0">
-                          <FileText className="w-4 h-4 text-teal-800 shrink-0" />
+                          <FileText className="w-4 h-4 text-phumulani-earth shrink-0" />
                           <div className="min-w-0">
-                            <p className="font-semibold text-slate-900 truncate">{att.filename}</p>
-                            <p className="text-[10px] text-slate-400 font-mono">
+                            <p className="font-semibold text-phumulani-charcoal truncate">{att.filename}</p>
+                            <p className="text-[10px] text-phumulani-charcoal font-mono">
                               {(att.sizeBytes / 1024).toFixed(1)} KB · {att.mimeType}
                             </p>
                           </div>
@@ -373,8 +373,8 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
                         <span
                           className={`text-[9px] font-bold px-1.5 py-0.5 rounded font-mono uppercase ${
                             att.scanStatus === 'clean' || !att.isQuarantined
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : 'bg-rose-100 text-rose-800'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal'
+                              : 'bg-phumulani-cream text-phumulani-earth'
                           }`}
                         >
                           {att.scanStatus === 'clean' || !att.isQuarantined ? 'Scanned Safe' : 'Quarantined'}
@@ -391,19 +391,19 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
 
       {/* 4. AI Response Engine & Quad-Action Approval Bar */}
       {thread.classification !== '01_safeguarding' && (
-        <div className="border-t border-slate-200 bg-white p-4 space-y-3">
+        <div className="border-t border-phumulani-cream bg-white p-4 space-y-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-teal-800" />
-              <span className="text-xs font-bold text-slate-900">AI Response Engine (A02 Email Manager)</span>
+              <Sparkles className="w-4 h-4 text-phumulani-earth" />
+              <span className="text-xs font-bold text-phumulani-charcoal">AI Response Engine (A02 Email Manager)</span>
               {thread.draft && (
                 <span
                   className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${
                     thread.draft.status === 'approved'
-                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                      ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green'
                       : thread.draft.status === 'sent'
-                      ? 'bg-blue-100 text-blue-800'
-                      : 'bg-amber-100 text-amber-800 border border-amber-300'
+                      ? 'bg-phumulani-cream text-phumulani-earth'
+                      : 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold'
                   }`}
                 >
                   Status: {thread.draft.status.replace('_', ' ')}
@@ -413,11 +413,11 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
 
             {/* Tone Selector & Draft Button */}
             <div className="flex items-center gap-1.5 text-xs">
-              <span className="text-slate-500 font-medium">Tone:</span>
+              <span className="text-phumulani-charcoal font-medium">Tone:</span>
               <select
                 value={selectedDraftTone}
                 onChange={(e) => setSelectedDraftTone(e.target.value as ResponseToneStyle)}
-                className="bg-slate-100 border border-slate-200 rounded-lg p-1 text-xs font-semibold text-slate-800 cursor-pointer"
+                className="bg-phumulani-cream border border-phumulani-cream rounded-lg p-1 text-xs font-semibold text-phumulani-charcoal cursor-pointer"
               >
                 <option value="professional">Professional</option>
                 <option value="formal">Formal</option>
@@ -431,9 +431,9 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
               </select>
               <button
                 onClick={() => onGenerateDraft(thread, selectedDraftTone)}
-                className="px-2.5 py-1 bg-teal-50 text-teal-900 hover:bg-teal-100 border border-teal-200 rounded-lg font-bold text-xs flex items-center gap-1 cursor-pointer transition-colors"
+                className="px-2.5 py-1 bg-phumulani-cream text-phumulani-earth hover:bg-phumulani-teal border border-phumulani-teal rounded-lg font-bold text-xs flex items-center gap-1 cursor-pointer transition-colors"
               >
-                <Sparkles className="w-3 h-3 text-teal-700" />
+                <Sparkles className="w-3 h-3 text-phumulani-earth" />
                 <span>{thread.draft ? 'Regenerate' : 'Generate Draft'}</span>
               </button>
             </div>
@@ -441,10 +441,10 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
 
           {/* AI Rewrite Actions Toolbar */}
           {thread.draft && (
-            <div className="flex flex-wrap items-center justify-between gap-2 p-2 bg-teal-50/70 border border-teal-200/80 rounded-xl">
+            <div className="flex flex-wrap items-center justify-between gap-2 p-2 bg-phumulani-cream border border-phumulani-teal rounded-xl">
               <div className="flex items-center gap-1.5 text-xs">
-                <Sparkles className="w-3.5 h-3.5 text-teal-800" />
-                <span className="font-bold text-teal-950 text-[11px]">AI Rewrite:</span>
+                <Sparkles className="w-3.5 h-3.5 text-phumulani-earth" />
+                <span className="font-bold text-phumulani-earth text-[11px]">AI Rewrite:</span>
                 <div className="flex items-center gap-1 flex-wrap">
                   {[
                     { action: 'shorten', label: 'Shorten' },
@@ -458,7 +458,7 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
                       key={btn.action}
                       type="button"
                       onClick={() => onAIRewrite(btn.action as EmailAIRewriteAction)}
-                      className="px-2 py-0.5 rounded bg-white border border-teal-200 text-teal-900 hover:bg-teal-100 text-[10px] font-semibold transition-colors cursor-pointer shadow-2xs"
+                      className="px-2 py-0.5 rounded bg-white border border-phumulani-teal text-phumulani-earth hover:bg-phumulani-teal text-[10px] font-semibold transition-colors cursor-pointer shadow-2xs"
                     >
                       {btn.label}
                     </button>
@@ -469,9 +469,9 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
               <button
                 type="button"
                 onClick={onInsertTemplate}
-                className="px-2.5 py-1 bg-white border border-indigo-200 hover:bg-indigo-50 text-indigo-900 rounded text-[10px] font-bold flex items-center gap-1 cursor-pointer shadow-2xs transition-colors"
+                className="px-2.5 py-1 bg-white border border-phumulani-teal hover:bg-phumulani-cream text-phumulani-earth rounded text-[10px] font-bold flex items-center gap-1 cursor-pointer shadow-2xs transition-colors"
               >
-                <FileText className="w-3 h-3 text-indigo-600" />
+                <FileText className="w-3 h-3 text-phumulani-earth" />
                 <span>Insert Template...</span>
               </button>
             </div>
@@ -479,32 +479,32 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
 
           {/* Active Draft Box with Watermark */}
           {thread.draft && (
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
+            <div className="bg-phumulani-cream border border-phumulani-cream rounded-xl p-3 space-y-2">
               {thread.draft.status !== 'approved' && thread.draft.status !== 'sent' && (
-                <div className="bg-rose-50 border border-rose-300 text-rose-900 rounded-lg p-2 text-xs font-mono font-bold flex items-center justify-between shadow-2xs">
+                <div className="bg-phumulani-cream border border-phumulani-earth text-phumulani-earth rounded-lg p-2 text-xs font-mono font-bold flex items-center justify-between shadow-2xs">
                   <div className="flex items-center gap-2">
-                    <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+                    <AlertTriangle className="w-4 h-4 text-phumulani-earth shrink-0" />
                     <span>AI_DRAFT — NOT APPROVED — NOT SENT</span>
                   </div>
-                  <span className="text-[10px] font-sans uppercase font-semibold text-rose-700 bg-rose-100 px-2 py-0.5 rounded border border-rose-200">
+                  <span className="text-[10px] font-sans uppercase font-semibold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded border border-phumulani-earth">
                     Requires Human Co-Signature
                   </span>
                 </div>
               )}
 
-              <div className="flex items-center justify-between text-xs border-b border-slate-200 pb-1.5">
+              <div className="flex items-center justify-between text-xs border-b border-phumulani-cream pb-1.5">
                 <div>
-                  <span className="font-semibold text-slate-700">Recipient:</span>{' '}
-                  <span className="font-mono text-slate-900">{thread.draft.recipientEmail}</span>
+                  <span className="font-semibold text-phumulani-charcoal">Recipient:</span>{' '}
+                  <span className="font-mono text-phumulani-charcoal">{thread.draft.recipientEmail}</span>
                 </div>
-                <div className="text-[11px] text-slate-500">
-                  Confidence: <span className="font-bold text-teal-800">{thread.draft.confidenceScore}%</span> · Tone: <span className="font-semibold capitalize">{thread.draft.toneStyle.replace('_', ' ')}</span>
+                <div className="text-[11px] text-phumulani-charcoal">
+                  Confidence: <span className="font-bold text-phumulani-earth">{thread.draft.confidenceScore}%</span> · Tone: <span className="font-semibold capitalize">{thread.draft.toneStyle.replace('_', ' ')}</span>
                 </div>
               </div>
 
               {/* Verified Context Summary */}
-              <div className="bg-emerald-50/60 border border-emerald-200/80 rounded px-2.5 py-1.5 text-[11px] text-emerald-900 flex items-start gap-1.5">
-                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700 shrink-0 mt-0.5" />
+              <div className="bg-phumulani-cream border border-phumulani-green rounded px-2.5 py-1.5 text-[11px] text-phumulani-charcoal flex items-start gap-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-earth shrink-0 mt-0.5" />
                 <span><strong>Verified Context Grounding:</strong> {thread.draft.verifiedContextSummary}</span>
               </div>
 
@@ -514,10 +514,10 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
                   rows={6}
                   value={draftEditContent}
                   onChange={(e) => setDraftEditContent(e.target.value)}
-                  className="w-full text-xs font-sans p-2.5 bg-white border border-teal-500 rounded-lg focus:outline-hidden"
+                  className="w-full text-xs font-sans p-2.5 bg-white border border-phumulani-cream rounded-lg focus:outline-hidden"
                 />
               ) : (
-                <div className="text-xs text-slate-800 whitespace-pre-wrap bg-white p-3 border border-slate-200 rounded-lg max-h-48 overflow-y-auto">
+                <div className="text-xs text-phumulani-charcoal whitespace-pre-wrap bg-white p-3 border border-phumulani-cream rounded-lg max-h-48 overflow-y-auto">
                   {thread.draft.proposedBody}
                 </div>
               )}
@@ -531,7 +531,7 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
                         onSaveDraft(thread.id, draftEditContent);
                         setIsEditingDraft(false);
                       }}
-                      className="px-3 py-1 bg-teal-800 text-white rounded text-xs font-bold cursor-pointer"
+                      className="px-3 py-1 bg-phumulani-charcoal text-white rounded text-xs font-bold cursor-pointer"
                     >
                       Save Changes
                     </button>
@@ -541,7 +541,7 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
                         setDraftEditContent(thread.draft?.proposedBody || '');
                         setIsEditingDraft(true);
                       }}
-                      className="px-3 py-1 border border-slate-200 hover:bg-slate-100 rounded text-xs font-semibold text-slate-700 flex items-center gap-1 cursor-pointer"
+                      className="px-3 py-1 border border-phumulani-cream hover:bg-phumulani-cream rounded text-xs font-semibold text-phumulani-charcoal flex items-center gap-1 cursor-pointer"
                     >
                       <Edit3 className="w-3 h-3" />
                       <span>Edit Draft</span>
@@ -552,7 +552,7 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
                     <>
                       <button
                         onClick={() => onApproveDraft(thread.id)}
-                        className="px-3 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded text-xs font-bold flex items-center gap-1 shadow-2xs cursor-pointer"
+                        className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded text-xs font-bold flex items-center gap-1 shadow-2xs cursor-pointer"
                         title="Approve draft and bind to current version"
                       >
                         <ThumbsUp className="w-3 h-3" />
@@ -560,7 +560,7 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
                       </button>
                       <button
                         onClick={() => onRequestChanges(thread.id)}
-                        className="px-2.5 py-1 text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-300 rounded text-xs font-medium flex items-center gap-1 cursor-pointer"
+                        className="px-2.5 py-1 text-phumulani-charcoal bg-phumulani-cream hover:bg-phumulani-gold border border-phumulani-gold rounded text-xs font-medium flex items-center gap-1 cursor-pointer"
                         title="Request staff modifications before re-review"
                       >
                         <RotateCcw className="w-3 h-3" />
@@ -568,7 +568,7 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
                       </button>
                       <button
                         onClick={() => onReturnToDraft(thread.id)}
-                        className="px-2.5 py-1 text-slate-700 bg-slate-100 hover:bg-slate-200 border border-slate-300 rounded text-xs font-medium flex items-center gap-1 cursor-pointer"
+                        className="px-2.5 py-1 text-phumulani-charcoal bg-phumulani-cream hover:bg-phumulani-cream border border-phumulani-cream rounded text-xs font-medium flex items-center gap-1 cursor-pointer"
                         title="Return to drafting stage"
                       >
                         <FileCheck className="w-3 h-3" />
@@ -576,7 +576,7 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
                       </button>
                       <button
                         onClick={() => onRejectDraft(thread.id)}
-                        className="px-2.5 py-1 text-rose-700 hover:bg-rose-50 border border-rose-200 rounded text-xs font-medium flex items-center gap-1 cursor-pointer"
+                        className="px-2.5 py-1 text-phumulani-earth hover:bg-phumulani-cream border border-phumulani-earth rounded text-xs font-medium flex items-center gap-1 cursor-pointer"
                         title="Reject proposed draft"
                       >
                         <ThumbsDown className="w-3 h-3" />
@@ -590,18 +590,18 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
                   {thread.draft.status === 'approved' ? (
                     <button
                       onClick={() => onSendApprovedEmail(thread.id)}
-                      className="px-4 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                      className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-2xs cursor-pointer"
                     >
                       <Send className="w-3.5 h-3.5" />
                       <span>SEND APPROVED EMAIL</span>
                     </button>
                   ) : thread.draft.status === 'sent' ? (
-                    <span className="text-xs font-bold text-emerald-800 flex items-center gap-1">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    <span className="text-xs font-bold text-phumulani-charcoal flex items-center gap-1">
+                      <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
                       <span>Dispatched to Recipient</span>
                     </span>
                   ) : (
-                    <span className="text-[11px] text-slate-400 font-medium italic">
+                    <span className="text-[11px] text-phumulani-charcoal font-medium italic">
                       Human approval required before sending
                     </span>
                   )}
@@ -613,46 +613,46 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
       )}
 
       {/* 5. Collapsible Accordions (Staff-First Organization) */}
-      <div className="border-t border-slate-200 divide-y divide-slate-100 bg-white">
+      <div className="border-t border-phumulani-cream divide-y divide-phumulani-cream bg-white">
         {/* Accordion 1: CRM & Donor Details */}
         <div className="p-3">
           <button
             onClick={() => setIsCrmOpen(!isCrmOpen)}
-            className="w-full flex items-center justify-between text-left text-xs font-bold text-slate-800 hover:text-teal-900 transition-colors cursor-pointer"
+            className="w-full flex items-center justify-between text-left text-xs font-bold text-phumulani-charcoal hover:text-phumulani-earth transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-teal-700" />
+              <DollarSign className="w-4 h-4 text-phumulani-earth" />
               <span>CRM & Donor Details</span>
               {matchedDonor ? (
-                <span className="text-[10px] font-semibold px-2 py-0.2 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">
+                <span className="text-[10px] font-semibold px-2 py-0.2 rounded bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green">
                   {matchedDonor.name} · {matchedDonor.givingTier}
                 </span>
               ) : thread.crmLink ? (
-                <span className="text-[10px] font-semibold px-2 py-0.2 rounded bg-teal-50 text-teal-800 border border-teal-200">
+                <span className="text-[10px] font-semibold px-2 py-0.2 rounded bg-phumulani-cream text-phumulani-earth border border-phumulani-teal">
                   Linked: {thread.crmLink.entityName}
                 </span>
               ) : (
-                <span className="text-[10px] text-slate-400 font-normal">Unlinked</span>
+                <span className="text-[10px] text-phumulani-charcoal font-normal">Unlinked</span>
               )}
             </div>
-            {isCrmOpen ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+            {isCrmOpen ? <ChevronUp className="w-4 h-4 text-phumulani-charcoal" /> : <ChevronDown className="w-4 h-4 text-phumulani-charcoal" />}
           </button>
 
           {isCrmOpen && (
-            <div className="mt-3 p-3 bg-teal-50/50 border border-teal-100 rounded-xl space-y-2 text-xs">
+            <div className="mt-3 p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl space-y-2 text-xs">
               {matchedDonor ? (
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div className="space-y-1">
-                    <p className="font-semibold text-slate-900">
+                    <p className="font-semibold text-phumulani-charcoal">
                       {matchedDonor.name} ({matchedDonor.category.replace(/_/g, ' ')})
                     </p>
-                    <p className="text-[11px] text-slate-600">
-                      Lifetime Giving: <strong className="text-teal-900">${matchedDonor.lifetimeGiving.toLocaleString()}</strong> · Relationship Owner: <strong>{matchedDonor.relationshipOwner}</strong>
+                    <p className="text-[11px] text-phumulani-charcoal">
+                      Lifetime Giving: <strong className="text-phumulani-earth">${matchedDonor.lifetimeGiving.toLocaleString()}</strong> · Relationship Owner: <strong>{matchedDonor.relationshipOwner}</strong>
                     </p>
                     {linkedOpps.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-1">
                         {linkedOpps.map((opp) => (
-                          <span key={opp.id} className="text-[10px] bg-white border border-teal-200 text-teal-950 px-2 py-0.5 rounded">
+                          <span key={opp.id} className="text-[10px] bg-white border border-phumulani-teal text-phumulani-earth px-2 py-0.5 rounded">
                             {opp.title} (${opp.targetAmount.toLocaleString()} · {opp.status.replace(/_/g, ' ')})
                           </span>
                         ))}
@@ -662,7 +662,7 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
                   {onOpenFundraisingCRM && (
                     <button
                       onClick={() => onOpenFundraisingCRM('donors', matchedDonor.id)}
-                      className="px-3 py-1.5 bg-[#104F57] hover:bg-[#0c3d43] text-white rounded text-xs font-semibold flex items-center gap-1 cursor-pointer shrink-0"
+                      className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded text-xs font-semibold flex items-center gap-1 cursor-pointer shrink-0"
                     >
                       <span>View in CRM</span>
                       <ExternalLink className="w-3 h-3" />
@@ -671,20 +671,20 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
                 </div>
               ) : (
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-slate-600 text-[11px]">
-                    No CRM record directly matched for <strong className="text-slate-800">{latestMsg?.senderEmail}</strong>.
+                  <span className="text-phumulani-charcoal text-[11px]">
+                    No CRM record directly matched for <strong className="text-phumulani-charcoal">{latestMsg?.senderEmail}</strong>.
                   </span>
                   <div className="flex items-center gap-1.5 shrink-0">
                     <button
                       onClick={() => onOpenCrmLinkModal(thread)}
-                      className="px-2.5 py-1 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded text-xs font-medium cursor-pointer"
+                      className="px-2.5 py-1 bg-white border border-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded text-xs font-medium cursor-pointer"
                     >
                       Manual Link
                     </button>
                     {onIngestFundraising && (
                       <button
                         onClick={() => onIngestFundraising(thread, latestMsg)}
-                        className="px-2.5 py-1 bg-[#104F57] hover:bg-[#0c3d43] text-white rounded text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                        className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded text-xs font-semibold flex items-center gap-1 cursor-pointer"
                       >
                         <Plus className="w-3 h-3" />
                         <span>Ingest as Donor</span>
@@ -701,22 +701,22 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
         <div className="p-3">
           <button
             onClick={() => setIsWorkflowOpen(!isWorkflowOpen)}
-            className="w-full flex items-center justify-between text-left text-xs font-bold text-slate-800 hover:text-teal-900 transition-colors cursor-pointer"
+            className="w-full flex items-center justify-between text-left text-xs font-bold text-phumulani-charcoal hover:text-phumulani-earth transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <UserPlus className="w-4 h-4 text-teal-700" />
+              <UserPlus className="w-4 h-4 text-phumulani-earth" />
               <span>Assignment & Workflow</span>
-              <span className="text-[10px] font-medium text-slate-500">
-                Assigned: <strong className="text-slate-700">{thread.assignedStaffName || 'Unassigned'}</strong> · Folder: <strong className="text-slate-700">{thread.folder || 'INBOX'}</strong>
+              <span className="text-[10px] font-medium text-phumulani-charcoal">
+                Assigned: <strong className="text-phumulani-charcoal">{thread.assignedStaffName || 'Unassigned'}</strong> · Folder: <strong className="text-phumulani-charcoal">{thread.folder || 'INBOX'}</strong>
               </span>
             </div>
-            {isWorkflowOpen ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+            {isWorkflowOpen ? <ChevronUp className="w-4 h-4 text-phumulani-charcoal" /> : <ChevronDown className="w-4 h-4 text-phumulani-charcoal" />}
           </button>
 
           {isWorkflowOpen && (
-            <div className="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-xl grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div className="mt-3 p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
               <div>
-                <label className="block text-[11px] font-semibold text-slate-600 mb-1">Assign Staff</label>
+                <label className="block text-[11px] font-semibold text-phumulani-charcoal mb-1">Assign Staff</label>
                 <select
                   value={thread.assignedStaffName || 'Unassigned'}
                   onChange={(e) => {
@@ -725,7 +725,7 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
                       onAssignStaff(thread.id, st.id, st.name);
                     }
                   }}
-                  className="w-full bg-white border border-slate-200 rounded p-1.5 text-xs text-slate-800"
+                  className="w-full bg-white border border-phumulani-cream rounded p-1.5 text-xs text-phumulani-charcoal"
                 >
                   <option value="Unassigned">Unassigned</option>
                   {EMAIL_STAFF_MEMBERS.map((s) => (
@@ -737,11 +737,11 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-600 mb-1">Folder Move</label>
+                <label className="block text-[11px] font-semibold text-phumulani-charcoal mb-1">Folder Move</label>
                 <select
                   value={thread.folder || 'INBOX'}
                   onChange={(e) => onChangeFolder(thread.id, e.target.value as EmailFolder)}
-                  className="w-full bg-white border border-slate-200 rounded p-1.5 text-xs text-slate-800"
+                  className="w-full bg-white border border-phumulani-cream rounded p-1.5 text-xs text-phumulani-charcoal"
                 >
                   <option value="INBOX">INBOX</option>
                   <option value="SENT">SENT</option>
@@ -753,14 +753,14 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
               </div>
 
               <div>
-                <label className="block text-[11px] font-semibold text-slate-600 mb-1">Classification & SLA</label>
-                <div className="flex items-center justify-between bg-white border border-slate-200 rounded p-1.5">
-                  <span className="truncate text-slate-700 font-mono text-[11px]">
+                <label className="block text-[11px] font-semibold text-phumulani-charcoal mb-1">Classification & SLA</label>
+                <div className="flex items-center justify-between bg-white border border-phumulani-cream rounded p-1.5">
+                  <span className="truncate text-phumulani-charcoal font-mono text-[11px]">
                     {EMAIL_CATEGORY_METADATA[thread.classification as EmailClassificationCategory]?.code || '00'} · {thread.priority}
                   </span>
                   <button
                     onClick={() => onReclassify(thread)}
-                    className="text-[11px] text-teal-800 underline font-semibold cursor-pointer shrink-0 ml-1"
+                    className="text-[11px] text-phumulani-earth underline font-semibold cursor-pointer shrink-0 ml-1"
                   >
                     Edit
                   </button>
@@ -774,33 +774,33 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
         <div className="p-3">
           <button
             onClick={() => setIsCollaborationOpen(!isCollaborationOpen)}
-            className="w-full flex items-center justify-between text-left text-xs font-bold text-slate-800 hover:text-teal-900 transition-colors cursor-pointer"
+            className="w-full flex items-center justify-between text-left text-xs font-bold text-phumulani-charcoal hover:text-phumulani-earth transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <Lock className="w-4 h-4 text-amber-700" />
+              <Lock className="w-4 h-4 text-phumulani-earth" />
               <span>Internal Collaboration</span>
-              <span className="text-[10px] font-semibold px-2 py-0.2 rounded bg-amber-50 text-amber-900 border border-amber-200">
+              <span className="text-[10px] font-semibold px-2 py-0.2 rounded bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold">
                 {thread.internalNotes?.length || 0} Staff Notes
               </span>
             </div>
-            {isCollaborationOpen ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+            {isCollaborationOpen ? <ChevronUp className="w-4 h-4 text-phumulani-charcoal" /> : <ChevronDown className="w-4 h-4 text-phumulani-charcoal" />}
           </button>
 
           {isCollaborationOpen && (
-            <div className="mt-3 p-3 bg-amber-50/40 border border-amber-200 rounded-xl space-y-2 text-xs">
-              <div className="text-[11px] text-amber-900 font-medium">
+            <div className="mt-3 p-3 bg-phumulani-cream border border-phumulani-gold rounded-xl space-y-2 text-xs">
+              <div className="text-[11px] text-phumulani-charcoal font-medium">
                 Confidential staff-only comments. Never included in external replies or autoresponders.
               </div>
 
               {thread.internalNotes && thread.internalNotes.length > 0 && (
                 <div className="space-y-1.5 max-h-40 overflow-y-auto">
                   {thread.internalNotes.map((note: any) => (
-                    <div key={note.id} className="bg-white border border-amber-200 rounded p-2.5 text-xs">
-                      <div className="flex items-center justify-between text-[10px] font-mono text-slate-500 mb-1">
-                        <span className="font-bold text-slate-900">{note.authorName}</span>
+                    <div key={note.id} className="bg-white border border-phumulani-gold rounded p-2.5 text-xs">
+                      <div className="flex items-center justify-between text-[10px] font-mono text-phumulani-charcoal mb-1">
+                        <span className="font-bold text-phumulani-charcoal">{note.authorName}</span>
                         <span>{new Date(note.createdAt).toLocaleString()}</span>
                       </div>
-                      <p className="text-slate-800 whitespace-pre-wrap">{note.text}</p>
+                      <p className="text-phumulani-charcoal whitespace-pre-wrap">{note.text}</p>
                     </div>
                   ))}
                 </div>
@@ -818,12 +818,12 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
                       handleNoteSubmit();
                     }
                   }}
-                  className="flex-1 bg-white border border-amber-300 rounded px-3 py-1.5 text-xs text-slate-800 placeholder:text-amber-800/40 focus:outline-hidden"
+                  className="flex-1 bg-white border border-phumulani-gold rounded px-3 py-1.5 text-xs text-phumulani-charcoal placeholder:text-phumulani-charcoal focus:outline-hidden"
                 />
                 <button
                   type="button"
                   onClick={handleNoteSubmit}
-                  className="px-3 py-1.5 bg-amber-700 hover:bg-amber-800 text-white rounded text-xs font-bold cursor-pointer transition-colors shrink-0"
+                  className="px-3 py-1.5 bg-phumulani-gold hover:bg-phumulani-orange text-phumulani-charcoal rounded text-xs font-bold cursor-pointer transition-colors shrink-0"
                 >
                   Add Note
                 </button>
@@ -836,45 +836,45 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
         <div className="p-3">
           <button
             onClick={() => setIsTechOpen(!isTechOpen)}
-            className="w-full flex items-center justify-between text-left text-xs font-bold text-slate-800 hover:text-teal-900 transition-colors cursor-pointer"
+            className="w-full flex items-center justify-between text-left text-xs font-bold text-phumulani-charcoal hover:text-phumulani-earth transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <Tag className="w-4 h-4 text-slate-500" />
+              <Tag className="w-4 h-4 text-phumulani-charcoal" />
               <span>Technical Details & Headers</span>
-              <span className="text-[10px] font-mono text-slate-400">
+              <span className="text-[10px] font-mono text-phumulani-charcoal">
                 {thread.providerMessageId || 'msg-auto'}
               </span>
             </div>
-            {isTechOpen ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+            {isTechOpen ? <ChevronUp className="w-4 h-4 text-phumulani-charcoal" /> : <ChevronDown className="w-4 h-4 text-phumulani-charcoal" />}
           </button>
 
           {isTechOpen && (
-            <div className="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-xs font-mono">
+            <div className="mt-3 p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl space-y-2 text-xs font-mono">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
                 <div>
-                  <span className="text-slate-400 block">Thread ID:</span>
-                  <span className="text-slate-800 break-all">{thread.id}</span>
+                  <span className="text-phumulani-charcoal block">Thread ID:</span>
+                  <span className="text-phumulani-charcoal break-all">{thread.id}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block">Provider Message ID:</span>
-                  <span className="text-slate-800 break-all">{thread.providerMessageId || latestMsg?.providerMessageId || 'N/A'}</span>
+                  <span className="text-phumulani-charcoal block">Provider Message ID:</span>
+                  <span className="text-phumulani-charcoal break-all">{thread.providerMessageId || latestMsg?.providerMessageId || 'N/A'}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block">Ingest Connector:</span>
-                  <span className="text-slate-800">{thread.isHistorical ? 'HISTORICAL_IMPORT' : 'MS_GRAPH_OAUTH / GOOGLE_WORKSPACE'}</span>
+                  <span className="text-phumulani-charcoal block">Ingest Connector:</span>
+                  <span className="text-phumulani-charcoal">{thread.isHistorical ? 'HISTORICAL_IMPORT' : 'MS_GRAPH_OAUTH / GOOGLE_WORKSPACE'}</span>
                 </div>
                 <div>
-                  <span className="text-slate-400 block">SLA Deadline:</span>
-                  <span className="text-slate-800">{new Date(thread.slaDeadline).toISOString()}</span>
+                  <span className="text-phumulani-charcoal block">SLA Deadline:</span>
+                  <span className="text-phumulani-charcoal">{new Date(thread.slaDeadline).toISOString()}</span>
                 </div>
               </div>
 
               {thread.labels && thread.labels.length > 0 && (
-                <div className="pt-2 border-t border-slate-200">
-                  <span className="text-[10px] text-slate-400 block mb-1">Message Labels:</span>
+                <div className="pt-2 border-t border-phumulani-cream">
+                  <span className="text-[10px] text-phumulani-charcoal block mb-1">Message Labels:</span>
                   <div className="flex flex-wrap gap-1">
                     {thread.labels.map((lbl: string) => (
-                      <span key={lbl} className="bg-slate-200 text-slate-700 px-1.5 py-0.5 rounded text-[10px]">
+                      <span key={lbl} className="bg-phumulani-cream text-phumulani-charcoal px-1.5 py-0.5 rounded text-[10px]">
                         {lbl}
                       </span>
                     ))}
@@ -889,43 +889,43 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
         <div className="p-3">
           <button
             onClick={() => setIsAuditOpen(!isAuditOpen)}
-            className="w-full flex items-center justify-between text-left text-xs font-bold text-slate-800 hover:text-teal-900 transition-colors cursor-pointer"
+            className="w-full flex items-center justify-between text-left text-xs font-bold text-phumulani-charcoal hover:text-phumulani-earth transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <History className="w-4 h-4 text-slate-500" />
+              <History className="w-4 h-4 text-phumulani-charcoal" />
               <span>Audit History</span>
-              <span className="text-[10px] text-slate-400 font-normal">
+              <span className="text-[10px] text-phumulani-charcoal font-normal">
                 Immutable event trail
               </span>
             </div>
-            {isAuditOpen ? <ChevronUp className="w-4 h-4 text-slate-400" /> : <ChevronDown className="w-4 h-4 text-slate-400" />}
+            {isAuditOpen ? <ChevronUp className="w-4 h-4 text-phumulani-charcoal" /> : <ChevronDown className="w-4 h-4 text-phumulani-charcoal" />}
           </button>
 
           {isAuditOpen && (
-            <div className="mt-3 p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2 text-xs">
-              <div className="flex items-center gap-2 text-[11px] text-slate-600 border-b border-slate-200 pb-1.5">
-                <Activity className="w-3.5 h-3.5 text-teal-700" />
+            <div className="mt-3 p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl space-y-2 text-xs">
+              <div className="flex items-center gap-2 text-[11px] text-phumulani-charcoal border-b border-phumulani-cream pb-1.5">
+                <Activity className="w-3.5 h-3.5 text-phumulani-earth" />
                 <span>Verification trail for compliance with non-profit donor governance</span>
               </div>
               <div className="space-y-1.5 font-mono text-[11px]">
-                <div className="flex items-start justify-between text-slate-600">
+                <div className="flex items-start justify-between text-phumulani-charcoal">
                   <span>· Received & Scanned by Connector Gateway</span>
-                  <span className="text-slate-400">{new Date(firstMsg?.receivedAt || thread.lastMessageAt).toLocaleTimeString()}</span>
+                  <span className="text-phumulani-charcoal">{new Date(firstMsg?.receivedAt || thread.lastMessageAt).toLocaleTimeString()}</span>
                 </div>
-                <div className="flex items-start justify-between text-slate-600">
+                <div className="flex items-start justify-between text-phumulani-charcoal">
                   <span>· Classified as Category {EMAIL_CATEGORY_METADATA[thread.classification as EmailClassificationCategory]?.code || '00'} ({thread.classification})</span>
-                  <span className="text-slate-400">{thread.priority}</span>
+                  <span className="text-phumulani-charcoal">{thread.priority}</span>
                 </div>
                 {thread.draft && (
-                  <div className="flex items-start justify-between text-slate-600">
+                  <div className="flex items-start justify-between text-phumulani-charcoal">
                     <span>· AI Response Draft Generated ({thread.draft.status})</span>
-                    <span className="text-slate-400">{thread.draft.confidenceScore}% conf</span>
+                    <span className="text-phumulani-charcoal">{thread.draft.confidenceScore}% conf</span>
                   </div>
                 )}
                 {thread.assignedStaffName && (
-                  <div className="flex items-start justify-between text-slate-600">
+                  <div className="flex items-start justify-between text-phumulani-charcoal">
                     <span>· Assigned to {thread.assignedStaffName}</span>
-                    <span className="text-slate-400">Active</span>
+                    <span className="text-phumulani-charcoal">Active</span>
                   </div>
                 )}
               </div>

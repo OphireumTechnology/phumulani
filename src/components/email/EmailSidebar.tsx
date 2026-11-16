@@ -98,15 +98,15 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
 
   return (
     <aside
-      className={`bg-white border-r border-slate-200 transition-all duration-200 flex flex-col shrink-0 select-none ${
+      className={`bg-white border-r border-phumulani-cream transition-all duration-200 flex flex-col shrink-0 select-none ${
         isCollapsed ? 'w-16' : 'w-64'
       } ${className}`}
       aria-label="Email Navigation Sidebar"
     >
       {/* Top Header Bar / Sidebar Toggle */}
-      <div className="p-3 border-b border-slate-100 flex items-center justify-between">
+      <div className="p-3 border-b border-phumulani-cream flex items-center justify-between">
         {!isCollapsed && (
-          <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-phumulani-charcoal">
             Mail Folders
           </span>
         )}
@@ -114,7 +114,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
           <button
             onClick={onToggleCollapse}
             aria-label={isCollapsed ? 'Expand Email Sidebar' : 'Collapse Email Sidebar'}
-            className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-md transition-colors cursor-pointer ml-auto"
+            className="p-1 text-phumulani-charcoal hover:text-phumulani-earth hover:bg-phumulani-cream rounded-md transition-colors cursor-pointer ml-auto"
             title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
           >
             {isCollapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
@@ -129,7 +129,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
           {!isCollapsed && (
             <button
               onClick={() => toggleGroup('everyday')}
-              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 hover:text-slate-700 cursor-pointer"
+              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
             >
               <span>Everyday Email</span>
               {groupOpen.everyday ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
@@ -144,16 +144,16 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="Phumulani Ai — Local LLM & Autonomous Fundraising"
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'phumulani_ai'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-teal-900 bg-teal-50/80 hover:bg-teal-100/80 border border-teal-200/60'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-earth bg-phumulani-cream hover:bg-phumulani-gold hover:text-phumulani-charcoal border border-phumulani-teal'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <Sparkles className={`w-4 h-4 shrink-0 ${activeTab === 'phumulani_ai' ? 'text-teal-200' : 'text-teal-700'}`} />
+                  <Sparkles className={`w-4 h-4 shrink-0 ${activeTab === 'phumulani_ai' ? 'text-white' : 'text-phumulani-earth'}`} />
                   {!isCollapsed && <span className="truncate font-bold">Phumulani Ai</span>}
                 </div>
                 {!isCollapsed && (
-                  <span className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded ${activeTab === 'phumulani_ai' ? 'bg-teal-900 text-teal-100' : 'bg-teal-700 text-white'}`}>
+                  <span className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded ${activeTab === 'phumulani_ai' ? 'bg-phumulani-charcoal text-phumulani-teal' : 'bg-phumulani-earth text-white'}`}>
                     LOCAL
                   </span>
                 )}
@@ -165,8 +165,8 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="Unified Inbox (All Connected Mailboxes)"
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'all_mailboxes' || activeTab === 'conversations'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -177,8 +177,8 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                   <span
                     className={`text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded-full font-bold ${
                       activeTab === 'all_mailboxes' || activeTab === 'conversations'
-                        ? 'bg-teal-900 text-teal-100'
-                        : 'bg-blue-100 text-blue-800'
+                        ? 'bg-phumulani-charcoal text-phumulani-teal'
+                        : 'bg-phumulani-cream text-phumulani-earth'
                     }`}
                   >
                     {unreadCount}
@@ -192,18 +192,18 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="Priority Triage (P0 Critical & P1 Urgent)"
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'priority'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <AlertTriangle className={`w-4 h-4 shrink-0 ${activeTab === 'priority' ? 'text-amber-300' : 'text-rose-600'}`} />
+                  <AlertTriangle className={`w-4 h-4 shrink-0 ${activeTab === 'priority' ? 'text-phumulani-earth' : 'text-phumulani-earth'}`} />
                   {!isCollapsed && <span className="truncate">Priority</span>}
                 </div>
                 {!isCollapsed && priorityCount > 0 && (
                   <span
                     className={`text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded-full font-bold ${
-                      activeTab === 'priority' ? 'bg-teal-900 text-teal-100' : 'bg-rose-100 text-rose-800'
+                      activeTab === 'priority' ? 'bg-phumulani-charcoal text-phumulani-teal' : 'bg-phumulani-cream text-phumulani-earth'
                     }`}
                   >
                     {priorityCount}
@@ -217,16 +217,16 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="Draft Messages & Staged Responses"
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'drafts'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <FileEdit className="w-4 h-4 shrink-0 text-slate-500" />
+                  <FileEdit className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
                   {!isCollapsed && <span className="truncate">Drafts</span>}
                 </div>
                 {!isCollapsed && draftsCount > 0 && (
-                  <span className="text-[10px] font-mono tabular-nums text-slate-500">
+                  <span className="text-[10px] font-mono tabular-nums text-phumulani-charcoal">
                     {draftsCount}
                   </span>
                 )}
@@ -238,18 +238,18 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="Pending Human Approvals (Quad-Action Review)"
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'approvals'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <Sparkles className={`w-4 h-4 shrink-0 ${activeTab === 'approvals' ? 'text-amber-300' : 'text-amber-500'}`} />
+                  <Sparkles className={`w-4 h-4 shrink-0 ${activeTab === 'approvals' ? 'text-phumulani-earth' : 'text-phumulani-earth'}`} />
                   {!isCollapsed && <span className="truncate">Approvals</span>}
                 </div>
                 {!isCollapsed && approvalsCount > 0 && (
                   <span
                     className={`text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded-full font-bold ${
-                      activeTab === 'approvals' ? 'bg-teal-900 text-teal-100' : 'bg-amber-100 text-amber-800'
+                      activeTab === 'approvals' ? 'bg-phumulani-charcoal text-phumulani-teal' : 'bg-phumulani-cream text-phumulani-charcoal'
                     }`}
                   >
                     {approvalsCount}
@@ -263,16 +263,16 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="Sent Messages Ledger"
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'sent'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <Send className="w-4 h-4 shrink-0 text-slate-500" />
+                  <Send className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
                   {!isCollapsed && <span className="truncate">Sent</span>}
                 </div>
                 {!isCollapsed && (
-                  <span className="text-[10px] font-mono tabular-nums text-slate-400">
+                  <span className="text-[10px] font-mono tabular-nums text-phumulani-charcoal">
                     {sentCount}
                   </span>
                 )}
@@ -284,16 +284,16 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="Follow-Up Tasks & Reminders"
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'follow_up_tasks'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <Clock className="w-4 h-4 shrink-0 text-teal-700" />
+                  <Clock className="w-4 h-4 shrink-0 text-phumulani-earth" />
                   {!isCollapsed && <span className="truncate">Follow-ups</span>}
                 </div>
                 {!isCollapsed && followUpsCount > 0 && (
-                  <span className="text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded bg-slate-100 text-slate-600">
+                  <span className="text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded bg-phumulani-cream text-phumulani-charcoal">
                     {followUpsCount}
                   </span>
                 )}
@@ -305,12 +305,12 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="Conversations assigned to you"
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'assigned_to_me'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <UserCheck className="w-4 h-4 shrink-0 text-slate-500" />
+                  <UserCheck className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
                   {!isCollapsed && <span className="truncate">Assigned to Me</span>}
                 </div>
               </button>
@@ -321,12 +321,12 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="Departmental Team Inbox"
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'team_inbox'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <Users className="w-4 h-4 shrink-0 text-slate-500" />
+                  <Users className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
                   {!isCollapsed && <span className="truncate">Team Inbox</span>}
                 </div>
               </button>
@@ -335,11 +335,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
         </div>
 
         {/* GROUP 2: CONTACTS & COMMUNICATIONS (Collapsed by default) */}
-        <div className="space-y-0.5 pt-1 border-t border-slate-100">
+        <div className="space-y-0.5 pt-1 border-t border-phumulani-cream">
           {!isCollapsed && (
             <button
               onClick={() => toggleGroup('contacts')}
-              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 hover:text-slate-700 cursor-pointer"
+              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
             >
               <span>Contacts & CRM</span>
               {groupOpen.contacts ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
@@ -353,11 +353,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="Constituent & Donor CRM Records"
                 className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'crm_connections'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <Database className="w-4 h-4 shrink-0 text-slate-500" />
+                <Database className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
                 {!isCollapsed && <span className="truncate">Contacts & CRM</span>}
               </button>
 
@@ -366,11 +366,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="Approved Email Templates & Canned Responses"
                 className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'templates'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <FileText className="w-4 h-4 shrink-0 text-slate-500" />
+                <FileText className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
                 {!isCollapsed && <span className="truncate">Email Templates</span>}
               </button>
 
@@ -379,11 +379,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="AI Email Assistant (A02 Configuration)"
                 className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'ai_intelligence'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <Bot className="w-4 h-4 shrink-0 text-teal-600" />
+                <Bot className="w-4 h-4 shrink-0 text-phumulani-earth" />
                 {!isCollapsed && <span className="truncate">AI Assistant</span>}
               </button>
 
@@ -392,11 +392,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="Communications Intelligence (Major Gifts & Grants)"
                 className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'fundraising' || activeTab === 'grants' || activeTab === 'corporate' || activeTab === 'executive'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <TrendingUp className="w-4 h-4 shrink-0 text-slate-500" />
+                <TrendingUp className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
                 {!isCollapsed && <span className="truncate">Comms Intelligence</span>}
               </button>
             </div>
@@ -404,11 +404,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
         </div>
 
         {/* GROUP 3: MANAGEMENT & REPORTING (Collapsed by default) */}
-        <div className="space-y-0.5 pt-1 border-t border-slate-100">
+        <div className="space-y-0.5 pt-1 border-t border-phumulani-cream">
           {!isCollapsed && (
             <button
               onClick={() => toggleGroup('management')}
-              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 hover:text-slate-700 cursor-pointer"
+              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
             >
               <span>Management & Reports</span>
               {groupOpen.management ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
@@ -422,11 +422,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="10 Organizational Mailboxes Inventory"
                 className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'mailboxes'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <Inbox className="w-4 h-4 shrink-0 text-slate-500" />
+                <Inbox className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
                 {!isCollapsed && <span className="truncate">Org Mailboxes</span>}
               </button>
 
@@ -435,11 +435,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="Email Performance, Response Times & SLAs"
                 className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'analytics'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <BarChart2 className="w-4 h-4 shrink-0 text-slate-500" />
+                <BarChart2 className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
                 {!isCollapsed && <span className="truncate">Email Analytics</span>}
               </button>
 
@@ -448,11 +448,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="Immutable Tamper-Evident Audit Logs"
                 className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'audit_history'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <History className="w-4 h-4 shrink-0 text-slate-500" />
+                <History className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
                 {!isCollapsed && <span className="truncate">Audit Logs</span>}
               </button>
 
@@ -461,11 +461,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="Grant Financial Documents & Advance Liquidation Guard"
                 className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'financial_docs'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <DollarSign className="w-4 h-4 shrink-0 text-emerald-700" />
+                <DollarSign className="w-4 h-4 shrink-0 text-phumulani-earth" />
                 {!isCollapsed && <span className="truncate">Grant Financials</span>}
               </button>
 
@@ -474,11 +474,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 title="Mailbox ACLs, Legal Holds, Retention & Worker Telemetry"
                 className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'governance'
-                    ? 'bg-[#104F57] text-white shadow-2xs'
-                    : 'text-slate-700 hover:bg-slate-100'
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <ShieldAlert className="w-4 h-4 shrink-0 text-rose-700" />
+                <ShieldAlert className="w-4 h-4 shrink-0 text-phumulani-earth" />
                 {!isCollapsed && <span className="truncate">Governance & Holds</span>}
               </button>
             </div>
@@ -487,11 +487,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
 
         {/* GROUP 4: SETTINGS & CONNECTIONS (Collapsed by default) */}
         {(isSuperAdmin || isSupervisor) && (
-          <div className="space-y-0.5 pt-1 border-t border-slate-100">
+          <div className="space-y-0.5 pt-1 border-t border-phumulani-cream">
             {!isCollapsed && (
               <button
                 onClick={() => toggleGroup('settings')}
-                className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 hover:text-slate-700 cursor-pointer"
+                className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
               >
                 <span>Settings & Connectors</span>
                 {groupOpen.settings ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
@@ -505,11 +505,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                   title="Universal Email Connectors (Google, MS365, IMAP/SMTP)"
                   className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                     activeTab === 'universal_connectors'
-                      ? 'bg-[#104F57] text-white shadow-2xs'
-                      : 'text-slate-700 hover:bg-slate-100'
+                      ? 'bg-phumulani-earth text-white shadow-2xs'
+                      : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                   }`}
                 >
-                  <Sliders className="w-4 h-4 shrink-0 text-teal-700" />
+                  <Sliders className="w-4 h-4 shrink-0 text-phumulani-earth" />
                   {!isCollapsed && <span className="truncate">Email Accounts</span>}
                 </button>
 
@@ -518,11 +518,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                   title="Two-Way Inbound & Outbound Sync Checkpoints"
                   className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                     activeTab === 'synchronization'
-                      ? 'bg-[#104F57] text-white shadow-2xs'
-                      : 'text-slate-700 hover:bg-slate-100'
+                      ? 'bg-phumulani-earth text-white shadow-2xs'
+                      : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                   }`}
                 >
-                  <RefreshCw className="w-4 h-4 shrink-0 text-slate-500" />
+                  <RefreshCw className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
                   {!isCollapsed && <span className="truncate">Sync Management</span>}
                 </button>
 
@@ -531,11 +531,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                   title="Email Policy, Security & Dispatch Settings"
                   className={`w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                     activeTab === 'settings'
-                      ? 'bg-[#104F57] text-white shadow-2xs'
-                      : 'text-slate-700 hover:bg-slate-100'
+                      ? 'bg-phumulani-earth text-white shadow-2xs'
+                      : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                   }`}
                 >
-                  <Settings className="w-4 h-4 shrink-0 text-slate-500" />
+                  <Settings className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
                   {!isCollapsed && <span className="truncate">Email Settings</span>}
                 </button>
               </div>
@@ -545,15 +545,15 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
       </nav>
 
       {/* Footer Profile Status */}
-      <div className="p-2.5 border-t border-slate-100 bg-slate-50/70">
+      <div className="p-2.5 border-t border-phumulani-cream bg-phumulani-cream">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full bg-[#104F57] text-white font-bold text-xs flex items-center justify-center shrink-0">
+          <div className="w-7 h-7 rounded-full bg-phumulani-charcoal text-white font-bold text-xs flex items-center justify-center shrink-0">
             {currentUser.name.charAt(0)}
           </div>
           {!isCollapsed && (
             <div className="min-w-0 flex-1">
-              <div className="text-xs font-bold text-slate-800 truncate">{currentUser.name}</div>
-              <div className="text-[10px] text-slate-500 truncate">{currentUser.email}</div>
+              <div className="text-xs font-bold text-phumulani-charcoal truncate">{currentUser.name}</div>
+              <div className="text-[10px] text-phumulani-charcoal truncate">{currentUser.email}</div>
             </div>
           )}
         </div>

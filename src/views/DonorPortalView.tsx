@@ -204,38 +204,38 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
     >
       <div className="space-y-6">
         {/* Banner */}
-        <div className="bg-[#633C69] text-white rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-sm">
+        <div className="bg-phumulani-charcoal text-white rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-sm">
           <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-2 text-xs font-semibold text-purple-200 bg-purple-900/60 px-3 py-0.5 rounded-full border border-purple-700">
-              <Heart className="w-3.5 h-3.5 fill-purple-300 text-purple-300" />
+            <div className="inline-flex items-center gap-2 text-xs font-semibold text-phumulani-cream bg-phumulani-charcoal px-3 py-0.5 rounded-full border border-phumulani-earth">
+              <Heart className="w-3.5 h-3.5 fill-phumulani-cream text-phumulani-gold" />
               <span>DONOR & SPONSOR RECOGNITION</span>
             </div>
             <h1 className="font-serif text-2xl font-bold">
               Donor Giving &amp; Impact Dashboard — {currentUser.name}
             </h1>
-            <p className="text-xs text-purple-100/90 max-w-xl">
+            <p className="text-xs text-phumulani-cream max-w-xl">
               Review your 501(c)(3) tax receipts, download annual statements, manage recurring gifts, and track the direct impact of your generosity.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <div className="bg-white/10 backdrop-blur-xs border border-white/20 rounded-xl p-3 text-center min-w-[110px]">
-              <div className="font-serif text-xl font-bold text-amber-300">
+            <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl p-3 text-center min-w-[110px]">
+              <div className="font-serif text-xl font-bold text-phumulani-gold">
                 ${totalGiven.toLocaleString()}
               </div>
-              <div className="text-[10px] text-purple-200 mt-0.5">Total Settled</div>
+              <div className="text-[10px] text-phumulani-cream mt-0.5">Total Settled</div>
             </div>
-            <div className="bg-white/10 backdrop-blur-xs border border-white/20 rounded-xl p-3 text-center min-w-[110px]">
-              <div className="font-serif text-xl font-bold text-sky-200">
+            <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl p-3 text-center min-w-[110px]">
+              <div className="font-serif text-xl font-bold text-phumulani-cream">
                 ${totalPledgedUnearned.toLocaleString()}
               </div>
-              <div className="text-[10px] text-purple-200 mt-0.5">Segregated Pledges</div>
+              <div className="text-[10px] text-phumulani-cream mt-0.5">Segregated Pledges</div>
             </div>
-            <div className="bg-white/10 backdrop-blur-xs border border-white/20 rounded-xl p-3 text-center min-w-[110px]">
-              <div className="font-serif text-xl font-bold text-emerald-300">
+            <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl p-3 text-center min-w-[110px]">
+              <div className="font-serif text-xl font-bold text-phumulani-cream">
                 {activeRecurring} Active
               </div>
-              <div className="text-[10px] text-purple-200 mt-0.5">Monthly Gifts</div>
+              <div className="text-[10px] text-phumulani-cream mt-0.5">Monthly Gifts</div>
             </div>
           </div>
         </div>
@@ -245,14 +245,14 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           <div className="lg:col-span-8 space-y-6">
             {/* Recent Receipts List */}
-            <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
+            <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-4">
               <div className="flex justify-between items-center">
-                <h3 className="font-serif text-base font-bold text-slate-900">
+                <h3 className="font-serif text-base font-bold text-phumulani-charcoal">
                   Recent Verified Contributions
                 </h3>
                 <button
                   onClick={() => setActiveTab('history')}
-                  className="text-xs font-semibold text-[#633C69] hover:underline"
+                  className="text-xs font-semibold text-phumulani-earth hover:underline"
                 >
                   View All Receipts
                 </button>
@@ -262,30 +262,30 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
                 {userDonations.slice(0, 3).map((don) => (
                   <div
                     key={don.id}
-                    className="p-4 rounded-xl border border-slate-200 hover:border-purple-300 transition-all flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
+                    className="p-4 rounded-xl border border-phumulani-cream hover:border-phumulani-earth transition-all flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3"
                   >
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-slate-900 text-sm">
+                        <span className="font-bold text-phumulani-charcoal text-sm">
                           ${don.amount.toLocaleString()}.00 USD
                         </span>
-                        <span className="text-[10px] font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-mono text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded">
                           {don.receiptNumber}
                         </span>
-                        <span className="text-[10px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-semibold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded">
                           Reconciled
                         </span>
                       </div>
-                      <div className="text-xs text-slate-500 mt-1">
-                        Campaign: <strong className="text-slate-700">{don.campaignTitle}</strong> · Method: {don.paymentMethod}
+                      <div className="text-xs text-phumulani-charcoal mt-1">
+                        Campaign: <strong className="text-phumulani-charcoal">{don.campaignTitle}</strong> · Method: {don.paymentMethod}
                       </div>
                     </div>
 
                     <button
                       onClick={() => onOpenReceipt(don)}
-                      className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
+                      className="px-3 py-1.5 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-lg text-xs font-semibold transition-colors flex items-center gap-1.5 cursor-pointer"
                     >
-                      <Receipt className="w-3.5 h-3.5 text-[#633C69]" />
+                      <Receipt className="w-3.5 h-3.5 text-phumulani-earth" />
                       <span>Print Receipt</span>
                     </button>
                   </div>
@@ -294,16 +294,16 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
             </div>
 
             {/* Campaign Impact Spotlight */}
-            <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
-              <h3 className="font-serif text-base font-bold text-slate-900">
+            <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-4">
+              <h3 className="font-serif text-base font-bold text-phumulani-charcoal">
                 Where Your Donations Make an Impact
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {campaigns.map((camp) => (
-                  <div key={camp.id} className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                    <div className="font-semibold text-xs text-slate-800">{camp.title}</div>
-                    <div className="text-[11px] text-slate-500">{camp.impactMetric}</div>
-                    <div className="text-xs font-bold text-[#104F57] pt-1">
+                  <div key={camp.id} className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-2">
+                    <div className="font-semibold text-xs text-phumulani-charcoal">{camp.title}</div>
+                    <div className="text-[11px] text-phumulani-charcoal">{camp.impactMetric}</div>
+                    <div className="text-xs font-bold text-phumulani-earth pt-1">
                       ${camp.raisedAmount.toLocaleString()} funded by {camp.donorCount} community supporters
                     </div>
                   </div>
@@ -314,22 +314,22 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
 
           {/* Right Column: Donor Information */}
           <div className="lg:col-span-4 space-y-6">
-            <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4 text-xs">
-              <h3 className="font-serif text-base font-bold text-slate-900 flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+            <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-4 text-xs">
+              <h3 className="font-serif text-base font-bold text-phumulani-charcoal flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-phumulani-earth" />
                 <span>IRS Tax-Exempt Status</span>
               </h3>
-              <p className="text-slate-600 leading-relaxed">
+              <p className="text-phumulani-charcoal leading-relaxed">
                 Phumulani is registered in Minnesota as an independent 501(c)(3) public charity. EIN: <strong>82-4190823</strong>.
               </p>
-              <div className="p-3 bg-purple-50 border border-purple-200 rounded-lg space-y-1">
-                <div className="font-bold text-[#633C69]">Annual Giving Statement</div>
-                <div className="text-[11px] text-slate-600">
+              <div className="p-3 bg-phumulani-cream border border-phumulani-earth rounded-lg space-y-1">
+                <div className="font-bold text-phumulani-earth">Annual Giving Statement</div>
+                <div className="text-[11px] text-phumulani-charcoal">
                   Consolidated PDF summary ready for tax year 2026 filing.
                 </div>
                 <button
                   onClick={() => setActiveTab('tax_statement')}
-                  className="mt-2 text-xs font-bold text-[#633C69] hover:underline flex items-center gap-1 cursor-pointer"
+                  className="mt-2 text-xs font-bold text-phumulani-earth hover:underline flex items-center gap-1 cursor-pointer"
                 >
                   <span>View Statement</span>
                   <ExternalLink className="w-3 h-3" />
@@ -337,12 +337,12 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
               </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-3 text-xs">
-              <div className="font-bold text-slate-800">Employer Matching Gift?</div>
-              <p className="text-slate-500 leading-relaxed text-[11px]">
+            <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-3 text-xs">
+              <div className="font-bold text-phumulani-charcoal">Employer Matching Gift?</div>
+              <p className="text-phumulani-charcoal leading-relaxed text-[11px]">
                 Many Minnesota employers (including Target, UnitedHealth, 3M, Best Buy, and General Mills) match charitable gifts dollar-for-dollar.
               </p>
-              <div className="text-[#104F57] font-semibold text-[11px]">
+              <div className="text-phumulani-earth font-semibold text-[11px]">
                 Contact: finance@phumulani.org for matching gift verification.
               </div>
             </div>
@@ -352,13 +352,13 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
 
       {/* TAB 2: GIVING HISTORY & RECEIPTS */}
       {activeTab === 'history' && (
-        <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-6">
+        <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-6">
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="font-serif text-lg font-bold text-slate-900">
+              <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
                 Official Contribution & Receipt Archive
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-phumulani-charcoal mt-1">
                 Every transaction receives an immutable provider receipt number and is reconciled against our general ledger.
               </p>
             </div>
@@ -366,7 +366,7 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-500 border-y border-slate-200">
+              <thead className="bg-phumulani-cream text-phumulani-charcoal border-y border-phumulani-cream">
                 <tr>
                   <th className="py-3 px-4 font-semibold">Date</th>
                   <th className="py-3 px-4 font-semibold">Receipt #</th>
@@ -377,29 +377,29 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
                   <th className="py-3 px-4 font-semibold">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-phumulani-cream">
                 {userDonations.map((don) => (
-                  <tr key={don.id} className="hover:bg-slate-50">
-                    <td className="py-3 px-4 text-slate-600 font-mono">
+                  <tr key={don.id} className="hover:bg-phumulani-cream">
+                    <td className="py-3 px-4 text-phumulani-charcoal font-mono">
                       {new Date(don.createdAt).toLocaleDateString()}
                     </td>
-                    <td className="py-3 px-4 font-mono font-bold text-[#104F57]">
+                    <td className="py-3 px-4 font-mono font-bold text-phumulani-earth">
                       {don.receiptNumber}
                     </td>
-                    <td className="py-3 px-4 font-medium text-slate-800">
+                    <td className="py-3 px-4 font-medium text-phumulani-charcoal">
                       {don.campaignTitle}
                     </td>
-                    <td className="py-3 px-4 text-slate-600">{don.paymentMethod}</td>
-                    <td className="py-3 px-4 capitalize text-slate-600">
+                    <td className="py-3 px-4 text-phumulani-charcoal">{don.paymentMethod}</td>
+                    <td className="py-3 px-4 capitalize text-phumulani-charcoal">
                       {don.frequency.replace('_', ' ')}
                     </td>
-                    <td className="py-3 px-4 font-bold text-slate-900">
+                    <td className="py-3 px-4 font-bold text-phumulani-charcoal">
                       ${don.amount.toLocaleString()}.00
                     </td>
                     <td className="py-3 px-4">
                       <button
                         onClick={() => onOpenReceipt(don)}
-                        className="text-xs font-semibold text-[#633C69] hover:underline flex items-center gap-1 cursor-pointer"
+                        className="text-xs font-semibold text-phumulani-earth hover:underline flex items-center gap-1 cursor-pointer"
                       >
                         <Receipt className="w-3.5 h-3.5" />
                         <span>Print Receipt</span>
@@ -418,14 +418,14 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
         <div className="space-y-6">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
             <div>
-              <div className="inline-flex items-center gap-2 text-[11px] font-bold text-amber-800 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">
-                <AlertTriangle className="w-3.5 h-3.5 text-amber-700" />
+              <div className="inline-flex items-center gap-2 text-[11px] font-bold text-phumulani-charcoal bg-phumulani-cream px-2.5 py-1 rounded-md border border-phumulani-gold">
+                <AlertTriangle className="w-3.5 h-3.5 text-phumulani-earth" />
                 <span>FASB / GAAP RESTRICTED &amp; SEGREGATED ACCOUNTING</span>
               </div>
-              <h3 className="font-serif text-xl font-bold text-slate-900 mt-2">
+              <h3 className="font-serif text-xl font-bold text-phumulani-charcoal mt-2">
                 Multi-Year Pledges &amp; Intentions of Support
               </h3>
-              <p className="text-xs text-slate-600 mt-1 max-w-3xl">
+              <p className="text-xs text-phumulani-charcoal mt-1 max-w-3xl">
                 Phumulani rigorously isolates future pledge commitments from liquid bank cash. Unsettled pledges are recognized as unearned receivables and do not generate IRS tax receipts until funds are received and settled.
               </p>
             </div>
@@ -433,92 +433,92 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
 
           {/* 4-Tier Financial Classification Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between text-xs text-slate-500">
+            <div className="bg-white rounded-xl border border-phumulani-cream p-4 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between text-xs text-phumulani-charcoal">
                 <span>Tier 1: Settled Liquid Cash</span>
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                <ShieldCheck className="w-4 h-4 text-phumulani-earth" />
               </div>
-              <div className="font-serif text-2xl font-bold text-emerald-700">$390,000</div>
-              <div className="text-[10px] text-slate-500">
+              <div className="font-serif text-2xl font-bold text-phumulani-earth">$390,000</div>
+              <div className="text-[10px] text-phumulani-charcoal">
                 CPA-verified cash in bank across 5 institutional grants &amp; gifts.
               </div>
             </div>
 
-            <div className="bg-amber-50/60 rounded-xl border-2 border-amber-300 p-4 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between text-xs text-amber-800 font-semibold">
+            <div className="bg-phumulani-cream rounded-xl border-2 border-phumulani-gold p-4 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between text-xs text-phumulani-charcoal font-semibold">
                 <span>Tier 2: Committed Pledges</span>
-                <HeartHandshake className="w-4 h-4 text-amber-700" />
+                <HeartHandshake className="w-4 h-4 text-phumulani-earth" />
               </div>
-              <div className="font-serif text-2xl font-bold text-amber-900">
+              <div className="font-serif text-2xl font-bold text-phumulani-charcoal">
                 ${totalPledgedUnearned.toLocaleString()}
               </div>
-              <div className="text-[10px] text-amber-800">
+              <div className="text-[10px] text-phumulani-charcoal">
                 Segregated unearned receivables; $0 counted toward settled cash.
               </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between text-xs text-slate-500">
+            <div className="bg-white rounded-xl border border-phumulani-cream p-4 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between text-xs text-phumulani-charcoal">
                 <span>Tier 3: Payment Gateway</span>
-                <Lock className="w-4 h-4 text-slate-400" />
+                <Lock className="w-4 h-4 text-phumulani-charcoal" />
               </div>
-              <div className="font-serif text-2xl font-bold text-slate-700">$0.00</div>
-              <div className="text-[10px] text-slate-500">
+              <div className="font-serif text-2xl font-bold text-phumulani-charcoal">$0.00</div>
+              <div className="text-[10px] text-phumulani-charcoal">
                 Truthfully NOT_CONNECTED in staged development. Zero mock charges.
               </div>
             </div>
 
-            <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs space-y-2">
-              <div className="flex items-center justify-between text-xs text-slate-500">
+            <div className="bg-white rounded-xl border border-phumulani-cream p-4 shadow-2xs space-y-2">
+              <div className="flex items-center justify-between text-xs text-phumulani-charcoal">
                 <span>Tier 4: Grants Pipeline</span>
-                <TrendingUp className="w-4 h-4 text-teal-600" />
+                <TrendingUp className="w-4 h-4 text-phumulani-earth" />
               </div>
-              <div className="font-serif text-2xl font-bold text-teal-700">$245,000</div>
-              <div className="text-[10px] text-slate-500">
+              <div className="font-serif text-2xl font-bold text-phumulani-earth">$245,000</div>
+              <div className="text-[10px] text-phumulani-charcoal">
                 Institutional foundation proposals submitted &amp; under review.
               </div>
             </div>
           </div>
 
           {/* Legal Notice */}
-          <div className="p-4 bg-purple-50/70 border border-purple-200 rounded-xl flex items-start gap-3 text-xs text-[#633C69]">
-            <AlertTriangle className="w-5 h-5 text-[#633C69] shrink-0 mt-0.5" />
+          <div className="p-4 bg-phumulani-cream border border-phumulani-earth rounded-xl flex items-start gap-3 text-xs text-phumulani-earth">
+            <AlertTriangle className="w-5 h-5 text-phumulani-earth shrink-0 mt-0.5" />
             <div className="space-y-1">
               <div className="font-bold">
                 501(c)(3) PLEDGE &amp; REVENUE SEGREGATION NOTICE
               </div>
-              <div className="text-slate-700 text-[11px] leading-relaxed">
+              <div className="text-phumulani-charcoal text-[11px] leading-relaxed">
                 Pursuant to Section 170(f)(8) of the Internal Revenue Code, a pledge or statement of future intention does not constitute a completed charitable contribution. Official IRS tax-deductible receipts and year-end statements are issued <strong>ONLY upon receipt and settlement of realized payments</strong>. Unsettled pledges are recorded exclusively as conditional receivables in a segregated accounting tier.
               </div>
             </div>
           </div>
 
           {pledgeFeedback && (
-            <div className="p-4 bg-emerald-50 border border-emerald-300 rounded-xl text-xs font-semibold text-emerald-800 flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-700 shrink-0" />
+            <div className="p-4 bg-phumulani-cream border border-phumulani-green rounded-xl text-xs font-semibold text-phumulani-charcoal flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-phumulani-earth shrink-0" />
               <span>{pledgeFeedback}</span>
             </div>
           )}
 
           {/* Pledges List */}
-          <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
+          <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-4">
             <div className="flex justify-between items-center">
               <div>
-                <h4 className="font-serif text-base font-bold text-slate-900">
+                <h4 className="font-serif text-base font-bold text-phumulani-charcoal">
                   Active Segregated Pledge Commitments
                 </h4>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-phumulani-charcoal">
                   All active commitments are segregated with zero impact on liquid bank cash.
                 </p>
               </div>
-              <span className="text-xs font-semibold px-2.5 py-1 bg-slate-100 rounded-md text-slate-700">
+              <span className="text-xs font-semibold px-2.5 py-1 bg-phumulani-cream rounded-md text-phumulani-charcoal">
                 {pledges.length} Active Schedules
               </span>
             </div>
 
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-600 border-y border-slate-200">
+                <thead className="bg-phumulani-cream text-phumulani-charcoal border-y border-phumulani-cream">
                   <tr>
                     <th className="py-3 px-4 font-semibold">Pledge ID</th>
                     <th className="py-3 px-4 font-semibold">Designee / Campaign</th>
@@ -530,36 +530,36 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
                     <th className="py-3 px-4 font-semibold">Tax Receipt Status</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody className="divide-y divide-phumulani-cream">
                   {pledges.map((plg) => (
-                    <tr key={plg.id} className="hover:bg-slate-50/80">
-                      <td className="py-3 px-4 font-mono font-bold text-purple-900">
+                    <tr key={plg.id} className="hover:bg-phumulani-cream">
+                      <td className="py-3 px-4 font-mono font-bold text-phumulani-earth">
                         {plg.id}
                       </td>
                       <td className="py-3 px-4">
-                        <div className="font-semibold text-slate-800">{plg.campaignTitle}</div>
-                        <div className="text-[10px] text-slate-500">{plg.donorName}</div>
+                        <div className="font-semibold text-phumulani-charcoal">{plg.campaignTitle}</div>
+                        <div className="text-[10px] text-phumulani-charcoal">{plg.donorName}</div>
                       </td>
-                      <td className="py-3 px-4 text-slate-600 font-mono">
+                      <td className="py-3 px-4 text-phumulani-charcoal font-mono">
                         {plg.startYear} – {plg.endYear}
                       </td>
-                      <td className="py-3 px-4 font-bold text-slate-900">
+                      <td className="py-3 px-4 font-bold text-phumulani-charcoal">
                         ${plg.totalPledgeAmount.toLocaleString()}
                       </td>
-                      <td className="py-3 px-4 font-bold text-amber-800">
+                      <td className="py-3 px-4 font-bold text-phumulani-charcoal">
                         ${plg.unearnedBalance.toLocaleString()}
                       </td>
-                      <td className="py-3 px-4 text-slate-600">
+                      <td className="py-3 px-4 text-phumulani-charcoal">
                         ${plg.annualInstallmentAmount.toLocaleString()} / yr
                       </td>
                       <td className="py-3 px-4">
-                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                        <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded border border-phumulani-gold">
                           <Lock className="w-2.5 h-2.5" />
                           <span>Segregated Unearned</span>
                         </span>
                       </td>
                       <td className="py-3 px-4">
-                        <span className="text-[10px] font-mono text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-mono text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded">
                           0 Issued (Pending Settlement)
                         </span>
                       </td>
@@ -571,24 +571,24 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
           </div>
 
           {/* Form to Register New Multi-Year Pledge Intention */}
-          <div className="bg-white rounded-xl border border-slate-200 p-6 shadow-xs space-y-4">
+          <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-4">
             <div className="flex items-center gap-2">
-              <PlusCircle className="w-5 h-5 text-[#633C69]" />
-              <h4 className="font-serif text-base font-bold text-slate-900">
+              <PlusCircle className="w-5 h-5 text-phumulani-earth" />
+              <h4 className="font-serif text-base font-bold text-phumulani-charcoal">
                 Record New Multi-Year Pledge Intention
               </h4>
             </div>
-            <p className="text-xs text-slate-600">
+            <p className="text-xs text-phumulani-charcoal">
               Establish a structured, multi-year intention of support for Phumulani programs. Your commitment will be scheduled across annual installments under strict segregated accounting.
             </p>
 
             <form onSubmit={handleRegisterPledge} className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700">Campaign Designation</label>
+                <label className="text-xs font-semibold text-phumulani-charcoal">Campaign Designation</label>
                 <select
                   value={newPledgeCampaign}
                   onChange={(e) => setNewPledgeCampaign(e.target.value)}
-                  className="w-full text-xs p-2.5 border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  className="w-full text-xs p-2.5 border border-phumulani-cream rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-phumulani-earth"
                 >
                   {campaigns.map((c) => (
                     <option key={c.id} value={c.id}>
@@ -599,24 +599,24 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700">Total Commitment Amount ($ USD)</label>
+                <label className="text-xs font-semibold text-phumulani-charcoal">Total Commitment Amount ($ USD)</label>
                 <input
                   type="number"
                   min="500"
                   step="500"
                   value={newPledgeAmount}
                   onChange={(e) => setNewPledgeAmount(Number(e.target.value))}
-                  className="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  className="w-full text-xs p-2.5 border border-phumulani-cream rounded-lg focus:outline-none focus:ring-1 focus:ring-phumulani-earth"
                   required
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700">Commitment Duration</label>
+                <label className="text-xs font-semibold text-phumulani-charcoal">Commitment Duration</label>
                 <select
                   value={newPledgeDuration}
                   onChange={(e) => setNewPledgeDuration(Number(e.target.value))}
-                  className="w-full text-xs p-2.5 border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  className="w-full text-xs p-2.5 border border-phumulani-cream rounded-lg bg-white focus:outline-none focus:ring-1 focus:ring-phumulani-earth"
                 >
                   <option value={1}>1 Year ($ {Number(newPledgeAmount).toLocaleString()} total)</option>
                   <option value={2}>2 Years (~${Math.round(newPledgeAmount / 2).toLocaleString()} / yr)</option>
@@ -626,23 +626,23 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-slate-700">Special Notes or Donor Intention</label>
+                <label className="text-xs font-semibold text-phumulani-charcoal">Special Notes or Donor Intention</label>
                 <input
                   type="text"
                   placeholder="e.g. In honor of community leaders; annual December disbursement"
                   value={newPledgeNotes}
                   onChange={(e) => setNewPledgeNotes(e.target.value)}
-                  className="w-full text-xs p-2.5 border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-purple-500"
+                  className="w-full text-xs p-2.5 border border-phumulani-cream rounded-lg focus:outline-none focus:ring-1 focus:ring-phumulani-earth"
                 />
               </div>
 
               <div className="md:col-span-2 pt-2">
-                <label className="flex items-start gap-2.5 cursor-pointer text-xs text-slate-700">
+                <label className="flex items-start gap-2.5 cursor-pointer text-xs text-phumulani-charcoal">
                   <input
                     type="checkbox"
                     checked={newPledgeAcknowledged}
                     onChange={(e) => setNewPledgeAcknowledged(e.target.checked)}
-                    className="mt-0.5 rounded text-purple-600 focus:ring-purple-500"
+                    className="mt-0.5 rounded text-phumulani-earth focus:ring-phumulani-earth"
                     required
                   />
                   <span>
@@ -652,7 +652,7 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
               </div>
 
               {pledgeError && (
-                <div className="md:col-span-2 p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs font-medium text-rose-700">
+                <div className="md:col-span-2 p-3 bg-phumulani-cream border border-phumulani-earth rounded-lg text-xs font-medium text-phumulani-earth">
                   {pledgeError}
                 </div>
               )}
@@ -661,7 +661,7 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
                 <button
                   type="submit"
                   disabled={!newPledgeAcknowledged}
-                  className="px-5 py-2.5 bg-[#633C69] hover:bg-[#4f2f54] disabled:opacity-50 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                  className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange disabled:opacity-50 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
                 >
                   Record Pledge Intention (Segregated Accounting)
                 </button>
@@ -675,17 +675,17 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
       {activeTab === 'sponsorships' && (
         <div className="space-y-6">
           <div className="max-w-2xl">
-            <h3 className="font-serif text-xl font-bold text-slate-900">
+            <h3 className="font-serif text-xl font-bold text-phumulani-charcoal">
               Corporate & Foundation Sponsorship Tiers
             </h3>
-            <p className="text-xs text-slate-600 mt-1">
+            <p className="text-xs text-phumulani-charcoal mt-1">
               Phumulani collaborates with corporate champions and community foundations to fund sustainable infrastructure, emergency housing subsidies, and career mentorship cohorts.
             </p>
           </div>
 
           {sponsorshipFeedback && (
-            <div className="p-4 bg-purple-50 border border-purple-200 rounded-xl text-xs font-semibold text-[#633C69] flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-[#633C69] flex-shrink-0" />
+            <div className="p-4 bg-phumulani-cream border border-phumulani-earth rounded-xl text-xs font-semibold text-phumulani-earth flex items-center gap-2">
+              <CheckCircle2 className="w-4 h-4 text-phumulani-earth flex-shrink-0" />
               <span>{sponsorshipFeedback}</span>
             </div>
           )}
@@ -694,21 +694,21 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
             {sponsorshipTiers.map((tier) => (
               <div
                 key={tier.id}
-                className="bg-white rounded-2xl border-2 border-slate-200 hover:border-purple-400 p-6 flex flex-col justify-between shadow-xs transition-all space-y-6"
+                className="bg-white rounded-2xl border-2 border-phumulani-cream hover:border-phumulani-earth p-6 flex flex-col justify-between shadow-xs transition-all space-y-6"
               >
                 <div className="space-y-4">
-                  <div className="text-xs font-bold text-[#633C69] uppercase tracking-wider">
+                  <div className="text-xs font-bold text-phumulani-earth uppercase tracking-wider">
                     {tier.name}
                   </div>
-                  <div className="font-serif text-3xl font-bold text-slate-900">
+                  <div className="font-serif text-3xl font-bold text-phumulani-charcoal">
                     ${tier.amount.toLocaleString()}
-                    <span className="text-xs font-normal text-slate-500 font-sans"> / year</span>
+                    <span className="text-xs font-normal text-phumulani-charcoal font-sans"> / year</span>
                   </div>
 
-                  <ul className="space-y-2.5 text-xs text-slate-600 pt-3 border-t border-slate-100">
+                  <ul className="space-y-2.5 text-xs text-phumulani-charcoal pt-3 border-t border-phumulani-cream">
                     {tier.benefits.map((b, i) => (
                       <li key={i} className="flex items-start gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
+                        <CheckCircle2 className="w-4 h-4 text-phumulani-earth shrink-0 mt-0.5" />
                         <span>{b}</span>
                       </li>
                     ))}
@@ -720,7 +720,7 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
                     setSponsorshipFeedback(`Thank you for inquiring about the ${tier.name}! Executive Director Comfort Dondo and our Development Team will contact you within 24 business hours.`);
                     setTimeout(() => setSponsorshipFeedback(null), 7000);
                   }}
-                  className="w-full py-2.5 bg-[#633C69] hover:bg-[#4f2f54] text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                  className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
                 >
                   Inquire for Partnership
                 </button>
@@ -732,19 +732,19 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
 
       {/* TAB 4: OFFICIAL TAX STATEMENT */}
       {activeTab === 'tax_statement' && (
-        <div className="max-w-3xl bg-white rounded-2xl border border-slate-200 p-8 shadow-sm space-y-6">
-          <div className="flex justify-between items-start border-b border-slate-200 pb-4">
+        <div className="max-w-3xl bg-white rounded-2xl border border-phumulani-cream p-8 shadow-sm space-y-6">
+          <div className="flex justify-between items-start border-b border-phumulani-cream pb-4">
             <div>
-              <div className="font-serif text-xl font-bold text-[#104F57]">
+              <div className="font-serif text-xl font-bold text-phumulani-earth">
                 PHUMULANI — ANNUAL GIVING STATEMENT
               </div>
-              <div className="text-xs text-slate-500 mt-1">
+              <div className="text-xs text-phumulani-charcoal mt-1">
                 Calendar Tax Year 2026 · Section 170(f)(8) Internal Revenue Code
               </div>
             </div>
             <button
               onClick={() => window.print()}
-              className="px-3 py-1.5 border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-lg text-xs font-medium flex items-center gap-1.5"
+              className="px-3 py-1.5 border border-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-lg text-xs font-medium flex items-center gap-1.5"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Print / PDF</span>
@@ -753,24 +753,24 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
 
           <div className="text-xs space-y-2">
             <div className="flex justify-between">
-              <span className="text-slate-500">Donor Name:</span>
-              <span className="font-semibold text-slate-800">{currentUser.name}</span>
+              <span className="text-phumulani-charcoal">Donor Name:</span>
+              <span className="font-semibold text-phumulani-charcoal">{currentUser.name}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Donor Email:</span>
-              <span className="font-mono text-slate-800">{currentUser.email}</span>
+              <span className="text-phumulani-charcoal">Donor Email:</span>
+              <span className="font-mono text-phumulani-charcoal">{currentUser.email}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-slate-500">Exempt Organization:</span>
-              <span className="text-slate-800 font-medium">Phumulani (EIN: 82-4190823)</span>
+              <span className="text-phumulani-charcoal">Exempt Organization:</span>
+              <span className="text-phumulani-charcoal font-medium">Phumulani (EIN: 82-4190823)</span>
             </div>
-            <div className="flex justify-between font-bold text-sm pt-3 border-t border-slate-200">
+            <div className="flex justify-between font-bold text-sm pt-3 border-t border-phumulani-cream">
               <span>Total Tax-Deductible Contributions for 2026:</span>
-              <span className="text-[#104F57] text-base">${totalGiven.toLocaleString()}.00 USD</span>
+              <span className="text-phumulani-earth text-base">${totalGiven.toLocaleString()}.00 USD</span>
             </div>
           </div>
 
-          <div className="p-4 bg-slate-50 rounded-xl text-[11px] text-slate-600 leading-relaxed border border-slate-200">
+          <div className="p-4 bg-phumulani-cream rounded-xl text-[11px] text-phumulani-charcoal leading-relaxed border border-phumulani-cream">
             Phumulani confirms that no goods or services were provided in whole or partial consideration for the contributions listed above. Thank you for empowering immigrant and refugee survivors in Minnesota.
           </div>
         </div>

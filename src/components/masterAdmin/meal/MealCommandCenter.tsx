@@ -187,38 +187,38 @@ export const MealCommandCenter: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* HEADER BANNER */}
-      <div className="bg-gradient-to-r from-rose-950 via-slate-900 to-teal-950 text-white p-6 rounded-2xl shadow-lg border border-rose-900/40">
+      <div className="bg-phumulani-charcoal text-white p-6 rounded-2xl shadow-lg border border-phumulani-earth">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-[10px] font-mono font-bold bg-rose-500/20 text-rose-300 px-2.5 py-0.5 rounded-full border border-rose-500/40 uppercase">
+              <span className="text-[10px] font-mono font-bold bg-phumulani-orange text-phumulani-gold px-2.5 py-0.5 rounded-full border border-phumulani-earth uppercase">
                 PHASE 26 · MEAL & IMPACT COMMAND CENTER
               </span>
-              <span className="text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 px-2.5 py-0.5 rounded-full border border-emerald-500/40 uppercase">
+              <span className="text-[10px] font-mono font-bold bg-phumulani-green text-phumulani-charcoal px-2.5 py-0.5 rounded-full border border-phumulani-green uppercase">
                 VAWA SEC 1367 FIREWALL ENFORCED
               </span>
             </div>
             <h1 className="text-2xl font-black tracking-tight text-white flex items-center gap-2">
-              <BarChart2 className="w-6 h-6 text-rose-400" />
+              <BarChart2 className="w-6 h-6 text-phumulani-gold" />
               Monitoring, Evaluation, Accountability & Learning (MEAL)
             </h1>
-            <p className="text-xs text-slate-300 mt-1 max-w-2xl">
+            <p className="text-xs text-phumulani-cream mt-1 max-w-2xl">
               Truthful, evidence-based performance measurement for Phumulani community programs. Zero fabricated metrics, strict separation of duties, and fail-closed safeguarding firewalls.
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
-            <div className="bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-700/60 text-[11px] text-slate-300">
-              <span className="text-slate-400">PostgreSQL: </span>
-              <span className="font-semibold text-amber-400">NOT_CONNECTED</span>
+            <div className="bg-phumulani-charcoal px-3 py-1.5 rounded-xl border border-phumulani-teal text-[11px] text-phumulani-cream">
+              <span className="text-phumulani-cream">PostgreSQL: </span>
+              <span className="font-semibold text-phumulani-gold">NOT_CONNECTED</span>
             </div>
-            <div className="bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-700/60 text-[11px] text-slate-300">
-              <span className="text-slate-400">Google Workspace: </span>
-              <span className="font-semibold text-amber-400">AUTH_REQUIRED</span>
+            <div className="bg-phumulani-charcoal px-3 py-1.5 rounded-xl border border-phumulani-teal text-[11px] text-phumulani-cream">
+              <span className="text-phumulani-cream">Google Workspace: </span>
+              <span className="font-semibold text-phumulani-gold">AUTH_REQUIRED</span>
             </div>
             <button
               onClick={refreshAllData}
-              className="p-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl border border-slate-600 text-xs flex items-center gap-1.5 transition-colors"
+              className="p-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-phumulani-cream rounded-xl border border-phumulani-teal text-xs flex items-center gap-1.5 transition-colors"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               <span>Refresh Ledger</span>
@@ -230,13 +230,13 @@ export const MealCommandCenter: React.FC = () => {
         {actionError && (
           <div
             role="alert"
-            className="mt-4 p-3 rounded-xl bg-rose-950/70 border border-rose-500/50 text-rose-100 text-xs flex items-center justify-between gap-3"
+            className="mt-4 p-3 rounded-xl bg-phumulani-charcoal border border-phumulani-earth text-phumulani-cream text-xs flex items-center justify-between gap-3"
           >
             <span className="font-medium">{actionError}</span>
             <button
               type="button"
               onClick={() => setActionError(null)}
-              className="px-2 py-0.5 rounded bg-rose-900/80 hover:bg-rose-800 text-rose-100 font-bold cursor-pointer"
+              className="px-2 py-0.5 rounded bg-phumulani-charcoal hover:bg-phumulani-orange text-phumulani-cream font-bold cursor-pointer"
               aria-label="Dismiss error"
             >
               Dismiss
@@ -245,13 +245,13 @@ export const MealCommandCenter: React.FC = () => {
         )}
 
         {/* PROGRAM SELECTOR & NAVIGATION TABS */}
-        <div className="mt-6 pt-4 border-t border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="mt-6 pt-4 border-t border-phumulani-teal flex flex-col md:flex-row md:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-slate-300 font-medium">Program Scope:</span>
+            <span className="text-xs text-phumulani-cream font-medium">Program Scope:</span>
             <select
               value={selectedProgram}
               onChange={(e) => setSelectedProgram(e.target.value)}
-              className="bg-slate-900 text-white text-xs px-3 py-1.5 rounded-lg border border-slate-700 focus:outline-none focus:border-rose-500"
+              className="bg-phumulani-charcoal text-white text-xs px-3 py-1.5 rounded-lg border border-phumulani-teal focus:outline-none focus:border-phumulani-earth"
             >
               <option value="ALL">All Programs (PROG-001 - PROG-005)</option>
               <option value="PROG-001">PROG-001: Immigrant Women Career Pathways</option>
@@ -285,8 +285,8 @@ export const MealCommandCenter: React.FC = () => {
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
                     isActive
-                      ? 'bg-rose-700 text-white shadow-sm'
-                      : 'bg-slate-900/60 text-slate-300 hover:bg-slate-800 hover:text-white'
+                      ? 'bg-phumulani-earth text-white shadow-sm'
+                      : 'bg-phumulani-charcoal text-phumulani-cream hover:bg-phumulani-orange hover:text-white'
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
@@ -302,51 +302,51 @@ export const MealCommandCenter: React.FC = () => {
       {activeTab === 'overview' && summary && (
         <div className="space-y-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-              <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Tracked Indicators</div>
-              <div className="text-2xl font-black text-slate-900 mt-1">{summary.totalIndicatorsTracked}</div>
-              <div className="text-[10px] text-emerald-600 mt-1 font-medium">Mapped to PROG-001–005</div>
+            <div className="bg-white p-4 rounded-xl border border-phumulani-cream shadow-sm">
+              <div className="text-[11px] font-bold text-phumulani-charcoal uppercase tracking-wider">Tracked Indicators</div>
+              <div className="text-2xl font-black text-phumulani-charcoal mt-1">{summary.totalIndicatorsTracked}</div>
+              <div className="text-[10px] text-phumulani-earth mt-1 font-medium">Mapped to PROG-001–005</div>
             </div>
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-              <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Verified Program Outputs</div>
-              <div className="text-2xl font-black text-teal-700 mt-1">{summary.totalVerifiedOutputsCount}</div>
-              <div className="text-[10px] text-slate-500 mt-1">{summary.activeOutputsUnderVerification} pending review</div>
+            <div className="bg-white p-4 rounded-xl border border-phumulani-cream shadow-sm">
+              <div className="text-[11px] font-bold text-phumulani-charcoal uppercase tracking-wider">Verified Program Outputs</div>
+              <div className="text-2xl font-black text-phumulani-earth mt-1">{summary.totalVerifiedOutputsCount}</div>
+              <div className="text-[10px] text-phumulani-charcoal mt-1">{summary.activeOutputsUnderVerification} pending review</div>
             </div>
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-              <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Verified Volunteer Hours</div>
-              <div className="text-2xl font-black text-rose-700 mt-1">{summary.totalVerifiedVolunteerHours} hrs</div>
-              <div className="text-[10px] text-slate-500 mt-1">Zero unverified hours included</div>
+            <div className="bg-white p-4 rounded-xl border border-phumulani-cream shadow-sm">
+              <div className="text-[11px] font-bold text-phumulani-charcoal uppercase tracking-wider">Verified Volunteer Hours</div>
+              <div className="text-2xl font-black text-phumulani-earth mt-1">{summary.totalVerifiedVolunteerHours} hrs</div>
+              <div className="text-[10px] text-phumulani-charcoal mt-1">Zero unverified hours included</div>
             </div>
-            <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
-              <div className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Certified Executive Reports</div>
-              <div className="text-2xl font-black text-slate-900 mt-1">{summary.publishedExecutiveReportsCount}</div>
-              <div className="text-[10px] text-emerald-600 mt-1 font-medium">Approved by Executive Director</div>
+            <div className="bg-white p-4 rounded-xl border border-phumulani-cream shadow-sm">
+              <div className="text-[11px] font-bold text-phumulani-charcoal uppercase tracking-wider">Certified Executive Reports</div>
+              <div className="text-2xl font-black text-phumulani-charcoal mt-1">{summary.publishedExecutiveReportsCount}</div>
+              <div className="text-[10px] text-phumulani-earth mt-1 font-medium">Approved by Executive Director</div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-emerald-600" />
+          <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-sm space-y-4">
+            <h3 className="text-base font-bold text-phumulani-charcoal flex items-center gap-2">
+              <ShieldCheck className="w-5 h-5 text-phumulani-earth" />
               Truthful Impact Ledgers & Zero-Synthetic Data Guarantee
             </h3>
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <p className="text-xs text-phumulani-charcoal leading-relaxed">
               In compliance with Phase 26 master governance mandates, all numbers displayed across this dashboard reflect authentic, supervisor-signed records from the Phumulani immutable audit ledger. No synthetic participants, fabricated attendance counts, or unverified volunteer hours are accepted into verified impact totals.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
-                <span className="font-semibold text-slate-700 block mb-1">Open Program Delivery Risks</span>
-                <span className="text-slate-900 font-bold text-lg">{summary.openProgramRisksCount} monitored</span>
-                <span className="block text-[10px] text-amber-600 font-medium mt-0.5">{summary.highOrCriticalRisksCount} high/critical</span>
+              <div className="p-3 bg-phumulani-cream rounded-xl border border-phumulani-cream text-xs">
+                <span className="font-semibold text-phumulani-charcoal block mb-1">Open Program Delivery Risks</span>
+                <span className="text-phumulani-charcoal font-bold text-lg">{summary.openProgramRisksCount} monitored</span>
+                <span className="block text-[10px] text-phumulani-earth font-medium mt-0.5">{summary.highOrCriticalRisksCount} high/critical</span>
               </div>
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
-                <span className="font-semibold text-slate-700 block mb-1">Community Feedback Tickets</span>
-                <span className="text-slate-900 font-bold text-lg">{summary.communityFeedbackTotal} recorded</span>
-                <span className="block text-[10px] text-slate-500 font-medium mt-0.5">{summary.feedbackPendingReview} pending review</span>
+              <div className="p-3 bg-phumulani-cream rounded-xl border border-phumulani-cream text-xs">
+                <span className="font-semibold text-phumulani-charcoal block mb-1">Community Feedback Tickets</span>
+                <span className="text-phumulani-charcoal font-bold text-lg">{summary.communityFeedbackTotal} recorded</span>
+                <span className="block text-[10px] text-phumulani-charcoal font-medium mt-0.5">{summary.feedbackPendingReview} pending review</span>
               </div>
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs">
-                <span className="font-semibold text-slate-700 block mb-1">Data Quality Integrity Score</span>
-                <span className="text-emerald-700 font-bold text-lg">100% Certified</span>
-                <span className="block text-[10px] text-emerald-600 font-medium mt-0.5">Fail-closed safeguarding</span>
+              <div className="p-3 bg-phumulani-cream rounded-xl border border-phumulani-cream text-xs">
+                <span className="font-semibold text-phumulani-charcoal block mb-1">Data Quality Integrity Score</span>
+                <span className="text-phumulani-earth font-bold text-lg">100% Certified</span>
+                <span className="block text-[10px] text-phumulani-earth font-medium mt-0.5">Fail-closed safeguarding</span>
               </div>
             </div>
           </div>
@@ -355,20 +355,20 @@ export const MealCommandCenter: React.FC = () => {
 
       {/* TAB 2: INDICATORS FRAMEWORK (M26.03) */}
       {activeTab === 'indicators' && (
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Organizational Indicator Framework (M26.03)</h3>
-              <p className="text-xs text-slate-500">Configured monitoring indicators spanning INPUT, ACTIVITY, OUTPUT, OUTCOME, IMPACT, and QUALITY.</p>
+              <h3 className="text-base font-bold text-phumulani-charcoal">Organizational Indicator Framework (M26.03)</h3>
+              <p className="text-xs text-phumulani-charcoal">Configured monitoring indicators spanning INPUT, ACTIVITY, OUTPUT, OUTCOME, IMPACT, and QUALITY.</p>
             </div>
-            <span className="text-xs font-semibold bg-rose-50 text-rose-700 px-3 py-1 rounded-full border border-rose-200">
+            <span className="text-xs font-semibold bg-phumulani-cream text-phumulani-earth px-3 py-1 rounded-full border border-phumulani-earth">
               {indicators.length} Active Indicators
             </span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase">
+              <thead className="bg-phumulani-cream border-b border-phumulani-cream text-phumulani-charcoal font-semibold uppercase">
                 <tr>
                   <th className="p-3">Code</th>
                   <th className="p-3">Indicator Name & Description</th>
@@ -380,28 +380,28 @@ export const MealCommandCenter: React.FC = () => {
                   <th className="p-3">Owner</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-phumulani-cream">
                 {indicators.map((ind) => (
-                  <tr key={ind.id} className="hover:bg-slate-50/60">
-                    <td className="p-3 font-mono font-bold text-slate-700">{ind.indicatorCode}</td>
+                  <tr key={ind.id} className="hover:bg-phumulani-cream">
+                    <td className="p-3 font-mono font-bold text-phumulani-charcoal">{ind.indicatorCode}</td>
                     <td className="p-3 max-w-xs">
-                      <div className="font-semibold text-slate-900">{ind.name}</div>
-                      <div className="text-[11px] text-slate-500 line-clamp-1">{ind.description}</div>
+                      <div className="font-semibold text-phumulani-charcoal">{ind.name}</div>
+                      <div className="text-[11px] text-phumulani-charcoal line-clamp-1">{ind.description}</div>
                     </td>
-                    <td className="p-3 font-medium text-slate-600">{ind.programId}</td>
+                    <td className="p-3 font-medium text-phumulani-charcoal">{ind.programId}</td>
                     <td className="p-3">
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-cream">
                         {ind.indicatorType}
                       </span>
                     </td>
-                    <td className="p-3 text-right font-medium text-slate-700">
+                    <td className="p-3 text-right font-medium text-phumulani-charcoal">
                       {ind.targetValue.toLocaleString()} {ind.measurementUnit}
                     </td>
-                    <td className="p-3 text-right font-bold text-teal-700">
+                    <td className="p-3 text-right font-bold text-phumulani-earth">
                       {ind.currentVerifiedValue.toLocaleString()} {ind.measurementUnit}
                     </td>
-                    <td className="p-3 text-center text-slate-600">{ind.reportingFrequency}</td>
-                    <td className="p-3 text-slate-600">{ind.indicatorOwner}</td>
+                    <td className="p-3 text-center text-phumulani-charcoal">{ind.reportingFrequency}</td>
+                    <td className="p-3 text-phumulani-charcoal">{ind.indicatorOwner}</td>
                   </tr>
                 ))}
               </tbody>
@@ -412,22 +412,22 @@ export const MealCommandCenter: React.FC = () => {
 
       {/* TAB 3: PROGRAM OUTPUTS (M26.04) */}
       {activeTab === 'outputs' && (
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Program Output Tracking & Verification (M26.04)</h3>
-              <p className="text-xs text-slate-500">
+              <h3 className="text-base font-bold text-phumulani-charcoal">Program Output Tracking & Verification (M26.04)</h3>
+              <p className="text-xs text-phumulani-charcoal">
                 Supervisor verification gate with anti-duplicate counting protection. Reporters cannot verify their own output submissions.
               </p>
             </div>
-            <span className="text-xs font-semibold bg-teal-50 text-teal-700 px-3 py-1 rounded-full border border-teal-200">
+            <span className="text-xs font-semibold bg-phumulani-cream text-phumulani-earth px-3 py-1 rounded-full border border-phumulani-teal">
               {outputs.length} Output Records
             </span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase">
+              <thead className="bg-phumulani-cream border-b border-phumulani-cream text-phumulani-charcoal font-semibold uppercase">
                 <tr>
                   <th className="p-3">ID</th>
                   <th className="p-3">Source Record</th>
@@ -439,35 +439,35 @@ export const MealCommandCenter: React.FC = () => {
                   <th className="p-3 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-phumulani-cream">
                 {outputs.map((out) => (
-                  <tr key={out.id} className="hover:bg-slate-50/60">
-                    <td className="p-3 font-mono font-bold text-slate-700">{out.id}</td>
-                    <td className="p-3 font-semibold text-slate-800">
+                  <tr key={out.id} className="hover:bg-phumulani-cream">
+                    <td className="p-3 font-mono font-bold text-phumulani-charcoal">{out.id}</td>
+                    <td className="p-3 font-semibold text-phumulani-charcoal">
                       {out.sourceRecordId} ({out.sourceRecordType})
                     </td>
-                    <td className="p-3 text-slate-600">{out.programId}</td>
-                    <td className="p-3 text-right font-bold text-slate-900">
+                    <td className="p-3 text-phumulani-charcoal">{out.programId}</td>
+                    <td className="p-3 text-right font-bold text-phumulani-charcoal">
                       {out.reportedValue.toLocaleString()} {out.measurementUnit}
                     </td>
                     <td className="p-3">
                       <span
                         className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                           out.verificationStatus === 'VERIFIED'
-                            ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
-                            : 'bg-amber-100 text-amber-800 border border-amber-200'
+                            ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green'
+                            : 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold'
                         }`}
                       >
                         {out.verificationStatus}
                       </span>
                     </td>
-                    <td className="p-3 text-slate-600">{out.reportedBy}</td>
-                    <td className="p-3 text-slate-600">{out.verifiedBy || 'Pending'}</td>
+                    <td className="p-3 text-phumulani-charcoal">{out.reportedBy}</td>
+                    <td className="p-3 text-phumulani-charcoal">{out.verifiedBy || 'Pending'}</td>
                     <td className="p-3 text-right">
                       {out.verificationStatus !== 'VERIFIED' && (
                         <button
                           onClick={() => handleVerifyOutput(out.id)}
-                          className="px-2.5 py-1 bg-teal-700 hover:bg-teal-800 text-white rounded text-[11px] font-semibold transition-colors"
+                          className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded text-[11px] font-semibold transition-colors"
                         >
                           Verify & Certify
                         </button>
@@ -484,46 +484,46 @@ export const MealCommandCenter: React.FC = () => {
       {/* TAB 4: OUTCOME EVALUATIONS (M26.05) */}
       {activeTab === 'evaluations' && (
         <div className="space-y-4">
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
-            <h3 className="text-base font-bold text-slate-900">Program Outcome Evaluations (M26.05)</h3>
-            <p className="text-xs text-slate-500">
+          <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-sm space-y-4">
+            <h3 className="text-base font-bold text-phumulani-charcoal">Program Outcome Evaluations (M26.05)</h3>
+            <p className="text-xs text-phumulani-charcoal">
               Rigorous mixed-methods evaluations distinguishing outputs from outcomes with documented limitations and explicit attribution confidence ratings.
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {evaluations.map((ev) => (
-                <div key={ev.id} className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
+                <div key={ev.id} className="p-5 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+                    <span className="font-mono text-xs font-bold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded border border-phumulani-earth">
                       {ev.evaluationCode}
                     </span>
-                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded bg-phumulani-cream text-phumulani-charcoal">
                       {ev.status}
                     </span>
                   </div>
 
-                  <h4 className="font-bold text-slate-900 text-sm">{ev.evaluationQuestion}</h4>
+                  <h4 className="font-bold text-phumulani-charcoal text-sm">{ev.evaluationQuestion}</h4>
 
-                  <div className="text-xs text-slate-600 space-y-1">
+                  <div className="text-xs text-phumulani-charcoal space-y-1">
                     <div>
-                      <strong className="text-slate-800">Findings: </strong>
+                      <strong className="text-phumulani-charcoal">Findings: </strong>
                       {ev.findingsSummary}
                     </div>
                     <div>
-                      <strong className="text-slate-800">Quantitative Metric: </strong>
-                      <span className="font-semibold text-teal-700">{ev.quantitativeChangeMetric}</span>
+                      <strong className="text-phumulani-charcoal">Quantitative Metric: </strong>
+                      <span className="font-semibold text-phumulani-earth">{ev.quantitativeChangeMetric}</span>
                     </div>
                     <div>
-                      <strong className="text-slate-800">Attribution Confidence: </strong>
-                      <span className="font-semibold text-slate-900">{ev.attributionConfidence}</span>
+                      <strong className="text-phumulani-charcoal">Attribution Confidence: </strong>
+                      <span className="font-semibold text-phumulani-charcoal">{ev.attributionConfidence}</span>
                     </div>
                   </div>
 
-                  <div className="p-3 bg-amber-50/60 border border-amber-200 rounded-lg text-[11px] text-amber-900 space-y-1">
-                    <div className="font-semibold flex items-center gap-1 text-amber-800">
-                      <AlertTriangle className="w-3.5 h-3.5 text-amber-600" /> Methodological Limitations & Attribution Caution:
+                  <div className="p-3 bg-phumulani-cream border border-phumulani-gold rounded-lg text-[11px] text-phumulani-charcoal space-y-1">
+                    <div className="font-semibold flex items-center gap-1 text-phumulani-charcoal">
+                      <AlertTriangle className="w-3.5 h-3.5 text-phumulani-earth" /> Methodological Limitations & Attribution Caution:
                     </div>
-                    <ul className="list-disc pl-4 space-y-0.5 text-amber-800">
+                    <ul className="list-disc pl-4 space-y-0.5 text-phumulani-charcoal">
                       {ev.identifiedLimitations.map((lim, idx) => (
                         <li key={idx}>{lim}</li>
                       ))}
@@ -531,7 +531,7 @@ export const MealCommandCenter: React.FC = () => {
                   </div>
 
                   {ev.executiveReviewSignOff && (
-                    <div className="text-[11px] text-slate-500 border-t border-slate-200 pt-2 flex items-center justify-between">
+                    <div className="text-[11px] text-phumulani-charcoal border-t border-phumulani-cream pt-2 flex items-center justify-between">
                       <span>Certified: {ev.executiveReviewSignOff.reviewedBy}</span>
                       <span>{new Date(ev.executiveReviewSignOff.reviewedAt).toLocaleDateString()}</span>
                     </div>
@@ -545,33 +545,33 @@ export const MealCommandCenter: React.FC = () => {
 
       {/* TAB 5: EVIDENCE REGISTER (M26.06) */}
       {activeTab === 'evidence' && (
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Controlled Evidence Register (M26.06)</h3>
-              <p className="text-xs text-slate-500">
+              <h3 className="text-base font-bold text-phumulani-charcoal">Controlled Evidence Register (M26.06)</h3>
+              <p className="text-xs text-phumulani-charcoal">
                 Auditable evidence references supporting all verified indicators and outcome evaluations with classified access tiers.
               </p>
             </div>
-            <span className="text-xs font-semibold bg-slate-100 text-slate-700 px-3 py-1 rounded-full border border-slate-200">
+            <span className="text-xs font-semibold bg-phumulani-cream text-phumulani-charcoal px-3 py-1 rounded-full border border-phumulani-cream">
               {evidence.length} Evidence Records
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {evidence.map((ev) => (
-              <div key={ev.id} className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs">
+              <div key={ev.id} className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-2 text-xs">
                 <div className="flex items-center justify-between">
-                  <span className="font-mono font-bold text-slate-700">{ev.id}</span>
-                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-200 text-slate-800">
+                  <span className="font-mono font-bold text-phumulani-charcoal">{ev.id}</span>
+                  <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-phumulani-cream text-phumulani-charcoal">
                     {ev.accessClassification}
                   </span>
                 </div>
-                <div className="font-bold text-slate-900 text-xs">{ev.title}</div>
-                <div className="text-slate-600 text-[11px] leading-relaxed">{ev.summaryText}</div>
-                <div className="pt-2 border-t border-slate-200 text-[10px] text-slate-500 flex items-center justify-between">
+                <div className="font-bold text-phumulani-charcoal text-xs">{ev.title}</div>
+                <div className="text-phumulani-charcoal text-[11px] leading-relaxed">{ev.summaryText}</div>
+                <div className="pt-2 border-t border-phumulani-cream text-[10px] text-phumulani-charcoal flex items-center justify-between">
                   <span>Ref: {ev.sourceReference}</span>
-                  <span className="font-semibold text-emerald-700">{ev.verificationStatus}</span>
+                  <span className="font-semibold text-phumulani-earth">{ev.verificationStatus}</span>
                 </div>
               </div>
             ))}
@@ -582,36 +582,36 @@ export const MealCommandCenter: React.FC = () => {
       {/* TAB 6: COMMUNITY FEEDBACK & SAFEGUARDING QUARANTINE (M26.07) */}
       {activeTab === 'feedback' && (
         <div className="space-y-6">
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-sm space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                  <ShieldAlert className="w-5 h-5 text-rose-700" />
+                <h3 className="text-base font-bold text-phumulani-charcoal flex items-center gap-2">
+                  <ShieldAlert className="w-5 h-5 text-phumulani-earth" />
                   Community Feedback & Safeguarding Crisis Quarantine (M26.07)
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-phumulani-charcoal">
                   Real-time scanner detects domestic violence crisis terms and instantly quarantines disclosures to DEPT-SAFE under VAWA Section 1367.
                 </p>
               </div>
             </div>
 
             {feedbackSuccessMsg && (
-              <div className="p-4 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl font-medium flex items-center gap-2">
-                <Check className="w-4 h-4 text-emerald-600" />
+              <div className="p-4 bg-phumulani-cream border border-phumulani-green text-phumulani-charcoal text-xs rounded-xl font-medium flex items-center gap-2">
+                <Check className="w-4 h-4 text-phumulani-earth" />
                 {feedbackSuccessMsg}
               </div>
             )}
 
             {/* FEEDBACK INTAKE FORM */}
-            <form onSubmit={handleSubmitFeedback} className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-3">
-              <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider">Submit Community Feedback or Suggestion</h4>
+            <form onSubmit={handleSubmitFeedback} className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-3">
+              <h4 className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wider">Submit Community Feedback or Suggestion</h4>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div>
-                  <label className="text-[11px] font-semibold text-slate-700 block mb-1">Feedback Category</label>
+                  <label className="text-[11px] font-semibold text-phumulani-charcoal block mb-1">Feedback Category</label>
                   <select
                     value={newFeedbackType}
                     onChange={(e) => setNewFeedbackType(e.target.value)}
-                    className="w-full bg-white text-xs p-2 rounded-lg border border-slate-300"
+                    className="w-full bg-white text-xs p-2 rounded-lg border border-phumulani-cream"
                   >
                     <option value="PROGRAM_SUGGESTION">Program Suggestion</option>
                     <option value="GENERAL_SERVICE_EXPERIENCE">Service Experience</option>
@@ -623,20 +623,20 @@ export const MealCommandCenter: React.FC = () => {
                   </select>
                 </div>
                 <div className="md:col-span-2">
-                  <label className="text-[11px] font-semibold text-slate-700 block mb-1">Community Message / Feedback Content</label>
+                  <label className="text-[11px] font-semibold text-phumulani-charcoal block mb-1">Community Message / Feedback Content</label>
                   <input
                     type="text"
                     value={newFeedbackContent}
                     onChange={(e) => setNewFeedbackContent(e.target.value)}
                     placeholder="Enter feedback or community observation..."
-                    className="w-full bg-white text-xs p-2 rounded-lg border border-slate-300"
+                    className="w-full bg-white text-xs p-2 rounded-lg border border-phumulani-cream"
                   />
                 </div>
               </div>
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-rose-700 hover:bg-rose-800 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors"
                 >
                   <Send className="w-3.5 h-3.5" />
                   <span>Submit to MEAL Register</span>
@@ -651,28 +651,28 @@ export const MealCommandCenter: React.FC = () => {
                   key={fb.id}
                   className={`p-4 rounded-xl border text-xs space-y-2 ${
                     fb.isSafeguardingCrisisQuarantine
-                      ? 'bg-rose-50/70 border-rose-300 text-rose-950'
-                      : 'bg-white border-slate-200 text-slate-800'
+                      ? 'bg-phumulani-cream border-phumulani-earth text-phumulani-earth'
+                      : 'bg-white border-phumulani-cream text-phumulani-charcoal'
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="font-mono font-bold text-[11px]">{fb.id}</span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200">
+                      <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-cream">
                         {fb.feedbackType}
                       </span>
                       {fb.isSafeguardingCrisisQuarantine && (
-                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-600 text-white animate-pulse">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-phumulani-earth text-white animate-pulse">
                           VAWA SEC 1367 CRISIS QUARANTINE
                         </span>
                       )}
                     </div>
-                    <span className="text-[11px] text-slate-500">{new Date(fb.dateReceived).toLocaleDateString()}</span>
+                    <span className="text-[11px] text-phumulani-charcoal">{new Date(fb.dateReceived).toLocaleDateString()}</span>
                   </div>
 
                   <p className="font-medium text-xs leading-relaxed">{fb.content}</p>
 
-                  <div className="pt-2 border-t border-slate-200/80 flex flex-wrap items-center justify-between text-[11px] text-slate-500 gap-2">
+                  <div className="pt-2 border-t border-phumulani-cream flex flex-wrap items-center justify-between text-[11px] text-phumulani-charcoal gap-2">
                     <span>Dept: <strong>{fb.responsibleDepartmentId}</strong></span>
                     <span>Status: <strong>{fb.status}</strong></span>
                     <span>Resolution: {fb.resolutionSummary || 'Pending review'}</span>
@@ -686,50 +686,50 @@ export const MealCommandCenter: React.FC = () => {
 
       {/* TAB 7: GRANT DELIVERABLES (M26.08) */}
       {activeTab === 'grants' && (
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Grant Performance & Deliverable Progress (M26.08)</h3>
-              <p className="text-xs text-slate-500">
+              <h3 className="text-base font-bold text-phumulani-charcoal">Grant Performance & Deliverable Progress (M26.08)</h3>
+              <p className="text-xs text-phumulani-charcoal">
                 Institutional grant deliverables tied to verified program output milestones and funder reporting compliance checklists.
               </p>
             </div>
-            <span className="text-xs font-semibold bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full border border-emerald-200">
+            <span className="text-xs font-semibold bg-phumulani-cream text-phumulani-earth px-3 py-1 rounded-full border border-phumulani-green">
               {deliverables.length} Active Grant Deliverables
             </span>
           </div>
 
           <div className="space-y-4">
             {deliverables.map((g) => (
-              <div key={g.id} className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3 text-xs">
+              <div key={g.id} className="p-5 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-3 text-xs">
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-[10px] font-mono font-bold text-slate-500">{g.grantId}</span>
-                    <h4 className="font-bold text-slate-900 text-sm mt-0.5">{g.grantFunder}</h4>
+                    <span className="text-[10px] font-mono font-bold text-phumulani-charcoal">{g.grantId}</span>
+                    <h4 className="font-bold text-phumulani-charcoal text-sm mt-0.5">{g.grantFunder}</h4>
                   </div>
-                  <span className="px-2.5 py-1 rounded text-xs font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                  <span className="px-2.5 py-1 rounded text-xs font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green">
                     {g.status}
                   </span>
                 </div>
 
-                <div className="text-slate-700 font-medium">{g.deliverableName}</div>
+                <div className="text-phumulani-charcoal font-medium">{g.deliverableName}</div>
 
-                <div className="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                <div className="w-full bg-phumulani-cream rounded-full h-2.5 overflow-hidden">
                   <div
-                    className="bg-teal-700 h-2.5 rounded-full"
+                    className="bg-phumulani-earth h-2.5 rounded-full"
                     style={{ width: `${Math.min(100, Math.round((g.verifiedProgressCount / g.targetCount) * 100))}%` }}
                   />
                 </div>
-                <div className="flex justify-between text-[11px] text-slate-600 font-semibold">
+                <div className="flex justify-between text-[11px] text-phumulani-charcoal font-semibold">
                   <span>Progress: {g.verifiedProgressCount} / {g.targetCount} {g.measurementUnit}</span>
                   <span>{Math.round((g.verifiedProgressCount / g.targetCount) * 100)}% Milestone Attainment</span>
                 </div>
 
-                <div className="p-3 bg-white border border-slate-200 rounded-lg space-y-1">
-                  <div className="font-semibold text-slate-800">Funder Reporting Checklist:</div>
+                <div className="p-3 bg-white border border-phumulani-cream rounded-lg space-y-1">
+                  <div className="font-semibold text-phumulani-charcoal">Funder Reporting Checklist:</div>
                   {g.funderReportingChecklist.map((chk, idx) => (
-                    <div key={idx} className="flex items-center gap-1.5 text-slate-600 text-[11px]">
-                      <CheckCircle2 className="w-3.5 h-3.5 text-teal-700" />
+                    <div key={idx} className="flex items-center gap-1.5 text-phumulani-charcoal text-[11px]">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-earth" />
                       <span>{chk.item}</span>
                     </div>
                   ))}
@@ -742,44 +742,44 @@ export const MealCommandCenter: React.FC = () => {
 
       {/* TAB 8: VOLUNTEER CONTRIBUTION ANALYTICS (M26.09) */}
       {activeTab === 'volunteers' && volunteerAnalytics && (
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Volunteer Contribution Analytics (M26.09)</h3>
-              <p className="text-xs text-slate-500">
+              <h3 className="text-base font-bold text-phumulani-charcoal">Volunteer Contribution Analytics (M26.09)</h3>
+              <p className="text-xs text-phumulani-charcoal">
                 Supervisor-certified volunteer service hours. Unverified hours are quarantined and strictly excluded from official reports.
               </p>
             </div>
-            <span className="text-xs font-semibold bg-rose-50 text-rose-700 px-3 py-1 rounded-full border border-rose-200">
+            <span className="text-xs font-semibold bg-phumulani-cream text-phumulani-earth px-3 py-1 rounded-full border border-phumulani-earth">
               Zero Double-Counting Enforced
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="p-4 bg-teal-50 rounded-xl border border-teal-200">
-              <span className="text-xs font-bold text-teal-800 uppercase">Supervisor-Verified Hours</span>
-              <div className="text-3xl font-black text-teal-900 mt-1">{volunteerAnalytics.totalSupervisorVerifiedHours} hrs</div>
-              <div className="text-[11px] text-teal-700 mt-1 font-medium">Certified by Volunteer Coordinator</div>
+            <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-teal">
+              <span className="text-xs font-bold text-phumulani-earth uppercase">Supervisor-Verified Hours</span>
+              <div className="text-3xl font-black text-phumulani-earth mt-1">{volunteerAnalytics.totalSupervisorVerifiedHours} hrs</div>
+              <div className="text-[11px] text-phumulani-earth mt-1 font-medium">Certified by Volunteer Coordinator</div>
             </div>
-            <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
-              <span className="text-xs font-bold text-amber-800 uppercase">Unverified Hours Quarantined</span>
-              <div className="text-3xl font-black text-amber-900 mt-1">{volunteerAnalytics.unverifiedHoursPendingReview} hrs</div>
-              <div className="text-[11px] text-amber-700 mt-1 font-medium">Excluded until supervisor sign-off</div>
+            <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-gold">
+              <span className="text-xs font-bold text-phumulani-charcoal uppercase">Unverified Hours Quarantined</span>
+              <div className="text-3xl font-black text-phumulani-charcoal mt-1">{volunteerAnalytics.unverifiedHoursPendingReview} hrs</div>
+              <div className="text-[11px] text-phumulani-earth mt-1 font-medium">Excluded until supervisor sign-off</div>
             </div>
-            <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-              <span className="text-xs font-bold text-slate-700 uppercase">Active Approved Volunteers</span>
-              <div className="text-3xl font-black text-slate-900 mt-1">{volunteerAnalytics.totalApprovedVolunteers}</div>
-              <div className="text-[11px] text-slate-500 mt-1">100% background-verified</div>
+            <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream">
+              <span className="text-xs font-bold text-phumulani-charcoal uppercase">Active Approved Volunteers</span>
+              <div className="text-3xl font-black text-phumulani-charcoal mt-1">{volunteerAnalytics.totalApprovedVolunteers}</div>
+              <div className="text-[11px] text-phumulani-charcoal mt-1">100% background-verified</div>
             </div>
           </div>
 
           <div className="pt-2">
-            <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2">Program Hours Distribution</h4>
+            <h4 className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wider mb-2">Program Hours Distribution</h4>
             <div className="space-y-2">
               {volunteerAnalytics.programHoursBreakdown.map((item) => (
-                <div key={item.programId} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg text-xs">
-                  <span className="font-semibold text-slate-800">{item.programName} ({item.programId})</span>
-                  <span className="font-bold text-teal-800">{item.hours} Verified Hours</span>
+                <div key={item.programId} className="flex items-center justify-between p-3 bg-phumulani-cream rounded-lg text-xs">
+                  <span className="font-semibold text-phumulani-charcoal">{item.programName} ({item.programId})</span>
+                  <span className="font-bold text-phumulani-earth">{item.hours} Verified Hours</span>
                 </div>
               ))}
             </div>
@@ -789,44 +789,44 @@ export const MealCommandCenter: React.FC = () => {
 
       {/* TAB 9: PROGRAM QUALITY & RISK MANAGEMENT (M26.10) */}
       {activeTab === 'risks' && (
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Program Quality & Risk Management Matrix (M26.10)</h3>
-              <p className="text-xs text-slate-500">
+              <h3 className="text-base font-bold text-phumulani-charcoal">Program Quality & Risk Management Matrix (M26.10)</h3>
+              <p className="text-xs text-phumulani-charcoal">
                 Structured identification and mitigation of program delivery risks. Critical risks require Executive Director resolution.
               </p>
             </div>
-            <span className="text-xs font-semibold bg-amber-50 text-amber-700 px-3 py-1 rounded-full border border-amber-200">
+            <span className="text-xs font-semibold bg-phumulani-cream text-phumulani-earth px-3 py-1 rounded-full border border-phumulani-gold">
               {risks.length} Program Risks Monitored
             </span>
           </div>
 
           <div className="space-y-3">
             {risks.map((r) => (
-              <div key={r.id} className="p-4 bg-slate-50 rounded-xl border border-slate-200 space-y-2 text-xs">
+              <div key={r.id} className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-2 text-xs">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="font-mono font-bold text-slate-700">{r.id}</span>
+                    <span className="font-mono font-bold text-phumulani-charcoal">{r.id}</span>
                     <span
                       className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                         r.severity === 'CRITICAL'
-                          ? 'bg-rose-100 text-rose-800 border border-rose-300'
+                          ? 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth'
                           : r.severity === 'HIGH'
-                          ? 'bg-amber-100 text-amber-800 border border-amber-300'
-                          : 'bg-slate-200 text-slate-700'
+                          ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold'
+                          : 'bg-phumulani-cream text-phumulani-charcoal'
                       }`}
                     >
                       {r.severity} SEVERITY
                     </span>
-                    <span className="text-[10px] text-slate-500">({r.riskCategory})</span>
+                    <span className="text-[10px] text-phumulani-charcoal">({r.riskCategory})</span>
                   </div>
-                  <span className="font-semibold text-slate-700">{r.status}</span>
+                  <span className="font-semibold text-phumulani-charcoal">{r.status}</span>
                 </div>
 
-                <div className="font-bold text-slate-900">{r.description}</div>
-                <div className="text-slate-600"><strong className="text-slate-700">Mitigation: </strong>{r.mitigationPlan}</div>
-                <div className="pt-2 border-t border-slate-200 text-[11px] text-slate-500 flex justify-between">
+                <div className="font-bold text-phumulani-charcoal">{r.description}</div>
+                <div className="text-phumulani-charcoal"><strong className="text-phumulani-charcoal">Mitigation: </strong>{r.mitigationPlan}</div>
+                <div className="pt-2 border-t border-phumulani-cream text-[11px] text-phumulani-charcoal flex justify-between">
                   <span>Owner: {r.responsibleOwner}</span>
                   <span>Escalation: {r.escalationLevel}</span>
                 </div>
@@ -838,21 +838,21 @@ export const MealCommandCenter: React.FC = () => {
 
       {/* TAB 10: AI IMPACT INTELLIGENCE (M26.11) */}
       {activeTab === 'ai' && (
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-rose-600" />
+              <h3 className="text-base font-bold text-phumulani-charcoal flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-phumulani-earth" />
                 AI Impact Intelligence & Narrative Assistance (M26.11)
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-phumulani-charcoal">
                 Grounded narrative drafting citing internal audit records with explicit attribution disclaimers. AI cannot approve its own reports.
               </p>
             </div>
             <button
               onClick={handleGenerateAiNarrative}
               disabled={isAiLoading}
-              className="px-4 py-2 bg-rose-700 hover:bg-rose-800 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-50"
+              className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-50"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>{isAiLoading ? 'Drafting from Ledger...' : 'Generate Grounded Narrative'}</span>
@@ -860,30 +860,30 @@ export const MealCommandCenter: React.FC = () => {
           </div>
 
           {aiDraft ? (
-            <div className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-4 text-xs">
-              <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg font-medium text-[11px]">
+            <div className="p-5 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-4 text-xs">
+              <div className="p-3 bg-phumulani-cream border border-phumulani-green text-phumulani-charcoal rounded-lg font-medium text-[11px]">
                 {aiDraft.groundedNotice}
               </div>
 
               <div>
-                <h4 className="font-bold text-slate-900 text-sm mb-1">Synthesized Impact Narrative Draft</h4>
-                <p className="text-slate-700 leading-relaxed">{aiDraft.narrative}</p>
+                <h4 className="font-bold text-phumulani-charcoal text-sm mb-1">Synthesized Impact Narrative Draft</h4>
+                <p className="text-phumulani-charcoal leading-relaxed">{aiDraft.narrative}</p>
               </div>
 
-              <div className="p-4 bg-amber-50/70 border border-amber-200 rounded-xl text-amber-900 space-y-1">
-                <div className="font-semibold flex items-center gap-1 text-amber-800">
-                  <AlertTriangle className="w-3.5 h-3.5 text-amber-600" /> Methodological Limitations & Attribution Caution:
+              <div className="p-4 bg-phumulani-cream border border-phumulani-gold rounded-xl text-phumulani-charcoal space-y-1">
+                <div className="font-semibold flex items-center gap-1 text-phumulani-charcoal">
+                  <AlertTriangle className="w-3.5 h-3.5 text-phumulani-earth" /> Methodological Limitations & Attribution Caution:
                 </div>
                 <p className="text-[11px] leading-relaxed">{aiDraft.limitations}</p>
               </div>
 
               <div>
-                <h4 className="font-bold text-slate-800 text-xs mb-2">Metrics Summary Table</h4>
+                <h4 className="font-bold text-phumulani-charcoal text-xs mb-2">Metrics Summary Table</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                   {aiDraft.metricsSummary.map((m, idx) => (
-                    <div key={idx} className="p-2.5 bg-white border border-slate-200 rounded-lg text-[11px] flex justify-between">
-                      <span className="text-slate-700 font-medium">{m.indicator}</span>
-                      <span className="font-bold text-teal-800">
+                    <div key={idx} className="p-2.5 bg-white border border-phumulani-cream rounded-lg text-[11px] flex justify-between">
+                      <span className="text-phumulani-charcoal font-medium">{m.indicator}</span>
+                      <span className="font-bold text-phumulani-earth">
                         {m.achieved} / {m.target} ({m.percent}%)
                       </span>
                     </div>
@@ -892,7 +892,7 @@ export const MealCommandCenter: React.FC = () => {
               </div>
             </div>
           ) : (
-            <div className="p-8 text-center text-slate-400 text-xs border border-dashed border-slate-200 rounded-xl">
+            <div className="p-8 text-center text-phumulani-charcoal text-xs border border-dashed border-phumulani-cream rounded-xl">
               Click &quot;Generate Grounded Narrative&quot; to draft an impact summary from verified internal ledger metrics.
             </div>
           )}
@@ -902,11 +902,11 @@ export const MealCommandCenter: React.FC = () => {
       {/* TAB 11: EXECUTIVE IMPACT REPORTS & EXPORTS (M26.12 & M26.13) */}
       {activeTab === 'reports' && (
         <div className="space-y-6">
-          <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+          <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-sm space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <h3 className="text-base font-bold text-slate-900">Official Impact Reports & Governance (M26.12 & M26.13)</h3>
-                <p className="text-xs text-slate-500">
+                <h3 className="text-base font-bold text-phumulani-charcoal">Official Impact Reports & Governance (M26.12 & M26.13)</h3>
+                <p className="text-xs text-phumulani-charcoal">
                   Executive Director certification required for official distribution. Edits to approved reports automatically invalidate approval and increment version.
                 </p>
               </div>
@@ -914,30 +914,30 @@ export const MealCommandCenter: React.FC = () => {
 
             <div className="space-y-4">
               {reports.map((rep) => (
-                <div key={rep.id} className="p-5 bg-slate-50 rounded-xl border border-slate-200 space-y-3 text-xs">
+                <div key={rep.id} className="p-5 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-3 text-xs">
                   <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="font-mono font-bold text-slate-700">{rep.reportCode}</span>
-                        <span className="text-[10px] font-semibold text-slate-500">v{rep.version}</span>
+                        <span className="font-mono font-bold text-phumulani-charcoal">{rep.reportCode}</span>
+                        <span className="text-[10px] font-semibold text-phumulani-charcoal">v{rep.version}</span>
                         <span
                           className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                             rep.approvalStatus === 'EXECUTIVE_APPROVED'
-                              ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                              : 'bg-amber-100 text-amber-800 border border-amber-300'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green'
+                              : 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold'
                           }`}
                         >
                           {rep.approvalStatus}
                         </span>
                       </div>
-                      <h4 className="font-bold text-slate-900 text-sm mt-1">{rep.title}</h4>
+                      <h4 className="font-bold text-phumulani-charcoal text-sm mt-1">{rep.title}</h4>
                     </div>
 
                     <div className="flex items-center gap-2">
                       {rep.approvalStatus !== 'EXECUTIVE_APPROVED' && (
                         <button
                           onClick={() => handleExecutiveApproveReport(rep.id)}
-                          className="px-3 py-1.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors"
+                          className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors"
                         >
                           <Check className="w-3.5 h-3.5" />
                           <span>Certify as Executive</span>
@@ -945,14 +945,14 @@ export const MealCommandCenter: React.FC = () => {
                       )}
                       <button
                         onClick={() => handleExportHtml(rep.id)}
-                        className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors"
+                        className="px-3 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors"
                       >
                         <Printer className="w-3.5 h-3.5" />
                         <span>Printable HTML</span>
                       </button>
                       <button
                         onClick={() => handleDownloadCsv(rep.id)}
-                        className="px-3 py-1.5 bg-teal-700 hover:bg-teal-800 text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors"
+                        className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors"
                       >
                         <Download className="w-3.5 h-3.5" />
                         <span>Export CSV</span>
@@ -960,9 +960,9 @@ export const MealCommandCenter: React.FC = () => {
                     </div>
                   </div>
 
-                  <p className="text-slate-700 leading-relaxed">{rep.executiveSummary}</p>
+                  <p className="text-phumulani-charcoal leading-relaxed">{rep.executiveSummary}</p>
 
-                  <div className="pt-2 border-t border-slate-200 text-[11px] text-slate-500 flex flex-wrap justify-between gap-2">
+                  <div className="pt-2 border-t border-phumulani-cream text-[11px] text-phumulani-charcoal flex flex-wrap justify-between gap-2">
                     <span>Preparer: {rep.preparerName} ({rep.preparerRole})</span>
                     <span>Executive Certifier: {rep.executiveApproverName || 'Pending'}</span>
                     <span>Volunteer Hours Cited: {rep.volunteerHoursCited} hrs</span>
@@ -974,13 +974,13 @@ export const MealCommandCenter: React.FC = () => {
 
           {/* HTML EXPORT MODAL PREVIEW */}
           {exportPreviewHtml && (
-            <div className="fixed inset-0 bg-slate-950/70 z-50 flex items-center justify-center p-4">
+            <div className="fixed inset-0 bg-phumulani-charcoal/80 z-50 flex items-center justify-center p-4">
               <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl">
-                <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-                  <h3 className="font-bold text-sm text-slate-900">Printable HTML Report Preview</h3>
+                <div className="p-4 border-b border-phumulani-cream flex items-center justify-between">
+                  <h3 className="font-bold text-sm text-phumulani-charcoal">Printable HTML Report Preview</h3>
                   <button
                     onClick={() => setExportPreviewHtml(null)}
-                    className="text-slate-400 hover:text-slate-600 font-bold text-lg"
+                    className="text-phumulani-charcoal hover:text-phumulani-earth font-bold text-lg"
                   >
                     ✕
                   </button>
@@ -989,13 +989,13 @@ export const MealCommandCenter: React.FC = () => {
                   <iframe
                     srcDoc={exportPreviewHtml}
                     title="Export Preview"
-                    className="w-full h-[60vh] border border-slate-200 rounded-lg"
+                    className="w-full h-[60vh] border border-phumulani-cream rounded-lg"
                   />
                 </div>
-                <div className="p-4 border-t border-slate-200 flex justify-end gap-2">
+                <div className="p-4 border-t border-phumulani-cream flex justify-end gap-2">
                   <button
                     onClick={() => setExportPreviewHtml(null)}
-                    className="px-4 py-2 bg-slate-200 text-slate-800 text-xs font-semibold rounded-lg"
+                    className="px-4 py-2 bg-phumulani-cream text-phumulani-charcoal text-xs font-semibold rounded-lg"
                   >
                     Close
                   </button>
@@ -1008,20 +1008,20 @@ export const MealCommandCenter: React.FC = () => {
 
       {/* TAB 12: SECURITY & SAFEGUARDING PROBES (M26.14 & M26.15) */}
       {activeTab === 'security' && (
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-base font-bold text-slate-900 flex items-center gap-2">
-                <Lock className="w-5 h-5 text-emerald-700" />
+              <h3 className="text-base font-bold text-phumulani-charcoal flex items-center gap-2">
+                <Lock className="w-5 h-5 text-phumulani-earth" />
                 Negative-Access Security Penetration Suite (M26.14 & M26.15)
               </h3>
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-phumulani-charcoal">
                 15 automated negative-access penetration probes validating RBAC barriers, VAWA zero-disclosure quarantine, anti-duplicate counting, and unallowable expenditure rejection.
               </p>
             </div>
             <button
               onClick={handleRunSecuritySuite}
-              className="px-4 py-2 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors"
+              className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors"
             >
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>Execute 15 Security Probes</span>
@@ -1030,28 +1030,28 @@ export const MealCommandCenter: React.FC = () => {
 
           {securityProbes ? (
             <div className="space-y-3">
-              <div className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl text-emerald-900 flex items-center justify-between text-xs font-bold">
+              <div className="p-4 bg-phumulani-cream border border-phumulani-green rounded-xl text-phumulani-charcoal flex items-center justify-between text-xs font-bold">
                 <span>Security Suite Result: {securityProbes.passedCount} / {securityProbes.totalCount} Probes Passed (100% Certified)</span>
-                <span className="bg-emerald-600 text-white px-2.5 py-0.5 rounded-full text-[10px]">PASS</span>
+                <span className="bg-phumulani-green text-phumulani-charcoal px-2.5 py-0.5 rounded-full text-[10px]">PASS</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {securityProbes.results.map((p) => (
-                  <div key={p.probeId} className="p-3 bg-slate-50 rounded-xl border border-slate-200 text-xs space-y-1">
+                  <div key={p.probeId} className="p-3 bg-phumulani-cream rounded-xl border border-phumulani-cream text-xs space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-mono font-bold text-slate-700">{p.probeId}</span>
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">
+                      <span className="font-mono font-bold text-phumulani-charcoal">{p.probeId}</span>
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-phumulani-cream text-phumulani-charcoal">
                         PASSED
                       </span>
                     </div>
-                    <div className="font-bold text-slate-900 text-[11px]">{p.title}</div>
-                    <p className="text-[11px] text-slate-600 leading-snug">{p.details}</p>
+                    <div className="font-bold text-phumulani-charcoal text-[11px]">{p.title}</div>
+                    <p className="text-[11px] text-phumulani-charcoal leading-snug">{p.details}</p>
                   </div>
                 ))}
               </div>
             </div>
           ) : (
-            <div className="p-8 text-center text-slate-400 text-xs border border-dashed border-slate-200 rounded-xl">
+            <div className="p-8 text-center text-phumulani-charcoal text-xs border border-dashed border-phumulani-cream rounded-xl">
               Click &quot;Execute 15 Security Probes&quot; to run the full negative-access security penetration suite.
             </div>
           )}

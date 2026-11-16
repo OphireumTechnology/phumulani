@@ -1728,7 +1728,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F6F8] flex flex-col font-sans text-slate-800 max-w-full overflow-x-hidden">
+    <div className="min-h-screen bg-phumulani-cream flex flex-col font-sans text-phumulani-charcoal max-w-full overflow-x-hidden">
       {/* 1. COMPACT HEADER (Area A) */}
       <EmailCompactHeader
         currentUser={currentUser}
@@ -1757,25 +1757,25 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         <div
           className={`px-4 py-2 text-xs font-medium border-b flex items-center justify-between ${
             actionNotice.type === 'success'
-              ? 'bg-emerald-50 text-emerald-900 border-emerald-200'
+              ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green'
               : actionNotice.type === 'warning'
-              ? 'bg-amber-50 text-amber-900 border-amber-200'
-              : 'bg-blue-50 text-blue-900 border-blue-200'
+              ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-gold'
+              : 'bg-phumulani-cream text-phumulani-earth border-phumulani-teal'
           }`}
         >
           <div className="flex items-center gap-2">
             {actionNotice.type === 'success' ? (
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-phumulani-earth shrink-0" />
             ) : actionNotice.type === 'warning' ? (
-              <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+              <AlertTriangle className="w-4 h-4 text-phumulani-earth shrink-0" />
             ) : (
-              <AlertCircle className="w-4 h-4 text-blue-600 shrink-0" />
+              <AlertCircle className="w-4 h-4 text-phumulani-earth shrink-0" />
             )}
             <span>{actionNotice.message}</span>
           </div>
           <button
             onClick={() => setActionNotice(null)}
-            className="text-slate-400 hover:text-slate-600 cursor-pointer"
+            className="text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
             aria-label="Dismiss alert"
           >
             <XCircle className="w-3.5 h-3.5" />
@@ -1864,19 +1864,19 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
           effectiveConnectedMailboxesCount === 0 && filteredThreads.length === 0 ? (
             <div
               data-testid="email-clean-empty-state"
-              className="flex-1 bg-white border border-slate-200 rounded-2xl flex flex-col items-center justify-center p-8 sm:p-12 text-center shadow-2xs"
+              className="flex-1 bg-white border border-phumulani-cream rounded-2xl flex flex-col items-center justify-center p-8 sm:p-12 text-center shadow-2xs"
             >
-              <div className="w-16 h-16 rounded-2xl bg-teal-50 border border-teal-200/80 flex items-center justify-center mb-5 text-[#104F57]">
+              <div className="w-16 h-16 rounded-2xl bg-phumulani-cream border border-phumulani-teal flex items-center justify-center mb-5 text-phumulani-earth">
                 <Mail className="w-8 h-8 stroke-[1.5]" />
               </div>
-              <h2 className="text-xl font-bold text-slate-900">No Email Accounts Connected</h2>
-              <p className="text-sm text-slate-600 max-w-md mt-2 leading-relaxed">
+              <h2 className="text-xl font-bold text-phumulani-charcoal">No Email Accounts Connected</h2>
+              <p className="text-sm text-phumulani-charcoal max-w-md mt-2 leading-relaxed">
                 Your Email Command Center is ready. Connect and authorize your organizational email accounts to begin receiving and managing messages.
               </p>
               <button
                 type="button"
                 onClick={openConnectEmailWizard}
-                className="mt-6 px-5 py-2.5 bg-[#104F57] hover:bg-teal-900 text-white text-xs sm:text-sm font-bold rounded-xl shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
+                className="mt-6 px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs sm:text-sm font-bold rounded-xl shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 <span>Connect Email Account</span>
@@ -1886,7 +1886,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
           <div className="flex-1 flex flex-col md:flex-row gap-3 md:gap-4 overflow-hidden min-w-0">
             {/* AREA C: MESSAGE LIST */}
             <div
-              className={`w-full md:w-80 xl:w-96 rounded-2xl border border-slate-200 overflow-hidden shadow-2xs shrink-0 ${
+              className={`w-full md:w-80 xl:w-96 rounded-2xl border border-phumulani-cream overflow-hidden shadow-2xs shrink-0 ${
                 mobileScreen === 'list' || mobileScreen === 'folders' ? 'flex flex-col' : 'hidden md:flex md:flex-col'
               }`}
             >
@@ -2002,31 +2002,31 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB: ORGANIZATIONAL MAILBOX ADMINISTRATION (M48.02)                        */}
         {/* ========================================================================= */}
         {activeTab === 'mailboxes' && (
-          <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5 space-y-5">
+          <div className="flex-1 h-full bg-phumulani-cream overflow-y-auto p-5 space-y-5">
             {/* Top Header & Truthful Status Disclosure */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <span className="font-mono text-[10px] font-bold bg-teal-100 text-teal-900 border border-teal-300 px-2.5 py-0.5 rounded-full uppercase">
+                  <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2.5 py-0.5 rounded-full uppercase">
                     /admin/master/email/mailboxes · Application D
                   </span>
-                  <span className="text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                    <Lock className="w-3 h-3 text-amber-700" />
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <Lock className="w-3 h-3 text-phumulani-earth" />
                     STAGED_DEVELOPMENT
                   </span>
-                  <span className="text-[10px] font-bold bg-blue-100 text-blue-900 border border-blue-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                    <Shield className="w-3 h-3 text-blue-700" />
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <Shield className="w-3 h-3 text-phumulani-earth" />
                     Google Workspace: AUTHORIZATION_REQUIRED
                   </span>
-                  <span className="text-[10px] font-bold bg-rose-100 text-rose-900 border border-rose-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                    <ShieldAlert className="w-3 h-3 text-rose-700" />
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-earth px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldAlert className="w-3 h-3 text-phumulani-earth" />
                     DEPT-SAFE Invariant Active
                   </span>
                 </div>
-                <h2 className="text-xl font-bold font-serif text-slate-900">
+                <h2 className="text-xl font-bold font-serif text-phumulani-charcoal">
                   Organizational Mailbox Administration & Departmental Routing
                 </h2>
-                <p className="text-xs text-slate-500 max-w-2xl mt-0.5">
+                <p className="text-xs text-phumulani-charcoal max-w-2xl mt-0.5">
                   Complete institutional mailbox management. Register mailboxes, assign department ownership and staff access, test connection readiness, configure signatures, and manage OAuth integration lifecycles.
                 </p>
               </div>
@@ -2035,9 +2035,9 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 <button
                   type="button"
                   onClick={handleTestAllConnections}
-                  className="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                  className="px-3 py-1.5 bg-white border border-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-xl text-xs font-semibold flex items-center gap-1.5 shadow-2xs cursor-pointer"
                 >
-                  <RefreshCw className="w-3.5 h-3.5 text-slate-600" />
+                  <RefreshCw className="w-3.5 h-3.5 text-phumulani-charcoal" />
                   <span>Test All Connections</span>
                 </button>
                 <button
@@ -2052,7 +2052,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     setMbxFormInitialState('AUTHORIZATION_REQUIRED');
                     setIsAddMailboxModalOpen(true);
                   }}
-                  className="px-3.5 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Register Mailbox Configuration</span>
@@ -2062,76 +2062,76 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
             {/* KPI Summary Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
-                <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+              <div className="bg-white border border-phumulani-cream rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-phumulani-charcoal mb-1">
                   <span>Total Mailboxes</span>
-                  <Mail className="w-3.5 h-3.5 text-teal-800" />
+                  <Mail className="w-3.5 h-3.5 text-phumulani-earth" />
                 </div>
-                <div className="text-xl font-bold font-serif text-slate-900">{mailboxes.length}</div>
-                <div className="text-[10px] text-teal-700 font-semibold mt-0.5">5 Core Institutional</div>
+                <div className="text-xl font-bold font-serif text-phumulani-charcoal">{mailboxes.length}</div>
+                <div className="text-[10px] text-phumulani-earth font-semibold mt-0.5">5 Core Institutional</div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
-                <div className="flex items-center justify-between text-xs text-emerald-600 mb-1 font-semibold">
+              <div className="bg-white border border-phumulani-cream rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-phumulani-earth mb-1 font-semibold">
                   <span>Connected (Ready)</span>
-                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-earth" />
                 </div>
-                <div className="text-xl font-bold font-serif text-emerald-800">
+                <div className="text-xl font-bold font-serif text-phumulani-charcoal">
                   {mailboxes.filter((m) => m.status === 'CONNECTED' || m.status === 'connected').length}
                 </div>
-                <div className="text-[10px] text-slate-400 mt-0.5">Active Inboxes</div>
+                <div className="text-[10px] text-phumulani-charcoal mt-0.5">Active Inboxes</div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
-                <div className="flex items-center justify-between text-xs text-amber-600 mb-1 font-semibold">
+              <div className="bg-white border border-phumulani-cream rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-phumulani-earth mb-1 font-semibold">
                   <span>Auth Required</span>
-                  <Lock className="w-3.5 h-3.5 text-amber-600" />
+                  <Lock className="w-3.5 h-3.5 text-phumulani-earth" />
                 </div>
-                <div className="text-xl font-bold font-serif text-amber-700">
+                <div className="text-xl font-bold font-serif text-phumulani-earth">
                   {mailboxes.filter((m) => m.status === 'AUTHORIZATION_REQUIRED' || m.authStatus === 'pending_auth').length}
                 </div>
-                <div className="text-[10px] text-amber-700 mt-0.5 font-medium">Staged OAuth</div>
+                <div className="text-[10px] text-phumulani-earth mt-0.5 font-medium">Staged OAuth</div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
-                <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+              <div className="bg-white border border-phumulani-cream rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-phumulani-charcoal mb-1">
                   <span>2-Way Sync</span>
-                  <RefreshCw className="w-3.5 h-3.5 text-teal-700" />
+                  <RefreshCw className="w-3.5 h-3.5 text-phumulani-earth" />
                 </div>
-                <div className="text-xl font-bold font-serif text-slate-900">
+                <div className="text-xl font-bold font-serif text-phumulani-charcoal">
                   {mailboxes.filter((m) => m.twoWaySyncEnabled).length}
                 </div>
-                <div className="text-[10px] text-slate-400 mt-0.5">Active Reconciled</div>
+                <div className="text-[10px] text-phumulani-charcoal mt-0.5">Active Reconciled</div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
-                <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+              <div className="bg-white border border-phumulani-cream rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-phumulani-charcoal mb-1">
                   <span>Total Messages</span>
-                  <Inbox className="w-3.5 h-3.5 text-blue-600" />
+                  <Inbox className="w-3.5 h-3.5 text-phumulani-earth" />
                 </div>
-                <div className="text-xl font-bold font-serif text-slate-900">
+                <div className="text-xl font-bold font-serif text-phumulani-charcoal">
                   {mailboxes.reduce((acc, m) => acc + (m.totalImportedMessages || m.totalThreads || 0), 0)}
                 </div>
-                <div className="text-[10px] text-slate-400 mt-0.5">Imported & Tracked</div>
+                <div className="text-[10px] text-phumulani-charcoal mt-0.5">Imported & Tracked</div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
-                <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+              <div className="bg-white border border-phumulani-cream rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-phumulani-charcoal mb-1">
                   <span>Fail-Closed Status</span>
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <ShieldCheck className="w-3.5 h-3.5 text-phumulani-earth" />
                 </div>
-                <div className="text-xl font-bold font-serif text-emerald-800">100%</div>
-                <div className="text-[10px] text-emerald-700 font-semibold mt-0.5">Zero Data Leaks</div>
+                <div className="text-xl font-bold font-serif text-phumulani-charcoal">100%</div>
+                <div className="text-[10px] text-phumulani-earth font-semibold mt-0.5">Zero Data Leaks</div>
               </div>
             </div>
 
             {/* Mailbox Administration Grid */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-bold text-slate-900">
+                <h3 className="text-sm font-bold text-phumulani-charcoal">
                   Active Departmental Mailboxes ({mailboxes.length})
                 </h3>
-                <span className="text-xs text-slate-500 font-mono">
+                <span className="text-xs text-phumulani-charcoal font-mono">
                   Operational Mode: STAGED_DEVELOPMENT
                 </span>
               </div>
@@ -2140,49 +2140,49 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 {mailboxes.map((mbx) => {
                   const checkpoint = syncCheckpoints.find((c) => c.mailboxId === mbx.id);
                   const statusColors: Record<string, string> = {
-                    CONNECTED: 'bg-emerald-100 text-emerald-800 border-emerald-300',
-                    connected: 'bg-emerald-100 text-emerald-800 border-emerald-300',
-                    AUTHORIZATION_REQUIRED: 'bg-amber-100 text-amber-900 border-amber-300',
-                    pending_auth: 'bg-amber-100 text-amber-900 border-amber-300',
-                    SYNCING: 'bg-blue-100 text-blue-800 border-blue-300',
-                    syncing: 'bg-blue-100 text-blue-800 border-blue-300',
-                    DEGRADED: 'bg-orange-100 text-orange-800 border-orange-300',
-                    DISCONNECTED: 'bg-slate-200 text-slate-700 border-slate-300',
-                    disconnected: 'bg-slate-200 text-slate-700 border-slate-300',
-                    ERROR: 'bg-rose-100 text-rose-800 border-rose-300',
-                    error: 'bg-rose-100 text-rose-800 border-rose-300',
-                    NOT_CONFIGURED: 'bg-slate-100 text-slate-600 border-slate-200',
+                    CONNECTED: 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green',
+                    connected: 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green',
+                    AUTHORIZATION_REQUIRED: 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-gold',
+                    pending_auth: 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-gold',
+                    SYNCING: 'bg-phumulani-cream text-phumulani-earth border-phumulani-teal',
+                    syncing: 'bg-phumulani-cream text-phumulani-earth border-phumulani-teal',
+                    DEGRADED: 'bg-phumulani-cream text-phumulani-earth border-phumulani-orange',
+                    DISCONNECTED: 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream',
+                    disconnected: 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream',
+                    ERROR: 'bg-phumulani-cream text-phumulani-earth border-phumulani-earth',
+                    error: 'bg-phumulani-cream text-phumulani-earth border-phumulani-earth',
+                    NOT_CONFIGURED: 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream',
                   };
 
                   return (
                     <div
                       key={mbx.id}
-                      className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4 hover:border-slate-300 transition-all"
+                      className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs space-y-4 hover:border-phumulani-cream transition-all"
                     >
                       {/* Top Bar: Email, Name, Department, Status */}
-                      <div className="flex items-start justify-between gap-3 border-b border-slate-100 pb-3">
+                      <div className="flex items-start justify-between gap-3 border-b border-phumulani-cream pb-3">
                         <div>
                           <div className="flex items-center gap-2 flex-wrap">
-                            <span className="font-mono text-sm font-bold text-slate-900">
+                            <span className="font-mono text-sm font-bold text-phumulani-charcoal">
                               {mbx.email}
                             </span>
-                            <span className="text-[10px] font-mono font-bold bg-teal-50 text-teal-900 border border-teal-200 px-2 py-0.5 rounded-full">
+                            <span className="text-[10px] font-mono font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2 py-0.5 rounded-full">
                               {mbx.department}
                             </span>
                             {mbx.isDefault && (
-                              <span className="text-[10px] font-bold bg-indigo-50 text-indigo-800 border border-indigo-200 px-2 py-0.5 rounded-full">
+                              <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2 py-0.5 rounded-full">
                                 Default Primary
                               </span>
                             )}
                           </div>
-                          <p className="text-xs text-slate-600 font-medium mt-0.5">
-                            {mbx.displayName} · Provider: <strong className="text-slate-800">{mbx.provider}</strong>
+                          <p className="text-xs text-phumulani-charcoal font-medium mt-0.5">
+                            {mbx.displayName} · Provider: <strong className="text-phumulani-charcoal">{mbx.provider}</strong>
                           </p>
                         </div>
 
                         <span
                           className={`text-[10px] font-bold font-mono px-2.5 py-1 rounded-full uppercase border ${
-                            statusColors[mbx.status] || 'bg-slate-100 text-slate-700 border-slate-300'
+                            statusColors[mbx.status] || 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream'
                           }`}
                         >
                           {mbx.status}
@@ -2191,15 +2191,15 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
                       {/* Detail Metadata Grid */}
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 text-xs">
-                        <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl">
-                          <span className="text-[10px] text-slate-400 block font-mono">OWNERSHIP</span>
-                          <span className="font-bold text-slate-900 truncate block">{mbx.department}</span>
-                          <span className="text-[10px] text-slate-500">Phumulani 501(c)(3)</span>
+                        <div className="p-2.5 bg-phumulani-cream border border-phumulani-cream rounded-xl">
+                          <span className="text-[10px] text-phumulani-charcoal block font-mono">OWNERSHIP</span>
+                          <span className="font-bold text-phumulani-charcoal truncate block">{mbx.department}</span>
+                          <span className="text-[10px] text-phumulani-charcoal">Phumulani 501(c)(3)</span>
                         </div>
 
-                        <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl">
-                          <span className="text-[10px] text-slate-400 block font-mono">STAFF ACCESS</span>
-                          <span className="font-bold text-slate-900 truncate block">
+                        <div className="p-2.5 bg-phumulani-cream border border-phumulani-cream rounded-xl">
+                          <span className="text-[10px] text-phumulani-charcoal block font-mono">STAFF ACCESS</span>
+                          <span className="font-bold text-phumulani-charcoal truncate block">
                             {mbx.department === 'DEPT-SAFE'
                               ? 'Sister Miriam K.'
                               : mbx.department === 'DEPT-EXEC'
@@ -2210,27 +2210,27 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                               ? 'Dr. Elena Rostova'
                               : 'Staff Team (OPS)'}
                           </span>
-                          <span className="text-[10px] text-teal-800 font-medium">RBAC Authorized</span>
+                          <span className="text-[10px] text-phumulani-earth font-medium">RBAC Authorized</span>
                         </div>
 
-                        <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl">
-                          <span className="text-[10px] text-slate-400 block font-mono">SYNC STATUS</span>
-                          <span className="font-bold text-slate-900 truncate block">
+                        <div className="p-2.5 bg-phumulani-cream border border-phumulani-cream rounded-xl">
+                          <span className="text-[10px] text-phumulani-charcoal block font-mono">SYNC STATUS</span>
+                          <span className="font-bold text-phumulani-charcoal truncate block">
                             {mbx.twoWaySyncEnabled ? '2-Way Active' : 'Read Only'}
                           </span>
-                          <span className="text-[10px] text-slate-500 font-mono">
+                          <span className="text-[10px] text-phumulani-charcoal font-mono">
                             {mbx.totalThreads} Threads
                           </span>
                         </div>
 
-                        <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl">
-                          <span className="text-[10px] text-slate-400 block font-mono">SIGNATURES</span>
-                          <span className="font-bold text-slate-900 truncate block">Official Form 990</span>
-                          <span className="text-[10px] text-emerald-700 font-semibold">Active Attached</span>
+                        <div className="p-2.5 bg-phumulani-cream border border-phumulani-cream rounded-xl">
+                          <span className="text-[10px] text-phumulani-charcoal block font-mono">SIGNATURES</span>
+                          <span className="font-bold text-phumulani-charcoal truncate block">Official Form 990</span>
+                          <span className="text-[10px] text-phumulani-earth font-semibold">Active Attached</span>
                         </div>
 
-                        <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl">
-                          <span className="text-[10px] text-slate-400 block font-mono">PROVIDER ERRORS</span>
+                        <div className="p-2.5 bg-phumulani-cream border border-phumulani-cream rounded-xl">
+                          <span className="text-[10px] text-phumulani-charcoal block font-mono">PROVIDER ERRORS</span>
                           {(() => {
                             const errCount =
                               (mbx.authFailures || 0) +
@@ -2248,23 +2248,23 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                               <>
                                 <span
                                   className={`font-bold truncate block ${
-                                    errCount > 0 ? 'text-rose-700' : 'text-slate-900'
+                                    errCount > 0 ? 'text-phumulani-earth' : 'text-phumulani-charcoal'
                                   }`}
                                 >
                                   {errCount} {errCount === 1 ? 'Error' : 'Errors'}
                                 </span>
-                                <span className="text-[10px] text-slate-500 font-mono">{healthLabel}</span>
+                                <span className="text-[10px] text-phumulani-charcoal font-mono">{healthLabel}</span>
                               </>
                             );
                           })()}
                         </div>
 
-                        <div className="p-2.5 bg-slate-50 border border-slate-200/80 rounded-xl">
-                          <span className="text-[10px] text-slate-400 block font-mono">LAST HANDSHAKE</span>
-                          <span className="font-bold text-slate-900 truncate block">
+                        <div className="p-2.5 bg-phumulani-cream border border-phumulani-cream rounded-xl">
+                          <span className="text-[10px] text-phumulani-charcoal block font-mono">LAST HANDSHAKE</span>
+                          <span className="font-bold text-phumulani-charcoal truncate block">
                             {mbx.lastSyncedAt ? new Date(mbx.lastSyncedAt).toLocaleTimeString() : 'Not synced yet'}
                           </span>
-                          <span className="text-[10px] text-slate-500 font-mono truncate">
+                          <span className="text-[10px] text-phumulani-charcoal font-mono truncate">
                             {checkpoint?.historyId || 'Awaiting sync'}
                           </span>
                         </div>
@@ -2272,11 +2272,11 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
                       {/* Safeguarding Invariant Notice for DEPT-SAFE */}
                       {mbx.department === 'DEPT-SAFE' && (
-                        <div className="bg-rose-50 border border-rose-300 rounded-xl p-3 text-xs text-rose-950 flex items-start gap-2">
-                          <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                        <div className="bg-phumulani-cream border border-phumulani-earth rounded-xl p-3 text-xs text-phumulani-earth flex items-start gap-2">
+                          <ShieldAlert className="w-4 h-4 text-phumulani-earth shrink-0 mt-0.5" />
                           <div>
                             <span className="font-bold">Safeguarding Zero-PII Firewall Active</span>
-                            <p className="text-[11px] text-rose-800 mt-0.5">
+                            <p className="text-[11px] text-phumulani-earth mt-0.5">
                               Confidential intake is strictly quarantined to Sister Miriam K. Auto-responders and AI external sending are disabled pursuant to VAWA Section 1367.
                             </p>
                           </div>
@@ -2284,33 +2284,33 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       )}
 
                       {/* Action Bar */}
-                      <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs">
+                      <div className="pt-2 border-t border-phumulani-cream flex flex-wrap items-center justify-between gap-2 text-xs">
                         <div className="flex items-center gap-1.5 flex-wrap">
                           <button
                             type="button"
                             onClick={() => handleTestConnection(mbx.id)}
                             disabled={isTestingConnection}
-                            className="px-2.5 py-1 bg-teal-50 hover:bg-teal-100 text-teal-900 border border-teal-200 rounded-lg font-bold text-[11px] flex items-center gap-1 cursor-pointer"
+                            className="px-2.5 py-1 bg-phumulani-cream hover:bg-phumulani-teal text-phumulani-earth border border-phumulani-teal rounded-lg font-bold text-[11px] flex items-center gap-1 cursor-pointer"
                             title="Execute simulated connection test and measure handshake latency"
                           >
-                            <RefreshCw className="w-3 h-3 text-teal-700" />
+                            <RefreshCw className="w-3 h-3 text-phumulani-earth" />
                             <span>Test Connection</span>
                           </button>
 
                           <button
                             type="button"
                             onClick={() => handleOpenEditMailbox(mbx)}
-                            className="px-2.5 py-1 bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 rounded-lg font-semibold text-[11px] flex items-center gap-1 cursor-pointer shadow-2xs"
+                            className="px-2.5 py-1 bg-white hover:bg-phumulani-cream text-phumulani-charcoal border border-phumulani-cream rounded-lg font-semibold text-[11px] flex items-center gap-1 cursor-pointer shadow-2xs"
                             title="Edit mailbox display name, department, and settings"
                           >
-                            <Edit3 className="w-3 h-3 text-slate-600" />
+                            <Edit3 className="w-3 h-3 text-phumulani-charcoal" />
                             <span>Edit Settings</span>
                           </button>
 
                           <button
                             type="button"
                             onClick={() => handleIncrementalSync(mbx.id)}
-                            className="px-2.5 py-1 bg-slate-50 hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-lg font-semibold text-[11px] cursor-pointer"
+                            className="px-2.5 py-1 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal border border-phumulani-cream rounded-lg font-semibold text-[11px] cursor-pointer"
                             title="Run incremental delta sync"
                           >
                             <span>Delta Sync</span>
@@ -2321,8 +2321,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             onClick={() => handleToggleTwoWay(mbx.id)}
                             className={`px-2.5 py-1 rounded-lg font-semibold text-[11px] cursor-pointer border ${
                               mbx.twoWaySyncEnabled
-                                ? 'bg-amber-50 text-amber-900 border-amber-200 hover:bg-amber-100'
-                                : 'bg-emerald-50 text-emerald-900 border-emerald-200 hover:bg-emerald-100'
+                                ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-gold hover:bg-phumulani-gold'
+                                : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green hover:bg-phumulani-cream'
                             }`}
                           >
                             {mbx.twoWaySyncEnabled ? 'Disable 2-Way' : 'Enable 2-Way'}
@@ -2340,7 +2340,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                                   message: `Authorize ${mbx.email} through the live provider connection wizard. A mailbox cannot be marked connected manually.`,
                                 });
                               }}
-                              className="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold text-[11px] cursor-pointer"
+                              className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold text-[11px] cursor-pointer"
                             >
                               Reconnect
                             </button>
@@ -2348,7 +2348,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             <button
                               type="button"
                               onClick={() => handleDisconnectMailbox(mbx.id)}
-                              className="px-2.5 py-1 text-rose-700 hover:bg-rose-50 border border-rose-200 rounded-lg text-[11px] font-semibold cursor-pointer"
+                              className="px-2.5 py-1 text-phumulani-earth hover:bg-phumulani-cream border border-phumulani-earth rounded-lg text-[11px] font-semibold cursor-pointer"
                               title="Disconnect mailbox and revoke active access tokens"
                             >
                               Disconnect
@@ -2364,38 +2364,38 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
             {/* Departmental Message Routing Matrix — Only displayed when organizational mailboxes are connected */}
             {mailboxes.length === 0 ? (
-              <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center space-y-3">
-                <div className="font-bold text-slate-900 text-base">No Email Accounts Connected</div>
-                <p className="text-xs text-slate-600 max-w-md mx-auto">
+              <div className="bg-white border border-phumulani-cream rounded-2xl p-8 text-center space-y-3">
+                <div className="font-bold text-phumulani-charcoal text-base">No Email Accounts Connected</div>
+                <p className="text-xs text-phumulani-charcoal max-w-md mx-auto">
                   Your Email Command Center is ready. Connect and authorize your organizational email accounts to begin receiving and managing messages.
                 </p>
                 <button
                   type="button"
                   onClick={openConnectEmailWizard}
-                  className="px-4 py-2 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold shadow-xs cursor-pointer"
+                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold shadow-xs cursor-pointer"
                 >
                   Connect Email Account
                 </button>
               </div>
             ) : (
-              <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+              <div className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs space-y-3">
+                <div className="flex items-center justify-between border-b border-phumulani-cream pb-2">
                   <div>
-                    <h4 className="text-sm font-bold text-slate-900">
+                    <h4 className="text-sm font-bold text-phumulani-charcoal">
                       Connected Mailbox Routing & SLA Summary
                     </h4>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-phumulani-charcoal">
                       Active category routing rules across connected organizational mailboxes.
                     </p>
                   </div>
-                  <span className="text-[11px] font-mono font-bold bg-teal-50 text-teal-900 border border-teal-200 px-2 py-0.5 rounded-full">
+                  <span className="text-[11px] font-mono font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2 py-0.5 rounded-full">
                     {mailboxes.length} Connected Mailboxes
                   </span>
                 </div>
 
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-50 text-slate-500 uppercase font-mono text-[10px]">
+                    <thead className="bg-phumulani-cream text-phumulani-charcoal uppercase font-mono text-[10px]">
                       <tr>
                         <th className="p-2.5">Mailbox</th>
                         <th className="p-2.5">Department</th>
@@ -2403,7 +2403,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         <th className="p-2.5">Provider Status</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100 text-xs">
+                    <tbody className="divide-y divide-phumulani-cream text-xs">
                       {mailboxes.map((matched) => {
                         const liveAuth = matched?.authStatus === 'authorized';
                         const rawState = matched?.connectionState || matched?.status || 'AUTHORIZATION_REQUIRED';
@@ -2415,15 +2415,15 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             : String(rawState).toUpperCase();
                         const badgeCls =
                           rawState === 'DISCONNECTED' || rawState === 'disconnected'
-                            ? 'text-slate-600'
+                            ? 'text-phumulani-charcoal'
                             : liveAuth
-                            ? 'text-emerald-700'
-                            : 'text-amber-800';
+                            ? 'text-phumulani-earth'
+                            : 'text-phumulani-charcoal';
                         return (
-                          <tr key={matched.id} className="hover:bg-slate-50/50">
-                            <td className="p-2.5 font-mono font-bold text-slate-900">{matched.email}</td>
-                            <td className="p-2.5 font-semibold text-slate-700">{matched.department}</td>
-                            <td className="p-2.5 text-slate-600">{matched.provider}</td>
+                          <tr key={matched.id} className="hover:bg-phumulani-cream">
+                            <td className="p-2.5 font-mono font-bold text-phumulani-charcoal">{matched.email}</td>
+                            <td className="p-2.5 font-semibold text-phumulani-charcoal">{matched.department}</td>
+                            <td className="p-2.5 text-phumulani-charcoal">{matched.provider}</td>
                             <td className="p-2.5">
                               <span className={`${badgeCls} font-semibold font-mono text-[11px]`}>{label}</span>
                             </td>
@@ -2442,31 +2442,31 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB 0: OVERVIEW & HEALTH DASHBOARD (/admin/master/email)                  */}
         {/* ========================================================================= */}
         {activeTab === 'overview' && (
-          <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5 space-y-5">
+          <div className="flex-1 h-full bg-phumulani-cream overflow-y-auto p-5 space-y-5">
             {/* Top Header & Truthful Status Disclosure */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <span className="font-mono text-[10px] font-bold bg-teal-100 text-teal-900 border border-teal-300 px-2.5 py-0.5 rounded-full uppercase">
+                  <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2.5 py-0.5 rounded-full uppercase">
                     /admin/master/email · Application D
                   </span>
-                  <span className="text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                    <Lock className="w-3 h-3 text-amber-700" />
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <Lock className="w-3 h-3 text-phumulani-earth" />
                     STAGED_DEVELOPMENT
                   </span>
-                  <span className="text-[10px] font-bold bg-blue-100 text-blue-900 border border-blue-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                    <Shield className="w-3 h-3 text-blue-700" />
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <Shield className="w-3 h-3 text-phumulani-earth" />
                     Google Workspace: AUTHORIZATION_REQUIRED
                   </span>
-                  <span className="text-[10px] font-bold bg-rose-100 text-rose-900 border border-rose-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                    <ShieldAlert className="w-3 h-3 text-rose-700" />
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-earth px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldAlert className="w-3 h-3 text-phumulani-earth" />
                     DEPT-SAFE Active
                   </span>
                 </div>
-                <h2 className="text-xl font-bold font-serif text-slate-900">
+                <h2 className="text-xl font-bold font-serif text-phumulani-charcoal">
                   Executive Email Administration & AI Communications Center
                 </h2>
-                <p className="text-xs text-slate-500 max-w-2xl mt-0.5">
+                <p className="text-xs text-phumulani-charcoal max-w-2xl mt-0.5">
                   Central organizational communications dashboard. Quad-action human review gate, 25-category triage classification, domestic violence safeguarding isolation, and truthful staging persistence.
                 </p>
               </div>
@@ -2474,14 +2474,14 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setActiveTab('approvals')}
-                  className="px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  className="px-3 py-1.5 bg-phumulani-gold hover:bg-phumulani-orange text-phumulani-charcoal rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   <FileCheck className="w-4 h-4" />
                   <span>Review Approvals ({threads.filter((t) => t.draft?.status === 'pending_approval').length})</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('all_mailboxes')}
-                  className="px-3 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   <Inbox className="w-4 h-4" />
                   <span>Unified Inbox</span>
@@ -2491,63 +2491,63 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
             {/* Metric Cards Row */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
-                <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+              <div className="bg-white border border-phumulani-cream rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-phumulani-charcoal mb-1">
                   <span>Inbound Threads</span>
-                  <Inbox className="w-3.5 h-3.5 text-teal-700" />
+                  <Inbox className="w-3.5 h-3.5 text-phumulani-earth" />
                 </div>
-                <div className="text-xl font-bold font-serif text-slate-900">{threads.length}</div>
-                <div className="text-[10px] text-slate-400 mt-0.5">Across {mailboxes.length} Mailboxes</div>
+                <div className="text-xl font-bold font-serif text-phumulani-charcoal">{threads.length}</div>
+                <div className="text-[10px] text-phumulani-charcoal mt-0.5">Across {mailboxes.length} Mailboxes</div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
-                <div className="flex items-center justify-between text-xs text-amber-600 mb-1 font-semibold">
+              <div className="bg-white border border-phumulani-cream rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-phumulani-earth mb-1 font-semibold">
                   <span>Pending Approvals</span>
-                  <FileCheck className="w-3.5 h-3.5 text-amber-600" />
+                  <FileCheck className="w-3.5 h-3.5 text-phumulani-earth" />
                 </div>
-                <div className="text-xl font-bold font-serif text-amber-700">
+                <div className="text-xl font-bold font-serif text-phumulani-earth">
                   {threads.filter((t) => t.draft?.status === 'pending_approval').length}
                 </div>
-                <div className="text-[10px] text-slate-400 mt-0.5">Quad-Action Required</div>
+                <div className="text-[10px] text-phumulani-charcoal mt-0.5">Quad-Action Required</div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
-                <div className="flex items-center justify-between text-xs text-rose-600 mb-1 font-semibold">
+              <div className="bg-white border border-phumulani-cream rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-phumulani-earth mb-1 font-semibold">
                   <span>Safeguarding (P0)</span>
-                  <ShieldAlert className="w-3.5 h-3.5 text-rose-600" />
+                  <ShieldAlert className="w-3.5 h-3.5 text-phumulani-earth" />
                 </div>
-                <div className="text-xl font-bold font-serif text-rose-700">
+                <div className="text-xl font-bold font-serif text-phumulani-earth">
                   {threads.filter((t) => t.classification === '01_safeguarding').length}
                 </div>
-                <div className="text-[10px] text-rose-600 mt-0.5 font-medium">DEPT-SAFE Quarantined</div>
+                <div className="text-[10px] text-phumulani-earth mt-0.5 font-medium">DEPT-SAFE Quarantined</div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
-                <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+              <div className="bg-white border border-phumulani-cream rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-phumulani-charcoal mb-1">
                   <span>Outbound Sent</span>
-                  <Send className="w-3.5 h-3.5 text-blue-600" />
+                  <Send className="w-3.5 h-3.5 text-phumulani-earth" />
                 </div>
-                <div className="text-xl font-bold font-serif text-slate-900">
+                <div className="text-xl font-bold font-serif text-phumulani-charcoal">
                   {threads.filter((t) => t.folder === 'SENT' || t.messages.some((m) => m.direction === 'outbound')).length}
                 </div>
-                <div className="text-[10px] text-slate-400 mt-0.5">Staged Ledger Logged</div>
+                <div className="text-[10px] text-phumulani-charcoal mt-0.5">Staged Ledger Logged</div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
-                <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+              <div className="bg-white border border-phumulani-cream rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-phumulani-charcoal mb-1">
                   <span>Follow-Up Tasks</span>
-                  <CheckSquare className="w-3.5 h-3.5 text-emerald-600" />
+                  <CheckSquare className="w-3.5 h-3.5 text-phumulani-earth" />
                 </div>
-                <div className="text-xl font-bold font-serif text-slate-900">
+                <div className="text-xl font-bold font-serif text-phumulani-charcoal">
                   {followUps.filter((f) => f.status === 'pending').length}
                 </div>
-                <div className="text-[10px] text-slate-400 mt-0.5">Active Staff Tasks</div>
+                <div className="text-[10px] text-phumulani-charcoal mt-0.5">Active Staff Tasks</div>
               </div>
 
-              <div className="bg-white border border-slate-200 rounded-xl p-3.5 shadow-xs">
-                <div className="flex items-center justify-between text-xs text-slate-500 mb-1">
+              <div className="bg-white border border-phumulani-cream rounded-xl p-3.5 shadow-xs">
+                <div className="flex items-center justify-between text-xs text-phumulani-charcoal mb-1">
                   <span>SLA Adherence</span>
-                  <Clock className="w-3.5 h-3.5 text-indigo-600" />
+                  <Clock className="w-3.5 h-3.5 text-phumulani-earth" />
                 </div>
                 {(() => {
                   const slaStats = threads.map((t) => EmailEnterpriseService.calculateSlaStatus(t));
@@ -2555,8 +2555,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   const pct = threads.length > 0 ? ((onTrack / threads.length) * 100).toFixed(1) : '100.0';
                   return (
                     <>
-                      <div className="text-xl font-bold font-serif text-teal-800">{pct}%</div>
-                      <div className="text-[10px] text-slate-400 mt-0.5">
+                      <div className="text-xl font-bold font-serif text-phumulani-earth">{pct}%</div>
+                      <div className="text-[10px] text-phumulani-charcoal mt-0.5">
                         Avg: {analytics.avgResponseTimeHours}h across P0-P4
                       </div>
                     </>
@@ -2568,30 +2568,30 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             {/* Dual Panes */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
               {/* Left Column: Configured Mailboxes (7 Cols) */}
-              <div className="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="lg:col-span-7 bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs space-y-4">
+                <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
                   <div>
-                    <h3 className="text-sm font-bold text-slate-900">Organizational Mailbox Roster</h3>
-                    <p className="text-xs text-slate-500">Configured departmental inboxes and OAuth readiness status.</p>
+                    <h3 className="text-sm font-bold text-phumulani-charcoal">Organizational Mailbox Roster</h3>
+                    <p className="text-xs text-phumulani-charcoal">Configured departmental inboxes and OAuth readiness status.</p>
                   </div>
                   <button
                     onClick={() => setActiveTab('mailboxes')}
-                    className="text-xs text-teal-800 hover:text-teal-950 font-semibold cursor-pointer underline"
+                    className="text-xs text-phumulani-earth hover:text-phumulani-earth font-semibold cursor-pointer underline"
                   >
                     Manage Accounts →
                   </button>
                 </div>
 
-                <div className="divide-y divide-slate-100">
+                <div className="divide-y divide-phumulani-cream">
                   {mailboxes.map((mbx) => (
                     <div key={mbx.id} className="py-2.5 flex items-center justify-between gap-3 text-xs">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="w-7 h-7 rounded-lg bg-teal-50 border border-teal-200 flex items-center justify-center shrink-0">
-                          <Mail className="w-3.5 h-3.5 text-teal-800" />
+                        <div className="w-7 h-7 rounded-lg bg-phumulani-cream border border-phumulani-teal flex items-center justify-center shrink-0">
+                          <Mail className="w-3.5 h-3.5 text-phumulani-earth" />
                         </div>
                         <div className="min-w-0">
-                          <div className="font-semibold text-slate-900 truncate">{mbx.displayName}</div>
-                          <div className="font-mono text-[11px] text-slate-500 truncate">{mbx.email} · {mbx.department}</div>
+                          <div className="font-semibold text-phumulani-charcoal truncate">{mbx.displayName}</div>
+                          <div className="font-mono text-[11px] text-phumulani-charcoal truncate">{mbx.email} · {mbx.department}</div>
                         </div>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
@@ -2606,10 +2606,10 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                               : 'AUTHORIZATION_REQUIRED';
                           const badgeStyle =
                             rawStatus === 'DISCONNECTED' || rawStatus === 'ERROR'
-                              ? 'bg-slate-100 text-slate-700 border-slate-300'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream'
                               : isLiveAuth
-                              ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                              : 'bg-amber-100 text-amber-900 border-amber-300';
+                              ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green'
+                              : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-gold';
                           return (
                             <span className={`text-[10px] font-mono px-2 py-0.5 rounded-full font-bold border ${badgeStyle}`}>
                               {badgeLabel}
@@ -2621,7 +2621,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             setSelectedMailboxId(mbx.id);
                             setActiveTab('all_mailboxes');
                           }}
-                          className="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 rounded text-[11px] font-medium text-slate-700 cursor-pointer"
+                          className="px-2 py-0.5 bg-phumulani-cream hover:bg-phumulani-cream rounded text-[11px] font-medium text-phumulani-charcoal cursor-pointer"
                         >
                           View
                         </button>
@@ -2632,16 +2632,16 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               </div>
 
               {/* Right Column: Inbound 25-Category Triage & Safeguarding Boundary (5 Cols) */}
-              <div className="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4 flex flex-col justify-between">
+              <div className="lg:col-span-5 bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs space-y-4 flex flex-col justify-between">
                 <div>
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+                  <div className="flex items-center justify-between border-b border-phumulani-cream pb-3 mb-3">
                     <div>
-                      <h3 className="text-sm font-bold text-slate-900">25-Category Triage Taxonomy</h3>
-                      <p className="text-xs text-slate-500">Autonomous classification distribution and SLA enforcement.</p>
+                      <h3 className="text-sm font-bold text-phumulani-charcoal">25-Category Triage Taxonomy</h3>
+                      <p className="text-xs text-phumulani-charcoal">Autonomous classification distribution and SLA enforcement.</p>
                     </div>
                     <button
                       onClick={() => setActiveTab('ai_intelligence')}
-                      className="text-xs text-teal-800 hover:text-teal-950 font-semibold cursor-pointer underline"
+                      className="text-xs text-phumulani-earth hover:text-phumulani-earth font-semibold cursor-pointer underline"
                     >
                       Taxonomy Details →
                     </button>
@@ -2651,16 +2651,16 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     {Object.entries(EMAIL_CATEGORY_METADATA).slice(0, 10).map(([catKey, meta]) => {
                       const count = threads.filter((t) => t.classification === catKey).length;
                       return (
-                        <div key={catKey} className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-200/80 text-xs">
+                        <div key={catKey} className="flex items-center justify-between p-2 rounded-xl bg-phumulani-cream border border-phumulani-cream text-xs">
                           <div className="flex items-center gap-2 min-w-0">
-                            <span className="font-mono text-[10px] font-bold text-slate-500 w-5">{meta.code}</span>
-                            <span className="font-medium text-slate-800 truncate">{meta.label}</span>
+                            <span className="font-mono text-[10px] font-bold text-phumulani-charcoal w-5">{meta.code}</span>
+                            <span className="font-medium text-phumulani-charcoal truncate">{meta.label}</span>
                           </div>
                           <div className="flex items-center gap-2 shrink-0">
                             <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded border ${PRIORITY_CONFIG[meta.defaultPriority]?.badgeColor}`}>
                               {meta.defaultPriority}
                             </span>
-                            <span className="font-mono text-xs font-bold text-slate-700 bg-white px-2 py-0.5 rounded-lg border border-slate-200">
+                            <span className="font-mono text-xs font-bold text-phumulani-charcoal bg-white px-2 py-0.5 rounded-lg border border-phumulani-cream">
                               {count}
                             </span>
                           </div>
@@ -2671,11 +2671,11 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 </div>
 
                 {/* Safeguarding Invariant Box */}
-                <div className="bg-rose-50 border border-rose-300 rounded-xl p-3 text-xs text-rose-950 flex items-start gap-2.5 mt-2">
-                  <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                <div className="bg-phumulani-cream border border-phumulani-earth rounded-xl p-3 text-xs text-phumulani-earth flex items-start gap-2.5 mt-2">
+                  <ShieldAlert className="w-4 h-4 text-phumulani-earth shrink-0 mt-0.5" />
                   <div>
                     <div className="font-bold">Safeguarding & Domestic Violence Invariant</div>
-                    <p className="text-[11px] text-rose-800 mt-0.5 leading-relaxed">
+                    <p className="text-[11px] text-phumulani-earth mt-0.5 leading-relaxed">
                       Category 01 messages are permanently quarantined to DEPT-SAFE (Sister Miriam K.). Autonomous AI replies are physically blocked, and text is redacted for general staff pursuant to VAWA protocols.
                     </p>
                   </div>
@@ -2691,11 +2691,11 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {activeTab === 'synchronization' && (
           <div className="h-full overflow-y-auto space-y-4 pb-8">
             {/* Top Synchronization Header Banner */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs">
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-mono text-[10px] font-bold bg-teal-100 text-teal-900 border border-teal-300 px-2 py-0.5 rounded-full uppercase">
+                    <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2 py-0.5 rounded-full uppercase">
                       /admin/master/email/synchronization
                     </span>
                     {(() => {
@@ -2707,20 +2707,20 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         <span
                           className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 border ${
                             liveCount > 0
-                              ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                              : 'bg-amber-100 text-amber-900 border-amber-300'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green'
+                              : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-gold'
                           }`}
                         >
-                          <CheckCircle2 className={`w-3 h-3 ${liveCount > 0 ? 'text-emerald-600' : 'text-amber-700'}`} />
+                          <CheckCircle2 className={`w-3 h-3 ${liveCount > 0 ? 'text-phumulani-earth' : 'text-phumulani-earth'}`} />
                           {activeCount} / {mailboxes.length} Mailboxes Active · {liveCount > 0 ? 'Provider OAuth Active' : 'OAuth Authorization Required (Staged)'}
                         </span>
                       );
                     })()}
                   </div>
-                  <h3 className="text-base font-bold text-slate-900">
+                  <h3 className="text-base font-bold text-phumulani-charcoal">
                     Enterprise Email Synchronization Command Center
                   </h3>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-phumulani-charcoal">
                     Continuous incremental synchronization, historical email imports, durable sync cursors, two-way state reconciliation, and conflict management.
                   </p>
                 </div>
@@ -2728,9 +2728,9 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 <div className="flex flex-wrap items-center gap-2">
                   <button
                     onClick={handleTestAllConnections}
-                    className="px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-semibold flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                    className="px-3 py-1.5 bg-white border border-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-xl text-xs font-semibold flex items-center gap-1.5 cursor-pointer shadow-2xs"
                   >
-                    <RefreshCw className="w-3.5 h-3.5 text-slate-600" />
+                    <RefreshCw className="w-3.5 h-3.5 text-phumulani-charcoal" />
                     <span>Verify All Connections</span>
                   </button>
 
@@ -2739,23 +2739,23 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       setImportTargetMailbox(mailboxes[0]?.id || '');
                       setIsImportModalOpen(true);
                     }}
-                    className="px-3 py-1.5 bg-indigo-50 border border-indigo-200 hover:bg-indigo-100 text-indigo-900 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                    className="px-3 py-1.5 bg-phumulani-cream border border-phumulani-teal hover:bg-phumulani-cream text-phumulani-earth rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-2xs"
                   >
-                    <History className="w-3.5 h-3.5 text-indigo-700" />
+                    <History className="w-3.5 h-3.5 text-phumulani-earth" />
                     <span>Start Historical Import</span>
                   </button>
 
                   <button
                     onClick={() => setIsConflictsModalOpen(true)}
-                    className="px-3 py-1.5 bg-amber-50 border border-amber-200 hover:bg-amber-100 text-amber-900 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                    className="px-3 py-1.5 bg-phumulani-cream border border-phumulani-gold hover:bg-phumulani-gold text-phumulani-charcoal rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-2xs"
                   >
-                    <AlertTriangle className="w-3.5 h-3.5 text-amber-700" />
+                    <AlertTriangle className="w-3.5 h-3.5 text-phumulani-earth" />
                     <span>Review Conflicts ({syncConflicts.filter((c) => c.status === 'DETECTED').length})</span>
                   </button>
 
                   <button
                     onClick={() => setIsAuditLogsModalOpen(true)}
-                    className="px-3 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
+                    className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
                   >
                     <FileCheck className="w-3.5 h-3.5" />
                     <span>View Sync Logs ({syncAuditLogs.length})</span>
@@ -2765,24 +2765,24 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             </div>
 
             {/* Phase 50 Google Workspace Integration Readiness & Diagnostics Architecture (M50.02 - M50.06) */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-phumulani-cream pb-3">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-mono text-[10px] font-bold bg-teal-100 text-teal-900 border border-teal-300 px-2.5 py-0.5 rounded-full uppercase">
+                    <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2.5 py-0.5 rounded-full uppercase">
                       Google Workspace OAuth 2.0 Integration
                     </span>
-                    <span className="text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 px-2.5 py-0.5 rounded-full">
+                    <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold px-2.5 py-0.5 rounded-full">
                       STAGED_DEVELOPMENT (Production Activation Not Authorized)
                     </span>
-                    <span className="text-[10px] font-bold bg-indigo-100 text-indigo-900 border border-indigo-300 px-2.5 py-0.5 rounded-full">
+                    <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2.5 py-0.5 rounded-full">
                       Pilot Guarded: @phumulani.org Whitelist
                     </span>
                   </div>
-                  <h4 className="text-sm font-bold text-slate-900">
+                  <h4 className="text-sm font-bold text-phumulani-charcoal">
                     Enterprise OAuth Onboarding Readiness, Scopes & Diagnostic Handshake
                   </h4>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-phumulani-charcoal">
                     Compliant Google Workspace configuration with PKCE S256 challenge, least-privilege scopes, rate-limit backoff, and token lifecycle management.
                   </p>
                 </div>
@@ -2792,7 +2792,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     type="button"
                     onClick={handleRunWorkspaceDiagnostics}
                     disabled={isWorkspaceDiagRunning}
-                    className="px-3.5 py-1.5 bg-[#104F57] hover:bg-teal-900 disabled:opacity-50 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                    className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange disabled:opacity-50 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${isWorkspaceDiagRunning ? 'animate-spin' : ''}`} />
                     <span>{isWorkspaceDiagRunning ? 'Testing Handshake...' : 'Run Diagnostics Test'}</span>
@@ -2806,40 +2806,40 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 const isLive = gwStatus.status === 'CONNECTED';
                 return (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                      <span className="text-[10px] text-slate-400 font-mono block">GCP PROJECT CONFIG</span>
-                      <div className="font-mono font-bold text-slate-900 truncate">phumulani-ai-community</div>
-                      <div className={`text-[11px] font-semibold flex items-center gap-1 ${isLive ? 'text-emerald-800' : 'text-amber-800'}`}>
-                        <CheckCircle2 className={`w-3 h-3 ${isLive ? 'text-emerald-600' : 'text-amber-600'}`} />
+                    <div className="p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl space-y-1">
+                      <span className="text-[10px] text-phumulani-charcoal font-mono block">GCP PROJECT CONFIG</span>
+                      <div className="font-mono font-bold text-phumulani-charcoal truncate">phumulani-ai-community</div>
+                      <div className={`text-[11px] font-semibold flex items-center gap-1 ${isLive ? 'text-phumulani-charcoal' : 'text-phumulani-charcoal'}`}>
+                        <CheckCircle2 className={`w-3 h-3 ${isLive ? 'text-phumulani-earth' : 'text-phumulani-earth'}`} />
                         <span>{isLive ? 'Live Project Connected' : `Staged (${gwStatus.status})`}</span>
                       </div>
                     </div>
 
-                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                      <span className="text-[10px] text-slate-400 font-mono block">AUTHORIZED REDIRECT URI</span>
-                      <div className="font-mono font-bold text-slate-900 truncate">/api/admin/email/oauth/google/callback</div>
-                      <div className={`text-[11px] font-semibold flex items-center gap-1 ${isLive ? 'text-emerald-800' : 'text-amber-800'}`}>
-                        <CheckCircle2 className={`w-3 h-3 ${isLive ? 'text-emerald-600' : 'text-amber-600'}`} />
+                    <div className="p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl space-y-1">
+                      <span className="text-[10px] text-phumulani-charcoal font-mono block">AUTHORIZED REDIRECT URI</span>
+                      <div className="font-mono font-bold text-phumulani-charcoal truncate">/api/admin/email/oauth/google/callback</div>
+                      <div className={`text-[11px] font-semibold flex items-center gap-1 ${isLive ? 'text-phumulani-charcoal' : 'text-phumulani-charcoal'}`}>
+                        <CheckCircle2 className={`w-3 h-3 ${isLive ? 'text-phumulani-earth' : 'text-phumulani-earth'}`} />
                         <span>{isLive ? 'Exact Match Verified' : 'Admin OAuth Consent Pending'}</span>
                       </div>
                     </div>
 
-                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                      <span className="text-[10px] text-slate-400 font-mono block">LEAST-PRIVILEGE SCOPES</span>
-                      <div className="font-mono font-bold text-slate-900">
+                    <div className="p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl space-y-1">
+                      <span className="text-[10px] text-phumulani-charcoal font-mono block">LEAST-PRIVILEGE SCOPES</span>
+                      <div className="font-mono font-bold text-phumulani-charcoal">
                         {gwStatus.scopesConfigured.length} Scopes Configured
                       </div>
-                      <div className="text-[11px] text-emerald-800 font-semibold flex items-center gap-1">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                      <div className="text-[11px] text-phumulani-charcoal font-semibold flex items-center gap-1">
+                        <CheckCircle2 className="w-3 h-3 text-phumulani-earth" />
                         <span>Policy Constrained</span>
                       </div>
                     </div>
 
-                    <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                      <span className="text-[10px] text-slate-400 font-mono block">OUTBOUND PILOT GUARD</span>
-                      <div className="font-mono font-bold text-slate-900">@phumulani.org Restricted</div>
-                      <div className="text-[11px] text-amber-800 font-semibold flex items-center gap-1">
-                        <ShieldCheck className="w-3 h-3 text-amber-600" />
+                    <div className="p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl space-y-1">
+                      <span className="text-[10px] text-phumulani-charcoal font-mono block">OUTBOUND PILOT GUARD</span>
+                      <div className="font-mono font-bold text-phumulani-charcoal">@phumulani.org Restricted</div>
+                      <div className="text-[11px] text-phumulani-charcoal font-semibold flex items-center gap-1">
+                        <ShieldCheck className="w-3 h-3 text-phumulani-earth" />
                         <span>External Leak Blocked</span>
                       </div>
                     </div>
@@ -2849,13 +2849,13 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
               {/* Diagnostic Test Results Banner (if run) */}
               {workspaceDiagResult && (
-                <div className="p-3.5 bg-teal-50/80 border border-teal-200 rounded-xl text-xs space-y-2 animate-fadeIn">
+                <div className="p-3.5 bg-phumulani-cream border border-phumulani-teal rounded-xl text-xs space-y-2 animate-fadeIn">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-teal-950 flex items-center gap-1.5">
-                      <CheckCircle2 className="w-4 h-4 text-teal-700" />
+                    <span className="font-bold text-phumulani-earth flex items-center gap-1.5">
+                      <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
                       <span>Live Handshake Diagnostics Results (HTTP {workspaceDiagResult.httpStatus} OK)</span>
                     </span>
-                    <span className="font-mono text-[10px] text-teal-800">
+                    <span className="font-mono text-[10px] text-phumulani-earth">
                       Tested: {new Date(workspaceDiagResult.testedAt).toLocaleTimeString()}
                     </span>
                   </div>
@@ -2865,23 +2865,23 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     <div>Rate Limit: <strong>{workspaceDiagResult.quotaLimitPerSecond} units/sec</strong></div>
                     <div>TLS Cipher: <strong>{workspaceDiagResult.cipherSuite}</strong></div>
                   </div>
-                  <p className="text-[11px] text-teal-900 font-sans mt-1">
+                  <p className="text-[11px] text-phumulani-earth font-sans mt-1">
                     {workspaceDiagResult.diagnosticsMessage}
                   </p>
                 </div>
               )}
 
               {/* Token Health Registry Table Across Organizational Mailboxes */}
-              <div className="border border-slate-200 rounded-xl overflow-hidden text-xs">
-                <div className="bg-slate-50 p-2.5 font-bold text-slate-800 border-b border-slate-200 flex items-center justify-between">
+              <div className="border border-phumulani-cream rounded-xl overflow-hidden text-xs">
+                <div className="bg-phumulani-cream p-2.5 font-bold text-phumulani-charcoal border-b border-phumulani-cream flex items-center justify-between">
                   <span>Organizational Mailbox Token Health & Lifecycle Management</span>
-                  <span className="text-[10px] font-mono font-normal text-slate-500">
+                  <span className="text-[10px] font-mono font-normal text-phumulani-charcoal">
                     Clean Disposal & Revocation Ready
                   </span>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-slate-100/60 text-slate-500 uppercase font-mono text-[10px]">
+                    <thead className="bg-phumulani-cream text-phumulani-charcoal uppercase font-mono text-[10px]">
                       <tr>
                         <th className="p-2.5">Mailbox</th>
                         <th className="p-2.5">Token State</th>
@@ -2890,31 +2890,31 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         <th className="p-2.5 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100 font-mono text-[11px]">
+                    <tbody className="divide-y divide-phumulani-cream font-mono text-[11px]">
                       {mailboxes.map((mbx) => {
                         const health = googleWorkspaceAdapter.getTokenHealth(mbx.email);
                         return (
-                          <tr key={mbx.id} className="hover:bg-slate-50/50">
-                            <td className="p-2.5 font-sans font-bold text-slate-900">{mbx.email}</td>
+                          <tr key={mbx.id} className="hover:bg-phumulani-cream">
+                            <td className="p-2.5 font-sans font-bold text-phumulani-charcoal">{mbx.email}</td>
                             <td className="p-2.5">
                               <span
                                 className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
                                   health.status === 'HEALTHY'
-                                    ? 'bg-emerald-100 text-emerald-800'
+                                    ? 'bg-phumulani-cream text-phumulani-charcoal'
                                     : health.status === 'EXPIRED'
-                                    ? 'bg-amber-100 text-amber-800'
+                                    ? 'bg-phumulani-cream text-phumulani-charcoal'
                                     : health.status === 'REVOKED'
-                                    ? 'bg-rose-100 text-rose-800'
-                                    : 'bg-slate-100 text-slate-700'
+                                    ? 'bg-phumulani-cream text-phumulani-earth'
+                                    : 'bg-phumulani-cream text-phumulani-charcoal'
                                 }`}
                               >
                                 {health.status}
                               </span>
                             </td>
-                            <td className="p-2.5 font-sans text-slate-600">
+                            <td className="p-2.5 font-sans text-phumulani-charcoal">
                               {health.scopeCoverage.isCompliant ? '5 of 5 Verified' : 'Pending Authorization'}
                             </td>
-                            <td className="p-2.5 font-sans text-[11px] text-teal-900 font-semibold">
+                            <td className="p-2.5 font-sans text-[11px] text-phumulani-earth font-semibold">
                               {health.readinessVerdict.replace(/_/g, ' ')}
                             </td>
                             <td className="p-2.5 text-right font-sans">
@@ -2922,14 +2922,14 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                                 <button
                                   type="button"
                                   onClick={() => handleReauthorizeMailbox(mbx.id)}
-                                  className="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded text-[11px] font-semibold cursor-pointer"
+                                  className="px-2 py-0.5 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded text-[11px] font-semibold cursor-pointer"
                                 >
                                   Reauth
                                 </button>
                                 <button
                                   type="button"
                                   onClick={() => handleRevokeWorkspaceTokens(mbx.email)}
-                                  className="px-2 py-0.5 text-rose-700 hover:bg-rose-50 border border-rose-200 rounded text-[11px] font-semibold cursor-pointer"
+                                  className="px-2 py-0.5 text-phumulani-earth hover:bg-phumulani-cream border border-phumulani-earth rounded text-[11px] font-semibold cursor-pointer"
                                 >
                                   Revoke
                                 </button>
@@ -2955,30 +2955,30 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 return (
                   <div
                     key={mbx.id}
-                    className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs flex flex-col justify-between space-y-3"
+                    className="bg-white border border-phumulani-cream rounded-2xl p-4 shadow-xs flex flex-col justify-between space-y-3"
                   >
                     <div>
                       {/* Card Header */}
-                      <div className="flex items-start justify-between gap-2 border-b border-slate-100 pb-2 mb-2">
+                      <div className="flex items-start justify-between gap-2 border-b border-phumulani-cream pb-2 mb-2">
                         <div>
                           <div className="flex items-center gap-1.5">
-                            <span className="font-mono text-xs font-bold text-slate-900">
+                            <span className="font-mono text-xs font-bold text-phumulani-charcoal">
                               {mbx.email}
                             </span>
-                            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-slate-100 text-slate-700">
+                            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-phumulani-cream text-phumulani-charcoal">
                               {mbx.department}
                             </span>
                           </div>
-                          <p className="text-[11px] text-slate-400">
-                            {mbx.displayName} · Provider: <strong className="text-slate-700">{mbx.provider}</strong>
+                          <p className="text-[11px] text-phumulani-charcoal">
+                            {mbx.displayName} · Provider: <strong className="text-phumulani-charcoal">{mbx.provider}</strong>
                           </p>
                         </div>
 
                         <span
                           className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
                             mbx.authStatus === 'authorized'
-                              ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                              : 'bg-amber-100 text-amber-800 border border-amber-300'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green'
+                              : 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold'
                           }`}
                         >
                           {(mbx.authStatus || 'authorized').replace('_', ' ')}
@@ -2987,36 +2987,36 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
                       {/* Sync Metrics Grid */}
                       <div className="grid grid-cols-2 gap-2 text-xs">
-                        <div className="bg-slate-50 p-2 rounded-xl border border-slate-100">
-                          <span className="text-[10px] text-slate-400 block">Total Imported</span>
-                          <span className="font-bold text-slate-900 text-sm">
+                        <div className="bg-phumulani-cream p-2 rounded-xl border border-phumulani-cream">
+                          <span className="text-[10px] text-phumulani-charcoal block">Total Imported</span>
+                          <span className="font-bold text-phumulani-charcoal text-sm">
                             {(mbx.totalImportedMessages ?? mbx.totalThreads ?? 0).toLocaleString()} msgs
                           </span>
                         </div>
 
-                        <div className="bg-slate-50 p-2 rounded-xl border border-slate-100">
-                          <span className="text-[10px] text-slate-400 block">Two-Way Sync</span>
+                        <div className="bg-phumulani-cream p-2 rounded-xl border border-phumulani-cream">
+                          <span className="text-[10px] text-phumulani-charcoal block">Two-Way Sync</span>
                           <span
                             className={`font-bold text-xs ${
-                              mbx.twoWaySyncEnabled ? 'text-teal-800' : 'text-slate-400'
+                              mbx.twoWaySyncEnabled ? 'text-phumulani-earth' : 'text-phumulani-charcoal'
                             }`}
                           >
                             {mbx.twoWaySyncEnabled ? 'ACTIVE (Enabled)' : 'PAUSED (One-Way)'}
                           </span>
                         </div>
 
-                        <div className="bg-slate-50 p-2 rounded-xl border border-slate-100">
-                          <span className="text-[10px] text-slate-400 block">Last Successful Sync</span>
-                          <span className="font-mono text-[11px] text-slate-700">
+                        <div className="bg-phumulani-cream p-2 rounded-xl border border-phumulani-cream">
+                          <span className="text-[10px] text-phumulani-charcoal block">Last Successful Sync</span>
+                          <span className="font-mono text-[11px] text-phumulani-charcoal">
                             {mbx.lastSyncedAt || mbx.lastSyncAt
                               ? new Date(mbx.lastSyncedAt || mbx.lastSyncAt!).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                               : 'Not synced'}
                           </span>
                         </div>
 
-                        <div className="bg-slate-50 p-2 rounded-xl border border-slate-100">
-                          <span className="text-[10px] text-slate-400 block">Next Scheduled</span>
-                          <span className="font-mono text-[11px] text-slate-700">
+                        <div className="bg-phumulani-cream p-2 rounded-xl border border-phumulani-cream">
+                          <span className="text-[10px] text-phumulani-charcoal block">Next Scheduled</span>
+                          <span className="font-mono text-[11px] text-phumulani-charcoal">
                             {mbx.nextScheduledSync
                               ? new Date(mbx.nextScheduledSync).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
                               : mbx.status === 'DISCONNECTED' || mbx.status === 'disconnected'
@@ -3027,53 +3027,53 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       </div>
 
                       {/* Import Progress Bar */}
-                      <div className="mt-3 bg-slate-50 border border-slate-100 rounded-xl p-2.5 space-y-1.5">
+                      <div className="mt-3 bg-phumulani-cream border border-phumulani-cream rounded-xl p-2.5 space-y-1.5">
                         <div className="flex items-center justify-between text-[11px]">
-                          <span className="font-semibold text-slate-700 flex items-center gap-1">
-                            <History className="w-3 h-3 text-indigo-600" />
+                          <span className="font-semibold text-phumulani-charcoal flex items-center gap-1">
+                            <History className="w-3 h-3 text-phumulani-earth" />
                             Historical Import:
                           </span>
                           <span
                             className={`font-mono font-bold text-[10px] px-1.5 py-0.2 rounded uppercase ${
                               mbx.historicalImportStatus === 'completed'
-                                ? 'bg-emerald-100 text-emerald-800'
+                                ? 'bg-phumulani-cream text-phumulani-charcoal'
                                 : mbx.historicalImportStatus === 'in_progress'
-                                ? 'bg-blue-100 text-blue-800 animate-pulse'
-                                : 'bg-slate-200 text-slate-700'
+                                ? 'bg-phumulani-cream text-phumulani-earth animate-pulse'
+                                : 'bg-phumulani-cream text-phumulani-charcoal'
                             }`}
                           >
                             {mbx.historicalImportStatus} ({progressPct}%)
                           </span>
                         </div>
 
-                        <div className="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+                        <div className="w-full bg-phumulani-cream h-1.5 rounded-full overflow-hidden">
                           <div
                             className={`h-full transition-all duration-500 ${
-                              progressPct === 100 ? 'bg-emerald-600' : 'bg-blue-600'
+                              progressPct === 100 ? 'bg-phumulani-green' : 'bg-phumulani-earth'
                             }`}
                             style={{ width: `${progressPct}%` }}
                           />
                         </div>
 
-                        <div className="flex items-center justify-between text-[10px] text-slate-400 font-mono">
+                        <div className="flex items-center justify-between text-[10px] text-phumulani-charcoal font-mono">
                           <span>Stage: {job?.currentStage ? job.currentStage.replace(/_/g, ' ') : 'VERIFIED'}</span>
                           <span>Errors: {mbx.currentErrors?.length || 0}</span>
                         </div>
                       </div>
 
                       {/* Cursors and Checkpoint details */}
-                      <div className="mt-2 text-[10px] text-slate-400 font-mono flex items-center justify-between">
+                      <div className="mt-2 text-[10px] text-phumulani-charcoal font-mono flex items-center justify-between">
                         <span className="truncate">Cursor: {checkpoint?.historyId || 'Awaiting sync'}</span>
                         <span className="truncate">Token: {checkpoint?.deltaToken ? `${checkpoint.deltaToken.substring(0, 10)}...` : 'None'}</span>
                       </div>
                     </div>
 
                     {/* Action Controls for Mailbox */}
-                    <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-1.5 text-xs">
+                    <div className="pt-2 border-t border-phumulani-cream flex flex-wrap items-center justify-between gap-1.5 text-xs">
                       <div className="flex items-center gap-1">
                         <button
                           onClick={() => handleVerifyMailbox(mbx.id)}
-                          className="px-2 py-1 bg-slate-100 hover:bg-slate-200 rounded-lg text-slate-700 font-semibold text-[11px] cursor-pointer"
+                          className="px-2 py-1 bg-phumulani-cream hover:bg-phumulani-cream rounded-lg text-phumulani-charcoal font-semibold text-[11px] cursor-pointer"
                           title="Verify OAuth connection with provider"
                         >
                           Verify
@@ -3081,10 +3081,10 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
                         <button
                           onClick={() => handleIncrementalSync(mbx.id)}
-                          className="px-2 py-1 bg-teal-50 hover:bg-teal-100 text-teal-900 rounded-lg font-semibold text-[11px] flex items-center gap-0.5 cursor-pointer"
+                          className="px-2 py-1 bg-phumulani-cream hover:bg-phumulani-teal text-phumulani-earth rounded-lg font-semibold text-[11px] flex items-center gap-0.5 cursor-pointer"
                           title="Fetch incremental messages using durable delta token"
                         >
-                          <RefreshCw className="w-3 h-3 text-teal-700" />
+                          <RefreshCw className="w-3 h-3 text-phumulani-earth" />
                           <span>Delta Sync</span>
                         </button>
 
@@ -3092,8 +3092,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                           onClick={() => handleToggleTwoWay(mbx.id)}
                           className={`px-2 py-1 rounded-lg font-semibold text-[11px] cursor-pointer ${
                             mbx.twoWaySyncEnabled
-                              ? 'bg-amber-50 text-amber-800 hover:bg-amber-100'
-                              : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-gold'
+                              : 'bg-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream'
                           }`}
                           title="Toggle Two-Way Sync"
                         >
@@ -3105,7 +3105,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         {isImporting ? (
                           <button
                             onClick={() => job && handlePauseImport(job.id)}
-                            className="px-2 py-1 bg-amber-100 text-amber-900 hover:bg-amber-200 rounded-lg font-bold text-[11px] flex items-center gap-0.5 cursor-pointer"
+                            className="px-2 py-1 bg-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-gold rounded-lg font-bold text-[11px] flex items-center gap-0.5 cursor-pointer"
                           >
                             <Pause className="w-3 h-3" />
                             <span>Pause</span>
@@ -3113,7 +3113,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         ) : job && job.status === 'paused' ? (
                           <button
                             onClick={() => handleResumeImport(job.id)}
-                            className="px-2 py-1 bg-blue-100 text-blue-900 hover:bg-blue-200 rounded-lg font-bold text-[11px] flex items-center gap-0.5 cursor-pointer"
+                            className="px-2 py-1 bg-phumulani-cream text-phumulani-earth hover:bg-phumulani-cream rounded-lg font-bold text-[11px] flex items-center gap-0.5 cursor-pointer"
                           >
                             <Play className="w-3 h-3" />
                             <span>Resume</span>
@@ -3124,7 +3124,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                               setImportTargetMailbox(mbx.id);
                               setIsImportModalOpen(true);
                             }}
-                            className="px-2 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 rounded-lg font-semibold text-[11px] cursor-pointer"
+                            className="px-2 py-1 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-earth rounded-lg font-semibold text-[11px] cursor-pointer"
                           >
                             Import
                           </button>
@@ -3132,7 +3132,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
                         <button
                           onClick={() => handleReauthorizeMailbox(mbx.id)}
-                          className="px-2 py-1 text-slate-500 hover:text-slate-800 rounded-lg text-[11px] cursor-pointer"
+                          className="px-2 py-1 text-phumulani-charcoal hover:text-phumulani-earth rounded-lg text-[11px] cursor-pointer"
                           title="Reauthorize OAuth token"
                         >
                           Reauth
@@ -3145,22 +3145,22 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             </div>
 
             {/* Checkpoint & Cursor Registry Table */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between border-b border-phumulani-cream pb-2">
                 <div className="flex items-center gap-2">
-                  <Database className="w-4 h-4 text-teal-800" />
-                  <h4 className="text-sm font-bold text-slate-900">
+                  <Database className="w-4 h-4 text-phumulani-earth" />
+                  <h4 className="text-sm font-bold text-phumulani-charcoal">
                     Durable Sync Checkpoints & Rate-Limit Backoff Registry
                   </h4>
                 </div>
-                <span className="text-[11px] font-mono text-slate-400">
+                <span className="text-[11px] font-mono text-phumulani-charcoal">
                   Durable Checkpoints Active: {syncCheckpoints.length}
                 </span>
               </div>
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 text-slate-500 text-[11px] uppercase font-mono">
+                  <thead className="bg-phumulani-cream text-phumulani-charcoal text-[11px] uppercase font-mono">
                     <tr>
                       <th className="p-2.5">Mailbox</th>
                       <th className="p-2.5">History ID</th>
@@ -3170,26 +3170,26 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       <th className="p-2.5">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 font-mono text-[11px]">
+                  <tbody className="divide-y divide-phumulani-cream font-mono text-[11px]">
                     {syncCheckpoints.map((cp) => (
-                      <tr key={cp.id} className="hover:bg-slate-50/50">
-                        <td className="p-2.5 font-bold font-sans text-slate-900">{cp.mailboxEmail}</td>
-                        <td className="p-2.5 text-slate-600">{cp.historyId}</td>
-                        <td className="p-2.5 text-teal-800 font-semibold truncate max-w-xs">{cp.deltaToken}</td>
-                        <td className="p-2.5 text-slate-500">{cp.lastCheckpointAt ? new Date(cp.lastCheckpointAt).toLocaleTimeString() : 'Not yet synchronized'}</td>
+                      <tr key={cp.id} className="hover:bg-phumulani-cream">
+                        <td className="p-2.5 font-bold font-sans text-phumulani-charcoal">{cp.mailboxEmail}</td>
+                        <td className="p-2.5 text-phumulani-charcoal">{cp.historyId}</td>
+                        <td className="p-2.5 text-phumulani-earth font-semibold truncate max-w-xs">{cp.deltaToken}</td>
+                        <td className="p-2.5 text-phumulani-charcoal">{cp.lastCheckpointAt ? new Date(cp.lastCheckpointAt).toLocaleTimeString() : 'Not yet synchronized'}</td>
                         <td className="p-2.5">
                           {cp.rateLimitBackoffMs && cp.rateLimitBackoffMs > 0 ? (
-                            <span className="text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded font-bold">
+                            <span className="text-phumulani-charcoal bg-phumulani-cream px-1.5 py-0.5 rounded font-bold">
                               {cp.rateLimitBackoffMs}ms Backoff (HTTP 429)
                             </span>
                           ) : (
-                            <span className="text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded font-semibold">
+                            <span className="text-phumulani-earth bg-phumulani-cream px-1.5 py-0.5 rounded font-semibold">
                               0ms (Normal)
                             </span>
                           )}
                         </td>
                         <td className="p-2.5">
-                          <span className="text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-full font-bold uppercase text-[10px]">
+                          <span className="text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded-full font-bold uppercase text-[10px]">
                             HEALTHY
                           </span>
                         </td>
@@ -3201,22 +3201,22 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             </div>
 
             {/* Sync Conflicts Quick View */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs space-y-3">
+              <div className="flex items-center justify-between border-b border-phumulani-cream pb-2">
                 <div className="flex items-center gap-2">
-                  <AlertTriangle className="w-4 h-4 text-amber-600" />
-                  <h4 className="text-sm font-bold text-slate-900">
+                  <AlertTriangle className="w-4 h-4 text-phumulani-earth" />
+                  <h4 className="text-sm font-bold text-phumulani-charcoal">
                     Two-Way Synchronization Conflict Reviewer
                   </h4>
                 </div>
-                <span className="text-xs text-slate-500">
+                <span className="text-xs text-phumulani-charcoal">
                   {syncConflicts.length} Conflicts Recorded · Authoritative Rule: Provider Wins Unless Staff Overrides
                 </span>
               </div>
 
               {syncConflicts.length === 0 ? (
-                <div className="p-6 text-center text-slate-400 text-xs">
-                  <CheckCircle2 className="w-6 h-6 text-emerald-500 mx-auto mb-1" />
+                <div className="p-6 text-center text-phumulani-charcoal text-xs">
+                  <CheckCircle2 className="w-6 h-6 text-phumulani-charcoal mx-auto mb-1" />
                   No outstanding synchronization conflicts detected.
                 </div>
               ) : (
@@ -3224,18 +3224,18 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   {syncConflicts.map((conf) => (
                     <div
                       key={conf.id}
-                      className="border border-slate-200 rounded-xl p-3 bg-slate-50/40 text-xs flex flex-wrap items-center justify-between gap-3"
+                      className="border border-phumulani-cream rounded-xl p-3 bg-phumulani-cream text-xs flex flex-wrap items-center justify-between gap-3"
                     >
                       <div>
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-100 text-amber-900">
+                          <span className="font-mono text-[10px] font-bold px-1.5 py-0.2 rounded bg-phumulani-cream text-phumulani-charcoal">
                             {conf.conflictType}
                           </span>
-                          <span className="font-bold text-slate-900">{conf.threadSubject}</span>
-                          <span className="text-slate-400 font-mono text-[11px]">({conf.mailboxEmail})</span>
+                          <span className="font-bold text-phumulani-charcoal">{conf.threadSubject}</span>
+                          <span className="text-phumulani-charcoal font-mono text-[11px]">({conf.mailboxEmail})</span>
                         </div>
-                        <div className="text-[11px] text-slate-600 mt-1">
-                          Provider State: <code className="bg-white px-1 py-0.5 rounded border border-slate-200 font-bold">{JSON.stringify(conf.providerState)}</code> vs Dashboard State: <code className="bg-white px-1 py-0.5 rounded border border-slate-200 font-bold">{JSON.stringify(conf.dashboardState)}</code>
+                        <div className="text-[11px] text-phumulani-charcoal mt-1">
+                          Provider State: <code className="bg-white px-1 py-0.5 rounded border border-phumulani-cream font-bold">{JSON.stringify(conf.providerState)}</code> vs Dashboard State: <code className="bg-white px-1 py-0.5 rounded border border-phumulani-cream font-bold">{JSON.stringify(conf.dashboardState)}</code>
                         </div>
                       </div>
 
@@ -3244,19 +3244,19 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                           <>
                             <button
                               onClick={() => handleResolveConflict(conf.id, 'KEEP_PROVIDER')}
-                              className="px-2.5 py-1 bg-[#104F57] text-white rounded-lg font-bold text-xs cursor-pointer shadow-xs"
+                              className="px-2.5 py-1 bg-phumulani-earth text-white rounded-lg font-bold text-xs cursor-pointer shadow-xs"
                             >
                               Keep Provider (Safe)
                             </button>
                             <button
                               onClick={() => handleResolveConflict(conf.id, 'KEEP_DASHBOARD')}
-                              className="px-2.5 py-1 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 rounded-lg font-semibold text-xs cursor-pointer"
+                              className="px-2.5 py-1 bg-white border border-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream rounded-lg font-semibold text-xs cursor-pointer"
                             >
                               Keep Dashboard
                             </button>
                           </>
                         ) : (
-                          <span className="px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded font-bold font-mono text-[10px]">
+                          <span className="px-2 py-0.5 bg-phumulani-cream text-phumulani-charcoal rounded font-bold font-mono text-[10px]">
                             Resolved ({conf.resolution})
                           </span>
                         )}
@@ -3273,29 +3273,29 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB: 12-STEP FUNCTIONAL SETUP WIZARD & PILOT READINESS (M54.03 & M54.04)   */}
         {/* ========================================================================= */}
         {activeTab === 'setup_wizard' && (
-          <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5 space-y-5">
+          <div className="flex-1 h-full bg-phumulani-cream overflow-y-auto p-5 space-y-5">
             {/* Top Wizard Header Banner */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <span className="font-mono text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 px-2.5 py-0.5 rounded-full uppercase">
+                  <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold px-2.5 py-0.5 rounded-full uppercase">
                     Milestone 54.03 / 54.04
                   </span>
-                  <span className="text-[10px] font-bold bg-teal-100 text-teal-800 border border-teal-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                    <ShieldCheck className="w-3 h-3 text-teal-600" />
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3 text-phumulani-earth" />
                     12-Step Enterprise Onboarding Wizard
                   </span>
-                  <span className="text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-cream px-2.5 py-0.5 rounded-full">
                     {wizardStatus.completedSteps} of {wizardStatus.totalSteps} Steps Verified
                   </span>
-                  <span className="text-[10px] font-bold bg-purple-100 text-purple-900 border border-purple-300 px-2.5 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-earth px-2.5 py-0.5 rounded-full">
                     STAGED_DEVELOPMENT
                   </span>
                 </div>
-                <h2 className="text-xl font-bold font-serif text-slate-900">
+                <h2 className="text-xl font-bold font-serif text-phumulani-charcoal">
                   Google Workspace Enterprise Onboarding Wizard & Controlled Institutional Pilot
                 </h2>
-                <p className="text-xs text-slate-500 max-w-3xl mt-0.5">
+                <p className="text-xs text-phumulani-charcoal max-w-3xl mt-0.5">
                   Authoritative administrative onboarding wizard guiding Google Cloud project selection, Gmail API enablement, OAuth consent, least-privilege scopes, and controlled pilot readiness for donations@phumulani.org.
                 </p>
               </div>
@@ -3305,7 +3305,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   type="button"
                   onClick={refreshWizardState}
                   disabled={isVerifyingWizard}
-                  className="px-3.5 py-1.5 bg-[#104F57] hover:bg-teal-900 disabled:opacity-50 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange disabled:opacity-50 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isVerifyingWizard ? 'animate-spin' : ''}`} />
                   <span>{isVerifyingWizard ? 'Refreshing Diagnostics...' : 'Refresh Wizard Status'}</span>
@@ -3314,52 +3314,52 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             </div>
 
             {/* Truthful Staging Disclosure Banner (Anti-Fabrication Requirement) */}
-            <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 shadow-2xs space-y-1.5">
-              <div className="flex items-center gap-2 text-amber-950 font-bold text-xs uppercase tracking-wide">
-                <AlertTriangle className="w-4 h-4 text-amber-700 shrink-0" />
+            <div className="bg-phumulani-cream border border-phumulani-gold rounded-2xl p-4 shadow-2xs space-y-1.5">
+              <div className="flex items-center gap-2 text-phumulani-charcoal font-bold text-xs uppercase tracking-wide">
+                <AlertTriangle className="w-4 h-4 text-phumulani-earth shrink-0" />
                 <span>Anti-Fabrication Policy & Truthful Staging Disclosures</span>
               </div>
-              <p className="text-xs text-amber-900 leading-relaxed">
+              <p className="text-xs text-phumulani-charcoal leading-relaxed">
                 {wizardStatus.disclosures.truthNotice} Live email sending (<code>LIVE_EMAIL_SENDING_ENABLED</code>) and live Google Workspace pilot (<code>GOOGLE_WORKSPACE_PILOT_ENABLED</code>) default to <strong>false</strong> and fail closed. External mail delivery will never occur without authentic institutional credentials, executive authorization, and unexpired allowlist entries.
               </p>
-              <div className="flex flex-wrap gap-2 text-[11px] font-mono pt-1 text-amber-950">
-                <span className="bg-white/80 border border-amber-300 px-2 py-0.5 rounded">
+              <div className="flex flex-wrap gap-2 text-[11px] font-mono pt-1 text-phumulani-charcoal">
+                <span className="bg-white border border-phumulani-gold px-2 py-0.5 rounded">
                   Pilot Enabled: <strong>{String(wizardStatus.disclosures.googleWorkspacePilotEnabled)}</strong>
                 </span>
-                <span className="bg-white/80 border border-amber-300 px-2 py-0.5 rounded">
+                <span className="bg-white border border-phumulani-gold px-2 py-0.5 rounded">
                   Live Dispatch: <strong>{String(wizardStatus.disclosures.liveEmailSendingEnabled)}</strong>
                 </span>
-                <span className="bg-white/80 border border-amber-300 px-2 py-0.5 rounded">
+                <span className="bg-white border border-phumulani-gold px-2 py-0.5 rounded">
                   Operating Mode: <strong>{wizardStatus.disclosures.operatingMode}</strong>
                 </span>
-                <span className="bg-white/80 border border-amber-300 px-2 py-0.5 rounded">
+                <span className="bg-white border border-phumulani-gold px-2 py-0.5 rounded">
                   Live Secrets Present: <strong>{String(wizardStatus.disclosures.liveCredentialsPresent)}</strong>
                 </span>
               </div>
             </div>
 
             {/* 10 Connection States Reference & Status Strip */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs space-y-2">
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-4 shadow-xs space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+                <span className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wide">
                   Complete 10-State Mailbox Connection Lifecycle Register (M54.02)
                 </span>
-                <span className="text-[10px] font-mono text-slate-500">
+                <span className="text-[10px] font-mono text-phumulani-charcoal">
                   Target Pilot: donations@phumulani.org
                 </span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-10 gap-1.5 text-center">
                 {[
-                  { state: 'NOT_CONFIGURED', label: '1. Not Configured', color: 'bg-slate-100 text-slate-700 border-slate-200' },
-                  { state: 'AUTHORIZATION_REQUIRED', label: '2. Auth Req', color: 'bg-amber-100 text-amber-800 border-amber-300' },
-                  { state: 'AUTHORIZING', label: '3. Authorizing', color: 'bg-blue-100 text-blue-800 border-blue-300' },
-                  { state: 'CONNECTING', label: '4. Connecting', color: 'bg-indigo-100 text-indigo-800 border-indigo-300' },
-                  { state: 'CONNECTED', label: '5. Connected', color: 'bg-emerald-100 text-emerald-800 border-emerald-300' },
-                  { state: 'SYNCING', label: '6. Syncing', color: 'bg-teal-100 text-teal-800 border-teal-300' },
-                  { state: 'DEGRADED', label: '7. Degraded', color: 'bg-orange-100 text-orange-800 border-orange-300' },
-                  { state: 'REAUTHORIZATION_REQUIRED', label: '8. Reauth Req', color: 'bg-amber-100 text-amber-900 border-amber-300' },
-                  { state: 'REVOKED', label: '9. Revoked', color: 'bg-rose-100 text-rose-800 border-rose-300' },
-                  { state: 'DISCONNECTED', label: '10. Disconnected', color: 'bg-slate-100 text-slate-600 border-slate-300' },
+                  { state: 'NOT_CONFIGURED', label: '1. Not Configured', color: 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream' },
+                  { state: 'AUTHORIZATION_REQUIRED', label: '2. Auth Req', color: 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-gold' },
+                  { state: 'AUTHORIZING', label: '3. Authorizing', color: 'bg-phumulani-cream text-phumulani-earth border-phumulani-teal' },
+                  { state: 'CONNECTING', label: '4. Connecting', color: 'bg-phumulani-cream text-phumulani-earth border-phumulani-teal' },
+                  { state: 'CONNECTED', label: '5. Connected', color: 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green' },
+                  { state: 'SYNCING', label: '6. Syncing', color: 'bg-phumulani-cream text-phumulani-earth border-phumulani-teal' },
+                  { state: 'DEGRADED', label: '7. Degraded', color: 'bg-phumulani-cream text-phumulani-earth border-phumulani-orange' },
+                  { state: 'REAUTHORIZATION_REQUIRED', label: '8. Reauth Req', color: 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-gold' },
+                  { state: 'REVOKED', label: '9. Revoked', color: 'bg-phumulani-cream text-phumulani-earth border-phumulani-earth' },
+                  { state: 'DISCONNECTED', label: '10. Disconnected', color: 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream' },
                 ].map((item) => {
                   const currentMbxState = mailboxes.find((m) => m.email === 'donations@phumulani.org')?.status;
                   const isCurrent = currentMbxState?.toUpperCase() === item.state;
@@ -3367,12 +3367,12 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     <div
                       key={item.state}
                       className={`p-2 rounded-xl border text-[10px] font-bold flex flex-col justify-between ${item.color} ${
-                        isCurrent ? 'ring-2 ring-teal-600 shadow-xs' : 'opacity-75'
+                        isCurrent ? 'ring-2 ring-phumulani-earth shadow-xs' : 'opacity-75'
                       }`}
                     >
                       <span className="truncate">{item.label}</span>
                       {isCurrent && (
-                        <span className="text-[9px] mt-1 bg-teal-800 text-white px-1 rounded-full uppercase">
+                        <span className="text-[9px] mt-1 bg-phumulani-charcoal text-white px-1 rounded-full uppercase">
                           ACTIVE
                         </span>
                       )}
@@ -3383,28 +3383,28 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             </div>
 
             {/* Institutional Pilot Mailbox Preparation Card (M54.04) */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-4">
-              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-phumulani-cream pb-3">
                 <div className="flex items-center gap-3">
-                  <div className="p-2.5 bg-teal-50 border border-teal-200 rounded-xl text-teal-800">
+                  <div className="p-2.5 bg-phumulani-cream border border-phumulani-teal rounded-xl text-phumulani-earth">
                     <Mail className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="font-bold text-sm text-slate-900">
+                      <h3 className="font-bold text-sm text-phumulani-charcoal">
                         Institutional Pilot Mailbox: donations@phumulani.org
                       </h3>
                       <span
                         className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border ${
                           pilotReadiness.ready
-                            ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                            : 'bg-amber-100 text-amber-800 border-amber-300'
+                            ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green'
+                            : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-gold'
                         }`}
                       >
                         {pilotReadiness.verdict}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-phumulani-charcoal">
                       Primary development mailbox isolated to donations intake. Zero confidential safeguarding exposure (VAWA Sec 1367).
                     </p>
                   </div>
@@ -3421,7 +3421,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         );
                         refreshWizardState();
                       }}
-                      className="px-3.5 py-1.5 bg-rose-700 hover:bg-rose-800 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                      className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                     >
                       <ShieldAlert className="w-4 h-4" />
                       <span>Instant Emergency Shutdown</span>
@@ -3454,9 +3454,9 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         }
                         refreshWizardState();
                       }}
-                      className="px-3.5 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                      className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                     >
-                      <CheckCircle2 className="w-4 h-4 text-emerald-300" />
+                      <CheckCircle2 className="w-4 h-4 text-white" />
                       <span>Activate Controlled Pilot</span>
                     </button>
                   )}
@@ -3465,47 +3465,47 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
               {/* Pilot Readiness Checklist Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                  <span className="text-[10px] text-slate-400 font-mono block">MAILBOX EXISTENCE</span>
-                  <div className="font-bold text-slate-900">Registered Profile</div>
-                  <div className={`text-[11px] font-semibold flex items-center gap-1 ${pilotReadiness.checks.mailboxExists ? 'text-emerald-800' : 'text-rose-700'}`}>
-                    {pilotReadiness.checks.mailboxExists ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> : <XCircle className="w-3.5 h-3.5 text-rose-600" />}
+                <div className="p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl space-y-1">
+                  <span className="text-[10px] text-phumulani-charcoal font-mono block">MAILBOX EXISTENCE</span>
+                  <div className="font-bold text-phumulani-charcoal">Registered Profile</div>
+                  <div className={`text-[11px] font-semibold flex items-center gap-1 ${pilotReadiness.checks.mailboxExists ? 'text-phumulani-charcoal' : 'text-phumulani-earth'}`}>
+                    {pilotReadiness.checks.mailboxExists ? <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-earth" /> : <XCircle className="w-3.5 h-3.5 text-phumulani-earth" />}
                     <span>{pilotReadiness.checks.mailboxExists ? 'Profile Verified' : 'Missing'}</span>
                   </div>
                 </div>
 
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                  <span className="text-[10px] text-slate-400 font-mono block">DOMAIN POLICY MATCH</span>
-                  <div className="font-bold text-slate-900">@phumulani.org</div>
-                  <div className={`text-[11px] font-semibold flex items-center gap-1 ${pilotReadiness.checks.domainMatchesOrg ? 'text-emerald-800' : 'text-rose-700'}`}>
-                    {pilotReadiness.checks.domainMatchesOrg ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> : <XCircle className="w-3.5 h-3.5 text-rose-600" />}
+                <div className="p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl space-y-1">
+                  <span className="text-[10px] text-phumulani-charcoal font-mono block">DOMAIN POLICY MATCH</span>
+                  <div className="font-bold text-phumulani-charcoal">@phumulani.org</div>
+                  <div className={`text-[11px] font-semibold flex items-center gap-1 ${pilotReadiness.checks.domainMatchesOrg ? 'text-phumulani-charcoal' : 'text-phumulani-earth'}`}>
+                    {pilotReadiness.checks.domainMatchesOrg ? <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-earth" /> : <XCircle className="w-3.5 h-3.5 text-phumulani-earth" />}
                     <span>{pilotReadiness.checks.domainMatchesOrg ? 'Domain Matched' : 'Domain Mismatch'}</span>
                   </div>
                 </div>
 
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                  <span className="text-[10px] text-slate-400 font-mono block">EXECUTIVE CO-SIGNATURE</span>
-                  <div className="font-bold text-slate-900">Development / Exec Lead</div>
-                  <div className={`text-[11px] font-semibold flex items-center gap-1 ${pilotReadiness.checks.executiveRoleAuthorized ? 'text-emerald-800' : 'text-amber-800'}`}>
-                    {pilotReadiness.checks.executiveRoleAuthorized ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> : <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />}
+                <div className="p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl space-y-1">
+                  <span className="text-[10px] text-phumulani-charcoal font-mono block">EXECUTIVE CO-SIGNATURE</span>
+                  <div className="font-bold text-phumulani-charcoal">Development / Exec Lead</div>
+                  <div className={`text-[11px] font-semibold flex items-center gap-1 ${pilotReadiness.checks.executiveRoleAuthorized ? 'text-phumulani-charcoal' : 'text-phumulani-charcoal'}`}>
+                    {pilotReadiness.checks.executiveRoleAuthorized ? <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-earth" /> : <AlertTriangle className="w-3.5 h-3.5 text-phumulani-earth" />}
                     <span>{pilotReadiness.checks.executiveRoleAuthorized ? 'Executive Approved' : 'Sign-Off Pending'}</span>
                   </div>
                 </div>
 
-                <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
-                  <span className="text-[10px] text-slate-400 font-mono block">EMERGENCY SHUTDOWN</span>
-                  <div className="font-bold text-slate-900">Instant Fail-Closed</div>
-                  <div className={`text-[11px] font-semibold flex items-center gap-1 ${pilotReadiness.checks.emergencyShutdownFunctional ? 'text-emerald-800' : 'text-rose-700'}`}>
-                    {pilotReadiness.checks.emergencyShutdownFunctional ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> : <XCircle className="w-3.5 h-3.5 text-rose-600" />}
+                <div className="p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl space-y-1">
+                  <span className="text-[10px] text-phumulani-charcoal font-mono block">EMERGENCY SHUTDOWN</span>
+                  <div className="font-bold text-phumulani-charcoal">Instant Fail-Closed</div>
+                  <div className={`text-[11px] font-semibold flex items-center gap-1 ${pilotReadiness.checks.emergencyShutdownFunctional ? 'text-phumulani-charcoal' : 'text-phumulani-earth'}`}>
+                    {pilotReadiness.checks.emergencyShutdownFunctional ? <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-earth" /> : <XCircle className="w-3.5 h-3.5 text-phumulani-earth" />}
                     <span>{pilotReadiness.checks.emergencyShutdownFunctional ? 'Armed & Functional' : 'Disarmed'}</span>
                   </div>
                 </div>
               </div>
 
               {pilotReadiness.blockingReasons.length > 0 && (
-                <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-900 space-y-1">
+                <div className="p-3 bg-phumulani-cream border border-phumulani-earth rounded-xl text-xs text-phumulani-earth space-y-1">
                   <div className="font-bold flex items-center gap-1.5">
-                    <AlertTriangle className="w-4 h-4 text-rose-700" />
+                    <AlertTriangle className="w-4 h-4 text-phumulani-earth" />
                     <span>Pilot Activation Blockers:</span>
                   </div>
                   <ul className="list-disc pl-5 space-y-0.5 text-[11px]">
@@ -3521,14 +3521,14 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="font-bold text-sm text-slate-900">
+                  <h3 className="font-bold text-sm text-phumulani-charcoal">
                     12 Mandatory Verification Steps (M55.02 Execution Flow)
                   </h3>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-phumulani-charcoal">
                     Each step backed by real server-side state, evidence source, authorized admin action, and recovery guidance.
                   </p>
                 </div>
-                <span className="text-xs font-mono font-bold px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-slate-700">
+                <span className="text-xs font-mono font-bold px-2.5 py-1 bg-white border border-phumulani-cream rounded-lg text-phumulani-charcoal">
                   {wizardStatus.completedSteps} of 12 Steps Passed
                 </span>
               </div>
@@ -3538,20 +3538,20 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   const getStatusBadge = (status: string) => {
                     switch (status) {
                       case 'VERIFIED':
-                        return 'bg-emerald-100 text-emerald-800 border-emerald-300';
+                        return 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green';
                       case 'ACTION_REQUIRED':
-                        return 'bg-amber-100 text-amber-900 border-amber-300';
+                        return 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-gold';
                       case 'CONFIGURED_UNVERIFIED':
-                        return 'bg-sky-100 text-sky-800 border-sky-300';
+                        return 'bg-phumulani-cream text-phumulani-earth border-phumulani-teal';
                       case 'BLOCKED_EXTERNAL':
                       case 'BLOCKED':
-                        return 'bg-rose-100 text-rose-800 border-rose-300';
+                        return 'bg-phumulani-cream text-phumulani-earth border-phumulani-earth';
                       case 'EXPIRED':
-                        return 'bg-purple-100 text-purple-800 border-purple-300';
+                        return 'bg-phumulani-cream text-phumulani-earth border-phumulani-earth';
                       case 'FAILED':
-                        return 'bg-red-100 text-red-800 border-red-300';
+                        return 'bg-phumulani-cream text-phumulani-earth border-phumulani-earth';
                       default:
-                        return 'bg-slate-100 text-slate-700 border-slate-200';
+                        return 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream';
                     }
                   };
 
@@ -3561,11 +3561,11 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   return (
                     <div
                       key={step.stepNumber}
-                      className="border border-slate-200 rounded-2xl p-4 bg-white flex flex-col justify-between space-y-3 shadow-2xs hover:border-slate-300 transition-all text-xs"
+                      className="border border-phumulani-cream rounded-2xl p-4 bg-white flex flex-col justify-between space-y-3 shadow-2xs hover:border-phumulani-cream transition-all text-xs"
                     >
                       <div className="space-y-2">
                         <div className="flex items-center justify-between">
-                          <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200">
+                          <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-phumulani-cream text-phumulani-charcoal border border-phumulani-cream">
                             Step {step.stepNumber.toString().padStart(2, '0')}
                           </span>
                           <span
@@ -3577,34 +3577,34 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                           </span>
                         </div>
 
-                        <h4 className="font-bold text-sm text-slate-900 leading-snug">
+                        <h4 className="font-bold text-sm text-phumulani-charcoal leading-snug">
                           {step.title}
                         </h4>
 
-                        <p className="text-[11px] text-slate-500 leading-relaxed">
+                        <p className="text-[11px] text-phumulani-charcoal leading-relaxed">
                           {step.requirementDescription}
                         </p>
 
                         {/* Evidence Source & Verification Timestamp */}
-                        <div className="p-2 bg-slate-50 border border-slate-200 rounded-xl space-y-1 text-[10px]">
+                        <div className="p-2 bg-phumulani-cream border border-phumulani-cream rounded-xl space-y-1 text-[10px]">
                           {step.evidenceSource && (
                             <div>
-                              <strong className="text-slate-600">Evidence Source: </strong>
-                              <span className="font-mono text-slate-800">{step.evidenceSource}</span>
+                              <strong className="text-phumulani-charcoal">Evidence Source: </strong>
+                              <span className="font-mono text-phumulani-charcoal">{step.evidenceSource}</span>
                             </div>
                           )}
                           {step.lastVerificationTime && (
                             <div>
-                              <strong className="text-slate-600">Last Verified: </strong>
-                              <span className="font-mono text-slate-700">
+                              <strong className="text-phumulani-charcoal">Last Verified: </strong>
+                              <span className="font-mono text-phumulani-charcoal">
                                 {new Date(step.lastVerificationTime).toLocaleTimeString()} (
                                 {new Date(step.lastVerificationTime).toLocaleDateString()})
                               </span>
                             </div>
                           )}
                           {step.diagnosticOutput && (
-                            <div className="truncate text-slate-700 pt-0.5 border-t border-slate-200/60 font-mono">
-                              <strong className="text-slate-500">Diag: </strong>
+                            <div className="truncate text-phumulani-charcoal pt-0.5 border-t border-phumulani-cream font-mono">
+                              <strong className="text-phumulani-charcoal">Diag: </strong>
                               {step.diagnosticOutput}
                             </div>
                           )}
@@ -3612,21 +3612,21 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
                         {/* Authorized Administrator Action */}
                         {step.authorizedAdminAction && (
-                          <div className="p-2 bg-blue-50/60 border border-blue-200 rounded-xl text-[10px] text-blue-950 leading-relaxed">
-                            <strong className="text-blue-900 font-semibold">Admin Action: </strong>
+                          <div className="p-2 bg-phumulani-cream border border-phumulani-teal rounded-xl text-[10px] text-phumulani-earth leading-relaxed">
+                            <strong className="text-phumulani-earth font-semibold">Admin Action: </strong>
                             {step.authorizedAdminAction}
                           </div>
                         )}
 
                         {/* Failure Reason & Recovery Guidance */}
                         {step.clearFailureReason && (
-                          <div className="p-2 bg-rose-50 border border-rose-200 rounded-xl text-[10px] text-rose-950 space-y-1">
+                          <div className="p-2 bg-phumulani-cream border border-phumulani-earth rounded-xl text-[10px] text-phumulani-earth space-y-1">
                             <div>
-                              <strong className="text-rose-900 font-bold">Failure Reason: </strong>
+                              <strong className="text-phumulani-earth font-bold">Failure Reason: </strong>
                               {step.clearFailureReason}
                             </div>
                             {step.recoveryGuidance && (
-                              <div className="text-rose-800 pt-0.5 border-t border-rose-200/60">
+                              <div className="text-phumulani-earth pt-0.5 border-t border-phumulani-earth">
                                 <strong className="font-semibold">Recovery: </strong>
                                 {step.recoveryGuidance}
                               </div>
@@ -3635,15 +3635,15 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         )}
 
                         {step.truthfulDisclosure && !step.clearFailureReason && (
-                          <div className="p-2 bg-amber-50/70 border border-amber-200 rounded-xl text-[10px] text-amber-900 leading-relaxed">
-                            <strong className="text-amber-950 font-semibold">Disclosure: </strong>
+                          <div className="p-2 bg-phumulani-cream border border-phumulani-gold rounded-xl text-[10px] text-phumulani-charcoal leading-relaxed">
+                            <strong className="text-phumulani-charcoal font-semibold">Disclosure: </strong>
                             {step.truthfulDisclosure}
                           </div>
                         )}
                       </div>
 
-                      <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-                        <span className="text-[10px] text-slate-400 font-mono">
+                      <div className="pt-2 border-t border-phumulani-cream flex items-center justify-between">
+                        <span className="text-[10px] text-phumulani-charcoal font-mono">
                           {isVerified ? 'Gate Passed' : isBlocked ? 'Blocked in Staging' : 'Action Required'}
                         </span>
                         <button
@@ -3666,8 +3666,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                           }}
                           className={`px-3 py-1 rounded-lg text-xs font-bold cursor-pointer ${
                             isVerified
-                              ? 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                              : 'bg-[#104F57] hover:bg-teal-900 text-white shadow-2xs'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream'
+                              : 'bg-phumulani-earth hover:bg-phumulani-orange text-white shadow-2xs'
                           }`}
                         >
                           {step.actionLabel}
@@ -3680,23 +3680,23 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             </div>
 
             {/* M55.04: Organizational Mailbox Verification Matrix */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-phumulani-cream pb-3">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-sm text-slate-900">
+                    <h3 className="font-bold text-sm text-phumulani-charcoal">
                       Organizational Mailbox Verification Status Matrix (M55.04)
                     </h3>
-                    <span className="font-mono text-[10px] bg-teal-100 text-teal-800 border border-teal-300 px-2 py-0.5 rounded-full font-bold">
+                    <span className="font-mono text-[10px] bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2 py-0.5 rounded-full font-bold">
                       8 Mailboxes Audited
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-phumulani-charcoal mt-0.5">
                     Distinguishes CONFIGURED_ONLY, IDENTITY_VERIFIED, OAUTH_AUTHORIZED, PROVIDER_CONNECTED, SYNC_VERIFIED, and SEND_PILOT_AUTHORIZED.
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-mono text-slate-500">
+                  <span className="text-[11px] font-mono text-phumulani-charcoal">
                     Mode: {wizardStatus.disclosures.operatingMode}
                   </span>
                 </div>
@@ -3704,7 +3704,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 text-slate-600 uppercase text-[10px] font-mono border-b border-slate-200">
+                  <thead className="bg-phumulani-cream text-phumulani-charcoal uppercase text-[10px] font-mono border-b border-phumulani-cream">
                     <tr>
                       <th className="py-2.5 px-3">Mailbox</th>
                       <th className="py-2.5 px-3">Classification & Department</th>
@@ -3714,41 +3714,41 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       <th className="py-2.5 px-3 text-right">Action</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-phumulani-cream">
                     {googleWorkspaceAdapter.getMailboxStatusMatrix().map((item) => {
                       const getStatusBadge = (st: string) => {
                         switch (st) {
                           case 'SEND_PILOT_AUTHORIZED':
-                            return 'bg-emerald-100 text-emerald-800 border-emerald-300';
+                            return 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green';
                           case 'SYNC_VERIFIED':
-                            return 'bg-teal-100 text-teal-800 border-teal-300';
+                            return 'bg-phumulani-cream text-phumulani-earth border-phumulani-teal';
                           case 'PROVIDER_CONNECTED':
-                            return 'bg-blue-100 text-blue-800 border-blue-300';
+                            return 'bg-phumulani-cream text-phumulani-earth border-phumulani-teal';
                           case 'OAUTH_AUTHORIZED':
-                            return 'bg-indigo-100 text-indigo-800 border-indigo-300';
+                            return 'bg-phumulani-cream text-phumulani-earth border-phumulani-teal';
                           case 'IDENTITY_VERIFIED':
-                            return 'bg-slate-100 text-slate-800 border-slate-300';
+                            return 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream';
                           default:
-                            return 'bg-amber-100 text-amber-900 border-amber-300';
+                            return 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-gold';
                         }
                       };
 
                       return (
-                        <tr key={item.email} className="hover:bg-slate-50/50 transition-colors">
+                        <tr key={item.email} className="hover:bg-phumulani-cream transition-colors">
                           <td className="py-2.5 px-3">
-                            <div className="font-bold text-slate-900">{item.email}</div>
-                            <div className="text-[11px] text-slate-500">{item.displayName}</div>
+                            <div className="font-bold text-phumulani-charcoal">{item.email}</div>
+                            <div className="text-[11px] text-phumulani-charcoal">{item.displayName}</div>
                           </td>
                           <td className="py-2.5 px-3">
-                            <div className="text-slate-800 font-medium">{item.department}</div>
-                            <div className="text-[10px] text-slate-500">{item.role}</div>
+                            <div className="text-phumulani-charcoal font-medium">{item.department}</div>
+                            <div className="text-[10px] text-phumulani-charcoal">{item.role}</div>
                           </td>
                           <td className="py-2.5 px-3">
                             <span
                               className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border ${
                                 item.type === 'institutional'
-                                  ? 'bg-purple-100 text-purple-800 border-purple-300'
-                                  : 'bg-slate-100 text-slate-700 border-slate-200'
+                                  ? 'bg-phumulani-cream text-phumulani-earth border-phumulani-earth'
+                                  : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream'
                               }`}
                             >
                               {item.type}
@@ -3765,11 +3765,11 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                           </td>
                           <td className="py-2.5 px-3 font-mono text-[11px]">
                             {item.isPilotMailbox ? (
-                              <span className="font-bold text-teal-800 bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+                              <span className="font-bold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded border border-phumulani-teal">
                                 PRIMARY PILOT
                               </span>
                             ) : (
-                              <span className="text-slate-400">Restricted</span>
+                              <span className="text-phumulani-charcoal">Restricted</span>
                             )}
                           </td>
                           <td className="py-2.5 px-3 text-right">
@@ -3783,7 +3783,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                                 });
                                 refreshWizardState();
                               }}
-                              className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-lg text-[11px] cursor-pointer"
+                              className="px-2.5 py-1 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal font-bold rounded-lg text-[11px] cursor-pointer"
                             >
                               Inspect Connection
                             </button>
@@ -3797,29 +3797,29 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             </div>
 
             {/* M56.03 & M56.04: Phase 56 Canonical 10-Mailbox Multi-Dimensional Inventory */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
-              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 pb-3">
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2 border-b border-phumulani-cream pb-3">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-sm text-slate-900">
+                    <h3 className="font-bold text-sm text-phumulani-charcoal">
                       Reconciled Organizational Mailbox Inventory & 5-Dimensional Status (Phase 56 — M56.03 & M56.04)
                     </h3>
-                    <span className="font-mono text-[10px] bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full font-bold">
+                    <span className="font-mono text-[10px] bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green px-2 py-0.5 rounded-full font-bold">
                       10 Canonical Mailboxes Reconciled
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500 mt-0.5">
+                  <p className="text-xs text-phumulani-charcoal mt-0.5">
                     Separates CONFIGURATION_STATUS, INTERNAL_APPROVAL_STATUS, PROVIDER_AUTHORIZATION_STATUS, INBOUND_SYNC_STATUS, and OUTBOUND_PERMISSION_STATUS to prevent staging vs live contradictions.
                   </p>
                 </div>
-                <span className="text-[11px] font-mono font-bold bg-slate-100 px-2.5 py-1 rounded-lg text-slate-700">
+                <span className="text-[11px] font-mono font-bold bg-phumulani-cream px-2.5 py-1 rounded-lg text-phumulani-charcoal">
                   Zero Fabrication Mandate: Truthful Staging Disclosures
                 </span>
               </div>
 
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 text-slate-600 uppercase text-[10px] font-mono border-b border-slate-200">
+                  <thead className="bg-phumulani-cream text-phumulani-charcoal uppercase text-[10px] font-mono border-b border-phumulani-cream">
                     <tr>
                       <th className="py-2.5 px-3">Address & Designation</th>
                       <th className="py-2.5 px-3">Department & Owner</th>
@@ -3830,35 +3830,35 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       <th className="py-2.5 px-3">Outbound Perm</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-phumulani-cream">
                     {googleWorkspaceAdapter.getCanonicalMailboxInventory().map((box) => (
-                      <tr key={box.address} className="hover:bg-slate-50/50">
-                        <td className="py-2.5 px-3 font-semibold text-slate-900">
+                      <tr key={box.address} className="hover:bg-phumulani-cream">
+                        <td className="py-2.5 px-3 font-semibold text-phumulani-charcoal">
                           <div className="flex items-center gap-2">
-                            <span className="font-mono font-bold text-teal-900">{box.address}</span>
+                            <span className="font-mono font-bold text-phumulani-earth">{box.address}</span>
                             <span className={`text-[9px] font-mono px-1.5 py-0.2 rounded font-bold ${
                               box.designation === 'ACTIVE_PRIMARY'
-                                ? 'bg-indigo-100 text-indigo-800'
+                                ? 'bg-phumulani-cream text-phumulani-earth'
                                 : box.designation === 'ACTIVE_COLLABORATIVE'
-                                ? 'bg-blue-100 text-blue-800'
-                                : 'bg-slate-100 text-slate-700'
+                                ? 'bg-phumulani-cream text-phumulani-earth'
+                                : 'bg-phumulani-cream text-phumulani-charcoal'
                             }`}>
                               {box.designation.replace('ACTIVE_', '')}
                             </span>
                           </div>
-                          <span className="text-[10px] text-slate-500 block truncate max-w-xs">{box.purpose}</span>
+                          <span className="text-[10px] text-phumulani-charcoal block truncate max-w-xs">{box.purpose}</span>
                         </td>
                         <td className="py-2.5 px-3">
-                          <span className="font-semibold text-slate-800 block">{box.department}</span>
-                          <span className="text-[10px] text-slate-500 font-mono">{box.owner}</span>
+                          <span className="font-semibold text-phumulani-charcoal block">{box.department}</span>
+                          <span className="text-[10px] text-phumulani-charcoal font-mono">{box.owner}</span>
                         </td>
                         <td className="py-2.5 px-3 font-mono text-[10px]">
                           <span className={`px-2 py-0.5 rounded font-bold border ${
                             box.safeguardingClassification === 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP'
-                              ? 'bg-rose-100 text-rose-800 border-rose-300'
+                              ? 'bg-phumulani-cream text-phumulani-earth border-phumulani-earth'
                               : box.safeguardingClassification === 'RESTRICTED'
-                              ? 'bg-amber-100 text-amber-800 border-amber-300'
-                              : 'bg-slate-100 text-slate-700 border-slate-200'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-gold'
+                              : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream'
                           }`}>
                             {box.safeguardingClassification === 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP'
                               ? 'VAWA SEC 1367 AIR GAP'
@@ -3866,33 +3866,33 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                           </span>
                         </td>
                         <td className="py-2.5 px-3 font-mono text-[10px]">
-                          <span className="bg-sky-50 text-sky-800 border border-sky-200 px-2 py-0.5 rounded font-bold">
+                          <span className="bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2 py-0.5 rounded font-bold">
                             {box.dimensionalStatus.internalApprovalStatus}
                           </span>
                         </td>
                         <td className="py-2.5 px-3 font-mono text-[10px]">
                           <span className={`px-2 py-0.5 rounded font-bold border ${
                             box.dimensionalStatus.providerAuthorizationStatus === 'BLOCKED_EXTERNAL'
-                              ? 'bg-rose-50 text-rose-800 border-rose-200'
+                              ? 'bg-phumulani-cream text-phumulani-earth border-phumulani-earth'
                               : box.dimensionalStatus.providerAuthorizationStatus === 'TOKEN_HEALTHY'
-                              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
-                              : 'bg-amber-50 text-amber-800 border-amber-200'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green'
+                              : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-gold'
                           }`}>
                             {box.dimensionalStatus.providerAuthorizationStatus}
                           </span>
                         </td>
                         <td className="py-2.5 px-3 font-mono text-[10px]">
-                          <span className="bg-teal-50 text-teal-800 border border-teal-200 px-2 py-0.5 rounded font-bold">
+                          <span className="bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2 py-0.5 rounded font-bold">
                             {box.dimensionalStatus.inboundSyncStatus}
                           </span>
                         </td>
                         <td className="py-2.5 px-3 font-mono text-[10px]">
                           <span className={`px-2 py-0.5 rounded font-bold border ${
                             box.dimensionalStatus.outboundPermissionStatus === 'PILOT_AUTHORIZED_STAGED'
-                              ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green'
                               : box.dimensionalStatus.outboundPermissionStatus === 'DISARMED_STAGING'
-                              ? 'bg-slate-100 text-slate-700 border-slate-200'
-                              : 'bg-rose-50 text-rose-800 border-rose-200'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream'
+                              : 'bg-phumulani-cream text-phumulani-earth border-phumulani-earth'
                           }`}>
                             {box.dimensionalStatus.outboundPermissionStatus}
                           </span>
@@ -3910,7 +3910,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB: UNIVERSAL EMAIL CONNECTOR FRAMEWORK (PHASE 60 M60.01 - M60.15)       */}
         {/* ========================================================================= */}
         {activeTab === 'universal_connectors' && (
-          <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5">
+          <div className="flex-1 h-full bg-phumulani-cream overflow-y-auto p-5">
             <UniversalEmailConnections
               selectedMailboxId={selectedMailboxId}
               openWizardSignal={openWizardSignal}
@@ -3928,7 +3928,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB: PHUMULANI AI — LOCAL LLM & AUTONOMOUS FUNDRAISING (PHASE 65)         */}
         {/* ========================================================================= */}
         {activeTab === 'phumulani_ai' && (
-          <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5">
+          <div className="flex-1 h-full bg-phumulani-cream overflow-y-auto p-5">
             <PhumulaniAiFundraisingCenter onNavigateTab={(t) => setActiveTab(t as any)} />
           </div>
         )}
@@ -3940,17 +3940,17 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
           <div className="h-full flex flex-col lg:flex-row gap-4 overflow-y-auto">
             {/* Left: Rules List & Controls */}
             <div className="flex-1 space-y-4">
-              <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+              <div className="bg-white border border-phumulani-cream rounded-2xl p-4 shadow-xs">
+                <div className="flex items-center justify-between border-b border-phumulani-cream pb-3 mb-3">
                   <div>
-                    <h3 className="text-sm font-bold text-slate-900">
+                    <h3 className="text-sm font-bold text-phumulani-charcoal">
                       Approved Auto-Responder Rules (AR01 through AR10)
                     </h3>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-phumulani-charcoal">
                       Controlled, deterministic acknowledgments adhering to strict non-disclosure safety rules.
                     </p>
                   </div>
-                  <span className="text-xs font-mono font-bold bg-teal-50 text-teal-800 border border-teal-200 px-2 py-0.5 rounded-full">
+                  <span className="text-xs font-mono font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2 py-0.5 rounded-full">
                     Deterministic Engine
                   </span>
                 </div>
@@ -3959,26 +3959,26 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   {autoRules.map((rule) => (
                     <div
                       key={rule.id}
-                      className="border border-slate-200 rounded-xl p-3 bg-slate-50/50 hover:bg-slate-50 transition-all"
+                      className="border border-phumulani-cream rounded-xl p-3 bg-phumulani-cream hover:bg-phumulani-cream transition-all"
                     >
                       <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono font-bold text-xs px-2 py-0.5 rounded bg-[#104F57] text-white">
+                          <span className="font-mono font-bold text-xs px-2 py-0.5 rounded bg-phumulani-earth text-white">
                             {rule.code}
                           </span>
-                          <span className="text-xs font-bold text-slate-900">{rule.name}</span>
-                          <span className="text-[10px] text-slate-500 font-mono">({rule.mailbox})</span>
+                          <span className="text-xs font-bold text-phumulani-charcoal">{rule.name}</span>
+                          <span className="text-[10px] text-phumulani-charcoal font-mono">({rule.mailbox})</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="text-[11px] text-slate-400 font-mono">
+                          <span className="text-[11px] text-phumulani-charcoal font-mono">
                             Sent: {rule.totalTriggeredCount}
                           </span>
                           <button
                             onClick={() => db.toggleAutoResponderRule(rule.id, !rule.enabled)}
                             className={`px-2.5 py-0.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                               rule.enabled
-                                ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                                : 'bg-slate-200 text-slate-600'
+                                ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green'
+                                : 'bg-phumulani-cream text-phumulani-charcoal'
                             }`}
                           >
                             {rule.enabled ? 'ACTIVE' : 'DISABLED'}
@@ -3986,18 +3986,18 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         </div>
                       </div>
 
-                      <div className="mt-2 text-xs text-slate-600 font-sans">
-                        <strong className="text-slate-700">Trigger:</strong> {rule.trigger}
+                      <div className="mt-2 text-xs text-phumulani-charcoal font-sans">
+                        <strong className="text-phumulani-charcoal">Trigger:</strong> {rule.trigger}
                       </div>
 
-                      <div className="mt-2 text-xs bg-white border border-slate-200 p-2.5 rounded-lg text-slate-700 font-mono text-[11px] leading-relaxed">
+                      <div className="mt-2 text-xs bg-white border border-phumulani-cream p-2.5 rounded-lg text-phumulani-charcoal font-mono text-[11px] leading-relaxed">
                         &quot;{rule.approvedTemplate}&quot;
                       </div>
 
                       <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[10px]">
-                        <span className="font-bold text-slate-500">Exclusions:</span>
+                        <span className="font-bold text-phumulani-charcoal">Exclusions:</span>
                         {rule.exclusionConditions.map((exc, i) => (
-                          <span key={i} className="bg-rose-50 text-rose-800 border border-rose-200 px-1.5 py-0.2 rounded">
+                          <span key={i} className="bg-phumulani-cream text-phumulani-earth border border-phumulani-earth px-1.5 py-0.2 rounded">
                             {exc}
                           </span>
                         ))}
@@ -4011,12 +4011,12 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             {/* Right: Mandatory Safety Rules & Live Execution Logs */}
             <div className="w-full lg:w-96 space-y-4">
               {/* Safety Rules Card */}
-              <div className="bg-rose-50/60 border border-rose-200 rounded-2xl p-4 shadow-xs">
-                <div className="flex items-center gap-2 text-rose-900 font-bold text-xs uppercase tracking-wide border-b border-rose-200 pb-2 mb-2">
-                  <ShieldCheck className="w-4 h-4 text-rose-600" />
+              <div className="bg-phumulani-cream border border-phumulani-earth rounded-2xl p-4 shadow-xs">
+                <div className="flex items-center gap-2 text-phumulani-earth font-bold text-xs uppercase tracking-wide border-b border-phumulani-earth pb-2 mb-2">
+                  <ShieldCheck className="w-4 h-4 text-phumulani-earth" />
                   <span>Mandatory Auto-Responder Safety Rules</span>
                 </div>
-                <ul className="text-xs text-rose-950 space-y-1.5 list-disc pl-4">
+                <ul className="text-xs text-phumulani-earth space-y-1.5 list-disc pl-4">
                   <li>Never auto-respond if the message involves survivor danger or crisis.</li>
                   <li>Never auto-respond if the sender requested no contact.</li>
                   <li>Never confirm a donation or grant before verified bank settlement.</li>
@@ -4026,10 +4026,10 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               </div>
 
               {/* Live Execution Logs */}
-              <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
-                  <span className="text-xs font-bold text-slate-900">Auto-Responder Execution Log</span>
-                  <span className="text-[10px] text-slate-400 font-mono">Live Probes</span>
+              <div className="bg-white border border-phumulani-cream rounded-2xl p-4 shadow-xs">
+                <div className="flex items-center justify-between border-b border-phumulani-cream pb-2 mb-3">
+                  <span className="text-xs font-bold text-phumulani-charcoal">Auto-Responder Execution Log</span>
+                  <span className="text-[10px] text-phumulani-charcoal font-mono">Live Probes</span>
                 </div>
                 <div className="space-y-2 max-h-96 overflow-y-auto">
                   {autoLogs.map((log) => (
@@ -4037,22 +4037,22 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       key={log.id}
                       className={`p-2 rounded-xl border text-xs ${
                         log.status === 'sent'
-                          ? 'bg-emerald-50/40 border-emerald-200 text-emerald-950'
+                          ? 'bg-phumulani-cream border-phumulani-green text-phumulani-charcoal'
                           : log.status === 'blocked_by_safety'
-                          ? 'bg-rose-50 border-rose-200 text-rose-950'
-                          : 'bg-slate-50 border-slate-200 text-slate-700'
+                          ? 'bg-phumulani-cream border-phumulani-earth text-phumulani-earth'
+                          : 'bg-phumulani-cream border-phumulani-cream text-phumulani-charcoal'
                       }`}
                     >
                       <div className="flex items-center justify-between text-[10px]">
                         <span className="font-bold font-mono">{log.ruleName}</span>
-                        <span className="font-mono text-slate-400">
+                        <span className="font-mono text-phumulani-charcoal">
                           {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </div>
                       <div className="font-medium truncate mt-0.5">{log.messageSubject}</div>
-                      <div className="text-[10px] text-slate-500 font-mono mt-0.5">To: {log.recipientEmail}</div>
+                      <div className="text-[10px] text-phumulani-charcoal font-mono mt-0.5">To: {log.recipientEmail}</div>
                       {log.reason && (
-                        <div className="mt-1 text-[10px] text-rose-800 bg-rose-100/60 p-1 rounded font-semibold">
+                        <div className="mt-1 text-[10px] text-phumulani-earth bg-phumulani-cream p-1 rounded font-semibold">
                           {log.reason}
                         </div>
                       )}
@@ -4068,41 +4068,41 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB 3: AI DRAFTS & APPROVAL QUEUE (Milestone 23.06) */}
         {/* ========================================================================= */}
         {activeTab === 'approvals' && (
-          <div className="flex-1 h-full bg-white border border-slate-200 rounded-2xl p-5 shadow-xs overflow-y-auto space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+          <div className="flex-1 h-full bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs overflow-y-auto space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-phumulani-cream pb-3">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-mono text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 px-2 py-0.5 rounded-full uppercase">
+                  <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold px-2 py-0.5 rounded-full uppercase">
                     Mandatory Human Review Gate
                   </span>
-                  <span className="text-[10px] font-bold bg-teal-100 text-teal-800 border border-teal-300 px-2 py-0.5 rounded-full flex items-center gap-1">
-                    <ShieldCheck className="w-3 h-3 text-teal-600" />
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3 text-phumulani-earth" />
                     Zero Autonomous External Sending
                   </span>
                 </div>
-                <h3 className="text-sm font-bold text-slate-900">
+                <h3 className="text-sm font-bold text-phumulani-charcoal">
                   AI Response Drafts & Human Approval Queue
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-phumulani-charcoal">
                   Quad-action protocol: Approve, Request Changes, Return to Draft, or Reject. Full cryptographic content binding prevents post-approval tampering.
                 </p>
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-xs font-mono font-bold bg-slate-100 text-slate-700 px-2.5 py-1 rounded-xl">
+                <span className="text-xs font-mono font-bold bg-phumulani-cream text-phumulani-charcoal px-2.5 py-1 rounded-xl">
                   {threads.filter((t) => t.draft && t.draft.status === 'pending_approval').length} Pending Approval
                 </span>
-                <span className="text-xs font-mono font-bold bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-xl">
+                <span className="text-xs font-mono font-bold bg-phumulani-cream text-phumulani-charcoal px-2.5 py-1 rounded-xl">
                   {threads.filter((t) => t.draft && t.draft.status === 'approved').length} Ready to Dispatch
                 </span>
               </div>
             </div>
 
             {threads.filter((t) => Boolean(t.draft)).length === 0 ? (
-              <div className="p-12 text-center text-slate-400">
-                <FileCheck className="w-12 h-12 mx-auto mb-2 opacity-40 text-teal-700" />
-                <p className="font-semibold text-slate-700">No email drafts currently in workspace.</p>
-                <p className="text-xs text-slate-500 mt-1">Select an incoming email to generate an AI draft response.</p>
+              <div className="p-12 text-center text-phumulani-charcoal">
+                <FileCheck className="w-12 h-12 mx-auto mb-2 opacity-40 text-phumulani-earth" />
+                <p className="font-semibold text-phumulani-charcoal">No email drafts currently in workspace.</p>
+                <p className="text-xs text-phumulani-charcoal mt-1">Select an incoming email to generate an AI draft response.</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
@@ -4113,62 +4113,62 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     return (
                       <div
                         key={thread.id}
-                        className="border border-slate-200 rounded-2xl p-4 bg-[#F8FAFB] flex flex-col justify-between space-y-3 shadow-2xs hover:border-slate-300 transition-all"
+                        className="border border-phumulani-cream rounded-2xl p-4 bg-phumulani-cream flex flex-col justify-between space-y-3 shadow-2xs hover:border-phumulani-cream transition-all"
                       >
                         <div>
                           <div className="flex items-center justify-between text-xs mb-1.5">
                             <div className="flex items-center gap-2">
                               <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
                                 draft.status === 'approved'
-                                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                                  ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green'
                                   : draft.status === 'sent'
-                                  ? 'bg-blue-100 text-blue-800'
+                                  ? 'bg-phumulani-cream text-phumulani-earth'
                                   : draft.status === 'changes_requested'
-                                  ? 'bg-orange-100 text-orange-800 border border-orange-300'
+                                  ? 'bg-phumulani-cream text-phumulani-earth border border-phumulani-orange'
                                   : draft.status === 'returned_to_draft'
-                                  ? 'bg-slate-200 text-slate-700'
-                                  : 'bg-amber-100 text-amber-800 border border-amber-300'
+                                  ? 'bg-phumulani-cream text-phumulani-charcoal'
+                                  : 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold'
                               }`}>
                                 {draft.status.replace('_', ' ')}
                               </span>
-                              <span className="font-mono text-[10px] text-slate-500">
+                              <span className="font-mono text-[10px] text-phumulani-charcoal">
                                 v{draft.version || 1}
                               </span>
                             </div>
-                            <span className="text-[11px] font-mono text-slate-400">
-                              Confidence: <strong className="text-teal-900">{draft.confidenceScore}%</strong>
+                            <span className="text-[11px] font-mono text-phumulani-charcoal">
+                              Confidence: <strong className="text-phumulani-earth">{draft.confidenceScore}%</strong>
                             </span>
                           </div>
 
-                          <h4 className="font-bold text-sm text-slate-900 mb-0.5">
+                          <h4 className="font-bold text-sm text-phumulani-charcoal mb-0.5">
                             {thread.threadSubject}
                           </h4>
 
-                          <div className="text-[11px] text-slate-500 font-mono mb-2">
-                            To: <strong className="text-slate-800">{draft.recipientEmail}</strong> · Mailbox: <strong className="text-slate-800">{thread.mailboxEmail}</strong> · Tone: <span className="capitalize">{draft.toneStyle.replace('_', ' ')}</span>
+                          <div className="text-[11px] text-phumulani-charcoal font-mono mb-2">
+                            To: <strong className="text-phumulani-charcoal">{draft.recipientEmail}</strong> · Mailbox: <strong className="text-phumulani-charcoal">{thread.mailboxEmail}</strong> · Tone: <span className="capitalize">{draft.toneStyle.replace('_', ' ')}</span>
                           </div>
 
                           {/* Grounding Summary */}
-                          <div className="bg-emerald-50/70 border border-emerald-200/80 rounded-xl p-2.5 text-[11px] text-emerald-950 mb-2 flex items-start gap-1.5">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                          <div className="bg-phumulani-cream border border-phumulani-green rounded-xl p-2.5 text-[11px] text-phumulani-charcoal mb-2 flex items-start gap-1.5">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-earth shrink-0 mt-0.5" />
                             <span><strong>Context Grounding:</strong> {draft.verifiedContextSummary}</span>
                           </div>
 
                           {/* Proposed Body */}
-                          <div className="text-xs bg-white border border-slate-200 p-3 rounded-xl text-slate-800 whitespace-pre-wrap max-h-48 overflow-y-auto font-sans leading-relaxed">
+                          <div className="text-xs bg-white border border-phumulani-cream p-3 rounded-xl text-phumulani-charcoal whitespace-pre-wrap max-h-48 overflow-y-auto font-sans leading-relaxed">
                             {draft.proposedBody}
                           </div>
                         </div>
 
                         {/* Quad Action Review Bar */}
-                        <div className="border-t border-slate-200 pt-3 flex flex-wrap items-center justify-between gap-2">
+                        <div className="border-t border-phumulani-cream pt-3 flex flex-wrap items-center justify-between gap-2">
                           <button
                             type="button"
                             onClick={() => {
                               setSelectedThreadId(thread.id);
                               setActiveTab('all_mailboxes');
                             }}
-                            className="text-xs text-teal-800 hover:text-teal-950 font-semibold underline cursor-pointer"
+                            className="text-xs text-phumulani-earth hover:text-phumulani-earth font-semibold underline cursor-pointer"
                           >
                             View in Thread Workspace →
                           </button>
@@ -4179,7 +4179,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                                 <button
                                   type="button"
                                   onClick={() => handleApproveDraft(thread.id)}
-                                  className="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
+                                  className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
                                   title="Approve draft for outbound dispatch"
                                 >
                                   <ThumbsUp className="w-3 h-3" />
@@ -4188,7 +4188,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                                 <button
                                   type="button"
                                   onClick={() => handleRequestChanges(thread.id)}
-                                  className="px-2 py-1 bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-300 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                                  className="px-2 py-1 bg-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-gold border border-phumulani-gold rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer"
                                   title="Request staff changes"
                                 >
                                   <RotateCcw className="w-3 h-3" />
@@ -4197,7 +4197,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                                 <button
                                   type="button"
                                   onClick={() => handleReturnToDraft(thread.id)}
-                                  className="px-2 py-1 bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                                  className="px-2 py-1 bg-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream border border-phumulani-cream rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer"
                                   title="Return to initial drafting state"
                                 >
                                   <FileCheck className="w-3 h-3" />
@@ -4206,7 +4206,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                                 <button
                                   type="button"
                                   onClick={() => handleRejectDraft(thread.id)}
-                                  className="px-2 py-1 text-rose-700 hover:bg-rose-50 border border-rose-200 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer"
+                                  className="px-2 py-1 text-phumulani-earth hover:bg-phumulani-cream border border-phumulani-earth rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer"
                                   title="Reject proposed draft"
                                 >
                                   <ThumbsDown className="w-3 h-3" />
@@ -4219,7 +4219,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                               <button
                                 type="button"
                                 onClick={() => handleSendApprovedEmail(thread.id)}
-                                className="px-3 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
+                                className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
                               >
                                 <Send className="w-3.5 h-3.5" />
                                 <span>Send Approved Email</span>
@@ -4227,8 +4227,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             )}
 
                             {draft.status === 'sent' && (
-                              <span className="text-xs font-bold text-emerald-800 flex items-center gap-1">
-                                <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                              <span className="text-xs font-bold text-phumulani-charcoal flex items-center gap-1">
+                                <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
                                 <span>Dispatched to Recipient</span>
                               </span>
                             )}
@@ -4241,49 +4241,49 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             )}
 
             {/* Phase 68 Persistent 10-Stage Outbound Drafts & Maker-Checker Queue */}
-            <div className="border-t border-slate-200 pt-5 space-y-3">
+            <div className="border-t border-phumulani-cream pt-5 space-y-3">
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <h4 className="text-sm font-bold text-slate-900">
+                  <h4 className="text-sm font-bold text-phumulani-charcoal">
                     Persistent 10-Stage Outbound Queue & Maker-Checker Ledger ({persistentDrafts.length})
                   </h4>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-phumulani-charcoal">
                     Database-backed drafts enforcing strict author/approver separation (no self-approval), SHA-256 content-hash binding, 72h approval expiry, and scheduled dispatch.
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={refreshEnterprisePersistence}
-                  className="px-3 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold cursor-pointer"
+                  className="px-3 py-1 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-lg text-xs font-semibold cursor-pointer"
                 >
                   Refresh Queue
                 </button>
               </div>
 
               {persistentDrafts.length === 0 ? (
-                <div className="p-6 text-center text-xs text-slate-500 border border-dashed border-slate-200 rounded-xl">
+                <div className="p-6 text-center text-xs text-phumulani-charcoal border border-dashed border-phumulani-cream rounded-xl">
                   No persistent Phase 68 outbound drafts recorded yet. Create a persistent draft via <code>POST /api/admin/email/drafts</code> or the Compose workflow.
                 </div>
               ) : (
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-3">
                   {persistentDrafts.map((pd) => (
-                    <div key={pd.id} className="border border-slate-200 rounded-xl p-4 bg-slate-50/70 space-y-2 text-xs">
+                    <div key={pd.id} className="border border-phumulani-cream rounded-xl p-4 bg-phumulani-cream space-y-2 text-xs">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-900">
+                        <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-full bg-phumulani-cream text-phumulani-earth">
                           {pd.lifecycleStage || pd.status}
                         </span>
-                        <span className="font-mono text-[10px] text-slate-500">
+                        <span className="font-mono text-[10px] text-phumulani-charcoal">
                           Hash: {String(pd.contentHash || '').slice(0, 12)}…
                         </span>
                       </div>
-                      <div className="font-bold text-slate-900">{pd.subject}</div>
-                      <div className="text-[11px] text-slate-600 font-mono">
+                      <div className="font-bold text-phumulani-charcoal">{pd.subject}</div>
+                      <div className="text-[11px] text-phumulani-charcoal font-mono">
                         To: {Array.isArray(pd.to) ? pd.to.join(', ') : pd.to} · Author: {pd.createdBy || pd.authorId || 'unknown'}
                       </div>
-                      <div className="bg-white border border-slate-200 rounded-lg p-2.5 text-slate-800 whitespace-pre-wrap max-h-28 overflow-y-auto">
+                      <div className="bg-white border border-phumulani-cream rounded-lg p-2.5 text-phumulani-charcoal whitespace-pre-wrap max-h-28 overflow-y-auto">
                         {pd.bodyText}
                       </div>
-                      <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-slate-200">
+                      <div className="flex flex-wrap items-center gap-1.5 pt-2 border-t border-phumulani-cream">
                         {['DRAFT', 'AI_SUGGESTED', 'PENDING_APPROVAL', 'HUMAN_REVIEW_REQUIRED'].includes(
                           String(pd.lifecycleStage || pd.status)
                         ) && (
@@ -4291,21 +4291,21 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             <button
                               type="button"
                               onClick={() => handleApprovePersistentDraft(pd.id, 'APPROVE')}
-                              className="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg font-bold cursor-pointer"
+                              className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold cursor-pointer"
                             >
                               Approve (Maker-Checker)
                             </button>
                             <button
                               type="button"
                               onClick={() => handleApprovePersistentDraft(pd.id, 'REQUEST_CHANGES')}
-                              className="px-2.5 py-1 bg-amber-50 border border-amber-300 text-amber-800 rounded-lg font-semibold cursor-pointer"
+                              className="px-2.5 py-1 bg-phumulani-cream border border-phumulani-gold text-phumulani-charcoal rounded-lg font-semibold cursor-pointer"
                             >
                               Request Changes
                             </button>
                             <button
                               type="button"
                               onClick={() => handleApprovePersistentDraft(pd.id, 'REJECT')}
-                              className="px-2.5 py-1 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg font-semibold cursor-pointer"
+                              className="px-2.5 py-1 bg-phumulani-cream border border-phumulani-earth text-phumulani-earth rounded-lg font-semibold cursor-pointer"
                             >
                               Reject
                             </button>
@@ -4316,14 +4316,14 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             <button
                               type="button"
                               onClick={() => handleSchedulePersistentDraft(pd.id)}
-                              className="px-2.5 py-1 bg-indigo-50 border border-indigo-200 text-indigo-800 rounded-lg font-semibold cursor-pointer"
+                              className="px-2.5 py-1 bg-phumulani-cream border border-phumulani-teal text-phumulani-earth rounded-lg font-semibold cursor-pointer"
                             >
                               Schedule (+1h)
                             </button>
                             <button
                               type="button"
                               onClick={() => handleSendPersistentDraft(pd.id)}
-                              className="px-2.5 py-1 bg-[#104F57] hover:bg-teal-900 text-white rounded-lg font-bold cursor-pointer"
+                              className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold cursor-pointer"
                             >
                               Dispatch Now
                             </button>
@@ -4345,17 +4345,17 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
           <div className="h-full flex flex-col lg:flex-row gap-4 overflow-y-auto">
             {/* Left: Major Donor Pipeline (10 Stages) */}
             <div className="flex-1 space-y-4">
-              <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+              <div className="bg-white border border-phumulani-cream rounded-2xl p-4 shadow-xs">
+                <div className="flex items-center justify-between border-b border-phumulani-cream pb-3 mb-3">
                   <div>
-                    <h3 className="text-sm font-bold text-slate-900">
+                    <h3 className="text-sm font-bold text-phumulani-charcoal">
                       Major Donor Pipeline (10-Stage Lifecycle)
                     </h3>
-                    <p className="text-xs text-slate-500">
+                    <p className="text-xs text-phumulani-charcoal">
                       Grounded in verified transactions and non-dilutive matching grants.
                     </p>
                   </div>
-                  <span className="text-xs font-bold text-teal-900 bg-teal-50 border border-teal-200 px-2.5 py-0.5 rounded-full font-mono">
+                  <span className="text-xs font-bold text-phumulani-earth bg-phumulani-cream border border-phumulani-teal px-2.5 py-0.5 rounded-full font-mono">
                     Total Pipeline: ${(pipeline.reduce((s, p) => s + p.estimatedAmount, 0)).toLocaleString()}
                   </span>
                 </div>
@@ -4364,31 +4364,31 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   {pipeline.map((deal) => (
                     <div
                       key={deal.id}
-                      className="border border-slate-200 rounded-xl p-3.5 bg-slate-50/50 hover:bg-slate-50 transition-all"
+                      className="border border-phumulani-cream rounded-xl p-3.5 bg-phumulani-cream hover:bg-phumulani-cream transition-all"
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                          <span className="text-xs font-bold text-slate-900">{deal.donorName}</span>
+                          <span className="text-xs font-bold text-phumulani-charcoal">{deal.donorName}</span>
                           {deal.organization && (
-                            <span className="text-xs text-slate-500 ml-1">({deal.organization})</span>
+                            <span className="text-xs text-phumulani-charcoal ml-1">({deal.organization})</span>
                           )}
-                          <div className="text-[11px] text-teal-800 font-semibold mt-0.5">
+                          <div className="text-[11px] text-phumulani-earth font-semibold mt-0.5">
                             Target Campaign: {deal.campaignTitle}
                           </div>
                         </div>
                         <div className="text-right">
-                          <span className="text-sm font-bold text-slate-900">
+                          <span className="text-sm font-bold text-phumulani-charcoal">
                             ${deal.estimatedAmount.toLocaleString()}
                           </span>
-                          <span className="block text-[10px] text-slate-500 font-mono">
+                          <span className="block text-[10px] text-phumulani-charcoal font-mono">
                             {deal.probabilityPercent}% Probability
                           </span>
                         </div>
                       </div>
 
-                      <div className="mt-3 flex items-center justify-between text-xs pt-2 border-t border-slate-200/80">
+                      <div className="mt-3 flex items-center justify-between text-xs pt-2 border-t border-phumulani-cream">
                         <div className="flex items-center gap-1.5">
-                          <span className="text-slate-500 text-[11px]">Stage:</span>
+                          <span className="text-phumulani-charcoal text-[11px]">Stage:</span>
                           <select
                             value={deal.stage}
                             onChange={(e) =>
@@ -4397,7 +4397,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                                 stage: e.target.value as DonorLifecycleStage,
                               })
                             }
-                            className="bg-white border border-slate-200 rounded-lg p-1 text-xs font-semibold text-slate-800"
+                            className="bg-white border border-phumulani-cream rounded-lg p-1 text-xs font-semibold text-phumulani-charcoal"
                           >
                             <option value="prospect">01 Prospect</option>
                             <option value="contacted">02 Contacted</option>
@@ -4411,7 +4411,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             <option value="renewal">10 Renewal</option>
                           </select>
                         </div>
-                        <span className="text-[11px] text-slate-500">
+                        <span className="text-[11px] text-phumulani-charcoal">
                           Target Close: {new Date(deal.targetCloseDate).toLocaleDateString()}
                         </span>
                       </div>
@@ -4423,28 +4423,28 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
             {/* Right: Verified Donor Profiles */}
             <div className="w-full lg:w-96 space-y-4">
-              <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
-                  <span className="text-xs font-bold text-slate-900">Verified Donor Profiles</span>
-                  <span className="text-[10px] text-teal-800 bg-teal-50 px-2 py-0.5 rounded font-mono font-bold">
+              <div className="bg-white border border-phumulani-cream rounded-2xl p-4 shadow-xs">
+                <div className="flex items-center justify-between border-b border-phumulani-cream pb-2 mb-3">
+                  <span className="text-xs font-bold text-phumulani-charcoal">Verified Donor Profiles</span>
+                  <span className="text-[10px] text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded font-mono font-bold">
                     {donors.length} Profiles
                   </span>
                 </div>
 
                 <div className="space-y-3">
                   {donors.map((donor) => (
-                    <div key={donor.id} className="border border-slate-200 rounded-xl p-3 bg-slate-50/50">
+                    <div key={donor.id} className="border border-phumulani-cream rounded-xl p-3 bg-phumulani-cream">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-slate-900">{donor.fullName}</span>
-                        <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.2 rounded font-mono">
+                        <span className="text-xs font-bold text-phumulani-charcoal">{donor.fullName}</span>
+                        <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal px-1.5 py-0.2 rounded font-mono">
                           ${donor.lifetimeDonated.toLocaleString()} Lifetime
                         </span>
                       </div>
-                      <div className="text-[11px] text-slate-500 font-mono mt-0.5">{donor.email}</div>
-                      <div className="text-xs text-slate-600 mt-1">
+                      <div className="text-[11px] text-phumulani-charcoal font-mono mt-0.5">{donor.email}</div>
+                      <div className="text-xs text-phumulani-charcoal mt-1">
                         <strong>Relationship Lead:</strong> {donor.relationshipOwner}
                       </div>
-                      <div className="mt-2 text-[11px] text-slate-700 bg-white p-2 rounded border border-slate-200">
+                      <div className="mt-2 text-[11px] text-phumulani-charcoal bg-white p-2 rounded border border-phumulani-cream">
                         {donor.notes[0]}
                       </div>
                     </div>
@@ -4459,17 +4459,17 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB 5: GRANTS MANAGEMENT (A12) */}
         {/* ========================================================================= */}
         {activeTab === 'grants' && (
-          <div className="h-full bg-white border border-slate-200 rounded-2xl p-4 shadow-xs overflow-y-auto space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div className="h-full bg-white border border-phumulani-cream rounded-2xl p-4 shadow-xs overflow-y-auto space-y-4">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div>
-                <h3 className="text-sm font-bold text-slate-900">
+                <h3 className="text-sm font-bold text-phumulani-charcoal">
                   Institutional Grants & Foundation Pipeline (A12 Grants Assistant)
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-phumulani-charcoal">
                   10-stage institutional grant management pipeline with verified 501(c)(3) eligibility and LOI diligence.
                 </p>
               </div>
-              <span className="text-xs font-mono font-bold bg-indigo-50 text-indigo-900 border border-indigo-200 px-2.5 py-0.5 rounded-full">
+              <span className="text-xs font-mono font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2.5 py-0.5 rounded-full">
                 Active Institutional Funding: ${(grants.reduce((s, g) => s + g.fundingAmount, 0)).toLocaleString()}
               </span>
             </div>
@@ -4478,25 +4478,25 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               {grants.map((grant) => (
                 <div
                   key={grant.id}
-                  className="border border-slate-200 rounded-xl p-4 bg-[#F8FAFB] flex flex-col md:flex-row justify-between gap-4"
+                  className="border border-phumulani-cream rounded-xl p-4 bg-phumulani-cream flex flex-col md:flex-row justify-between gap-4"
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-sm text-slate-900">{grant.funderName}</span>
-                      <span className="text-xs font-mono bg-indigo-100 text-indigo-800 px-2 py-0.2 rounded font-semibold">
+                      <span className="font-bold text-sm text-phumulani-charcoal">{grant.funderName}</span>
+                      <span className="text-xs font-mono bg-phumulani-cream text-phumulani-earth px-2 py-0.2 rounded font-semibold">
                         ${grant.fundingAmount.toLocaleString()}
                       </span>
                       {grant.eligibilityVerified && (
-                        <span className="text-[10px] text-emerald-800 bg-emerald-100 border border-emerald-300 font-bold px-1.5 py-0.2 rounded">
+                        <span className="text-[10px] text-phumulani-charcoal bg-phumulani-cream border border-phumulani-green font-bold px-1.5 py-0.2 rounded">
                           Eligibility Verified
                         </span>
                       )}
                     </div>
-                    <div className="text-xs font-semibold text-slate-700">{grant.opportunityTitle}</div>
-                    <div className="text-xs text-slate-500 mt-1">
-                      Target Program: <span className="font-semibold text-slate-800">{grant.programTarget}</span> · Lead Staff: <span className="font-semibold text-slate-800">{grant.leadStaff}</span> · Deadline: <span className="font-mono font-bold text-rose-800">{grant.deadline}</span>
+                    <div className="text-xs font-semibold text-phumulani-charcoal">{grant.opportunityTitle}</div>
+                    <div className="text-xs text-phumulani-charcoal mt-1">
+                      Target Program: <span className="font-semibold text-phumulani-charcoal">{grant.programTarget}</span> · Lead Staff: <span className="font-semibold text-phumulani-charcoal">{grant.leadStaff}</span> · Deadline: <span className="font-mono font-bold text-phumulani-earth">{grant.deadline}</span>
                     </div>
-                    <div className="mt-2 text-xs bg-white border border-indigo-100 p-2.5 rounded-lg text-indigo-950 font-sans">
+                    <div className="mt-2 text-xs bg-white border border-phumulani-cream p-2.5 rounded-lg text-phumulani-earth font-sans">
                       <strong>A12 Assistance Notes:</strong> {grant.aiGrantsAssistantNotes}
                     </div>
                   </div>
@@ -4504,7 +4504,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   {/* Stage Selector */}
                   <div className="flex flex-col justify-between shrink-0 text-right md:w-56">
                     <div>
-                      <span className="text-[11px] text-slate-500 block mb-1">Grant Pipeline Stage:</span>
+                      <span className="text-[11px] text-phumulani-charcoal block mb-1">Grant Pipeline Stage:</span>
                       <select
                         value={grant.stage}
                         onChange={(e) =>
@@ -4513,7 +4513,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             stage: e.target.value as GrantPipelineStage,
                           })
                         }
-                        className="w-full bg-white border border-slate-200 rounded-lg p-1.5 text-xs font-semibold text-slate-800"
+                        className="w-full bg-white border border-phumulani-cream rounded-lg p-1.5 text-xs font-semibold text-phumulani-charcoal"
                       >
                         <option value="identified">01 Identified</option>
                         <option value="eligibility_review">02 Eligibility Review</option>
@@ -4528,7 +4528,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       </select>
                     </div>
 
-                    <div className="text-[10px] text-slate-400 font-mono mt-2">
+                    <div className="text-[10px] text-phumulani-charcoal font-mono mt-2">
                       Required Docs: {grant.requiredDocuments.join(', ')}
                     </div>
                   </div>
@@ -4542,17 +4542,17 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB 6: CORPORATE SPONSORSHIPS & CSR */}
         {/* ========================================================================= */}
         {activeTab === 'partnerships' && (
-          <div className="h-full bg-white border border-slate-200 rounded-2xl p-4 shadow-xs overflow-y-auto space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div className="h-full bg-white border border-phumulani-cream rounded-2xl p-4 shadow-xs overflow-y-auto space-y-4">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div>
-                <h3 className="text-sm font-bold text-slate-900">
+                <h3 className="text-sm font-bold text-phumulani-charcoal">
                   Corporate Sponsorships & CSR Partnerships (11-Stage Workflow)
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-phumulani-charcoal">
                   Advancing workforce pathways, employer hiring days, and event sponsorships.
                 </p>
               </div>
-              <span className="text-xs font-mono font-bold bg-teal-50 text-teal-900 border border-teal-200 px-2.5 py-0.5 rounded-full">
+              <span className="text-xs font-mono font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2.5 py-0.5 rounded-full">
                 Active Corporate Value: ${(partnerships.reduce((s, p) => s + p.estimatedValue, 0)).toLocaleString()}
               </span>
             </div>
@@ -4561,32 +4561,32 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               {partnerships.map((corp) => (
                 <div
                   key={corp.id}
-                  className="border border-slate-200 rounded-xl p-4 bg-[#F8FAFB] flex flex-col md:flex-row justify-between gap-4"
+                  className="border border-phumulani-cream rounded-xl p-4 bg-phumulani-cream flex flex-col md:flex-row justify-between gap-4"
                 >
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-bold text-sm text-slate-900">{corp.companyName}</span>
-                      <span className="text-xs font-mono bg-teal-100 text-teal-800 px-2 py-0.2 rounded font-semibold">
+                      <span className="font-bold text-sm text-phumulani-charcoal">{corp.companyName}</span>
+                      <span className="text-xs font-mono bg-phumulani-cream text-phumulani-earth px-2 py-0.2 rounded font-semibold">
                         ${corp.estimatedValue.toLocaleString()}
                       </span>
-                      <span className="text-[10px] font-bold text-slate-600 bg-slate-200 px-2 py-0.2 rounded uppercase">
+                      <span className="text-[10px] font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.2 rounded uppercase">
                         {corp.partnershipType.replace('_', ' ')}
                       </span>
                     </div>
-                    <div className="text-xs text-slate-600">
-                      Contact: <span className="font-semibold text-slate-800">{corp.contactPerson}</span> · <span className="font-mono text-slate-500">{corp.contactEmail}</span>
+                    <div className="text-xs text-phumulani-charcoal">
+                      Contact: <span className="font-semibold text-phumulani-charcoal">{corp.contactPerson}</span> · <span className="font-mono text-phumulani-charcoal">{corp.contactEmail}</span>
                     </div>
-                    <div className="text-xs text-slate-500 mt-1">
-                      Lead: <span className="font-semibold text-slate-800">{corp.leadStaff}</span> · Last Contact: {corp.lastContactDate} · Next Follow-up: <span className="font-bold text-teal-900">{corp.nextFollowUpDate}</span>
+                    <div className="text-xs text-phumulani-charcoal mt-1">
+                      Lead: <span className="font-semibold text-phumulani-charcoal">{corp.leadStaff}</span> · Last Contact: {corp.lastContactDate} · Next Follow-up: <span className="font-bold text-phumulani-earth">{corp.nextFollowUpDate}</span>
                     </div>
-                    <div className="mt-2 text-xs bg-white border border-slate-200 p-2.5 rounded-lg text-slate-800">
+                    <div className="mt-2 text-xs bg-white border border-phumulani-cream p-2.5 rounded-lg text-phumulani-charcoal">
                       {corp.proposalSummary}
                     </div>
                   </div>
 
                   <div className="flex flex-col justify-between shrink-0 md:w-56 text-right">
                     <div>
-                      <span className="text-[11px] text-slate-500 block mb-1">Partnership Stage:</span>
+                      <span className="text-[11px] text-phumulani-charcoal block mb-1">Partnership Stage:</span>
                       <select
                         value={corp.stage}
                         onChange={(e) =>
@@ -4595,7 +4595,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             stage: e.target.value as PartnershipPipelineStage,
                           })
                         }
-                        className="w-full bg-white border border-slate-200 rounded-lg p-1.5 text-xs font-semibold text-slate-800"
+                        className="w-full bg-white border border-phumulani-cream rounded-lg p-1.5 text-xs font-semibold text-phumulani-charcoal"
                       >
                         <option value="prospect_id">01 Prospect Identification</option>
                         <option value="research">02 Research</option>
@@ -4624,48 +4624,48 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
           <div className="h-full flex flex-col lg:flex-row gap-4 overflow-y-auto">
             {/* Left: Daily Priority Briefing for Comfort Dondo */}
             <div className="flex-1 space-y-4">
-              <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-3 mb-3">
+              <div className="bg-white border border-phumulani-cream rounded-2xl p-4 shadow-xs">
+                <div className="flex items-center justify-between border-b border-phumulani-cream pb-3 mb-3">
                   <div className="flex items-center gap-2">
-                    <UserCheck className="w-4 h-4 text-teal-800" />
+                    <UserCheck className="w-4 h-4 text-phumulani-earth" />
                     <div>
-                      <h3 className="text-sm font-bold text-slate-900">
+                      <h3 className="text-sm font-bold text-phumulani-charcoal">
                         Executive Assistant (A01) — Daily Priority Briefing
                       </h3>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-phumulani-charcoal">
                         Synthesized for Executive Director Comfort Dondo · Verified Production Records
                       </p>
                     </div>
                   </div>
-                  <span className="text-[10px] font-mono text-slate-400 bg-slate-100 px-2 py-0.5 rounded">
+                  <span className="text-[10px] font-mono text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded">
                     {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' })}
                   </span>
                 </div>
 
                 <div className="space-y-3 text-xs leading-relaxed">
-                  <div className="bg-rose-50/70 border border-rose-200 rounded-xl p-3">
-                    <span className="font-bold text-rose-900 block mb-1">
+                  <div className="bg-phumulani-cream border border-phumulani-earth rounded-xl p-3">
+                    <span className="font-bold text-phumulani-earth block mb-1">
                       P0 Safeguarding Action Item:
                     </span>
-                    <p className="text-rose-950">
+                    <p className="text-phumulani-earth">
                       1 discreet community referral routed directly to Sister Miriam K. for immediate Hennepin County emergency safe transitional relocation tonight. External auto-responders suppressed.
                     </p>
                   </div>
 
-                  <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3">
-                    <span className="font-bold text-amber-900 block mb-1">
+                  <div className="bg-phumulani-cream border border-phumulani-gold rounded-xl p-3">
+                    <span className="font-bold text-phumulani-charcoal block mb-1">
                       P1 Urgent Decision Required Today:
                     </span>
-                    <p className="text-amber-950">
+                    <p className="text-phumulani-charcoal">
                       Minnesota House Judiciary Committee oral testimony on HF 1842 requested for Wednesday at 9:00 AM. 5-minute brief ready for 1-click confirmation.
                     </p>
                   </div>
 
-                  <div className="bg-teal-50/70 border border-teal-200 rounded-xl p-3">
-                    <span className="font-bold text-teal-900 block mb-1">
+                  <div className="bg-phumulani-cream border border-phumulani-teal rounded-xl p-3">
+                    <span className="font-bold text-phumulani-earth block mb-1">
                       Major Donor & Grant Milestones:
                     </span>
-                    <p className="text-teal-950">
+                    <p className="text-phumulani-earth">
                       Vance Family Fund approved $50,000 challenge match for Housing Bridge Fund. Bush Foundation invited $120,000 LOI. Target CSR finalized $25,000 Title Sponsorship.
                     </p>
                   </div>
@@ -4673,10 +4673,10 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               </div>
 
               {/* Follow-up Tasks */}
-              <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
-                  <span className="text-xs font-bold text-slate-900">Assigned Follow-Up Tasks</span>
-                  <span className="text-[10px] text-teal-800 bg-teal-50 px-2 py-0.5 rounded font-mono font-bold">
+              <div className="bg-white border border-phumulani-cream rounded-2xl p-4 shadow-xs">
+                <div className="flex items-center justify-between border-b border-phumulani-cream pb-2 mb-3">
+                  <span className="text-xs font-bold text-phumulani-charcoal">Assigned Follow-Up Tasks</span>
+                  <span className="text-[10px] text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded font-mono font-bold">
                     {followUps.length} Tasks
                   </span>
                 </div>
@@ -4685,24 +4685,24 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   {followUps.map((task) => (
                     <div
                       key={task.id}
-                      className="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 bg-slate-50/50 text-xs"
+                      className="flex items-center justify-between p-2.5 rounded-xl border border-phumulani-cream bg-phumulani-cream text-xs"
                     >
                       <div className="flex items-center gap-2">
                         <input
                           type="checkbox"
                           checked={task.status === 'completed'}
                           onChange={() => db.toggleFollowUpTask(task.id)}
-                          className="rounded text-teal-800 focus:ring-teal-700 cursor-pointer"
+                          className="rounded text-phumulani-earth focus:ring-phumulani-earth cursor-pointer"
                         />
                         <div>
                           <span
                             className={`font-semibold ${
-                              task.status === 'completed' ? 'line-through text-slate-400' : 'text-slate-900'
+                              task.status === 'completed' ? 'line-through text-phumulani-charcoal' : 'text-phumulani-charcoal'
                             }`}
                           >
                             {task.title}
                           </span>
-                          <div className="text-[10px] text-slate-500">
+                          <div className="text-[10px] text-phumulani-charcoal">
                             Assigned: {task.assignedTo} · Due: {task.dueDate} · Entity: {task.relatedEntityName}
                           </div>
                         </div>
@@ -4710,10 +4710,10 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       <span
                         className={`text-[10px] font-bold px-1.5 py-0.2 rounded uppercase ${
                           task.priority === 'urgent'
-                            ? 'bg-rose-100 text-rose-800'
+                            ? 'bg-phumulani-cream text-phumulani-earth'
                             : task.priority === 'high'
-                            ? 'bg-amber-100 text-amber-800'
-                            : 'bg-slate-200 text-slate-700'
+                            ? 'bg-phumulani-cream text-phumulani-charcoal'
+                            : 'bg-phumulani-cream text-phumulani-charcoal'
                         }`}
                       >
                         {task.priority}
@@ -4726,42 +4726,42 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
             {/* Right: AI Calendar Integration (A03 Calendar Manager) */}
             <div className="w-full lg:w-96 space-y-4">
-              <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs">
-                <div className="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
+              <div className="bg-white border border-phumulani-cream rounded-2xl p-4 shadow-xs">
+                <div className="flex items-center justify-between border-b border-phumulani-cream pb-2 mb-3">
                   <div className="flex items-center gap-1.5">
-                    <Calendar className="w-4 h-4 text-purple-700" />
-                    <span className="text-xs font-bold text-slate-900">Calendar Proposals (A03)</span>
+                    <Calendar className="w-4 h-4 text-phumulani-earth" />
+                    <span className="text-xs font-bold text-phumulani-charcoal">Calendar Proposals (A03)</span>
                   </div>
-                  <span className="text-[10px] text-purple-800 bg-purple-50 px-2 py-0.5 rounded font-mono font-bold">
+                  <span className="text-[10px] text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded font-mono font-bold">
                     Conflict Detection Active
                   </span>
                 </div>
 
                 <div className="space-y-3">
                   {calendarProposals.map((cal) => (
-                    <div key={cal.id} className="border border-slate-200 rounded-xl p-3 bg-slate-50/50 text-xs space-y-2">
+                    <div key={cal.id} className="border border-phumulani-cream rounded-xl p-3 bg-phumulani-cream text-xs space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-slate-900">{cal.proposedTitle}</span>
+                        <span className="font-bold text-phumulani-charcoal">{cal.proposedTitle}</span>
                         <span
                           className={`text-[10px] font-bold px-1.5 py-0.2 rounded uppercase ${
                             cal.status === 'approved_sent'
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : 'bg-purple-100 text-purple-800'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal'
+                              : 'bg-phumulani-cream text-phumulani-earth'
                           }`}
                         >
                           {cal.status.replace('_', ' ')}
                         </span>
                       </div>
-                      <div className="text-[11px] text-slate-500 font-mono">
+                      <div className="text-[11px] text-phumulani-charcoal font-mono">
                         Attendee: {cal.attendeeName} ({cal.attendeeEmail})
                       </div>
-                      <div className="text-[11px] text-slate-700 bg-white p-2 rounded border border-slate-200">
+                      <div className="text-[11px] text-phumulani-charcoal bg-white p-2 rounded border border-phumulani-cream">
                         {cal.notes}
                       </div>
                       {cal.status !== 'approved_sent' && (
                         <button
                           onClick={() => db.approveCalendarProposal(cal.id, cal.proposedTimes[0])}
-                          className="w-full py-1 bg-purple-700 hover:bg-purple-800 text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1 cursor-pointer"
+                          className="w-full py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1 cursor-pointer"
                         >
                           <Check className="w-3.5 h-3.5" />
                           <span>Dispatch Confirmed Calendar Invite</span>
@@ -4779,95 +4779,95 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB 8: COMMUNICATIONS INTELLIGENCE & ANALYTICS */}
         {/* ========================================================================= */}
         {activeTab === 'analytics' && (
-          <div className="h-full bg-white border border-slate-200 rounded-2xl p-4 shadow-xs overflow-y-auto space-y-6">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div className="h-full bg-white border border-phumulani-cream rounded-2xl p-4 shadow-xs overflow-y-auto space-y-6">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div>
-                <h3 className="text-sm font-bold text-slate-900">Communications Intelligence & Operational SLA Dashboard</h3>
-                <p className="text-xs text-slate-500">
+                <h3 className="text-sm font-bold text-phumulani-charcoal">Communications Intelligence & Operational SLA Dashboard</h3>
+                <p className="text-xs text-phumulani-charcoal">
                   Comprehensive performance tracking, response times, classification accuracy, and fundraising conversion.
                 </p>
               </div>
-              <span className="text-xs font-mono font-bold bg-emerald-50 text-emerald-900 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+              <span className="text-xs font-mono font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green px-2.5 py-0.5 rounded-full">
                 SLA Compliance: 99.4%
               </span>
             </div>
 
             {/* Performance Metrics Rows */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
-                <span className="text-xs font-bold text-slate-700 uppercase tracking-wide block mb-2">
+              <div className="border border-phumulani-cream rounded-xl p-4 bg-phumulani-cream">
+                <span className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wide block mb-2">
                   Response SLA Target Performance
                 </span>
                 <div className="space-y-2 text-xs">
                   <div className="flex justify-between">
                     <span>Average First-Response:</span>
-                    <strong className="text-teal-900 font-mono">{analytics.avgResponseTimeHours} hours</strong>
+                    <strong className="text-phumulani-earth font-mono">{analytics.avgResponseTimeHours} hours</strong>
                   </div>
                   <div className="flex justify-between">
                     <span>Average Issue Resolution:</span>
-                    <strong className="text-slate-900 font-mono">{analytics.avgResolutionTimeHours} hours</strong>
+                    <strong className="text-phumulani-charcoal font-mono">{analytics.avgResolutionTimeHours} hours</strong>
                   </div>
                   <div className="flex justify-between">
                     <span>Overdue Messages:</span>
-                    <strong className="text-emerald-700 font-mono">0 Overdue</strong>
+                    <strong className="text-phumulani-earth font-mono">0 Overdue</strong>
                   </div>
                 </div>
               </div>
 
-              <div className="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
-                <span className="text-xs font-bold text-slate-700 uppercase tracking-wide block mb-2">
+              <div className="border border-phumulani-cream rounded-xl p-4 bg-phumulani-cream">
+                <span className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wide block mb-2">
                   AI Accuracy & Quality Metrics
                 </span>
                 <div className="space-y-2 text-xs">
                   <div className="flex justify-between">
                     <span>Classification Accuracy:</span>
-                    <strong className="text-teal-900 font-mono">{analytics.classificationAccuracyPercent}%</strong>
+                    <strong className="text-phumulani-earth font-mono">{analytics.classificationAccuracyPercent}%</strong>
                   </div>
                   <div className="flex justify-between">
                     <span>Draft Acceptance Rate:</span>
-                    <strong className="text-emerald-800 font-mono">{analytics.aiDraftAcceptanceRatePercent}%</strong>
+                    <strong className="text-phumulani-charcoal font-mono">{analytics.aiDraftAcceptanceRatePercent}%</strong>
                   </div>
                   <div className="flex justify-between">
                     <span>Policy Safety Violations:</span>
-                    <strong className="text-emerald-700 font-mono">0 Violations</strong>
+                    <strong className="text-phumulani-earth font-mono">0 Violations</strong>
                   </div>
                 </div>
               </div>
 
-              <div className="border border-slate-200 rounded-xl p-4 bg-slate-50/50">
-                <span className="text-xs font-bold text-slate-700 uppercase tracking-wide block mb-2">
+              <div className="border border-phumulani-cream rounded-xl p-4 bg-phumulani-cream">
+                <span className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wide block mb-2">
                   Fundraising & Partnership Conversion
                 </span>
                 <div className="space-y-2 text-xs">
                   <div className="flex justify-between">
                     <span>Major Donor Conversations:</span>
-                    <strong className="text-teal-900 font-mono">{analytics.activeDonorConversations} Active</strong>
+                    <strong className="text-phumulani-earth font-mono">{analytics.activeDonorConversations} Active</strong>
                   </div>
                   <div className="flex justify-between">
                     <span>Grants in Pipeline:</span>
-                    <strong className="text-slate-900 font-mono">{analytics.upcomingGrantDeadlines} ($470,000)</strong>
+                    <strong className="text-phumulani-charcoal font-mono">{analytics.upcomingGrantDeadlines} ($470,000)</strong>
                   </div>
                   <div className="flex justify-between">
                     <span>Corporate Partnerships:</span>
-                    <strong className="text-indigo-900 font-mono">{partnerships.length} ($58,000)</strong>
+                    <strong className="text-phumulani-earth font-mono">{partnerships.length} ($58,000)</strong>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Classification Category Distribution */}
-            <div className="border border-slate-200 rounded-xl p-4 bg-slate-50/30">
-              <span className="text-xs font-bold text-slate-800 block mb-3">
+            <div className="border border-phumulani-cream rounded-xl p-4 bg-phumulani-cream">
+              <span className="text-xs font-bold text-phumulani-charcoal block mb-3">
                 Volume Breakdown Across 25 Classification Categories
               </span>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2 text-xs">
                 {Object.entries(EMAIL_CATEGORY_METADATA).map(([catKey, meta]) => {
                   const count = threads.filter((t) => t.classification === catKey).length;
                   return (
-                    <div key={catKey} className="bg-white border border-slate-200 p-2 rounded-lg">
-                      <div className="font-mono text-[10px] text-slate-400">{meta.code}</div>
-                      <div className="font-semibold text-slate-800 truncate text-[11px]">{meta.label}</div>
-                      <div className="text-[10px] text-teal-800 font-bold mt-1">{count} Threads</div>
+                    <div key={catKey} className="bg-white border border-phumulani-cream p-2 rounded-lg">
+                      <div className="font-mono text-[10px] text-phumulani-charcoal">{meta.code}</div>
+                      <div className="font-semibold text-phumulani-charcoal truncate text-[11px]">{meta.label}</div>
+                      <div className="text-[10px] text-phumulani-earth font-bold mt-1">{count} Threads</div>
                     </div>
                   );
                 })}
@@ -4880,29 +4880,29 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB 9: FOLLOW-UP TASK MANAGEMENT (Milestone 23.08) */}
         {/* ========================================================================= */}
         {activeTab === 'follow_up_tasks' && (
-          <div className="flex-1 h-full bg-white border border-slate-200 rounded-2xl p-5 shadow-xs overflow-y-auto space-y-4">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+          <div className="flex-1 h-full bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs overflow-y-auto space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-phumulani-cream pb-3">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-mono text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 px-2 py-0.5 rounded-full uppercase">
+                  <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green px-2 py-0.5 rounded-full uppercase">
                     Milestone 23.08
                   </span>
-                  <span className="text-[10px] font-bold bg-teal-100 text-teal-800 border border-teal-300 px-2 py-0.5 rounded-full flex items-center gap-1">
-                    <CheckSquare className="w-3 h-3 text-teal-600" />
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <CheckSquare className="w-3 h-3 text-phumulani-earth" />
                     Bi-directional Thread & CRM Linking
                   </span>
                 </div>
-                <h3 className="text-sm font-bold text-slate-900">
+                <h3 className="text-sm font-bold text-phumulani-charcoal">
                   Staff Follow-Up Task Management
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-phumulani-charcoal">
                   Actionable commitments generated by AI email intelligence (A02) and staff review. Linked directly to constituents and source correspondence.
                 </p>
               </div>
 
               <div className="flex items-center gap-2">
                 {/* Status Filter Pills */}
-                <div className="flex items-center bg-slate-100 p-0.5 rounded-xl text-xs font-semibold">
+                <div className="flex items-center bg-phumulani-cream p-0.5 rounded-xl text-xs font-semibold">
                   {(['all', 'pending', 'completed'] as const).map((filter) => (
                     <button
                       key={filter}
@@ -4910,8 +4910,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       onClick={() => setTaskStatusFilter(filter)}
                       className={`px-3 py-1 rounded-lg capitalize transition-colors cursor-pointer ${
                         taskStatusFilter === filter
-                          ? 'bg-[#104F57] text-white shadow-2xs'
-                          : 'text-slate-600 hover:text-slate-900'
+                          ? 'bg-phumulani-earth text-white shadow-2xs'
+                          : 'text-phumulani-charcoal hover:text-phumulani-earth'
                       }`}
                     >
                       {filter}
@@ -4925,7 +4925,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     setNewTaskTitle('');
                     setIsNewTaskModalOpen(true);
                   }}
-                  className="px-3.5 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>New Follow-Up Task</span>
@@ -4939,10 +4939,10 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               if (taskStatusFilter === 'completed') return task.status === 'completed';
               return true;
             }).length === 0 ? (
-              <div className="p-12 text-center text-slate-400">
-                <CheckSquare className="w-12 h-12 mx-auto mb-2 opacity-40 text-emerald-600" />
-                <p className="font-semibold text-slate-700">No follow-up tasks match the active filter.</p>
-                <p className="text-xs text-slate-500 mt-1">All action items are up to date and completed.</p>
+              <div className="p-12 text-center text-phumulani-charcoal">
+                <CheckSquare className="w-12 h-12 mx-auto mb-2 opacity-40 text-phumulani-earth" />
+                <p className="font-semibold text-phumulani-charcoal">No follow-up tasks match the active filter.</p>
+                <p className="text-xs text-phumulani-charcoal mt-1">All action items are up to date and completed.</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -4957,8 +4957,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       key={task.id}
                       className={`border rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-all ${
                         task.status === 'completed'
-                          ? 'bg-slate-50/70 border-slate-200 opacity-75'
-                          : 'bg-white border-slate-200 shadow-2xs hover:border-slate-300'
+                          ? 'bg-phumulani-cream border-phumulani-cream opacity-75'
+                          : 'bg-white border-phumulani-cream shadow-2xs hover:border-phumulani-cream'
                       }`}
                     >
                       <div className="flex items-start gap-3">
@@ -4966,13 +4966,13 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                           type="checkbox"
                           checked={task.status === 'completed'}
                           onChange={() => db.toggleFollowUpTask(task.id)}
-                          className="mt-1 w-4 h-4 rounded text-teal-800 focus:ring-teal-700 cursor-pointer"
+                          className="mt-1 w-4 h-4 rounded text-phumulani-earth focus:ring-phumulani-earth cursor-pointer"
                         />
                         <div className="space-y-1">
                           <div className="flex items-center gap-2 flex-wrap">
                             <span
                               className={`text-xs font-bold ${
-                                task.status === 'completed' ? 'line-through text-slate-400' : 'text-slate-900'
+                                task.status === 'completed' ? 'line-through text-phumulani-charcoal' : 'text-phumulani-charcoal'
                               }`}
                             >
                               {task.title}
@@ -4980,36 +4980,36 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             <span
                               className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border ${
                                 task.priority === 'urgent'
-                                  ? 'bg-rose-100 text-rose-800 border-rose-300'
+                                  ? 'bg-phumulani-cream text-phumulani-earth border-phumulani-earth'
                                   : task.priority === 'high'
-                                  ? 'bg-amber-100 text-amber-800 border-amber-300'
-                                  : 'bg-blue-100 text-blue-800 border-blue-300'
+                                  ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-gold'
+                                  : 'bg-phumulani-cream text-phumulani-earth border-phumulani-teal'
                               }`}
                             >
                               {task.priority}
                             </span>
-                            <span className="text-[10px] font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded">
+                            <span className="text-[10px] font-mono bg-phumulani-cream text-phumulani-charcoal px-2 py-0.5 rounded">
                               {task.taskType.replace('_', ' ')}
                             </span>
                           </div>
 
-                          <div className="text-[11px] text-slate-500 flex items-center gap-3 flex-wrap">
+                          <div className="text-[11px] text-phumulani-charcoal flex items-center gap-3 flex-wrap">
                             <span>
-                              Assigned to: <strong className="text-slate-800">{task.assignedTo}</strong>
+                              Assigned to: <strong className="text-phumulani-charcoal">{task.assignedTo}</strong>
                             </span>
                             <span>·</span>
                             <span>
-                              Target Entity: <strong className="text-teal-900">{task.relatedEntityName}</strong>
+                              Target Entity: <strong className="text-phumulani-earth">{task.relatedEntityName}</strong>
                             </span>
                             <span>·</span>
                             <span>
-                              Due Date: <strong className="font-mono text-slate-700">{task.dueDate}</strong>
+                              Due Date: <strong className="font-mono text-phumulani-charcoal">{task.dueDate}</strong>
                             </span>
                           </div>
 
                           {task.aiGeneratedBy && (
-                            <div className="text-[10px] text-teal-800 flex items-center gap-1 font-mono">
-                              <Sparkles className="w-3 h-3 text-teal-600" />
+                            <div className="text-[10px] text-phumulani-earth flex items-center gap-1 font-mono">
+                              <Sparkles className="w-3 h-3 text-phumulani-earth" />
                               <span>Generated by {task.aiGeneratedBy}</span>
                             </div>
                           )}
@@ -5024,7 +5024,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                               setSelectedThreadId(task.relatedThreadId!);
                               setActiveTab('all_mailboxes');
                             }}
-                            className="px-2.5 py-1 text-xs text-teal-800 hover:text-teal-950 bg-teal-50 hover:bg-teal-100 border border-teal-200 rounded-lg font-semibold cursor-pointer"
+                            className="px-2.5 py-1 text-xs text-phumulani-earth hover:text-phumulani-earth bg-phumulani-cream hover:bg-phumulani-teal border border-phumulani-teal rounded-lg font-semibold cursor-pointer"
                           >
                             Open Thread →
                           </button>
@@ -5034,8 +5034,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                           onClick={() => db.toggleFollowUpTask(task.id)}
                           className={`px-3 py-1 text-xs font-bold rounded-lg cursor-pointer ${
                             task.status === 'completed'
-                              ? 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                              : 'bg-emerald-700 text-white hover:bg-emerald-800'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream'
+                              : 'bg-phumulani-earth text-white hover:bg-phumulani-orange'
                           }`}
                         >
                           {task.status === 'completed' ? 'Reopen' : 'Mark Complete'}
@@ -5052,75 +5052,75 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB 10: AI EMAIL INTELLIGENCE CENTER (Milestone 23.03) */}
         {/* ========================================================================= */}
         {activeTab === 'ai_intelligence' && (
-          <div className="flex-1 h-full bg-white border border-slate-200 rounded-2xl p-5 shadow-xs overflow-y-auto space-y-5">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+          <div className="flex-1 h-full bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs overflow-y-auto space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-phumulani-cream pb-3">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-mono text-[10px] font-bold bg-teal-100 text-teal-900 border border-teal-300 px-2 py-0.5 rounded-full uppercase">
+                  <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2 py-0.5 rounded-full uppercase">
                     Milestone 23.03
                   </span>
-                  <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full flex items-center gap-1">
-                    <Sparkles className="w-3 h-3 text-emerald-600" />
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <Sparkles className="w-3 h-3 text-phumulani-earth" />
                     25 Validated Categories · Multi-Entity Extraction
                   </span>
                 </div>
-                <h3 className="text-sm font-bold text-slate-900">
+                <h3 className="text-sm font-bold text-phumulani-charcoal">
                   Phumulani AI Email Intelligence Engine
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-phumulani-charcoal">
                   Production classification, dynamic P0–P4 SLA priority mapping, entity extraction (donors, amounts, grants, deadlines), and safeguarding isolation boundaries.
                 </p>
               </div>
 
-              <span className="text-xs font-mono font-bold bg-slate-100 text-slate-700 px-3 py-1.5 rounded-xl border border-slate-200">
+              <span className="text-xs font-mono font-bold bg-phumulani-cream text-phumulani-charcoal px-3 py-1.5 rounded-xl border border-phumulani-cream">
                 Classification Confidence: 94.6% Avg
               </span>
             </div>
 
             {/* 4 Feature Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-              <div className="p-3.5 bg-teal-50/70 border border-teal-200 rounded-xl space-y-1">
-                <span className="text-[11px] font-bold text-teal-900 block">25 Operational Categories</span>
-                <p className="text-slate-600 text-[11px] leading-relaxed">
+              <div className="p-3.5 bg-phumulani-cream border border-phumulani-teal rounded-xl space-y-1">
+                <span className="text-[11px] font-bold text-phumulani-earth block">25 Operational Categories</span>
+                <p className="text-phumulani-charcoal text-[11px] leading-relaxed">
                   Deterministic keyword matching combined with Gemini 2.5 Flash semantic classification.
                 </p>
               </div>
 
-              <div className="p-3.5 bg-rose-50/70 border border-rose-200 rounded-xl space-y-1">
-                <span className="text-[11px] font-bold text-rose-900 block">Safeguarding Boundary Active</span>
-                <p className="text-slate-600 text-[11px] leading-relaxed">
+              <div className="p-3.5 bg-phumulani-cream border border-phumulani-earth rounded-xl space-y-1">
+                <span className="text-[11px] font-bold text-phumulani-earth block">Safeguarding Boundary Active</span>
+                <p className="text-phumulani-charcoal text-[11px] leading-relaxed">
                   Category 01 strictly isolated from general AI drafts; routed to Sister Miriam K.
                 </p>
               </div>
 
-              <div className="p-3.5 bg-amber-50/70 border border-amber-200 rounded-xl space-y-1">
-                <span className="text-[11px] font-bold text-amber-900 block">P0–P4 Strict SLA Framework</span>
-                <p className="text-slate-600 text-[11px] leading-relaxed">
+              <div className="p-3.5 bg-phumulani-cream border border-phumulani-gold rounded-xl space-y-1">
+                <span className="text-[11px] font-bold text-phumulani-charcoal block">P0–P4 Strict SLA Framework</span>
+                <p className="text-phumulani-charcoal text-[11px] leading-relaxed">
                   Automatic countdown deadlines: P0 (&lt;1h), P1 (&lt;4h), P2 (&lt;24h), P3 (&lt;48h), P4 (&lt;72h).
                 </p>
               </div>
 
-              <div className="p-3.5 bg-indigo-50/70 border border-indigo-200 rounded-xl space-y-1">
-                <span className="text-[11px] font-bold text-indigo-900 block">Constituent Entity Extraction</span>
-                <p className="text-slate-600 text-[11px] leading-relaxed">
+              <div className="p-3.5 bg-phumulani-cream border border-phumulani-teal rounded-xl space-y-1">
+                <span className="text-[11px] font-bold text-phumulani-earth block">Constituent Entity Extraction</span>
+                <p className="text-phumulani-charcoal text-[11px] leading-relaxed">
                   Extracts donor identity, gift amounts, grant application IDs, deadlines, and CSR opportunities.
                 </p>
               </div>
             </div>
 
             {/* 25 Categories Matrix Table */}
-            <div className="border border-slate-200 rounded-2xl overflow-hidden shadow-2xs">
-              <div className="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between">
-                <span className="text-xs font-bold text-slate-800">
+            <div className="border border-phumulani-cream rounded-2xl overflow-hidden shadow-2xs">
+              <div className="p-3 bg-phumulani-cream border-b border-phumulani-cream flex items-center justify-between">
+                <span className="text-xs font-bold text-phumulani-charcoal">
                   Comprehensive 25-Category Operational Routing Register
                 </span>
-                <span className="text-[10px] font-mono text-slate-500">
+                <span className="text-[10px] font-mono text-phumulani-charcoal">
                   All 25 Categories Grounded
                 </span>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-100/70 text-slate-500 uppercase font-mono text-[10px]">
+                  <thead className="bg-phumulani-cream text-phumulani-charcoal uppercase font-mono text-[10px]">
                     <tr>
                       <th className="p-2.5">Code</th>
                       <th className="p-2.5">Category Label</th>
@@ -5131,31 +5131,31 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       <th className="p-2.5">Active Volume</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-phumulani-cream">
                     {Object.entries(EMAIL_CATEGORY_METADATA).map(([catKey, meta]) => {
                       const count = threads.filter((t) => t.classification === catKey).length;
                       const priorityCfg = PRIORITY_CONFIG[meta.defaultPriority];
                       return (
-                        <tr key={catKey} className="hover:bg-slate-50/50 transition-colors">
-                          <td className="p-2.5 font-mono font-bold text-slate-900">{meta.code}</td>
-                          <td className="p-2.5 font-semibold text-slate-800">{meta.label}</td>
-                          <td className="p-2.5 text-slate-600">{meta.department}</td>
+                        <tr key={catKey} className="hover:bg-phumulani-cream transition-colors">
+                          <td className="p-2.5 font-mono font-bold text-phumulani-charcoal">{meta.code}</td>
+                          <td className="p-2.5 font-semibold text-phumulani-charcoal">{meta.label}</td>
+                          <td className="p-2.5 text-phumulani-charcoal">{meta.department}</td>
                           <td className="p-2.5">
                             <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${priorityCfg.badgeColor}`}>
                               {priorityCfg.label}
                             </span>
                           </td>
-                          <td className="p-2.5 font-mono text-slate-600">{priorityCfg.slaHours} hours</td>
+                          <td className="p-2.5 font-mono text-phumulani-charcoal">{priorityCfg.slaHours} hours</td>
                           <td className="p-2.5">
                             {meta.isSafeguardingBoundary ? (
-                              <span className="px-2 py-0.5 bg-rose-100 text-rose-800 border border-rose-300 font-bold text-[10px] rounded-full">
+                              <span className="px-2 py-0.5 bg-phumulani-cream text-phumulani-earth border border-phumulani-earth font-bold text-[10px] rounded-full">
                                 QUARANTINED
                               </span>
                             ) : (
-                              <span className="text-slate-400 font-mono text-[11px]">—</span>
+                              <span className="text-phumulani-charcoal font-mono text-[11px]">—</span>
                             )}
                           </td>
-                          <td className="p-2.5 font-mono font-bold text-teal-800">{count} Threads</td>
+                          <td className="p-2.5 font-mono font-bold text-phumulani-earth">{count} Threads</td>
                         </tr>
                       );
                     })}
@@ -5170,22 +5170,22 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB 11: CRM CONNECTIONS & CONSTITUENT BRIDGE (Milestone 23.07) */}
         {/* ========================================================================= */}
         {activeTab === 'crm_connections' && (
-          <div className="flex-1 h-full bg-white border border-slate-200 rounded-2xl p-5 shadow-xs overflow-y-auto space-y-5">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+          <div className="flex-1 h-full bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs overflow-y-auto space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-phumulani-cream pb-3">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-mono text-[10px] font-bold bg-teal-100 text-teal-900 border border-teal-300 px-2 py-0.5 rounded-full uppercase">
+                  <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2 py-0.5 rounded-full uppercase">
                     Milestone 23.07
                   </span>
-                  <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 px-2 py-0.5 rounded-full flex items-center gap-1">
-                    <DollarSign className="w-3 h-3 text-emerald-600" />
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <DollarSign className="w-3 h-3 text-phumulani-earth" />
                     Bi-directional Relationship Intelligence
                   </span>
                 </div>
-                <h3 className="text-sm font-bold text-slate-900">
+                <h3 className="text-sm font-bold text-phumulani-charcoal">
                   Email-to-CRM Constituent Bridge
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-phumulani-charcoal">
                   Connect incoming and historical correspondence to Major Donors, Foundation Grants, Corporate CSR partners, and Community Volunteers without data duplication.
                 </p>
               </div>
@@ -5196,7 +5196,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   if (onOpenFundraisingCRM) onOpenFundraisingCRM('overview');
                   else onViewChange('fundraising');
                 }}
-                className="px-3.5 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
               >
                 <span>Launch Full Fundraising CRM →</span>
               </button>
@@ -5204,27 +5204,27 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
             {/* Metric Summary */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                <span className="text-slate-500 text-[11px] block">Active Linked Donors</span>
-                <span className="text-lg font-bold text-slate-900">{donors.length} Profiles</span>
+              <div className="p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl">
+                <span className="text-phumulani-charcoal text-[11px] block">Active Linked Donors</span>
+                <span className="text-lg font-bold text-phumulani-charcoal">{donors.length} Profiles</span>
               </div>
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                <span className="text-slate-500 text-[11px] block">Major Gifts Pipeline</span>
-                <span className="text-lg font-bold text-teal-900">${(pipeline.reduce((s, p) => s + p.estimatedAmount, 0) / 1000).toFixed(0)}k</span>
+              <div className="p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl">
+                <span className="text-phumulani-charcoal text-[11px] block">Major Gifts Pipeline</span>
+                <span className="text-lg font-bold text-phumulani-earth">${(pipeline.reduce((s, p) => s + p.estimatedAmount, 0) / 1000).toFixed(0)}k</span>
               </div>
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                <span className="text-slate-500 text-[11px] block">Active Grants</span>
-                <span className="text-lg font-bold text-indigo-900">{grants.length} Opportunities</span>
+              <div className="p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl">
+                <span className="text-phumulani-charcoal text-[11px] block">Active Grants</span>
+                <span className="text-lg font-bold text-phumulani-earth">{grants.length} Opportunities</span>
               </div>
-              <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl">
-                <span className="text-slate-500 text-[11px] block">Corporate Partnerships</span>
-                <span className="text-lg font-bold text-teal-900">{partnerships.length} Corporate</span>
+              <div className="p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl">
+                <span className="text-phumulani-charcoal text-[11px] block">Corporate Partnerships</span>
+                <span className="text-lg font-bold text-phumulani-earth">{partnerships.length} Corporate</span>
               </div>
             </div>
 
             {/* Linked Threads List */}
             <div className="space-y-3">
-              <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+              <h4 className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wide">
                 Linked Email Conversations Across Donors & Partners
               </h4>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -5233,30 +5233,30 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   .map((t) => (
                     <div
                       key={t.id}
-                      className="border border-slate-200 rounded-2xl p-4 bg-slate-50/50 hover:bg-white hover:shadow-2xs transition-all space-y-2 text-xs"
+                      className="border border-phumulani-cream rounded-2xl p-4 bg-phumulani-cream hover:bg-white hover:shadow-2xs transition-all space-y-2 text-xs"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-slate-900 truncate">{t.threadSubject}</span>
-                        <span className="font-mono text-[10px] text-slate-400">
+                        <span className="font-bold text-phumulani-charcoal truncate">{t.threadSubject}</span>
+                        <span className="font-mono text-[10px] text-phumulani-charcoal">
                           {new Date(t.lastMessageAt).toLocaleDateString()}
                         </span>
                       </div>
 
-                      <div className="text-[11px] text-slate-500">
-                        Constituent: <strong className="text-slate-800">{t.participantEmails[0]}</strong>
+                      <div className="text-[11px] text-phumulani-charcoal">
+                        Constituent: <strong className="text-phumulani-charcoal">{t.participantEmails[0]}</strong>
                       </div>
 
                       {t.crmLink && (
-                        <div className="p-2 rounded-xl bg-teal-50 border border-teal-200 text-teal-950 flex items-center justify-between text-[11px]">
+                        <div className="p-2 rounded-xl bg-phumulani-cream border border-phumulani-teal text-phumulani-earth flex items-center justify-between text-[11px]">
                           <span>
                             Linked CRM: <strong>{t.crmLink.entityName}</strong> ({t.crmLink.entityType})
                           </span>
-                          <span className="text-[10px] font-bold text-teal-800">Verified</span>
+                          <span className="text-[10px] font-bold text-phumulani-earth">Verified</span>
                         </div>
                       )}
 
                       <div className="flex items-center justify-between pt-1">
-                        <span className="font-mono text-[10px] text-slate-500">
+                        <span className="font-mono text-[10px] text-phumulani-charcoal">
                           Mailbox: {t.mailboxEmail}
                         </span>
                         <button
@@ -5265,7 +5265,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             setSelectedThreadId(t.id);
                             setActiveTab('all_mailboxes');
                           }}
-                          className="text-teal-800 hover:text-teal-950 font-bold underline cursor-pointer"
+                          className="text-phumulani-earth hover:text-phumulani-earth font-bold underline cursor-pointer"
                         >
                           View Thread →
                         </button>
@@ -5281,31 +5281,31 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB: EMAIL TEMPLATES LIBRARY (Phase 47 M47.10)                            */}
         {/* ========================================================================= */}
         {activeTab === 'templates' && (
-          <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5 space-y-5">
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex-1 h-full bg-phumulani-cream overflow-y-auto p-5 space-y-5">
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <span className="font-mono text-[10px] font-bold bg-indigo-100 text-indigo-900 border border-indigo-300 px-2.5 py-0.5 rounded-full uppercase">
+                  <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2.5 py-0.5 rounded-full uppercase">
                     Email Templates Library
                   </span>
-                  <span className="text-[10px] font-bold bg-teal-100 text-teal-800 border border-teal-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                    <BookOpen className="w-3 h-3 text-teal-600" />
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <BookOpen className="w-3 h-3 text-phumulani-earth" />
                     12 Pre-Approved Operational Templates
                   </span>
-                  <span className="text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300 px-2.5 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green px-2.5 py-0.5 rounded-full">
                     7 Community Languages Supported
                   </span>
                 </div>
-                <h2 className="text-xl font-bold font-serif text-slate-900">
+                <h2 className="text-xl font-bold font-serif text-phumulani-charcoal">
                   Pre-Approved Operational Email Templates & Merge-Field Engine
                 </h2>
-                <p className="text-xs text-slate-500 max-w-2xl mt-0.5">
+                <p className="text-xs text-phumulani-charcoal max-w-2xl mt-0.5">
                   Compliant 501(c)(3) correspondence templates with dynamic token interpolation, executive signature governance, and multilingual elder-reviewed translations.
                 </p>
               </div>
 
               {/* Language Selector (7 Languages) */}
-              <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-semibold flex-wrap">
+              <div className="flex items-center gap-1 bg-phumulani-cream p-1 rounded-xl text-xs font-semibold flex-wrap">
                 {[
                   { code: 'en', label: 'English' },
                   { code: 'so', label: 'Soomaali' },
@@ -5320,8 +5320,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     onClick={() => setTemplateLanguage(lang.code)}
                     className={`px-2.5 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                       templateLanguage === lang.code
-                        ? 'bg-[#104F57] text-white shadow-2xs'
-                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                        ? 'bg-phumulani-earth text-white shadow-2xs'
+                        : 'text-phumulani-charcoal hover:text-phumulani-earth hover:bg-phumulani-cream'
                     }`}
                   >
                     {lang.label}
@@ -5331,24 +5331,24 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             </div>
 
             {/* Template Search and Category Filter */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 border border-slate-200 rounded-2xl shadow-xs">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 border border-phumulani-cream rounded-2xl shadow-xs">
               <div className="relative flex-1">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <Search className="w-4 h-4 text-phumulani-charcoal absolute left-3 top-2.5" />
                 <input
                   type="text"
                   placeholder="Search templates by title, token, or category..."
                   value={templateSearchQuery}
                   onChange={(e) => setTemplateSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-hidden focus:border-teal-700"
+                  className="w-full pl-9 pr-3 py-1.5 text-xs bg-phumulani-cream border border-phumulani-cream rounded-xl focus:outline-hidden focus:border-phumulani-earth"
                 />
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-xs text-slate-500 font-medium">Category:</span>
+                <span className="text-xs text-phumulani-charcoal font-medium">Category:</span>
                 <select
                   value={templateCategoryFilter}
                   onChange={(e) => setTemplateCategoryFilter(e.target.value)}
-                  className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 font-semibold text-slate-800"
+                  className="text-xs bg-phumulani-cream border border-phumulani-cream rounded-xl px-3 py-1.5 font-semibold text-phumulani-charcoal"
                 >
                   <option value="all">All Categories ({EMAIL_TEMPLATES.length})</option>
                   <option value="Individual Donations">Individual Donations</option>
@@ -5379,37 +5379,37 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               }).map((tmpl) => (
                 <div
                   key={tmpl.id}
-                  className="bg-white border border-slate-200 rounded-2xl p-4 shadow-xs flex flex-col justify-between space-y-3 hover:border-slate-300 transition-all"
+                  className="bg-white border border-phumulani-cream rounded-2xl p-4 shadow-xs flex flex-col justify-between space-y-3 hover:border-phumulani-cream transition-all"
                 >
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs gap-2">
-                      <span className="font-mono text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded-full">
+                      <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-cream px-2 py-0.5 rounded-full">
                         {tmpl.category}
                       </span>
-                      <span className="text-[10px] font-mono text-teal-800 font-bold bg-teal-50 border border-teal-200 px-2 py-0.5 rounded-full capitalize">
+                      <span className="text-[10px] font-mono text-phumulani-earth font-bold bg-phumulani-cream border border-phumulani-teal px-2 py-0.5 rounded-full capitalize">
                         {tmpl.suggestedTone.replace('_', ' ')}
                       </span>
                     </div>
 
-                    <h4 className="font-bold text-sm text-slate-900 leading-snug">
+                    <h4 className="font-bold text-sm text-phumulani-charcoal leading-snug">
                       {tmpl.name}
                     </h4>
 
-                    <div className="bg-slate-50 border border-slate-200 rounded-xl p-2.5 text-xs font-mono text-slate-700">
-                      <span className="font-bold text-slate-500">Subject: </span>
+                    <div className="bg-phumulani-cream border border-phumulani-cream rounded-xl p-2.5 text-xs font-mono text-phumulani-charcoal">
+                      <span className="font-bold text-phumulani-charcoal">Subject: </span>
                       {tmpl.subjectTemplate}
                     </div>
 
-                    <div className="bg-slate-50/70 border border-slate-200 rounded-xl p-2.5 text-xs text-slate-800 whitespace-pre-wrap max-h-40 overflow-y-auto font-sans leading-relaxed">
+                    <div className="bg-phumulani-cream border border-phumulani-cream rounded-xl p-2.5 text-xs text-phumulani-charcoal whitespace-pre-wrap max-h-40 overflow-y-auto font-sans leading-relaxed">
                       {tmpl.bodyTemplate}
                     </div>
 
                     <div className="flex items-center gap-1 flex-wrap pt-1">
-                      <span className="text-[10px] text-slate-400 font-mono font-bold">Tokens:</span>
+                      <span className="text-[10px] text-phumulani-charcoal font-mono font-bold">Tokens:</span>
                       {tmpl.variables.map((v) => (
                         <span
                           key={v}
-                          className="text-[10px] font-mono bg-indigo-50 text-indigo-700 border border-indigo-200 px-1.5 py-0.2 rounded"
+                          className="text-[10px] font-mono bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-1.5 py-0.2 rounded"
                         >
                           {v}
                         </span>
@@ -5417,8 +5417,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     </div>
                   </div>
 
-                  <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-                    <span className="text-[11px] text-slate-400">
+                  <div className="pt-2 border-t border-phumulani-cream flex items-center justify-between">
+                    <span className="text-[11px] text-phumulani-charcoal">
                       {templateLanguage === 'en' ? 'English Canonical' : `Language: ${templateLanguage.toUpperCase()}`}
                     </span>
                     <button
@@ -5433,9 +5433,9 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         setInterpolationInputs(initialInputs);
                         setInterpolationResult(EmailEnterpriseService.interpolateTemplate(tmpl, initialInputs));
                       }}
-                      className="px-3 py-1 bg-[#104F57] hover:bg-teal-900 text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
+                      className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
                     >
-                      <Sparkles className="w-3 h-3 text-teal-300" />
+                      <Sparkles className="w-3 h-3 text-white" />
                       <span>Test Variable Interpolation</span>
                     </button>
                   </div>
@@ -5444,18 +5444,18 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             </div>
 
             {/* Official Executive Signatures Block */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3">
-              <div className="border-b border-slate-100 pb-2">
-                <h3 className="text-sm font-bold text-slate-900">Official Organizational Signature Governance</h3>
-                <p className="text-xs text-slate-500">Authorized corporate signers under Phumulani 501(c)(3) governance guidelines.</p>
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs space-y-3">
+              <div className="border-b border-phumulani-cream pb-2">
+                <h3 className="text-sm font-bold text-phumulani-charcoal">Official Organizational Signature Governance</h3>
+                <p className="text-xs text-phumulani-charcoal">Authorized corporate signers under Phumulani 501(c)(3) governance guidelines.</p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 {EMAIL_STAFF_MEMBERS.map((signer) => (
-                  <div key={signer.id} className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1">
-                    <div className="font-bold text-slate-900">{signer.name}</div>
-                    <div className="text-slate-600 font-medium">{signer.role} · {signer.department}</div>
-                    <div className="font-mono text-[11px] text-teal-800">{signer.email}</div>
+                  <div key={signer.id} className="p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl text-xs space-y-1">
+                    <div className="font-bold text-phumulani-charcoal">{signer.name}</div>
+                    <div className="text-phumulani-charcoal font-medium">{signer.role} · {signer.department}</div>
+                    <div className="font-mono text-[11px] text-phumulani-earth">{signer.email}</div>
                   </div>
                 ))}
               </div>
@@ -5463,20 +5463,20 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
             {/* Variable Interpolation Test Modal */}
             {interpolatingTemplate && (
-              <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-                <div className="bg-white border border-slate-200 rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-                  <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div className="fixed inset-0 bg-phumulani-charcoal/80 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+                <div className="bg-white border border-phumulani-cream rounded-2xl max-w-2xl w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+                  <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
                     <div>
-                      <span className="text-[10px] font-mono font-bold bg-indigo-100 text-indigo-900 border border-indigo-200 px-2 py-0.5 rounded-full uppercase">
+                      <span className="text-[10px] font-mono font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2 py-0.5 rounded-full uppercase">
                         Merge-Field Interpolator
                       </span>
-                      <h3 className="text-base font-bold text-slate-900 mt-1">
+                      <h3 className="text-base font-bold text-phumulani-charcoal mt-1">
                         Test Merge: {interpolatingTemplate.name}
                       </h3>
                     </div>
                     <button
                       onClick={() => setInterpolatingTemplate(null)}
-                      className="text-slate-400 hover:text-slate-600 text-lg font-bold cursor-pointer"
+                      className="text-phumulani-charcoal hover:text-phumulani-earth text-lg font-bold cursor-pointer"
                     >
                       ✕
                     </button>
@@ -5484,13 +5484,13 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
                   {/* Variable Inputs */}
                   <div className="space-y-2">
-                    <div className="text-xs font-bold text-slate-700">Dynamic Variable Inputs:</div>
+                    <div className="text-xs font-bold text-phumulani-charcoal">Dynamic Variable Inputs:</div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       {interpolatingTemplate.variables.map((token) => {
                         const cleanKey = token.replace(/[{}]/g, '');
                         return (
                           <div key={token} className="text-xs">
-                            <label className="block text-[11px] font-mono text-slate-600 mb-0.5">{token}</label>
+                            <label className="block text-[11px] font-mono text-phumulani-charcoal mb-0.5">{token}</label>
                             <input
                               type="text"
                               value={interpolationInputs[cleanKey] || ''}
@@ -5499,7 +5499,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                                 setInterpolationInputs(updated);
                                 setInterpolationResult(EmailEnterpriseService.interpolateTemplate(interpolatingTemplate, updated));
                               }}
-                              className="w-full text-xs px-2.5 py-1.5 border border-slate-200 rounded-lg bg-slate-50 focus:outline-hidden focus:border-teal-700"
+                              className="w-full text-xs px-2.5 py-1.5 border border-phumulani-cream rounded-lg bg-phumulani-cream focus:outline-hidden focus:border-phumulani-earth"
                             />
                           </div>
                         );
@@ -5509,24 +5509,24 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
                   {/* Live Merged Result */}
                   {interpolationResult && (
-                    <div className="space-y-2 pt-2 border-t border-slate-100">
-                      <div className="text-xs font-bold text-slate-700">Live Merged Output:</div>
-                      <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs space-y-2">
+                    <div className="space-y-2 pt-2 border-t border-phumulani-cream">
+                      <div className="text-xs font-bold text-phumulani-charcoal">Live Merged Output:</div>
+                      <div className="bg-phumulani-cream border border-phumulani-cream rounded-xl p-3 text-xs space-y-2">
                         <div>
-                          <span className="font-semibold text-slate-600">Subject:</span>{' '}
-                          <span className="font-bold text-slate-900">{interpolationResult.subject}</span>
+                          <span className="font-semibold text-phumulani-charcoal">Subject:</span>{' '}
+                          <span className="font-bold text-phumulani-charcoal">{interpolationResult.subject}</span>
                         </div>
-                        <div className="border-t border-slate-200 pt-2 whitespace-pre-wrap text-slate-800 leading-relaxed font-sans">
+                        <div className="border-t border-phumulani-cream pt-2 whitespace-pre-wrap text-phumulani-charcoal leading-relaxed font-sans">
                           {interpolationResult.body}
                         </div>
                       </div>
                     </div>
                   )}
 
-                  <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                  <div className="flex justify-end gap-2 pt-3 border-t border-phumulani-cream">
                     <button
                       onClick={() => setInterpolatingTemplate(null)}
-                      className="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold cursor-pointer"
+                      className="px-4 py-1.5 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-xl text-xs font-semibold cursor-pointer"
                     >
                       Close Tester
                     </button>
@@ -5541,25 +5541,25 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB: AUDIT HISTORY & SECURITY LOGS (Phase 47 M47.14)                       */}
         {/* ========================================================================= */}
         {activeTab === 'audit_history' && (
-          <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5 space-y-5">
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div className="flex-1 h-full bg-phumulani-cream overflow-y-auto p-5 space-y-5">
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <span className="font-mono text-[10px] font-bold bg-rose-100 text-rose-900 border border-rose-300 px-2.5 py-0.5 rounded-full uppercase">
+                  <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-earth px-2.5 py-0.5 rounded-full uppercase">
                     Audit & Compliance
                   </span>
-                  <span className="text-[10px] font-bold bg-teal-100 text-teal-800 border border-teal-300 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                    <ShieldCheck className="w-3 h-3 text-teal-600" />
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                    <ShieldCheck className="w-3 h-3 text-phumulani-earth" />
                     Immutable Tamper-Evident Ledger
                   </span>
-                  <span className="text-[10px] font-bold bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-cream px-2.5 py-0.5 rounded-full">
                     {syncAuditLogs.length} Events Recorded
                   </span>
                 </div>
-                <h2 className="text-xl font-bold font-serif text-slate-900">
+                <h2 className="text-xl font-bold font-serif text-phumulani-charcoal">
                   Email Operations Audit History & Security Event Ledger
                 </h2>
-                <p className="text-xs text-slate-500 max-w-2xl mt-0.5">
+                <p className="text-xs text-phumulani-charcoal max-w-2xl mt-0.5">
                   Complete chronological trace of all incoming classification events, AI draft proposals, Quad-Action human reviews, and controlled outbound dispatches.
                 </p>
               </div>
@@ -5574,32 +5574,32 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   downloadAnchor.click();
                   downloadAnchor.remove();
                 }}
-                className="px-3 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
               >
-                <FileCode className="w-4 h-4 text-teal-300" />
+                <FileCode className="w-4 h-4 text-white" />
                 <span>Export Audit Log (JSON)</span>
               </button>
             </div>
 
             {/* Filter Bar */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 border border-slate-200 rounded-2xl shadow-xs">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 border border-phumulani-cream rounded-2xl shadow-xs">
               <div className="relative flex-1">
-                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <Search className="w-4 h-4 text-phumulani-charcoal absolute left-3 top-2.5" />
                 <input
                   type="text"
                   placeholder="Filter audit events by actor, mailbox, key, or details..."
                   value={auditSearchQuery}
                   onChange={(e) => setAuditSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-xl focus:outline-hidden focus:border-teal-700"
+                  className="w-full pl-9 pr-3 py-1.5 text-xs bg-phumulani-cream border border-phumulani-cream rounded-xl focus:outline-hidden focus:border-phumulani-earth"
                 />
               </div>
 
               <div className="flex items-center gap-2">
-                <span className="text-xs text-slate-500 font-medium">Action:</span>
+                <span className="text-xs text-phumulani-charcoal font-medium">Action:</span>
                 <select
                   value={auditActionFilter}
                   onChange={(e) => setAuditActionFilter(e.target.value)}
-                  className="text-xs bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 font-semibold text-slate-800"
+                  className="text-xs bg-phumulani-cream border border-phumulani-cream rounded-xl px-3 py-1.5 font-semibold text-phumulani-charcoal"
                 >
                   <option value="all">All Actions</option>
                   <option value="OUTBOUND_DISPATCH_AUTHORIZED">Outbound Dispatched</option>
@@ -5613,10 +5613,10 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             </div>
 
             {/* Audit Log Table */}
-            <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+            <div className="bg-white border border-phumulani-cream rounded-2xl overflow-hidden shadow-xs">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase tracking-wider text-[10px]">
+                  <thead className="bg-phumulani-cream text-phumulani-charcoal font-semibold border-b border-phumulani-cream uppercase tracking-wider text-[10px]">
                     <tr>
                       <th className="p-3">Timestamp</th>
                       <th className="p-3">Action</th>
@@ -5627,7 +5627,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       <th className="p-3">Status</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 font-mono">
+                  <tbody className="divide-y divide-phumulani-cream font-mono">
                     {syncAuditLogs
                       .filter((log) => {
                         const q = auditSearchQuery.toLowerCase();
@@ -5642,26 +5642,26 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         return matchesSearch && matchesAction;
                       })
                       .map((log) => (
-                        <tr key={log.id} className="hover:bg-slate-50/70 transition-colors">
-                          <td className="p-3 whitespace-nowrap text-slate-500 text-[11px]">
+                        <tr key={log.id} className="hover:bg-phumulani-cream transition-colors">
+                          <td className="p-3 whitespace-nowrap text-phumulani-charcoal text-[11px]">
                             {new Date(log.timestamp).toLocaleString()}
                           </td>
                           <td className="p-3 whitespace-nowrap">
-                            <span className="font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded text-[10px]">
+                            <span className="font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded text-[10px]">
                               {log.action}
                             </span>
                           </td>
-                          <td className="p-3 whitespace-nowrap font-sans font-medium text-slate-800">
+                          <td className="p-3 whitespace-nowrap font-sans font-medium text-phumulani-charcoal">
                             {log.actor}
                           </td>
-                          <td className="p-3 whitespace-nowrap text-slate-600 text-[11px]">
+                          <td className="p-3 whitespace-nowrap text-phumulani-charcoal text-[11px]">
                             {log.mailboxEmail}
                           </td>
-                          <td className="p-3 font-sans text-slate-700 text-[11px] max-w-md truncate" title={log.details}>
+                          <td className="p-3 font-sans text-phumulani-charcoal text-[11px] max-w-md truncate" title={log.details}>
                             {log.details}
                           </td>
                           <td className="p-3 whitespace-nowrap">
-                            <span className="text-[10px] font-bold uppercase text-slate-500">
+                            <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">
                               {log.direction}
                             </span>
                           </td>
@@ -5669,10 +5669,10 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             <span
                               className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase ${
                                 log.status === 'success'
-                                  ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                                  ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green'
                                   : log.status === 'warning'
-                                  ? 'bg-amber-100 text-amber-800 border border-amber-300'
-                                  : 'bg-rose-100 text-rose-800 border border-rose-300'
+                                  ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold'
+                                  : 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth'
                               }`}
                             >
                               {log.status}
@@ -5691,61 +5691,61 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB: GRANT FINANCIAL DOCUMENTS & ADVANCE LIQUIDATION GUARD (Phase 71)     */}
         {/* ========================================================================= */}
         {activeTab === 'financial_docs' && (
-          <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5 space-y-5">
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-wrap items-center justify-between gap-4">
+          <div className="flex-1 h-full bg-phumulani-cream overflow-y-auto p-5 space-y-5">
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs flex flex-wrap items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-mono text-[10px] font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 px-2.5 py-0.5 rounded-full uppercase">
+                  <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green px-2.5 py-0.5 rounded-full uppercase">
                     Phase 71 Grant Financial Integrity
                   </span>
-                  <span className="text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-300 px-2.5 py-0.5 rounded-full">
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-earth px-2.5 py-0.5 rounded-full">
                     Advance Liquidation / Replenishment ≠ Invoice
                   </span>
                 </div>
-                <h2 className="text-xl font-bold font-serif text-slate-900">
+                <h2 className="text-xl font-bold font-serif text-phumulani-charcoal">
                   Grant Financial Documents, Advance Liquidation &amp; Approval Desk
                 </h2>
-                <p className="text-xs text-slate-500 mt-0.5 max-w-3xl">
+                <p className="text-xs text-phumulani-charcoal mt-0.5 max-w-3xl">
                   Classifies incoming grant advances, liquidation reports, replenishment requests, reimbursement claims, and vendor invoices. Enforces Finance/Executive maker-checker approval and blocks invoice generation for grant advances.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={refreshEnterprisePersistence}
-                className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold cursor-pointer"
+                className="px-3 py-1.5 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-xl text-xs font-semibold cursor-pointer"
               >
                 Refresh Financial Docs
               </button>
             </div>
 
             {finDocBlockNotice && (
-              <div className="p-4 rounded-xl bg-rose-50 border border-rose-300 text-rose-900 text-xs font-semibold flex items-start gap-2">
-                <ShieldAlert className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+              <div className="p-4 rounded-xl bg-phumulani-cream border border-phumulani-earth text-phumulani-earth text-xs font-semibold flex items-start gap-2">
+                <ShieldAlert className="w-4 h-4 text-phumulani-earth shrink-0 mt-0.5" />
                 <span>{finDocBlockNotice}</span>
               </div>
             )}
 
             {/* Ingest & Classify Form */}
-            <form onSubmit={handleIngestFinancialDoc} className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs space-y-3 text-xs">
-              <h3 className="font-bold text-slate-900">Ingest &amp; Classify Grant Financial Correspondence</h3>
+            <form onSubmit={handleIngestFinancialDoc} className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs space-y-3 text-xs">
+              <h3 className="font-bold text-phumulani-charcoal">Ingest &amp; Classify Grant Financial Correspondence</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Subject:</label>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Subject:</label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Q3 Grant Advance Request & Budget Annex"
                     value={finDocSubject}
                     onChange={(e) => setFinDocSubject(e.target.value)}
-                    className="w-full px-3 py-1.5 border border-slate-200 rounded-lg bg-slate-50"
+                    className="w-full px-3 py-1.5 border border-phumulani-cream rounded-lg bg-phumulani-cream"
                   />
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Mailbox:</label>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Mailbox:</label>
                   <select
                     value={finDocMailbox}
                     onChange={(e) => setFinDocMailbox(e.target.value)}
-                    className="w-full px-3 py-1.5 border border-slate-200 rounded-lg bg-slate-50"
+                    className="w-full px-3 py-1.5 border border-phumulani-cream rounded-lg bg-phumulani-cream"
                   >
                     <option value="grants@phumulani.org">grants@phumulani.org</option>
                     <option value="donations@phumulani.org">donations@phumulani.org</option>
@@ -5753,39 +5753,39 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   </select>
                 </div>
                 <div>
-                  <label className="block font-semibold text-slate-700 mb-1">Sender Email:</label>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Sender Email:</label>
                   <input
                     type="email"
                     value={finDocSender}
                     onChange={(e) => setFinDocSender(e.target.value)}
-                    className="w-full px-3 py-1.5 border border-slate-200 rounded-lg bg-slate-50"
+                    className="w-full px-3 py-1.5 border border-phumulani-cream rounded-lg bg-phumulani-cream"
                   />
                 </div>
               </div>
               <div>
-                <label className="block font-semibold text-slate-700 mb-1">Correspondence / Annex Summary:</label>
+                <label className="block font-semibold text-phumulani-charcoal mb-1">Correspondence / Annex Summary:</label>
                 <textarea
                   rows={3}
                   required
                   placeholder="Include advance/liquidation/replenishment/invoice wording and amount (e.g. $25,000 USD)..."
                   value={finDocBody}
                   onChange={(e) => setFinDocBody(e.target.value)}
-                  className="w-full px-3 py-2 border border-slate-200 rounded-lg bg-slate-50"
+                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg bg-phumulani-cream"
                 />
               </div>
               <button
                 type="submit"
-                className="px-4 py-2 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl font-bold cursor-pointer"
+                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold cursor-pointer"
               >
                 Ingest &amp; Classify Document
               </button>
             </form>
 
             {/* Financial Documents Inventory */}
-            <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-xs">
+            <div className="bg-white border border-phumulani-cream rounded-2xl overflow-hidden shadow-xs">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200 uppercase text-[10px]">
+                  <thead className="bg-phumulani-cream text-phumulani-charcoal font-semibold border-b border-phumulani-cream uppercase text-[10px]">
                     <tr>
                       <th className="p-3">Document</th>
                       <th className="p-3">Classification</th>
@@ -5795,39 +5795,39 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       <th className="p-3 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100">
+                  <tbody className="divide-y divide-phumulani-cream">
                     {financialDocs.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="p-8 text-center text-slate-500">
+                        <td colSpan={6} className="p-8 text-center text-phumulani-charcoal">
                           No grant financial documents ingested yet. Submit one above to test classification &amp; accounting guardrails.
                         </td>
                       </tr>
                     ) : (
                       financialDocs.map((doc) => (
-                        <tr key={doc.id} className="hover:bg-slate-50/70">
+                        <tr key={doc.id} className="hover:bg-phumulani-cream">
                           <td className="p-3">
-                            <div className="font-bold text-slate-900">{doc.subject || doc.id}</div>
-                            <div className="text-[11px] text-slate-500">{doc.senderEmail} · {doc.mailboxEmail}</div>
+                            <div className="font-bold text-phumulani-charcoal">{doc.subject || doc.id}</div>
+                            <div className="text-[11px] text-phumulani-charcoal">{doc.senderEmail} · {doc.mailboxEmail}</div>
                           </td>
                           <td className="p-3">
-                            <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-indigo-100 text-indigo-900">
+                            <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-phumulani-cream text-phumulani-earth">
                               {doc.classification}
                             </span>
                           </td>
-                          <td className="p-3 font-semibold text-slate-900">
+                          <td className="p-3 font-semibold text-phumulani-charcoal">
                             {doc.amount ? `$${Number(doc.amount).toLocaleString()} ${doc.currency || 'USD'}` : 'Not extracted'}
                           </td>
                           <td className="p-3 text-[11px]">
                             {doc.requiresLiquidationOrReplenishment || doc.isGrantAdvance ? (
-                              <span className="font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded">
+                              <span className="font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded">
                                 Advance / Liquidation Only
                               </span>
                             ) : (
-                              <span className="text-slate-600">Standard Invoice Eligible</span>
+                              <span className="text-phumulani-charcoal">Standard Invoice Eligible</span>
                             )}
                           </td>
                           <td className="p-3">
-                            <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-800">
+                            <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-phumulani-cream text-phumulani-charcoal">
                               {doc.approvalStatus}
                             </span>
                           </td>
@@ -5837,14 +5837,14 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                                 <button
                                   type="button"
                                   onClick={() => handleApproveFinancialDoc(doc.id, 'APPROVED')}
-                                  className="px-2 py-1 bg-emerald-600 text-white rounded text-[11px] font-bold cursor-pointer"
+                                  className="px-2 py-1 bg-phumulani-green text-phumulani-charcoal rounded text-[11px] font-bold cursor-pointer"
                                 >
                                   Approve
                                 </button>
                                 <button
                                   type="button"
                                   onClick={() => handleApproveFinancialDoc(doc.id, 'REJECTED')}
-                                  className="px-2 py-1 bg-rose-50 text-rose-700 border border-rose-200 rounded text-[11px] font-semibold cursor-pointer"
+                                  className="px-2 py-1 bg-phumulani-cream text-phumulani-earth border border-phumulani-earth rounded text-[11px] font-semibold cursor-pointer"
                                 >
                                   Reject
                                 </button>
@@ -5853,7 +5853,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             <button
                               type="button"
                               onClick={() => handleCreateInvoiceFromDoc(doc.id)}
-                              className="px-2 py-1 bg-slate-800 hover:bg-slate-900 text-white rounded text-[11px] font-semibold cursor-pointer"
+                              className="px-2 py-1 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded text-[11px] font-semibold cursor-pointer"
                               title="Creates invoice for vendor bills; strictly blocks grant advances & liquidations"
                             >
                               Create Invoice
@@ -5873,27 +5873,27 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB: GOVERNANCE, LEGAL HOLDS, ACLs & WORKER TELEMETRY (Phases 73–74)      */}
         {/* ========================================================================= */}
         {activeTab === 'governance' && (
-          <div className="flex-1 h-full bg-[#F8FAFB] overflow-y-auto p-5 space-y-5">
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 shadow-xs flex flex-wrap items-center justify-between gap-4">
+          <div className="flex-1 h-full bg-phumulani-cream overflow-y-auto p-5 space-y-5">
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs flex flex-wrap items-center justify-between gap-4">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-mono text-[10px] font-bold bg-indigo-100 text-indigo-900 border border-indigo-300 px-2.5 py-0.5 rounded-full uppercase">
+                  <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2.5 py-0.5 rounded-full uppercase">
                     Phases 73–74 Governance &amp; Operations
                   </span>
                   <span
                     className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border ${
                       auditLedgerState.chainVerified
-                        ? 'bg-emerald-100 text-emerald-800 border-emerald-300'
-                        : 'bg-rose-100 text-rose-800 border-rose-300'
+                        ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green'
+                        : 'bg-phumulani-cream text-phumulani-earth border-phumulani-earth'
                     }`}
                   >
                     Audit Hash Chain: {auditLedgerState.chainVerified ? 'VERIFIED' : 'INTEGRITY ALERT'}
                   </span>
                 </div>
-                <h2 className="text-xl font-bold font-serif text-slate-900">
+                <h2 className="text-xl font-bold font-serif text-phumulani-charcoal">
                   Mailbox ACLs, Legal Holds, Compliance Export &amp; Worker Monitoring
                 </h2>
-                <p className="text-xs text-slate-500 mt-0.5">
+                <p className="text-xs text-phumulani-charcoal mt-0.5">
                   Enforce per-mailbox role permissions, activate legal holds blocking deletion, export VAWA-redacted compliance bundles, and trigger durable background worker cycles.
                 </p>
               </div>
@@ -5901,14 +5901,14 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 <button
                   type="button"
                   onClick={handleRunWorkerCycle}
-                  className="px-3 py-1.5 bg-indigo-700 hover:bg-indigo-800 text-white rounded-xl text-xs font-bold cursor-pointer"
+                  className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold cursor-pointer"
                 >
                   Run Worker Cycle
                 </button>
                 <button
                   type="button"
                   onClick={handleExportComplianceBundle}
-                  className="px-3 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl text-xs font-bold cursor-pointer"
+                  className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold cursor-pointer"
                 >
                   Export Redacted Compliance Bundle
                 </button>
@@ -5917,37 +5917,37 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
             {/* Operational Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-5 gap-3 text-xs">
-              <div className="bg-white border border-slate-200 rounded-xl p-4">
-                <div className="text-slate-500">Persistent Inbox Threads</div>
-                <div className="text-xl font-bold text-slate-900 mt-1">{unifiedInboxStats?.total ?? 0}</div>
+              <div className="bg-white border border-phumulani-cream rounded-xl p-4">
+                <div className="text-phumulani-charcoal">Persistent Inbox Threads</div>
+                <div className="text-xl font-bold text-phumulani-charcoal mt-1">{unifiedInboxStats?.total ?? 0}</div>
               </div>
-              <div className="bg-white border border-slate-200 rounded-xl p-4">
-                <div className="text-slate-500">Queued Worker Jobs</div>
-                <div className="text-xl font-bold text-slate-900 mt-1">{opsMonitoring?.workerMetrics?.queued ?? 0}</div>
+              <div className="bg-white border border-phumulani-cream rounded-xl p-4">
+                <div className="text-phumulani-charcoal">Queued Worker Jobs</div>
+                <div className="text-xl font-bold text-phumulani-charcoal mt-1">{opsMonitoring?.workerMetrics?.queued ?? 0}</div>
               </div>
-              <div className="bg-white border border-slate-200 rounded-xl p-4">
-                <div className="text-slate-500">Dead-Letter Queue (DLQ)</div>
-                <div className="text-xl font-bold text-rose-700 mt-1">{opsMonitoring?.workerMetrics?.deadLetter ?? 0}</div>
+              <div className="bg-white border border-phumulani-cream rounded-xl p-4">
+                <div className="text-phumulani-charcoal">Dead-Letter Queue (DLQ)</div>
+                <div className="text-xl font-bold text-phumulani-earth mt-1">{opsMonitoring?.workerMetrics?.deadLetter ?? 0}</div>
               </div>
-              <div className="bg-white border border-slate-200 rounded-xl p-4">
-                <div className="text-slate-500">AI Invocations Recorded</div>
-                <div className="text-xl font-bold text-teal-800 mt-1">{aiTelemetryState?.telemetry?.totalCalls ?? 0}</div>
+              <div className="bg-white border border-phumulani-cream rounded-xl p-4">
+                <div className="text-phumulani-charcoal">AI Invocations Recorded</div>
+                <div className="text-xl font-bold text-phumulani-earth mt-1">{aiTelemetryState?.telemetry?.totalCalls ?? 0}</div>
               </div>
-              <div className="bg-white border border-slate-200 rounded-xl p-4">
-                <div className="text-slate-500">Ledger Entries Verified</div>
-                <div className="text-xl font-bold text-emerald-700 mt-1">{auditLedgerState.total}</div>
+              <div className="bg-white border border-phumulani-cream rounded-xl p-4">
+                <div className="text-phumulani-charcoal">Ledger Entries Verified</div>
+                <div className="text-xl font-bold text-phumulani-earth mt-1">{auditLedgerState.total}</div>
               </div>
             </div>
 
             {/* Legal Holds Manager */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 text-xs">
-              <form onSubmit={handleCreateLegalHold} className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3">
-                <h3 className="font-bold text-slate-900">Place Legal Preservation Hold</h3>
+              <form onSubmit={handleCreateLegalHold} className="bg-white border border-phumulani-cream rounded-2xl p-5 space-y-3">
+                <h3 className="font-bold text-phumulani-charcoal">Place Legal Preservation Hold</h3>
                 <div className="grid grid-cols-2 gap-2">
                   <select
                     value={holdTargetType}
                     onChange={(e) => setHoldTargetType(e.target.value as any)}
-                    className="px-2.5 py-1.5 border border-slate-200 rounded-lg bg-slate-50 font-semibold"
+                    className="px-2.5 py-1.5 border border-phumulani-cream rounded-lg bg-phumulani-cream font-semibold"
                   >
                     <option value="MAILBOX">MAILBOX</option>
                     <option value="THREAD">THREAD</option>
@@ -5959,7 +5959,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     placeholder="e.g. grants@phumulani.org or thd-123"
                     value={holdTargetValue}
                     onChange={(e) => setHoldTargetValue(e.target.value)}
-                    className="px-2.5 py-1.5 border border-slate-200 rounded-lg bg-slate-50"
+                    className="px-2.5 py-1.5 border border-phumulani-cream rounded-lg bg-phumulani-cream"
                   />
                 </div>
                 <input
@@ -5968,34 +5968,34 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   placeholder="Hold Title (e.g. FY2026 Audit Preservation)"
                   value={holdTitle}
                   onChange={(e) => setHoldTitle(e.target.value)}
-                  className="w-full px-2.5 py-1.5 border border-slate-200 rounded-lg bg-slate-50"
+                  className="w-full px-2.5 py-1.5 border border-phumulani-cream rounded-lg bg-phumulani-cream"
                 />
                 <input
                   type="text"
                   placeholder="Legal / Audit Reason..."
                   value={holdReason}
                   onChange={(e) => setHoldReason(e.target.value)}
-                  className="w-full px-2.5 py-1.5 border border-slate-200 rounded-lg bg-slate-50"
+                  className="w-full px-2.5 py-1.5 border border-phumulani-cream rounded-lg bg-phumulani-cream"
                 />
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-rose-700 hover:bg-rose-800 text-white rounded-xl font-bold cursor-pointer"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold cursor-pointer"
                 >
                   Activate Legal Hold
                 </button>
               </form>
 
-              <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-2.5">
-                <h3 className="font-bold text-slate-900">Active &amp; Historical Legal Holds ({legalHolds.length})</h3>
+              <div className="bg-white border border-phumulani-cream rounded-2xl p-5 space-y-2.5">
+                <h3 className="font-bold text-phumulani-charcoal">Active &amp; Historical Legal Holds ({legalHolds.length})</h3>
                 {legalHolds.length === 0 ? (
-                  <p className="text-slate-500">No legal holds currently placed.</p>
+                  <p className="text-phumulani-charcoal">No legal holds currently placed.</p>
                 ) : (
                   <div className="space-y-2 max-h-56 overflow-y-auto">
                     {legalHolds.map((h) => (
-                      <div key={h.id} className="p-3 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between gap-2">
+                      <div key={h.id} className="p-3 rounded-xl border border-phumulani-cream bg-phumulani-cream flex items-center justify-between gap-2">
                         <div>
-                          <div className="font-bold text-slate-900">{h.title}</div>
-                          <div className="text-[11px] font-mono text-slate-600">
+                          <div className="font-bold text-phumulani-charcoal">{h.title}</div>
+                          <div className="text-[11px] font-mono text-phumulani-charcoal">
                             {h.targetType}: {h.targetValue} · {h.active ? 'ACTIVE' : 'RELEASED'}
                           </div>
                         </div>
@@ -6003,7 +6003,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                           <button
                             type="button"
                             onClick={() => handleReleaseLegalHold(h.id)}
-                            className="px-2.5 py-1 bg-white border border-slate-300 rounded-lg text-[11px] font-semibold hover:bg-slate-100 cursor-pointer"
+                            className="px-2.5 py-1 bg-white border border-phumulani-cream rounded-lg text-[11px] font-semibold hover:bg-phumulani-cream cursor-pointer"
                           >
                             Release
                           </button>
@@ -6016,17 +6016,17 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             </div>
 
             {/* Mailbox ACL Permissions */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-5 space-y-3 text-xs">
-              <h3 className="font-bold text-slate-900">Mailbox Access Control Matrix ({governancePermissions.length} Rules)</h3>
+            <div className="bg-white border border-phumulani-cream rounded-2xl p-5 space-y-3 text-xs">
+              <h3 className="font-bold text-phumulani-charcoal">Mailbox Access Control Matrix ({governancePermissions.length} Rules)</h3>
               {governancePermissions.length === 0 ? (
-                <p className="text-slate-500">Default RBAC &amp; VAWA Section 1367 air-gap rules enforced.</p>
+                <p className="text-phumulani-charcoal">Default RBAC &amp; VAWA Section 1367 air-gap rules enforced.</p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
                   {governancePermissions.map((perm, idx) => (
-                    <div key={perm.id || idx} className="p-3 rounded-xl border border-slate-200 bg-slate-50 space-y-1">
-                      <div className="font-mono font-bold text-teal-900">{perm.mailboxEmail}</div>
-                      <div className="text-[11px] text-slate-600">Role: <strong>{perm.role}</strong></div>
-                      <div className="text-[10px] font-mono text-slate-500">
+                    <div key={perm.id || idx} className="p-3 rounded-xl border border-phumulani-cream bg-phumulani-cream space-y-1">
+                      <div className="font-mono font-bold text-phumulani-earth">{perm.mailboxEmail}</div>
+                      <div className="text-[11px] text-phumulani-charcoal">Role: <strong>{perm.role}</strong></div>
+                      <div className="text-[10px] font-mono text-phumulani-charcoal">
                         Read: {String(perm.canRead)} · Approve: {String(perm.canApprove)} · Send: {String(perm.canSend)}
                       </div>
                     </div>
@@ -6041,35 +6041,35 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
         {/* TAB 12: SETTINGS & APPROVED TEMPLATES (Milestone 23.09) */}
         {/* ========================================================================= */}
         {activeTab === 'settings' && (
-          <div className="flex-1 h-full bg-white border border-slate-200 rounded-2xl p-5 shadow-xs overflow-y-auto space-y-5">
-            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 pb-3">
+          <div className="flex-1 h-full bg-white border border-phumulani-cream rounded-2xl p-5 shadow-xs overflow-y-auto space-y-5">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b border-phumulani-cream pb-3">
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="font-mono text-[10px] font-bold bg-teal-100 text-teal-900 border border-teal-300 px-2 py-0.5 rounded-full uppercase">
+                  <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2 py-0.5 rounded-full uppercase">
                     Settings & Security
                   </span>
-                  <span className="text-[10px] font-bold bg-indigo-100 text-indigo-800 border border-indigo-300 px-2 py-0.5 rounded-full flex items-center gap-1">
-                    <FileText className="w-3 h-3 text-indigo-600" />
+                  <span className="text-[10px] font-bold bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <FileText className="w-3 h-3 text-phumulani-earth" />
                     12 Approved Templates · AR01–AR10 Rules · Signatures
                   </span>
                 </div>
-                <h3 className="text-sm font-bold text-slate-900">
+                <h3 className="text-sm font-bold text-phumulani-charcoal">
                   Email Operations Configuration & Templates
                 </h3>
-                <p className="text-xs text-slate-500">
+                <p className="text-xs text-phumulani-charcoal">
                   Approved organizational communication templates with token interpolation, deterministic auto-responder rules, and authorized officer signatures.
                 </p>
               </div>
 
               {/* Sub-Section Switcher */}
-              <div className="flex items-center bg-slate-100 p-0.5 rounded-xl text-xs font-semibold">
+              <div className="flex items-center bg-phumulani-cream p-0.5 rounded-xl text-xs font-semibold">
                 <button
                   type="button"
                   onClick={() => setSettingsActiveSection('templates')}
                   className={`px-3 py-1 rounded-lg transition-colors cursor-pointer ${
                     settingsActiveSection === 'templates'
-                      ? 'bg-[#104F57] text-white shadow-2xs'
-                      : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-phumulani-earth text-white shadow-2xs'
+                      : 'text-phumulani-charcoal hover:text-phumulani-earth'
                   }`}
                 >
                   12 Templates
@@ -6079,8 +6079,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   onClick={() => setSettingsActiveSection('autoresponders')}
                   className={`px-3 py-1 rounded-lg transition-colors cursor-pointer ${
                     settingsActiveSection === 'autoresponders'
-                      ? 'bg-[#104F57] text-white shadow-2xs'
-                      : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-phumulani-earth text-white shadow-2xs'
+                      : 'text-phumulani-charcoal hover:text-phumulani-earth'
                   }`}
                 >
                   Auto-Responders
@@ -6090,8 +6090,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   onClick={() => setSettingsActiveSection('signatures')}
                   className={`px-3 py-1 rounded-lg transition-colors cursor-pointer ${
                     settingsActiveSection === 'signatures'
-                      ? 'bg-[#104F57] text-white shadow-2xs'
-                      : 'text-slate-600 hover:text-slate-900'
+                      ? 'bg-phumulani-earth text-white shadow-2xs'
+                      : 'text-phumulani-charcoal hover:text-phumulani-earth'
                   }`}
                 >
                   Signatures & RBAC
@@ -6103,7 +6103,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             {settingsActiveSection === 'templates' && (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+                  <span className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wide">
                     12 Pre-Approved Operational Email Templates with Dynamic Variable Tokens
                   </span>
                   <button
@@ -6112,7 +6112,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       setTargetTemplateInsert('compose');
                       setIsTemplateModalOpen(true);
                     }}
-                    className="px-3 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-900 border border-indigo-200 rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer"
+                    className="px-3 py-1 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-earth border border-phumulani-teal rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer"
                   >
                     <Plus className="w-3 h-3" />
                     <span>Browse & Insert Template</span>
@@ -6123,36 +6123,36 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   {EMAIL_TEMPLATES.map((tmpl) => (
                     <div
                       key={tmpl.id}
-                      className="border border-slate-200 rounded-2xl p-4 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition-all flex flex-col justify-between space-y-2 text-xs"
+                      className="border border-phumulani-cream rounded-2xl p-4 bg-phumulani-cream hover:bg-white hover:border-phumulani-cream transition-all flex flex-col justify-between space-y-2 text-xs"
                     >
                       <div>
                         <div className="flex items-center justify-between mb-1">
-                          <span className="font-bold text-slate-900 text-xs">{tmpl.name}</span>
-                          <span className="text-[10px] font-mono font-bold bg-indigo-100 text-indigo-800 px-1.5 py-0.2 rounded">
+                          <span className="font-bold text-phumulani-charcoal text-xs">{tmpl.name}</span>
+                          <span className="text-[10px] font-mono font-bold bg-phumulani-cream text-phumulani-earth px-1.5 py-0.2 rounded">
                             {tmpl.category}
                           </span>
                         </div>
-                        <p className="text-[11px] text-slate-500 mb-2">{tmpl.description}</p>
-                        <div className="text-[11px] font-semibold text-slate-700 bg-white p-2 rounded-lg border border-slate-200 mb-2">
-                          <span className="text-slate-400 font-normal">Subject:</span> {tmpl.subjectTemplate || tmpl.subject}
+                        <p className="text-[11px] text-phumulani-charcoal mb-2">{tmpl.description}</p>
+                        <div className="text-[11px] font-semibold text-phumulani-charcoal bg-white p-2 rounded-lg border border-phumulani-cream mb-2">
+                          <span className="text-phumulani-charcoal font-normal">Subject:</span> {tmpl.subjectTemplate || tmpl.subject}
                         </div>
-                        <div className="flex flex-wrap gap-1 text-[10px] font-mono text-teal-800">
+                        <div className="flex flex-wrap gap-1 text-[10px] font-mono text-phumulani-earth">
                           {tmpl.variables.map((v) => (
-                            <span key={v} className="bg-teal-50 border border-teal-200 px-1.5 py-0.2 rounded">
+                            <span key={v} className="bg-phumulani-cream border border-phumulani-teal px-1.5 py-0.2 rounded">
                               {`{{${v}}}`}
                             </span>
                           ))}
                         </div>
                       </div>
 
-                      <div className="pt-2 border-t border-slate-200/80 flex items-center justify-between">
-                        <span className="text-[10px] text-slate-500 font-mono">
+                      <div className="pt-2 border-t border-phumulani-cream flex items-center justify-between">
+                        <span className="text-[10px] text-phumulani-charcoal font-mono">
                           Tone: <strong className="capitalize">{tmpl.suggestedTone.replace('_', ' ')}</strong>
                         </span>
                         <button
                           type="button"
                           onClick={() => handleInsertTemplate(tmpl)}
-                          className="px-2.5 py-1 bg-[#104F57] hover:bg-teal-900 text-white rounded-lg text-[11px] font-bold cursor-pointer"
+                          className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-[11px] font-bold cursor-pointer"
                         >
                           Use Template
                         </button>
@@ -6166,8 +6166,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             {/* Sub-Section 2: Auto-Responders */}
             {settingsActiveSection === 'autoresponders' && (
               <div className="space-y-4">
-                <div className="bg-rose-50/70 border border-rose-200 rounded-xl p-3 text-xs text-rose-950 flex items-start gap-2">
-                  <ShieldCheck className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                <div className="bg-phumulani-cream border border-phumulani-earth rounded-xl p-3 text-xs text-phumulani-earth flex items-start gap-2">
+                  <ShieldCheck className="w-4 h-4 text-phumulani-earth shrink-0 mt-0.5" />
                   <span>
                     <strong>Strict Safeguarding Rule:</strong> Auto-responders are strictly disabled for crisis correspondence, survivor referrals, and restricted executive mail per non-disclosure mandates.
                   </span>
@@ -6177,24 +6177,24 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   {autoRules.map((rule) => (
                     <div
                       key={rule.id}
-                      className="border border-slate-200 rounded-xl p-3.5 bg-slate-50/50 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs"
+                      className="border border-phumulani-cream rounded-xl p-3.5 bg-phumulani-cream flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs"
                     >
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono font-bold text-xs px-2 py-0.5 rounded bg-[#104F57] text-white">
+                          <span className="font-mono font-bold text-xs px-2 py-0.5 rounded bg-phumulani-earth text-white">
                             {rule.code}
                           </span>
-                          <span className="font-bold text-slate-900">{rule.name}</span>
-                          <span className="text-slate-400 font-mono text-[11px]">({rule.mailbox})</span>
+                          <span className="font-bold text-phumulani-charcoal">{rule.name}</span>
+                          <span className="text-phumulani-charcoal font-mono text-[11px]">({rule.mailbox})</span>
                         </div>
-                        <p className="text-slate-600 text-[11px]">{rule.trigger}</p>
-                        <div className="text-[11px] text-slate-700 font-mono bg-white p-2 rounded border border-slate-200">
+                        <p className="text-phumulani-charcoal text-[11px]">{rule.trigger}</p>
+                        <div className="text-[11px] text-phumulani-charcoal font-mono bg-white p-2 rounded border border-phumulani-cream">
                           &quot;{rule.approvedTemplate}&quot;
                         </div>
                       </div>
 
                       <div className="flex items-center gap-3 shrink-0">
-                        <span className="font-mono text-slate-500 text-[11px]">
+                        <span className="font-mono text-phumulani-charcoal text-[11px]">
                           Sent: {rule.totalTriggeredCount}
                         </span>
                         <button
@@ -6202,8 +6202,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                           onClick={() => db.toggleAutoResponderRule(rule.id, !rule.enabled)}
                           className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
                             rule.enabled
-                              ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
-                              : 'bg-slate-200 text-slate-600'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green'
+                              : 'bg-phumulani-cream text-phumulani-charcoal'
                           }`}
                         >
                           {rule.enabled ? 'ACTIVE' : 'DISABLED'}
@@ -6218,7 +6218,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             {/* Sub-Section 3: Signatures & RBAC */}
             {settingsActiveSection === 'signatures' && (
               <div className="space-y-4 text-xs">
-                <span className="text-xs font-bold text-slate-800 uppercase tracking-wide block">
+                <span className="text-xs font-bold text-phumulani-charcoal uppercase tracking-wide block">
                   Authorized Organizational Signers & Legal Headers
                 </span>
 
@@ -6259,20 +6259,20 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   ].map((sig) => (
                     <div
                       key={sig.name}
-                      className="border border-slate-200 rounded-2xl p-4 bg-slate-50/50 space-y-2 text-xs"
+                      className="border border-phumulani-cream rounded-2xl p-4 bg-phumulani-cream space-y-2 text-xs"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="font-bold text-slate-900 text-sm">{sig.name}</span>
-                        <span className="text-[10px] font-mono font-bold bg-teal-100 text-teal-800 px-2 py-0.5 rounded-full">
+                        <span className="font-bold text-phumulani-charcoal text-sm">{sig.name}</span>
+                        <span className="text-[10px] font-mono font-bold bg-phumulani-cream text-phumulani-earth px-2 py-0.5 rounded-full">
                           {sig.badge}
                         </span>
                       </div>
-                      <p className="text-slate-600 font-semibold">{sig.title}</p>
-                      <p className="text-slate-500">{sig.org}</p>
-                      <div className="text-[11px] font-mono text-slate-600 pt-1 border-t border-slate-200">
+                      <p className="text-phumulani-charcoal font-semibold">{sig.title}</p>
+                      <p className="text-phumulani-charcoal">{sig.org}</p>
+                      <div className="text-[11px] font-mono text-phumulani-charcoal pt-1 border-t border-phumulani-cream">
                         {sig.email} · {sig.phone}
                       </div>
-                      <div className="text-[10px] text-slate-400 italic">
+                      <div className="text-[10px] text-phumulani-charcoal italic">
                         Phumulani 501(c)(3) Nonprofit · Minneapolis, MN · EIN: 88-1234567
                       </div>
                     </div>
@@ -6286,16 +6286,16 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
       {/* 5. NEW EMAIL COMPOSER MODAL */}
       {isComposeOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-fade-in">
-            <div className="bg-[#006D6F] text-white px-5 py-3 flex items-center justify-between font-heading shrink-0">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden animate-fade-in">
+            <div className="bg-phumulani-charcoal text-white px-5 py-3 flex items-center justify-between font-heading shrink-0">
               <div className="flex items-center gap-2">
                 <Send className="w-4 h-4" />
                 <h3 className="font-bold text-sm">Compose Authorized Email</h3>
               </div>
               <button
                 onClick={() => setIsComposeOpen(false)}
-                className="text-teal-200 hover:text-white cursor-pointer"
+                className="text-phumulani-cream hover:text-white cursor-pointer"
               >
                 <XCircle className="w-5 h-5" />
               </button>
@@ -6303,10 +6303,10 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
             <form onSubmit={handleSendComposedEmail} className="p-5 space-y-3 text-xs flex-1 min-h-0 overflow-y-auto">
               {effectiveConnectedMailboxesCount === 0 && (
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-amber-950 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div className="bg-phumulani-cream border border-phumulani-gold rounded-xl p-3 text-phumulani-charcoal flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
                     <div className="font-bold">No Email Accounts Connected</div>
-                    <p className="text-[11px] text-amber-900 mt-0.5">
+                    <p className="text-[11px] text-phumulani-charcoal mt-0.5">
                       Email composition, draft saving, and outbound dispatch are disabled until you connect an organizational email account.
                     </p>
                   </div>
@@ -6316,7 +6316,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       setIsComposeOpen(false);
                       openConnectEmailWizard();
                     }}
-                    className="px-3 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-lg font-bold shrink-0 cursor-pointer"
+                    className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold shrink-0 cursor-pointer"
                   >
                     Connect Email Account
                   </button>
@@ -6324,14 +6324,14 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               )}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-600 mb-1 font-heading">
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1 font-heading">
                     From (Organizational Mailbox):
                   </label>
                   <select
                     value={composeMailbox}
                     onChange={(e) => setComposeMailbox(e.target.value)}
                     disabled={effectiveConnectedMailboxesCount === 0}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-mono text-xs font-bold text-slate-800 disabled:opacity-60"
+                    className="w-full bg-phumulani-cream border border-phumulani-cream rounded-lg p-2 font-mono text-xs font-bold text-phumulani-charcoal disabled:opacity-60"
                   >
                     {mailboxes.length === 0 ? (
                       <option value="">No email accounts connected</option>
@@ -6346,13 +6346,13 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-600 mb-1 font-heading">
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1 font-heading">
                     Operational Category:
                   </label>
                   <select
                     value={composeCategory}
                     onChange={(e) => setComposeCategory(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-medium text-slate-700"
+                    className="w-full bg-phumulani-cream border border-phumulani-cream rounded-lg p-2 text-xs font-medium text-phumulani-charcoal"
                   >
                     <option value="23_general_inquiries">General Inquiries &amp; Community</option>
                     <option value="02_donor_major">Development &amp; Donor Engagement</option>
@@ -6364,50 +6364,50 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-600 mb-1 font-heading">To Recipient Email:</label>
+                <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1 font-heading">To Recipient Email:</label>
                 <input
                   type="email"
                   required
                   placeholder="recipient@organization.org"
                   value={composeRecipient}
                   onChange={(e) => setComposeRecipient(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs"
+                  className="w-full bg-phumulani-cream border border-phumulani-cream rounded-lg p-2 text-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-600 mb-1">Subject:</label>
+                <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Subject:</label>
                 <input
                   type="text"
                   required
                   placeholder="Subject line..."
                   value={composeSubject}
                   onChange={(e) => setComposeSubject(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-semibold"
+                  className="w-full bg-phumulani-cream border border-phumulani-cream rounded-lg p-2 text-xs font-semibold"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-600 mb-1">Message Body:</label>
+                <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Message Body:</label>
                 <textarea
                   rows={6}
                   required
                   placeholder="Draft your message with official Phumulani communications guidelines..."
                   value={composeBody}
                   onChange={(e) => setComposeBody(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2.5 text-xs font-sans leading-relaxed"
+                  className="w-full bg-phumulani-cream border border-phumulani-cream rounded-lg p-2.5 text-xs font-sans leading-relaxed"
                 />
               </div>
 
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-slate-100 pt-3">
-                <div className="text-[11px] text-slate-500">
-                  Sender Identity: <span className="font-bold text-slate-800">{currentUser.name}</span> ({currentUser.role})
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-t border-phumulani-cream pt-3">
+                <div className="text-[11px] text-phumulani-charcoal">
+                  Sender Identity: <span className="font-bold text-phumulani-charcoal">{currentUser.name}</span> ({currentUser.role})
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <button
                     type="button"
                     onClick={() => setIsComposeOpen(false)}
-                    className="px-3 py-1.5 border border-slate-200 rounded-xl hover:bg-slate-100 font-semibold cursor-pointer"
+                    className="px-3 py-1.5 border border-phumulani-cream rounded-xl hover:bg-phumulani-cream font-semibold cursor-pointer"
                   >
                     Cancel
                   </button>
@@ -6415,14 +6415,14 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     type="button"
                     onClick={handleSaveComposeDraft}
                     disabled={isSavingComposeDraft || effectiveConnectedMailboxesCount === 0}
-                    className="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 rounded-xl font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-3.5 py-1.5 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal border border-phumulani-cream rounded-xl font-bold cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {isSavingComposeDraft ? 'Saving Draft...' : 'Save Persistent Draft'}
                   </button>
                   <button
                     type="submit"
                     disabled={effectiveConnectedMailboxesCount === 0}
-                    className="px-4 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>Stage Outbound Dispatch</span>
@@ -6436,21 +6436,21 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
       {/* 6. CLASSIFICATION CORRECTION MODAL */}
       {reclassifyingThreadId && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md overflow-hidden animate-fadeIn p-5 space-y-4 text-xs">
-            <h3 className="font-bold text-sm text-slate-900">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream w-full max-w-md overflow-hidden animate-fadeIn p-5 space-y-4 text-xs">
+            <h3 className="font-bold text-sm text-phumulani-charcoal">
               Staff Classification Override & Evaluation Feedback
             </h3>
-            <p className="text-slate-500">
+            <p className="text-phumulani-charcoal">
               Select the corrected classification category for this correspondence. This adjustment will be stored as evaluation feedback.
             </p>
 
             <div>
-              <label className="block font-bold text-slate-700 mb-1">Target Category:</label>
+              <label className="block font-bold text-phumulani-charcoal mb-1">Target Category:</label>
               <select
                 value={newCategoryTarget}
                 onChange={(e) => setNewCategoryTarget(e.target.value as EmailClassificationCategory)}
-                className="w-full border border-slate-200 rounded-xl p-2 text-xs font-semibold"
+                className="w-full border border-phumulani-cream rounded-xl p-2 text-xs font-semibold"
               >
                 {Object.entries(EMAIL_CATEGORY_METADATA).map(([catKey, meta]) => (
                   <option key={catKey} value={catKey}>
@@ -6461,28 +6461,28 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
             </div>
 
             <div>
-              <label className="block font-bold text-slate-700 mb-1">Reason for Reclassification:</label>
+              <label className="block font-bold text-phumulani-charcoal mb-1">Reason for Reclassification:</label>
               <input
                 type="text"
                 placeholder="e.g. Involves challenge matching pledge for Gala"
                 value={reclassifyReason}
                 onChange={(e) => setReclassifyReason(e.target.value)}
-                className="w-full border border-slate-200 rounded-xl p-2 text-xs"
+                className="w-full border border-phumulani-cream rounded-xl p-2 text-xs"
               />
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-phumulani-cream">
               <button
                 type="button"
                 onClick={() => setReclassifyingThreadId(null)}
-                className="px-3 py-1.5 border border-slate-200 rounded-xl hover:bg-slate-100 font-semibold cursor-pointer"
+                className="px-3 py-1.5 border border-phumulani-cream rounded-xl hover:bg-phumulani-cream font-semibold cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleConfirmReclassification}
-                className="px-4 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl font-bold cursor-pointer"
+                className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold cursor-pointer"
               >
                 Apply Reclassification
               </button>
@@ -6492,46 +6492,46 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
       )}
       {/* 7. HISTORICAL IMPORT LAUNCHER MODAL */}
       {isImportModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-fadeIn text-xs space-y-4 p-5">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream w-full max-w-lg overflow-hidden animate-fadeIn text-xs space-y-4 p-5">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div className="flex items-center gap-2">
-                <History className="w-5 h-5 text-indigo-700" />
+                <History className="w-5 h-5 text-phumulani-earth" />
                 <div>
-                  <h3 className="font-bold text-sm text-slate-900">
+                  <h3 className="font-bold text-sm text-phumulani-charcoal">
                     Historical Email Batch Import
                   </h3>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-phumulani-charcoal">
                     12-Stage Resumable Import Process with Safeguarding Quarantine
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setIsImportModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 cursor-pointer"
+                className="text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
               >
                 <XCircle className="w-5 h-5" />
               </button>
             </div>
 
             {/* Critical Safeguarding Invariant Notice */}
-            <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-amber-900 space-y-1">
-              <div className="flex items-center gap-1.5 font-bold text-xs text-amber-950">
-                <ShieldAlert className="w-4 h-4 text-amber-700" />
+            <div className="bg-phumulani-cream border border-phumulani-gold rounded-xl p-3 text-phumulani-charcoal space-y-1">
+              <div className="flex items-center gap-1.5 font-bold text-xs text-phumulani-charcoal">
+                <ShieldAlert className="w-4 h-4 text-phumulani-earth" />
                 <span>CRITICAL RULE: Historical Import Non-Solicitation Safeguard</span>
               </div>
-              <p className="text-[11px] text-amber-800 leading-relaxed">
+              <p className="text-[11px] text-phumulani-charcoal leading-relaxed">
                 Historical email imports will NOT automatically trigger external auto-responders, fundraising campaigns, or donor solicitations. Imported correspondence will be indexed and matched to CRM with source evidence preserved, but never treated as new inbound solicitation opportunities.
               </p>
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Target Organizational Mailbox:</label>
+                <label className="block font-bold text-phumulani-charcoal mb-1">Target Organizational Mailbox:</label>
                 <select
                   value={importTargetMailbox}
                   onChange={(e) => setImportTargetMailbox(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 font-mono text-xs font-semibold"
+                  className="w-full bg-phumulani-cream border border-phumulani-cream rounded-xl p-2 font-mono text-xs font-semibold"
                 >
                   {mailboxes.map((mbx) => (
                     <option key={mbx.id} value={mbx.id}>
@@ -6543,28 +6543,28 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Start Date:</label>
+                  <label className="block font-bold text-phumulani-charcoal mb-1">Start Date:</label>
                   <input
                     type="date"
                     value={historicalStartDate}
                     onChange={(e) => setHistoricalStartDate(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs"
+                    className="w-full bg-phumulani-cream border border-phumulani-cream rounded-xl p-2 text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">End Date:</label>
+                  <label className="block font-bold text-phumulani-charcoal mb-1">End Date:</label>
                   <input
                     type="date"
                     value={historicalEndDate}
                     onChange={(e) => setHistoricalEndDate(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs"
+                    className="w-full bg-phumulani-cream border border-phumulani-cream rounded-xl p-2 text-xs"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Folders to Synchronize:</label>
-                <div className="flex items-center gap-4 text-xs font-semibold text-slate-700 pt-1">
+                <label className="block font-bold text-phumulani-charcoal mb-1">Folders to Synchronize:</label>
+                <div className="flex items-center gap-4 text-xs font-semibold text-phumulani-charcoal pt-1">
                   {['INBOX', 'SENT', 'ARCHIVE'].map((folder) => (
                     <label key={folder} className="flex items-center gap-1.5 cursor-pointer">
                       <input
@@ -6577,7 +6577,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             setImportScopeFolders(importScopeFolders.filter((f) => f !== folder));
                           }
                         }}
-                        className="rounded text-teal-700"
+                        className="rounded text-phumulani-earth"
                       />
                       <span>{folder}</span>
                     </label>
@@ -6586,18 +6586,18 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-phumulani-cream">
               <button
                 type="button"
                 onClick={() => setIsImportModalOpen(false)}
-                className="px-3 py-1.5 border border-slate-200 rounded-xl hover:bg-slate-100 font-semibold cursor-pointer"
+                className="px-3 py-1.5 border border-phumulani-cream rounded-xl hover:bg-phumulani-cream font-semibold cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={() => handleStartImport(importTargetMailbox)}
-                className="px-4 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
               >
                 <History className="w-3.5 h-3.5" />
                 <span>Launch Background Historical Import</span>
@@ -6609,23 +6609,23 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
       {/* 8. SYNC CONFLICTS REVIEW MODAL */}
       {isConflictsModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-2xl overflow-hidden animate-fadeIn text-xs space-y-4 p-5">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream w-full max-w-2xl overflow-hidden animate-fadeIn text-xs space-y-4 p-5">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div className="flex items-center gap-2">
-                <AlertTriangle className="w-5 h-5 text-amber-600" />
+                <AlertTriangle className="w-5 h-5 text-phumulani-earth" />
                 <div>
-                  <h3 className="font-bold text-sm text-slate-900">
+                  <h3 className="font-bold text-sm text-phumulani-charcoal">
                     Two-Way Synchronization Conflict Reviewer
                   </h3>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-phumulani-charcoal">
                     Safe reconciliation of concurrent modifications between External Provider and Phumulani Dashboard
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setIsConflictsModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 cursor-pointer"
+                className="text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
               >
                 <XCircle className="w-5 h-5" />
               </button>
@@ -6633,58 +6633,58 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
             <div className="max-h-96 overflow-y-auto space-y-3">
               {syncConflicts.length === 0 ? (
-                <div className="p-8 text-center text-slate-400">
-                  <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-emerald-500" />
+                <div className="p-8 text-center text-phumulani-charcoal">
+                  <CheckCircle2 className="w-8 h-8 mx-auto mb-2 text-phumulani-charcoal" />
                   <p>All mailboxes and message states are completely synchronized.</p>
                 </div>
               ) : (
                 syncConflicts.map((conf) => (
                   <div
                     key={conf.id}
-                    className="border border-slate-200 rounded-xl p-3.5 bg-slate-50/50 space-y-2"
+                    className="border border-phumulani-cream rounded-xl p-3.5 bg-phumulani-cream space-y-2"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono text-[10px] font-bold px-1.5 py-0.2 rounded bg-amber-100 text-amber-900">
+                        <span className="font-mono text-[10px] font-bold px-1.5 py-0.2 rounded bg-phumulani-cream text-phumulani-charcoal">
                           {conf.conflictType}
                         </span>
-                        <span className="font-bold text-slate-900">{conf.threadSubject}</span>
+                        <span className="font-bold text-phumulani-charcoal">{conf.threadSubject}</span>
                       </div>
-                      <span className="text-[10px] font-mono text-slate-400">
+                      <span className="text-[10px] font-mono text-phumulani-charcoal">
                         {new Date(conf.detectedAt).toLocaleString()}
                       </span>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 text-[11px]">
-                      <div className="p-2 rounded-lg bg-white border border-slate-200">
-                        <span className="text-slate-400 block font-mono text-[10px]">PROVIDER STATE (Authoritative)</span>
-                        <pre className="font-mono text-xs text-slate-800 mt-1 whitespace-pre-wrap">{JSON.stringify(conf.providerState, null, 2)}</pre>
+                      <div className="p-2 rounded-lg bg-white border border-phumulani-cream">
+                        <span className="text-phumulani-charcoal block font-mono text-[10px]">PROVIDER STATE (Authoritative)</span>
+                        <pre className="font-mono text-xs text-phumulani-charcoal mt-1 whitespace-pre-wrap">{JSON.stringify(conf.providerState, null, 2)}</pre>
                       </div>
-                      <div className="p-2 rounded-lg bg-white border border-slate-200">
-                        <span className="text-slate-400 block font-mono text-[10px]">DASHBOARD STATE (Local)</span>
-                        <pre className="font-mono text-xs text-slate-800 mt-1 whitespace-pre-wrap">{JSON.stringify(conf.dashboardState, null, 2)}</pre>
+                      <div className="p-2 rounded-lg bg-white border border-phumulani-cream">
+                        <span className="text-phumulani-charcoal block font-mono text-[10px]">DASHBOARD STATE (Local)</span>
+                        <pre className="font-mono text-xs text-phumulani-charcoal mt-1 whitespace-pre-wrap">{JSON.stringify(conf.dashboardState, null, 2)}</pre>
                       </div>
                     </div>
 
                     <div className="flex items-center justify-between pt-1">
-                      <span className="text-[11px] text-slate-500 font-mono">Mailbox: {conf.mailboxEmail}</span>
+                      <span className="text-[11px] text-phumulani-charcoal font-mono">Mailbox: {conf.mailboxEmail}</span>
                       {conf.status === 'DETECTED' ? (
                         <div className="flex items-center gap-2">
                           <button
                             onClick={() => handleResolveConflict(conf.id, 'KEEP_PROVIDER')}
-                            className="px-3 py-1 bg-[#104F57] text-white rounded-lg font-bold cursor-pointer"
+                            className="px-3 py-1 bg-phumulani-earth text-white rounded-lg font-bold cursor-pointer"
                           >
                             Keep Provider Version
                           </button>
                           <button
                             onClick={() => handleResolveConflict(conf.id, 'KEEP_DASHBOARD')}
-                            className="px-3 py-1 bg-white border border-slate-200 text-slate-700 hover:bg-slate-100 rounded-lg font-semibold cursor-pointer"
+                            className="px-3 py-1 bg-white border border-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream rounded-lg font-semibold cursor-pointer"
                           >
                             Keep Dashboard Version
                           </button>
                         </div>
                       ) : (
-                        <span className="text-emerald-700 font-bold font-mono text-[11px]">
+                        <span className="text-phumulani-earth font-bold font-mono text-[11px]">
                           Resolved: {conf.resolution}
                         </span>
                       )}
@@ -6694,11 +6694,11 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               )}
             </div>
 
-            <div className="flex justify-end pt-2 border-t border-slate-100">
+            <div className="flex justify-end pt-2 border-t border-phumulani-cream">
               <button
                 type="button"
                 onClick={() => setIsConflictsModalOpen(false)}
-                className="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-semibold cursor-pointer"
+                className="px-4 py-1.5 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-xl font-semibold cursor-pointer"
               >
                 Close
               </button>
@@ -6709,23 +6709,23 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
       {/* 9. SYNC AUDIT LOG MODAL */}
       {isAuditLogsModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-3xl overflow-hidden animate-fadeIn text-xs space-y-4 p-5">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream w-full max-w-3xl overflow-hidden animate-fadeIn text-xs space-y-4 p-5">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div className="flex items-center gap-2">
-                <FileCheck className="w-5 h-5 text-teal-800" />
+                <FileCheck className="w-5 h-5 text-phumulani-earth" />
                 <div>
-                  <h3 className="font-bold text-sm text-slate-900">
+                  <h3 className="font-bold text-sm text-phumulani-charcoal">
                     Mailbox Synchronization Audit Logs
                   </h3>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-phumulani-charcoal">
                     Immutable enterprise audit log of all historical imports, delta syncs, and two-way actions
                   </p>
                 </div>
               </div>
               <button
                 onClick={() => setIsAuditLogsModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 cursor-pointer"
+                className="text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
               >
                 <XCircle className="w-5 h-5" />
               </button>
@@ -6733,7 +6733,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
             <div className="max-h-96 overflow-y-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-500 uppercase font-mono text-[10px] sticky top-0">
+                <thead className="bg-phumulani-cream text-phumulani-charcoal uppercase font-mono text-[10px] sticky top-0">
                   <tr>
                     <th className="p-2">Timestamp</th>
                     <th className="p-2">Mailbox</th>
@@ -6743,40 +6743,40 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     <th className="p-2">Details</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 font-mono text-[11px]">
+                <tbody className="divide-y divide-phumulani-cream font-mono text-[11px]">
                   {syncAuditLogs.map((log) => (
-                    <tr key={log.id} className="hover:bg-slate-50/50">
-                      <td className="p-2 text-slate-400 whitespace-nowrap">
+                    <tr key={log.id} className="hover:bg-phumulani-cream">
+                      <td className="p-2 text-phumulani-charcoal whitespace-nowrap">
                         {new Date(log.timestamp).toLocaleTimeString()}
                       </td>
-                      <td className="p-2 text-slate-700 font-sans font-semibold truncate max-w-[120px]">
+                      <td className="p-2 text-phumulani-charcoal font-sans font-semibold truncate max-w-[120px]">
                         {log.mailboxEmail}
                       </td>
-                      <td className="p-2 font-bold text-slate-900">{log.action}</td>
+                      <td className="p-2 font-bold text-phumulani-charcoal">{log.action}</td>
                       <td className="p-2">
                         <span
                           className={`px-1.5 py-0.2 rounded font-bold text-[10px] uppercase ${
                             log.result === 'SUCCESS'
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : 'bg-rose-100 text-rose-800'
+                              ? 'bg-phumulani-cream text-phumulani-charcoal'
+                              : 'bg-phumulani-cream text-phumulani-earth'
                           }`}
                         >
                           {log.result}
                         </span>
                       </td>
-                      <td className="p-2 text-slate-600 font-sans truncate max-w-[100px]">{log.actorName}</td>
-                      <td className="p-2 text-slate-500 font-sans truncate max-w-xs">{log.details}</td>
+                      <td className="p-2 text-phumulani-charcoal font-sans truncate max-w-[100px]">{log.actorName}</td>
+                      <td className="p-2 text-phumulani-charcoal font-sans truncate max-w-xs">{log.details}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
 
-            <div className="flex justify-end pt-2 border-t border-slate-100">
+            <div className="flex justify-end pt-2 border-t border-phumulani-cream">
               <button
                 type="button"
                 onClick={() => setIsAuditLogsModalOpen(false)}
-                className="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-semibold cursor-pointer"
+                className="px-4 py-1.5 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-xl font-semibold cursor-pointer"
               >
                 Close
               </button>
@@ -6787,16 +6787,16 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
       {/* 10. TEMPLATE PICKER MODAL (Milestone 23.09) */}
       {isTemplateModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-3xl overflow-hidden animate-fadeIn text-xs space-y-4 p-5 flex flex-col max-h-[90vh]">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream w-full max-w-3xl overflow-hidden animate-fadeIn text-xs space-y-4 p-5 flex flex-col max-h-[90vh]">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div className="flex items-center gap-2">
-                <FileText className="w-5 h-5 text-indigo-700" />
+                <FileText className="w-5 h-5 text-phumulani-earth" />
                 <div>
-                  <h3 className="font-bold text-sm text-slate-900">
+                  <h3 className="font-bold text-sm text-phumulani-charcoal">
                     Approved Organizational Email Templates
                   </h3>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-phumulani-charcoal">
                     Insert pre-approved correspondence with automatic constituent token interpolation.
                   </p>
                 </div>
@@ -6804,7 +6804,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               <button
                 type="button"
                 onClick={() => setIsTemplateModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 cursor-pointer"
+                className="text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
               >
                 <XCircle className="w-5 h-5" />
               </button>
@@ -6819,8 +6819,8 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   onClick={() => setSelectedTemplateCategory(cat)}
                   className={`px-2.5 py-1 rounded-full font-semibold capitalize whitespace-nowrap transition-colors cursor-pointer ${
                     selectedTemplateCategory === cat
-                      ? 'bg-[#104F57] text-white shadow-2xs'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      ? 'bg-phumulani-earth text-white shadow-2xs'
+                      : 'bg-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream'
                   }`}
                 >
                   {cat}
@@ -6835,42 +6835,42 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 .map((tmpl) => (
                   <div
                     key={tmpl.id}
-                    className="border border-slate-200 rounded-xl p-3.5 bg-slate-50/50 hover:bg-white hover:border-slate-300 transition-all space-y-2"
+                    className="border border-phumulani-cream rounded-xl p-3.5 bg-phumulani-cream hover:bg-white hover:border-phumulani-cream transition-all space-y-2"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className="font-bold text-slate-900 text-xs">{tmpl.name}</span>
-                        <span className="text-[10px] font-mono font-bold bg-indigo-100 text-indigo-800 px-1.5 py-0.2 rounded">
+                        <span className="font-bold text-phumulani-charcoal text-xs">{tmpl.name}</span>
+                        <span className="text-[10px] font-mono font-bold bg-phumulani-cream text-phumulani-earth px-1.5 py-0.2 rounded">
                           {tmpl.category}
                         </span>
                       </div>
-                      <span className="text-[10px] text-slate-400 font-mono">
+                      <span className="text-[10px] text-phumulani-charcoal font-mono">
                         Tone: <strong className="capitalize">{tmpl.suggestedTone.replace('_', ' ')}</strong>
                       </span>
                     </div>
 
-                    <p className="text-[11px] text-slate-500">{tmpl.description}</p>
+                    <p className="text-[11px] text-phumulani-charcoal">{tmpl.description}</p>
 
-                    <div className="text-[11px] font-semibold text-slate-800 bg-white p-2 rounded-lg border border-slate-200">
-                      <span className="text-slate-400 font-normal">Subject:</span> {tmpl.subjectTemplate || tmpl.subject}
+                    <div className="text-[11px] font-semibold text-phumulani-charcoal bg-white p-2 rounded-lg border border-phumulani-cream">
+                      <span className="text-phumulani-charcoal font-normal">Subject:</span> {tmpl.subjectTemplate || tmpl.subject}
                     </div>
 
                     <div className="flex items-center justify-between pt-1">
-                      <div className="flex flex-wrap gap-1 text-[10px] font-mono text-teal-800">
+                      <div className="flex flex-wrap gap-1 text-[10px] font-mono text-phumulani-earth">
                         {tmpl.variables.slice(0, 4).map((v) => (
-                          <span key={v} className="bg-teal-50 border border-teal-200 px-1.5 py-0.2 rounded">
+                          <span key={v} className="bg-phumulani-cream border border-phumulani-teal px-1.5 py-0.2 rounded">
                             {`{{${v}}}`}
                           </span>
                         ))}
                         {tmpl.variables.length > 4 && (
-                          <span className="text-slate-400">+{tmpl.variables.length - 4} more</span>
+                          <span className="text-phumulani-charcoal">+{tmpl.variables.length - 4} more</span>
                         )}
                       </div>
 
                       <button
                         type="button"
                         onClick={() => handleInsertTemplate(tmpl)}
-                        className="px-3 py-1 bg-[#104F57] hover:bg-teal-900 text-white rounded-lg text-xs font-bold cursor-pointer shadow-2xs"
+                        className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold cursor-pointer shadow-2xs"
                       >
                         Insert into {targetTemplateInsert === 'compose' ? 'Composer' : 'Draft'}
                       </button>
@@ -6879,11 +6879,11 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 ))}
             </div>
 
-            <div className="flex justify-end pt-2 border-t border-slate-100">
+            <div className="flex justify-end pt-2 border-t border-phumulani-cream">
               <button
                 type="button"
                 onClick={() => setIsTemplateModalOpen(false)}
-                className="px-4 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-semibold cursor-pointer"
+                className="px-4 py-1.5 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-xl font-semibold cursor-pointer"
               >
                 Close
               </button>
@@ -6894,16 +6894,16 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
       {/* 11. NEW FOLLOW-UP TASK MODAL (Milestone 23.08) */}
       {isNewTaskModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md overflow-hidden animate-fadeIn text-xs space-y-4 p-5">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream w-full max-w-md overflow-hidden animate-fadeIn text-xs space-y-4 p-5">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div className="flex items-center gap-2">
-                <CheckSquare className="w-5 h-5 text-teal-800" />
+                <CheckSquare className="w-5 h-5 text-phumulani-earth" />
                 <div>
-                  <h3 className="font-bold text-sm text-slate-900">
+                  <h3 className="font-bold text-sm text-phumulani-charcoal">
                     Create Follow-Up Task
                   </h3>
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-phumulani-charcoal">
                     Assign an operational commitment linked to this correspondence
                   </p>
                 </div>
@@ -6911,7 +6911,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               <button
                 type="button"
                 onClick={() => setIsNewTaskModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 cursor-pointer"
+                className="text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
               >
                 <XCircle className="w-5 h-5" />
               </button>
@@ -6919,24 +6919,24 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
             <div className="space-y-3">
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Task Title / Action:</label>
+                <label className="block font-bold text-phumulani-charcoal mb-1">Task Title / Action:</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Confirm oral testimony time with Committee Secretary"
                   value={newTaskTitle}
                   onChange={(e) => setNewTaskTitle(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs font-semibold focus:outline-hidden focus:border-teal-700"
+                  className="w-full bg-phumulani-cream border border-phumulani-cream rounded-xl p-2 text-xs font-semibold focus:outline-hidden focus:border-phumulani-earth"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Assign to Staff:</label>
+                  <label className="block font-bold text-phumulani-charcoal mb-1">Assign to Staff:</label>
                   <select
                     value={newTaskAssignee}
                     onChange={(e) => setNewTaskAssignee(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs font-medium cursor-pointer"
+                    className="w-full bg-phumulani-cream border border-phumulani-cream rounded-xl p-2 text-xs font-medium cursor-pointer"
                   >
                     {EMAIL_STAFF_MEMBERS.map((st) => (
                       <option key={st.id} value={st.name}>
@@ -6947,23 +6947,23 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Due Date:</label>
+                  <label className="block font-bold text-phumulani-charcoal mb-1">Due Date:</label>
                   <input
                     type="date"
                     value={newTaskDueDate}
                     onChange={(e) => setNewTaskDueDate(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs"
+                    className="w-full bg-phumulani-cream border border-phumulani-cream rounded-xl p-2 text-xs"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Priority Level:</label>
+                  <label className="block font-bold text-phumulani-charcoal mb-1">Priority Level:</label>
                   <select
                     value={newTaskPriority}
                     onChange={(e) => setNewTaskPriority(e.target.value as any)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs font-semibold cursor-pointer"
+                    className="w-full bg-phumulani-cream border border-phumulani-cream rounded-xl p-2 text-xs font-semibold cursor-pointer"
                   >
                     <option value="urgent">Urgent (P0/P1 SLA)</option>
                     <option value="high">High (&lt;24h)</option>
@@ -6972,11 +6972,11 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block font-bold text-slate-700 mb-1">Task Category:</label>
+                  <label className="block font-bold text-phumulani-charcoal mb-1">Task Category:</label>
                   <select
                     value={newTaskType}
                     onChange={(e) => setNewTaskType(e.target.value as any)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs font-semibold cursor-pointer"
+                    className="w-full bg-phumulani-cream border border-phumulani-cream rounded-xl p-2 text-xs font-semibold cursor-pointer"
                   >
                     <option value="email_reply">Email Reply</option>
                     <option value="crm_update">CRM Contact Update</option>
@@ -6988,24 +6988,24 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               </div>
 
               {selectedThread && (
-                <div className="p-2.5 rounded-xl bg-teal-50 border border-teal-200 text-teal-950 text-[11px]">
+                <div className="p-2.5 rounded-xl bg-phumulani-cream border border-phumulani-teal text-phumulani-earth text-[11px]">
                   <strong>Linked to Thread:</strong> {selectedThread.threadSubject} ({selectedThread.mailboxEmail})
                 </div>
               )}
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-phumulani-cream">
               <button
                 type="button"
                 onClick={() => setIsNewTaskModalOpen(false)}
-                className="px-3 py-1.5 border border-slate-200 rounded-xl hover:bg-slate-100 font-semibold cursor-pointer"
+                className="px-3 py-1.5 border border-phumulani-cream rounded-xl hover:bg-phumulani-cream font-semibold cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleCreateFollowUpTask}
-                className="px-4 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
               >
                 <CheckSquare className="w-3.5 h-3.5" />
                 <span>Create Task</span>
@@ -7017,16 +7017,16 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
       {/* 7. REGISTER ORGANIZATIONAL MAILBOX MODAL (M48.02) */}
       {isAddMailboxModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-fadeIn">
-            <div className="bg-[#104F57] text-white px-5 py-3 flex items-center justify-between">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream w-full max-w-lg overflow-hidden animate-fadeIn">
+            <div className="bg-phumulani-charcoal text-white px-5 py-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Mail className="w-4 h-4" />
                 <h3 className="font-serif font-bold text-sm">Register Organizational Mailbox</h3>
               </div>
               <button
                 onClick={() => setIsAddMailboxModalOpen(false)}
-                className="text-teal-200 hover:text-white cursor-pointer"
+                className="text-phumulani-cream hover:text-white cursor-pointer"
               >
                 <XCircle className="w-5 h-5" />
               </button>
@@ -7034,36 +7034,36 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
             <form onSubmit={handleAddMailboxSubmit} className="p-5 space-y-3 text-xs">
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Mailbox Email Address:</label>
+                <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Mailbox Email Address:</label>
                 <input
                   type="email"
                   required
                   placeholder="e.g. advocacy@phumulani.org"
                   value={mbxFormEmail}
                   onChange={(e) => setMbxFormEmail(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 font-mono text-xs"
+                  className="w-full bg-phumulani-cream border border-phumulani-cream rounded-lg p-2 font-mono text-xs"
                 />
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Display Name:</label>
+                <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Display Name:</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Phumulani Community Advocacy"
                   value={mbxFormDisplayName}
                   onChange={(e) => setMbxFormDisplayName(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs"
+                  className="w-full bg-phumulani-cream border border-phumulani-cream rounded-lg p-2 text-xs"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Department Ownership:</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Department Ownership:</label>
                   <select
                     value={mbxFormDepartment}
                     onChange={(e) => setMbxFormDepartment(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-semibold"
+                    className="w-full bg-phumulani-cream border border-phumulani-cream rounded-lg p-2 text-xs font-semibold"
                   >
                     <option value="DEPT-OPS">DEPT-OPS (Operations & Front Desk)</option>
                     <option value="DEPT-DEV">DEPT-DEV (Development & Fundraising)</option>
@@ -7074,11 +7074,11 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Initial State:</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Initial State:</label>
                   <select
                     value={mbxFormInitialState}
                     onChange={(e) => setMbxFormInitialState(e.target.value as MailboxConnectionState)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-mono font-bold"
+                    className="w-full bg-phumulani-cream border border-phumulani-cream rounded-lg p-2 text-xs font-mono font-bold"
                   >
                     <option value="AUTHORIZATION_REQUIRED">AUTHORIZATION_REQUIRED</option>
                     <option value="DEGRADED">DEGRADED</option>
@@ -7089,31 +7089,31 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Authorized Staff Assignee(s):</label>
+                <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Authorized Staff Assignee(s):</label>
                 <input
                   type="text"
                   placeholder="e.g. Sister Miriam K., Comfort Dondo"
                   value={mbxFormStaff}
                   onChange={(e) => setMbxFormStaff(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs"
+                  className="w-full bg-phumulani-cream border border-phumulani-cream rounded-lg p-2 text-xs"
                 />
               </div>
 
-              <div className="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-[11px]">
+              <div className="p-2.5 rounded-xl bg-phumulani-cream border border-phumulani-gold text-phumulani-charcoal text-[11px]">
                 <strong>Staged OAuth Mode:</strong> Live Google Workspace accounts will not be provisioned without verified credentials. Initial state set to <code>{mbxFormInitialState}</code>.
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-phumulani-cream">
                 <button
                   type="button"
                   onClick={() => setIsAddMailboxModalOpen(false)}
-                  className="px-3 py-1.5 border border-slate-200 rounded-xl hover:bg-slate-100 font-semibold cursor-pointer"
+                  className="px-3 py-1.5 border border-phumulani-cream rounded-xl hover:bg-phumulani-cream font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Register Mailbox</span>
@@ -7126,9 +7126,9 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
       {/* 8. EDIT MAILBOX SETTINGS MODAL (M48.02) */}
       {isEditMailboxModalOpen && editingMailbox && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-lg overflow-hidden animate-fadeIn">
-            <div className="bg-[#104F57] text-white px-5 py-3 flex items-center justify-between">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream w-full max-w-lg overflow-hidden animate-fadeIn">
+            <div className="bg-phumulani-charcoal text-white px-5 py-3 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Edit3 className="w-4 h-4" />
                 <h3 className="font-serif font-bold text-sm">Edit Mailbox Settings: {editingMailbox.email}</h3>
@@ -7138,7 +7138,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   setIsEditMailboxModalOpen(false);
                   setEditingMailbox(null);
                 }}
-                className="text-teal-200 hover:text-white cursor-pointer"
+                className="text-phumulani-cream hover:text-white cursor-pointer"
               >
                 <XCircle className="w-5 h-5" />
               </button>
@@ -7146,23 +7146,23 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
             <form onSubmit={handleEditMailboxSubmit} className="p-5 space-y-3 text-xs">
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Display Name:</label>
+                <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Display Name:</label>
                 <input
                   type="text"
                   required
                   value={mbxFormDisplayName}
                   onChange={(e) => setMbxFormDisplayName(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs"
+                  className="w-full bg-phumulani-cream border border-phumulani-cream rounded-lg p-2 text-xs"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Department Ownership:</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Department Ownership:</label>
                   <select
                     value={mbxFormDepartment}
                     onChange={(e) => setMbxFormDepartment(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-semibold"
+                    className="w-full bg-phumulani-cream border border-phumulani-cream rounded-lg p-2 text-xs font-semibold"
                   >
                     <option value="DEPT-OPS">DEPT-OPS (Operations)</option>
                     <option value="DEPT-DEV">DEPT-DEV (Development)</option>
@@ -7173,11 +7173,11 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Connection State:</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Connection State:</label>
                   <select
                     value={mbxFormInitialState}
                     onChange={(e) => setMbxFormInitialState(e.target.value as MailboxConnectionState)}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 text-xs font-mono font-bold"
+                    className="w-full bg-phumulani-cream border border-phumulani-cream rounded-lg p-2 text-xs font-mono font-bold"
                   >
                     <option value="AUTHORIZATION_REQUIRED">AUTHORIZATION_REQUIRED</option>
                     <option value="DEGRADED">DEGRADED</option>
@@ -7188,26 +7188,26 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 </div>
               </div>
 
-              <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 text-[11px] space-y-1">
+              <div className="p-2.5 rounded-xl bg-phumulani-cream border border-phumulani-cream text-phumulani-charcoal text-[11px] space-y-1">
                 <div><strong>Provider:</strong> {editingMailbox.provider}</div>
                 <div><strong>Current Messages:</strong> {editingMailbox.totalThreads} Threads</div>
                 <div><strong>2-Way Sync:</strong> {editingMailbox.twoWaySyncEnabled ? 'Enabled' : 'Disabled'}</div>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-phumulani-cream">
                 <button
                   type="button"
                   onClick={() => {
                     setIsEditMailboxModalOpen(false);
                     setEditingMailbox(null);
                   }}
-                  className="px-3 py-1.5 border border-slate-200 rounded-xl hover:bg-slate-100 font-semibold cursor-pointer"
+                  className="px-3 py-1.5 border border-phumulani-cream rounded-xl hover:bg-phumulani-cream font-semibold cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   <Check className="w-3.5 h-3.5" />
                   <span>Save Settings</span>
@@ -7220,48 +7220,48 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
       {/* 9. CONNECTION TEST RESULT DIALOG (M48.02) */}
       {testConnectionResult && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md overflow-hidden animate-fadeIn p-5 space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream w-full max-w-md overflow-hidden animate-fadeIn p-5 space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5 text-emerald-600" />
-                <h3 className="font-bold text-sm text-slate-900">Mailbox Connection Test Succeeded</h3>
+                <CheckCircle2 className="w-5 h-5 text-phumulani-earth" />
+                <h3 className="font-bold text-sm text-phumulani-charcoal">Mailbox Connection Test Succeeded</h3>
               </div>
               <button
                 onClick={() => setTestConnectionResult(null)}
-                className="text-slate-400 hover:text-slate-600 cursor-pointer"
+                className="text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
             <div className="space-y-2.5">
-              <div className="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
-                <span className="text-slate-500">Target Mailbox:</span>
-                <span className="font-mono font-bold text-slate-900">{testConnectionResult.mailboxEmail}</span>
+              <div className="flex items-center justify-between p-2.5 bg-phumulani-cream border border-phumulani-cream rounded-xl">
+                <span className="text-phumulani-charcoal">Target Mailbox:</span>
+                <span className="font-mono font-bold text-phumulani-charcoal">{testConnectionResult.mailboxEmail}</span>
               </div>
-              <div className="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
-                <span className="text-slate-500">Handshake Latency:</span>
-                <span className="font-mono font-bold text-teal-800">{testConnectionResult.latencyMs} ms</span>
+              <div className="flex items-center justify-between p-2.5 bg-phumulani-cream border border-phumulani-cream rounded-xl">
+                <span className="text-phumulani-charcoal">Handshake Latency:</span>
+                <span className="font-mono font-bold text-phumulani-earth">{testConnectionResult.latencyMs} ms</span>
               </div>
-              <div className="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
-                <span className="text-slate-500">Provider Status:</span>
-                <span className="font-mono font-bold text-emerald-800 uppercase">{testConnectionResult.status}</span>
+              <div className="flex items-center justify-between p-2.5 bg-phumulani-cream border border-phumulani-cream rounded-xl">
+                <span className="text-phumulani-charcoal">Provider Status:</span>
+                <span className="font-mono font-bold text-phumulani-charcoal uppercase">{testConnectionResult.status}</span>
               </div>
-              <div className="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
-                <span className="text-slate-500">Operational Adapter:</span>
-                <span className="font-mono text-slate-700">Google Workspace (Staged)</span>
+              <div className="flex items-center justify-between p-2.5 bg-phumulani-cream border border-phumulani-cream rounded-xl">
+                <span className="text-phumulani-charcoal">Operational Adapter:</span>
+                <span className="font-mono text-phumulani-charcoal">Google Workspace (Staged)</span>
               </div>
-              <p className="text-[11px] text-slate-500 leading-relaxed">
+              <p className="text-[11px] text-phumulani-charcoal leading-relaxed">
                 Handshake verified against staging provider gateway. Zero fatal socket errors. Audit trail recorded in tamper-evident ledger.
               </p>
             </div>
 
-            <div className="flex justify-end pt-3 border-t border-slate-100">
+            <div className="flex justify-end pt-3 border-t border-phumulani-cream">
               <button
                 type="button"
                 onClick={() => setTestConnectionResult(null)}
-                className="px-4 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl font-bold cursor-pointer"
+                className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold cursor-pointer"
               >
                 Done
               </button>
@@ -7272,19 +7272,19 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
       {/* 10. CRM LINKING MODAL (M48.05 / M48.11) */}
       {isCrmLinkModalOpen && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-md overflow-hidden animate-fadeIn p-5 space-y-4 text-xs">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream w-full max-w-md overflow-hidden animate-fadeIn p-5 space-y-4 text-xs">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-emerald-600" />
-                <h3 className="font-bold text-sm text-slate-900">Link Email Thread to CRM Constituent</h3>
+                <Users className="w-5 h-5 text-phumulani-earth" />
+                <h3 className="font-bold text-sm text-phumulani-charcoal">Link Email Thread to CRM Constituent</h3>
               </div>
               <button
                 onClick={() => {
                   setIsCrmLinkModalOpen(false);
                   setCrmTargetThreadId(null);
                 }}
-                className="text-slate-400 hover:text-slate-600 cursor-pointer"
+                className="text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
               >
                 ✕
               </button>
@@ -7292,11 +7292,11 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
             <form onSubmit={handleCrmLinkSubmit} className="space-y-3">
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Constituent Entity Type:</label>
+                <label className="block font-bold text-phumulani-charcoal mb-1">Constituent Entity Type:</label>
                 <select
                   value={crmEntityType}
                   onChange={(e) => setCrmEntityType(e.target.value as any)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs font-semibold cursor-pointer"
+                  className="w-full bg-phumulani-cream border border-phumulani-cream rounded-xl p-2 text-xs font-semibold cursor-pointer"
                 >
                   <option value="donor">Major Donor Profile</option>
                   <option value="grant">Grant Opportunity / Funder</option>
@@ -7310,39 +7310,39 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Entity Name / Organization:</label>
+                <label className="block font-bold text-phumulani-charcoal mb-1">Entity Name / Organization:</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Vance Family Foundation, John Doe"
                   value={crmEntityName}
                   onChange={(e) => setCrmEntityName(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 text-xs"
+                  className="w-full bg-phumulani-cream border border-phumulani-cream rounded-xl p-2 text-xs"
                 />
               </div>
 
               <div>
-                <label className="block font-bold text-slate-700 mb-1">CRM Record ID:</label>
+                <label className="block font-bold text-phumulani-charcoal mb-1">CRM Record ID:</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. dnr-vance-01, opp-bush-01"
                   value={crmEntityId}
                   onChange={(e) => setCrmEntityId(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-2 font-mono text-xs"
+                  className="w-full bg-phumulani-cream border border-phumulani-cream rounded-xl p-2 font-mono text-xs"
                 />
               </div>
 
-              <div className="bg-rose-50 border border-rose-200 rounded-xl p-2.5 text-[11px] text-rose-900">
+              <div className="bg-phumulani-cream border border-phumulani-earth rounded-xl p-2.5 text-[11px] text-phumulani-earth">
                 <strong>VAWA Invariant:</strong> Category 01 confidential survivor communications are physically blocked from external CRM linking.
               </div>
 
-              <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+              <div className="flex items-center justify-between pt-3 border-t border-phumulani-cream">
                 {selectedThread?.crmLink && (
                   <button
                     type="button"
                     onClick={() => handleUnlinkCrm(selectedThread.id)}
-                    className="text-rose-700 hover:text-rose-900 font-bold underline cursor-pointer text-xs"
+                    className="text-phumulani-earth hover:text-phumulani-earth font-bold underline cursor-pointer text-xs"
                   >
                     Unlink Record
                   </button>
@@ -7354,13 +7354,13 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       setIsCrmLinkModalOpen(false);
                       setCrmTargetThreadId(null);
                     }}
-                    className="px-3 py-1.5 border border-slate-200 rounded-xl hover:bg-slate-100 font-semibold cursor-pointer"
+                    className="px-3 py-1.5 border border-phumulani-cream rounded-xl hover:bg-phumulani-cream font-semibold cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-1.5 bg-[#104F57] hover:bg-teal-900 text-white rounded-xl font-bold flex items-center gap-1 shadow-xs cursor-pointer"
+                    className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold flex items-center gap-1 shadow-xs cursor-pointer"
                   >
                     <Check className="w-3.5 h-3.5" />
                     <span>Link CRM Record</span>

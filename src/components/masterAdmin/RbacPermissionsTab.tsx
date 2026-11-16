@@ -133,13 +133,13 @@ export const RbacPermissionsTab: React.FC<RbacPermissionsTabProps> = ({ currentU
   return (
     <div className="space-y-6">
       {/* Top Header */}
-      <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white p-5 rounded-xl border border-phumulani-cream shadow-xs flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2">
-            <KeyRound className="w-5 h-5 text-teal-800" />
-            <h2 className="text-lg font-bold text-slate-900">Role-Based Access Control (RBAC) & Permission Matrix</h2>
+            <KeyRound className="w-5 h-5 text-phumulani-earth" />
+            <h2 className="text-lg font-bold text-phumulani-charcoal">Role-Based Access Control (RBAC) & Permission Matrix</h2>
           </div>
-          <p className="text-xs text-slate-500 mt-1">
+          <p className="text-xs text-phumulani-charcoal mt-1">
             Server-side authorization across 14 permission domains with default-deny boundaries and safeguarding isolation
           </p>
         </div>
@@ -147,7 +147,7 @@ export const RbacPermissionsTab: React.FC<RbacPermissionsTabProps> = ({ currentU
         <button
           onClick={handleRunNegativeAccessTests}
           disabled={isRunningTests}
-          className="inline-flex items-center gap-2 px-3.5 py-2 bg-indigo-800 text-white rounded-lg text-xs font-semibold hover:bg-indigo-900 transition-colors cursor-pointer shadow-xs disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-3.5 py-2 bg-phumulani-earth text-white rounded-lg text-xs font-semibold hover:bg-phumulani-orange transition-colors cursor-pointer shadow-xs disabled:opacity-50"
         >
           <Play className={`w-4 h-4 ${isRunningTests ? 'animate-spin' : ''}`} />
           <span>{isRunningTests ? 'Executing Probes...' : 'Execute 10 Negative Access Tests'}</span>
@@ -156,27 +156,27 @@ export const RbacPermissionsTab: React.FC<RbacPermissionsTabProps> = ({ currentU
 
       {/* Negative Access Results Banner */}
       {testResults && (
-        <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-xs space-y-3">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+        <div className="bg-white p-5 rounded-xl border border-phumulani-cream shadow-xs space-y-3">
+          <div className="flex items-center justify-between pb-3 border-b border-phumulani-cream">
             <div className="flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-emerald-600" />
-              <h3 className="text-sm font-bold text-slate-900">
+              <ShieldCheck className="w-5 h-5 text-phumulani-earth" />
+              <h3 className="text-sm font-bold text-phumulani-charcoal">
                 Negative Access Probe Suite Results ({testResults.passedTests}/{testResults.totalTests} Passing)
               </h3>
             </div>
-            <span className="text-xs font-bold font-mono px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded">
+            <span className="text-xs font-bold font-mono px-2 py-0.5 bg-phumulani-cream text-phumulani-charcoal rounded">
               100% INVARIANT ENFORCEMENT
             </span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs">
             {testResults.tests.map((t) => (
-              <div key={t.id} className="p-2.5 bg-slate-50 border border-slate-200 rounded-lg flex items-center justify-between gap-2">
+              <div key={t.id} className="p-2.5 bg-phumulani-cream border border-phumulani-cream rounded-lg flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span className="text-slate-800 font-medium">{t.description}</span>
+                  <CheckCircle2 className="w-4 h-4 text-phumulani-earth shrink-0" />
+                  <span className="text-phumulani-charcoal font-medium">{t.description}</span>
                 </div>
-                <span className="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded shrink-0">
+                <span className="text-[10px] font-mono font-bold bg-phumulani-cream text-phumulani-charcoal px-1.5 py-0.5 rounded shrink-0">
                   BLOCKED
                 </span>
               </div>
@@ -186,34 +186,34 @@ export const RbacPermissionsTab: React.FC<RbacPermissionsTabProps> = ({ currentU
       )}
 
       {/* 14 Permission Domains Matrix Table */}
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-xs">
-        <div className="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-          <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
+      <div className="bg-white rounded-xl border border-phumulani-cream overflow-hidden shadow-xs">
+        <div className="p-4 border-b border-phumulani-cream bg-phumulani-cream flex items-center justify-between">
+          <h3 className="text-xs font-bold uppercase tracking-wider text-phumulani-charcoal">
             Domain Authorization Matrix (14 Granular Capability Domains)
           </h3>
-          <span className="text-[11px] text-slate-500">Default-Deny Policy Enforced</span>
+          <span className="text-[11px] text-phumulani-charcoal">Default-Deny Policy Enforced</span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
             <thead>
-              <tr className="bg-slate-100/70 border-b border-slate-200 text-slate-700 font-semibold text-[11px]">
+              <tr className="bg-phumulani-cream border-b border-phumulani-cream text-phumulani-charcoal font-semibold text-[11px]">
                 <th className="py-2.5 px-3 min-w-[160px]">Organizational Role</th>
                 {permissionDomains.map((domain) => (
                   <th key={domain.id} className="py-2.5 px-2 text-center whitespace-nowrap" title={domain.description}>
-                    <div className="max-w-[75px] truncate mx-auto text-[10px] uppercase font-bold text-slate-600">
+                    <div className="max-w-[75px] truncate mx-auto text-[10px] uppercase font-bold text-phumulani-charcoal">
                       {domain.label}
                     </div>
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-phumulani-cream">
               {matrix.map((row) => (
-                <tr key={row.role} className="hover:bg-slate-50 transition-colors">
-                  <td className="py-2.5 px-3 font-semibold text-slate-900">
+                <tr key={row.role} className="hover:bg-phumulani-cream transition-colors">
+                  <td className="py-2.5 px-3 font-semibold text-phumulani-charcoal">
                     <div>{row.label}</div>
-                    <div className="text-[10px] text-slate-400 font-mono">{row.role}</div>
+                    <div className="text-[10px] text-phumulani-charcoal font-mono">{row.role}</div>
                   </td>
                   {permissionDomains.map((domain) => {
                     const hasAccess = row.allowedDomains.includes(domain.id);
@@ -223,14 +223,14 @@ export const RbacPermissionsTab: React.FC<RbacPermissionsTabProps> = ({ currentU
                         {hasAccess ? (
                           <span
                             className={`inline-flex items-center justify-center w-5 h-5 rounded-full ${
-                              isSafeguarding ? 'bg-rose-100 text-rose-800' : 'bg-emerald-100 text-emerald-800'
+                              isSafeguarding ? 'bg-phumulani-cream text-phumulani-earth' : 'bg-phumulani-cream text-phumulani-charcoal'
                             }`}
                             title={`Granted: ${domain.label}`}
                           >
                             <CheckCircle2 className="w-3.5 h-3.5" />
                           </span>
                         ) : (
-                          <span className="inline-block w-2 h-0.5 bg-slate-200 rounded" title="Denied" />
+                          <span className="inline-block w-2 h-0.5 bg-phumulani-cream rounded" title="Denied" />
                         )}
                       </td>
                     );

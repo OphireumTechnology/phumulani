@@ -112,33 +112,33 @@ export const ProgramResourcesTab: React.FC<Props> = ({ currentUserRole, currentU
   const getCategoryIcon = (cat: ResourceCategory) => {
     switch (cat) {
       case 'EQUIPMENT':
-        return <Box className="w-4 h-4 text-blue-600" />;
+        return <Box className="w-4 h-4 text-phumulani-earth" />;
       case 'TRANSPORTATION':
-        return <Truck className="w-4 h-4 text-amber-600" />;
+        return <Truck className="w-4 h-4 text-phumulani-earth" />;
       case 'FACILITIES':
-        return <Building className="w-4 h-4 text-emerald-600" />;
+        return <Building className="w-4 h-4 text-phumulani-earth" />;
       default:
-        return <Layers className="w-4 h-4 text-purple-600" />;
+        return <Layers className="w-4 h-4 text-phumulani-earth" />;
     }
   };
 
   return (
     <div className="space-y-6">
       {/* TOP HEADER */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <span className="text-[10px] font-mono font-bold bg-teal-50 text-teal-800 px-2.5 py-0.5 rounded-full border border-teal-200 uppercase">
+          <span className="text-[10px] font-mono font-bold bg-phumulani-cream text-phumulani-earth px-2.5 py-0.5 rounded-full border border-phumulani-teal uppercase">
             M25.08 · OPERATIONAL RESOURCE ALLOCATION
           </span>
-          <h2 className="text-xl font-bold font-serif text-slate-900 mt-1">Program Resource Management</h2>
-          <p className="text-slate-500 text-xs mt-0.5">
+          <h2 className="text-xl font-bold font-serif text-phumulani-charcoal mt-1">Program Resource Management</h2>
+          <p className="text-phumulani-charcoal text-xs mt-0.5">
             Track equipment, dry pantry transport, community facilities, and materials with separation of duties and executive sign-off.
           </p>
         </div>
 
         <button
           onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-teal-800 hover:bg-teal-900 text-white rounded-xl text-xs font-bold transition-all shadow-xs shrink-0 cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold transition-all shadow-xs shrink-0 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Request Program Resource</span>
@@ -150,46 +150,46 @@ export const ProgramResourcesTab: React.FC<Props> = ({ currentUserRole, currentU
         <div
           className={`p-3.5 rounded-xl text-xs font-semibold flex items-center justify-between transition-all ${
             feedbackNotice.type === 'success'
-              ? 'bg-emerald-50 text-emerald-900 border border-emerald-200'
-              : 'bg-rose-50 text-rose-900 border border-rose-200'
+              ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green'
+              : 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth'
           }`}
         >
           <div className="flex items-center gap-2">
             {feedbackNotice.type === 'success' ? (
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-phumulani-earth shrink-0" />
             ) : (
-              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+              <AlertTriangle className="w-4 h-4 text-phumulani-earth shrink-0" />
             )}
             <span>{feedbackNotice.message}</span>
           </div>
-          <button onClick={() => setFeedbackNotice(null)} className="text-slate-400 font-bold px-2">
+          <button onClick={() => setFeedbackNotice(null)} className="text-phumulani-charcoal font-bold px-2">
             ✕
           </button>
         </div>
       )}
 
       {/* SEARCH BAR */}
-      <div className="bg-white p-3.5 rounded-xl border border-slate-200 shadow-xs flex items-center justify-between">
+      <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs flex items-center justify-between">
         <div className="relative w-full md:w-80">
-          <Search className="w-4 h-4 absolute left-3 top-2.5 text-slate-400" />
+          <Search className="w-4 h-4 absolute left-3 top-2.5 text-phumulani-charcoal" />
           <input
             type="text"
             placeholder="Search resource, program, owner..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-teal-700"
+            className="w-full pl-9 pr-3 py-1.5 text-xs rounded-lg border border-phumulani-cream bg-phumulani-cream focus:bg-white focus:outline-hidden focus:ring-2 focus:ring-phumulani-earth"
           />
         </div>
-        <button onClick={refreshData} className="p-1.5 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-100">
+        <button onClick={refreshData} className="p-1.5 rounded-lg border border-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream">
           <RefreshCw className="w-4 h-4" />
         </button>
       </div>
 
       {/* RESOURCES TABLE */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+      <div className="bg-white rounded-2xl border border-phumulani-cream shadow-xs overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b border-slate-200 text-[10px] uppercase font-bold text-slate-500">
+            <thead className="bg-phumulani-cream border-b border-phumulani-cream text-[10px] uppercase font-bold text-phumulani-charcoal">
               <tr>
                 <th className="py-3 px-4">Resource Ref</th>
                 <th className="py-3 px-4">Category & Item</th>
@@ -199,47 +199,47 @@ export const ProgramResourcesTab: React.FC<Props> = ({ currentUserRole, currentU
                 <th className="py-3 px-4">Status & Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
+            <tbody className="divide-y divide-phumulani-cream text-phumulani-charcoal">
               {filtered.map((res) => (
-                <tr key={res.id} className="hover:bg-slate-50/70 transition-colors">
-                  <td className="py-3 px-4 whitespace-nowrap font-mono font-bold text-slate-900">{res.id}</td>
+                <tr key={res.id} className="hover:bg-phumulani-cream transition-colors">
+                  <td className="py-3 px-4 whitespace-nowrap font-mono font-bold text-phumulani-charcoal">{res.id}</td>
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-2">
                       {getCategoryIcon(res.resourceCategory)}
-                      <span className="font-bold text-slate-900">{res.resourceName}</span>
+                      <span className="font-bold text-phumulani-charcoal">{res.resourceName}</span>
                     </div>
-                    <div className="text-[10px] text-slate-400 mt-0.5">{res.resourceCategory}</div>
+                    <div className="text-[10px] text-phumulani-charcoal mt-0.5">{res.resourceCategory}</div>
                   </td>
                   <td className="py-3 px-4">
-                    <span className="font-semibold text-teal-800 line-clamp-1">{res.programName}</span>
-                    <span className="text-[10px] text-slate-400">Owner: {res.requestOwnerName}</span>
+                    <span className="font-semibold text-phumulani-earth line-clamp-1">{res.programName}</span>
+                    <span className="text-[10px] text-phumulani-charcoal">Owner: {res.requestOwnerName}</span>
                   </td>
                   <td className="py-3 px-4 whitespace-nowrap">
-                    <span className="font-bold text-slate-800">
+                    <span className="font-bold text-phumulani-charcoal">
                       {res.quantityRequested} {res.unitOfMeasure}
                     </span>
-                    <div className="text-[10px] text-emerald-700 font-semibold">
+                    <div className="text-[10px] text-phumulani-earth font-semibold">
                       ${res.estimatedCostUSD?.toLocaleString() || 0} USD
                     </div>
                   </td>
-                  <td className="py-3 px-4 whitespace-nowrap font-mono text-slate-600">{res.requiredByDate}</td>
+                  <td className="py-3 px-4 whitespace-nowrap font-mono text-phumulani-charcoal">{res.requiredByDate}</td>
                   <td className="py-3 px-4 whitespace-nowrap">
                     {res.status === 'ALLOCATED' ? (
-                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-300">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green">
+                        <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-earth" />
                         <span>Allocated</span>
                       </span>
                     ) : (
                       <div className="flex items-center gap-1.5">
                         <button
                           onClick={() => handleReviewResource(res.id, true)}
-                          className="px-2.5 py-1 bg-emerald-700 hover:bg-emerald-800 text-white rounded-lg text-[11px] font-bold shadow-xs cursor-pointer"
+                          className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-[11px] font-bold shadow-xs cursor-pointer"
                         >
                           Approve
                         </button>
                         <button
                           onClick={() => handleReviewResource(res.id, false)}
-                          className="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-lg text-[11px] font-bold cursor-pointer"
+                          className="px-2.5 py-1 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-earth border border-phumulani-earth rounded-lg text-[11px] font-bold cursor-pointer"
                         >
                           Reject
                         </button>
@@ -255,38 +255,38 @@ export const ProgramResourcesTab: React.FC<Props> = ({ currentUserRole, currentU
 
       {/* REQUEST RESOURCE MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 animate-fadeIn">
-          <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 max-w-lg w-full p-6 text-xs space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4 animate-fadeIn">
+          <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream max-w-lg w-full p-6 text-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div>
-                <span className="text-[10px] font-mono text-teal-800 font-bold uppercase">Resource Request</span>
-                <h3 className="text-base font-bold text-slate-900">Request Program Resource</h3>
+                <span className="text-[10px] font-mono text-phumulani-earth font-bold uppercase">Resource Request</span>
+                <h3 className="text-base font-bold text-phumulani-charcoal">Request Program Resource</h3>
               </div>
-              <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-slate-600 font-bold">
+              <button onClick={() => setIsModalOpen(false)} className="text-phumulani-charcoal hover:text-phumulani-earth font-bold">
                 ✕
               </button>
             </div>
 
             <form onSubmit={handleCreateRequest} className="space-y-3">
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Resource Name *</label>
+                <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Resource Name *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. 10 Refurbished Laptops for Youth STEM Circle"
                   value={resourceName}
                   onChange={(e) => setResourceName(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white"
+                  className="w-full px-3 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream focus:bg-white"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Resource Category *</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Resource Category *</label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value as ResourceCategory)}
-                    className="w-full px-2.5 py-2 rounded-lg border border-slate-200 bg-slate-50 font-medium"
+                    className="w-full px-2.5 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream font-medium"
                   >
                     <option value="EQUIPMENT">Equipment & Hardware</option>
                     <option value="TRANSPORTATION">Transportation / Vehicle</option>
@@ -295,11 +295,11 @@ export const ProgramResourcesTab: React.FC<Props> = ({ currentUserRole, currentU
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Target Program</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Target Program</label>
                   <select
                     value={programName}
                     onChange={(e) => setProgramName(e.target.value)}
-                    className="w-full px-2.5 py-2 rounded-lg border border-slate-200 bg-slate-50 font-medium truncate"
+                    className="w-full px-2.5 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream font-medium truncate"
                   >
                     <option value="Immigrant Women Career Pathways & Workforce Development">Workforce Development</option>
                     <option value="Youth STEM Mentorship & Sisterhood Tutoring Circle">Youth Mentorship Circle</option>
@@ -310,63 +310,63 @@ export const ProgramResourcesTab: React.FC<Props> = ({ currentUserRole, currentU
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Quantity</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Quantity</label>
                   <input
                     type="number"
                     min="1"
                     value={quantity}
                     onChange={(e) => setQuantity(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50"
+                    className="w-full px-3 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Unit</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Unit</label>
                   <input
                     type="text"
                     value={unitOfMeasure}
                     onChange={(e) => setUnitOfMeasure(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50"
+                    className="w-full px-3 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream"
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-slate-700 mb-1">Est. Cost ($)</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Est. Cost ($)</label>
                   <input
                     type="number"
                     value={costUSD}
                     onChange={(e) => setCostUSD(Number(e.target.value))}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50"
+                    className="w-full px-3 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[11px] font-bold text-slate-700 mb-1">Required By Date</label>
+                <label className="block text-[11px] font-bold text-phumulani-charcoal mb-1">Required By Date</label>
                 <input
                   type="date"
                   value={requiredByDate}
                   onChange={(e) => setRequiredByDate(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-slate-200 bg-slate-50"
+                  className="w-full px-3 py-2 rounded-lg border border-phumulani-cream bg-phumulani-cream"
                 />
               </div>
 
-              <div className="p-3 bg-teal-50 border border-teal-200 rounded-xl text-teal-900 text-[11px] flex items-start gap-2">
-                <ShieldCheck className="w-4 h-4 text-teal-700 shrink-0 mt-0.5" />
+              <div className="p-3 bg-phumulani-cream border border-phumulani-teal rounded-xl text-phumulani-earth text-[11px] flex items-start gap-2">
+                <ShieldCheck className="w-4 h-4 text-phumulani-earth shrink-0 mt-0.5" />
                 <span>
                   Resource allocations require executive or finance director approval before expenditure or inventory assignment.
                 </span>
               </div>
 
-              <div className="flex justify-end gap-2 pt-2 border-t border-slate-100">
+              <div className="flex justify-end gap-2 pt-2 border-t border-phumulani-cream">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 border border-slate-200 text-slate-700 font-semibold rounded-xl hover:bg-slate-50"
+                  className="px-4 py-2 border border-phumulani-cream text-phumulani-charcoal font-semibold rounded-xl hover:bg-phumulani-cream"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-teal-800 hover:bg-teal-900 text-white font-bold rounded-xl shadow-xs"
+                  className="px-5 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white font-bold rounded-xl shadow-xs"
                 >
                   Submit Request
                 </button>
