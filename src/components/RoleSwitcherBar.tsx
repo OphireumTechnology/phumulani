@@ -7,7 +7,7 @@
 import React from 'react';
 import { db } from '../services/db';
 import { User, UserRole } from '../types';
-import { UserCheck, Shield, RefreshCw, Sparkles, AlertCircle, Mail } from 'lucide-react';
+import { UserCheck, ShieldCheck, RefreshCw, Sparkles, Mail } from 'lucide-react';
 
 interface RoleSwitcherBarProps {
   currentUser: User;
@@ -140,36 +140,36 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
   }
 
   return (
-    <div className="bg-phumulani-charcoal text-phumulani-cream text-xs border-b border-phumulani-earth no-print z-50 w-full transition-all">
+    <div className="bg-phumulani-charcoal text-phumulani-cream text-xs border-b-2 border-phumulani-earth no-print z-50 w-full transition-all shadow-sm">
       {/* COMPACT REFINED CONTROL BAR */}
-      <div className="py-1 px-3 sm:px-4 flex items-center justify-between gap-2 max-w-7xl mx-auto">
+      <div className="py-1.5 px-3 sm:px-4 flex items-center justify-between gap-2 max-w-7xl mx-auto">
         <div className="flex items-center gap-2 min-w-0">
           <button
             onClick={toggleCollapsed}
             aria-expanded={!isCollapsed}
             aria-controls="demo-tools-panel"
-            className="flex items-center gap-1.5 px-2 py-0.5 rounded bg-phumulani-charcoal hover:bg-phumulani-earth text-white font-medium text-[11px] border border-phumulani-gold transition-colors cursor-pointer shrink-0"
+            className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-phumulani-charcoal hover:bg-phumulani-earth text-white font-semibold text-[11px] border border-phumulani-gold transition-colors cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-phumulani-gold"
             title="Toggle Demo Simulation Tools"
           >
-            <Sparkles className="w-3 h-3 text-phumulani-gold shrink-0" />
+            <Sparkles className="w-3 h-3 text-phumulani-gold shrink-0" strokeWidth={1.75} aria-hidden="true" />
             <span>Admin Tools</span>
             <span className="text-[9px] text-phumulani-cream">{isCollapsed ? '▼' : '▲'}</span>
           </button>
 
           <span className="text-phumulani-cream text-[11px] truncate hidden sm:inline">
-            <span className="text-phumulani-gold">Active Role:</span>{' '}
+            <span className="text-phumulani-gold font-medium">Active Role:</span>{' '}
             <strong className="text-white font-semibold">{currentUser.name}</strong>{' '}
             <span className="text-phumulani-cream">({roleLabels[currentUser.role] || currentUser.role})</span>
           </span>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
-          <span className="text-[10px] text-phumulani-cream font-mono tracking-wider hidden md:inline">
-            STAFF CONSOLE
+        <div className="flex items-center gap-2.5 shrink-0">
+          <span className="text-[10px] text-phumulani-gold font-mono tracking-wider hidden md:inline">
+            STAFF &amp; ADMIN CONSOLE
           </span>
           <button
             onClick={toggleCollapsed}
-            className="text-phumulani-gold hover:text-white text-[11px] hover:underline cursor-pointer"
+            className="text-phumulani-gold hover:text-white text-[11px] font-medium hover:underline cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-gold rounded px-1"
           >
             {isCollapsed ? 'Show Options' : 'Hide Options'}
           </button>
@@ -205,7 +205,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
 
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1.5 text-white bg-phumulani-charcoal px-2.5 py-1 rounded border border-phumulani-green text-[11px]">
-                <Shield className="w-3.5 h-3.5 text-phumulani-green" />
+                <ShieldCheck className="w-3.5 h-3.5 text-phumulani-green" strokeWidth={1.75} aria-hidden="true" />
                 <span>Simulated MFA: {currentUser.mfaEnabled ? 'Enforced' : 'Standard'}</span>
               </div>
 
@@ -213,14 +213,20 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
                 onClick={handleResetData}
                 className={`flex items-center gap-1.5 px-2.5 py-1 rounded border transition-colors text-[11px] cursor-pointer ${
                   resetStatus === 'confirming'
-                    ? 'bg-phumulani-earth border-phumulani-gold text-white font-bold animate-pulse'
+                    ? 'bg-phumulani-earth border-phumulani-gold text-white font-bold'
                     : resetStatus === 'done'
                     ? 'bg-phumulani-green border-phumulani-cream text-phumulani-charcoal font-bold'
                     : 'bg-phumulani-charcoal hover:bg-phumulani-earth text-phumulani-cream hover:text-white border-phumulani-cream'
                 }`}
                 title="Restore baseline test records"
               >
-                <RefreshCw className={`w-3 h-3 ${resetStatus === 'done' ? 'text-phumulani-charcoal rotate-180' : 'text-phumulani-gold'}`} />
+                <RefreshCw
+                  className={`w-3 h-3 transition-transform duration-300 ${
+                    resetStatus === 'done' ? 'text-phumulani-charcoal rotate-180' : 'text-phumulani-gold'
+                  }`}
+                  strokeWidth={1.75}
+                  aria-hidden="true"
+                />
                 <span>
                   {resetStatus === 'confirming'
                     ? 'Click to Confirm Reset'
@@ -297,7 +303,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
                   : 'bg-phumulani-charcoal text-phumulani-gold hover:text-white border border-phumulani-gold'
               }`}
             >
-              <Shield className="w-3 h-3" />
+              <ShieldCheck className="w-3 h-3" strokeWidth={1.75} aria-hidden="true" />
               <span>Master Admin</span>
             </button>
 
@@ -309,7 +315,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
                   : 'bg-phumulani-charcoal text-phumulani-teal hover:text-white border border-phumulani-teal'
               }`}
             >
-              <Mail className="w-3 h-3" />
+              <Mail className="w-3 h-3" strokeWidth={1.75} aria-hidden="true" />
               <span>Email Admin</span>
             </button>
 

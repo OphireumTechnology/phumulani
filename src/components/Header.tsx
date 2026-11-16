@@ -1,30 +1,29 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- * Phumulani Clean 3-Level Header & Navigation Architecture
+ * Phumulani Clean Sticky Header & Navigation Architecture
  */
 
 import React, { useState, useEffect, useRef } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import { User } from '../types';
-import { SafeImage } from './SafeImage';
 import { PhumulaniLogo } from './branding/PhumulaniLogo';
 import {
-  ShieldAlert,
-  Globe,
+  ShieldCheck,
+  Languages,
   LifeBuoy,
   Menu,
   X,
   ExternalLink,
   Bot,
-  Users,
+  UsersRound,
   Heart,
   Briefcase,
-  Layers,
+  Layers3,
   ChevronDown,
-  LogIn,
-  ShieldCheck,
-  Activity,
   Bell,
+  Globe,
+  Activity,
 } from 'lucide-react';
 
 import { SUPPORTED_LANGUAGES } from '../services/multilingualAccessibilityService';
@@ -39,6 +38,16 @@ interface HeaderProps {
   onLangChange: (lang: string) => void;
 }
 
+const PUBLIC_NAV_ITEMS = [
+  { id: 'home', label: 'Home', sectionId: null },
+  { id: 'founder-section', label: 'Founder & Legacy', sectionId: 'founder-section' },
+  { id: 'programs-section', label: 'Programs', sectionId: 'programs-section' },
+  { id: 'get-involved-section', label: 'Get Involved', sectionId: 'get-involved-section' },
+  { id: 'about-section', label: 'About', sectionId: 'about-section' },
+  { id: 'events-section', label: 'Events', sectionId: 'events-section' },
+  { id: 'contact-section', label: 'Contact', sectionId: 'contact-section' },
+] as const;
+
 export const Header: React.FC<HeaderProps> = ({
   currentUser,
   activeView,
@@ -47,11 +56,51 @@ export const Header: React.FC<HeaderProps> = ({
   onLangChange,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [portalsDropdownOpen, setPortalsDropdownOpen] = useState(false);
   const [notificationModalOpen, setNotificationModalOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [activeSection, setActiveSection] = useState<string>('home');
+  const [isScrolled, setIsScrolled] = useState(false);
   const portalsDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Subtle elevation + active section scroll-spy on public website
+  useEffect(() => {
+    const updateScrollState = () => {
+      const y = window.scrollY;
+      setIsScrolled(y > 12);
+
+      if (activeView !== 'public') return;
+      if (y < 200) {
+        setActiveSection('home');
+        return;
+      }
+
+      const sectionIds = [
+        'contact-section',
+        'events-section',
+        'get-involved-section',
+        'about-section',
+        'programs-section',
+        'founder-section',
+      ];
+      const offset = 150;
+      for (const id of sectionIds) {
+        const el = document.getElementById(id);
+        if (el) {
+          const top = el.getBoundingClientRect().top;
+          if (top <= offset) {
+            setActiveSection(id);
+            return;
+          }
+        }
+      }
+      setActiveSection('home');
+    };
+
+    updateScrollState();
+    window.addEventListener('scroll', updateScrollState, { passive: true });
+    return () => window.removeEventListener('scroll', updateScrollState);
+  }, [activeView]);
 
   // Close portals dropdown on outside click or Escape
   useEffect(() => {
@@ -139,16 +188,15 @@ export const Header: React.FC<HeaderProps> = ({
     { id: 'public', label: 'Public Website & CMS', icon: Globe, desc: 'Public community pages, mission, and giving' },
     { id: 'master-admin', label: 'Master Administrator (/admin/master)', icon: ShieldCheck, desc: 'Centralized enterprise control across all 15 operational modules' },
     { id: 'production-status', label: 'Live Production Status (Sec 16)', icon: Activity, desc: 'Real-time health probes & component verification grid' },
-    { id: 'community', label: 'Community & Volunteer Hub', icon: Users, desc: 'Applications, hours, mentorship & training' },
+    { id: 'community', label: 'Community & Volunteer Hub', icon: UsersRound, desc: 'Applications, hours, mentorship & training' },
     { id: 'donor', label: 'Donor & Sponsor Portal', icon: Heart, desc: 'Giving history, receipts, sponsorship tiers' },
     { id: 'staff', label: 'Staff Command Center', icon: Briefcase, desc: 'Unified inbox, AI review, CRM, volunteer screening' },
-    { id: 'governance', label: 'Executive & Board Portal', icon: Layers, desc: 'Budgets, board resolutions, grants, risk register' },
+    { id: 'governance', label: 'Executive & Board Portal', icon: Layers3, desc: 'Budgets, board resolutions, grants, risk register' },
     { id: 'ai-workforce', label: 'AI Command Center (18 Agents)', icon: Bot, desc: 'Agent registry, policy gateway, evaluations' },
   ];
 
-  const currentPortalLabel = portals.find((p) => p.id === activeView)?.label || 'Public Website';
-
   const navigateToSection = (sectionId: string) => {
+    setActiveSection(sectionId);
     if (activeView !== 'public') {
       onViewChange('public');
       setTimeout(() => {
@@ -161,30 +209,40 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white">
+    <header
+      className={`sticky top-0 z-40 bg-white transition-shadow duration-200 ${
+        isScrolled ? 'shadow-md' : 'shadow-none'
+      }`}
+    >
       {/* ========================================================
           LEVEL 2: SAFETY & ACCESSIBILITY BAR
           ======================================================== */}
       <div className="bg-phumulani-charcoal text-white py-1.5 px-2 min-[400px]:px-4 text-xs max-w-full overflow-hidden border-b border-phumulani-earth">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-1.5 min-[400px]:gap-2 sm:gap-4 min-w-0">
           <div className="flex items-center gap-1.5 min-[400px]:gap-2 min-w-0 flex-1 overflow-hidden">
-            <ShieldAlert className="w-3.5 h-3.5 text-phumulani-gold shrink-0" />
+            <ShieldCheck className="w-3.5 h-3.5 text-phumulani-gold shrink-0" strokeWidth={1.75} aria-hidden="true" />
             <span className="text-[11px] text-phumulani-cream truncate font-lato">
-              Confidential Support &amp; Safety: Use <strong>Safe Exit</strong> or press <kbd className="bg-phumulani-earth text-white px-1 py-0.2 rounded text-[10px] border border-phumulani-orange font-mono">ESC</kbd> twice.
+              Confidential Support &amp; Safety: Use <strong>Safe Exit</strong> or press{' '}
+              <kbd className="bg-phumulani-earth text-white px-1 py-0.5 rounded text-[10px] border border-phumulani-orange font-mono">
+                ESC
+              </kbd>{' '}
+              twice.
             </span>
           </div>
 
           <div className="flex items-center gap-1.5 min-[400px]:gap-2 sm:gap-3 shrink-0">
             {/* Language Switcher */}
             <div className="flex items-center gap-1 min-[400px]:gap-1.5">
-              <Globe className="w-3.5 h-3.5 text-phumulani-teal shrink-0" />
-              <label htmlFor="header-lang-select" className="sr-only">Select Language</label>
+              <Languages className="w-3.5 h-3.5 text-phumulani-teal shrink-0" strokeWidth={1.75} aria-hidden="true" />
+              <label htmlFor="header-lang-select" className="sr-only">
+                Select Language
+              </label>
               <select
                 id="header-lang-select"
                 aria-label="Select Language"
                 value={currentLang}
                 onChange={(e) => onLangChange(e.target.value)}
-                className="bg-phumulani-charcoal border border-phumulani-cream text-white rounded px-1.5 min-[400px]:px-2 py-0.5 text-[11px] font-medium max-w-[105px] min-[400px]:max-w-[155px] sm:max-w-none focus:ring-1 focus:ring-phumulani-gold outline-none cursor-pointer"
+                className="bg-phumulani-charcoal border border-phumulani-cream text-white rounded px-1.5 min-[400px]:px-2 py-0.5 text-[11px] font-medium max-w-[105px] min-[400px]:max-w-[155px] sm:max-w-none focus:ring-1 focus:ring-phumulani-gold outline-none cursor-pointer transition-colors"
               >
                 {languages.map((l) => (
                   <option key={l.code} value={l.code} className="bg-white text-phumulani-charcoal">
@@ -194,16 +252,18 @@ export const Header: React.FC<HeaderProps> = ({
               </select>
             </div>
 
-            <span className="text-phumulani-cream">|</span>
+            <span className="text-phumulani-cream" aria-hidden="true">
+              |
+            </span>
 
             {/* Quick Safe Exit Button */}
             <button
               onClick={handleSafeExit}
-              className="bg-phumulani-earth hover:bg-phumulani-orange text-white font-bold px-2 min-[400px]:px-2.5 py-1 rounded text-[11px] transition-colors flex items-center gap-1 cursor-pointer font-heading tracking-wide whitespace-nowrap"
+              className="bg-phumulani-earth hover:bg-phumulani-orange text-white font-bold px-2 min-[400px]:px-2.5 py-1 rounded text-[11px] transition-colors duration-150 flex items-center gap-1 cursor-pointer font-heading tracking-wide whitespace-nowrap focus-visible:ring-2 focus-visible:ring-phumulani-gold"
               title="Instant safe exit to Weather.com (replaces browser history)"
             >
               <span>SAFE EXIT</span>
-              <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+              <ExternalLink className="w-2.5 h-2.5 shrink-0" strokeWidth={1.75} aria-hidden="true" />
             </button>
           </div>
         </div>
@@ -214,10 +274,11 @@ export const Header: React.FC<HeaderProps> = ({
           ======================================================== */}
       <div className="bg-white border-b border-phumulani-cream">
         <div className="max-w-7xl mx-auto px-2 min-[400px]:px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-1 min-[400px]:gap-2 lg:gap-4 h-20 min-w-0 w-full">
-            {/* LEFT: Official Phumulani Mosaic USA Logo */}
+          <div className="flex items-center justify-between gap-1 min-[400px]:gap-2 lg:gap-4 h-[68px] sm:h-20 min-w-0 w-full">
+            {/* LEFT: Official Phumulani Logo */}
             <button
               onClick={() => {
+                setActiveSection('home');
                 onViewChange('public');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
@@ -226,82 +287,61 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <PhumulaniLogo
                 variant="full"
-                className="h-9 min-[400px]:h-11 sm:h-12 w-auto max-w-[100px] min-[400px]:max-w-[145px] min-[480px]:max-w-[210px] sm:max-w-[250px] object-contain transition-transform duration-200 group-hover:scale-[1.01]"
+                className="h-9 min-[400px]:h-11 sm:h-12 w-auto max-w-[100px] min-[400px]:max-w-[145px] min-[480px]:max-w-[205px] sm:max-w-[240px] object-contain transition-transform duration-200 group-hover:scale-[1.01]"
                 alt="Phumulani — The voice of immigrants and refugees in America"
               />
             </button>
 
             {/* CENTER: Main Website Navigation (Desktop) */}
-            <nav className="hidden xl:flex items-center gap-6 2xl:gap-8 text-sm font-medium text-phumulani-charcoal font-heading whitespace-nowrap">
-              <button
-                onClick={() => {
-                  onViewChange('public');
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className={`hover:text-phumulani-earth transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded ${
-                  activeView === 'public' ? 'text-phumulani-earth font-semibold border-b-2 border-phumulani-earth' : 'text-phumulani-charcoal'
-                }`}
-              >
-                Home
-              </button>
-              <button
-                onClick={() => navigateToSection('founder-section')}
-                className="hover:text-phumulani-earth text-phumulani-charcoal transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
-              >
-                Founder &amp; Legacy
-              </button>
-              <button
-                onClick={() => navigateToSection('programs-section')}
-                className="hover:text-phumulani-earth text-phumulani-charcoal transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
-              >
-                Programs
-              </button>
-              <button
-                onClick={() => navigateToSection('get-involved-section')}
-                className="hover:text-phumulani-earth text-phumulani-charcoal transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
-              >
-                Get Involved
-              </button>
-              <button
-                onClick={() => navigateToSection('about-section')}
-                className="hover:text-phumulani-earth text-phumulani-charcoal transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
-              >
-                About
-              </button>
-              <button
-                onClick={() => navigateToSection('events-section')}
-                className="hover:text-phumulani-earth text-phumulani-charcoal transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
-              >
-                Events
-              </button>
-              <button
-                onClick={() => navigateToSection('contact-section')}
-                className="hover:text-phumulani-earth text-phumulani-charcoal transition-colors cursor-pointer py-1 focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
-              >
-                Contact
-              </button>
+            <nav
+              aria-label="Primary website navigation"
+              className="hidden xl:flex items-center gap-5 2xl:gap-7 text-[13px] font-medium text-phumulani-charcoal font-heading whitespace-nowrap"
+            >
+              {PUBLIC_NAV_ITEMS.map((item) => {
+                const isActive = activeView === 'public' && activeSection === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    data-active={isActive ? 'true' : 'false'}
+                    onClick={() => {
+                      if (item.sectionId) {
+                        navigateToSection(item.sectionId);
+                      } else {
+                        setActiveSection('home');
+                        onViewChange('public');
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
+                    }}
+                    className={`nav-link-underline hover:text-phumulani-earth transition-colors duration-150 cursor-pointer py-1.5 focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded ${
+                      isActive ? 'text-phumulani-earth font-bold' : 'text-phumulani-charcoal'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
             </nav>
 
             {/* RIGHT: Primary Action Group with Uniform Height */}
-            <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
+            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
               {/* Get Help Accent Button */}
               <button
                 onClick={() => navigateToSection('get-help-section')}
-                className="hidden min-[400px]:flex h-10 min-w-[38px] items-center justify-center gap-1.5 bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-earth hover:text-phumulani-charcoal border border-phumulani-earth px-2.5 sm:px-3.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer font-heading shadow-2xs focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                className="hidden min-[400px]:flex h-9 sm:h-10 min-w-[38px] items-center justify-center gap-1.5 bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-earth hover:text-phumulani-charcoal border border-phumulani-earth px-2.5 sm:px-3.5 rounded-lg text-xs font-semibold transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer font-heading shadow-2xs focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 title="Discreet support routing & emergency help"
                 aria-label="Get Help"
               >
-                <LifeBuoy className="w-3.5 h-3.5 shrink-0" />
+                <LifeBuoy className="w-3.5 h-3.5 shrink-0" strokeWidth={1.75} aria-hidden="true" />
                 <span className="hidden sm:inline">Get Help</span>
               </button>
 
-              {/* Donate CTA Button in Approved Brand Palette */}
+              {/* Donate CTA Button */}
               <button
                 onClick={() => navigateToSection('donate-section')}
-                className="h-10 min-w-[38px] flex items-center justify-center gap-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white px-2.5 min-[400px]:px-3 sm:px-4 rounded-lg text-xs font-bold transition-all cursor-pointer font-heading tracking-wide shadow-xs hover:shadow-sm focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                className="h-9 sm:h-10 min-w-[38px] flex items-center justify-center gap-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white px-2.5 min-[400px]:px-3 sm:px-4 rounded-lg text-xs font-bold transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer font-heading tracking-wide shadow-xs hover:shadow-sm focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 aria-label="Donate"
               >
-                <Heart className="w-3.5 h-3.5 shrink-0" />
+                <Heart className="w-3.5 h-3.5 shrink-0" strokeWidth={1.75} aria-hidden="true" />
                 <span className="hidden xs:inline">Donate</span>
               </button>
 
@@ -311,64 +351,80 @@ export const Header: React.FC<HeaderProps> = ({
                   onClick={() => setPortalsDropdownOpen(!portalsDropdownOpen)}
                   aria-haspopup="menu"
                   aria-expanded={portalsDropdownOpen}
-                  className="h-10 flex items-center gap-1.5 text-xs font-medium px-3 rounded-lg bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-charcoal border border-phumulani-earth transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                  className="h-9 sm:h-10 flex items-center gap-1.5 text-xs font-medium px-3 rounded-lg bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-charcoal border border-phumulani-earth transition-all duration-150 cursor-pointer font-heading focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                   title="Access Portals &amp; Staff Command"
                 >
-                  <LogIn className="w-3.5 h-3.5 text-phumulani-earth" />
+                  <Layers3 className="w-3.5 h-3.5 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
                   <span>Portals</span>
-                  <ChevronDown className={`w-3 h-3 text-phumulani-charcoal transition-transform ${portalsDropdownOpen ? 'rotate-180' : ''}`} />
+                  <ChevronDown
+                    className={`w-3 h-3 text-phumulani-charcoal transition-transform duration-150 ${
+                      portalsDropdownOpen ? 'rotate-180' : ''
+                    }`}
+                    strokeWidth={1.75}
+                    aria-hidden="true"
+                  />
                 </button>
 
-                {portalsDropdownOpen && (
-                  <div
-                    role="menu"
-                    aria-label="Application Portals"
-                    className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-xl border border-phumulani-earth py-2 z-50 animate-in fade-in zoom-in-95 duration-100"
-                  >
-                    <div className="px-3 py-1 text-[10px] uppercase font-bold tracking-wider text-phumulani-earth">
-                      Application Portals
-                    </div>
-                    {portals.map((portal) => {
-                      const Icon = portal.icon;
-                      const isActive = activeView === portal.id;
-                      return (
-                        <button
-                          key={portal.id}
-                          role="menuitem"
-                          onClick={() => {
-                            onViewChange(portal.id);
-                            setPortalsDropdownOpen(false);
-                          }}
-                          className={`w-full text-left px-3 py-2 flex items-start gap-2.5 hover:bg-phumulani-cream transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth ${
-                            isActive ? 'bg-phumulani-cream border-l-2 border-phumulani-earth' : ''
-                          }`}
-                        >
-                          <div className={`p-1 rounded mt-0.5 ${isActive ? 'bg-phumulani-earth text-white' : 'bg-phumulani-cream text-phumulani-charcoal'}`}>
-                            <Icon className="w-3.5 h-3.5" />
-                          </div>
-                          <div>
-                            <div className={`text-xs font-semibold ${isActive ? 'text-phumulani-earth' : 'text-phumulani-charcoal'}`}>
-                              {portal.label}
+                <AnimatePresence>
+                  {portalsDropdownOpen && (
+                    <motion.div
+                      role="menu"
+                      aria-label="Application Portals"
+                      initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 4, scale: 0.98 }}
+                      transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                      className="absolute right-0 mt-2 w-76 bg-white rounded-xl shadow-xl border border-phumulani-earth py-2 z-50"
+                    >
+                      <div className="px-3 py-1.5 text-[10px] uppercase font-bold tracking-wider text-phumulani-earth border-b border-phumulani-cream mb-1">
+                        Application Portals
+                      </div>
+                      {portals.map((portal) => {
+                        const Icon = portal.icon;
+                        const isActive = activeView === portal.id;
+                        return (
+                          <button
+                            key={portal.id}
+                            role="menuitem"
+                            onClick={() => {
+                              onViewChange(portal.id);
+                              setPortalsDropdownOpen(false);
+                            }}
+                            className={`w-full text-left px-3 py-2 flex items-start gap-2.5 hover:bg-phumulani-cream transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth ${
+                              isActive ? 'bg-phumulani-cream border-l-2 border-phumulani-earth' : ''
+                            }`}
+                          >
+                            <div
+                              className={`p-1.5 rounded-md mt-0.5 ${
+                                isActive ? 'bg-phumulani-earth text-white' : 'bg-phumulani-cream text-phumulani-charcoal'
+                              }`}
+                            >
+                              <Icon className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
                             </div>
-                            <div className="text-[10px] text-phumulani-charcoal line-clamp-1">{portal.desc}</div>
-                          </div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
+                            <div className="min-w-0">
+                              <div className={`text-xs font-semibold ${isActive ? 'text-phumulani-earth' : 'text-phumulani-charcoal'}`}>
+                                {portal.label}
+                              </div>
+                              <div className="text-[10px] text-phumulani-charcoal line-clamp-1">{portal.desc}</div>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               {/* In-App Notification Center Bell */}
               <button
                 onClick={() => setNotificationModalOpen(true)}
-                className="flex h-10 w-10 shrink-0 relative items-center justify-center rounded-lg bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-charcoal border border-phumulani-earth transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 relative items-center justify-center rounded-lg bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-charcoal border border-phumulani-earth transition-all duration-150 cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 title="Open Notification Center"
                 aria-label="Open Notification Center"
               >
-                <Bell className="w-4 h-4 text-phumulani-earth" />
+                <Bell className="w-4 h-4 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
                 {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-phumulani-earth text-white font-bold text-[9px] px-1.5 py-0.2 rounded-full ring-2 ring-white">
+                  <span className="absolute -top-1 -right-1 bg-phumulani-earth text-white font-bold text-[9px] px-1.5 py-0.5 rounded-full ring-2 ring-white tabular-nums">
                     {unreadCount}
                   </span>
                 )}
@@ -377,12 +433,16 @@ export const Header: React.FC<HeaderProps> = ({
               {/* Mobile Drawer Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="xl:hidden h-10 w-10 shrink-0 flex items-center justify-center text-phumulani-charcoal hover:text-phumulani-earth rounded-lg hover:bg-phumulani-cream transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                className="xl:hidden h-9 w-9 sm:h-10 sm:w-10 shrink-0 flex items-center justify-center text-phumulani-charcoal hover:text-phumulani-earth rounded-lg hover:bg-phumulani-cream border border-phumulani-cream transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 aria-label="Toggle Navigation Menu"
                 aria-expanded={mobileMenuOpen}
                 aria-controls="public-mobile-navigation"
               >
-                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+                {mobileMenuOpen ? (
+                  <X className="w-5 h-5" strokeWidth={1.75} aria-hidden="true" />
+                ) : (
+                  <Menu className="w-5 h-5" strokeWidth={1.75} aria-hidden="true" />
+                )}
               </button>
             </div>
           </div>
@@ -390,95 +450,82 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* MOBILE DRAWER */}
-      {mobileMenuOpen && (
-        <nav
-          id="public-mobile-navigation"
-          aria-label="Mobile website and portal navigation"
-          className="xl:hidden w-full max-w-full overflow-x-hidden border-t border-phumulani-cream bg-white px-3 min-[400px]:px-4 pt-3 pb-6 space-y-4 shadow-xl animate-in slide-in-from-top-2 duration-150"
-        >
-          <div className="font-bold text-xs text-phumulani-earth uppercase tracking-wider">
-            Main Navigation
-          </div>
-          <div className="grid grid-cols-2 gap-2 text-xs font-semibold min-w-0">
-            <button
-              onClick={() => {
-                onViewChange('public');
-                setMobileMenuOpen(false);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-phumulani-cream text-phumulani-charcoal transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
-            >
-              <span className="truncate">Home</span>
-            </button>
-            <button
-              onClick={() => navigateToSection('founder-section')}
-              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-phumulani-cream text-phumulani-charcoal transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
-            >
-              <span className="truncate">Founder &amp; Legacy</span>
-            </button>
-            <button
-              onClick={() => navigateToSection('programs-section')}
-              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-phumulani-cream text-phumulani-charcoal transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
-            >
-              <span className="truncate">Programs</span>
-            </button>
-            <button
-              onClick={() => navigateToSection('get-involved-section')}
-              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-phumulani-cream text-phumulani-charcoal transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
-            >
-              <span className="truncate">Get Involved</span>
-            </button>
-            <button
-              onClick={() => navigateToSection('about-section')}
-              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-phumulani-cream text-phumulani-charcoal transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
-            >
-              <span className="truncate">About</span>
-            </button>
-            <button
-              onClick={() => navigateToSection('events-section')}
-              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-phumulani-cream text-phumulani-charcoal transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
-            >
-              <span className="truncate">Events</span>
-            </button>
-            <button
-              onClick={() => navigateToSection('contact-section')}
-              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg hover:bg-phumulani-cream text-phumulani-charcoal transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
-            >
-              <span className="truncate">Contact</span>
-            </button>
-            <button
-              onClick={() => navigateToSection('get-help-section')}
-              className="min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg bg-phumulani-cream text-phumulani-earth border border-phumulani-earth font-bold transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
-            >
-              <span className="truncate">Get Help (Safe)</span>
-            </button>
-          </div>
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.nav
+            id="public-mobile-navigation"
+            aria-label="Mobile website and portal navigation"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
+            className="xl:hidden w-full max-w-full overflow-x-hidden border-t border-phumulani-cream bg-white px-3 min-[400px]:px-4 pt-3 pb-6 space-y-4 shadow-xl"
+          >
+            <div className="font-bold text-xs text-phumulani-earth uppercase tracking-wider font-heading">
+              Main Navigation
+            </div>
+            <div className="grid grid-cols-2 gap-2 text-xs font-semibold min-w-0 font-heading">
+              {PUBLIC_NAV_ITEMS.map((item) => {
+                const isActive = activeView === 'public' && activeSection === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      if (item.sectionId) {
+                        navigateToSection(item.sectionId);
+                      } else {
+                        setActiveSection('home');
+                        onViewChange('public');
+                        setMobileMenuOpen(false);
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                      }
+                    }}
+                    className={`min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left ${
+                      isActive
+                        ? 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth font-bold'
+                        : 'hover:bg-phumulani-cream text-phumulani-charcoal'
+                    }`}
+                  >
+                    <span className="truncate">{item.label}</span>
+                  </button>
+                );
+              })}
 
-          <div className="pt-2 border-t border-phumulani-cream font-bold text-xs text-phumulani-earth uppercase tracking-wider">
-            Connected Applications
-          </div>
-          <div className="space-y-1 min-w-0">
-            {portals.map((p) => {
-              const Icon = p.icon;
-              return (
-                <button
-                  key={p.id}
-                  onClick={() => {
-                    onViewChange(p.id);
-                    setMobileMenuOpen(false);
-                  }}
-                  className={`min-h-[44px] w-full min-w-0 flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium text-left transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth ${
-                    activeView === p.id ? 'bg-phumulani-earth text-white' : 'text-phumulani-charcoal hover:bg-phumulani-cream'
-                  }`}
-                >
-                  <Icon className="w-4 h-4 shrink-0" />
-                  <span className="truncate min-w-0 flex-1">{p.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </nav>
-      )}
+              <button
+                onClick={() => navigateToSection('get-help-section')}
+                className="min-h-[44px] min-w-0 flex items-center gap-1.5 px-2.5 py-2 rounded-lg bg-phumulani-cream text-phumulani-earth border border-phumulani-earth font-bold transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
+              >
+                <LifeBuoy className="w-3.5 h-3.5 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                <span className="truncate">Get Help (Safe)</span>
+              </button>
+            </div>
+
+            <div className="pt-2 border-t border-phumulani-cream font-bold text-xs text-phumulani-earth uppercase tracking-wider font-heading">
+              Connected Applications
+            </div>
+            <div className="space-y-1 min-w-0">
+              {portals.map((p) => {
+                const Icon = p.icon;
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => {
+                      onViewChange(p.id);
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`min-h-[44px] w-full min-w-0 flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-xs font-medium text-left transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth ${
+                      activeView === p.id ? 'bg-phumulani-earth text-white' : 'text-phumulani-charcoal hover:bg-phumulani-cream'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                    <span className="truncate min-w-0 flex-1">{p.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </motion.nav>
+        )}
+      </AnimatePresence>
 
       {/* Cross-Portal Notification Center Modal */}
       <NotificationCenterModal

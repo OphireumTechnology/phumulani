@@ -7,23 +7,19 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import {
   Bot,
   Send,
   X,
-  ShieldAlert,
+  LockKeyhole,
   Sparkles,
-  HelpCircle,
-  Globe,
   PhoneCall,
-  ExternalLink,
   ShieldCheck,
+  Languages,
 } from 'lucide-react';
 import { aiOrchestrator } from '../services/aiOrchestrator';
-import {
-  multilingualAccessibilityService,
-  SUPPORTED_LANGUAGES,
-} from '../services/multilingualAccessibilityService';
+import { SUPPORTED_LANGUAGES } from '../services/multilingualAccessibilityService';
 import { SupportedLanguageCode } from '../types/phase33';
 
 export const WebsiteConciergeModal: React.FC = () => {
@@ -128,179 +124,197 @@ export const WebsiteConciergeModal: React.FC = () => {
   return (
     <>
       {/* Floating Launcher Button */}
-      <div className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-40 no-print max-w-[calc(100vw-1.5rem)] translate-x-0">
-        {!isOpen && (
-          <button
-            onClick={() => setIsOpen(true)}
-            className="flex items-center gap-2 max-w-full bg-phumulani-earth hover:bg-phumulani-orange text-white px-2 sm:px-4 py-2.5 sm:py-3 rounded-full shadow-xl hover:shadow-2xl transition-all cursor-pointer group border-2 border-white focus:outline-hidden focus:ring-2 focus:ring-phumulani-gold"
-            aria-label="Open Website Concierge"
-          >
-            <div className="relative">
-              <Bot className="w-5 h-5 text-phumulani-gold group-hover:scale-110 transition-transform" />
-              <span className="absolute -top-1 -right-1 w-2 h-2 bg-phumulani-green rounded-full animate-pulse" />
-            </div>
-            <span className="font-semibold text-xs tracking-wide hidden min-[400px]:inline">Ask Concierge (A10)</span>
-          </button>
-        )}
+      <div className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-40 no-print max-w-[calc(100vw-1.5rem)]">
+        <AnimatePresence>
+          {!isOpen && (
+            <motion.button
+              initial={{ opacity: 0, y: 12, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 8, scale: 0.96 }}
+              transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+              onClick={() => setIsOpen(true)}
+              className="flex items-center gap-2.5 max-w-full bg-phumulani-earth hover:bg-phumulani-orange text-white px-3.5 sm:px-4 py-2.5 sm:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer group border-2 border-white focus-visible:ring-2 focus-visible:ring-phumulani-gold"
+              aria-label="Open Website Concierge"
+            >
+              <Bot
+                className="w-5 h-5 text-phumulani-gold group-hover:scale-105 transition-transform shrink-0"
+                strokeWidth={1.75}
+                aria-hidden="true"
+              />
+              <span className="font-heading font-semibold text-xs tracking-wide hidden min-[400px]:inline">
+                Ask Concierge (A10)
+              </span>
+            </motion.button>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Concierge Dialog */}
-      {isOpen && (
-        <div
-          role="dialog"
-          aria-labelledby="concierge-dialog-title"
-          aria-modal="true"
-          className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-50 w-96 max-w-[calc(100vw-1.5rem)] h-[580px] bg-white rounded-2xl shadow-2xl border border-phumulani-earth flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-200 no-print"
-        >
-          {/* Header */}
-          <div className="bg-phumulani-earth text-white p-3.5 flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-full bg-phumulani-charcoal flex items-center justify-center border border-phumulani-gold">
-                <Bot className="w-4 h-4 text-phumulani-gold" />
-              </div>
-              <div>
-                <div id="concierge-dialog-title" className="text-xs font-bold tracking-tight">
-                  Website Concierge (Agent A10)
-                </div>
-                <div className="text-[10px] text-phumulani-cream flex items-center gap-1">
-                  <span>Grounded in Approved Records</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-1.5">
-              {/* Language Selector */}
-              <select
-                value={selectedLang}
-                onChange={(e) => setSelectedLang(e.target.value as SupportedLanguageCode)}
-                className="text-[10px] bg-phumulani-charcoal border border-phumulani-cream text-white rounded px-1.5 py-0.5 focus:outline-hidden"
-                aria-label="Select Assistance Language"
-              >
-                {SUPPORTED_LANGUAGES.map((l) => (
-                  <option key={l.code} value={l.code}>
-                    {l.localName}
-                  </option>
-                ))}
-              </select>
-
-              <button
-                onClick={() => setIsOpen(false)}
-                className="p-1 rounded-md text-phumulani-cream hover:text-white hover:bg-phumulani-orange transition-colors"
-                aria-label="Close Concierge"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* Model Connectivity & Transparency Banner */}
-          <div className="bg-phumulani-cream border-b border-phumulani-cream px-3 py-1 flex items-center justify-between text-[10px] text-phumulani-charcoal">
-            <span className="flex items-center gap-1">
-              <ShieldCheck className="w-3 h-3 text-phumulani-earth" />
-              <span>Grounded Mode: Isolated Curated Knowledge Base</span>
-            </span>
-            <span className="font-mono text-[9px] text-phumulani-earth">NO EXTERNAL AI KEY</span>
-          </div>
-
-          {/* Privacy Note */}
-          <div className="bg-phumulani-gold border-b border-phumulani-earth px-3 py-1.5 text-[11px] text-phumulani-charcoal flex items-center gap-1.5">
-            <ShieldAlert className="w-3.5 h-3.5 text-phumulani-charcoal shrink-0" />
-            <span>Do not share confidential survivor case details here. (VAWA § 1367)</span>
-          </div>
-
-          {/* Chat Messages */}
-          <div
-            className="flex-1 overflow-y-auto p-4 space-y-3 bg-phumulani-cream"
-            aria-live="polite"
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            role="dialog"
+            aria-labelledby="concierge-dialog-title"
+            aria-modal="true"
+            initial={{ opacity: 0, y: 16, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 12, scale: 0.98 }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed bottom-3 right-3 sm:bottom-6 sm:right-6 z-50 w-[calc(100vw-1.5rem)] sm:w-96 h-[min(580px,82vh)] bg-white rounded-2xl shadow-2xl border border-phumulani-earth flex flex-col overflow-hidden no-print"
           >
-            {messages.map((m, idx) => (
-              <div
-                key={idx}
-                className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}
-              >
-                <div
-                  className={`max-w-[85%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed whitespace-pre-line ${
-                    m.role === 'user'
-                      ? 'bg-phumulani-earth text-white rounded-br-xs'
-                      : m.isCrisisAlert
-                      ? 'bg-phumulani-cream border-2 border-phumulani-earth text-phumulani-charcoal rounded-bl-xs font-medium'
-                      : 'bg-white border border-phumulani-cream text-phumulani-charcoal rounded-bl-xs shadow-2xs'
-                  }`}
-                >
-                  {m.text}
-
-                  {m.sourceAttribution && (
-                    <div className={`mt-2 pt-1.5 border-t text-[9px] font-mono font-medium ${
-                      m.role === 'user' ? 'border-phumulani-cream text-phumulani-cream' : 'border-phumulani-cream text-phumulani-earth'
-                    }`}>
-                      Source: {m.sourceAttribution}
-                    </div>
-                  )}
+            {/* Header */}
+            <div className="bg-phumulani-earth text-white p-3.5 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5 min-w-0">
+                <div className="w-8 h-8 rounded-full bg-phumulani-charcoal flex items-center justify-center border border-phumulani-gold shrink-0">
+                  <Bot className="w-4 h-4 text-phumulani-gold" strokeWidth={1.75} aria-hidden="true" />
                 </div>
-                <span className="text-[9px] text-phumulani-charcoal mt-1 px-1">
-                  {m.role === 'user' ? 'You' : 'Agent A10 (Public Concierge)'}
-                </span>
+                <div className="min-w-0">
+                  <div id="concierge-dialog-title" className="text-xs font-bold tracking-tight font-heading truncate">
+                    Website Concierge (Agent A10)
+                  </div>
+                  <div className="text-[10px] text-phumulani-cream truncate font-sans">
+                    Grounded in Approved Records
+                  </div>
+                </div>
               </div>
-            ))}
 
-            {isLoading && (
-              <div className="flex items-center gap-2 text-xs text-phumulani-charcoal bg-white border border-phumulani-cream px-3 py-2 rounded-2xl w-fit">
-                <Sparkles className="w-3.5 h-3.5 text-phumulani-earth animate-spin" />
-                <span>Checking approved knowledge base...</span>
-              </div>
-            )}
-            <div ref={messagesEndRef} />
-          </div>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <div className="flex items-center gap-1 bg-phumulani-charcoal border border-phumulani-cream rounded px-1.5 py-0.5">
+                  <Languages className="w-3 h-3 text-phumulani-teal shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                  <select
+                    value={selectedLang}
+                    onChange={(e) => setSelectedLang(e.target.value as SupportedLanguageCode)}
+                    className="text-[10px] bg-phumulani-charcoal text-white focus:outline-hidden cursor-pointer"
+                    aria-label="Select Assistance Language"
+                  >
+                    {SUPPORTED_LANGUAGES.map((l) => (
+                      <option key={l.code} value={l.code} className="bg-white text-phumulani-charcoal">
+                        {l.localName}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-          {/* Quick Prompts & Human Escalation */}
-          <div className="p-2 bg-phumulani-cream border-t border-phumulani-cream flex flex-wrap gap-1.5 justify-between items-center">
-            <div className="flex flex-wrap gap-1">
-              {quickQuestions.slice(0, 2).map((q, i) => (
                 <button
-                  key={i}
-                  onClick={() => handleSend(q)}
-                  className="text-[10px] bg-white hover:bg-phumulani-gold text-phumulani-charcoal border border-phumulani-earth px-2 py-0.5 rounded transition-colors text-left"
+                  onClick={() => setIsOpen(false)}
+                  className="p-1.5 rounded-md text-phumulani-cream hover:text-white hover:bg-phumulani-orange transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-gold"
+                  aria-label="Close Concierge"
                 >
-                  {q}
+                  <X className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
                 </button>
-              ))}
+              </div>
             </div>
 
-            {!humanEscalated && (
-              <button
-                onClick={handleHumanEscalate}
-                className="text-[10px] text-phumulani-charcoal hover:text-phumulani-charcoal font-semibold flex items-center gap-1 px-1.5 py-0.5 rounded hover:bg-phumulani-gold transition-colors"
-                title="Connect with a human community advocate"
-              >
-                <PhoneCall className="w-3 h-3 text-phumulani-charcoal" />
-                <span>Human Coordinator</span>
-              </button>
-            )}
-          </div>
+            {/* Model Connectivity & Transparency Banner */}
+            <div className="bg-phumulani-cream border-b border-phumulani-cream px-3 py-1.5 flex items-center justify-between text-[10px] text-phumulani-charcoal">
+              <span className="flex items-center gap-1.5">
+                <ShieldCheck className="w-3.5 h-3.5 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                <span>Grounded Mode: Curated Knowledge Base</span>
+              </span>
+              <span className="font-mono text-[9px] text-phumulani-earth font-semibold">NO EXTERNAL AI KEY</span>
+            </div>
 
-          {/* Input Bar */}
-          <div className="p-2.5 bg-white border-t border-phumulani-cream flex items-center gap-2">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Ask about programs, volunteering, events..."
-              className="flex-1 text-xs border border-phumulani-earth rounded-lg px-3 py-2 text-phumulani-charcoal focus:outline-hidden focus:ring-1 focus:ring-phumulani-earth"
-              disabled={isLoading}
-              aria-label="Ask concierge question"
-            />
-            <button
-              onClick={() => handleSend()}
-              disabled={!input.trim() || isLoading}
-              className="p-2 bg-phumulani-earth hover:bg-phumulani-orange disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg transition-colors cursor-pointer"
-              aria-label="Send message"
-            >
-              <Send className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-      )}
+            {/* Privacy Note */}
+            <div className="bg-phumulani-gold border-b border-phumulani-earth px-3 py-1.5 text-[11px] text-phumulani-charcoal flex items-center gap-1.5 font-medium">
+              <LockKeyhole className="w-3.5 h-3.5 text-phumulani-charcoal shrink-0" strokeWidth={1.75} aria-hidden="true" />
+              <span>Do not share confidential survivor case details here. (VAWA § 1367)</span>
+            </div>
+
+            {/* Chat Messages */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-3.5 bg-phumulani-cream" aria-live="polite">
+              {messages.map((m, idx) => (
+                <div
+                  key={idx}
+                  className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}
+                >
+                  <div
+                    className={`max-w-[86%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed whitespace-pre-line ${
+                      m.role === 'user'
+                        ? 'bg-phumulani-earth text-white rounded-br-xs shadow-2xs'
+                        : m.isCrisisAlert
+                        ? 'bg-white border-2 border-phumulani-earth text-phumulani-charcoal rounded-bl-xs font-medium shadow-xs'
+                        : 'bg-white border border-phumulani-cream text-phumulani-charcoal rounded-bl-xs shadow-2xs'
+                    }`}
+                  >
+                    {m.text}
+
+                    {m.sourceAttribution && (
+                      <div
+                        className={`mt-2 pt-1.5 border-t text-[9px] font-mono font-medium ${
+                          m.role === 'user'
+                            ? 'border-phumulani-cream text-phumulani-cream'
+                            : 'border-phumulani-cream text-phumulani-earth'
+                        }`}
+                      >
+                        Source: {m.sourceAttribution}
+                      </div>
+                    )}
+                  </div>
+                  <span className="text-[9px] text-phumulani-charcoal mt-1 px-1">
+                    {m.role === 'user' ? 'You' : 'Agent A10 (Public Concierge)'}
+                  </span>
+                </div>
+              ))}
+
+              {isLoading && (
+                <div className="flex items-center gap-2 text-xs text-phumulani-charcoal bg-white border border-phumulani-cream px-3 py-2 rounded-2xl w-fit">
+                  <Sparkles className="w-3.5 h-3.5 text-phumulani-earth animate-spin" strokeWidth={1.75} aria-hidden="true" />
+                  <span>Checking approved knowledge base...</span>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Quick Prompts & Human Escalation */}
+            <div className="p-2.5 bg-phumulani-cream border-t border-phumulani-cream flex flex-wrap gap-1.5 justify-between items-center">
+              <div className="flex flex-wrap gap-1.5">
+                {quickQuestions.slice(0, 2).map((q, i) => (
+                  <button
+                    key={i}
+                    onClick={() => handleSend(q)}
+                    className="text-[10px] bg-white hover:bg-phumulani-gold text-phumulani-charcoal border border-phumulani-earth px-2.5 py-1 rounded-md transition-colors text-left cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                  >
+                    {q}
+                  </button>
+                ))}
+              </div>
+
+              {!humanEscalated && (
+                <button
+                  onClick={handleHumanEscalate}
+                  className="text-[10px] text-phumulani-earth hover:text-phumulani-charcoal font-semibold flex items-center gap-1 px-2 py-1 rounded-md bg-white hover:bg-phumulani-gold border border-phumulani-earth transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                  title="Connect with a human community advocate"
+                >
+                  <PhoneCall className="w-3 h-3 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
+                  <span>Human Coordinator</span>
+                </button>
+              )}
+            </div>
+
+            {/* Input Bar */}
+            <div className="p-2.5 bg-white border-t border-phumulani-cream flex items-center gap-2">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                placeholder="Ask about programs, volunteering, events..."
+                className="flex-1 text-xs border border-phumulani-earth rounded-lg px-3 py-2 text-phumulani-charcoal focus:outline-hidden focus:ring-2 focus:ring-phumulani-earth"
+                disabled={isLoading}
+                aria-label="Ask concierge question"
+              />
+              <button
+                onClick={() => handleSend()}
+                disabled={!input.trim() || isLoading}
+                className="p-2 bg-phumulani-earth hover:bg-phumulani-orange disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                aria-label="Send message"
+              >
+                <Send className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 };

@@ -5,45 +5,47 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { motion } from 'motion/react';
 import { db } from '../services/db';
 import { Program, VolunteerOpportunity, Campaign, EventItem, User } from '../types';
 import { getAssetUrl } from '../utils/assetPath';
 import {
-  Shield,
+  ShieldCheck,
   Heart,
-  Users,
-  Calendar,
+  HandHeart,
+  HeartHandshake,
+  UsersRound,
+  CalendarDays,
   BookOpen,
   ArrowRight,
   LifeBuoy,
   CheckCircle2,
-  Lock,
+  LockKeyhole,
   ChevronRight,
   Sparkles,
   ExternalLink,
   PhoneCall,
   Clock,
-  ShieldCheck,
   MapPin,
-  TrendingUp,
-  Award,
-  DollarSign,
-  Briefcase,
-  Home,
-  MessageSquare,
+  Sprout,
+  GraduationCap,
+  House,
+  Layers3,
   AlertTriangle,
   Mail,
   Globe,
   Building2,
   Download,
-  HelpCircle,
   Send,
-  FileText,
-  Check,
+  LibraryBig,
+  Accessibility,
 } from 'lucide-react';
 
 import { FounderSection } from '../components/FounderSection';
 import { SafeImage } from '../components/SafeImage';
+import { BrandPatternDivider } from '../components/branding/BrandPatternDivider';
+import { CulturalGeometricAccent } from '../components/branding/CulturalGeometricAccent';
+import { RevealSection, RevealItem, CountUpMetric } from '../components/ui/MotionPrimitives';
 
 const FOUNDER_IMAGE = '/images/leadership/phumulani-founder-official.png';
 const HERO_IMAGE = '/images/home/phumulani-homepage-hero.webp';
@@ -432,38 +434,65 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
   return (
     <div className="space-y-16 pb-20 font-sans min-w-0 overflow-x-clip">
       {/* 1. HERO BANNER - ELEGANT NONPROFIT REFINEMENT */}
-      <section className="bg-phumulani-cream pt-10 sm:pt-14 pb-14 sm:pb-18 border-b border-phumulani-cream">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-w-0">
+      <section className="relative overflow-hidden bg-phumulani-cream pt-10 sm:pt-14 pb-14 sm:pb-18 border-b border-phumulani-gold">
+        {/* Culturally grounded low-contrast geometric lattice background accent */}
+        <div className="hidden md:block absolute right-0 bottom-0 w-[520px] h-[410px] pointer-events-none">
+          <CulturalGeometricAccent variant="hero-lattice" className="w-full h-full" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-w-0">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
             {/* LEFT COLUMN: Mission & Headline (~58%) */}
             <div className="lg:col-span-7 space-y-6">
-              <div className="flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-phumulani-earth">
+              <motion.div
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+                className="flex flex-wrap items-center gap-2 text-xs font-semibold tracking-wider uppercase text-phumulani-earth font-heading"
+              >
                 <span>Minnesota 501(c)(3)</span>
-                <span aria-hidden="true" className="text-phumulani-charcoal">·</span>
+                <span aria-hidden="true" className="text-phumulani-charcoal">
+                  ·
+                </span>
                 <span>The Voice of Immigrants &amp; Refugees</span>
-              </div>
+              </motion.div>
 
               {/* Exact wording with responsive typography and balanced breaks */}
-              <h1 className="font-heading font-extrabold text-phumulani-charcoal tracking-tight leading-[1.12] text-3xl sm:text-4xl lg:text-5xl xl:text-[3.25rem] max-w-2xl text-balance">
+              <motion.h1
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.58, delay: 0.06, ease: [0.22, 1, 0.36, 1] }}
+                className="font-heading font-extrabold text-phumulani-charcoal tracking-tight leading-[1.12] text-3xl sm:text-4xl lg:text-5xl xl:text-[3.25rem] max-w-2xl text-balance"
+              >
                 Empowering Immigrant &amp; Refugee Survivors{' '}
                 <span className="text-phumulani-earth">Toward Healing</span>{' '}
                 <span className="text-phumulani-earth">&amp; Autonomy</span>
-              </h1>
+              </motion.h1>
 
               {/* Official Mission Statement */}
-              <p className="text-base sm:text-lg text-phumulani-charcoal leading-relaxed font-sans font-normal max-w-2xl">
+              <motion.p
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.64, delay: 0.14, ease: [0.22, 1, 0.36, 1] }}
+                className="text-base sm:text-lg text-phumulani-charcoal leading-relaxed font-sans font-normal max-w-2xl"
+              >
                 To empower immigrant and refugee survivors through culturally specific advocacy, safety, housing stability, education, and economic opportunity.
-              </p>
+              </motion.p>
 
               {/* Standardized 3 CTA Buttons with consistent heights and 44px+ touch targets */}
-              <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2">
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.55, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2"
+              >
                 <button
                   onClick={() => {
                     document.getElementById('donate-section')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="min-h-[44px] h-12 bg-phumulani-earth hover:bg-phumulani-orange text-white px-5 sm:px-6 rounded-lg text-xs sm:text-sm font-heading font-bold shadow-xs hover:shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-orange"
+                  className="min-h-[44px] h-12 bg-phumulani-earth hover:bg-phumulani-orange text-white px-5 sm:px-6 rounded-lg text-xs sm:text-sm font-heading font-bold shadow-xs hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-orange group"
                 >
-                  <Heart className="w-4 h-4 fill-white" />
+                  <Heart className="w-4 h-4 fill-white transition-transform duration-200 group-hover:scale-110" strokeWidth={1.75} aria-hidden="true" />
                   <span>Support Our Mission</span>
                 </button>
 
@@ -471,9 +500,9 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   onClick={() => {
                     document.getElementById('get-involved-section')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="min-h-[44px] h-12 bg-white hover:bg-phumulani-cream text-phumulani-earth border border-phumulani-earth px-5 sm:px-6 rounded-lg text-xs sm:text-sm font-heading font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth"
+                  className="min-h-[44px] h-12 bg-white hover:bg-phumulani-gold text-phumulani-earth hover:text-phumulani-charcoal border border-phumulani-earth px-5 sm:px-6 rounded-lg text-xs sm:text-sm font-heading font-semibold transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth"
                 >
-                  <Users className="w-4 h-4 text-phumulani-earth" />
+                  <UsersRound className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
                   <span>Become a Volunteer or Mentor</span>
                 </button>
 
@@ -481,180 +510,226 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   onClick={() => {
                     document.getElementById('get-help-section')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="min-h-[44px] h-12 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-earth border border-phumulani-earth px-4 sm:px-5 rounded-lg text-xs sm:text-sm font-heading font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth"
+                  className="min-h-[44px] h-12 bg-phumulani-cream hover:bg-white text-phumulani-earth border border-phumulani-earth px-4 sm:px-5 rounded-lg text-xs sm:text-sm font-heading font-semibold transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth"
                 >
-                  <LifeBuoy className="w-4 h-4 text-phumulani-earth" />
+                  <LifeBuoy className="w-4 h-4 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
                   <span>Need Help? Safe Routing</span>
                 </button>
-              </div>
+              </motion.div>
             </div>
 
             {/* RIGHT COLUMN: Official Photography & Founder Spotlight Card (~42%) */}
-            <div className="lg:col-span-5">
-              <div className="bg-white rounded-2xl border border-phumulani-cream shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden">
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
+              className="lg:col-span-5"
+            >
+              <div className="bg-white rounded-2xl border border-phumulani-gold shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
                 {/* Official Community Hero Photography */}
-                <div className="relative aspect-[4/3] bg-phumulani-charcoal overflow-hidden border-b border-phumulani-cream">
+                <div className="relative aspect-[4/3] bg-phumulani-charcoal overflow-hidden border-b border-phumulani-cream group">
                   <SafeImage
                     src={HERO_IMAGE}
                     fallbackSrc="/media/homepage/phumulani-homepage-hero.webp"
                     fallbackType="hero"
                     alt="Three empowered women from diverse immigrant and refugee backgrounds standing in solidarity in a sunlit community center overlooking the Minneapolis skyline"
-                    className="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-[1.01]"
+                    className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                     loading="eager"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-phumulani-charcoal/80 via-transparent to-transparent pointer-events-none" />
-                  <div className="absolute bottom-3 left-3 bg-phumulani-charcoal backdrop-blur-md text-white px-3 py-1 rounded-md text-[11px] font-heading font-semibold tracking-wide border border-phumulani-cream shadow-sm">
+                  <div className="absolute bottom-3 left-3 bg-phumulani-charcoal backdrop-blur-md text-white px-3 py-1 rounded-md text-[11px] font-heading font-semibold tracking-wide border border-phumulani-gold shadow-sm">
                     Culturally Grounded Sanctuary
                   </div>
                 </div>
 
                 <div className="p-5 sm:p-6 space-y-4">
                   {/* Founder Identification */}
-                  <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
-                    <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-between border-b border-phumulani-cream pb-3 gap-2">
+                    <div className="flex items-center gap-3 min-w-0">
                       <SafeImage
                         src={FOUNDER_IMAGE}
                         fallbackType="founder"
                         initials="CD"
                         alt="Phumulani Foundation Founder — Official Corporate Portrait"
-                        className="w-12 h-12 rounded-lg object-contain bg-white border border-phumulani-cream shrink-0"
+                        className="w-12 h-12 rounded-xl object-contain bg-white border border-phumulani-earth shrink-0"
                         loading="lazy"
                         decoding="async"
                         width={1254}
                         height={1254}
                       />
-                      <div>
-                        <div className="font-heading font-bold text-base text-phumulani-charcoal">Comfort Dondo</div>
-                        <div className="text-xs text-phumulani-earth font-semibold font-heading">Founder &amp; Executive Director</div>
+                      <div className="min-w-0">
+                        <div className="font-heading font-bold text-base text-phumulani-charcoal truncate">
+                          Comfort Dondo
+                        </div>
+                        <div className="text-xs text-phumulani-earth font-semibold font-heading truncate">
+                          Founder &amp; Executive Director
+                        </div>
                       </div>
                     </div>
                     <button
                       onClick={() => {
                         document.getElementById('founder-section')?.scrollIntoView({ behavior: 'smooth' });
                       }}
-                      className="text-xs font-semibold font-heading text-phumulani-earth hover:text-phumulani-earth hover:underline flex items-center gap-0.5 cursor-pointer"
+                      className="text-xs font-semibold font-heading text-phumulani-earth hover:text-phumulani-orange hover:underline underline-offset-4 flex items-center gap-0.5 cursor-pointer shrink-0 group/link focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
                     >
                       <span>Story &amp; Video</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
+                      <ChevronRight
+                        className="w-3.5 h-3.5 transition-transform duration-150 group-hover/link:translate-x-0.5"
+                        strokeWidth={1.75}
+                        aria-hidden="true"
+                      />
                     </button>
                   </div>
 
-                  <p className="text-xs sm:text-[13px] text-phumulani-charcoal leading-relaxed font-serif italic">
-                    "Healing is finding the community, protection, and economic independence to stand tall again. At Phumulani, every survivor is met with trauma-informed care and unwavering sisterhood."
+                  <p className="text-xs sm:text-[13.5px] text-phumulani-charcoal leading-relaxed font-display-serif italic py-1">
+                    &ldquo;Healing is finding the community, protection, and economic independence to stand tall again. At Phumulani, every survivor is met with trauma-informed care and unwavering sisterhood.&rdquo;
                   </p>
 
                   <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="bg-phumulani-cream p-3 rounded-lg border border-phumulani-cream">
-                      <div className="font-heading text-lg font-bold text-phumulani-earth tabular-nums">1,450+</div>
-                      <div className="text-[11px] text-phumulani-charcoal mt-0.5">Survivors &amp; Families</div>
+                    <div className="bg-phumulani-cream p-3.5 rounded-xl border border-phumulani-gold">
+                      <div className="font-heading text-lg font-extrabold text-phumulani-earth">
+                        <CountUpMetric value={1450} suffix="+" immediate />
+                      </div>
+                      <div className="text-[11px] text-phumulani-charcoal mt-0.5 font-medium">
+                        Survivors &amp; Families
+                      </div>
                     </div>
-                    <div className="bg-phumulani-cream p-3 rounded-lg border border-phumulani-cream">
-                      <div className="font-heading text-lg font-bold text-phumulani-earth tabular-nums">$480k+</div>
-                      <div className="text-[11px] text-phumulani-charcoal mt-0.5">Emergency Housing Aid</div>
+                    <div className="bg-phumulani-cream p-3.5 rounded-xl border border-phumulani-gold">
+                      <div className="font-heading text-lg font-extrabold text-phumulani-earth">
+                        <CountUpMetric value={480} prefix="$" suffix="k+" formatWithCommas={false} immediate />
+                      </div>
+                      <div className="text-[11px] text-phumulani-charcoal mt-0.5 font-medium">
+                        Emergency Housing Aid
+                      </div>
                     </div>
                   </div>
 
-                  <div className="p-2.5 bg-phumulani-cream border border-phumulani-cream rounded-lg flex items-center justify-between text-xs">
+                  <div className="p-2.5 bg-phumulani-cream border border-phumulani-teal rounded-xl flex items-center justify-between text-xs gap-2">
                     <div className="flex items-center gap-2 text-phumulani-charcoal">
-                      <ShieldCheck className="w-4 h-4 text-phumulani-earth" />
+                      <ShieldCheck className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
                       <span className="font-medium text-[11px]">Strict Survivor Confidentiality</span>
                     </div>
-                    <span className="text-[10px] text-phumulani-earth font-mono font-semibold">VAWA § 1367</span>
+                    <span className="text-[10px] text-phumulani-earth font-mono font-semibold inline-flex items-center gap-1 shrink-0">
+                      <LockKeyhole className="w-3 h-3" strokeWidth={1.75} aria-hidden="true" />
+                      <span>VAWA § 1367</span>
+                    </span>
                   </div>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* 1.5 OFFICIAL CORE VALUES (FROM BRAND IDENTITY GUIDE REFERENCE A) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-8 space-y-2">
+        <RevealSection className="text-center max-w-2xl mx-auto mb-9 space-y-2.5">
           <div className="text-xs font-bold text-phumulani-earth font-heading uppercase tracking-wider">
             Brand Foundations
           </div>
           <h2 className="font-heading text-2xl sm:text-3xl font-extrabold text-phumulani-charcoal">
             Our Core Values
           </h2>
-          <p className="text-xs sm:text-sm text-phumulani-charcoal">
+          <CulturalGeometricAccent variant="section-crest" />
+          <p className="text-xs sm:text-sm text-phumulani-charcoal leading-relaxed">
             A unified framework for advocacy, safety, empowerment, and dignity for immigrants and refugees.
           </p>
-        </div>
+        </RevealSection>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          <div className="bg-phumulani-cream p-4 rounded-2xl border border-phumulani-gold text-center hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 rounded-full bg-white border border-phumulani-gold flex items-center justify-center mx-auto mb-3 shadow-2xs">
-              <Users className="w-6 h-6 text-phumulani-earth" />
-            </div>
-            <h3 className="font-heading font-bold text-sm text-phumulani-charcoal leading-snug">Safety &amp; Protection</h3>
-            <p className="text-[11px] text-phumulani-charcoal mt-1 leading-relaxed">Confidential sanctuary &amp; legal accompaniment</p>
-          </div>
-
-          <div className="bg-phumulani-cream p-4 rounded-2xl border border-phumulani-gold text-center hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 rounded-full bg-white border border-phumulani-gold flex items-center justify-center mx-auto mb-3 shadow-2xs">
-              <Home className="w-6 h-6 text-phumulani-earth" />
-            </div>
-            <h3 className="font-heading font-bold text-sm text-phumulani-charcoal leading-snug">Stable Housing</h3>
-            <p className="text-[11px] text-phumulani-charcoal mt-1 leading-relaxed">Emergency bridge funding &amp; rapid leasing</p>
-          </div>
-
-          <div className="bg-phumulani-cream p-4 rounded-2xl border border-phumulani-gold text-center hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 rounded-full bg-white border border-phumulani-gold flex items-center justify-center mx-auto mb-3 shadow-2xs">
-              <TrendingUp className="w-6 h-6 text-phumulani-earth" />
-            </div>
-            <h3 className="font-heading font-bold text-sm text-phumulani-charcoal leading-snug">Economic Empowerment</h3>
-            <p className="text-[11px] text-phumulani-charcoal mt-1 leading-relaxed">Financial literacy &amp; business ownership</p>
-          </div>
-
-          <div className="bg-phumulani-cream p-4 rounded-2xl border border-phumulani-gold text-center hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 rounded-full bg-white border border-phumulani-gold flex items-center justify-center mx-auto mb-3 shadow-2xs">
-              <BookOpen className="w-6 h-6 text-phumulani-earth" />
-            </div>
-            <h3 className="font-heading font-bold text-sm text-phumulani-charcoal leading-snug">Education &amp; Workforce</h3>
-            <p className="text-[11px] text-phumulani-charcoal mt-1 leading-relaxed">Job readiness, certifications &amp; tutoring</p>
-          </div>
-
-          <div className="bg-phumulani-cream p-4 rounded-2xl border border-phumulani-gold text-center hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 rounded-full bg-white border border-phumulani-gold flex items-center justify-center mx-auto mb-3 shadow-2xs">
-              <Heart className="w-6 h-6 text-phumulani-earth" />
-            </div>
-            <h3 className="font-heading font-bold text-sm text-phumulani-charcoal leading-snug">Cultural Belonging</h3>
-            <p className="text-[11px] text-phumulani-charcoal mt-1 leading-relaxed">Sisterhood tea circles &amp; lived heritage</p>
-          </div>
-
-          <div className="bg-phumulani-cream p-4 rounded-2xl border border-phumulani-gold text-center hover:shadow-md transition-shadow">
-            <div className="w-12 h-12 rounded-full bg-white border border-phumulani-gold flex items-center justify-center mx-auto mb-3 shadow-2xs">
-              <Sparkles className="w-6 h-6 text-phumulani-earth" />
-            </div>
-            <h3 className="font-heading font-bold text-sm text-phumulani-charcoal leading-snug">Dignity &amp; Autonomy</h3>
-            <p className="text-[11px] text-phumulani-charcoal mt-1 leading-relaxed">Trauma-informed self-determination</p>
-          </div>
+          {[
+            {
+              icon: ShieldCheck,
+              title: 'Safety & Protection',
+              desc: 'Confidential sanctuary & legal accompaniment',
+            },
+            {
+              icon: House,
+              title: 'Stable Housing',
+              desc: 'Emergency bridge funding & rapid leasing',
+            },
+            {
+              icon: Sprout,
+              title: 'Economic Empowerment',
+              desc: 'Financial literacy & business ownership',
+            },
+            {
+              icon: GraduationCap,
+              title: 'Education & Workforce',
+              desc: 'Job readiness, certifications & tutoring',
+            },
+            {
+              icon: HeartHandshake,
+              title: 'Cultural Belonging',
+              desc: 'Sisterhood tea circles & lived heritage',
+            },
+            {
+              icon: UsersRound,
+              title: 'Dignity & Autonomy',
+              desc: 'Trauma-informed self-determination',
+            },
+          ].map((val, idx) => {
+            const Icon = val.icon;
+            return (
+              <RevealItem key={val.title} index={idx}>
+                <div className="h-full bg-phumulani-cream p-4 sm:p-5 rounded-2xl border border-phumulani-gold hover:border-phumulani-earth text-center hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col items-center">
+                  <div className="w-12 h-12 rounded-full bg-white border border-phumulani-gold flex items-center justify-center mb-3 shadow-2xs">
+                    <Icon className="w-5 h-5 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
+                  </div>
+                  <h3 className="font-heading font-bold text-sm text-phumulani-charcoal leading-snug">
+                    {val.title}
+                  </h3>
+                  <p className="text-[11px] text-phumulani-charcoal mt-1.5 leading-relaxed">
+                    {val.desc}
+                  </p>
+                </div>
+              </RevealItem>
+            );
+          })}
         </div>
       </section>
 
       {/* 2. STATS & COMMUNITY IMPACT SUMMARY */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-2xl border border-phumulani-cream shadow-sm p-6 sm:p-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center divide-y lg:divide-y-0 lg:divide-x divide-phumulani-cream">
-            <div className="p-2">
-              <div className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-earth">1,450+</div>
-              <div className="text-xs text-phumulani-charcoal font-medium mt-1">Families Supported Since Inception</div>
-            </div>
-            <div className="p-2 pt-6 lg:pt-2">
-              <div className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-earth">$480,000+</div>
-              <div className="text-xs text-phumulani-charcoal font-medium mt-1">Direct Emergency &amp; Housing Aid Distributed</div>
-            </div>
-            <div className="p-2 pt-6 lg:pt-2">
-              <div className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-earth">92%</div>
-              <div className="text-xs text-phumulani-charcoal font-medium mt-1">Workforce Graduate Job Placement Rate</div>
-            </div>
-            <div className="p-2 pt-6 lg:pt-2">
-              <div className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-earth">100%</div>
-              <div className="text-xs text-phumulani-charcoal font-medium mt-1">Dedicated to Culturally Specific Survivor Healing</div>
+        <RevealSection className="bg-white rounded-2xl border border-phumulani-gold shadow-sm overflow-hidden">
+          <BrandPatternDivider variant="subtle" height={4} />
+          <div className="p-6 sm:p-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center divide-y lg:divide-y-0 lg:divide-x divide-phumulani-cream">
+              <div className="p-2">
+                <div className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-earth">
+                  <CountUpMetric value={1450} suffix="+" />
+                </div>
+                <div className="text-xs text-phumulani-charcoal font-medium mt-1.5">
+                  Families Supported Since Inception
+                </div>
+              </div>
+              <div className="p-2 pt-6 lg:pt-2">
+                <div className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-earth">
+                  <CountUpMetric value={480000} prefix="$" suffix="+" />
+                </div>
+                <div className="text-xs text-phumulani-charcoal font-medium mt-1.5">
+                  Direct Emergency &amp; Housing Aid Distributed
+                </div>
+              </div>
+              <div className="p-2 pt-6 lg:pt-2">
+                <div className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-earth">
+                  <CountUpMetric value={92} suffix="%" formatWithCommas={false} />
+                </div>
+                <div className="text-xs text-phumulani-charcoal font-medium mt-1.5">
+                  Workforce Graduate Job Placement Rate
+                </div>
+              </div>
+              <div className="p-2 pt-6 lg:pt-2">
+                <div className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-earth">
+                  <CountUpMetric value={100} suffix="%" formatWithCommas={false} />
+                </div>
+                <div className="text-xs text-phumulani-charcoal font-medium mt-1.5">
+                  Dedicated to Culturally Specific Survivor Healing
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+        </RevealSection>
       </section>
 
       {/* 2.5 FOUNDER LEGACY, ORIGINAL VIDEOS & PUBLICATIONS */}
@@ -662,20 +737,21 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
       {/* 3. SIX CORE PROGRAMS */}
       <section id="programs-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-28">
-        <div className="space-y-3 text-center max-w-2xl mx-auto mb-10">
+        <RevealSection className="space-y-3 text-center max-w-2xl mx-auto mb-10">
           <div className="text-xs font-bold text-phumulani-earth font-heading uppercase tracking-wider">
             What We Do
           </div>
           <h2 className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-charcoal">
             Six Comprehensive Community Programs
           </h2>
+          <CulturalGeometricAccent variant="section-crest" />
           <p className="text-sm text-phumulani-charcoal font-sans">
             Grounded in trauma-informed care and culturally responsive support across Minnesota.
           </p>
-        </div>
+        </RevealSection>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {programs.map((prog) => {
+          {programs.map((prog, idx) => {
             const programPhotos: Record<string, { src: string; fallback: string; alt: string }> = {
               advocacy: {
                 src: '/media/phumulani/programs/safety-protection.jpg',
@@ -715,80 +791,81 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
             };
 
             return (
-              <div
-                key={prog.id}
-                className="bg-white rounded-2xl border border-phumulani-cream overflow-hidden flex flex-col justify-between hover:border-phumulani-earth hover:shadow-lg transition-all group"
-              >
-                {/* Authentic Program Artwork */}
-                <div className="aspect-[4/3] w-full bg-phumulani-cream overflow-hidden border-b border-phumulani-cream">
-                  <SafeImage
-                    src={progMedia.src}
-                    fallbackSrc={progMedia.fallback}
-                    fallbackType="program"
-                    fallbackText={prog.name}
-                    alt={progMedia.alt}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                  />
-                </div>
-
-                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-2 text-phumulani-earth text-xs font-bold font-heading uppercase tracking-wider">
-                      {prog.slug === 'advocacy' && <Shield className="w-4 h-4 text-phumulani-earth" />}
-                      {prog.slug === 'workforce' && <Briefcase className="w-4 h-4 text-phumulani-earth" />}
-                      {prog.slug === 'financial_literacy' && <DollarSign className="w-4 h-4 text-phumulani-earth" />}
-                      {prog.slug === 'mentorship' && <Users className="w-4 h-4 text-phumulani-earth" />}
-                      {prog.slug === 'housing' && <Home className="w-4 h-4 text-phumulani-earth" />}
-                      {prog.slug === 'entrepreneurship' && <Sparkles className="w-4 h-4 text-phumulani-earth" />}
-                      <span>{prog.tagline || 'Core Program'}</span>
-                    </div>
-
-                    <div>
-                      <h3 className="font-heading text-lg font-bold text-phumulani-charcoal group-hover:text-phumulani-earth transition-colors">
-                        {prog.name}
-                      </h3>
-                      <p className="text-xs text-phumulani-charcoal mt-2 leading-relaxed font-sans">
-                        {prog.description}
-                      </p>
-                    </div>
-
-                    <div className="pt-2 space-y-1.5 border-t border-phumulani-cream">
-                      <div className="text-[11px] font-semibold font-heading text-phumulani-charcoal">Key Services:</div>
-                      <ul className="text-[11px] text-phumulani-charcoal space-y-1 font-sans">
-                        {prog.keyServices.slice(0, 3).map((s, idx) => (
-                          <li key={idx} className="flex items-center gap-1.5">
-                            <CheckCircle2 className="w-3 h-3 text-phumulani-earth shrink-0" />
-                            <span>{s}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+              <RevealItem key={prog.id} index={idx} className="flex">
+                <div className="bg-white rounded-2xl border border-phumulani-cream overflow-hidden flex flex-col justify-between w-full hover:border-phumulani-earth hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group">
+                  {/* Authentic Program Artwork */}
+                  <div className="aspect-[4/3] w-full bg-phumulani-cream overflow-hidden border-b border-phumulani-cream">
+                    <SafeImage
+                      src={progMedia.src}
+                      fallbackSrc={progMedia.fallback}
+                      fallbackType="program"
+                      fallbackText={prog.name}
+                      alt={progMedia.alt}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                      loading="lazy"
+                    />
                   </div>
 
-                  <div className="pt-4 border-t border-phumulani-cream flex items-center justify-between text-xs">
-                    <span className="text-phumulani-charcoal font-medium">
-                      {prog.beneficiariesCount}+ Supported
-                    </span>
-                    <button
-                      onClick={() => setSelectedProgram(prog)}
-                      className="font-semibold font-heading text-phumulani-earth hover:text-phumulani-earth flex items-center gap-1 cursor-pointer"
-                    >
-                      <span>Details &amp; Referral</span>
-                      <ChevronRight className="w-3.5 h-3.5" />
-                    </button>
+                  <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2 text-phumulani-earth text-xs font-bold font-heading uppercase tracking-wider">
+                        {prog.slug === 'advocacy' && <ShieldCheck className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />}
+                        {prog.slug === 'workforce' && <GraduationCap className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />}
+                        {prog.slug === 'financial_literacy' && <Sprout className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />}
+                        {prog.slug === 'mentorship' && <UsersRound className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />}
+                        {prog.slug === 'housing' && <House className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />}
+                        {prog.slug === 'entrepreneurship' && <Layers3 className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />}
+                        <span>{prog.tagline || 'Core Program'}</span>
+                      </div>
+
+                      <div>
+                        <h3 className="font-heading text-lg font-bold text-phumulani-charcoal group-hover:text-phumulani-earth transition-colors">
+                          {prog.name}
+                        </h3>
+                        <p className="text-xs text-phumulani-charcoal mt-2 leading-relaxed font-sans">
+                          {prog.description}
+                        </p>
+                      </div>
+
+                      <div className="pt-2 space-y-1.5 border-t border-phumulani-cream">
+                        <div className="text-[11px] font-semibold font-heading text-phumulani-charcoal">
+                          Key Services:
+                        </div>
+                        <ul className="text-[11px] text-phumulani-charcoal space-y-1 font-sans">
+                          {prog.keyServices.slice(0, 3).map((s, idx2) => (
+                            <li key={idx2} className="flex items-center gap-1.5">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                              <span>{s}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-phumulani-cream flex items-center justify-between text-xs">
+                      <span className="text-phumulani-charcoal font-medium tabular-nums">
+                        {prog.beneficiariesCount}+ Supported
+                      </span>
+                      <button
+                        onClick={() => setSelectedProgram(prog)}
+                        className="font-semibold font-heading text-phumulani-earth hover:text-phumulani-orange flex items-center gap-1 cursor-pointer group/btn focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
+                      >
+                        <span>Details &amp; Referral</span>
+                        <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-0.5" strokeWidth={1.75} aria-hidden="true" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </RevealItem>
             );
           })}
         </div>
       </section>
 
       {/* 4. FOUNDER STORY & ABOUT PHUMULANI */}
-      <section id="about-section" className="bg-phumulani-cream py-16 border-y border-phumulani-cream scroll-mt-28">
+      <section id="about-section" className="bg-phumulani-cream py-16 border-y border-phumulani-gold scroll-mt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <RevealSection className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-5 space-y-4">
               <div className="bg-white rounded-2xl p-6 border border-phumulani-gold shadow-md space-y-4">
                 <div className="flex items-center gap-4">
@@ -816,29 +893,29 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   </div>
                 </div>
 
-                <p className="text-xs text-phumulani-charcoal leading-relaxed italic font-quote">
-                  "Healing is not merely surviving an ordeal—it is finding the courage, community, and economic standing to dream boldly again. Phumulani exists so no immigrant survivor walks alone."
+                <p className="text-xs sm:text-[13px] text-phumulani-charcoal leading-relaxed italic font-display-serif py-2 border-y border-phumulani-cream">
+                  &ldquo;Healing is not merely surviving an ordeal—it is finding the courage, community, and economic standing to dream boldly again. Phumulani exists so no immigrant survivor walks alone.&rdquo;
                 </p>
 
-                <div className="pt-4 border-t border-phumulani-cream">
+                <div className="pt-2">
                   <div className="text-[11px] font-bold font-heading text-phumulani-charcoal uppercase tracking-wider mb-2">
                     Authored Publications
                   </div>
                   <div className="space-y-2 text-xs text-phumulani-charcoal font-sans">
                     <div className="flex items-center gap-2">
-                      <BookOpen className="w-3.5 h-3.5 text-phumulani-earth shrink-0" />
+                      <BookOpen className="w-3.5 h-3.5 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
                       <span className="font-medium text-phumulani-charcoal">Facing the Giants</span>
                       <span className="text-[10px] text-phumulani-charcoal">· 2021 Memoir</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <BookOpen className="w-3.5 h-3.5 text-phumulani-earth shrink-0" />
+                      <BookOpen className="w-3.5 h-3.5 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
                       <span className="font-medium text-phumulani-charcoal">Sacred Promise</span>
                       <span className="text-[10px] text-phumulani-charcoal">· With Dr. Tererai Trent</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <BookOpen className="w-3.5 h-3.5 text-phumulani-earth shrink-0" />
+                      <BookOpen className="w-3.5 h-3.5 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
                       <span className="font-medium text-phumulani-charcoal">The Gift in Pain</span>
-                      <span className="text-[10px] text-phumulani-charcoal font-semibold bg-phumulani-cream px-1.5 py-0.5 rounded">Advance Announcement</span>
+                      <span className="text-[10px] text-phumulani-earth font-semibold">· Advance Announcement</span>
                     </div>
                   </div>
                 </div>
@@ -853,7 +930,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   fallbackSrc="/images/homepage/community-hero.svg"
                   fallbackType="hero"
                   alt="Multi-generational African immigrant women standing together in unified solidarity by a Minnesota lake"
-                  className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500 ease-out"
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-phumulani-charcoal/80 via-phumulani-charcoal/20 to-transparent flex items-end p-5">
@@ -875,7 +952,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 A Safe Haven Rooted in Cultural Dignity
               </h2>
               <p className="text-sm text-phumulani-charcoal leading-relaxed font-sans">
-                Founded in 2017 to bridge the systemic voids faced by African, African-American, Asian, and Latinx immigrants in Minnesota, Phumulani (meaning "to rest" or "peace" in Zulu) provides comprehensive wraparound support.
+                Founded in 2017 to bridge the systemic voids faced by African, African-American, Asian, and Latinx immigrants in Minnesota, Phumulani (meaning &ldquo;to rest&rdquo; or &ldquo;peace&rdquo; in Zulu) provides comprehensive wraparound support.
               </p>
               <p className="text-sm text-phumulani-charcoal leading-relaxed font-sans">
                 We believe that safety requires economic independence. When survivors obtain stable housing, credit repair, and living-wage employment, they break cycles of intergenerational trauma.
@@ -883,14 +960,14 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
               {/* Leadership & Safeguarding Portraits */}
               <div id="leadership-section" className="pt-2">
-                <div className="flex items-center justify-between mb-3">
+                <div className="flex flex-wrap items-center justify-between mb-3 gap-2">
                   <span className="text-xs font-bold font-heading text-phumulani-charcoal uppercase tracking-wide">
                     Executive Leadership &amp; Board
                   </span>
                   {onOpenMediaRegistry && (
                     <button
                       onClick={onOpenMediaRegistry}
-                      className="text-xs font-heading text-phumulani-earth hover:text-phumulani-earth hover:underline font-semibold cursor-pointer"
+                      className="text-xs font-heading text-phumulani-earth hover:text-phumulani-orange hover:underline underline-offset-4 font-semibold cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
                     >
                       View Media &amp; Safeguarding Registry ↗
                     </button>
@@ -898,70 +975,69 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
-                  <div className="bg-white p-3 rounded-xl border border-phumulani-cream shadow-2xs space-y-1.5">
-                    <SafeImage
-                      src="/images/leadership/dr-elena-rostova.svg"
-                      fallbackSrc="/media/leadership/dr-elena-rostova.svg"
-                      fallbackType="leadership"
-                      initials="ER"
-                      alt="Dr. Elena Rostova"
-                      className="w-14 h-14 mx-auto rounded-xl object-cover shadow-2xs"
-                    />
-                    <div className="font-heading font-bold text-xs text-phumulani-charcoal leading-tight">Dr. Elena Rostova</div>
-                    <div className="text-[10px] text-phumulani-charcoal font-sans">Board Chair</div>
-                  </div>
-
-                  <div className="bg-white p-3 rounded-xl border border-phumulani-cream shadow-2xs space-y-1.5">
-                    <SafeImage
-                      src="/images/leadership/sister-miriam-k.svg"
-                      fallbackSrc="/media/leadership/sister-miriam-k.svg"
-                      fallbackType="leadership"
-                      initials="MK"
-                      alt="Sister Miriam K."
-                      className="w-14 h-14 mx-auto rounded-xl object-cover shadow-2xs"
-                    />
-                    <div className="font-heading font-bold text-xs text-phumulani-charcoal leading-tight">Sister Miriam K.</div>
-                    <div className="text-[10px] text-phumulani-charcoal font-sans">Safeguarding Lead</div>
-                  </div>
-
-                  <div className="bg-white p-3 rounded-xl border border-phumulani-cream shadow-2xs space-y-1.5">
-                    <SafeImage
-                      src="/images/leadership/david-mwangi.svg"
-                      fallbackSrc="/media/leadership/david-mwangi.svg"
-                      fallbackType="leadership"
-                      initials="DM"
-                      alt="David Mwangi, CPA"
-                      className="w-14 h-14 mx-auto rounded-xl object-cover shadow-2xs"
-                    />
-                    <div className="font-heading font-bold text-xs text-phumulani-charcoal leading-tight">David Mwangi, CPA</div>
-                    <div className="text-[10px] text-phumulani-charcoal font-sans">Finance Director</div>
-                  </div>
-
-                  <div className="bg-white p-3 rounded-xl border border-phumulani-cream shadow-2xs space-y-1.5">
-                    <SafeImage
-                      src="/images/leadership/amina-yusuf.svg"
-                      fallbackSrc="/media/leadership/amina-yusuf.svg"
-                      fallbackType="leadership"
-                      initials="AY"
-                      alt="Amina Yusuf"
-                      className="w-14 h-14 mx-auto rounded-xl object-cover shadow-2xs"
-                    />
-                    <div className="font-heading font-bold text-xs text-phumulani-charcoal leading-tight">Amina Yusuf</div>
-                    <div className="text-[10px] text-phumulani-charcoal font-sans">Community Lead</div>
-                  </div>
+                  {[
+                    {
+                      src: '/images/leadership/dr-elena-rostova.svg',
+                      fallback: '/media/leadership/dr-elena-rostova.svg',
+                      initials: 'ER',
+                      name: 'Dr. Elena Rostova',
+                      role: 'Board Chair',
+                    },
+                    {
+                      src: '/images/leadership/sister-miriam-k.svg',
+                      fallback: '/media/leadership/sister-miriam-k.svg',
+                      initials: 'MK',
+                      name: 'Sister Miriam K.',
+                      role: 'Safeguarding Lead',
+                    },
+                    {
+                      src: '/images/leadership/david-mwangi.svg',
+                      fallback: '/media/leadership/david-mwangi.svg',
+                      initials: 'DM',
+                      name: 'David Mwangi, CPA',
+                      role: 'Finance Director',
+                    },
+                    {
+                      src: '/images/leadership/amina-yusuf.svg',
+                      fallback: '/media/leadership/amina-yusuf.svg',
+                      initials: 'AY',
+                      name: 'Amina Yusuf',
+                      role: 'Community Lead',
+                    },
+                  ].map((leader) => (
+                    <div
+                      key={leader.name}
+                      className="bg-white p-3 rounded-xl border border-phumulani-cream hover:border-phumulani-earth hover:-translate-y-0.5 shadow-2xs transition-all duration-200 space-y-1.5"
+                    >
+                      <SafeImage
+                        src={leader.src}
+                        fallbackSrc={leader.fallback}
+                        fallbackType="leadership"
+                        initials={leader.initials}
+                        alt={leader.name}
+                        className="w-14 h-14 mx-auto rounded-xl object-cover shadow-2xs"
+                      />
+                      <div className="font-heading font-bold text-xs text-phumulani-charcoal leading-tight">
+                        {leader.name}
+                      </div>
+                      <div className="text-[10px] text-phumulani-charcoal font-sans">{leader.role}</div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
-          </div>
+          </RevealSection>
         </div>
       </section>
 
       {/* 5. GET INVOLVED / VOLUNTEER OPPORTUNITIES */}
       <section id="get-involved-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-28">
         <div id="volunteer-section" className="relative -top-24"></div>
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
+        <RevealSection className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
           <div>
-            <div className="text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">Join The Movement</div>
+            <div className="text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">
+              Join The Movement
+            </div>
             <h2 className="font-heading text-3xl font-extrabold text-phumulani-charcoal">
               Volunteer Opportunities &amp; Mentorship
             </h2>
@@ -971,15 +1047,15 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
           </div>
           <button
             onClick={() => onViewChange('community')}
-            className="text-xs font-semibold font-heading text-phumulani-earth hover:text-phumulani-earth hover:underline flex items-center gap-1 cursor-pointer"
+            className="text-xs font-semibold font-heading text-phumulani-earth hover:text-phumulani-orange hover:underline underline-offset-4 flex items-center gap-1 cursor-pointer group focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
           >
             <span>Go to Volunteer Portal</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" strokeWidth={1.75} aria-hidden="true" />
           </button>
-        </div>
+        </RevealSection>
 
         {/* Featured Volunteer Action Banner */}
-        <div className="mb-8 rounded-2xl overflow-hidden border border-phumulani-teal shadow-sm bg-phumulani-charcoal text-white grid grid-cols-1 lg:grid-cols-12 items-center">
+        <RevealSection className="mb-8 rounded-2xl overflow-hidden border border-phumulani-teal shadow-sm bg-phumulani-charcoal text-white grid grid-cols-1 lg:grid-cols-12 items-center">
           <div className="lg:col-span-7 relative aspect-[16/9] lg:aspect-auto lg:h-full bg-phumulani-charcoal overflow-hidden">
             <SafeImage
               src="/media/phumulani/get-involved/volunteers.jpg"
@@ -990,9 +1066,9 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               loading="lazy"
             />
           </div>
-          <div className="lg:col-span-5 p-6 sm:p-8 space-y-3">
+          <div className="lg:col-span-5 p-6 sm:p-8 space-y-3.5">
             <div className="inline-flex items-center gap-1.5 text-xs font-bold font-heading text-phumulani-gold uppercase tracking-wider">
-              <Users className="w-4 h-4 text-phumulani-gold" />
+              <HandHeart className="w-4 h-4 text-phumulani-gold" strokeWidth={1.75} aria-hidden="true" />
               <span>Community In Action</span>
             </div>
             <h3 className="font-heading text-2xl font-bold text-white">
@@ -1002,23 +1078,23 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               Our volunteers package dignity kits, accompany survivors to court appointments, mentor youth, and host bilingual conversation circles. Join over 120 active volunteers across the Twin Cities.
             </p>
             <div className="pt-2 text-xs text-phumulani-gold font-semibold flex items-center gap-2 font-heading">
-              <CheckCircle2 className="w-4 h-4" />
+              <CheckCircle2 className="w-4 h-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
               <span>Orientation &amp; trauma-informed training provided</span>
             </div>
           </div>
-        </div>
+        </RevealSection>
 
         {submittedAppId && (
           <div className="mb-6 p-4 bg-phumulani-cream border border-phumulani-green rounded-xl flex items-center justify-between text-xs text-phumulani-charcoal">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
+              <CheckCircle2 className="w-4 h-4 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
               <span>
                 Application submitted successfully! Your tracking ID is <strong>{submittedAppId}</strong>. A volunteer coordinator has received your profile.
               </span>
             </div>
             <button
               onClick={() => setSubmittedAppId(null)}
-              className="text-phumulani-earth hover:text-phumulani-charcoal font-semibold"
+              className="text-phumulani-earth hover:text-phumulani-charcoal font-semibold cursor-pointer"
             >
               Dismiss
             </button>
@@ -1026,63 +1102,69 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {opportunities.map((opp) => (
-            <div
-              key={opp.id}
-              className="bg-white rounded-2xl border border-phumulani-cream p-5 flex flex-col justify-between hover:border-phumulani-earth hover:shadow-md transition-all"
-            >
-              <div className="space-y-3">
-                <div className="flex justify-between items-start">
-                  <span className="text-[10px] font-semibold font-heading text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded">
-                    {opp.commitment}
-                  </span>
-                  {opp.urgent && (
-                    <span className="text-[10px] font-bold font-heading text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded">
-                      Urgent Need
+          {opportunities.map((opp, idx) => (
+            <RevealItem key={opp.id} index={idx} className="flex">
+              <div className="bg-white rounded-2xl border border-phumulani-cream p-5 flex flex-col justify-between w-full hover:border-phumulani-earth hover:shadow-md hover:-translate-y-1 transition-all duration-200">
+                <div className="space-y-3">
+                  <div className="flex justify-between items-start gap-2 text-[10px] font-heading">
+                    <span className="font-semibold text-phumulani-earth">
+                      {opp.commitment}
                     </span>
-                  )}
+                    {opp.urgent && (
+                      <span className="font-bold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded border border-phumulani-gold shrink-0">
+                        Urgent Need
+                      </span>
+                    )}
+                  </div>
+
+                  <h3 className="font-heading font-bold text-base text-phumulani-charcoal">
+                    {opp.title}
+                  </h3>
+
+                  <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">
+                    {opp.description}
+                  </p>
+
+                  <div className="text-[11px] text-phumulani-charcoal space-y-1 pt-2 border-t border-phumulani-cream font-sans">
+                    <div className="flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                      <span>{opp.location}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <UsersRound className="w-3.5 h-3.5 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                      <span className="tabular-nums">{opp.openSlots} openings available</span>
+                    </div>
+                  </div>
                 </div>
 
-                <h3 className="font-heading font-bold text-base text-phumulani-charcoal">
-                  {opp.title}
-                </h3>
-
-                <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">
-                  {opp.description}
-                </p>
-
-                <div className="text-[11px] text-phumulani-charcoal space-y-1 pt-2 border-t border-phumulani-cream font-sans">
-                  <div className="flex items-center gap-1.5">
-                    <MapPin className="w-3 h-3 text-phumulani-charcoal" />
-                    <span>{opp.location}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <Users className="w-3 h-3 text-phumulani-charcoal" />
-                    <span>{opp.openSlots} openings available</span>
-                  </div>
-                </div>
+                <button
+                  onClick={() => setSelectedOpportunity(opp)}
+                  className="mt-5 w-full min-h-[42px] bg-phumulani-earth hover:bg-phumulani-orange text-white py-2.5 px-3 rounded-lg text-xs font-semibold font-heading transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                >
+                  Apply for Opportunity
+                </button>
               </div>
-
-              <button
-                onClick={() => setSelectedOpportunity(opp)}
-                className="mt-5 w-full bg-phumulani-earth hover:bg-phumulani-orange text-white py-2.5 px-3 rounded-lg text-xs font-semibold font-heading transition-colors cursor-pointer shadow-xs"
-              >
-                Apply for Opportunity
-              </button>
-            </div>
+            </RevealItem>
           ))}
         </div>
       </section>
 
       {/* 6. DONATION & FUNDRAISING (HOSTED CHECKOUT SIMULATOR) */}
-      <section id="donate-section" className="bg-phumulani-charcoal text-white py-16 relative overflow-hidden border-t border-phumulani-teal scroll-mt-28">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section
+        id="donate-section"
+        className="bg-phumulani-charcoal text-white py-16 relative overflow-hidden border-t border-phumulani-teal scroll-mt-28"
+      >
+        <div className="hidden lg:block absolute top-0 right-0 w-[420px] h-[260px] pointer-events-none">
+          <CulturalGeometricAccent variant="dark-woven" className="w-full h-full" />
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left Column: Campaigns & Impact */}
             <div className="lg:col-span-6 space-y-6">
-              <div className="inline-flex items-center gap-2 text-xs font-bold font-heading text-phumulani-gold bg-phumulani-charcoal px-3 py-1 rounded-full border border-phumulani-teal">
-                <Heart className="w-3.5 h-3.5 fill-phumulani-gold" />
-                <span className="tracking-wide">TAX-DEDUCTIBLE 501(C)(3) GIVING</span>
+              <div className="inline-flex items-center gap-2 text-xs font-bold font-heading text-phumulani-gold uppercase tracking-wider">
+                <HandHeart className="w-4 h-4 text-phumulani-gold" strokeWidth={1.75} aria-hidden="true" />
+                <span>TAX-DEDUCTIBLE 501(C)(3) GIVING</span>
               </div>
 
               <h2 className="font-heading text-3xl sm:text-4xl font-extrabold tracking-tight text-white leading-tight">
@@ -1100,13 +1182,17 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   fallbackSrc="/images/events/community-celebration.svg"
                   fallbackType="event"
                   alt="Warm community celebration banquet in deep teal and gold candlelight celebrating survivor resilience"
-                  className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+                  className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500 ease-out"
                   loading="lazy"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-phumulani-charcoal/80 via-phumulani-charcoal/20 to-transparent flex items-end p-4">
                   <div className="text-xs">
-                    <span className="text-phumulani-gold font-heading font-bold uppercase tracking-wider text-[10px]">Your Impact In Action</span>
-                    <div className="font-heading text-white font-bold text-sm sm:text-base">Families Rebuilding with Dignity &amp; Joy</div>
+                    <span className="text-phumulani-gold font-heading font-bold uppercase tracking-wider text-[10px]">
+                      Your Impact In Action
+                    </span>
+                    <div className="font-heading text-white font-bold text-sm sm:text-base">
+                      Families Rebuilding with Dignity &amp; Joy
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1120,22 +1206,26 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                     <div
                       key={camp.id}
                       onClick={() => setSelectedCampaignId(camp.id)}
-                      className={`p-4 rounded-xl border transition-all cursor-pointer ${
-                        isSelected ? 'bg-phumulani-charcoal border-phumulani-orange shadow-md' : 'bg-phumulani-charcoal border-phumulani-teal hover:bg-phumulani-orange'
+                      className={`p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
+                        isSelected
+                          ? 'bg-phumulani-charcoal border-phumulani-orange shadow-md'
+                          : 'bg-phumulani-charcoal border-phumulani-teal hover:border-phumulani-gold'
                       }`}
                     >
-                      <div className="flex justify-between items-start text-xs font-semibold font-heading">
+                      <div className="flex justify-between items-start text-xs font-semibold font-heading gap-2">
                         <span className="text-white">{camp.title}</span>
-                        <span className="text-phumulani-gold">{percent}% Funded</span>
+                        <span className="text-phumulani-gold tabular-nums shrink-0">{percent}% Funded</span>
                       </div>
-                      <div className="w-full bg-phumulani-charcoal rounded-full h-2 my-2 overflow-hidden">
+                      <div className="w-full bg-phumulani-charcoal border border-phumulani-teal rounded-full h-2 my-2 overflow-hidden">
                         <div
-                          className="bg-phumulani-orange h-2 rounded-full"
+                          className="bg-phumulani-orange h-2 rounded-full transition-all duration-500"
                           style={{ width: `${percent}%` }}
                         />
                       </div>
-                      <div className="flex justify-between text-[11px] text-phumulani-cream font-sans">
-                        <span>${camp.raisedAmount.toLocaleString()} raised of ${camp.targetAmount.toLocaleString()}</span>
+                      <div className="flex justify-between text-[11px] text-phumulani-cream font-sans tabular-nums">
+                        <span>
+                          ${camp.raisedAmount.toLocaleString()} raised of ${camp.targetAmount.toLocaleString()}
+                        </span>
                         <span>{camp.donorCount} donors</span>
                       </div>
                     </div>
@@ -1146,12 +1236,14 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
             {/* Right Column: Checkout Form */}
             <div className="lg:col-span-6">
-              <div className="bg-white text-phumulani-charcoal rounded-2xl p-6 sm:p-8 shadow-2xl border border-phumulani-cream">
+              <div className="bg-white text-phumulani-charcoal rounded-2xl p-6 sm:p-8 shadow-2xl border border-phumulani-gold">
                 <form onSubmit={handleDonationSubmit} className="space-y-5">
-                  <div className="flex justify-between items-center border-b border-phumulani-cream pb-3">
-                    <div className="font-heading text-xl font-bold text-phumulani-charcoal">Make a Donation</div>
-                    <span className="text-xs text-phumulani-charcoal font-medium flex items-center gap-1">
-                      <Lock className="w-3 h-3 text-phumulani-earth" />
+                  <div className="flex justify-between items-center border-b border-phumulani-cream pb-3 gap-2">
+                    <div className="font-heading text-xl font-bold text-phumulani-charcoal">
+                      Make a Donation
+                    </div>
+                    <span className="text-xs text-phumulani-charcoal font-medium flex items-center gap-1.5 shrink-0">
+                      <LockKeyhole className="w-3.5 h-3.5 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
                       <span className="font-sans">SSL 256-Bit Encrypted</span>
                     </span>
                   </div>
@@ -1337,9 +1429,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
       {/* 7. COMMUNITY EVENTS CALENDAR */}
       <section id="events-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-28">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
+        <RevealSection className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
           <div>
-            <div className="text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">Gathering &amp; Growth</div>
+            <div className="text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">
+              Gathering &amp; Growth
+            </div>
             <h2 className="font-heading text-3xl font-extrabold text-phumulani-charcoal">
               Upcoming Workshops &amp; Community Gatherings
             </h2>
@@ -1347,22 +1441,22 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               Events are open to community members, supporters, and partner organizations. Capacity strictly enforced.
             </p>
           </div>
-        </div>
+        </RevealSection>
 
         {rsvpFeedback && (
           <div className="mb-6 p-4 bg-phumulani-cream border border-phumulani-teal rounded-xl flex items-center justify-between text-xs text-phumulani-earth">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
+              <CheckCircle2 className="w-4 h-4 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
               <span className="font-sans">{rsvpFeedback.message}</span>
             </div>
-            <button onClick={() => setRsvpFeedback(null)} className="font-bold text-phumulani-earth font-heading">
+            <button onClick={() => setRsvpFeedback(null)} className="font-bold text-phumulani-earth font-heading cursor-pointer">
               Dismiss
             </button>
           </div>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {events.map((evt) => {
+          {events.map((evt, idx) => {
             const isFull = evt.registeredCount >= evt.capacity;
             const eventPhotos: Record<string, { src: string; fallback: string }> = {
               'evt-1': {
@@ -1385,75 +1479,77 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               };
 
             return (
-              <div
-                key={evt.id}
-                className="bg-white rounded-2xl border border-phumulani-cream overflow-hidden flex flex-col justify-between hover:border-phumulani-earth hover:shadow-md transition-all group"
-              >
-                <div className="aspect-[16/9] w-full bg-phumulani-cream overflow-hidden border-b border-phumulani-cream">
-                  <SafeImage
-                    src={eventImgConfig.src}
-                    fallbackSrc={eventImgConfig.fallback}
-                    fallbackType="event"
-                    fallbackText={evt.title}
-                    alt={evt.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                  />
-                </div>
+              <RevealItem key={evt.id} index={idx} className="flex">
+                <div className="bg-white rounded-2xl border border-phumulani-cream overflow-hidden flex flex-col justify-between w-full hover:border-phumulani-earth hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group">
+                  <div className="aspect-[16/9] w-full bg-phumulani-cream overflow-hidden border-b border-phumulani-cream">
+                    <SafeImage
+                      src={eventImgConfig.src}
+                      fallbackSrc={eventImgConfig.fallback}
+                      fallbackType="event"
+                      fallbackText={evt.title}
+                      alt={evt.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                      loading="lazy"
+                    />
+                  </div>
 
-                <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center text-xs">
-                      <span className="font-semibold font-heading text-phumulani-earth bg-phumulani-cream px-2.5 py-0.5 rounded">
-                        {evt.category}
-                      </span>
-                      <span
-                        className={`text-[11px] font-bold font-heading px-2 py-0.5 rounded ${
-                          isFull ? 'bg-phumulani-cream text-phumulani-charcoal' : 'bg-phumulani-cream text-phumulani-charcoal'
+                  <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center text-xs gap-2">
+                        <span className="font-semibold font-heading text-phumulani-earth">
+                          {evt.category}
+                        </span>
+                        <span className="text-[11px] font-bold font-heading bg-phumulani-cream text-phumulani-charcoal px-2.5 py-0.5 rounded border border-phumulani-gold tabular-nums shrink-0">
+                          {isFull ? `Waitlist Active (${evt.waitlistCount})` : `${evt.capacity - evt.registeredCount} Seats Left`}
+                        </span>
+                      </div>
+
+                      <h3 className="font-heading font-bold text-lg text-phumulani-charcoal leading-snug group-hover:text-phumulani-earth transition-colors">
+                        {evt.title}
+                      </h3>
+
+                      <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">
+                        {evt.description}
+                      </p>
+
+                      <div className="space-y-1.5 text-xs text-phumulani-charcoal pt-3 border-t border-phumulani-cream font-sans">
+                        <div className="flex items-center gap-2">
+                          <CalendarDays className="w-3.5 h-3.5 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                          <span>
+                            {new Date(evt.date).toLocaleDateString(undefined, {
+                              weekday: 'short',
+                              month: 'short',
+                              day: 'numeric',
+                              year: 'numeric',
+                            })}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-3.5 h-3.5 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                          <span>{evt.time}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <MapPin className="w-3.5 h-3.5 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                          <span>{evt.location}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 pt-4 border-t border-phumulani-cream">
+                      <button
+                        onClick={() => setSelectedEvent(evt)}
+                        className={`w-full min-h-[42px] py-2.5 rounded-lg text-xs font-semibold font-heading transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-phumulani-earth ${
+                          isFull
+                            ? 'bg-phumulani-gold hover:bg-phumulani-orange text-phumulani-charcoal font-bold'
+                            : 'bg-phumulani-earth hover:bg-phumulani-orange text-white'
                         }`}
                       >
-                        {isFull ? `Waitlist Active (${evt.waitlistCount})` : `${evt.capacity - evt.registeredCount} Seats Left`}
-                      </span>
+                        {isFull ? 'Join Priority Waitlist' : 'RSVP / Register'}
+                      </button>
                     </div>
-
-                    <h3 className="font-heading font-bold text-lg text-phumulani-charcoal leading-snug">
-                      {evt.title}
-                    </h3>
-
-                    <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">
-                      {evt.description}
-                    </p>
-
-                    <div className="space-y-1.5 text-xs text-phumulani-charcoal pt-3 border-t border-phumulani-cream font-sans">
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-3.5 h-3.5 text-phumulani-charcoal" />
-                        <span>{new Date(evt.date).toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' })}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-3.5 h-3.5 text-phumulani-charcoal" />
-                        <span>{evt.time}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-3.5 h-3.5 text-phumulani-charcoal" />
-                        <span>{evt.location}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 pt-4 border-t border-phumulani-cream">
-                    <button
-                      onClick={() => setSelectedEvent(evt)}
-                      className={`w-full py-2.5 rounded-lg text-xs font-semibold font-heading transition-colors cursor-pointer shadow-xs ${
-                        isFull
-                          ? 'bg-phumulani-gold hover:bg-phumulani-orange text-phumulani-charcoal font-bold'
-                          : 'bg-phumulani-earth hover:bg-phumulani-orange text-white'
-                      }`}
-                    >
-                      {isFull ? 'Join Priority Waitlist' : 'RSVP / Register'}
-                    </button>
                   </div>
                 </div>
-              </div>
+              </RevealItem>
             );
           })}
         </div>
@@ -1461,11 +1557,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
       {/* 8. DISCREET GET HELP HUB & SAFE EXIT (SECTION 4.2 & 6.5) */}
       <section id="get-help-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-28">
-        <div className="bg-phumulani-cream border-2 border-phumulani-earth rounded-2xl p-6 sm:p-10 shadow-sm">
+        <RevealSection className="bg-phumulani-cream border-2 border-phumulani-earth rounded-2xl p-6 sm:p-10 shadow-sm">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <div className="lg:col-span-5 space-y-4">
-              <div className="inline-flex items-center gap-2 text-xs font-bold font-heading text-phumulani-earth bg-phumulani-cream px-3 py-1 rounded-full">
-                <LifeBuoy className="w-3.5 h-3.5 text-phumulani-earth" />
+              <div className="inline-flex items-center gap-2 text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">
+                <LifeBuoy className="w-4 h-4 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
                 <span>CONFIDENTIAL SAFEGUARDING ROUTE</span>
               </div>
 
@@ -1479,7 +1575,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
               <div className="bg-white p-4 rounded-xl border border-phumulani-earth text-xs space-y-2 text-phumulani-charcoal font-sans">
                 <div className="font-bold font-heading text-phumulani-earth flex items-center gap-1.5">
-                  <Shield className="w-4 h-4 text-phumulani-earth" />
+                  <ShieldCheck className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
                   <span>Our Privacy &amp; Safeguarding Guarantees:</span>
                 </div>
                 <ul className="space-y-1 list-disc list-inside text-[11px] text-phumulani-charcoal">
@@ -1490,17 +1586,17 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 </ul>
               </div>
 
-              <div className="p-3 bg-phumulani-cream rounded-xl text-xs text-phumulani-earth flex items-center justify-between">
+              <div className="p-3.5 bg-white border border-phumulani-gold rounded-xl text-xs text-phumulani-earth flex items-center justify-between gap-2">
                 <div>
                   <div className="font-bold font-heading">Immediate Crisis Line 24/7:</div>
-                  <div className="text-sm font-semibold font-heading">1-866-223-1111 (Call or Text)</div>
+                  <div className="text-sm font-semibold font-heading tabular-nums">1-866-223-1111 (Call or Text)</div>
                 </div>
                 <button
                   onClick={() => window.location.replace('https://weather.com')}
-                  className="bg-phumulani-earth hover:bg-phumulani-orange text-white px-3 py-1.5 rounded-lg text-xs font-semibold font-heading flex items-center gap-1 cursor-pointer"
+                  className="bg-phumulani-earth hover:bg-phumulani-orange text-white px-3 py-2 rounded-lg text-xs font-semibold font-heading flex items-center gap-1 cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 >
                   <span>Quick Exit</span>
-                  <ExternalLink className="w-3 h-3" />
+                  <ExternalLink className="w-3 h-3" strokeWidth={1.75} aria-hidden="true" />
                 </button>
               </div>
             </div>
@@ -1623,74 +1719,70 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               )}
             </div>
           </div>
-        </div>
+        </RevealSection>
       </section>
 
       {/* 9. MISSION, VISION & CORE VALUES (#mission-section) */}
       <section id="mission-section" className="bg-gradient-to-b from-white to-phumulani-cream py-16 border-t border-phumulani-cream scroll-mt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="text-center max-w-3xl mx-auto space-y-3">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold font-heading text-phumulani-earth bg-phumulani-cream border border-phumulani-teal px-3 py-1 rounded-full uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 text-phumulani-earth" />
+          <RevealSection className="text-center max-w-3xl mx-auto space-y-3">
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">
+              <HeartHandshake className="w-4 h-4 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
               <span>Foundational Purpose</span>
             </div>
             <h2 className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-charcoal">
               Our Sacred Mission &amp; Enduring Vision
             </h2>
+            <CulturalGeometricAccent variant="section-crest" />
             <p className="text-xs sm:text-sm text-phumulani-charcoal leading-relaxed font-sans">
               Phumulani exists to ensure that every immigrant and refugee survivor of domestic violence, human trafficking, and systemic trauma in Minnesota discovers not merely an escape from danger, but an enduring pathway to sovereignty, self-determination, and thriving peace.
             </p>
-          </div>
+          </RevealSection>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-xs space-y-3 hover:border-phumulani-earth transition-colors">
-              <div className="w-10 h-10 rounded-xl bg-phumulani-cream text-phumulani-earth flex items-center justify-center font-bold font-heading">
-                01
-              </div>
-              <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">Cultural Attunement</h3>
-              <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">
-                Healing cannot be imported from generic clinical models. We center ancestral sisterhood tea circles, indigenous trauma resolution, and bilingual advocates who share lived cultural realities.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-xs space-y-3 hover:border-phumulani-earth transition-colors">
-              <div className="w-10 h-10 rounded-xl bg-phumulani-cream text-phumulani-earth flex items-center justify-center font-bold font-heading">
-                02
-              </div>
-              <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">Legal Self-Defense</h3>
-              <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">
-                Navigating Orders for Protection (OFP), U-Visa certifications, and immigration relief with relentless, courtroom-accredited accompaniment and trauma-informed legal partners.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-xs space-y-3 hover:border-phumulani-earth transition-colors">
-              <div className="w-10 h-10 rounded-xl bg-phumulani-cream text-phumulani-earth flex items-center justify-center font-bold font-heading">
-                03
-              </div>
-              <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">Economic Sovereignty</h3>
-              <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">
-                Financial abuse is the most potent anchor of domestic violence. We dismantle dependency through matched savings, rapid lease deposits, credit restoration, and micro-enterprise coaching.
-              </p>
-            </div>
-
-            <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-xs space-y-3 hover:border-phumulani-earth transition-colors">
-              <div className="w-10 h-10 rounded-xl bg-phumulani-cream text-phumulani-earth flex items-center justify-center font-bold font-heading">
-                04
-              </div>
-              <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">Intergenerational Youth</h3>
-              <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">
-                Breaking generational trauma by investing deeply in the children of survivors through academic tutoring, college preparation, and culturally grounded leadership development.
-              </p>
-            </div>
+            {[
+              {
+                num: '01',
+                title: 'Cultural Attunement',
+                desc: 'Healing cannot be imported from generic clinical models. We center ancestral sisterhood tea circles, indigenous trauma resolution, and bilingual advocates who share lived cultural realities.',
+              },
+              {
+                num: '02',
+                title: 'Legal Self-Defense',
+                desc: 'Navigating Orders for Protection (OFP), U-Visa certifications, and immigration relief with relentless, courtroom-accredited accompaniment and trauma-informed legal partners.',
+              },
+              {
+                num: '03',
+                title: 'Economic Sovereignty',
+                desc: 'Financial abuse is the most potent anchor of domestic violence. We dismantle dependency through matched savings, rapid lease deposits, credit restoration, and micro-enterprise coaching.',
+              },
+              {
+                num: '04',
+                title: 'Intergenerational Youth',
+                desc: 'Breaking generational trauma by investing deeply in the children of survivors through academic tutoring, college preparation, and culturally grounded leadership development.',
+              },
+            ].map((item, idx) => (
+              <RevealItem key={item.num} index={idx} className="flex">
+                <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-xs space-y-3 hover:border-phumulani-earth hover:shadow-md hover:-translate-y-1 transition-all duration-200 w-full">
+                  <div className="w-10 h-10 rounded-xl bg-phumulani-cream border border-phumulani-gold text-phumulani-earth flex items-center justify-center font-bold font-heading tabular-nums">
+                    {item.num}
+                  </div>
+                  <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">{item.title}</h3>
+                  <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">{item.desc}</p>
+                </div>
+              </RevealItem>
+            ))}
           </div>
         </div>
       </section>
 
       {/* 10. STRATEGIC PARTNERSHIPS & ALLIANCES (#partnerships-section) */}
       <section id="partnerships-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 scroll-mt-28">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 gap-4">
+        <RevealSection className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 gap-4">
           <div>
-            <div className="text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">Collective Power</div>
+            <div className="text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">
+              Collective Power
+            </div>
             <h2 className="font-heading text-3xl font-extrabold text-phumulani-charcoal">
               Community Alliances &amp; Institutional Partners
             </h2>
@@ -1703,74 +1795,67 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               const el = document.getElementById('contact-section');
               if (el) el.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="px-4 py-2 border-2 border-phumulani-earth text-phumulani-earth hover:bg-phumulani-cream rounded-lg text-xs font-bold font-heading flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2.5 border-2 border-phumulani-earth text-phumulani-earth hover:bg-phumulani-cream rounded-lg text-xs font-bold font-heading flex items-center gap-1.5 cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth group"
           >
             <span>Partner With Phumulani</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" strokeWidth={1.75} aria-hidden="true" />
           </button>
-        </div>
+        </RevealSection>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white p-5 rounded-2xl border border-phumulani-cream shadow-2xs space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold font-heading text-phumulani-earth">
-              <Building2 className="w-4 h-4 text-phumulani-earth" />
-              <span>Corporate CSR Partners</span>
-            </div>
-            <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">
-              Minnesota corporate benefactors supporting matched giving, employer hiring days, and technology donations for our workforce lab.
-            </p>
-            <div className="text-[11px] font-semibold text-phumulani-charcoal pt-1 font-sans">
-              Target Foundation · 3M Community Giving · Medtronic CSR
-            </div>
-          </div>
-
-          <div className="bg-white p-5 rounded-2xl border border-phumulani-cream shadow-2xs space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold font-heading text-phumulani-earth">
-              <Shield className="w-4 h-4 text-phumulani-earth" />
-              <span>Legal Defense Network</span>
-            </div>
-            <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">
-              Direct collaborative referrals for bilingual legal counsel, orders for protection, and immigration U-Visa navigation in Hennepin &amp; Ramsey counties.
-            </p>
-            <div className="text-[11px] font-semibold text-phumulani-charcoal pt-1 font-sans">
-              The Advocates for Human Rights · Standpoint MN · Tubman
-            </div>
-          </div>
-
-          <div className="bg-white p-5 rounded-2xl border border-phumulani-cream shadow-2xs space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold font-heading text-phumulani-earth">
-              <Home className="w-4 h-4 text-phumulani-earth" />
-              <span>Emergency Shelter Network</span>
-            </div>
-            <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">
-              Fast-track confidential safe house transfers, emergency hotel vouchers, and landlord negotiation for rapid independent leasing.
-            </p>
-            <div className="text-[11px] font-semibold text-phumulani-charcoal pt-1 font-sans">
-              Day One Crisis Line · Cornerstone MN · Haven Housing
-            </div>
-          </div>
-
-          <div className="bg-white p-5 rounded-2xl border border-phumulani-cream shadow-2xs space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold font-heading text-phumulani-earth">
-              <Users className="w-4 h-4 text-phumulani-earth" />
-              <span>Academic &amp; Research</span>
-            </div>
-            <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">
-              Community-based participatory evaluation, workforce intern placement, and rigorous monitoring of our MEAL indicators.
-            </p>
-            <div className="text-[11px] font-semibold text-phumulani-charcoal pt-1 font-sans">
-              University of Minnesota UROC · Minneapolis College
-            </div>
-          </div>
+          {[
+            {
+              icon: Building2,
+              title: 'Corporate CSR Partners',
+              desc: 'Minnesota corporate benefactors supporting matched giving, employer hiring days, and technology donations for our workforce lab.',
+              partners: 'Target Foundation · 3M Community Giving · Medtronic CSR',
+            },
+            {
+              icon: ShieldCheck,
+              title: 'Legal Defense Network',
+              desc: 'Direct collaborative referrals for bilingual legal counsel, orders for protection, and immigration U-Visa navigation in Hennepin & Ramsey counties.',
+              partners: 'The Advocates for Human Rights · Standpoint MN · Tubman',
+            },
+            {
+              icon: House,
+              title: 'Emergency Shelter Network',
+              desc: 'Fast-track confidential safe house transfers, emergency hotel vouchers, and landlord negotiation for rapid independent leasing.',
+              partners: 'Day One Crisis Line · Cornerstone MN · Haven Housing',
+            },
+            {
+              icon: GraduationCap,
+              title: 'Academic & Research',
+              desc: 'Community-based participatory evaluation, workforce intern placement, and rigorous monitoring of our MEAL indicators.',
+              partners: 'University of Minnesota UROC · Minneapolis College',
+            },
+          ].map((partner, idx) => {
+            const Icon = partner.icon;
+            return (
+              <RevealItem key={partner.title} index={idx} className="flex">
+                <div className="bg-white p-5 rounded-2xl border border-phumulani-cream hover:border-phumulani-earth hover:shadow-md hover:-translate-y-1 transition-all duration-200 shadow-2xs space-y-2.5 w-full">
+                  <div className="flex items-center gap-2 text-xs font-bold font-heading text-phumulani-earth">
+                    <Icon className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                    <span>{partner.title}</span>
+                  </div>
+                  <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">{partner.desc}</p>
+                  <div className="text-[11px] font-semibold text-phumulani-charcoal pt-1 font-sans">
+                    {partner.partners}
+                  </div>
+                </div>
+              </RevealItem>
+            );
+          })}
         </div>
       </section>
 
       {/* 11. NEWS, COMMUNITY BULLETINS & PUBLICATIONS (#news-section) */}
       <section id="news-section" className="bg-phumulani-cream py-16 border-y border-phumulani-gold scroll-mt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+          <RevealSection className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
             <div>
-              <div className="text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">Publications &amp; Press</div>
+              <div className="text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">
+                Publications &amp; Press
+              </div>
               <h2 className="font-heading text-3xl font-extrabold text-phumulani-charcoal">
                 Latest News &amp; Authored Works
               </h2>
@@ -1781,72 +1866,65 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
             <div className="text-xs text-phumulani-charcoal font-sans">
               Verified IRS 501(c)(3) Public Disclosures
             </div>
-          </div>
+          </RevealSection>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Book Card 1 */}
-            <div className="bg-white rounded-2xl p-6 border border-phumulani-cream shadow-xs flex flex-col justify-between space-y-4 hover:border-phumulani-earth transition-colors">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-xs text-phumulani-charcoal font-sans">
-                  <span className="font-bold font-heading text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded">Published Memoir</span>
-                  <span>2021 Release</span>
+            {[
+              {
+                badge: 'Published Memoir',
+                meta: '2021 Release',
+                title: 'Facing the Giants',
+                desc: "Comfort Dondo's acclaimed memoir chronicling her lived journey through adversity, displacement, and the unyielding determination to build culturally grounded sanctuaries for immigrant women.",
+                leftFooter: 'Author: Comfort Dondo',
+                rightFooter: 'Available via Community Library',
+              },
+              {
+                badge: 'Co-Authored Anthology',
+                meta: "Global Women's Leadership",
+                title: 'Sacred Promise',
+                desc: 'An inspiring collaborative volume with Dr. Tererai Trent and visionary global leaders exploring the sacred covenants women make to lift each other out of oppression and into economic dignity.',
+                leftFooter: 'Foreword: Dr. Tererai Trent',
+                rightFooter: 'Minnesota Reading Circles',
+              },
+              {
+                badge: 'Forthcoming Publication',
+                meta: '2027 Preview',
+                title: 'The Gift in Pain',
+                desc: 'A profound exploration of transforming deep psychological and systemic wounds into catalysts for revolutionary community organizing, social entrepreneurship, and generational liberation.',
+                leftFooter: 'Advance Announcements',
+                rightFooter: 'Excerpts in Tea Circles',
+              },
+            ].map((item, idx) => (
+              <RevealItem key={item.title} index={idx} className="flex">
+                <div className="bg-white rounded-2xl p-6 border border-phumulani-cream shadow-xs flex flex-col justify-between space-y-4 w-full hover:border-phumulani-earth hover:shadow-md hover:-translate-y-1 transition-all duration-200">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between text-xs text-phumulani-charcoal font-sans gap-2">
+                      <span className="font-bold font-heading text-phumulani-earth">{item.badge}</span>
+                      <span>{item.meta}</span>
+                    </div>
+                    <h3 className="font-heading text-xl font-bold text-phumulani-charcoal">{item.title}</h3>
+                    <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">{item.desc}</p>
+                  </div>
+                  <div className="pt-4 border-t border-phumulani-cream flex items-center justify-between text-xs gap-2">
+                    <span className="font-bold text-phumulani-charcoal font-sans">{item.leftFooter}</span>
+                    <span className="text-phumulani-earth font-semibold font-heading text-right">{item.rightFooter}</span>
+                  </div>
                 </div>
-                <h3 className="font-heading text-xl font-bold text-phumulani-charcoal">Facing the Giants</h3>
-                <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">
-                  Comfort Dondo's acclaimed memoir chronicling her lived journey through adversity, displacement, and the unyielding determination to build culturally grounded sanctuaries for immigrant women.
-                </p>
-              </div>
-              <div className="pt-4 border-t border-phumulani-cream flex items-center justify-between text-xs">
-                <span className="font-bold text-phumulani-charcoal font-sans">Author: Comfort Dondo</span>
-                <span className="text-phumulani-earth font-semibold font-heading">Available via Community Library</span>
-              </div>
-            </div>
-
-            {/* Book Card 2 */}
-            <div className="bg-white rounded-2xl p-6 border border-phumulani-cream shadow-xs flex flex-col justify-between space-y-4 hover:border-phumulani-earth transition-colors">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-xs text-phumulani-charcoal font-sans">
-                  <span className="font-bold font-heading text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded">Co-Authored Anthology</span>
-                  <span>Global Women's Leadership</span>
-                </div>
-                <h3 className="font-heading text-xl font-bold text-phumulani-charcoal">Sacred Promise</h3>
-                <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">
-                  An inspiring collaborative volume with Dr. Tererai Trent and visionary global leaders exploring the sacred covenants women make to lift each other out of oppression and into economic dignity.
-                </p>
-              </div>
-              <div className="pt-4 border-t border-phumulani-cream flex items-center justify-between text-xs">
-                <span className="font-bold text-phumulani-charcoal font-sans">Foreword: Dr. Tererai Trent</span>
-                <span className="text-phumulani-earth font-semibold font-heading">Minnesota Reading Circles</span>
-              </div>
-            </div>
-
-            {/* Book Card 3 */}
-            <div className="bg-white rounded-2xl p-6 border border-phumulani-cream shadow-xs flex flex-col justify-between space-y-4 hover:border-phumulani-earth transition-colors">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between text-xs text-phumulani-charcoal font-sans">
-                  <span className="font-bold font-heading text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded">Forthcoming Publication</span>
-                  <span>2027 Preview</span>
-                </div>
-                <h3 className="font-heading text-xl font-bold text-phumulani-charcoal">The Gift in Pain</h3>
-                <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">
-                  A profound exploration of transforming deep psychological and systemic wounds into catalysts for revolutionary community organizing, social entrepreneurship, and generational liberation.
-                </p>
-              </div>
-              <div className="pt-4 border-t border-phumulani-cream flex items-center justify-between text-xs">
-                <span className="font-bold text-phumulani-charcoal font-sans">Advance Announcements</span>
-                <span className="text-phumulani-earth font-semibold font-heading">Excerpts in Tea Circles</span>
-              </div>
-            </div>
+              </RevealItem>
+            ))}
           </div>
         </div>
       </section>
 
       {/* 12. SURVIVOR RIGHTS & COMMUNITY RESOURCES (#resources-section) */}
       <section id="resources-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-8 scroll-mt-28">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
+        <RevealSection className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
           <div>
-            <div className="text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">Self-Advocacy &amp; Guidance</div>
-            <h2 className="font-heading text-3xl font-extrabold text-phumulani-charcoal">
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">
+              <LibraryBig className="w-4 h-4 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
+              <span>Self-Advocacy &amp; Guidance</span>
+            </div>
+            <h2 className="font-heading text-3xl font-extrabold text-phumulani-charcoal mt-1">
               Community Resources &amp; Downloadable Guides
             </h2>
             <p className="text-xs text-phumulani-charcoal mt-1 font-sans">
@@ -1854,55 +1932,62 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 bg-phumulani-cream p-1 rounded-xl text-xs max-w-full">
+          <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 bg-phumulani-cream p-1.5 rounded-xl text-xs max-w-full border border-phumulani-gold">
             {(['all', 'legal', 'housing', 'healing', 'workforce'] as const).map((cat) => (
               <button
                 key={cat}
                 onClick={() => setResourceFilter(cat)}
-                className={`px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg font-semibold font-heading capitalize cursor-pointer transition-colors ${
-                  resourceFilter === cat ? 'bg-phumulani-earth text-white shadow-2xs' : 'text-phumulani-charcoal hover:text-phumulani-earth'
+                className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg font-semibold font-heading capitalize cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth ${
+                  resourceFilter === cat
+                    ? 'bg-phumulani-earth text-white shadow-2xs'
+                    : 'text-phumulani-charcoal hover:text-phumulani-earth'
                 }`}
               >
                 {cat}
               </button>
             ))}
           </div>
-        </div>
+        </RevealSection>
 
         {downloadNotice && (
           <div className="p-3 bg-phumulani-cream border border-phumulani-teal rounded-xl text-xs font-semibold text-phumulani-earth flex items-center justify-between font-sans">
             <span>{downloadNotice}</span>
-            <button onClick={() => setDownloadNotice(null)} className="text-phumulani-earth">✕</button>
+            <button onClick={() => setDownloadNotice(null)} className="text-phumulani-earth cursor-pointer">
+              ✕
+            </button>
           </div>
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {PUBLIC_RESOURCES
             .filter((res) => resourceFilter === 'all' || res.category === resourceFilter)
-            .map((res) => (
-              <div
-                key={res.id}
-                className="bg-white p-5 rounded-2xl border border-phumulani-cream shadow-xs space-y-3 flex flex-col justify-between hover:border-phumulani-earth transition-colors"
-              >
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-[11px] text-phumulani-charcoal font-sans">
-                    <span className="font-bold font-heading text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded">{res.tag}</span>
-                    <span>{res.format} · {res.fileSize}</span>
+            .map((res, idx) => (
+              <RevealItem key={res.id} index={idx} className="flex">
+                <div className="bg-white p-5 rounded-2xl border border-phumulani-cream shadow-xs space-y-3 flex flex-col justify-between w-full hover:border-phumulani-earth hover:shadow-md hover:-translate-y-1 transition-all duration-200">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-[11px] text-phumulani-charcoal font-sans gap-2">
+                      <span className="font-bold font-heading text-phumulani-earth">{res.tag}</span>
+                      <span>
+                        {res.format} · {res.fileSize}
+                      </span>
+                    </div>
+                    <h4 className="font-heading font-bold text-phumulani-charcoal text-sm leading-snug">
+                      {res.title}
+                    </h4>
+                    <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans line-clamp-3">
+                      {res.description}
+                    </p>
                   </div>
-                  <h4 className="font-heading font-bold text-phumulani-charcoal text-sm leading-snug">{res.title}</h4>
-                  <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans line-clamp-3">
-                    {res.description}
-                  </p>
+                  <button
+                    type="button"
+                    onClick={() => handleDownloadResource(res)}
+                    className="w-full min-h-[40px] py-2 bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-earth hover:text-phumulani-charcoal border border-phumulani-gold rounded-lg text-xs font-semibold font-heading flex items-center justify-center gap-1.5 cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                  >
+                    <Download className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
+                    <span>Download {res.format}</span>
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleDownloadResource(res)}
-                  className="w-full py-2 bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-earth border border-phumulani-gold rounded-lg text-xs font-semibold font-heading flex items-center justify-center gap-1.5 cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth"
-                >
-                  <Download className="w-3.5 h-3.5 text-phumulani-earth" />
-                  <span>Download {res.format}</span>
-                </button>
-              </div>
+              </RevealItem>
             ))}
         </div>
       </section>
@@ -2123,97 +2208,110 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
       {/* 14. PRIVACY NOTICE & SAFEGUARDING (#privacy-section) */}
       <section id="privacy-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-6 scroll-mt-28">
-        <div className="border-b border-phumulani-cream pb-4">
-          <div className="text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">Compliance &amp; Ethics</div>
+        <RevealSection className="border-b border-phumulani-cream pb-4">
+          <div className="text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">
+            Compliance &amp; Ethics
+          </div>
           <h2 className="font-heading text-3xl font-extrabold text-phumulani-charcoal">
             Privacy Policy &amp; VAWA Confidentiality Safeguards
           </h2>
           <p className="text-xs text-phumulani-charcoal mt-1 font-sans">
             Official 501(c)(3) privacy declaration and trauma-informed survivor confidentiality policies.
           </p>
-        </div>
+        </RevealSection>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-phumulani-charcoal">
-          <div className="bg-white p-5 rounded-2xl border border-phumulani-cream shadow-2xs space-y-2">
-            <div className="font-bold font-heading text-phumulani-charcoal flex items-center gap-1.5">
-              <ShieldCheck className="w-4 h-4 text-phumulani-earth" />
-              <span>Survivor Confidentiality Safeguards</span>
+          <RevealItem index={0} className="flex">
+            <div className="bg-white p-5 rounded-2xl border border-phumulani-cream hover:border-phumulani-earth hover:shadow-md transition-all duration-200 shadow-2xs space-y-2 w-full">
+              <div className="font-bold font-heading text-phumulani-charcoal flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                <span>Survivor Confidentiality Safeguards</span>
+              </div>
+              <p className="leading-relaxed text-phumulani-charcoal font-sans">
+                Pursuant to Violence Against Women Act (VAWA) 34 U.S.C. § 12291(b)(2) guidelines, Phumulani upholds strict organizational protocols prohibiting the unauthorized disclosure of personally identifying information (PII) of survivors. Internal compliance indicators reflect continuous operational self-assessments.
+              </p>
             </div>
-            <p className="leading-relaxed text-phumulani-charcoal font-sans">
-              Pursuant to Violence Against Women Act (VAWA) 34 U.S.C. § 12291(b)(2) guidelines, Phumulani upholds strict organizational protocols prohibiting the unauthorized disclosure of personally identifying information (PII) of survivors. Internal compliance indicators reflect continuous operational self-assessments.
-            </p>
-          </div>
+          </RevealItem>
 
-          <div className="bg-white p-5 rounded-2xl border border-phumulani-cream shadow-2xs space-y-2">
-            <div className="font-bold font-heading text-phumulani-charcoal flex items-center gap-1.5">
-              <Lock className="w-4 h-4 text-phumulani-earth" />
-              <span>Donor Bill of Rights &amp; Privacy</span>
+          <RevealItem index={1} className="flex">
+            <div className="bg-white p-5 rounded-2xl border border-phumulani-cream hover:border-phumulani-earth hover:shadow-md transition-all duration-200 shadow-2xs space-y-2 w-full">
+              <div className="font-bold font-heading text-phumulani-charcoal flex items-center gap-1.5">
+                <LockKeyhole className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                <span>Donor Bill of Rights &amp; Privacy</span>
+              </div>
+              <p className="leading-relaxed text-phumulani-charcoal font-sans">
+                Phumulani adheres to the Association of Fundraising Professionals (AFP) Donor Bill of Rights. We never sell, rent, trade, or share donor contact information or giving records with external commercial marketing entities.
+              </p>
             </div>
-            <p className="leading-relaxed text-phumulani-charcoal font-sans">
-              Phumulani adheres to the Association of Fundraising Professionals (AFP) Donor Bill of Rights. We never sell, rent, trade, or share donor contact information or giving records with external commercial marketing entities.
-            </p>
-          </div>
+          </RevealItem>
 
-          <div className="bg-white p-5 rounded-2xl border border-phumulani-cream shadow-2xs space-y-2">
-            <div className="font-bold font-heading text-phumulani-charcoal flex items-center gap-1.5">
-              <Globe className="w-4 h-4 text-phumulani-earth" />
-              <span>Zero Commercial Ad Tracking</span>
+          <RevealItem index={2} className="flex">
+            <div className="bg-white p-5 rounded-2xl border border-phumulani-cream hover:border-phumulani-earth hover:shadow-md transition-all duration-200 shadow-2xs space-y-2 w-full">
+              <div className="font-bold font-heading text-phumulani-charcoal flex items-center gap-1.5">
+                <Globe className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
+                <span>Zero Commercial Ad Tracking</span>
+              </div>
+              <p className="leading-relaxed text-phumulani-charcoal font-sans">
+                Our website contains zero third-party advertising trackers, Facebook Meta pixels, or Google Ads remarketing cookies. While Safe Exit replaces this page, users should note it cannot delete local hardware or network ISP logs.
+              </p>
             </div>
-            <p className="leading-relaxed text-phumulani-charcoal font-sans">
-              Our website contains zero third-party advertising trackers, Facebook Meta pixels, or Google Ads remarketing cookies. While Safe Exit replaces this page, users should note it cannot delete local hardware or network ISP logs.
-            </p>
-          </div>
+          </RevealItem>
         </div>
       </section>
 
       {/* 15. ACCESSIBILITY STATEMENT (#accessibility-section) */}
       <section id="accessibility-section" className="bg-phumulani-charcoal text-white py-16 scroll-mt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="border-b border-phumulani-earth pb-4">
-            <div className="text-xs font-bold text-phumulani-gold uppercase tracking-wider">Universal Design</div>
-            <h2 className="font-serif text-3xl font-bold text-white">
+          <RevealSection className="border-b border-phumulani-earth pb-4">
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-phumulani-gold uppercase tracking-wider font-heading">
+              <Accessibility className="w-4 h-4 text-phumulani-gold" strokeWidth={1.75} aria-hidden="true" />
+              <span>Universal Design</span>
+            </div>
+            <h2 className="font-heading text-3xl font-extrabold text-white mt-1">
               Accessibility Statement &amp; WCAG 2.2 AA Conformance
             </h2>
-            <p className="text-xs text-phumulani-cream mt-1">
+            <p className="text-xs text-phumulani-cream mt-1 font-sans">
               Phumulani is committed to ensuring full digital inclusion and dignified usability for people with all physical, sensory, and cognitive abilities.
             </p>
-          </div>
+          </RevealSection>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-xs">
             <div className="bg-phumulani-charcoal p-4 rounded-xl border border-phumulani-teal space-y-2">
-              <div className="font-bold text-phumulani-gold">Keyboard Navigation</div>
-              <p className="text-phumulani-cream leading-relaxed">
+              <div className="font-bold text-phumulani-gold font-heading">Keyboard Navigation</div>
+              <p className="text-phumulani-cream leading-relaxed font-sans">
                 Full Tab, Shift+Tab, and Enter keyboard focus traversal with visible high-contrast focus rings and zero keyboard traps.
               </p>
             </div>
 
             <div className="bg-phumulani-charcoal p-4 rounded-xl border border-phumulani-teal space-y-2">
-              <div className="font-bold text-phumulani-gold">Screen Reader Support</div>
-              <p className="text-phumulani-cream leading-relaxed">
+              <div className="font-bold text-phumulani-gold font-heading">Screen Reader Support</div>
+              <p className="text-phumulani-cream leading-relaxed font-sans">
                 Semantic HTML5 landmarks (header, nav, main, section, footer) and explicit ARIA labels for non-text SVGs and modal dialogues.
               </p>
             </div>
 
             <div className="bg-phumulani-charcoal p-4 rounded-xl border border-phumulani-teal space-y-2">
-              <div className="font-bold text-phumulani-gold">Contrast &amp; Scalability</div>
-              <p className="text-phumulani-cream leading-relaxed">
+              <div className="font-bold text-phumulani-gold font-heading">Contrast &amp; Scalability</div>
+              <p className="text-phumulani-cream leading-relaxed font-sans">
                 Color contrast ratios meet or exceed 4.5:1 for body copy and 7:1 for headings. Text can be enlarged up to 200% without loss of layout.
               </p>
             </div>
 
             <div className="bg-phumulani-charcoal p-4 rounded-xl border border-phumulani-teal space-y-2">
-              <div className="font-bold text-phumulani-gold">Emergency Safe Exit</div>
-              <p className="text-phumulani-cream leading-relaxed">
+              <div className="font-bold text-phumulani-gold font-heading">Emergency Safe Exit</div>
+              <p className="text-phumulani-cream leading-relaxed font-sans">
                 Double-pressing the <kbd className="bg-phumulani-charcoal px-1 py-0.5 rounded text-[10px] border border-phumulani-teal">ESC</kbd> key anywhere immediately replaces the current page with weather.com for personal safety.
               </p>
             </div>
           </div>
 
           <div className="text-[11px] text-phumulani-cream border-t border-phumulani-earth pt-4 flex flex-wrap justify-between items-center gap-3">
-            <span>Accessibility Coordinator: <code>access@phumulani.org</code> · Designed in continuous conformance with WCAG 2.2 Level AA guidelines.</span>
+            <span>
+              Accessibility Coordinator: <code>access@phumulani.org</code> · Designed in continuous conformance with WCAG 2.2 Level AA guidelines.
+            </span>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="text-phumulani-gold hover:text-white font-semibold underline cursor-pointer"
+              className="text-phumulani-gold hover:text-white font-semibold underline underline-offset-4 cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-gold rounded"
             >
               Back to Top ↑
             </button>

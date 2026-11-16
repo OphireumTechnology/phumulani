@@ -5,6 +5,7 @@
  */
 
 import React, { useState, useEffect, Suspense } from 'react';
+import { MotionConfig } from 'motion/react';
 import { db } from './services/db';
 import { sessionTokenStore } from './services/sessionTokenStore';
 import { Donation, UserRole } from './types';
@@ -164,6 +165,7 @@ export default function App() {
   const hasViewAccess = isRoleAuthorizedForView(dbState.currentUser.role, activeView);
 
   return (
+    <MotionConfig reducedMotion="user">
     <div className="min-h-screen flex flex-col bg-white text-phumulani-charcoal selection:bg-phumulani-cream selection:text-phumulani-earth">
       {/* 0. ACCESSIBILITY: SKIP TO MAIN CONTENT ANCHOR (WCAG 2.2 AA) */}
       <a
@@ -363,5 +365,6 @@ export default function App() {
         />
       )}
     </div>
+    </MotionConfig>
   );
 }
