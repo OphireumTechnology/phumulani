@@ -277,7 +277,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
               onClick={() => onViewChange('donor')}
               className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
                 activeView === 'donor'
-                  ? 'bg-phumulani-orange text-phumulani-charcoal border border-phumulani-cream'
+                  ? 'bg-phumulani-earth text-white border border-phumulani-cream'
                   : 'bg-phumulani-charcoal text-phumulani-gold hover:text-white border border-phumulani-orange'
               }`}
             >

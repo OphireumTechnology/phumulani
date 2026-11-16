@@ -313,7 +313,7 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                       : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                   }`}
                 >
-                  <ThumbsUp className="w-4 h-4 shrink-0 text-phumulani-earth" />
+                  <ThumbsUp className={`w-4 h-4 shrink-0 ${activeSection === 'approvals' ? 'text-white' : 'text-phumulani-earth'}`} />
                   {isSidebarOpen && (
                     <div className="flex-1 flex justify-between items-center">
                       <span>Approvals</span>

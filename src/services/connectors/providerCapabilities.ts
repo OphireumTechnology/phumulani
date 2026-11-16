@@ -71,7 +71,7 @@ export const PROVIDER_DESCRIPTORS: Record<EmailProviderType, EmailProviderDescri
     name: 'Yahoo Mail',
     description: 'Yahoo Mail and Yahoo Small Business accounts via OAuth 2.0 or App-Specific Password with IMAP/SMTP over TLS.',
     category: 'CONSUMER_WEBMAIL',
-    badgeColor: 'bg-phumulani-orange text-phumulani-charcoal border-phumulani-earth',
+    badgeColor: 'bg-phumulani-cream text-phumulani-earth border-phumulani-orange',
     recommendedAuthMethod: 'APP_PASSWORD',
     supportedAuthMethods: ['APP_PASSWORD', 'OAUTH2'],
     defaultImapHost: 'imap.mail.yahoo.com',

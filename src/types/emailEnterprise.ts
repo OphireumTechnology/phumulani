@@ -70,7 +70,7 @@ export const PRIORITY_CONFIG: Record<
   { label: string; slaHours: number; description: string; badgeColor: string }
 > = {
   P0: { label: 'P0 — Critical', slaHours: 1, description: 'Safeguarding emergency, serious security, imminent service jeopardy. Route to human officer immediately.', badgeColor: 'bg-phumulani-earth text-white border-phumulani-earth' },
-  P1: { label: 'P1 — Urgent', slaHours: 4, description: 'Grant deadline < 24h, executive decision, time-sensitive funding, immediate meeting.', badgeColor: 'bg-phumulani-orange text-phumulani-charcoal border-phumulani-earth' },
+  P1: { label: 'P1 — Urgent', slaHours: 4, description: 'Grant deadline < 24h, executive decision, time-sensitive funding, immediate meeting.', badgeColor: 'bg-phumulani-cream text-phumulani-earth border-phumulani-orange' },
   P2: { label: 'P2 — High', slaHours: 24, description: 'Major donor inquiry, corporate sponsorship proposal, grant invitation, significant partnership.', badgeColor: 'bg-phumulani-gold text-phumulani-charcoal border-phumulani-charcoal' },
   P3: { label: 'P3 — Normal', slaHours: 48, description: 'Volunteer inquiries, event registration questions, administrative correspondence.', badgeColor: 'bg-phumulani-teal text-phumulani-charcoal border-phumulani-charcoal' },
   P4: { label: 'P4 — Low', slaHours: 72, description: 'Newsletters, general announcements, non-urgent updates, marketing.', badgeColor: 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-charcoal' },

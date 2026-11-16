@@ -197,7 +197,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <AlertTriangle className={`w-4 h-4 shrink-0 ${activeTab === 'priority' ? 'text-phumulani-earth' : 'text-phumulani-earth'}`} />
+                  <AlertTriangle className={`w-4 h-4 shrink-0 ${activeTab === 'priority' ? 'text-white' : 'text-phumulani-earth'}`} />
                   {!isCollapsed && <span className="truncate">Priority</span>}
                 </div>
                 {!isCollapsed && priorityCount > 0 && (
@@ -222,11 +222,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <FileEdit className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
+                  <FileEdit className="w-4 h-4 shrink-0 text-current" />
                   {!isCollapsed && <span className="truncate">Drafts</span>}
                 </div>
                 {!isCollapsed && draftsCount > 0 && (
-                  <span className="text-[10px] font-mono tabular-nums text-phumulani-charcoal">
+                  <span className="text-[10px] font-mono tabular-nums text-current">
                     {draftsCount}
                   </span>
                 )}
@@ -243,7 +243,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <Sparkles className={`w-4 h-4 shrink-0 ${activeTab === 'approvals' ? 'text-phumulani-earth' : 'text-phumulani-earth'}`} />
+                  <Sparkles className={`w-4 h-4 shrink-0 ${activeTab === 'approvals' ? 'text-white' : 'text-phumulani-earth'}`} />
                   {!isCollapsed && <span className="truncate">Approvals</span>}
                 </div>
                 {!isCollapsed && approvalsCount > 0 && (
@@ -268,11 +268,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <Send className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
+                  <Send className="w-4 h-4 shrink-0 text-current" />
                   {!isCollapsed && <span className="truncate">Sent</span>}
                 </div>
                 {!isCollapsed && (
-                  <span className="text-[10px] font-mono tabular-nums text-phumulani-charcoal">
+                  <span className="text-[10px] font-mono tabular-nums text-current">
                     {sentCount}
                   </span>
                 )}
@@ -289,7 +289,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <Clock className="w-4 h-4 shrink-0 text-phumulani-earth" />
+                  <Clock className={`w-4 h-4 shrink-0 ${activeTab === 'follow_up_tasks' ? 'text-white' : 'text-phumulani-earth'}`} />
                   {!isCollapsed && <span className="truncate">Follow-ups</span>}
                 </div>
                 {!isCollapsed && followUpsCount > 0 && (
@@ -310,7 +310,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <UserCheck className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
+                  <UserCheck className="w-4 h-4 shrink-0 text-current" />
                   {!isCollapsed && <span className="truncate">Assigned to Me</span>}
                 </div>
               </button>
@@ -326,7 +326,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <Users className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
+                  <Users className="w-4 h-4 shrink-0 text-current" />
                   {!isCollapsed && <span className="truncate">Team Inbox</span>}
                 </div>
               </button>
@@ -357,7 +357,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                     : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <Database className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
+                <Database className="w-4 h-4 shrink-0 text-current" />
                 {!isCollapsed && <span className="truncate">Contacts & CRM</span>}
               </button>
 
@@ -370,7 +370,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                     : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <FileText className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
+                <FileText className="w-4 h-4 shrink-0 text-current" />
                 {!isCollapsed && <span className="truncate">Email Templates</span>}
               </button>
 
@@ -383,7 +383,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                     : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <Bot className="w-4 h-4 shrink-0 text-phumulani-earth" />
+                <Bot className={`w-4 h-4 shrink-0 ${activeTab === 'ai_intelligence' ? 'text-white' : 'text-phumulani-earth'}`} />
                 {!isCollapsed && <span className="truncate">AI Assistant</span>}
               </button>
 
@@ -396,7 +396,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                     : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <TrendingUp className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
+                <TrendingUp className="w-4 h-4 shrink-0 text-current" />
                 {!isCollapsed && <span className="truncate">Comms Intelligence</span>}
               </button>
             </div>
@@ -426,7 +426,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                     : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <Inbox className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
+                <Inbox className="w-4 h-4 shrink-0 text-current" />
                 {!isCollapsed && <span className="truncate">Org Mailboxes</span>}
               </button>
 
@@ -439,7 +439,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                     : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <BarChart2 className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
+                <BarChart2 className="w-4 h-4 shrink-0 text-current" />
                 {!isCollapsed && <span className="truncate">Email Analytics</span>}
               </button>
 
@@ -452,7 +452,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                     : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <History className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
+                <History className="w-4 h-4 shrink-0 text-current" />
                 {!isCollapsed && <span className="truncate">Audit Logs</span>}
               </button>
 
@@ -465,7 +465,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                     : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <DollarSign className="w-4 h-4 shrink-0 text-phumulani-earth" />
+                <DollarSign className={`w-4 h-4 shrink-0 ${activeTab === 'financial_docs' ? 'text-white' : 'text-phumulani-earth'}`} />
                 {!isCollapsed && <span className="truncate">Grant Financials</span>}
               </button>
 
@@ -478,7 +478,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                     : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                 }`}
               >
-                <ShieldAlert className="w-4 h-4 shrink-0 text-phumulani-earth" />
+                <ShieldAlert className={`w-4 h-4 shrink-0 ${activeTab === 'governance' ? 'text-white' : 'text-phumulani-earth'}`} />
                 {!isCollapsed && <span className="truncate">Governance & Holds</span>}
               </button>
             </div>
@@ -509,7 +509,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                       : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                   }`}
                 >
-                  <Sliders className="w-4 h-4 shrink-0 text-phumulani-earth" />
+                  <Sliders className={`w-4 h-4 shrink-0 ${activeTab === 'universal_connectors' ? 'text-white' : 'text-phumulani-earth'}`} />
                   {!isCollapsed && <span className="truncate">Email Accounts</span>}
                 </button>
 
@@ -522,7 +522,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                       : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                   }`}
                 >
-                  <RefreshCw className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
+                  <RefreshCw className="w-4 h-4 shrink-0 text-current" />
                   {!isCollapsed && <span className="truncate">Sync Management</span>}
                 </button>
 
@@ -535,7 +535,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                       : 'text-phumulani-charcoal hover:bg-phumulani-cream'
                   }`}
                 >
-                  <Settings className="w-4 h-4 shrink-0 text-phumulani-charcoal" />
+                  <Settings className="w-4 h-4 shrink-0 text-current" />
                   {!isCollapsed && <span className="truncate">Email Settings</span>}
                 </button>
               </div>

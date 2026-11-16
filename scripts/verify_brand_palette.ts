@@ -156,8 +156,20 @@ function auditContrastInTsx(file: string, src: string): string[] {
   return issues;
 }
 
-const sourceFiles = [...walk('src'), 'index.html'].filter((f) => fs.existsSync(f));
+const EXTRA_UI_FILES = [
+  'index.html',
+  'server.ts',
+  'public/images/branding/phumulani-pattern.svg',
+  'public/media/branding/phumulani-pattern.svg',
+].filter((f) => fs.existsSync(f));
+
+const sourceFiles = [...walk('src'), ...EXTRA_UI_FILES];
 const errors: string[] = [];
+
+const NAMED_UI_COLOR_PROP_RE = /(?:color|background|backgroundColor|borderColor|fill|stroke|stopColor)\s*[:=]\s*["'`]([a-zA-Z]+)["'`]/gi;
+const ALLOWED_CSS_KEYWORDS = new Set([
+  'none', 'transparent', 'currentcolor', 'inherit', 'white', 'initial', 'unset', 'url', 'auto', 'normal',
+]);
 
 for (const file of sourceFiles) {
   const content = fs.readFileSync(file, 'utf8');
@@ -180,6 +192,20 @@ for (const file of sourceFiles) {
     }
     if (DARK_VARIANT_RE.test(line)) {
       errors.push(`Unauthorized dark: variant at ${file}:${lineNum}`);
+    }
+    if (/\.(?:tsx?|css|html|svg)$/.test(file) && !file.includes('automatedTestRunner')) {
+      let nm: RegExpExecArray | null;
+      NAMED_UI_COLOR_PROP_RE.lastIndex = 0;
+      while ((nm = NAMED_UI_COLOR_PROP_RE.exec(line)) !== null) {
+        const kw = nm[1].toLowerCase();
+        if (!ALLOWED_CSS_KEYWORDS.has(kw) && !file.includes('/services/') && !file.includes('/email/')) {
+          errors.push(`Unauthorized named color (${nm[0]}) at ${file}:${lineNum}`);
+        }
+      }
+    }
+    const baseCls = line.replace(/\b(?:hover|focus|focus-visible|disabled|active|group-hover):[a-z0-9\-\/\[\]]+/g, '');
+    if (/\bbg-phumulani-orange\b(?!\/)/.test(baseCls) && /\btext-(?:phumulani-gold|phumulani-earth|phumulani-teal|phumulani-green|phumulani-cream|white)\b/.test(baseCls)) {
+      errors.push(`Low-contrast text on Peace Orange background at ${file}:${lineNum}`);
     }
   });
 

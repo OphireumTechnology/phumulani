@@ -191,7 +191,7 @@ export const MealCommandCenter: React.FC = () => {
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-[10px] font-mono font-bold bg-phumulani-orange text-phumulani-gold px-2.5 py-0.5 rounded-full border border-phumulani-earth uppercase">
+              <span className="text-[10px] font-mono font-bold bg-phumulani-gold text-phumulani-charcoal px-2.5 py-0.5 rounded-full border border-phumulani-earth uppercase">
                 PHASE 26 · MEAL & IMPACT COMMAND CENTER
               </span>
               <span className="text-[10px] font-mono font-bold bg-phumulani-green text-phumulani-charcoal px-2.5 py-0.5 rounded-full border border-phumulani-green uppercase">

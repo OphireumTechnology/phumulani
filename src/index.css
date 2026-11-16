@@ -64,6 +64,8 @@
   /* Smooth anchor scrolling for desktop & mobile navigation */
   html {
     scroll-behavior: smooth;
+    background-color: var(--color-background);
+    color: var(--color-text);
   }
 
   body {

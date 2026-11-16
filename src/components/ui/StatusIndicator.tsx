@@ -60,9 +60,9 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = ({
       defaultLabel: 'Pending',
     },
     REQUIRES_APPROVAL: {
-      bg: 'bg-phumulani-orange',
+      bg: 'bg-phumulani-gold',
       text: 'text-phumulani-charcoal',
-      border: 'border-phumulani-charcoal',
+      border: 'border-phumulani-orange',
       icon: <AlertTriangle className="w-3 h-3 text-phumulani-charcoal" />,
       defaultLabel: 'Requires Approval',
     },
@@ -84,7 +84,7 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = ({
       bg: 'bg-phumulani-earth',
       text: 'text-white',
       border: 'border-phumulani-earth',
-      icon: <XCircle className="w-3 h-3 text-phumulani-charcoal" />,
+      icon: <XCircle className="w-3 h-3 text-current" />,
       defaultLabel: 'Failed',
     },
     DRAFT: {
