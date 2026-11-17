@@ -18,6 +18,7 @@ export interface DatabaseEnvironmentPolicy {
     | 'PRODUCTION_ONLY'
     | 'PRODUCTION_AUTHORIZED'
     | 'NODE_ENV_PRODUCTION_DEFAULT'
+    | 'NODE_ENV_PRODUCTION_STAGED_FORBIDDEN'
     | 'STAGED_DEVELOPMENT_AUTHORIZED'
     | 'LOCAL_DEVELOPMENT';
   reason: string;
