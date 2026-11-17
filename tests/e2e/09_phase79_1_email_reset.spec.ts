@@ -1,231 +1,189 @@
 import { test, expect } from '@playwright/test';
 
-/**
- * Phase 79.1 — Complete Email Data Reset & Clean Installation E2E Verification
- * Verifies:
- *  - Stale browser localStorage / sessionStorage email caches & demo data cannot rehydrate across reload
- *  - All 8 Block 5 counters read 0 and synchronization/automatic sending statuses read Disabled
- *  - Clean empty state ("No Email Accounts Connected" + exact copy + "Connect Email Account" CTA)
- *  - Primary CTA opens the Connect Email Account Wizard
- *  - Switching personas and reloading never restores demo messages
- *  - Unrelated Donor CRM / organizational records remain intact
- *  - Zero console errors or uncaught page errors across desktop & mobile
- */
+type MarkerState = 'missing' | 'outdated';
 
-async function openEmailCommandCenter(page: any, userId = 'u-master-admin') {
-  const roleSwitcher = page.locator('select#role-simulation-select');
-  if ((await roleSwitcher.count()) === 0) {
-    const adminTools = page.getByRole('button', { name: /Admin Tools/i });
-    await expect(adminTools).toBeVisible();
-    await adminTools.click();
-  }
-  await roleSwitcher.selectOption(userId, { force: true });
+const preservedEmailState = {
+  connectedMailboxes: [
+    {
+      id: 'mbx-preserved-info',
+      email: 'info@phumulani.org',
+      displayName: 'Organizational mailbox',
+      status: 'AUTHORIZATION_REQUIRED',
+      provider: 'GOOGLE',
+    },
+  ],
+  enterpriseEmailThreads: [
+    {
+      id: 'th-preserved-001',
+      mailboxId: 'mbx-preserved-info',
+      mailboxEmail: 'info@phumulani.org',
+      threadSubject: 'Preserved organizational correspondence',
+      participantEmails: ['partner@example.org'],
+      messages: [
+        {
+          id: 'msg-preserved-001',
+          direction: 'inbound',
+          senderEmail: 'partner@example.org',
+          bodyText: 'Existing correspondence must survive a storage-version migration.',
+          sentAt: '2026-11-01T10:00:00.000Z',
+        },
+      ],
+    },
+  ],
+  followUpTasks: [{ id: 'followup-preserved-001', threadId: 'th-preserved-001', status: 'pending' }],
+  calendarProposals: [{ id: 'calendar-preserved-001', threadId: 'th-preserved-001', status: 'pending' }],
+  historicalImportJobs: [{ id: 'import-preserved-001', mailboxId: 'mbx-preserved-info', status: 'completed' }],
+  syncCheckpoints: [{ id: 'checkpoint-preserved-001', mailboxId: 'mbx-preserved-info', cursor: 'cursor-preserved' }],
+  syncConflicts: [{ id: 'conflict-preserved-001', mailboxId: 'mbx-preserved-info', status: 'open' }],
+  syncAuditLogs: [{ id: 'sync-audit-preserved-001', mailboxId: 'mbx-preserved-info', action: 'SYNC_COMPLETED' }],
+};
 
-  const emailNav = page.getByRole('button', { name: /Email Command Center/i }).first();
-  const sidebarToggle = page.getByRole('button', { name: 'Toggle Navigation Sidebar' });
-  if (!(await emailNav.isVisible()) && (await sidebarToggle.isVisible())) {
-    await sidebarToggle.click();
-  }
-  await expect(emailNav).toBeVisible();
-  await emailNav.click();
+async function seedIndexedDb(page: any) {
+  await page.evaluate(async () => {
+    await new Promise<void>((resolve, reject) => {
+      const request = indexedDB.open('phumulani_email_cache', 1);
+      request.onupgradeneeded = () => {
+        if (!request.result.objectStoreNames.contains('records')) {
+          request.result.createObjectStore('records', { keyPath: 'id' });
+        }
+      };
+      request.onerror = () => reject(request.error);
+      request.onsuccess = () => {
+        const database = request.result;
+        const transaction = database.transaction('records', 'readwrite');
+        transaction.objectStore('records').put({
+          id: 'genuine-cache-preserved-001',
+          subject: 'Cached correspondence must survive migration',
+        });
+        transaction.oncomplete = () => {
+          database.close();
+          resolve();
+        };
+        transaction.onerror = () => reject(transaction.error);
+      };
+    });
+  });
 }
 
-test.describe('Phase 79.1 — Complete Email Data Reset & Clean Installation', () => {
-  test('purges stale cached email state via versioned reset marker, renders 0-counter clean command center, and preserves CRM data', async ({
-    page,
-  }, testInfo) => {
-    const consoleErrors: string[] = [];
-    const pageErrors: string[] = [];
-
-    page.on('console', (msg) => {
-      if (msg.type() === 'error') {
-        const text = msg.text();
-        if (text.includes('Permissions policy violation: unload is not allowed in this document.')) return;
-        if (/^WebSocket connection to 'ws:\/\/localhost:24678\/\?token=[^']+' failed:/.test(text)) return;
-        if (/^\[vite\] failed to connect to websocket \(Error: WebSocket closed without opened\.\)/.test(text)) return;
-        if (text.includes('/@vite/client') && /localhost:24678/.test(text) && /WebSocket|connection to the server/.test(text)) {
+async function readIndexedDb(page: any) {
+  return page.evaluate(async () => {
+    return new Promise((resolve, reject) => {
+      const request = indexedDB.open('phumulani_email_cache', 1);
+      request.onerror = () => reject(request.error);
+      request.onupgradeneeded = () => {
+        if (!request.result.objectStoreNames.contains('records')) {
+          request.result.createObjectStore('records', { keyPath: 'id' });
+        }
+      };
+      request.onsuccess = () => {
+        const database = request.result;
+        if (!database.objectStoreNames.contains('records')) {
+          database.close();
+          resolve(null);
           return;
         }
-        consoleErrors.push(text);
+        const transaction = database.transaction('records', 'readonly');
+        const getRequest = transaction.objectStore('records').get('genuine-cache-preserved-001');
+        getRequest.onsuccess = () => {
+          database.close();
+          resolve(getRequest.result || null);
+        };
+        getRequest.onerror = () => reject(getRequest.error);
+      };
+    });
+  });
+}
+
+async function seedExistingEmailState(page: any, markerState: MarkerState) {
+  await page.evaluate(
+    ({ markerState, fixture }) => {
+      const raw = localStorage.getItem('phumulani_database_v1');
+      const state = raw ? JSON.parse(raw) : {};
+      Object.assign(state, fixture);
+      if (markerState === 'missing') {
+        delete state.emailResetMarkerVersion;
+        localStorage.removeItem('phumulani_email_reset_version');
+      } else {
+        state.emailResetMarkerVersion = 'phase78_legacy_email_storage';
+        localStorage.setItem('phumulani_email_reset_version', 'phase78_legacy_email_storage');
       }
-    });
-    page.on('pageerror', (err) => {
-      if (!err.message.includes('WebSocket')) pageErrors.push(err.message);
-    });
+      localStorage.setItem('phumulani_database_v1', JSON.stringify(state));
+      localStorage.setItem(
+        'phumulani_email_cached_threads',
+        JSON.stringify([{ id: 'cache-preserved-001', subject: 'Cached correspondence' }])
+      );
+      sessionStorage.setItem('phumulani_email_session_draft', 'Preserve this existing draft.');
+    },
+    { markerState, fixture: preservedEmailState }
+  );
+}
 
-    // 1. Navigate to app first so localStorage/sessionStorage can be seeded with stale pre-reset state
+for (const markerState of ['missing', 'outdated'] as const) {
+  test(`email storage migration preserves genuine records when marker is ${markerState}`, async ({ page }) => {
     await page.goto('/');
-
-    await page.evaluate(() => {
-      const existingRaw = localStorage.getItem('phumulani_database_v1');
-      const baseDb = existingRaw ? JSON.parse(existingRaw) : {};
-      delete baseDb.emailResetMarkerVersion;
-
-      baseDb.connectedMailboxes = [
-        {
-          id: 'mbx-stale-info',
-          email: 'info@phumulani.org',
-          displayName: 'Stale Info Mailbox',
-          status: 'AUTHORIZATION_REQUIRED',
-        },
-        {
-          id: 'mbx-stale-donations',
-          email: 'donations@phumulani.org',
-          displayName: 'Stale Donations Mailbox',
-          status: 'AUTHORIZATION_REQUIRED',
-        },
-      ];
-      baseDb.enterpriseEmailThreads = [
-        {
-          id: 'th-stale-demo-01',
-          mailboxId: 'mbx-stale-info',
-          mailboxEmail: 'info@phumulani.org',
-          threadSubject: 'STALE DEMO MESSAGE SHOULD BE PURGED',
-          participantEmails: ['sarah.jenkins@example.org'],
-          classification: '02_donor_major',
-          priority: 'P1',
-          folder: 'INBOX',
-          isRead: false,
-          isArchived: false,
-          isHistorical: false,
-          lastMessageAt: new Date().toISOString(),
-          messages: [
-            {
-              id: 'msg-stale-01',
-              direction: 'inbound',
-              senderEmail: 'sarah.jenkins@example.org',
-              senderName: 'Sarah Jenkins',
-              bodyText: 'Old demo message content that must never survive reset.',
-              sentAt: new Date().toISOString(),
-            },
-          ],
-        },
-      ];
-      baseDb.followUpTasks = [
-        {
-          id: 'fu-stale-01',
-          threadId: 'th-stale-demo-01',
-          title: 'Stale follow-up task',
-          status: 'pending',
-          dueDate: new Date().toISOString(),
-        },
-      ];
-      baseDb.donorProfiles = [
-        ...(Array.isArray(baseDb.donorProfiles) ? baseDb.donorProfiles : []),
-        {
-          id: 'dnr-phase79-1-preserved',
-          name: 'Phase 79.1 Preserved Donor',
-          email: 'preserved.donor@example.org',
-          tier: 'Major Donor',
-          totalGiven: 25000,
-        },
-      ];
-
-      localStorage.setItem('phumulani_database_v1', JSON.stringify(baseDb));
-      localStorage.removeItem('phumulani_email_reset_version');
-      localStorage.setItem('phumulani_email_cached_threads', JSON.stringify([{ id: 'th-stale-cache' }]));
-      sessionStorage.setItem('phumulani_email_session_draft', 'stale draft');
-    });
-
-    // 2. Reload so db.loadState() executes versioned reset migration
+    await seedIndexedDb(page);
+    await seedExistingEmailState(page, markerState);
     await page.reload();
 
-    const migrationResult = await page.evaluate(() => {
-      const dbRaw = localStorage.getItem('phumulani_database_v1');
-      const parsed = dbRaw ? JSON.parse(dbRaw) : {};
+    const migrated = await page.evaluate(() => {
+      const raw = localStorage.getItem('phumulani_database_v1');
+      const state = raw ? JSON.parse(raw) : {};
       return {
         marker: localStorage.getItem('phumulani_email_reset_version'),
-        dbMarker: parsed.emailResetMarkerVersion,
-        staleLocalCache: localStorage.getItem('phumulani_email_cached_threads'),
-        staleSessionCache: sessionStorage.getItem('phumulani_email_session_draft'),
-        mailboxesLen: (parsed.connectedMailboxes || []).length,
-        threadsLen: (parsed.enterpriseEmailThreads || []).length,
-        followUpsLen: (parsed.followUpTasks || []).length,
-        preservedDonorExists: (parsed.donorProfiles || []).some(
-          (d: any) => d.id === 'dnr-phase79-1-preserved'
-        ),
+        dbMarker: state.emailResetMarkerVersion,
+        connectedMailboxes: state.connectedMailboxes,
+        enterpriseEmailThreads: state.enterpriseEmailThreads,
+        followUpTasks: state.followUpTasks,
+        calendarProposals: state.calendarProposals,
+        historicalImportJobs: state.historicalImportJobs,
+        syncCheckpoints: state.syncCheckpoints,
+        syncConflicts: state.syncConflicts,
+        syncAuditLogs: state.syncAuditLogs,
+        localCache: JSON.parse(localStorage.getItem('phumulani_email_cached_threads') || 'null'),
+        sessionDraft: sessionStorage.getItem('phumulani_email_session_draft'),
       };
     });
 
-    expect(migrationResult.marker).toBe('phase79_1_clean_email_v1');
-    expect(migrationResult.dbMarker).toBe('phase79_1_clean_email_v1');
-    expect(migrationResult.staleLocalCache).toBeNull();
-    expect(migrationResult.staleSessionCache).toBeNull();
-    expect(migrationResult.mailboxesLen).toBe(0);
-    expect(migrationResult.threadsLen).toBe(0);
-    expect(migrationResult.followUpsLen).toBe(0);
-    expect(migrationResult.preservedDonorExists).toBe(true);
-
-    // 3. Open Email Command Center and verify all Block 5 required states
-    await openEmailCommandCenter(page, 'u-master-admin');
-
-    const summaryStrip = page.getByTestId('email-summary-strip');
-    await expect(summaryStrip).toBeVisible();
-
-    await expect(page.getByTestId('metric-connected-mailboxes')).toContainText('Connected mailboxes');
-    await expect(page.getByTestId('metric-connected-mailboxes')).toContainText('0');
-    await expect(page.getByTestId('metric-inbox')).toContainText('Inbox');
-    await expect(page.getByTestId('metric-inbox')).toContainText('0');
-    await expect(page.getByTestId('metric-unread')).toContainText('Unread');
-    await expect(page.getByTestId('metric-unread')).toContainText('0');
-    await expect(page.getByTestId('metric-priority')).toContainText('Priority');
-    await expect(page.getByTestId('metric-priority')).toContainText('0');
-    await expect(page.getByTestId('metric-drafts')).toContainText('Drafts');
-    await expect(page.getByTestId('metric-drafts')).toContainText('0');
-    await expect(page.getByTestId('metric-sent')).toContainText('Sent');
-    await expect(page.getByTestId('metric-sent')).toContainText('0');
-    await expect(page.getByTestId('metric-awaiting-approval')).toContainText('Awaiting approval');
-    await expect(page.getByTestId('metric-awaiting-approval')).toContainText('0');
-    await expect(page.getByTestId('metric-follow-ups')).toContainText('Follow-ups');
-    await expect(page.getByTestId('metric-follow-ups')).toContainText('0');
-
-    await expect(page.getByTestId('status-active-sync')).toContainText(/Active email synchronization:\s*Disabled/);
-    await expect(page.getByTestId('status-auto-sending')).toContainText(/Automatic email sending:\s*Disabled/);
-
-    // Empty state copy & CTA
-    const emptyState = page.getByTestId('email-clean-empty-state');
-    await expect(emptyState).toBeVisible();
-    await expect(emptyState.getByText('No Email Accounts Connected')).toBeVisible();
-    await expect(
-      emptyState.getByText(
-        'Your Email Command Center is ready. Connect and authorize your organizational email accounts to begin receiving and managing messages.'
-      )
-    ).toBeVisible();
-
-    // Ensure zero stale demo data appeared anywhere
-    await expect(page.getByText('STALE DEMO MESSAGE SHOULD BE PURGED')).toHaveCount(0);
-    await expect(page.getByText('Sarah Jenkins')).toHaveCount(0);
-
-    if (process.env.CAPTURE_E2E_SCREENSHOTS === '1') {
-      const slug = testInfo.project.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-      await page.screenshot({ path: `/tmp/p79-1-clean-email-${slug}.png`, fullPage: false });
-    }
-
-    // 4. Primary CTA launches Connection Wizard cleanly
-    await emptyState.getByRole('button', { name: 'Connect Email Account', exact: true }).click();
-    await expect(page.locator('input[type="email"][placeholder*="phumulani.org"]')).toBeVisible();
-    await page.locator('button:has-text("✕")').first().click();
-
-    // 5. Switch personas and reload — verify demo records do NOT regenerate and donor CRM remains preserved
-    const roleSwitcher = page.locator('select#role-simulation-select');
-    if ((await roleSwitcher.count()) === 0) {
-      await page.getByRole('button', { name: /Admin Tools/i }).click();
-    }
-    await roleSwitcher.selectOption('u-exec', { force: true });
-    await page.reload();
-    await openEmailCommandCenter(page, 'u-master-admin');
-
-    await expect(page.getByTestId('email-clean-empty-state')).toBeVisible();
-    await expect(page.getByTestId('metric-connected-mailboxes')).toContainText('0');
-    await expect(page.getByText('STALE DEMO MESSAGE SHOULD BE PURGED')).toHaveCount(0);
-
-    const donorStillIntact = await page.evaluate(() => {
-      const parsed = JSON.parse(localStorage.getItem('phumulani_database_v1') || '{}');
-      return (parsed.donorProfiles || []).some((d: any) => d.id === 'dnr-phase79-1-preserved');
+    expect(migrated.marker).toBe('phase79_1_clean_email_v1');
+    expect(migrated.dbMarker).toBe('phase79_1_clean_email_v1');
+    expect(migrated.connectedMailboxes).toEqual(preservedEmailState.connectedMailboxes);
+    expect(migrated.enterpriseEmailThreads).toEqual(preservedEmailState.enterpriseEmailThreads);
+    expect(migrated.followUpTasks).toEqual(preservedEmailState.followUpTasks);
+    expect(migrated.calendarProposals).toEqual(preservedEmailState.calendarProposals);
+    expect(migrated.historicalImportJobs).toEqual(preservedEmailState.historicalImportJobs);
+    expect(migrated.syncCheckpoints).toEqual(preservedEmailState.syncCheckpoints);
+    expect(migrated.syncConflicts).toEqual(preservedEmailState.syncConflicts);
+    expect(migrated.syncAuditLogs).toEqual(preservedEmailState.syncAuditLogs);
+    expect(migrated.localCache).toEqual([{ id: 'cache-preserved-001', subject: 'Cached correspondence' }]);
+    expect(migrated.sessionDraft).toBe('Preserve this existing draft.');
+    expect(await readIndexedDb(page)).toEqual({
+      id: 'genuine-cache-preserved-001',
+      subject: 'Cached correspondence must survive migration',
     });
-    expect(donorStillIntact).toBe(true);
+  });
+}
 
-    expect(pageErrors).toEqual([]);
-    expect(consoleErrors).toEqual([]);
+test('first boot does not erase independently stored email caches when app state is absent', async ({ page }) => {
+  await page.goto('/');
+  await seedIndexedDb(page);
+  await page.evaluate(() => {
+    localStorage.removeItem('phumulani_database_v1');
+    localStorage.setItem(
+      'phumulani_email_cached_threads',
+      JSON.stringify([{ id: 'first-boot-cache-preserved', subject: 'Do not erase' }])
+    );
+    sessionStorage.setItem('phumulani_email_session_draft', 'First-boot draft remains.');
+  });
+  await page.reload();
+
+  const result = await page.evaluate(() => ({
+    cache: JSON.parse(localStorage.getItem('phumulani_email_cached_threads') || 'null'),
+    draft: sessionStorage.getItem('phumulani_email_session_draft'),
+  }));
+  expect(result.cache).toEqual([{ id: 'first-boot-cache-preserved', subject: 'Do not erase' }]);
+  expect(result.draft).toBe('First-boot draft remains.');
+  expect(await readIndexedDb(page)).toEqual({
+    id: 'genuine-cache-preserved-001',
+    subject: 'Cached correspondence must survive migration',
   });
 });
