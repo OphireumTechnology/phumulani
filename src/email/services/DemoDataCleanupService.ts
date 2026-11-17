@@ -648,6 +648,31 @@ export class DemoDataCleanupService {
   }
 
   /**
+   * The legacy complete-reset path deletes operational email records, mailbox connections,
+   * and all vaulted email credentials without proving each record is synthetic. It is therefore
+   * restricted to explicitly opted-in, isolated embedded development environments only.
+   * Production or any DATABASE_URL-backed environment must use provenance-checked demo cleanup.
+   */
+  private assertCompleteEmailResetAllowed(): void {
+    const policy = EnvironmentService.getDatabasePolicy();
+    const databaseUrl = typeof process !== 'undefined' ? process.env?.DATABASE_URL?.trim() : '';
+    const explicitSandboxOptIn =
+      typeof process !== 'undefined' &&
+      process.env?.PHUMULANI_ALLOW_DESTRUCTIVE_EMAIL_RESET === 'true';
+
+    if (policy.nodeEnv === 'production' || policy.requireLiveDatabase || databaseUrl) {
+      throw new Error(
+        'COMPLETE_EMAIL_RESET_DISABLED: Broad email reset is prohibited in production and every DATABASE_URL-backed environment. Use provenance-checked demo cleanup.'
+      );
+    }
+    if (!explicitSandboxOptIn) {
+      throw new Error(
+        'EXPLICIT_SANDBOX_OPT_IN_REQUIRED: Broad email reset requires PHUMULANI_ALLOW_DESTRUCTIVE_EMAIL_RESET=true in isolated embedded development.'
+      );
+    }
+  }
+
+  /**
    * Phase 79.1 Complete Email Data Reset & Clean Installation — Step 1 Dry Run
    * Exports a SHA-256 verified full backup snapshot (without secrets) and builds an itemized deletion plan,
    * preserving records under active legal holds and excluding donor CRM, grants, financial & audit ledger tables.
@@ -657,6 +682,7 @@ export class DemoDataCleanupService {
     actorName: string;
     actorRole: string;
   }): Promise<CompleteEmailResetDryRunReport> {
+    this.assertCompleteEmailResetAllowed();
     this.resolveSigningSecret();
     await emailThreadService.initialize();
     await emailDispatchService.initialize();
@@ -857,6 +883,7 @@ export class DemoDataCleanupService {
     approvalToken: string;
     attemptProviderRevocation?: boolean;
   }): Promise<CompleteEmailResetExecutionResult> {
+    this.assertCompleteEmailResetAllowed();
     if (params.adminApproved !== true) {
       throw new Error('ADMIN_APPROVAL_REQUIRED: Explicit adminApproved=true confirmation is required before deleting email data.');
     }
