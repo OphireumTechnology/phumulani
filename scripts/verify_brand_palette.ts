@@ -7,6 +7,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import ts from 'typescript';
 
 const APPROVED_HEXES = new Set([
   '#F97316', // Sunrise Orange
@@ -61,101 +62,56 @@ function classifySurface(cls: string, parentSurface: string): string {
 function auditContrastInTsx(file: string, src: string): string[] {
   const issues: string[] = [];
   if (file.endsWith('SafeImage.tsx')) return issues;
-
-  let i = 0;
-  const n = src.length;
-  let line = 1;
-  const stack: Array<{ tag: string; surface: string }> = [{ tag: 'ROOT', surface: 'light' }];
-
-  while (i < n) {
-    const ch = src[i];
-    if (ch === '\n') { line++; i++; continue; }
-    if (ch === '/' && src[i + 1] === '/') { while (i < n && src[i] !== '\n') i++; continue; }
-    if (ch === '/' && src[i + 1] === '*') {
-      i += 2;
-      while (i < n && !(src[i] === '*' && src[i + 1] === '/')) { if (src[i] === '\n') line++; i++; }
-      i += 2;
-      continue;
+  // Use the TypeScript AST so conditional JSX branches and fragments cannot
+  // corrupt the surface stack as they did in the former character scanner.
+  const sf = ts.createSourceFile(file, src, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
+  const variants = (e: ts.Expression | undefined): string[] | null => {
+    if (!e) return [];
+    if (ts.isStringLiteralLike(e) || ts.isNoSubstitutionTemplateLiteral(e)) return [e.text];
+    if (ts.isConditionalExpression(e)) { const x=variants(e.whenTrue), y=variants(e.whenFalse); return x && y ? [...x,...y] : null; }
+    if (ts.isTemplateExpression(e)) {
+      let out=[e.head.text];
+      for (const s of e.templateSpans) { const choices=variants(s.expression); if (!choices) return null;
+        out=out.flatMap(p=>choices.map(v=>p+v)); if(out.length>64) return null; out=out.map(v=>v+s.literal.text); }
+      return out;
     }
-    if (ch === "'" || ch === '"' || ch === '`') {
-      const q = ch;
-      i++;
-      while (i < n && src[i] !== q) { if (src[i] === '\\') i++; if (src[i] === '\n') line++; i++; }
-      i++;
-      continue;
+    if (ts.isBinaryExpression(e) && e.operatorToken.kind===ts.SyntaxKind.PlusToken) {
+      const x=variants(e.left), y=variants(e.right); return x&&y ? x.flatMap(p=>y.map(v=>p+v)) : null;
     }
-    if (ch === '<') {
-      if (src[i + 1] === '/') {
-        const m = src.slice(i).match(/^<\/([A-Za-z0-9_.]+)\s*>/);
-        if (m) {
-          for (let k = stack.length - 1; k >= 1; k--) {
-            if (stack[k].tag === m[1]) { stack.length = k; break; }
-          }
-          i += m[0].length;
-          continue;
-        }
-      }
-      const mOpen = src.slice(i).match(/^<([a-z][a-zA-Z0-9]*|[A-Z][A-Za-z0-9_.]*)(?=[\s/>])/);
-      if (mOpen) {
-        const tag = mOpen[1];
-        const tagLine = line;
-        let j = i + mOpen[0].length;
-        let braceDepth = 0;
-        let inQuote: string | null = null;
-        let validTag = true;
-        while (j < n) {
-          const c = src[j];
-          if (c === '\n') line++;
-          if (inQuote) { if (c === '\\') { j += 2; continue; } if (c === inQuote) inQuote = null; j++; continue; }
-          if (c === "'" || c === '"' || c === '`') { inQuote = c; j++; continue; }
-          if (c === '{') { braceDepth++; j++; continue; }
-          if (c === '}') { braceDepth--; if (braceDepth < 0) { validTag = false; break; } j++; continue; }
-          if (braceDepth === 0 && c === '>') break;
-          j++;
-        }
-        if (!validTag || j >= n) { i++; continue; }
-        const tagBody = src.slice(i, j + 1);
-        const selfClosing = tagBody.endsWith('/>') || ['input', 'img', 'br', 'hr', 'meta', 'link'].includes(tag);
-        const parentSurface = stack[stack.length - 1].surface;
-        const clsMatch = tagBody.match(/\bclassName\s*=\s*(?:"([^"]*)"|'([^']*)'|\{(`[\s\S]*?`|"[^"]*"|'[^']*')\})/);
-        const cls = clsMatch ? (clsMatch[1] || clsMatch[2] || clsMatch[3] || '') : '';
-        let ownSurface = parentSurface;
-
-        if (cls) {
-          const uncond = cls.includes('?') ? cls.split('${')[0] : cls;
-          ownSurface = classifySurface(uncond, parentSurface);
-          if (!cls.includes('?') && !/\bdisabled:bg-phumulani-cream\b/.test(cls)) {
-            const isIcon = /^[A-Z]/.test(tag);
-            if (ownSurface === 'charcoal') {
-              if (/\btext-phumulani-charcoal\b/.test(cls)) issues.push(`${file}:${tagLine} charcoal text on charcoal surface`);
-              if (/\btext-phumulani-earth\b/.test(cls)) issues.push(`${file}:${tagLine} earth text on charcoal surface`);
-            } else if (ownSurface === 'earth') {
-              if (/\btext-phumulani-charcoal\b/.test(cls)) issues.push(`${file}:${tagLine} charcoal text on earth surface`);
-              if (/\btext-phumulani-earth\b/.test(cls)) issues.push(`${file}:${tagLine} earth text on earth surface`);
-              if (!isIcon && /\btext-phumulani-gold\b/.test(cls)) issues.push(`${file}:${tagLine} gold text on earth surface`);
-            } else if (ownSurface === 'light') {
-              if (/\btext-white\b/.test(cls)) issues.push(`${file}:${tagLine} white text on light surface`);
-              if (/\btext-phumulani-cream\b/.test(cls)) issues.push(`${file}:${tagLine} cream text on light surface`);
-              if (!isIcon && /\btext-phumulani-(?:gold|teal|green)\b/.test(cls)) issues.push(`${file}:${tagLine} pale accent text on light surface`);
-            } else if (ownSurface === 'accent') {
-              if (/\btext-white\b/.test(cls)) issues.push(`${file}:${tagLine} white text on accent surface`);
-              if (/\btext-phumulani-(?:earth|cream)\b/.test(cls)) issues.push(`${file}:${tagLine} low-contrast text on accent surface`);
-            }
-          }
-          if (/\bhover:bg-phumulani-teal\b/.test(cls) && /\btext-white\b/.test(cls)) {
-            issues.push(`${file}:${tagLine} hover:bg-phumulani-teal paired with text-white`);
-          }
-        }
-        if (!selfClosing) stack.push({ tag, surface: ownSurface });
-        i = j + 1;
-        continue;
-      }
+    return null;
+  };
+  const classes=(attrs: ts.JsxAttributes): string[] | null => {
+    for (const p of attrs.properties) {
+      if (!ts.isJsxAttribute(p) || p.name.getText(sf)!=='className') continue;
+      if (!p.initializer) return [];
+      if (ts.isStringLiteral(p.initializer)) return [p.initializer.text];
+      if (ts.isJsxExpression(p.initializer)) return variants(p.initializer.expression);
+      return null;
     }
-    i++;
-  }
-  return issues;
+    return [];
+  };
+  const check=(tag:string,line:number,cls:string,parent:string):string => {
+    const surface=classifySurface(cls,parent), icon=/^[A-Z]/.test(tag);
+    const add=(message:string)=>issues.push(file+':'+line+' '+message);
+    if(surface==='charcoal'){ if(/\btext-phumulani-charcoal\b/.test(cls)) add('charcoal text on charcoal surface'); if(/\btext-phumulani-earth\b/.test(cls)) add('earth text on charcoal surface'); }
+    else if(surface==='earth'){ if(/\btext-phumulani-charcoal\b/.test(cls)) add('charcoal text on earth surface'); if(/\btext-phumulani-earth\b/.test(cls)) add('earth text on earth surface'); if(!icon&&/\btext-phumulani-gold\b/.test(cls)) add('gold text on earth surface'); }
+    else if(surface==='light'){ if(/\btext-white\b/.test(cls)) add('white text on light surface'); if(/\btext-phumulani-cream\b/.test(cls)) add('cream text on light surface'); if(!icon&&/\btext-phumulani-(?:gold|teal|green)\b/.test(cls)) add('pale accent text on light surface'); }
+    else if(surface==='accent'){ if(/\btext-white\b/.test(cls)) add('white text on accent surface'); if(/\btext-phumulani-(?:earth|cream)\b/.test(cls)) add('low-contrast text on accent surface'); }
+    if(/\bhover:bg-phumulani-teal\b/.test(cls)&&/\btext-white\b/.test(cls)) add('hover:bg-phumulani-teal paired with text-white');
+    return surface;
+  };
+  const visit=(n:ts.Node,parent:string):void=>{
+    if(ts.isJsxElement(n)){ const o=n.openingElement, tag=o.tagName.getText(sf), line=sf.getLineAndCharacterOfPosition(o.getStart(sf)).line+1;
+      const cs=classes(o.attributes); let surface=parent; if(cs) cs.forEach(v=>{surface=check(tag,line,v,parent);});
+      n.children.forEach(ch=>visit(ch,surface)); return; }
+    if(ts.isJsxSelfClosingElement(n)){ const line=sf.getLineAndCharacterOfPosition(n.getStart(sf)).line+1, cs=classes(n.attributes);
+      if(cs) cs.forEach(v=>check(n.tagName.getText(sf),line,v,parent)); return; }
+    if(ts.isJsxFragment(n)){ n.children.forEach(ch=>visit(ch,parent)); return; }
+    if(ts.isJsxExpression(n)){ if(n.expression) visit(n.expression,parent); return; }
+    ts.forEachChild(n,ch=>visit(ch,parent));
+  };
+  visit(sf,'light'); return issues;
 }
-
 const EXTRA_UI_FILES = [
   'index.html',
   'server.ts',
