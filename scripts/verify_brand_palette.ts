@@ -38,6 +38,24 @@ const COLOR_FUNC_RE = /\b(?:rgba?|hsla?|oklch)\s*\(/i;
 const DARK_VARIANT_RE = /\bdark:[a-z0-9-]+/i;
 const HEX_RE = /#[0-9A-Fa-f]{3,8}\b/g;
 
+// Transparencies are derived from official base colors, not new palette hues.
+// Support both full 8-digit (#RRGGBBAA) and 4-digit (#RGBA) notation.
+function isBrandDerivedHex(value: string): boolean {
+  const hex = value.toUpperCase();
+  if (APPROVED_HEXES.has(hex)) return true;
+  if (hex.length === 9) return APPROVED_HEXES.has(hex.slice(0, 7));
+  if (hex.length === 5) {
+    const full = '#' + [...hex.slice(1, 4)].map(ch => ch + ch).join('');
+    return APPROVED_HEXES.has(full);
+  }
+  if (hex.length === 4) {
+    const full = '#' + [...hex.slice(1)].map(ch => ch + ch).join('');
+    return APPROVED_HEXES.has(full);
+  }
+  return false;
+}
+
+
 function walk(dir: string): string[] {
   const results: string[] = [];
   if (!fs.existsSync(dir)) return results;
@@ -122,7 +140,7 @@ for (const file of sourceFiles) {
     const lineNum = idx + 1;
     for (const h of line.match(HEX_RE) || []) {
       const upper = h.toUpperCase();
-      if (!APPROVED_HEXES.has(upper) && !NON_COLOR_NUMERIC_IDS.has(h) && (h.length === 4 || h.length === 7 || h.length === 9)) {
+      if (!isBrandDerivedHex(upper) && !NON_COLOR_NUMERIC_IDS.has(h) && (h.length === 4 || h.length === 7 || h.length === 9)) {
         errors.push(`Unapproved hex ${h} at ${file}:${lineNum}`);
       }
     }
@@ -207,7 +225,7 @@ if (fs.existsSync(distAssets)) {
     const css = fs.readFileSync(path.join(distAssets, cssFile), 'utf8');
     const hexes = new Set((css.match(HEX_RE) || []).map((h) => h.toUpperCase()));
     for (const h of hexes) {
-      if ((h.length === 4 || h.length === 5 || h.length === 7 || h.length === 9) && !BUILT_CSS_ALLOWED_HEXES.has(h)) {
+      if ((h.length === 4 || h.length === 5 || h.length === 7 || h.length === 9) && !isBrandDerivedHex(h) && !BUILT_CSS_ALLOWED_HEXES.has(h)) {
         errors.push(`Unapproved hex ${h} emitted in built CSS bundle dist/assets/${cssFile}`);
       }
     }
