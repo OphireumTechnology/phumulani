@@ -401,13 +401,50 @@ class DatabaseService {
     };
   }
 
+  /**
+   * Preserve unreadable persisted state before any fallback can write a fresh seed over it.
+   * The quarantined bytes remain available for an explicit recovery procedure.
+   */
+  private quarantineCorruptStoredState(raw: string): string | null {
+    const baseKey = `${STORAGE_KEY}.corrupt.${Date.now()}`;
+    let backupKey = baseKey;
+    let suffix = 0;
+
+    try {
+      while (localStorage.getItem(backupKey) !== null) {
+        suffix += 1;
+        backupKey = `${baseKey}.${suffix}`;
+      }
+      localStorage.setItem(backupKey, raw);
+      if (localStorage.getItem(backupKey) !== raw) {
+        return null;
+      }
+      return backupKey;
+    } catch {
+      // Never overwrite the original value if a verified quarantine copy cannot be made.
+      return null;
+    }
+  }
+
   private loadState(): AppDatabaseState {
     const initial = getInitialState();
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      const markerInStorage = localStorage.getItem(EMAIL_RESET_MARKER_STORAGE_KEY);
       if (stored) {
-        const parsed = JSON.parse(stored);
+        let parsed: ReturnType<typeof JSON.parse>;
+        try {
+          parsed = JSON.parse(stored);
+        } catch (error) {
+          const backupKey = this.quarantineCorruptStoredState(stored);
+          if (!backupKey) {
+            console.error('[DatabaseService] Persisted state is unreadable and could not be safely quarantined; original storage was left untouched.', error);
+            return initial;
+          }
+          console.error(`[DatabaseService] Persisted state is unreadable and was preserved at localStorage key ${backupKey}; explicit recovery is required.`, error);
+          this.saveState(initial);
+          return initial;
+        }
+        const markerInStorage = localStorage.getItem(EMAIL_RESET_MARKER_STORAGE_KEY);
         const merged: AppDatabaseState = {
           ...initial,
           ...parsed,
@@ -466,8 +503,10 @@ class DatabaseService {
         }
         return merged;
       }
-    } catch {
-      // Fallback if parsing fails
+    } catch (error) {
+      // A storage read or migration error is not permission to replace persisted data.
+      console.error('[DatabaseService] Unable to read persisted application state; leaving existing storage untouched.', error);
+      return initial;
     }
     this.saveState(initial);
     return initial;
