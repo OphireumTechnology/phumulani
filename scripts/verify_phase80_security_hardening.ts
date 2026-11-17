@@ -125,6 +125,58 @@ async function run() {
     `supabaseUnlistedBlocked=${!supabaseUnlisted.valid}, explicitStagingAllowlist=${supabaseAllowlisted.valid}, productionMode=${productionTargetAllowed.valid}`
   );
 
+  // Verify the external-verification endpoint rejects unsafe targets BEFORE a
+  // connection attempt. These cases must return authorization errors, never
+  // network/connection errors. All hostnames are deliberately non-routable.
+  {
+    const original = {
+      nodeEnv: process.env.NODE_ENV,
+      mode: process.env.PHUMULANI_OPERATIONAL_MODE,
+      databaseUrl: process.env.DATABASE_URL,
+      hosts: process.env.PHUMULANI_NONPROD_DATABASE_HOSTS,
+    };
+    const adapter = PostgresPersistenceAdapter.getInstance();
+    const configured = 'postgres://app:configured-secret@db.projectref.invalid:5432/app?sslmode=require';
+    const candidates = [
+      'postgres://app:attacker-secret@db.projectref.invalid:5432/app?sslmode=require',
+      'postgres://app:configured-secret@db.projectref.invalid:5432/app?sslmode=disable',
+      'postgres://app:configured-secret@db.other.invalid:5432/app?sslmode=require',
+      'https://db.projectref.invalid/app',
+      'not-a-database-url',
+    ];
+    try {
+      process.env.NODE_ENV = 'production';
+      process.env.PHUMULANI_OPERATIONAL_MODE = 'PRODUCTION_ONLY';
+      process.env.DATABASE_URL = configured;
+      const productionResults = await Promise.all(candidates.map(url => adapter.verifyExternalConnection(url)));
+      const productionBlocked = productionResults.every(result =>
+        !result.success &&
+        (result.state === 'PRODUCTION_NOT_AUTHORIZED' ||
+          (result.state === 'EXTERNAL_CONNECTION_FAILED' && result.error?.startsWith('DATABASE_TARGET_INVALID:'))) &&
+        !JSON.stringify(result).includes('configured-secret') &&
+        !JSON.stringify(result).includes('attacker-secret')
+      );
+      process.env.NODE_ENV = 'development';
+      process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
+      process.env.PHUMULANI_NONPROD_DATABASE_HOSTS = 'db.allowed.invalid';
+      const unlisted = await adapter.verifyExternalConnection(configured);
+      const nonproductionBlocked = !unlisted.success &&
+        unlisted.state === 'PRODUCTION_NOT_AUTHORIZED';
+      record('P80-EXTERNAL-DB-VERIFY-GUARD', productionBlocked && nonproductionBlocked,
+        `productionRejected=${productionResults.filter(r => !r.success).length}/${candidates.length}, nonproductionRejected=${nonproductionBlocked}, noCredentialLeaks=${productionBlocked}`);
+    } finally {
+      for (const [key, value] of Object.entries({
+        NODE_ENV: original.nodeEnv,
+        PHUMULANI_OPERATIONAL_MODE: original.mode,
+        DATABASE_URL: original.databaseUrl,
+        PHUMULANI_NONPROD_DATABASE_HOSTS: original.hosts,
+      })) {
+        if (value === undefined) delete process.env[key];
+        else process.env[key] = value;
+      }
+    }
+  }
+
   // ---------------------------------------------------------------------------
   // BLOCK 80.2: Strict Operational Modes & Fail-Closed Database Policy
   // ---------------------------------------------------------------------------
