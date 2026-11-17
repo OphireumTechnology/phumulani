@@ -2,12 +2,12 @@
 @source "../index.html";
 
 @theme {
-  --color-phumulani-orange: #F97316;
-  --color-phumulani-earth: #A63C14;
-  --color-phumulani-teal: #60C3B4;
-  --color-phumulani-gold: #F7B733;
-  --color-phumulani-cream: #F7F3E0;
-  --color-phumulani-green: #4CAF7C;
+  --color-phumulani-orange: #EF5C2C;
+  --color-phumulani-earth: #B3340F;
+  --color-phumulani-teal: #62C4B4;
+  --color-phumulani-gold: #F7B24A;
+  --color-phumulani-cream: #EFEBD1;
+  --color-phumulani-green: #6AAD7C;
   --color-phumulani-charcoal: #333333;
   --color-phumulani-white: #FFFFFF;
   --color-white: #FFFFFF;
@@ -16,36 +16,89 @@
 
 @layer base {
   :root {
-    /* Official Phumulani Master Brand Color System */
-    --phumulani-orange: #F97316;
-    --phumulani-earth: #A63C14;
-    --phumulani-teal: #60C3B4;
-    --phumulani-gold: #F7B733;
-    --phumulani-cream: #F7F3E0;
-    --phumulani-green: #4CAF7C;
+    /* Official Phumulani Brand Manual (Working Draft v1.0) Color System */
+    --phumulani-orange: #EF5C2C;
+    --phumulani-earth: #B3340F;
+    --phumulani-teal: #62C4B4;
+    --phumulani-gold: #F7B24A;
+    --phumulani-cream: #EFEBD1;
+    --phumulani-green: #6AAD7C;
     --phumulani-charcoal: #333333;
     --phumulani-white: #FFFFFF;
 
+    /* Semantic Tokens — Actions */
     --color-primary: var(--phumulani-orange);
     --color-primary-strong: var(--phumulani-earth);
     --color-secondary: var(--phumulani-teal);
     --color-accent: var(--phumulani-gold);
+    --action-primary-bg: var(--phumulani-earth);
+    --action-primary-text: var(--phumulani-white);
+    --action-primary-hover-bg: var(--phumulani-charcoal);
+    --action-primary-hover-text: var(--phumulani-white);
+    --action-secondary-bg: var(--phumulani-teal);
+    --action-secondary-text: var(--phumulani-charcoal);
+    --action-secondary-border: #33333333;
 
-    /* Soft Cream primary light canvas + White elevated cards */
+    /* Semantic Tokens — Backgrounds, Surfaces & Navigation */
     --color-background: var(--phumulani-cream);
     --color-background-soft: var(--phumulani-cream);
-
     --color-surface: var(--phumulani-white);
     --color-surface-alternate: var(--phumulani-cream);
+    --nav-surface: var(--phumulani-white);
+    --nav-dark-surface: var(--phumulani-charcoal);
+    --nav-border: #33333326;
+    --nav-active-bg: var(--phumulani-earth);
+    --nav-active-text: var(--phumulani-white);
 
+    /* Semantic Tokens — Typography */
     --color-heading: var(--phumulani-earth);
     --color-text: var(--phumulani-charcoal);
+    --color-text-on-dark: var(--phumulani-cream);
+    --color-text-on-accent: var(--phumulani-charcoal);
 
+    /* Semantic Tokens — Cards, Panels, Forms, Borders & Focus */
+    --card-bg: var(--phumulani-white);
+    --card-border: #33333326;
+    --input-bg: var(--phumulani-white);
+    --input-border: #33333333;
+    --input-focus-border: var(--phumulani-earth);
     --color-border: var(--phumulani-cream);
+    --color-divider: #3333331F;
+    --focus-ring-color: var(--phumulani-earth);
+
+    /* Semantic Tokens — Alerts & Validation States */
     --color-success: var(--phumulani-green);
     --color-warning: var(--phumulani-gold);
     --color-error: var(--phumulani-earth);
     --color-info: var(--phumulani-teal);
+    --alert-success-bg: var(--phumulani-cream);
+    --alert-success-border: var(--phumulani-green);
+    --alert-warning-bg: var(--phumulani-cream);
+    --alert-warning-border: var(--phumulani-gold);
+    --alert-error-bg: var(--phumulani-cream);
+    --alert-error-border: var(--phumulani-earth);
+    --alert-info-bg: var(--phumulani-cream);
+    --alert-info-border: var(--phumulani-teal);
+
+    /* Semantic Tokens — Charts & Data Visualizations */
+    --chart-series-1: var(--phumulani-earth);
+    --chart-series-2: var(--phumulani-teal);
+    --chart-series-3: var(--phumulani-gold);
+    --chart-series-4: var(--phumulani-green);
+    --chart-series-5: var(--phumulani-orange);
+    --chart-series-6: var(--phumulani-charcoal);
+
+    /* Semantic Tokens — Modals, Tables & Content Templates */
+    --modal-backdrop: #333333CC;
+    --modal-surface: var(--phumulani-white);
+    --modal-border: #33333326;
+    --table-header-bg: var(--phumulani-cream);
+    --table-header-text: var(--phumulani-earth);
+    --table-row-hover: var(--phumulani-cream);
+    --table-border: #3333331F;
+    --template-canvas-light: var(--phumulani-cream);
+    --template-canvas-white: var(--phumulani-white);
+    --template-accent-stripe: var(--phumulani-orange);
 
     /* Legacy semantic compatibility aliases */
     --brand-deep-teal: var(--phumulani-earth);
@@ -59,7 +112,7 @@
     --brand-soft-bg: var(--phumulani-cream);
 
     /* Cohesive Typography */
-    font-family: 'Plus Jakarta Sans', 'Lato', system-ui, -apple-system, sans-serif;
+    font-family: 'Lato', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   }
 
   html {
@@ -91,6 +144,12 @@
   /* Editorial Quotes & Literary Accents */
   blockquote, .font-quote, .font-serif, .font-display-serif {
     font-family: 'Playfair Display', 'Merriweather', Georgia, serif;
+  }
+
+  /* Universal Accessible Keyboard Focus Ring */
+  :where(a, button, input, select, textarea, [tabindex]):focus-visible {
+    outline: 2px solid var(--focus-ring-color);
+    outline-offset: 2px;
   }
 }
 
@@ -129,15 +188,15 @@
 
 /* Subtle refined card & focus polish */
 .phumulani-card {
-  background-color: var(--phumulani-white);
+  background-color: var(--card-bg);
   border: 1px solid #3333331F;
   border-radius: 1rem;
   box-shadow: 0 1px 2px #3333330A;
 }
 
 .phumulani-card-interactive {
-  background-color: var(--phumulani-white);
-  border: 1px solid #33333326;
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 1rem;
   box-shadow: 0 1px 3px #3333330F;
   transition: border-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
@@ -146,7 +205,7 @@
 }
 
 .phumulani-card-interactive:hover {
-  border-color: #A63C144D;
+  border-color: #B3340F4D;
   box-shadow: 0 10px 24px -10px #3333331F;
   transform: translateY(-1px);
 }
@@ -197,7 +256,7 @@
   background: var(--phumulani-cream);
 }
 ::-webkit-scrollbar-thumb {
-  background: #A63C1480;
+  background: #B3340F80;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -212,6 +271,20 @@
   height: auto;
   object-fit: contain;
   border-radius: 12px;
+}
+
+/* Social Media 1080px Export Typography Guidance (Manual Sec 5.4: min 28px body on 1080w) */
+.social-export-frame {
+  font-family: 'Lato', 'Plus Jakarta Sans', sans-serif;
+  background-color: var(--template-canvas-light);
+  color: var(--phumulani-charcoal);
+}
+.social-export-headline {
+  font-family: 'Montserrat', sans-serif;
+  color: var(--phumulani-earth);
+}
+.social-export-quote {
+  font-family: 'Playfair Display', 'Merriweather', Georgia, serif;
 }
 
 /* Reduced motion accessibility safeguards */

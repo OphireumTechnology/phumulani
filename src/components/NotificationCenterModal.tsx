@@ -159,7 +159,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
             <button
               onClick={loadData}
               disabled={loading}
-              className="p-1.5 rounded-lg hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg hover:bg-phumulani-charcoal text-white transition-colors cursor-pointer"
               title="Refresh notifications"
               aria-label="Refresh notifications"
             >
@@ -167,7 +167,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-lg hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white transition-colors cursor-pointer"
+              className="p-1.5 rounded-lg hover:bg-phumulani-charcoal text-white transition-colors cursor-pointer"
               title="Close modal"
               aria-label="Close modal"
             >
@@ -442,7 +442,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
           </span>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-lg bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white font-bold text-xs transition-colors cursor-pointer"
+            className="px-4 py-1.5 rounded-lg bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-bold text-xs transition-colors cursor-pointer"
           >
             Close
           </button>

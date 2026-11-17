@@ -156,7 +156,7 @@ export const RestrictedFundsTab: React.FC<RestrictedFundsTabProps> = ({ currentU
 
                 <button
                   onClick={() => handleOpenExpenditureModal(fund)}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg shadow-xs transition-colors shrink-0 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg shadow-xs transition-colors shrink-0 cursor-pointer"
                 >
                   <DollarSign className="w-3.5 h-3.5" />
                   Record Program Spend
@@ -283,7 +283,7 @@ export const RestrictedFundsTab: React.FC<RestrictedFundsTabProps> = ({ currentU
               </button>
               <button
                 onClick={handleRecordExpenditure}
-                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg shadow-xs"
+                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg shadow-xs"
               >
                 Validate & Disburse
               </button>

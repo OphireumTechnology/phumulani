@@ -115,7 +115,7 @@ export const CommunityFeedbackIntelligenceTab: React.FC<Props> = ({ currentUser 
           <div className="flex justify-end">
             <button
               type="submit"
-              className="px-5 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded text-xs font-bold cursor-pointer"
+              className="px-5 py-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded text-xs font-bold cursor-pointer"
             >
               Submit Feedback
             </button>

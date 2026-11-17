@@ -88,7 +88,7 @@ export const FundingCalendarTab: React.FC<FundingCalendarTabProps> = ({ currentU
         <button
           onClick={handleRunSecuritySuite}
           disabled={isProbing}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
         >
           <ShieldCheck className="w-3.5 h-3.5" />
           {isProbing ? 'Executing Probes...' : 'Run Security Probes (20/20)'}
@@ -209,7 +209,7 @@ export const FundingCalendarTab: React.FC<FundingCalendarTabProps> = ({ currentU
                       {rec.status !== 'RECONCILED' ? (
                         <button
                           onClick={() => handleReconcileGift(rec.id, rec.paymentMethod)}
-                          className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded text-[11px] font-semibold cursor-pointer"
+                          className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded text-[11px] font-semibold cursor-pointer"
                         >
                           Reconcile Gift
                         </button>
@@ -277,7 +277,7 @@ export const FundingCalendarTab: React.FC<FundingCalendarTabProps> = ({ currentU
             <button
               onClick={handleRunSecuritySuite}
               disabled={isProbing}
-              className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg cursor-pointer"
+              className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg cursor-pointer"
             >
               {isProbing ? 'Executing...' : 'Re-Run Suite'}
             </button>

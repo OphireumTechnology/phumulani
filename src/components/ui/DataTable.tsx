@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  * DataTable — Reusable Accessible Responsive Table Component
- * Official Palette: Soft Cream (#F7F3E0), Charcoal (#333333), Deep Earth (#A63C14), White (#FFFFFF)
+ * Official Palette: Soft Cream (#EFEBD1), Charcoal (#333333), Deep Earth (#B3340F), White (#FFFFFF)
  */
 
 import React from 'react';

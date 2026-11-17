@@ -46,7 +46,7 @@ export const MobileAccessibilityAuditTab: React.FC<Props> = ({ currentUser }) =>
         <button
           onClick={handleRerun}
           disabled={isRunning}
-          className="px-4 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-lg text-sm font-semibold flex items-center gap-2 cursor-pointer shadow-xs disabled:opacity-50"
+          className="px-4 py-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded-lg text-sm font-semibold flex items-center gap-2 cursor-pointer shadow-xs disabled:opacity-50"
         >
           <RefreshCw className={`w-4 h-4 ${isRunning ? 'animate-spin' : ''}`} />
           <span>Run Live Accessibility Audit</span>

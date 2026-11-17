@@ -60,7 +60,7 @@ export const KnowledgeSearchTab: React.FC<Props> = ({ currentUser }) => {
           </div>
           <button
             type="submit"
-            className="px-5 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-lg text-sm font-semibold cursor-pointer"
+            className="px-5 py-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded-lg text-sm font-semibold cursor-pointer"
           >
             Search Knowledge
           </button>

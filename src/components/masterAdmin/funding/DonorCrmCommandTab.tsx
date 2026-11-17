@@ -136,7 +136,7 @@ export const DonorCrmCommandTab: React.FC<DonorCrmCommandTabProps> = ({ currentU
 
         <button
           onClick={() => setIsNewDonorOpen(true)}
-          className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5" />
           Register Donor Profile
@@ -366,7 +366,7 @@ export const DonorCrmCommandTab: React.FC<DonorCrmCommandTabProps> = ({ currentU
               </button>
               <button
                 onClick={handleCreateDonor}
-                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg shadow-xs"
+                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg shadow-xs"
               >
                 Save Profile
               </button>
@@ -426,7 +426,7 @@ export const DonorCrmCommandTab: React.FC<DonorCrmCommandTabProps> = ({ currentU
               {!letterResult && (
                 <button
                   onClick={handleGenerateLetter}
-                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg shadow-xs"
+                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg shadow-xs"
                 >
                   Generate & Stage Letter
                 </button>

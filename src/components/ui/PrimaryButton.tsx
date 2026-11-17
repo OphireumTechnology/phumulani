@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  * PrimaryButton — Brand-Consistent Accessible Button Component
- * Palette: Deep Earth (#A63C14), Sunrise Orange (#F97316), Healing Teal (#60C3B4), Charcoal (#333333)
+ * Palette: Deep Earth (#B3340F), Peace Orange (#EF5C2C), Healing Teal (#62C4B4), Charcoal (#333333)
  */
 
 import React from 'react';
@@ -36,13 +36,13 @@ export const PrimaryButton: React.FC<PrimaryButtonProps> = ({
 
   const variantClasses: Record<ButtonVariant, string> = {
     primary:
-      'bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white font-heading font-bold shadow-xs transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth',
+      'bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-heading font-bold shadow-xs transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth',
     secondary:
       'bg-phumulani-teal hover:bg-phumulani-cream text-phumulani-charcoal font-heading font-bold shadow-xs border border-phumulani-charcoal/20 transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth',
     outline:
       'bg-white hover:bg-phumulani-cream text-phumulani-earth border border-phumulani-earth/40 font-heading font-semibold transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth',
     danger:
-      'bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white font-heading font-bold shadow-xs transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth',
+      'bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-heading font-bold shadow-xs transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth',
     ghost:
       'bg-transparent hover:bg-phumulani-cream text-phumulani-charcoal font-heading font-medium transition-colors',
   };

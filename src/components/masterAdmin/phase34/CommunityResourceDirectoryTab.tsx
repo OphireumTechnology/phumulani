@@ -101,7 +101,7 @@ export const CommunityResourceDirectoryTab: React.FC<Props> = ({ currentUser }) 
           </div>
           <button
             onClick={() => setIsSubmitModalOpen(true)}
-            className="px-4 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-lg text-sm font-semibold transition-all shadow-xs flex items-center gap-2 cursor-pointer shrink-0"
+            className="px-4 py-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded-lg text-sm font-semibold transition-all shadow-xs flex items-center gap-2 cursor-pointer shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>Submit Resource</span>
@@ -314,7 +314,7 @@ export const CommunityResourceDirectoryTab: React.FC<Props> = ({ currentUser }) 
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded text-xs font-semibold cursor-pointer"
+                  className="px-4 py-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded text-xs font-semibold cursor-pointer"
                 >
                   Submit for Approval
                 </button>

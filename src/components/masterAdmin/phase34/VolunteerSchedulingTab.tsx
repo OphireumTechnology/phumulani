@@ -167,7 +167,7 @@ export const VolunteerSchedulingTab: React.FC<Props> = ({ currentUser }) => {
                     <button
                       onClick={() => handleApproveMatch(match.volunteerId)}
                       disabled={!match.clearanceVerified}
-                      className="px-3 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-orange disabled:opacity-40 text-white rounded text-xs font-semibold cursor-pointer"
+                      className="px-3 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-earth disabled:opacity-40 text-white rounded text-xs font-semibold cursor-pointer"
                     >
                       Supervisor Approve
                     </button>

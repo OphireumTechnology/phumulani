@@ -61,7 +61,7 @@ export const BoardGovernancePortalTab: React.FC<BoardGovernancePortalTabProps> =
           <button
             onClick={() => setActiveSubTab('resolutions')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-              activeSubTab === 'resolutions' ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-charcoal text-white hover:bg-phumulani-orange'
+              activeSubTab === 'resolutions' ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-charcoal text-white hover:bg-phumulani-teal hover:text-phumulani-charcoal'
             }`}
           >
             Resolutions ({resolutions.length})
@@ -69,7 +69,7 @@ export const BoardGovernancePortalTab: React.FC<BoardGovernancePortalTabProps> =
           <button
             onClick={() => setActiveSubTab('meetings')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-              activeSubTab === 'meetings' ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-charcoal text-white hover:bg-phumulani-orange'
+              activeSubTab === 'meetings' ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-charcoal text-white hover:bg-phumulani-teal hover:text-phumulani-charcoal'
             }`}
           >
             Meetings & Packets ({meetings.length})
@@ -77,7 +77,7 @@ export const BoardGovernancePortalTab: React.FC<BoardGovernancePortalTabProps> =
           <button
             onClick={() => setActiveSubTab('coi')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-              activeSubTab === 'coi' ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-charcoal text-white hover:bg-phumulani-orange'
+              activeSubTab === 'coi' ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-charcoal text-white hover:bg-phumulani-teal hover:text-phumulani-charcoal'
             }`}
           >
             COI Declarations ({declarations.length})

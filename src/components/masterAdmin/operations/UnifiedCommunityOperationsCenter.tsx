@@ -118,7 +118,7 @@ export const UnifiedCommunityOperationsCenter: React.FC<UnifiedCommunityOperatio
 
         <button
           onClick={handleRefresh}
-          className="flex items-center gap-2 bg-phumulani-earth hover:bg-phumulani-orange px-4 py-2 rounded-xl text-xs font-semibold border border-phumulani-cream transition-colors cursor-pointer"
+          className="flex items-center gap-2 bg-phumulani-earth hover:bg-phumulani-charcoal px-4 py-2 rounded-xl text-xs font-semibold border border-phumulani-cream transition-colors cursor-pointer"
         >
           <RefreshCw className="w-3.5 h-3.5" />
           <span>Refresh Operations</span>
@@ -416,7 +416,7 @@ export const UnifiedCommunityOperationsCenter: React.FC<UnifiedCommunityOperatio
               <button
                 onClick={handleEscalateConfirm}
                 disabled={!escalateReason.trim()}
-                className="px-4 py-1.5 text-xs bg-phumulani-earth hover:bg-phumulani-orange text-white font-semibold rounded-lg disabled:opacity-50"
+                className="px-4 py-1.5 text-xs bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-semibold rounded-lg disabled:opacity-50"
               >
                 Confirm Escalation
               </button>

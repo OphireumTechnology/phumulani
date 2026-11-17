@@ -157,7 +157,7 @@ export const VolunteerDeploymentTab: React.FC<Props> = ({ currentUserRole, curre
 
         <button
           onClick={() => setIsModalOpen(true)}
-          className="inline-flex items-center gap-1.5 px-4 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold transition-all shadow-xs shrink-0 cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-4 py-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded-xl text-xs font-bold transition-all shadow-xs shrink-0 cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Schedule Volunteer Shift</span>
@@ -248,7 +248,7 @@ export const VolunteerDeploymentTab: React.FC<Props> = ({ currentUserRole, curre
                     ) : (
                       <button
                         onClick={() => handleVerifyHours(dep.id, dep.shiftHours)}
-                        className="px-3 py-1 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer"
+                        className="px-3 py-1 bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer"
                       >
                         Sign Off ({dep.shiftHours} hrs)
                       </button>
@@ -357,7 +357,7 @@ export const VolunteerDeploymentTab: React.FC<Props> = ({ currentUserRole, curre
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white font-bold rounded-xl shadow-xs"
+                  className="px-5 py-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-white font-bold rounded-xl shadow-xs"
                 >
                   Schedule Shift
                 </button>

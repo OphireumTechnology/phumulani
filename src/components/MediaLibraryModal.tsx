@@ -69,7 +69,7 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
           <button
             onClick={onClose}
             aria-label="Close registry"
-            className="p-2 text-phumulani-cream hover:text-phumulani-charcoal hover:bg-phumulani-orange rounded-lg cursor-pointer transition-colors"
+            className="p-2 text-phumulani-cream hover:bg-phumulani-charcoal rounded-lg cursor-pointer transition-colors"
           >
             ✕
           </button>
@@ -208,7 +208,7 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
           </span>
           <button
             onClick={onClose}
-            className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg font-bold cursor-pointer transition-colors"
+            className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold cursor-pointer transition-colors"
           >
             Close Registry
           </button>

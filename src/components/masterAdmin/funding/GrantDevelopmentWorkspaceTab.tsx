@@ -321,7 +321,7 @@ export const GrantDevelopmentWorkspaceTab: React.FC<GrantDevelopmentWorkspaceTab
                 </button>
                 <button
                   onClick={handleSaveSection}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
                 >
                   <Save className="w-3.5 h-3.5" />
                   Save Section
@@ -373,7 +373,7 @@ export const GrantDevelopmentWorkspaceTab: React.FC<GrantDevelopmentWorkspaceTab
               </button>
               <button
                 onClick={handleSaveBudget}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer"
               >
                 <Save className="w-3.5 h-3.5" /> Validate & Save Budget
               </button>
@@ -603,7 +603,7 @@ export const GrantDevelopmentWorkspaceTab: React.FC<GrantDevelopmentWorkspaceTab
             <div className="pt-2">
               <button
                 onClick={handleSubmitGrant}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-bold rounded-lg shadow-sm transition-colors cursor-pointer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-bold rounded-lg shadow-sm transition-colors cursor-pointer"
               >
                 <Send className="w-4 h-4" />
                 Execute Official Grant Submission

@@ -178,7 +178,7 @@ export const ProgramAiIntelligenceModal: React.FC<Props> = ({
             <button
               type="submit"
               disabled={isGenerating}
-              className="px-5 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white font-bold rounded-xl shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              className="px-5 py-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-white font-bold rounded-xl shadow-xs transition-colors flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>{isGenerating ? 'Analyzing Community Data...' : 'Generate Verified Recommendation'}</span>

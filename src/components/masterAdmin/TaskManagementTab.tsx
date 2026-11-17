@@ -146,7 +146,7 @@ export const TaskManagementTab: React.FC<TaskManagementTabProps> = ({ currentUse
 
         <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="inline-flex items-center gap-2 px-3.5 py-2 bg-phumulani-charcoal text-white rounded-lg text-xs font-semibold hover:bg-phumulani-orange transition-colors cursor-pointer shadow-xs"
+          className="inline-flex items-center gap-2 px-3.5 py-2 bg-phumulani-charcoal text-white rounded-lg text-xs font-semibold hover:bg-phumulani-earth transition-colors cursor-pointer shadow-xs"
         >
           <Plus className="w-4 h-4" />
           <span>Create Department Task</span>
@@ -371,7 +371,7 @@ export const TaskManagementTab: React.FC<TaskManagementTabProps> = ({ currentUse
                   />
                   <button
                     type="submit"
-                    className="p-1.5 bg-phumulani-charcoal text-white rounded-lg hover:bg-phumulani-orange transition-colors"
+                    className="p-1.5 bg-phumulani-charcoal text-white rounded-lg hover:bg-phumulani-earth transition-colors"
                   >
                     <Send className="w-3.5 h-3.5" />
                   </button>
@@ -507,7 +507,7 @@ export const TaskManagementTab: React.FC<TaskManagementTabProps> = ({ currentUse
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-lg font-semibold shadow-xs"
+                  className="px-4 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded-lg font-semibold shadow-xs"
                 >
                   Create Task
                 </button>

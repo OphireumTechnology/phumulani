@@ -270,7 +270,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
             <button
               type="button"
               onClick={() => onViewChange('email-command')}
-              className="bg-phumulani-earth hover:bg-phumulani-orange border border-phumulani-teal/50 rounded-xl p-3 text-center min-w-[110px] cursor-pointer transition-colors text-white hover:text-phumulani-charcoal"
+              className="bg-phumulani-earth hover:bg-phumulani-charcoal border border-phumulani-teal/50 rounded-xl p-3 text-center min-w-[110px] cursor-pointer transition-colors text-white hover:text-phumulani-charcoal"
               title="Open Master Email Administration (/admin/master/email)"
             >
               <div className="font-heading text-lg font-bold">Email Admin</div>
@@ -456,7 +456,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                         ) : (
                           <button
                             onClick={() => handleApproveSend(selectedMessage.id)}
-                            className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
+                            className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
                           >
                             <Send className="w-3.5 h-3.5" />
                             <span>Authorize &amp; Send Email</span>
@@ -593,7 +593,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                     </button>
                     <button
                       onClick={() => handleUpdateVolunteerStatus(screeningApp.id, 'approved_active')}
-                      className="px-4 py-2 bg-phumulani-earth text-white rounded-lg font-bold hover:bg-phumulani-orange hover:text-phumulani-charcoal cursor-pointer flex items-center gap-1.5 transition-colors"
+                      className="px-4 py-2 bg-phumulani-earth text-white rounded-lg font-bold hover:bg-phumulani-charcoal cursor-pointer flex items-center gap-1.5 transition-colors"
                     >
                       <CheckCircle2 className="w-4 h-4" />
                       <span>Approve Active Placement</span>
@@ -621,7 +621,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
               </div>
               <button
                 onClick={() => setShowNewEventModal(true)}
-                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
+                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
               >
                 <PlusCircle className="w-3.5 h-3.5" />
                 <span>Create New Event</span>
@@ -810,7 +810,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                           db.resolveApprovalTask(task.id, 'approved', 'Staff approved without change.');
                           setActionFeedback(`Task ${task.id} approved and executed.`);
                         }}
-                        className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
+                        className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
                       >
                         <Check className="w-4 h-4" />
                         <span>Approve &amp; Authorize Action</span>
@@ -901,7 +901,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                         setActionFeedback(`Confidential safety protocol initiated for reference ${item.anonymousCode}. A certified trauma advocate will make discreet contact during the designated safe window.`);
                         setTimeout(() => setActionFeedback(null), 6000);
                       }}
-                      className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-lg font-bold cursor-pointer transition-colors"
+                      className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg font-bold cursor-pointer transition-colors"
                     >
                       Initiate Safe Outreach
                     </button>
@@ -935,7 +935,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                   <button
                     type="button"
                     onClick={onOpenMediaRegistry}
-                    className="px-4 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal text-xs font-bold rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
+                    className="px-4 py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal text-xs font-bold rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
                   >
                     <Eye className="w-4 h-4" />
                     <span>Inspect Full Registry Modal</span>
@@ -1029,7 +1029,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                           <button
                             type="button"
                             onClick={() => handleApproveMediaRelease(asset.id)}
-                            className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal text-xs font-bold rounded-lg transition-colors cursor-pointer"
+                            className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal text-xs font-bold rounded-lg transition-colors cursor-pointer"
                           >
                             Authorize Release
                           </button>
@@ -1231,7 +1231,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-lg font-bold cursor-pointer transition-colors"
+                    className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg font-bold cursor-pointer transition-colors"
                   >
                     Publish Event
                   </button>

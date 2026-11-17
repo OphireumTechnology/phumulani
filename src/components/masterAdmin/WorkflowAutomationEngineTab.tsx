@@ -177,7 +177,7 @@ export const WorkflowAutomationEngineTab: React.FC<WorkflowAutomationEngineTabPr
                     </button>
                     <button
                       onClick={() => handleAdvance(selectedInstance.id, 'REJECTED')}
-                      className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white font-semibold text-xs rounded-lg transition-colors"
+                      className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-semibold text-xs rounded-lg transition-colors"
                     >
                       Reject / Halt
                     </button>

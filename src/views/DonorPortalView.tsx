@@ -655,7 +655,7 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
                   <button
                     type="submit"
                     disabled={!newPledgeAcknowledged}
-                    className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal disabled:opacity-50 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                    className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal disabled:opacity-50 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
                   >
                     Record Pledge Intention (Segregated Accounting)
                   </button>
@@ -715,7 +715,7 @@ export const DonorPortalView: React.FC<DonorPortalViewProps> = ({
                       setSponsorshipFeedback(`Thank you for inquiring about the ${tier.name}! Executive Director Comfort Dondo and our Development Team will contact you within 24 business hours.`);
                       setTimeout(() => setSponsorshipFeedback(null), 7000);
                     }}
-                    className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                    className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
                   >
                     Inquire for Partnership
                   </button>

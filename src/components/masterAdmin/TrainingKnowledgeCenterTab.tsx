@@ -72,7 +72,7 @@ export const TrainingKnowledgeCenterTab: React.FC<TrainingKnowledgeCenterTabProp
           <button
             onClick={() => setActiveSubTab('modules')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-              activeSubTab === 'modules' ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-charcoal text-white hover:bg-phumulani-orange'
+              activeSubTab === 'modules' ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-charcoal text-white hover:bg-phumulani-teal hover:text-phumulani-charcoal'
             }`}
           >
             Modules ({modules.length})
@@ -80,7 +80,7 @@ export const TrainingKnowledgeCenterTab: React.FC<TrainingKnowledgeCenterTabProp
           <button
             onClick={() => setActiveSubTab('assignments')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-              activeSubTab === 'assignments' ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-charcoal text-white hover:bg-phumulani-orange'
+              activeSubTab === 'assignments' ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-charcoal text-white hover:bg-phumulani-teal hover:text-phumulani-charcoal'
             }`}
           >
             Certifications ({assignments.length})
@@ -88,7 +88,7 @@ export const TrainingKnowledgeCenterTab: React.FC<TrainingKnowledgeCenterTabProp
           <button
             onClick={() => setActiveSubTab('articles')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-              activeSubTab === 'articles' ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-charcoal text-white hover:bg-phumulani-orange'
+              activeSubTab === 'articles' ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-charcoal text-white hover:bg-phumulani-teal hover:text-phumulani-charcoal'
             }`}
           >
             SOPs & Policies ({articles.length})

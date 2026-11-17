@@ -120,7 +120,7 @@ export const StaffManagementTab: React.FC<StaffManagementTabProps> = ({ currentU
 
         <button
           onClick={() => setIsInviteModalOpen(true)}
-          className="inline-flex items-center gap-2 px-3.5 py-2 bg-phumulani-charcoal text-white rounded-lg text-xs font-semibold hover:bg-phumulani-orange transition-colors cursor-pointer shadow-xs"
+          className="inline-flex items-center gap-2 px-3.5 py-2 bg-phumulani-charcoal text-white rounded-lg text-xs font-semibold hover:bg-phumulani-earth transition-colors cursor-pointer shadow-xs"
         >
           <UserPlus className="w-4 h-4" />
           <span>Invite Enterprise Staff</span>
@@ -380,7 +380,7 @@ export const StaffManagementTab: React.FC<StaffManagementTabProps> = ({ currentU
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-lg font-semibold shadow-xs"
+                  className="px-4 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded-lg font-semibold shadow-xs"
                 >
                   Dispatch Invitation
                 </button>

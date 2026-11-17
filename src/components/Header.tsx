@@ -259,7 +259,7 @@ export const Header: React.FC<HeaderProps> = ({
             {/* Quick Safe Exit Button */}
             <button
               onClick={handleSafeExit}
-              className="bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white font-bold px-2.5 py-1 rounded-md text-[11px] transition-colors duration-150 flex items-center gap-1 cursor-pointer font-heading tracking-wide whitespace-nowrap focus-visible:ring-2 focus-visible:ring-phumulani-gold"
+              className="bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-bold px-2.5 py-1 rounded-md text-[11px] transition-colors duration-150 flex items-center gap-1 cursor-pointer font-heading tracking-wide whitespace-nowrap focus-visible:ring-2 focus-visible:ring-phumulani-gold"
               title="Instant safe exit to Weather.com (replaces browser history)"
             >
               <span>SAFE EXIT</span>
@@ -338,7 +338,7 @@ export const Header: React.FC<HeaderProps> = ({
               {/* Donate CTA Button */}
               <button
                 onClick={() => navigateToSection('donate-section')}
-                className="h-9 sm:h-10 min-w-[38px] flex items-center justify-center gap-1.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white px-2.5 min-[400px]:px-3 sm:px-4 rounded-lg text-xs font-bold transition-all duration-150 cursor-pointer font-heading tracking-wide shadow-xs whitespace-nowrap focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                className="h-9 sm:h-10 min-w-[38px] flex items-center justify-center gap-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white px-2.5 min-[400px]:px-3 sm:px-4 rounded-lg text-xs font-bold transition-all duration-150 cursor-pointer font-heading tracking-wide shadow-xs whitespace-nowrap focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 aria-label="Donate"
               >
                 <Heart className="w-3.5 h-3.5 shrink-0" strokeWidth={1.75} aria-hidden="true" />

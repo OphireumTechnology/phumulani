@@ -188,7 +188,7 @@ export const GrantManagementTab: React.FC<GrantManagementTabProps> = ({ currentU
                 {grant.pipelineStage === 'RESEARCH' && (
                   <button
                     onClick={() => handleAdvanceStage(grant.id, 'PROPOSAL_DRAFT')}
-                    className="px-3 py-1.5 bg-phumulani-charcoal text-white rounded font-medium hover:bg-phumulani-orange"
+                    className="px-3 py-1.5 bg-phumulani-charcoal text-white rounded font-medium hover:bg-phumulani-earth"
                   >
                     Advance to Proposal Draft
                   </button>
@@ -196,7 +196,7 @@ export const GrantManagementTab: React.FC<GrantManagementTabProps> = ({ currentU
                 {grant.pipelineStage === 'EXECUTIVE_APPROVAL' && (
                   <button
                     onClick={() => handleAdvanceStage(grant.id, 'SUBMISSION_READY')}
-                    className="px-3 py-1.5 bg-phumulani-earth text-white rounded font-medium hover:bg-phumulani-orange"
+                    className="px-3 py-1.5 bg-phumulani-earth text-white rounded font-medium hover:bg-phumulani-charcoal"
                   >
                     Grant Executive Approval
                   </button>
@@ -204,7 +204,7 @@ export const GrantManagementTab: React.FC<GrantManagementTabProps> = ({ currentU
                 {grant.pipelineStage === 'SUBMISSION_READY' && (
                   <button
                     onClick={() => handleAdvanceStage(grant.id, 'SUBMITTED')}
-                    className="px-3 py-1.5 bg-phumulani-earth text-white rounded font-medium hover:bg-phumulani-orange"
+                    className="px-3 py-1.5 bg-phumulani-earth text-white rounded font-medium hover:bg-phumulani-charcoal"
                   >
                     Confirm Submission to Funder
                   </button>
@@ -212,7 +212,7 @@ export const GrantManagementTab: React.FC<GrantManagementTabProps> = ({ currentU
                 {grant.pipelineStage === 'SUBMITTED' && (
                   <button
                     onClick={() => handleAdvanceStage(grant.id, 'AWARDED')}
-                    className="px-3 py-1.5 bg-phumulani-earth text-white rounded font-medium hover:bg-phumulani-orange"
+                    className="px-3 py-1.5 bg-phumulani-earth text-white rounded font-medium hover:bg-phumulani-charcoal"
                   >
                     Record Award Receipt
                   </button>

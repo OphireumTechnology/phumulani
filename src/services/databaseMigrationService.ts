@@ -697,6 +697,51 @@ export class DatabaseMigrationService {
           }
         },
       },
+      {
+        version: '20261117_014',
+        name: 'communications_brand_safeguarding_governance',
+        description:
+          'Add Phumulani Social Media Policy, Brand Manual & Safeguarding tables (editorial workflow, audit trail, isolated media consents, 4-tier moderation, account security governance, source-tagged analytics).',
+        up: async (adapter: PostgresPersistenceAdapter) => {
+          const commsTables = [
+            'social_editorial_items',
+            'social_approval_audit',
+            'media_consent_records',
+            'moderation_incidents',
+            'social_account_governance',
+            'social_analytics_records',
+          ];
+
+          const connInfo = adapter.getConnectionInfo();
+          if (connInfo.engine !== 'POSTGRESQL') {
+            for (const tbl of commsTables) {
+              const existing = await adapter.select(tbl);
+              if (existing.length === 0) {
+                await adapter.saveTable(tbl, []);
+              }
+            }
+            return;
+          }
+
+          for (const tbl of commsTables) {
+            await adapter.query(`
+              CREATE TABLE IF NOT EXISTS "${tbl}" (
+                id TEXT PRIMARY KEY,
+                data JSONB NOT NULL DEFAULT '{}'::jsonb,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+              );
+            `);
+          }
+
+          await adapter.query(`
+            CREATE INDEX IF NOT EXISTS idx_social_editorial_stage ON "social_editorial_items" ((data->>'stage'));
+            CREATE INDEX IF NOT EXISTS idx_social_editorial_pillar ON "social_editorial_items" ((data->>'pillar'));
+            CREATE INDEX IF NOT EXISTS idx_media_consent_status ON "media_consent_records" ((data->>'consentStatus'));
+            CREATE INDEX IF NOT EXISTS idx_moderation_tier_status ON "moderation_incidents" ((data->>'tier'), (data->>'status'));
+          `);
+        },
+      },
     ];
   }
 
@@ -912,6 +957,12 @@ export class DatabaseMigrationService {
         'email_ai_usage_metrics',
         'email_calendar_reminders',
         'email_campaign_batches',
+        'social_editorial_items',
+        'social_approval_audit',
+        'media_consent_records',
+        'moderation_incidents',
+        'social_account_governance',
+        'social_analytics_records',
       ])
     );
 
@@ -998,6 +1049,16 @@ export class DatabaseMigrationService {
         'email_ai_usage_metrics',
         'email_calendar_reminders',
         'email_campaign_batches',
+      ].forEach((t) => ddlTablesFromMigrations.add(t));
+    }
+    if (appliedVersions.has('20261117_014')) {
+      [
+        'social_editorial_items',
+        'social_approval_audit',
+        'media_consent_records',
+        'moderation_incidents',
+        'social_account_governance',
+        'social_analytics_records',
       ].forEach((t) => ddlTablesFromMigrations.add(t));
     }
 

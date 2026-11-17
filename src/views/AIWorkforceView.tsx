@@ -388,7 +388,7 @@ export const AIWorkforceView: React.FC<AIWorkforceViewProps> = ({
                 <button
                   onClick={handleRunPlayground}
                   disabled={isSimulating}
-                  className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+                  className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
                 >
                   {isSimulating ? (
                     <>
@@ -472,7 +472,7 @@ export const AIWorkforceView: React.FC<AIWorkforceViewProps> = ({
 
               <button
                 onClick={handleRunEvaluations}
-                className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shrink-0"
+                className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shrink-0"
               >
                 <Zap className="w-4 h-4" />
                 <span>Run Automated Test Suite</span>

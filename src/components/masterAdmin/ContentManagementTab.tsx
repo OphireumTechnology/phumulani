@@ -29,6 +29,8 @@ import {
   Image,
   RefreshCw,
 } from 'lucide-react';
+import { CommunicationsGovernanceWorkspace } from './communications/CommunicationsGovernanceWorkspace';
+import { BRAND_MANUAL_STATUS } from '../../types/communications';
 
 export interface CmsContentItem {
   id: string;
@@ -282,6 +284,7 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
   currentUser,
   onOpenMediaRegistry,
 }) => {
+  const [workspaceMode, setWorkspaceMode] = useState<'comms_governance' | 'website_cms'>('comms_governance');
   const [items, setItems] = useState<CmsContentItem[]>(INITIAL_CMS_ITEMS);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('ALL');
@@ -383,6 +386,42 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
 
   return (
     <div className="space-y-6">
+      {/* WORKSPACE SWITCHER + DRAFT MANUAL STATUS */}
+      <div className="bg-white p-3.5 rounded-xl border border-phumulani-charcoal/15 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => setWorkspaceMode('comms_governance')}
+            className={`px-3.5 py-2 rounded-lg text-xs font-heading font-bold transition-colors cursor-pointer ${
+              workspaceMode === 'comms_governance'
+                ? 'bg-phumulani-earth text-white shadow-xs'
+                : 'bg-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-gold'
+            }`}
+          >
+            Brand, Social &amp; Safeguarding Governance ({BRAND_MANUAL_STATUS.version})
+          </button>
+          <button
+            onClick={() => setWorkspaceMode('website_cms')}
+            className={`px-3.5 py-2 rounded-lg text-xs font-heading font-bold transition-colors cursor-pointer ${
+              workspaceMode === 'website_cms'
+                ? 'bg-phumulani-earth text-white shadow-xs'
+                : 'bg-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-gold'
+            }`}
+          >
+            Website CMS &amp; Public Pages ({items.length})
+          </button>
+        </div>
+        <span className="text-[11px] font-semibold px-2.5 py-1 rounded-md bg-phumulani-cream text-phumulani-earth border border-phumulani-gold">
+          {BRAND_MANUAL_STATUS.version} — Pending Executive Leadership Approval
+        </span>
+      </div>
+
+      {workspaceMode === 'comms_governance' ? (
+        <CommunicationsGovernanceWorkspace
+          currentUser={currentUser}
+          onStatusBanner={(msg) => setAuditMessage(msg)}
+        />
+      ) : (
+        <>
       {/* 1. TOP METRICS STRIP */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
         <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
@@ -536,7 +575,7 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
               };
               setEditingItem(newDraft);
             }}
-            className="px-3 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+            className="px-3 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-bold flex items-center gap-1.5 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Create Draft</span>
@@ -625,7 +664,7 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
                 ) : (
                   <button
                     onClick={() => handleApprovePublish(item.id)}
-                    className="px-2.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer"
+                    className="px-2.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer"
                     title="Restore and publish content"
                   >
                     <Check className="w-3 h-3" />
@@ -776,7 +815,7 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold cursor-pointer"
+                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold cursor-pointer"
                 >
                   Save Draft Changes
                 </button>
@@ -784,6 +823,8 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
             </form>
           </div>
         </div>
+      )}
+        </>
       )}
     </div>
   );

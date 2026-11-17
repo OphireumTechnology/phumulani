@@ -63,7 +63,7 @@ export const PageHero: React.FC<PageHeroProps> = ({
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <button
                 onClick={onDonateClick}
-                className="min-h-[44px] h-12 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white px-5 rounded-lg text-xs sm:text-sm font-heading font-bold shadow-xs transition-colors flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth"
+                className="min-h-[44px] h-12 bg-phumulani-earth hover:bg-phumulani-charcoal text-white px-5 rounded-lg text-xs sm:text-sm font-heading font-bold shadow-xs transition-colors flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth"
               >
                 <Heart className="w-4 h-4 shrink-0" />
                 <span>Support Our Mission</span>

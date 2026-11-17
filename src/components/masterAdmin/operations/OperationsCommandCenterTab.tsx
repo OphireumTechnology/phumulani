@@ -302,7 +302,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
             </button>
             <button
               onClick={() => setIsNewWorkflowModalOpen(true)}
-              className="px-3.5 py-1.5 text-xs font-semibold bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg transition-colors flex items-center gap-1.5 shadow-xs"
+              className="px-3.5 py-1.5 text-xs font-semibold bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg transition-colors flex items-center gap-1.5 shadow-xs"
             >
               <Plus className="w-3.5 h-3.5" />
               New Workflow
@@ -502,7 +502,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                           setSelectedApproval(app);
                           setIsApprovalModalOpen(true);
                         }}
-                        className="w-full py-1.5 bg-phumulani-charcoal text-white rounded font-semibold text-xs hover:bg-phumulani-orange transition-colors"
+                        className="w-full py-1.5 bg-phumulani-charcoal text-white rounded font-semibold text-xs hover:bg-phumulani-earth transition-colors"
                       >
                         Review Governance Decision
                       </button>
@@ -543,7 +543,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
               </div>
               <button
                 onClick={() => setIsNewWorkflowModalOpen(true)}
-                className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-xs"
+                className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-xs"
               >
                 <Plus className="w-3.5 h-3.5" /> Add Workflow
               </button>
@@ -698,7 +698,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                             setSelectedApproval(app);
                             setIsApprovalModalOpen(true);
                           }}
-                          className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white font-semibold text-xs rounded transition-colors shadow-xs"
+                          className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-semibold text-xs rounded transition-colors shadow-xs"
                         >
                           Decide
                         </button>
@@ -875,7 +875,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
             </div>
             <button
               onClick={() => setIsNewIncidentModalOpen(true)}
-              className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-xs"
+              className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-xs"
             >
               <Plus className="w-3.5 h-3.5" /> Report Incident
             </button>
@@ -963,7 +963,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                   message: `Data quality engine completed audit across 10 departments.`,
                 });
               }}
-              className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-xs"
+              className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg flex items-center gap-1.5 shadow-xs"
             >
               <RefreshCw className="w-3.5 h-3.5" /> Run Integrity Audit
             </button>
@@ -1064,13 +1064,13 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
             <div className="flex items-center gap-2">
               <button
                 onClick={() => handleGenerateReport('OPERATIONAL_STATUS_SUMMARY')}
-                className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg shadow-xs"
+                className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg shadow-xs"
               >
                 + Status Brief
               </button>
               <button
                 onClick={() => handleGenerateReport('DEPARTMENT_WORKLOAD_REPORT')}
-                className="px-3 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg shadow-xs"
+                className="px-3 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-earth text-white text-xs font-semibold rounded-lg shadow-xs"
               >
                 + Capacity Report
               </button>
@@ -1153,7 +1153,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white font-semibold rounded-lg shadow-xs"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-semibold rounded-lg shadow-xs"
                 >
                   Confirm Transition
                 </button>
@@ -1212,7 +1212,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white font-semibold rounded-lg shadow-xs"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-semibold rounded-lg shadow-xs"
                 >
                   Commit Decision
                 </button>
@@ -1315,7 +1315,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white font-semibold rounded-lg shadow-xs"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-semibold rounded-lg shadow-xs"
                 >
                   Create Workflow
                 </button>
@@ -1399,7 +1399,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white font-semibold rounded-lg shadow-xs"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-semibold rounded-lg shadow-xs"
                 >
                   Log Incident
                 </button>

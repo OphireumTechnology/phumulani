@@ -139,7 +139,7 @@ export const AdvancedReportingExportsTab: React.FC<Props> = ({ currentUser }) =>
           <div className="flex items-end">
             <button
               onClick={handleExport}
-              className="w-full py-2.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded text-sm font-bold flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+              className="w-full py-2.5 bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded text-sm font-bold flex items-center justify-center gap-2 cursor-pointer shadow-xs"
             >
               <Download className="w-4 h-4" />
               <span>Download Authorized Report</span>

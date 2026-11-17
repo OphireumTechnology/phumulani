@@ -849,4 +849,54 @@ CREATE TABLE fundraising_agent_tasks (
 CREATE INDEX idx_agent_tasks_agent_id ON fundraising_agent_tasks(agent_id);
 CREATE INDEX idx_agent_tasks_status ON fundraising_agent_tasks(status);
 
+-- ============================================================================
+-- 14. COMMUNICATIONS, BRAND MANUAL & SAFEGUARDING GOVERNANCE (WORKING DRAFT v1.0)
+-- ============================================================================
+
+CREATE TABLE IF NOT EXISTS social_editorial_items (
+    id TEXT PRIMARY KEY,
+    data JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS social_approval_audit (
+    id TEXT PRIMARY KEY,
+    data JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS media_consent_records (
+    id TEXT PRIMARY KEY,
+    data JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS moderation_incidents (
+    id TEXT PRIMARY KEY,
+    data JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS social_account_governance (
+    id TEXT PRIMARY KEY,
+    data JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS social_analytics_records (
+    id TEXT PRIMARY KEY,
+    data JSONB NOT NULL DEFAULT '{}'::jsonb,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS idx_social_editorial_stage ON social_editorial_items ((data->>'stage'));
+CREATE INDEX IF NOT EXISTS idx_media_consent_status ON media_consent_records ((data->>'consentStatus'));
+CREATE INDEX IF NOT EXISTS idx_moderation_tier_status ON moderation_incidents ((data->>'tier'), (data->>'status'));
+
 

@@ -147,7 +147,7 @@ export const RbacPermissionsTab: React.FC<RbacPermissionsTabProps> = ({ currentU
         <button
           onClick={handleRunNegativeAccessTests}
           disabled={isRunningTests}
-          className="inline-flex items-center gap-2 px-3.5 py-2 bg-phumulani-earth text-white rounded-lg text-xs font-semibold hover:bg-phumulani-orange transition-colors cursor-pointer shadow-xs disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-3.5 py-2 bg-phumulani-earth text-white rounded-lg text-xs font-semibold hover:bg-phumulani-charcoal transition-colors cursor-pointer shadow-xs disabled:opacity-50"
         >
           <Play className={`w-4 h-4 ${isRunningTests ? 'animate-spin' : ''}`} />
           <span>{isRunningTests ? 'Executing Probes...' : 'Execute 10 Negative Access Tests'}</span>

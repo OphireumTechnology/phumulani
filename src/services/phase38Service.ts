@@ -291,8 +291,8 @@ export class Phase38Service {
         wcagLevel: 'AA',
         componentChecked: 'src/components/Header.tsx / Footer.tsx',
         passed: true,
-        remediationApplied: 'Enforced Deep Earth #A63C14 and Charcoal #333333 against #FFFFFF and Soft Cream #F7F3E0 accents.',
-        evidence: 'Color contrast ratios exceed 6.25:1 (#A63C14) and 12.63:1 (#333333) on white for navigation and headers.',
+        remediationApplied: 'Enforced Deep Earth #B3340F and Charcoal #333333 against #FFFFFF and Soft Cream #EFEBD1 accents.',
+        evidence: 'Color contrast ratios exceed 6.15:1 (#B3340F) and 12.63:1 (#333333) on white for navigation and headers.',
       },
       {
         criterion: 'WCAG 4.1.2 Name, Role, Value',

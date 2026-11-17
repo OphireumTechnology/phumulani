@@ -169,7 +169,7 @@ export const ExecutiveOverviewTab: React.FC<ExecutiveOverviewTabProps> = ({
                   </div>
                   <button
                     onClick={() => onNavigateTab('executive_decisions')}
-                    className="px-2.5 py-1 bg-phumulani-earth text-white rounded text-xs font-medium hover:bg-phumulani-orange shrink-0"
+                    className="px-2.5 py-1 bg-phumulani-earth text-white rounded text-xs font-medium hover:bg-phumulani-charcoal shrink-0"
                   >
                     Review
                   </button>

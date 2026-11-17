@@ -66,7 +66,7 @@ export const CommunityEngagementTab: React.FC<CommunityEngagementTabProps> = ({
           <button
             onClick={() => setActiveSubTab('announcements')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-              activeSubTab === 'announcements' ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-charcoal text-white hover:bg-phumulani-orange'
+              activeSubTab === 'announcements' ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-charcoal text-white hover:bg-phumulani-teal hover:text-phumulani-charcoal'
             }`}
           >
             Announcements ({announcements.length})
@@ -74,7 +74,7 @@ export const CommunityEngagementTab: React.FC<CommunityEngagementTabProps> = ({
           <button
             onClick={() => setActiveSubTab('feedback')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-              activeSubTab === 'feedback' ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-charcoal text-white hover:bg-phumulani-orange'
+              activeSubTab === 'feedback' ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-charcoal text-white hover:bg-phumulani-teal hover:text-phumulani-charcoal'
             }`}
           >
             Feedback Triage ({feedback.length})
@@ -133,7 +133,7 @@ export const CommunityEngagementTab: React.FC<CommunityEngagementTabProps> = ({
                   {ann.publishStatus === 'PENDING_MODERATION' && (
                     <button
                       onClick={() => handlePublish(ann.id)}
-                      className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white font-semibold rounded-lg text-xs transition-colors"
+                      className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-semibold rounded-lg text-xs transition-colors"
                     >
                       Approve & Publish to Community
                     </button>

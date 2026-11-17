@@ -58,6 +58,7 @@ import {
   normalizeMailboxConnectionState,
 } from './src/email';
 import { phumulaniAiAgentService, APPROVED_COMMUNITY_PROGRAMS } from './src/services/phumulaniAiAgentService';
+import { communicationsGovernanceService } from './src/services/communicationsGovernanceService';
 import { localInferenceAdapter, PHUMULANI_AI_SYSTEM_PROMPT } from './src/services/localInferenceAdapter';
 import { calendarIntegrationService } from './src/services/calendarIntegrationService';
 import { localKnowledgeRetrievalService } from './src/services/localKnowledgeRetrievalService';
@@ -1347,10 +1348,19 @@ const STAFF_ADMIN_ROLES = new Set([
   'program_manager',
   'volunteer_coordinator',
   'communications_officer',
+  'communications_lead',
+  'program_director',
   'caseworker',
   'staff',
   'development_admin',
   'developer',
+]);
+
+const COMMUNICATIONS_WORKSPACE_ROLES = new Set([
+  ...STAFF_ADMIN_ROLES,
+  'intern_content_assistant',
+  'intern',
+  'board_advisor_partner',
 ]);
 
 const PRIVILEGED_ADMIN_ROLES = new Set([
@@ -6909,10 +6919,10 @@ function sendOAuthCallbackResponse(
   const messageText = String(payload.message || payload.error || (payload.success ? 'You may close this window.' : 'Authorization could not be completed.'));
   const escapedText = messageText.replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch] || ch));
   return res.status(statusCode).type('html').send(`<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><title>${title}</title><style>.phumulani-close-btn{background:#A63C14;color:#FFFFFF;border:none;border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer;}.phumulani-close-btn:hover{background:#F97316;color:#333333;}</style></head>
-<body style="font-family:system-ui,sans-serif;padding:24px;background:#F7F3E0;color:#333333;">
-  <div style="max-width:460px;margin:40px auto;background:#FFFFFF;border:1px solid #A63C14;border-radius:12px;padding:20px;">
-    <h2 style="margin:0 0 8px 0;font-size:18px;color:#A63C14;">${heading}</h2>
+<html lang="en"><head><meta charset="utf-8"><title>${title}</title><style>.phumulani-close-btn{background:#B3340F;color:#FFFFFF;border:none;border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer;}.phumulani-close-btn:hover{background:#333333;color:#FFFFFF;}</style></head>
+<body style="font-family:system-ui,sans-serif;padding:24px;background:#EFEBD1;color:#333333;">
+  <div style="max-width:460px;margin:40px auto;background:#FFFFFF;border:1px solid #B3340F;border-radius:12px;padding:20px;">
+    <h2 style="margin:0 0 8px 0;font-size:18px;color:#B3340F;">${heading}</h2>
     <p style="margin:0 0 16px 0;font-size:14px;color:#333333;">${escapedText}</p>
     <button onclick="window.close()" class="phumulani-close-btn">Close Window</button>
   </div>
@@ -8905,6 +8915,242 @@ app.get('/api/phumulani-ai/knowledge/audit-report', (req: Request, res: Response
   res.json({ success: true, auditReport: localKnowledgeRetrievalService.getSourceApprovalAuditReport() });
 });
 
+// =============================================================================
+// PHUMULANI BRAND MANUAL, COMMUNICATIONS & SAFEGUARDING GOVERNANCE API
+// (Grounded in Working Draft v1.0 — Pending Executive Leadership Approval)
+// =============================================================================
+
+const toActorFromSession = (req: Request) => {
+  const sess = getAuthenticatedSession(req)!;
+  return {
+    userId: sess.userId,
+    name: sess.name || sess.userEmail || sess.userId,
+    email: sess.userEmail,
+    role: String(sess.role),
+  };
+};
+
+const handleCommsError = (res: Response, err: any) => {
+  const msg = String(err?.message || err || 'Communications governance error');
+  const status =
+    msg.startsWith('FORBIDDEN:') ||
+    msg.startsWith('EXECUTIVE_APPROVAL_REQUIRED:') ||
+    msg.startsWith('EXECUTIVE_OR_SAFEGUARDING_REQUIRED:')
+      ? 403
+      : msg.startsWith('SAFEGUARDING_') ||
+        msg.startsWith('AI_SAFEGUARDING_BLOCKED:') ||
+        msg.startsWith('CONSENT_') ||
+        msg.startsWith('ACCESSIBILITY_') ||
+        msg.startsWith('TYPOGRAPHY_') ||
+        msg.startsWith('ASSET_NAMING_') ||
+        msg.startsWith('RED_CRISIS_PUBLISHING_PAUSE:') ||
+        msg.startsWith('SECURITY_POLICY_BLOCKED:')
+      ? 422
+      : 400;
+  return res.status(status).json({ success: false, error: msg });
+};
+
+app.get(
+  '/api/communications/snapshot',
+  requireSessionMiddleware(COMMUNICATIONS_WORKSPACE_ROLES),
+  async (req: Request, res: Response) => {
+    try {
+      const snapshot = await communicationsGovernanceService.getSnapshot(toActorFromSession(req));
+      res.json({ success: true, snapshot });
+    } catch (err: any) {
+      handleCommsError(res, err);
+    }
+  }
+);
+
+app.post(
+  '/api/communications/items',
+  requireSessionMiddleware(COMMUNICATIONS_WORKSPACE_ROLES),
+  async (req: Request, res: Response) => {
+    try {
+      const item = await communicationsGovernanceService.createEditorialItem(req.body || {}, toActorFromSession(req));
+      res.status(201).json({ success: true, item });
+    } catch (err: any) {
+      handleCommsError(res, err);
+    }
+  }
+);
+
+app.put(
+  '/api/communications/items/:id',
+  requireSessionMiddleware(COMMUNICATIONS_WORKSPACE_ROLES),
+  async (req: Request, res: Response) => {
+    try {
+      const result = await communicationsGovernanceService.updateEditorialItem(
+        req.params.id,
+        req.body || {},
+        toActorFromSession(req)
+      );
+      res.json({ success: true, ...result });
+    } catch (err: any) {
+      handleCommsError(res, err);
+    }
+  }
+);
+
+app.post(
+  '/api/communications/items/:id/transition',
+  requireSessionMiddleware(COMMUNICATIONS_WORKSPACE_ROLES),
+  async (req: Request, res: Response) => {
+    try {
+      const { targetStage, decisionNotes } = req.body || {};
+      const item = await communicationsGovernanceService.transitionEditorialStage(
+        req.params.id,
+        targetStage,
+        toActorFromSession(req),
+        decisionNotes
+      );
+      res.json({ success: true, item });
+    } catch (err: any) {
+      handleCommsError(res, err);
+    }
+  }
+);
+
+app.post(
+  '/api/communications/items/:id/verify-links',
+  requireSessionMiddleware(COMMUNICATIONS_WORKSPACE_ROLES),
+  async (req: Request, res: Response) => {
+    try {
+      const result = await communicationsGovernanceService.verifyItemLink(req.params.id, toActorFromSession(req));
+      res.json({ success: true, ...result });
+    } catch (err: any) {
+      handleCommsError(res, err);
+    }
+  }
+);
+
+app.post(
+  '/api/communications/consents',
+  requireSessionMiddleware(COMMUNICATIONS_WORKSPACE_ROLES),
+  async (req: Request, res: Response) => {
+    try {
+      const record = await communicationsGovernanceService.createConsentRecord(req.body || {}, toActorFromSession(req));
+      res.status(201).json({ success: true, record });
+    } catch (err: any) {
+      handleCommsError(res, err);
+    }
+  }
+);
+
+app.post(
+  '/api/communications/consents/:id/withdraw',
+  requireSessionMiddleware(COMMUNICATIONS_WORKSPACE_ROLES),
+  async (req: Request, res: Response) => {
+    try {
+      const { reason } = req.body || {};
+      const result = await communicationsGovernanceService.withdrawConsentAndTriggerTakedown(
+        req.params.id,
+        String(reason || 'Subject/Guardian requested withdrawal'),
+        toActorFromSession(req)
+      );
+      res.json({ success: true, ...result });
+    } catch (err: any) {
+      handleCommsError(res, err);
+    }
+  }
+);
+
+app.post(
+  '/api/communications/moderation',
+  requireSessionMiddleware(COMMUNICATIONS_WORKSPACE_ROLES),
+  async (req: Request, res: Response) => {
+    try {
+      const incident = await communicationsGovernanceService.createModerationIncident(
+        req.body || {},
+        toActorFromSession(req)
+      );
+      res.status(201).json({ success: true, incident });
+    } catch (err: any) {
+      handleCommsError(res, err);
+    }
+  }
+);
+
+app.post(
+  '/api/communications/moderation/:id/decide',
+  requireSessionMiddleware(COMMUNICATIONS_WORKSPACE_ROLES),
+  async (req: Request, res: Response) => {
+    try {
+      const { decision, draftReply } = req.body || {};
+      const incident = await communicationsGovernanceService.decideModerationIncident(
+        req.params.id,
+        decision,
+        toActorFromSession(req),
+        draftReply
+      );
+      res.json({ success: true, incident });
+    } catch (err: any) {
+      handleCommsError(res, err);
+    }
+  }
+);
+
+app.put(
+  '/api/communications/accounts/:id',
+  requireSessionMiddleware(COMMUNICATIONS_WORKSPACE_ROLES),
+  async (req: Request, res: Response) => {
+    try {
+      const account = await communicationsGovernanceService.auditSocialAccount(
+        req.params.id,
+        req.body || {},
+        toActorFromSession(req)
+      );
+      res.json({ success: true, account });
+    } catch (err: any) {
+      handleCommsError(res, err);
+    }
+  }
+);
+
+app.post(
+  '/api/communications/analytics',
+  requireSessionMiddleware(COMMUNICATIONS_WORKSPACE_ROLES),
+  async (req: Request, res: Response) => {
+    try {
+      const record = await communicationsGovernanceService.recordAnalyticsEntry(
+        req.body || {},
+        toActorFromSession(req)
+      );
+      res.status(201).json({ success: true, record });
+    } catch (err: any) {
+      handleCommsError(res, err);
+    }
+  }
+);
+
+app.post(
+  '/api/communications/ai-assist',
+  requireSessionMiddleware(COMMUNICATIONS_WORKSPACE_ROLES),
+  async (req: Request, res: Response) => {
+    try {
+      const generateWithModel = genAI
+        ? async (prompt: string) => {
+            const response = await genAI!.models.generateContent({
+              model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
+              contents: prompt,
+            });
+            return response?.text || null;
+          }
+        : undefined;
+
+      const result = await communicationsGovernanceService.runAiAssist(
+        req.body || {},
+        toActorFromSession(req),
+        generateWithModel
+      );
+      res.json({ success: true, ...result });
+    } catch (err: any) {
+      handleCommsError(res, err);
+    }
+  }
+);
+
 // -----------------------------------------------------------------------------
 // VITE SPA DEV MIDDLEWARE / STATIC SERVING
 // -----------------------------------------------------------------------------
@@ -8974,9 +9220,10 @@ async function startServer() {
   try {
     await phumulaniAiAgentService.initialize();
     await calendarIntegrationService.initialize();
-    console.log('[Phumulani Platform] Phumulani Ai agent & calendar integration services initialized.');
+    await communicationsGovernanceService.ensureInitialized();
+    console.log('[Phumulani Platform] Phumulani Ai, calendar & communications governance services initialized.');
   } catch (aiErr) {
-    console.warn('[Phumulani Platform] Phumulani Ai initialization notice:', aiErr);
+    console.warn('[Phumulani Platform] Phumulani Ai / communications initialization notice:', aiErr);
   }
 
   const publicDir = path.resolve(process.cwd(), 'public');

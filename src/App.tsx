@@ -209,7 +209,7 @@ export default function App() {
             </p>
             <button
               onClick={() => setActiveView('public')}
-              className="px-5 py-2.5 bg-phumulani-earth text-white rounded-lg text-xs font-heading font-bold hover:bg-phumulani-orange hover:text-phumulani-charcoal cursor-pointer transition-colors"
+              className="px-5 py-2.5 bg-phumulani-earth text-white rounded-lg text-xs font-heading font-bold hover:bg-phumulani-charcoal cursor-pointer transition-colors"
             >
               Return to Public Website
             </button>

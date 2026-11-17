@@ -510,7 +510,7 @@ export const FounderSection: React.FC = () => {
                   <div className="flex justify-end pt-2">
                     <button
                       onClick={() => setSelectedBook(null)}
-                      className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg text-xs font-bold cursor-pointer font-heading shadow-sm transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                      className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-bold cursor-pointer font-heading shadow-sm transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                     >
                       Close Window
                     </button>

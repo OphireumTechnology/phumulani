@@ -169,7 +169,7 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
             {/* Launch Staging Sandbox */}
             <button
               onClick={() => setIsStagingModalOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-gold hover:bg-phumulani-orange text-phumulani-charcoal text-xs font-bold rounded-lg transition-colors cursor-pointer whitespace-nowrap"
+              className="flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-gold hover:bg-phumulani-teal text-phumulani-charcoal text-xs font-bold rounded-lg transition-colors cursor-pointer whitespace-nowrap"
               title="Launch protected staging preview"
             >
               <Eye className="w-3.5 h-3.5" />
@@ -179,7 +179,7 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
             {/* Submit Client Feedback */}
             <button
               onClick={() => setIsFeedbackModalOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal text-xs font-bold rounded-lg transition-colors cursor-pointer whitespace-nowrap"
+              className="flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal text-xs font-bold rounded-lg transition-colors cursor-pointer whitespace-nowrap"
             >
               <Send className="w-3.5 h-3.5" />
               <span>Submit Feedback</span>
@@ -663,7 +663,7 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                           <div className="pt-2 flex justify-end">
                             <button
                               onClick={() => setApprovalModalMilestone(m)}
-                              className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal font-bold text-xs rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
+                              className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal font-bold text-xs rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
                             >
                               <ThumbsUp className="w-3.5 h-3.5" />
                               <span>Review &amp; Formally Sign Off</span>
@@ -847,7 +847,7 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                           <div className="flex justify-end pt-1">
                             <button
                               onClick={() => setApprovalModalMilestone(m)}
-                              className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal font-bold text-xs rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors"
+                              className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal font-bold text-xs rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors"
                             >
                               <ThumbsUp className="w-3.5 h-3.5" />
                               <span>Authorize Milestone Acceptance</span>
@@ -872,7 +872,7 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                   </h3>
                   <button
                     onClick={() => setIsFeedbackModalOpen(true)}
-                    className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal text-xs font-bold rounded-lg cursor-pointer transition-colors"
+                    className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal text-xs font-bold rounded-lg cursor-pointer transition-colors"
                   >
                     + Submit New Feedback
                   </button>
@@ -1139,7 +1139,7 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal font-bold rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal font-bold rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors"
                 >
                   <Send className="w-3.5 h-3.5" />
                   <span>Submit Observation</span>
@@ -1189,7 +1189,7 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                 </button>
                 <button
                   onClick={() => handleFormalApproval('APPROVED')}
-                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal font-bold rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal font-bold rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors"
                 >
                   <Check className="w-3.5 h-3.5" />
                   <span>Confirm Approval</span>

@@ -1876,7 +1876,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               <button
                 type="button"
                 onClick={openConnectEmailWizard}
-                className="mt-6 px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs sm:text-sm font-bold rounded-xl shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
+                className="mt-6 px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs sm:text-sm font-bold rounded-xl shadow-xs transition-colors flex items-center gap-2 cursor-pointer"
               >
                 <Plus className="w-4 h-4" />
                 <span>Connect Email Account</span>
@@ -2052,7 +2052,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     setMbxFormInitialState('AUTHORIZATION_REQUIRED');
                     setIsAddMailboxModalOpen(true);
                   }}
-                  className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Register Mailbox Configuration</span>
@@ -2340,7 +2340,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                                   message: `Authorize ${mbx.email} through the live provider connection wizard. A mailbox cannot be marked connected manually.`,
                                 });
                               }}
-                              className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold text-[11px] cursor-pointer"
+                              className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold text-[11px] cursor-pointer"
                             >
                               Reconnect
                             </button>
@@ -2372,7 +2372,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 <button
                   type="button"
                   onClick={openConnectEmailWizard}
-                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold shadow-xs cursor-pointer"
+                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl text-xs font-bold shadow-xs cursor-pointer"
                 >
                   Connect Email Account
                 </button>
@@ -2474,14 +2474,14 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setActiveTab('approvals')}
-                  className="px-3 py-1.5 bg-phumulani-gold hover:bg-phumulani-orange text-phumulani-charcoal rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  className="px-3 py-1.5 bg-phumulani-gold hover:bg-phumulani-teal text-phumulani-charcoal rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   <FileCheck className="w-4 h-4" />
                   <span>Review Approvals ({threads.filter((t) => t.draft?.status === 'pending_approval').length})</span>
                 </button>
                 <button
                   onClick={() => setActiveTab('all_mailboxes')}
-                  className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   <Inbox className="w-4 h-4" />
                   <span>Unified Inbox</span>
@@ -2755,7 +2755,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
 
                   <button
                     onClick={() => setIsAuditLogsModalOpen(true)}
-                    className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
+                    className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
                   >
                     <FileCheck className="w-3.5 h-3.5" />
                     <span>View Sync Logs ({syncAuditLogs.length})</span>
@@ -2792,7 +2792,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     type="button"
                     onClick={handleRunWorkspaceDiagnostics}
                     disabled={isWorkspaceDiagRunning}
-                    className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange disabled:opacity-50 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                    className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal disabled:opacity-50 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${isWorkspaceDiagRunning ? 'animate-spin' : ''}`} />
                     <span>{isWorkspaceDiagRunning ? 'Testing Handshake...' : 'Run Diagnostics Test'}</span>
@@ -3305,7 +3305,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   type="button"
                   onClick={refreshWizardState}
                   disabled={isVerifyingWizard}
-                  className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange disabled:opacity-50 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal disabled:opacity-50 text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isVerifyingWizard ? 'animate-spin' : ''}`} />
                   <span>{isVerifyingWizard ? 'Refreshing Diagnostics...' : 'Refresh Wizard Status'}</span>
@@ -3421,7 +3421,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         );
                         refreshWizardState();
                       }}
-                      className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                      className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                     >
                       <ShieldAlert className="w-4 h-4" />
                       <span>Instant Emergency Shutdown</span>
@@ -3454,7 +3454,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         }
                         refreshWizardState();
                       }}
-                      className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                      className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                     >
                       <CheckCircle2 className="w-4 h-4 text-white" />
                       <span>Activate Controlled Pilot</span>
@@ -3667,7 +3667,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                           className={`px-3 py-1 rounded-lg text-xs font-bold cursor-pointer ${
                             isVerified
                               ? 'bg-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream'
-                              : 'bg-phumulani-earth hover:bg-phumulani-orange text-white shadow-2xs'
+                              : 'bg-phumulani-earth hover:bg-phumulani-charcoal text-white shadow-2xs'
                           }`}
                         >
                           {step.actionLabel}
@@ -4179,7 +4179,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                                 <button
                                   type="button"
                                   onClick={() => handleApproveDraft(thread.id)}
-                                  className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
+                                  className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
                                   title="Approve draft for outbound dispatch"
                                 >
                                   <ThumbsUp className="w-3 h-3" />
@@ -4219,7 +4219,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                               <button
                                 type="button"
                                 onClick={() => handleSendApprovedEmail(thread.id)}
-                                className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
+                                className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shadow-xs"
                               >
                                 <Send className="w-3.5 h-3.5" />
                                 <span>Send Approved Email</span>
@@ -4291,7 +4291,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             <button
                               type="button"
                               onClick={() => handleApprovePersistentDraft(pd.id, 'APPROVE')}
-                              className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold cursor-pointer"
+                              className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold cursor-pointer"
                             >
                               Approve (Maker-Checker)
                             </button>
@@ -4323,7 +4323,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             <button
                               type="button"
                               onClick={() => handleSendPersistentDraft(pd.id)}
-                              className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold cursor-pointer"
+                              className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold cursor-pointer"
                             >
                               Dispatch Now
                             </button>
@@ -4761,7 +4761,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       {cal.status !== 'approved_sent' && (
                         <button
                           onClick={() => db.approveCalendarProposal(cal.id, cal.proposedTimes[0])}
-                          className="w-full py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1 cursor-pointer"
+                          className="w-full py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-bold flex items-center justify-center gap-1 cursor-pointer"
                         >
                           <Check className="w-3.5 h-3.5" />
                           <span>Dispatch Confirmed Calendar Invite</span>
@@ -4925,7 +4925,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                     setNewTaskTitle('');
                     setIsNewTaskModalOpen(true);
                   }}
-                  className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>New Follow-Up Task</span>
@@ -5035,7 +5035,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                           className={`px-3 py-1 text-xs font-bold rounded-lg cursor-pointer ${
                             task.status === 'completed'
                               ? 'bg-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream'
-                              : 'bg-phumulani-earth text-white hover:bg-phumulani-orange'
+                              : 'bg-phumulani-earth text-white hover:bg-phumulani-charcoal'
                           }`}
                         >
                           {task.status === 'completed' ? 'Reopen' : 'Mark Complete'}
@@ -5196,7 +5196,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   if (onOpenFundraisingCRM) onOpenFundraisingCRM('overview');
                   else onViewChange('fundraising');
                 }}
-                className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
               >
                 <span>Launch Full Fundraising CRM →</span>
               </button>
@@ -5433,7 +5433,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         setInterpolationInputs(initialInputs);
                         setInterpolationResult(EmailEnterpriseService.interpolateTemplate(tmpl, initialInputs));
                       }}
-                      className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
+                      className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-bold flex items-center gap-1 cursor-pointer shadow-2xs"
                     >
                       <Sparkles className="w-3 h-3 text-white" />
                       <span>Test Variable Interpolation</span>
@@ -5574,7 +5574,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   downloadAnchor.click();
                   downloadAnchor.remove();
                 }}
-                className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl text-xs font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
               >
                 <FileCode className="w-4 h-4 text-white" />
                 <span>Export Audit Log (JSON)</span>
@@ -5775,7 +5775,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               </div>
               <button
                 type="submit"
-                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold cursor-pointer"
+                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl font-bold cursor-pointer"
               >
                 Ingest &amp; Classify Document
               </button>
@@ -5853,7 +5853,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                             <button
                               type="button"
                               onClick={() => handleCreateInvoiceFromDoc(doc.id)}
-                              className="px-2 py-1 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded text-[11px] font-semibold cursor-pointer"
+                              className="px-2 py-1 bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded text-[11px] font-semibold cursor-pointer"
                               title="Creates invoice for vendor bills; strictly blocks grant advances & liquidations"
                             >
                               Create Invoice
@@ -5901,14 +5901,14 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 <button
                   type="button"
                   onClick={handleRunWorkerCycle}
-                  className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold cursor-pointer"
+                  className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl text-xs font-bold cursor-pointer"
                 >
                   Run Worker Cycle
                 </button>
                 <button
                   type="button"
                   onClick={handleExportComplianceBundle}
-                  className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-bold cursor-pointer"
+                  className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl text-xs font-bold cursor-pointer"
                 >
                   Export Redacted Compliance Bundle
                 </button>
@@ -5979,7 +5979,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 />
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold cursor-pointer"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl font-bold cursor-pointer"
                 >
                   Activate Legal Hold
                 </button>
@@ -6152,7 +6152,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                         <button
                           type="button"
                           onClick={() => handleInsertTemplate(tmpl)}
-                          className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-[11px] font-bold cursor-pointer"
+                          className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-[11px] font-bold cursor-pointer"
                         >
                           Use Template
                         </button>
@@ -6316,7 +6316,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       setIsComposeOpen(false);
                       openConnectEmailWizard();
                     }}
-                    className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold shrink-0 cursor-pointer"
+                    className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold shrink-0 cursor-pointer"
                   >
                     Connect Email Account
                   </button>
@@ -6422,7 +6422,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   <button
                     type="submit"
                     disabled={effectiveConnectedMailboxesCount === 0}
-                    className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>Stage Outbound Dispatch</span>
@@ -6482,7 +6482,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               <button
                 type="button"
                 onClick={handleConfirmReclassification}
-                className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold cursor-pointer"
+                className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl font-bold cursor-pointer"
               >
                 Apply Reclassification
               </button>
@@ -6597,7 +6597,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               <button
                 type="button"
                 onClick={() => handleStartImport(importTargetMailbox)}
-                className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
               >
                 <History className="w-3.5 h-3.5" />
                 <span>Launch Background Historical Import</span>
@@ -6870,7 +6870,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                       <button
                         type="button"
                         onClick={() => handleInsertTemplate(tmpl)}
-                        className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold cursor-pointer shadow-2xs"
+                        className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-bold cursor-pointer shadow-2xs"
                       >
                         Insert into {targetTemplateInsert === 'compose' ? 'Composer' : 'Draft'}
                       </button>
@@ -7005,7 +7005,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               <button
                 type="button"
                 onClick={handleCreateFollowUpTask}
-                className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
               >
                 <CheckSquare className="w-3.5 h-3.5" />
                 <span>Create Task</span>
@@ -7113,7 +7113,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>Register Mailbox</span>
@@ -7207,7 +7207,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl font-bold flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   <Check className="w-3.5 h-3.5" />
                   <span>Save Settings</span>
@@ -7261,7 +7261,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
               <button
                 type="button"
                 onClick={() => setTestConnectionResult(null)}
-                className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold cursor-pointer"
+                className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl font-bold cursor-pointer"
               >
                 Done
               </button>
@@ -7360,7 +7360,7 @@ export const EmailCommandCenterView: React.FC<EmailCommandCenterViewProps> = ({
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold flex items-center gap-1 shadow-xs cursor-pointer"
+                    className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl font-bold flex items-center gap-1 shadow-xs cursor-pointer"
                   >
                     <Check className="w-3.5 h-3.5" />
                     <span>Link CRM Record</span>

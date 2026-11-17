@@ -197,7 +197,7 @@ export const WebsiteConciergeModal: React.FC = () => {
 
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="p-1.5 rounded-md text-phumulani-cream hover:text-phumulani-charcoal hover:bg-phumulani-orange transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-gold"
+                  className="p-1.5 rounded-md text-phumulani-cream hover:bg-phumulani-charcoal transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-gold"
                   aria-label="Close Concierge"
                 >
                   <X className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
@@ -303,7 +303,7 @@ export const WebsiteConciergeModal: React.FC = () => {
               <button
                 onClick={() => handleSend()}
                 disabled={!input.trim() || isLoading}
-                className="p-2 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                className="p-2 bg-phumulani-earth hover:bg-phumulani-charcoal disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 aria-label="Send message"
               >
                 <Send className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />

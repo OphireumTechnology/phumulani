@@ -162,7 +162,7 @@ export const DevelopmentOperationsView: React.FC<DevelopmentOperationsViewProps>
           </button>
           <button
             onClick={() => onViewChange('client-development')}
-            className="flex items-center gap-1.5 px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal text-xs font-bold rounded-lg transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal text-xs font-bold rounded-lg transition-colors cursor-pointer"
           >
             <ExternalLink className="w-3.5 h-3.5" />
             <span>Open Client Portal View</span>
@@ -452,7 +452,7 @@ export const DevelopmentOperationsView: React.FC<DevelopmentOperationsViewProps>
                     {selectedMilestone.developmentStatus === 'READY_FOR_CLIENT_REVIEW' && (
                       <button
                         onClick={() => handleApproveMilestone(selectedMilestone)}
-                        className="w-full py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal font-bold text-xs rounded-lg transition-colors cursor-pointer flex items-center justify-center gap-1.5"
+                        className="w-full py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal font-bold text-xs rounded-lg transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                       >
                         <Check className="w-3.5 h-3.5" />
                         <span>Authorize Milestone Approval (v13.0)</span>
@@ -603,7 +603,7 @@ export const DevelopmentOperationsView: React.FC<DevelopmentOperationsViewProps>
                 </div>
                 <button
                   onClick={handleManualSyncIngest}
-                  className="px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal font-bold text-xs rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors"
+                  className="px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal font-bold text-xs rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
                   <span>Ingest Status From Windows Agent</span>
@@ -740,7 +740,7 @@ export const DevelopmentOperationsView: React.FC<DevelopmentOperationsViewProps>
                         {f.status !== 'RESOLVED' && (
                           <button
                             onClick={() => setFeedbackResolveModal(f)}
-                            className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal text-xs font-semibold rounded-md cursor-pointer transition-colors"
+                            className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal text-xs font-semibold rounded-md cursor-pointer transition-colors"
                           >
                             Resolve Issue
                           </button>
@@ -931,7 +931,7 @@ export const DevelopmentOperationsView: React.FC<DevelopmentOperationsViewProps>
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold cursor-pointer transition-colors"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold cursor-pointer transition-colors"
                 >
                   Confirm Resolution
                 </button>

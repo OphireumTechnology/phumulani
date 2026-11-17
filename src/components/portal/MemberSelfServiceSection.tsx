@@ -295,7 +295,7 @@ export const MemberSelfServiceSection: React.FC<MemberSelfServiceSectionProps> =
                 </span>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
+                  className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
                 >
                   Submit Service Request
                 </button>
@@ -460,7 +460,7 @@ export const MemberSelfServiceSection: React.FC<MemberSelfServiceSectionProps> =
                   <button
                     type="button"
                     onClick={() => handleSubmitFeedback(activeFeedbackModalReq.id)}
-                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white text-xs font-bold rounded-lg cursor-pointer transition-colors"
+                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-bold rounded-lg cursor-pointer transition-colors"
                   >
                     Submit Feedback
                   </button>
@@ -562,7 +562,7 @@ export const MemberSelfServiceSection: React.FC<MemberSelfServiceSectionProps> =
                   setSelectedProgForEnroll('PROG-001');
                   setSelectedProgTitle('East African Women Entrepreneurship Lab');
                 }}
-                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white text-xs font-bold rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors"
+                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-bold rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors"
               >
                 <PlusCircle className="w-3.5 h-3.5" />
                 <span>Apply to Program</span>
@@ -603,7 +603,7 @@ export const MemberSelfServiceSection: React.FC<MemberSelfServiceSectionProps> =
                 <span className="text-[11px] text-phumulani-charcoal/80">Waitlist spots allocated based on verified intake priorities.</span>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white font-bold rounded-lg cursor-pointer transition-colors"
+                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-bold rounded-lg cursor-pointer transition-colors"
                 >
                   Submit Application
                 </button>
@@ -728,7 +728,7 @@ export const MemberSelfServiceSection: React.FC<MemberSelfServiceSectionProps> =
                               <button
                                 type="button"
                                 onClick={() => handleRecordReferralOutcome(ref.id)}
-                                className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white font-bold rounded-lg cursor-pointer transition-colors"
+                                className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-bold rounded-lg cursor-pointer transition-colors"
                               >
                                 Save Feedback
                               </button>
@@ -796,7 +796,7 @@ export const MemberSelfServiceSection: React.FC<MemberSelfServiceSectionProps> =
                       <button
                         type="button"
                         onClick={() => handleEventCheckin(evt.id)}
-                        className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white text-xs font-bold rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors"
+                        className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-bold rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors"
                       >
                         <CheckCircle2 className="w-3.5 h-3.5" />
                         <span>Self Check-In Now</span>
@@ -966,7 +966,7 @@ export const MemberSelfServiceSection: React.FC<MemberSelfServiceSectionProps> =
             <div className="pt-2 flex justify-end">
               <button
                 type="submit"
-                className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white font-bold rounded-lg cursor-pointer transition-colors"
+                className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-bold rounded-lg cursor-pointer transition-colors"
               >
                 Save Profile Changes
               </button>

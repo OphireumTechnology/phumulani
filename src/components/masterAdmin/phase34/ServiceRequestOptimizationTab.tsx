@@ -134,7 +134,7 @@ export const ServiceRequestOptimizationTab: React.FC<Props> = ({ currentUser }) 
                   {req.status === 'TRIAGED' && (
                     <button
                       onClick={() => handleStatusTransition(req.id, 'IN_PROGRESS')}
-                      className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded text-xs font-semibold cursor-pointer"
+                      className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded text-xs font-semibold cursor-pointer"
                     >
                       Begin Progress
                     </button>
@@ -257,7 +257,7 @@ export const ServiceRequestOptimizationTab: React.FC<Props> = ({ currentUser }) 
               <button
                 onClick={handleEscalate}
                 disabled={!escalationReason.trim()}
-                className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded text-xs font-semibold disabled:opacity-50"
+                className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded text-xs font-semibold disabled:opacity-50"
               >
                 Confirm Escalation
               </button>

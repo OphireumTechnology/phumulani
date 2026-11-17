@@ -602,7 +602,7 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
               <button
                 type="button"
                 onClick={handleSaveProfile}
-                className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
+                className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
               >
                 Save Profile Updates
               </button>
@@ -700,7 +700,7 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
                   </span>
                   <button
                     type="submit"
-                    className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
+                    className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
                   >
                     Submit Service Request
                   </button>
@@ -807,7 +807,7 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
                           className={`w-full py-2 px-3 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
                             isEnrolled
                               ? 'bg-white text-phumulani-earth hover:bg-phumulani-cream border border-phumulani-earth/40'
-                              : 'bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white'
+                              : 'bg-phumulani-earth hover:bg-phumulani-charcoal text-white'
                           }`}
                         >
                           {isEnrolled ? 'Withdraw from Program' : 'Enroll in Next Cohort'}
@@ -1113,7 +1113,7 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
 
               <button
                 type="submit"
-                className="py-2.5 px-5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg font-bold transition-colors cursor-pointer"
+                className="py-2.5 px-5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold transition-colors cursor-pointer"
               >
                 Submit Service Record
               </button>

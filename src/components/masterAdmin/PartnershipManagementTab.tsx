@@ -164,7 +164,7 @@ export const PartnershipManagementTab: React.FC<PartnershipManagementTabProps> =
                 {p.workflowStage === 'ENGAGEMENT' && (
                   <button
                     onClick={() => handleAdvanceStage(p.id, 'PROPOSAL_REVIEW', 'DRAFTING')}
-                    className="px-2.5 py-1 bg-phumulani-charcoal text-white rounded font-medium hover:bg-phumulani-orange"
+                    className="px-2.5 py-1 bg-phumulani-charcoal text-white rounded font-medium hover:bg-phumulani-earth"
                   >
                     Submit Proposal
                   </button>
@@ -172,7 +172,7 @@ export const PartnershipManagementTab: React.FC<PartnershipManagementTabProps> =
                 {p.workflowStage === 'NEGOTIATION' && (
                   <button
                     onClick={() => handleAdvanceStage(p.id, 'ACTIVE_PARTNERSHIP', 'SIGNED')}
-                    className="px-2.5 py-1 bg-phumulani-earth text-white rounded font-medium hover:bg-phumulani-orange"
+                    className="px-2.5 py-1 bg-phumulani-earth text-white rounded font-medium hover:bg-phumulani-charcoal"
                   >
                     Execute Signed MOU
                   </button>

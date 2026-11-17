@@ -110,7 +110,7 @@ export const FundingCommandCenterTab: React.FC<FundingCommandCenterTabProps> = (
             <button
               onClick={handleRunSecurityProbes}
               disabled={isRunningSecurity}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
             >
               <ShieldCheck className="w-3.5 h-3.5" />
               {isRunningSecurity ? 'Testing...' : 'Run 20 Security Probes'}

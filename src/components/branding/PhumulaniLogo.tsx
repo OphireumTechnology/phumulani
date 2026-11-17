@@ -19,6 +19,8 @@ export interface PhumulaniLogoProps {
   size?: number | string;
   showTagline?: boolean;
   theme?: 'light' | 'dark';
+  surface?: 'transparent' | 'white' | 'cream';
+  enforceClearSpace?: boolean;
   alt?: string;
   onClick?: () => void;
 }
@@ -29,7 +31,8 @@ export const PhumulaniLogo: React.FC<PhumulaniLogoProps> = ({
   height,
   width,
   size,
-  theme = 'light',
+  surface = 'transparent',
+  enforceClearSpace = false,
   alt = 'Phumulani — The voice of immigrants and refugees in America',
   onClick,
 }) => {
@@ -83,11 +86,18 @@ export const PhumulaniLogo: React.FC<PhumulaniLogoProps> = ({
     width: effectiveWidth !== undefined ? effectiveWidth : undefined,
   };
 
-  return (
+  const surfaceClass =
+    surface === 'white'
+      ? 'bg-white rounded-xl'
+      : surface === 'cream'
+      ? 'bg-phumulani-cream rounded-xl'
+      : '';
+  const clearSpaceClass = enforceClearSpace ? 'p-[6%]' : '';
+
+  const imgEl = (
     <img
       src={useFallback ? fallbackSrc : src}
       onError={() => {
-        // A local variable change does not update the rendered image source.
         if (!useFallback) {
           setUseFallback(true);
         } else {
@@ -96,12 +106,25 @@ export const PhumulaniLogo: React.FC<PhumulaniLogoProps> = ({
       }}
       alt={alt}
       style={style}
-      onClick={onClick}
-      className={`object-contain shrink-0 max-w-full select-none ${aspectRatio} ${className}`}
+      onClick={surface === 'transparent' && !enforceClearSpace ? onClick : undefined}
+      className={`object-contain shrink-0 max-w-full select-none ${aspectRatio} ${surface === 'transparent' && !enforceClearSpace ? className : ''}`}
       loading="eager"
       decoding="async"
     />
   );
+
+  if (surface !== 'transparent' || enforceClearSpace) {
+    return (
+      <span
+        onClick={onClick}
+        className={`inline-flex items-center justify-center ${surfaceClass} ${clearSpaceClass} ${className}`}
+      >
+        {imgEl}
+      </span>
+    );
+  }
+
+  return imgEl;
 };
 
 export const PhumulaniLogoFull: React.FC<Omit<PhumulaniLogoProps, 'variant'>> = (props) => (

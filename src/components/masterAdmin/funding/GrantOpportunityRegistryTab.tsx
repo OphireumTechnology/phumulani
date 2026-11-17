@@ -267,7 +267,7 @@ export const GrantOpportunityRegistryTab: React.FC<GrantOpportunityRegistryTabPr
 
               <button
                 onClick={() => onOpenWorkspace(opp.id)}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg shadow-xs transition-colors cursor-pointer"
               >
                 <FileText className="w-3.5 h-3.5" />
                 Open Workspace
@@ -489,7 +489,7 @@ export const GrantOpportunityRegistryTab: React.FC<GrantOpportunityRegistryTabPr
               </button>
               <button
                 onClick={handleSubmitGoNoGo}
-                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer"
+                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer"
               >
                 Record Official Decision
               </button>

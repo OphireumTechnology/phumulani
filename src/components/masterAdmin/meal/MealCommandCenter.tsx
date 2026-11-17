@@ -218,7 +218,7 @@ export const MealCommandCenter: React.FC = () => {
             </div>
             <button
               onClick={refreshAllData}
-              className="p-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-phumulani-cream rounded-xl border border-phumulani-teal text-xs flex items-center gap-1.5 transition-colors"
+              className="p-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-phumulani-cream rounded-xl border border-phumulani-teal text-xs flex items-center gap-1.5 transition-colors"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               <span>Refresh Ledger</span>
@@ -236,7 +236,7 @@ export const MealCommandCenter: React.FC = () => {
             <button
               type="button"
               onClick={() => setActionError(null)}
-              className="px-2 py-0.5 rounded bg-phumulani-charcoal hover:bg-phumulani-orange text-phumulani-cream font-bold cursor-pointer"
+              className="px-2 py-0.5 rounded bg-phumulani-charcoal hover:bg-phumulani-earth text-phumulani-cream font-bold cursor-pointer"
               aria-label="Dismiss error"
             >
               Dismiss
@@ -286,7 +286,7 @@ export const MealCommandCenter: React.FC = () => {
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
                     isActive
                       ? 'bg-phumulani-earth text-white shadow-sm'
-                      : 'bg-phumulani-charcoal text-phumulani-cream hover:bg-phumulani-orange hover:text-white'
+                      : 'bg-phumulani-charcoal text-phumulani-cream hover:bg-phumulani-earth hover:text-white'
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
@@ -467,7 +467,7 @@ export const MealCommandCenter: React.FC = () => {
                       {out.verificationStatus !== 'VERIFIED' && (
                         <button
                           onClick={() => handleVerifyOutput(out.id)}
-                          className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded text-[11px] font-semibold transition-colors"
+                          className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded text-[11px] font-semibold transition-colors"
                         >
                           Verify & Certify
                         </button>
@@ -636,7 +636,7 @@ export const MealCommandCenter: React.FC = () => {
               <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors"
+                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors"
                 >
                   <Send className="w-3.5 h-3.5" />
                   <span>Submit to MEAL Register</span>
@@ -852,7 +852,7 @@ export const MealCommandCenter: React.FC = () => {
             <button
               onClick={handleGenerateAiNarrative}
               disabled={isAiLoading}
-              className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-50"
+              className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors disabled:opacity-50"
             >
               <Sparkles className="w-3.5 h-3.5" />
               <span>{isAiLoading ? 'Drafting from Ledger...' : 'Generate Grounded Narrative'}</span>
@@ -937,7 +937,7 @@ export const MealCommandCenter: React.FC = () => {
                       {rep.approvalStatus !== 'EXECUTIVE_APPROVED' && (
                         <button
                           onClick={() => handleExecutiveApproveReport(rep.id)}
-                          className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors"
+                          className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors"
                         >
                           <Check className="w-3.5 h-3.5" />
                           <span>Certify as Executive</span>
@@ -945,14 +945,14 @@ export const MealCommandCenter: React.FC = () => {
                       )}
                       <button
                         onClick={() => handleExportHtml(rep.id)}
-                        className="px-3 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors"
+                        className="px-3 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors"
                       >
                         <Printer className="w-3.5 h-3.5" />
                         <span>Printable HTML</span>
                       </button>
                       <button
                         onClick={() => handleDownloadCsv(rep.id)}
-                        className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors"
+                        className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors"
                       >
                         <Download className="w-3.5 h-3.5" />
                         <span>Export CSV</span>
@@ -1021,7 +1021,7 @@ export const MealCommandCenter: React.FC = () => {
             </div>
             <button
               onClick={handleRunSecuritySuite}
-              className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors"
+              className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors"
             >
               <ShieldCheck className="w-3.5 h-3.5" />
               <span>Execute 15 Security Probes</span>

@@ -484,7 +484,7 @@ export const GovernancePortalView: React.FC<GovernancePortalViewProps> = ({
             <div className="flex justify-end pt-2">
               <button
                 onClick={() => setActiveDocketGrant(null)}
-                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold cursor-pointer transition-colors"
+                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
                 Close Docket
               </button>

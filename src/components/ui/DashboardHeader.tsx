@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  * DashboardHeader — Restrained Professional Dashboard Header Component
- * Design Tokens: Deep Earth (#A63C14), Charcoal (#333333), Soft Cream (#F7F3E0), White (#FFFFFF)
+ * Design Tokens: Deep Earth (#B3340F), Charcoal (#333333), Soft Cream (#EFEBD1), White (#FFFFFF)
  */
 
 import React from 'react';
@@ -130,7 +130,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
         <button
           onClick={handleSafeExit}
-          className="bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white font-heading font-bold px-2.5 py-1.5 rounded-lg text-xs transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
+          className="bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-heading font-bold px-2.5 py-1.5 rounded-lg text-xs transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
           title="Instant safe exit to Weather.com (replaces browser history)"
         >
           <span>SAFE EXIT</span>

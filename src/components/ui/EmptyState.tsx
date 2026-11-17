@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  * EmptyState — Reusable Empty State Component
- * Palette: Deep Earth (#A63C14), Sunrise Orange (#F97316), Soft Cream (#F7F3E0), Charcoal (#333333)
+ * Palette: Deep Earth (#B3340F), Peace Orange (#EF5C2C), Soft Cream (#EFEBD1), Charcoal (#333333)
  */
 
 import React from 'react';

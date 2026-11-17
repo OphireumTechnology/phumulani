@@ -117,7 +117,7 @@ export const BoardGovernanceCalendarTab: React.FC<Props> = ({ currentUser }) => 
                   ) : (
                     <button
                       onClick={() => setSelectedEventId(evt.id)}
-                      className="px-3 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded text-xs font-semibold cursor-pointer"
+                      className="px-3 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded text-xs font-semibold cursor-pointer"
                     >
                       Record Evidence
                     </button>

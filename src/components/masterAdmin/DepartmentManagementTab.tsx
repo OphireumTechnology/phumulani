@@ -190,7 +190,7 @@ export const DepartmentManagementTab: React.FC<DepartmentManagementTabProps> = (
                 <span className="text-phumulani-charcoal">Department configuration maintained under Phase 24 standards.</span>
                 <button
                   onClick={() => onNavigateTab('task_management')}
-                  className="px-3.5 py-1.5 bg-phumulani-charcoal text-white rounded-lg font-semibold hover:bg-phumulani-orange transition-colors"
+                  className="px-3.5 py-1.5 bg-phumulani-charcoal text-white rounded-lg font-semibold hover:bg-phumulani-earth transition-colors"
                 >
                   View Department Tasks
                 </button>

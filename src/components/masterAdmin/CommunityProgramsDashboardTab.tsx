@@ -216,7 +216,7 @@ export const CommunityProgramsDashboardTab: React.FC<Props> = ({
           <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => onOpenAiAssist()}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-gold hover:bg-phumulani-orange text-phumulani-charcoal rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-gold hover:bg-phumulani-teal text-phumulani-charcoal rounded-xl text-xs font-bold transition-all shadow-xs cursor-pointer"
             >
               <Bot className="w-4 h-4" />
               <span>AI Program Assistant</span>
@@ -508,7 +508,7 @@ export const CommunityProgramsDashboardTab: React.FC<Props> = ({
                 {(selectedProgram.status === 'DRAFT' || selectedProgram.status === 'ON_HOLD') && (
                   <button
                     onClick={() => handleRequestApproval(selectedProgram.id)}
-                    className="w-full py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
+                    className="w-full py-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-xs transition-colors cursor-pointer"
                   >
                     <Send className="w-3.5 h-3.5" />
                     <span>Submit for Executive Authorization</span>
@@ -524,7 +524,7 @@ export const CommunityProgramsDashboardTab: React.FC<Props> = ({
                     <div className="grid grid-cols-2 gap-2">
                       <button
                         onClick={() => handleExecutiveSignOff(selectedProgram.id, true)}
-                        className="py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1 shadow-xs transition-colors cursor-pointer"
+                        className="py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-bold rounded-xl text-xs flex items-center justify-center gap-1 shadow-xs transition-colors cursor-pointer"
                       >
                         <CheckCircle2 className="w-3.5 h-3.5" />
                         <span>Approve</span>
@@ -667,7 +667,7 @@ export const CommunityProgramsDashboardTab: React.FC<Props> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white font-bold rounded-xl shadow-xs transition-colors cursor-pointer"
+                  className="px-5 py-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-white font-bold rounded-xl shadow-xs transition-colors cursor-pointer"
                 >
                   Draft Program
                 </button>

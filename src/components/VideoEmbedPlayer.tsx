@@ -127,7 +127,7 @@ export const VideoEmbedPlayer: React.FC<VideoEmbedPlayerProps> = ({ media }) => 
         <button
           type="button"
           onClick={() => setUseHashUrl(!useHashUrl)}
-          className="text-[11px] text-white hover:text-phumulani-charcoal inline-flex items-center gap-1 cursor-pointer transition-colors px-2.5 py-1 rounded-lg bg-phumulani-earth hover:bg-phumulani-orange border border-phumulani-gold/40"
+          className="text-[11px] text-white hover:text-phumulani-charcoal inline-flex items-center gap-1 cursor-pointer transition-colors px-2.5 py-1 rounded-lg bg-phumulani-earth hover:bg-phumulani-charcoal border border-phumulani-gold/40"
           title="Toggle authorized embed source with unlisted security hash"
         >
           <RefreshCw className="w-3 h-3 shrink-0" aria-hidden="true" />
@@ -152,7 +152,7 @@ export const VideoEmbedPlayer: React.FC<VideoEmbedPlayerProps> = ({ media }) => 
             <button
               type="button"
               onClick={() => setShowTranscript(!showTranscript)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg text-xs font-semibold transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-phumulani-gold"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-semibold transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-phumulani-gold"
             >
               <Info className="w-3.5 h-3.5" aria-hidden="true" />
               <span>{showTranscript ? 'Hide Summary' : 'Read Summary'}</span>

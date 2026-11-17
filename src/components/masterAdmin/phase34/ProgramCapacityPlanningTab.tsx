@@ -142,7 +142,7 @@ export const ProgramCapacityPlanningTab: React.FC<Props> = ({ currentUser }) => 
             />
             <button
               onClick={handleUpdateCapacity}
-              className="px-3 py-1 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded text-xs font-bold cursor-pointer"
+              className="px-3 py-1 bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded text-xs font-bold cursor-pointer"
             >
               Update
             </button>

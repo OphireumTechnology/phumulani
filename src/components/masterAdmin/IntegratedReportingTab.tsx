@@ -232,7 +232,7 @@ export const IntegratedReportingTab: React.FC<IntegratedReportingTabProps> = ({
           </button>
           <button
             onClick={() => handleExport('JSON')}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white font-semibold text-xs rounded-lg transition-colors border border-phumulani-cream"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-semibold text-xs rounded-lg transition-colors border border-phumulani-cream"
             title="Download sanitized JSON export"
           >
             <Download className="w-3.5 h-3.5" />
@@ -243,7 +243,7 @@ export const IntegratedReportingTab: React.FC<IntegratedReportingTabProps> = ({
           <button
             onClick={handleCreateSnapshot}
             disabled={isCreatingSnapshot}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-phumulani-gold hover:bg-phumulani-orange text-phumulani-charcoal font-bold text-xs rounded-lg transition-colors shadow-xs"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-phumulani-gold hover:bg-phumulani-teal text-phumulani-charcoal font-bold text-xs rounded-lg transition-colors shadow-xs"
           >
             <Clock className="w-3.5 h-3.5" />
             <span>Create Snapshot</span>
@@ -678,7 +678,7 @@ export const IntegratedReportingTab: React.FC<IntegratedReportingTabProps> = ({
                           </button>
                           <button
                             onClick={() => handleApproveSnapshot(snap.id, 'REJECTED')}
-                            className="px-2 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded text-[10px] font-bold"
+                            className="px-2 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded text-[10px] font-bold"
                           >
                             Reject
                           </button>
@@ -709,7 +709,7 @@ export const IntegratedReportingTab: React.FC<IntegratedReportingTabProps> = ({
           <button
             onClick={handleRun45StepScenario}
             disabled={isRunningScenario}
-            className="flex items-center gap-2 px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white font-bold text-xs rounded-lg transition-colors shadow-xs"
+            className="flex items-center gap-2 px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-bold text-xs rounded-lg transition-colors shadow-xs"
           >
             <Play className="w-3.5 h-3.5 fill-current" />
             <span>{isRunningScenario ? 'Running 45 Steps...' : 'Execute 45-Step Scenario'}</span>

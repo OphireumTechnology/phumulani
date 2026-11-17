@@ -201,7 +201,7 @@ export const VolunteerManagementTab: React.FC<VolunteerManagementTabProps> = ({ 
               {vol.stage === 'APPLICATION' && (
                 <button
                   onClick={() => handleAdvanceStage(vol.id, 'SCREENING')}
-                  className="w-full py-1.5 bg-phumulani-charcoal text-white rounded font-medium hover:bg-phumulani-orange"
+                  className="w-full py-1.5 bg-phumulani-charcoal text-white rounded font-medium hover:bg-phumulani-earth"
                 >
                   Initiate Screening
                 </button>
@@ -214,7 +214,7 @@ export const VolunteerManagementTab: React.FC<VolunteerManagementTabProps> = ({ 
                       orientationCompleted: true,
                     })
                   }
-                  className="w-full py-1.5 bg-phumulani-earth text-white rounded font-medium hover:bg-phumulani-orange"
+                  className="w-full py-1.5 bg-phumulani-earth text-white rounded font-medium hover:bg-phumulani-charcoal"
                 >
                   Clear Background & Approve
                 </button>
@@ -222,7 +222,7 @@ export const VolunteerManagementTab: React.FC<VolunteerManagementTabProps> = ({ 
               {vol.stage === 'APPROVAL' && (
                 <button
                   onClick={() => handleAdvanceStage(vol.id, 'ACTIVE_ENGAGEMENT')}
-                  className="w-full py-1.5 bg-phumulani-earth text-white rounded font-medium hover:bg-phumulani-orange"
+                  className="w-full py-1.5 bg-phumulani-earth text-white rounded font-medium hover:bg-phumulani-charcoal"
                 >
                   Place in Active Engagement
                 </button>

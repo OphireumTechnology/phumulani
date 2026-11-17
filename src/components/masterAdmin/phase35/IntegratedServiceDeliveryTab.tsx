@@ -271,7 +271,7 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
           </div>
           <button
             onClick={refreshAll}
-            className="flex items-center gap-2 px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-sm font-medium rounded-xl border border-phumulani-cream transition"
+            className="flex items-center gap-2 px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-sm font-medium rounded-xl border border-phumulani-cream transition"
           >
             <RefreshCw className="w-4 h-4" />
             Refresh Operational Data
@@ -294,7 +294,7 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
             <button
               type="button"
               onClick={() => setActionError(null)}
-              className="px-2 py-0.5 rounded bg-phumulani-charcoal hover:bg-phumulani-orange text-xs font-bold cursor-pointer"
+              className="px-2 py-0.5 rounded bg-phumulani-charcoal hover:bg-phumulani-earth text-xs font-bold cursor-pointer"
             >
               Dismiss
             </button>
@@ -323,7 +323,7 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                 className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
                   active
                     ? 'bg-phumulani-teal text-phumulani-charcoal shadow-md'
-                    : 'bg-phumulani-charcoal text-phumulani-teal hover:bg-phumulani-orange hover:text-white'
+                    : 'bg-phumulani-charcoal text-phumulani-teal hover:bg-phumulani-earth hover:text-white'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -452,7 +452,7 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                     />
                     <button
                       onClick={handleStatusChange}
-                      className="w-full py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg transition"
+                      className="w-full py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg transition"
                     >
                       Update Lifecycle Status
                     </button>
@@ -482,7 +482,7 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                     />
                     <button
                       onClick={handleAssign}
-                      className="w-full py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg transition"
+                      className="w-full py-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-white text-xs font-semibold rounded-lg transition"
                     >
                       Assign Staff Member
                     </button>
@@ -516,7 +516,7 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                     </div>
                     <button
                       onClick={handleResolve}
-                      className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg transition"
+                      className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg transition"
                     >
                       Verify & Close Request
                     </button>
@@ -571,7 +571,7 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                     />
                     <button
                       onClick={handleAddNote}
-                      className="px-3 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg"
+                      className="px-3 py-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-white text-xs font-semibold rounded-lg"
                     >
                       Add Note
                     </button>
@@ -771,7 +771,7 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                 {!vol.clearanceVerifiedByHumanSupervisor && (
                   <button
                     onClick={() => handleVerifyVolunteerClearance(vol.id)}
-                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg transition"
+                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg transition"
                   >
                     Authorize Human Clearance Gate
                   </button>
@@ -835,7 +835,7 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                   {!d.thankYouLetterApproved && (
                     <button
                       onClick={() => handleApproveThankYou(d.id)}
-                      className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded text-xs font-semibold"
+                      className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded text-xs font-semibold"
                     >
                       Approve Thank-You
                     </button>
@@ -948,7 +948,7 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                   </div>
                   <button
                     onClick={() => handleAdvanceWorkflow(wf.id)}
-                    className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded text-xs font-semibold transition"
+                    className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded text-xs font-semibold transition"
                   >
                     Advance Step
                   </button>
@@ -1025,7 +1025,7 @@ export const IntegratedServiceDeliveryTab: React.FC = () => {
                   {exec.requiresHumanApproval && exec.executionStatus === 'COMPLETED_REVIEW_REQUIRED' && (
                     <button
                       onClick={() => handleApproveAiTask(exec.id)}
-                      className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded font-medium"
+                      className="px-2.5 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded font-medium"
                     >
                       Co-Sign & Approve
                     </button>

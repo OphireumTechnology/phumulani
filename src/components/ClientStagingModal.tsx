@@ -93,7 +93,7 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={() => onOpenFeedback('Staging Preview Feedback')}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer transition-colors"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer transition-colors"
             >
               <Send className="w-3.5 h-3.5" />
               <span>Submit Staging Feedback</span>
@@ -246,7 +246,7 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white font-bold rounded-lg cursor-pointer transition-colors"
+                  className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-bold rounded-lg cursor-pointer transition-colors"
                 >
                   Process Sandbox Donation &amp; Verify Receipt
                 </button>
@@ -292,7 +292,7 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white font-bold rounded-lg cursor-pointer transition-colors"
+                  className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-bold rounded-lg cursor-pointer transition-colors"
                 >
                   Submit Staging Application
                 </button>

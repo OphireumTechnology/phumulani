@@ -213,7 +213,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
           <div className="flex items-center gap-2.5 flex-wrap">
             <button
               onClick={refreshData}
-              className="px-3 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-phumulani-cream text-xs font-semibold rounded-lg border border-phumulani-teal flex items-center gap-1.5 transition-all"
+              className="px-3 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-earth text-phumulani-cream text-xs font-semibold rounded-lg border border-phumulani-teal flex items-center gap-1.5 transition-all"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               <span>Refresh</span>
@@ -231,13 +231,13 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                 <span className="text-[11px] font-semibold text-phumulani-cream">Halt all 36 agents?</span>
                 <button
                   onClick={handleEmergencyHalt}
-                  className="px-2 py-0.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-[11px] font-bold rounded cursor-pointer"
+                  className="px-2 py-0.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-[11px] font-bold rounded cursor-pointer"
                 >
                   Confirm
                 </button>
                 <button
                   onClick={() => setConfirmHalt(false)}
-                  className="px-2 py-0.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-phumulani-cream text-[11px] font-medium rounded cursor-pointer"
+                  className="px-2 py-0.5 bg-phumulani-charcoal hover:bg-phumulani-earth text-phumulani-cream text-[11px] font-medium rounded cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -245,7 +245,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
             ) : (
               <button
                 onClick={() => setConfirmHalt(true)}
-                className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-bold rounded-lg shadow-xs flex items-center gap-1.5 transition-all"
+                className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-bold rounded-lg shadow-xs flex items-center gap-1.5 transition-all"
               >
                 <Power className="w-3.5 h-3.5" />
                 <span>Halt All 36 Agents</span>
@@ -488,7 +488,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                         onClick={() => handleToggleLifecycle(ag.id, ag.lifecycle)}
                         className={`text-xs px-2 py-1 rounded font-bold ${
                           ag.lifecycle === 'PAUSED'
-                            ? 'bg-phumulani-earth hover:bg-phumulani-orange text-white'
+                            ? 'bg-phumulani-earth hover:bg-phumulani-charcoal text-white'
                             : 'bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-earth border border-phumulani-earth'
                         }`}
                       >
@@ -567,7 +567,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                       </button>
                       <button
                         onClick={() => handleApprovalDecision(appr.id, 'APPROVED')}
-                        className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded text-xs font-bold flex items-center gap-1"
+                        className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded text-xs font-bold flex items-center gap-1"
                       >
                         <Check className="w-3.5 h-3.5" />
                         <span>Approve & Authorize</span>
@@ -643,7 +643,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                 <button
                   disabled={isHandoffRunning}
                   onClick={handleRunHandoff}
-                  className="w-full py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-all"
+                  className="w-full py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition-all"
                 >
                   <ArrowRightLeft className="w-3.5 h-3.5" />
                   <span>{isHandoffRunning ? 'Evaluating Handoff...' : 'Execute Authorized Handoff'}</span>
@@ -789,7 +789,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
             <div className="flex justify-end pt-2">
               <button
                 onClick={() => setSelectedAgent(null)}
-                className="px-4 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold"
+                className="px-4 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded-lg text-xs font-bold"
               >
                 Close Inspector
               </button>
@@ -846,7 +846,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                 <button
                   disabled={isExecuting}
                   onClick={handleExecuteTask}
-                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold flex items-center gap-1.5"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-bold flex items-center gap-1.5"
                 >
                   <Play className="w-3.5 h-3.5" />
                   <span>{isExecuting ? 'Executing...' : 'Run Agent Task'}</span>

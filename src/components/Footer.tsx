@@ -41,7 +41,7 @@ export const Footer: React.FC<FooterProps> = ({ onViewChange, onOpenMediaRegistr
           </div>
           <button
             onClick={() => window.location.replace('https://weather.com')}
-            className="text-[11px] bg-phumulani-charcoal hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white border border-phumulani-cream/40 px-3 py-1.5 rounded-md font-bold flex items-center gap-1.5 cursor-pointer transition-colors duration-150 shadow-xs focus-visible:ring-2 focus-visible:ring-phumulani-gold"
+            className="text-[11px] bg-phumulani-charcoal hover:bg-phumulani-earth text-white border border-phumulani-cream/40 px-3 py-1.5 rounded-md font-bold flex items-center gap-1.5 cursor-pointer transition-colors duration-150 shadow-xs focus-visible:ring-2 focus-visible:ring-phumulani-gold"
           >
             <span>Safe Exit</span>
             <ExternalLink className="w-3 h-3" strokeWidth={1.75} aria-hidden="true" />

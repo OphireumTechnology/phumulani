@@ -420,7 +420,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
             {pausedAgentsCount > 0 ? (
               <button
                 onClick={() => db.resumeAllAgents()}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-phumulani-gold hover:bg-phumulani-orange text-phumulani-charcoal rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-phumulani-gold hover:bg-phumulani-teal text-phumulani-charcoal rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer"
                 title="Restore all paused AI agents to active state"
               >
                 <RotateCcw className="w-3 h-3" />
@@ -698,14 +698,14 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                 <div className="flex flex-col sm:flex-row items-center gap-3 shrink-0">
                   <button
                     onClick={() => setActiveModule('production_status')}
-                    className="px-4 py-2 bg-phumulani-gold hover:bg-phumulani-orange text-phumulani-charcoal font-bold text-xs rounded-xl shadow-xs flex items-center gap-2 transition-all cursor-pointer"
+                    className="px-4 py-2 bg-phumulani-gold hover:bg-phumulani-teal text-phumulani-charcoal font-bold text-xs rounded-xl shadow-xs flex items-center gap-2 transition-all cursor-pointer"
                   >
                     <Activity className="w-4 h-4" />
                     <span>Inspect 15 Live Statuses</span>
                   </button>
                   <button
                     onClick={() => setIsProvisionModalOpen(true)}
-                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal font-bold text-xs rounded-xl border border-phumulani-earth flex items-center gap-2 transition-all cursor-pointer"
+                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal font-bold text-xs rounded-xl border border-phumulani-earth flex items-center gap-2 transition-all cursor-pointer"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Provision Account</span>
@@ -1449,7 +1449,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                   <button
                     onClick={handleRunProbe}
                     disabled={isProbing}
-                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer disabled:opacity-50"
+                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${isProbing ? 'animate-spin' : ''}`} />
                     <span>{isProbing ? 'Probing Components...' : 'Execute Live Health Probe'}</span>
@@ -1562,7 +1562,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                   <button
                     onClick={handleRunAcceptanceTests}
                     disabled={isRunningTests}
-                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer disabled:opacity-50"
+                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${isRunningTests ? 'animate-spin' : ''}`} />
                     <span>{isRunningTests ? 'Executing Verification Suite...' : 'Execute All Verification Tests'}</span>
@@ -1667,7 +1667,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                           <button
                             onClick={handleRunAcceptanceTests}
                             disabled={isRunningTests}
-                            className="mt-3 px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-xl text-xs font-bold inline-flex items-center gap-2 shadow-xs transition-all cursor-pointer"
+                            className="mt-3 px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-xl text-xs font-bold inline-flex items-center gap-2 shadow-xs transition-all cursor-pointer"
                           >
                             <Play className="w-3 h-3" />
                             <span>Run 15 Production Verification Tests Now</span>
@@ -1699,7 +1699,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setIsProvisionModalOpen(true)}
-                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer"
+                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Provision Account</span>
@@ -1910,7 +1910,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                         <span className="text-[11px] text-phumulani-charcoal/80">Lead: {portal.officer}</span>
                         <button
                           onClick={() => onViewChange(portal.viewKey)}
-                          className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold inline-flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+                          className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold inline-flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
                         >
                           <span>Launch Portal</span>
                           <ExternalLink className="w-3 h-3" />
@@ -2067,7 +2067,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                                 message: `Volunteer application ${app.trackingId} for ${app.fullName} has been approved for active service.`,
                               });
                             }}
-                            className="px-2.5 py-1 text-xs bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-lg font-bold transition-colors cursor-pointer"
+                            className="px-2.5 py-1 text-xs bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg font-bold transition-colors cursor-pointer"
                           >
                             Approve
                           </button>
@@ -2304,7 +2304,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                                 db.updateSystemSetting(s.key, settingTempValue);
                                 setEditingSettingKey(null);
                               }}
-                              className="px-2.5 py-1 text-xs bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal font-bold rounded-lg cursor-pointer"
+                              className="px-2.5 py-1 text-xs bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal font-bold rounded-lg cursor-pointer"
                             >
                               Save
                             </button>
@@ -2460,7 +2460,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-lg font-bold shadow-xs transition-all cursor-pointer"
+                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg font-bold shadow-xs transition-all cursor-pointer"
                 >
                   Provision & Issue Verification Token
                 </button>

@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  * DashboardSidebar — Restrained Professional Responsive Sidebar Component
- * Active Token: Deep Earth (#A63C14), Charcoal (#333333), Soft Cream (#F7F3E0)
+ * Active Token: Deep Earth (#B3340F), Charcoal (#333333), Soft Cream (#EFEBD1)
  */
 
 import React from 'react';

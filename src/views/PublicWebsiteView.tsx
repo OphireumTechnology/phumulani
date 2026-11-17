@@ -488,7 +488,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   onClick={() => {
                     document.getElementById('donate-section')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="min-h-[44px] h-12 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white px-5 sm:px-6 rounded-lg text-xs sm:text-sm font-heading font-bold shadow-xs hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-orange group whitespace-nowrap"
+                  className="min-h-[44px] h-12 bg-phumulani-earth hover:bg-phumulani-charcoal text-white px-5 sm:px-6 rounded-lg text-xs sm:text-sm font-heading font-bold shadow-xs hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-orange group whitespace-nowrap"
                 >
                   <Heart className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" strokeWidth={1.75} aria-hidden="true" />
                   <span>Support Our Mission</span>
@@ -932,8 +932,8 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500 ease-out"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-phumulani-charcoal/80 via-phumulani-charcoal/20 to-transparent flex items-end p-5">
-                  <div>
+                <div className="absolute inset-0 bg-gradient-to-t from-phumulani-charcoal via-phumulani-charcoal/70 to-transparent flex items-end p-5">
+                  <div className="bg-phumulani-charcoal/90 rounded-xl px-3.5 py-2.5 border border-phumulani-cream/20">
                     <span className="text-phumulani-gold font-heading font-bold text-[11px] uppercase tracking-wider">
                       Sisterhood &amp; Shared Strength
                     </span>
@@ -1138,7 +1138,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
                 <button
                   onClick={() => setSelectedOpportunity(opp)}
-                  className="mt-5 w-full min-h-[42px] bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white py-2.5 px-3 rounded-lg text-xs font-semibold font-heading transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                  className="mt-5 w-full min-h-[42px] bg-phumulani-earth hover:bg-phumulani-charcoal text-white py-2.5 px-3 rounded-lg text-xs font-semibold font-heading transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 >
                   Apply for Opportunity
                 </button>
@@ -1393,7 +1393,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                       <button
                         type="submit"
                         disabled={isDonating}
-                        className="w-full py-3 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg text-sm font-heading font-bold shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-orange tabular-nums"
+                        className="w-full py-3 bg-phumulani-earth hover:bg-phumulani-charcoal disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg text-sm font-heading font-bold shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-orange tabular-nums"
                       >
                         {isDonating ? (
                           <>
@@ -1539,8 +1539,8 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                         onClick={() => setSelectedEvent(evt)}
                         className={`w-full min-h-[42px] py-2.5 rounded-lg text-xs font-semibold font-heading transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-phumulani-earth ${
                           isFull
-                            ? 'bg-phumulani-gold hover:bg-phumulani-orange text-phumulani-charcoal font-bold'
-                            : 'bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white'
+                            ? 'bg-phumulani-gold hover:bg-phumulani-cream text-phumulani-charcoal font-bold'
+                            : 'bg-phumulani-earth hover:bg-phumulani-charcoal text-white'
                         }`}
                       >
                         {isFull ? 'Join Priority Waitlist' : 'RSVP / Register'}
@@ -1592,7 +1592,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 </div>
                 <button
                   onClick={() => window.location.replace('https://weather.com')}
-                  className="bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white px-3.5 py-2 rounded-lg text-xs font-semibold font-heading flex items-center gap-1 cursor-pointer shrink-0 transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                  className="bg-phumulani-earth hover:bg-phumulani-charcoal text-white px-3.5 py-2 rounded-lg text-xs font-semibold font-heading flex items-center gap-1 cursor-pointer shrink-0 transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 >
                   <span>Quick Exit</span>
                   <ExternalLink className="w-3 h-3" strokeWidth={1.75} aria-hidden="true" />
@@ -1698,7 +1698,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   <button
                     type="submit"
                     disabled={isSubmittingHelp}
-                    className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg text-xs font-bold font-heading transition-colors cursor-pointer shadow-xs flex items-center justify-center gap-2"
+                    className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg text-xs font-bold font-heading transition-colors cursor-pointer shadow-xs flex items-center justify-center gap-2"
                   >
                     {isSubmittingHelp ? (
                       <>
@@ -2045,8 +2045,8 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                     className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-phumulani-charcoal/80 via-phumulani-charcoal/20 to-transparent flex items-end p-4">
-                    <div className="text-white text-xs">
+                  <div className="absolute inset-0 bg-gradient-to-t from-phumulani-charcoal via-phumulani-charcoal/70 to-transparent flex items-end p-4">
+                    <div className="bg-phumulani-charcoal/90 rounded-lg px-3 py-2 text-white text-xs border border-phumulani-cream/20">
                       <span className="text-phumulani-gold font-heading font-bold uppercase tracking-wider text-[10px]">A Place of Rest</span>
                       <div className="font-heading font-bold text-sm">Phumulani — Rooted in Peace &amp; Sisterhood</div>
                     </div>
@@ -2184,7 +2184,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   <button
                     type="submit"
                     disabled={isSubmittingContact}
-                    className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg font-bold font-heading flex items-center justify-center gap-1.5 cursor-pointer shadow-xs transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                    className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg font-bold font-heading flex items-center justify-center gap-1.5 cursor-pointer shadow-xs transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                   >
                     {isSubmittingContact ? (
                       <>
@@ -2376,7 +2376,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   setSelectedProgram(null);
                   document.getElementById('get-involved-section')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-4 py-2 bg-phumulani-earth text-white rounded-lg text-xs font-semibold hover:bg-phumulani-orange hover:text-phumulani-charcoal cursor-pointer transition-colors"
+                className="px-4 py-2 bg-phumulani-earth text-white rounded-lg text-xs font-semibold hover:bg-phumulani-charcoal cursor-pointer transition-colors"
               >
                 Inquire as Volunteer / Partner
               </button>
@@ -2527,7 +2527,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg font-bold cursor-pointer transition-colors"
+                  className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold cursor-pointer transition-colors"
                 >
                   Submit Application
                 </button>
@@ -2615,7 +2615,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg font-bold cursor-pointer transition-colors"
+                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold cursor-pointer transition-colors"
                 >
                   Confirm Registration
                 </button>

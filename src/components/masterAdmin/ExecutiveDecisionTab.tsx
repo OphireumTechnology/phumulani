@@ -232,7 +232,7 @@ export const ExecutiveDecisionTab: React.FC<ExecutiveDecisionTabProps> = ({ curr
                 {dec.status === 'PENDING' ? (
                   <button
                     onClick={() => setSelectedDecision(dec)}
-                    className="px-3.5 py-1.5 bg-phumulani-earth text-white rounded-lg text-xs font-semibold hover:bg-phumulani-orange transition-colors shadow-xs"
+                    className="px-3.5 py-1.5 bg-phumulani-earth text-white rounded-lg text-xs font-semibold hover:bg-phumulani-charcoal transition-colors shadow-xs"
                   >
                     Executive Review
                   </button>
@@ -336,7 +336,7 @@ export const ExecutiveDecisionTab: React.FC<ExecutiveDecisionTabProps> = ({ curr
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-semibold shadow-xs"
+                    className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-semibold shadow-xs"
                   >
                     Record Executive Decision
                   </button>

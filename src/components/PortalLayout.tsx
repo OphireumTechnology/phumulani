@@ -256,7 +256,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
           {/* Safe Exit */}
           <button
             onClick={handleSafeExit}
-            className="bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white font-heading font-bold px-2.5 py-1.5 rounded-lg text-xs transition-colors flex items-center gap-1 shadow-xs cursor-pointer whitespace-nowrap"
+            className="bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-heading font-bold px-2.5 py-1.5 rounded-lg text-xs transition-colors flex items-center gap-1 shadow-xs cursor-pointer whitespace-nowrap"
             title="Instant safe exit to Weather.com (replaces browser history)"
           >
             <span>SAFE EXIT</span>
