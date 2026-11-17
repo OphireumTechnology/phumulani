@@ -536,7 +536,7 @@ export class AutomatedTestRunner {
       'TEST-15',
       'Production Verification',
       'Real-Time Health Probes & Fail-Closed Behavior',
-      'Verify operational health across the 15 components and fail-closed error handling',
+      'Verify that unprobed components are never represented as live or production-ready',
       async () => {
         const probe = await ProductionHealthService.probeAllComponents();
         if (probe.checks.length !== 15) {
@@ -3406,7 +3406,7 @@ export class AutomatedTestRunner {
       'TEST-P13-30',
       'Development Transparency',
       'Regression Verification: Master Administrator (Phase 8)',
-      'Verify that Phase 8 production health probes and 12 enterprise modules remain fully operational',
+      'Verify the Master Administrator dashboard does not claim production readiness without live component probes',
       async () => {
         const probe = await ProductionHealthService.probeAllComponents();
         if (
