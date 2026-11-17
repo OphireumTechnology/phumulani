@@ -22,6 +22,7 @@ import { spawn, ChildProcess } from 'node:child_process';
 const tempRuntimeDir = fs.mkdtempSync(path.join(os.tmpdir(), 'phumulani-phase79-1-'));
 process.env.PHUMULANI_RUNTIME_DATA_DIR = tempRuntimeDir;
 process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
+process.env.PHUMULANI_ALLOW_DESTRUCTIVE_EMAIL_RESET = 'true'; // Explicitly opt this isolated temp-directory regression suite into legacy reset behavior.
 process.env.SAFEGUARDING_MASTER_KEY = crypto.randomBytes(32).toString('hex');
 
 interface CheckResult {
@@ -101,6 +102,60 @@ async function main() {
   await EmailGovernanceService.getInstance().initialize();
 
   console.log('=== PHASE 79.1 COMPLETE EMAIL DATA RESET & CLEAN INSTALLATION VERIFICATION ===');
+
+  // 0. The broad reset path must never run against production or any database-backed environment.
+  await runCheck('R79.1-00-BLOCK-BROAD-RESET-OUTSIDE-ISOLATED-EMBEDDED-SANDBOX', async () => {
+    const previousNodeEnv = process.env.NODE_ENV;
+    const previousDatabaseUrl = process.env.DATABASE_URL;
+    const previousOptIn = process.env.PHUMULANI_ALLOW_DESTRUCTIVE_EMAIL_RESET;
+
+    const actor = {
+      actorId: 'u-master-admin',
+      actorName: 'Master Admin',
+      actorRole: 'PLATFORM_SUPER_ADMIN',
+    };
+
+    try {
+      process.env.NODE_ENV = 'production';
+      delete process.env.DATABASE_URL;
+      await assert.rejects(
+        () => demoDataCleanupService.createCompleteResetDryRun(actor),
+        /COMPLETE_EMAIL_RESET_DISABLED/
+      );
+      await assert.rejects(
+        () => demoDataCleanupService.executeCompleteReset({
+          ...actor,
+          adminApproved: true,
+          approvalToken: 'must-not-reach-destructive-path',
+          attemptProviderRevocation: false,
+        }),
+        /COMPLETE_EMAIL_RESET_DISABLED/
+      );
+
+      process.env.NODE_ENV = 'development';
+      process.env.DATABASE_URL = 'postgresql://blocked.invalid/phumulani';
+      await assert.rejects(
+        () => demoDataCleanupService.createCompleteResetDryRun(actor),
+        /COMPLETE_EMAIL_RESET_DISABLED/
+      );
+
+      delete process.env.DATABASE_URL;
+      delete process.env.PHUMULANI_ALLOW_DESTRUCTIVE_EMAIL_RESET;
+      await assert.rejects(
+        () => demoDataCleanupService.createCompleteResetDryRun(actor),
+        /EXPLICIT_SANDBOX_OPT_IN_REQUIRED/
+      );
+    } finally {
+      if (previousNodeEnv === undefined) delete process.env.NODE_ENV;
+      else process.env.NODE_ENV = previousNodeEnv;
+      if (previousDatabaseUrl === undefined) delete process.env.DATABASE_URL;
+      else process.env.DATABASE_URL = previousDatabaseUrl;
+      if (previousOptIn === undefined) delete process.env.PHUMULANI_ALLOW_DESTRUCTIVE_EMAIL_RESET;
+      else process.env.PHUMULANI_ALLOW_DESTRUCTIVE_EMAIL_RESET = previousOptIn;
+    }
+
+    return 'Broad reset is rejected in production, rejected with any DATABASE_URL, and requires explicit isolated-sandbox opt-in.';
+  });
 
   // 1. Clean Initial Boot Without Pre-Seeded Mailboxes or Demo Data
   await runCheck('R79.1-01-CLEAN-INITIAL-BOOT', () => {
