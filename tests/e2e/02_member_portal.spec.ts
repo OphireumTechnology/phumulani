@@ -31,13 +31,20 @@ async function navigateToPortal(page: any, portalRole: 'community' | 'staff' | '
   await roleSwitcher.selectOption(userIdByPortal[portalRole], { force: true });
   // RoleSwitcherBar auto-navigates to the assigned portal for these identities.
   // Assert the destination loaded, not merely that a generic main element exists.
-  const expectedHeading = portalRole === 'community' || portalRole === 'volunteer'
-    ? /Community Member.*Self-Service Portal/i
-    : portalRole === 'staff'
-      ? /Staff|Operations|Command/i
-      : portalRole === 'master-admin'
-        ? /Master Admin|Administration|Command Center/i
-        : /Donor|Sponsor/i;
+  if (portalRole === 'community' || portalRole === 'volunteer') {
+    // The current CommunityPortalView renders a portal identity label and a
+    // personalized "Welcome back" heading; it does not render the retired
+    // "Community Member Self-Service Portal" heading used by the old test.
+    await expect(page.getByText('Community & Volunteer Portal', { exact: true })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Welcome back,/i })).toBeVisible();
+    return;
+  }
+
+  const expectedHeading = portalRole === 'staff'
+    ? /Staff|Operations|Command/i
+    : portalRole === 'master-admin'
+      ? /Master Admin|Administration|Command Center/i
+      : /Donor|Sponsor/i;
   await expect(page.locator('main h1, main h2').filter({ hasText: expectedHeading }).first()).toBeVisible();
 }
 
