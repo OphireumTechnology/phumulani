@@ -31,14 +31,19 @@ async function navigateToPortal(page: any, portalRole: 'community' | 'staff' | '
   await roleSwitcher.selectOption(userIdByPortal[portalRole], { force: true });
   // RoleSwitcherBar auto-navigates to the assigned portal for these identities.
   // Assert the destination loaded, not merely that a generic main element exists.
-  const expectedHeading = portalRole === 'community' || portalRole === 'volunteer'
-    ? /Community Member.*Self-Service Portal/i
-    : portalRole === 'staff'
+  if (portalRole === 'community' || portalRole === 'volunteer') {
+    // The Community & Volunteer Hub uses a personalized heading rather than
+    // the retired "Self-Service Portal" title. Verify destination and persona.
+    await expect(page.locator('main h1').filter({ hasText: /^Welcome back,/i }).first()).toBeVisible();
+    await expect(roleSwitcher).toHaveValue(userIdByPortal[portalRole]);
+  } else {
+    const expectedHeading = portalRole === 'staff'
       ? /Staff|Operations|Command/i
       : portalRole === 'master-admin'
         ? /Master Admin|Administration|Command Center/i
         : /Donor|Sponsor/i;
-  await expect(page.locator('main h1, main h2').filter({ hasText: expectedHeading }).first()).toBeVisible();
+    await expect(page.locator('main h1, main h2').filter({ hasText: expectedHeading }).first()).toBeVisible();
+  }
 }
 
 /**
@@ -67,9 +72,7 @@ test.describe('M38.04 — Community Member Portal Journeys', () => {
 
     await navigateToPortal(page, 'community');
 
-    // Verify member portal layout or greeting
-    const portalHeading = page.locator('h1, h2').filter({ hasText: /Community|Member|Portal|Self-Service/i });
-    await expect(portalHeading.first()).toBeVisible();
+    await expect(page.locator('main h1').filter({ hasText: /^Welcome back,/i }).first()).toBeVisible();
   });
 
   test('service request creation and status tracking displays correctly', async ({ page }) => {

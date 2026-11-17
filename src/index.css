@@ -26,6 +26,14 @@
     --phumulani-charcoal: #333333;
     --phumulani-white: #FFFFFF;
 
+    /* Manual-named aliases retained alongside existing application tokens. */
+    --phumulani-peace-orange: var(--phumulani-orange);
+    --phumulani-deep-earth: var(--phumulani-earth);
+    --phumulani-healing-teal: var(--phumulani-teal);
+    --phumulani-ancestral-gold: var(--phumulani-gold);
+    --phumulani-soft-cream: var(--phumulani-cream);
+    --phumulani-leaf-green: var(--phumulani-green);
+
     /* Semantic Tokens — Actions */
     --color-primary: var(--phumulani-orange);
     --color-primary-strong: var(--phumulani-earth);
