@@ -542,10 +542,11 @@ export class AutomatedTestRunner {
         if (probe.checks.length !== 15) {
           throw new Error(`Expected 15 components probed, found ${probe.checks.length}.`);
         }
-        if (probe.verifiedCount < 14) {
-          throw new Error(`Degraded component count detected: ${probe.verifiedCount}/15.`);
+        const allUnverified = probe.checks.every((check) => check.status === 'UNVERIFIED');
+        if (probe.overallStatus !== 'DEGRADED' || probe.verifiedCount !== 0 || !allUnverified) {
+          throw new Error(`Unprobed components must remain unverified; status=${probe.overallStatus}, verified=${probe.verifiedCount}/15.`);
         }
-        return `Health monitoring active: All 15 components probed in ${probe.checks.reduce((sum, c) => sum + c.latencyMs, 0)}ms total latency. Fail-closed error handling verified.`;
+        return 'Health monitoring correctly reports 0/15 independently verified until live component probes are implemented.';
       }
     );
 
@@ -3408,10 +3409,14 @@ export class AutomatedTestRunner {
       'Verify that Phase 8 production health probes and 12 enterprise modules remain fully operational',
       async () => {
         const probe = await ProductionHealthService.probeAllComponents();
-        if (probe.verifiedCount < 15) {
-          throw new Error(`Production health probe regression: ${probe.verifiedCount}/15 components verified`);
+        if (
+          probe.overallStatus !== 'DEGRADED' ||
+          probe.verifiedCount !== 0 ||
+          !probe.checks.every((check) => check.status === 'UNVERIFIED')
+        ) {
+          throw new Error(`Master Administrator health report overstated readiness: ${probe.verifiedCount}/15 verified, status=${probe.overallStatus}`);
         }
-        return `Phase 8 Master Administrator regression test passed: 15/15 production components verified healthy (${probe.overallStatus}).`;
+        return 'Master Administrator health report correctly fails closed while live infrastructure probes are unavailable.';
       }
     );
 
@@ -6087,20 +6092,18 @@ export class AutomatedTestRunner {
         const emailCheck = probe.checks.find((c) => c.id === 'EMAIL');
         const payCheck = probe.checks.find((c) => c.id === 'PAYMENTS');
 
-        if (!dbCheck || (dbCheck.status !== 'CONNECTED' && dbCheck.status !== 'STAGED_READY')) {
-          throw new Error(`Unexpected DB status: ${dbCheck?.status}`);
-        }
-        if (!emailCheck || emailCheck.status !== 'SIMULATED_OAUTH_PENDING') {
-          throw new Error(`Expected email SIMULATED_OAUTH_PENDING, got ${emailCheck?.status}`);
-        }
-        if (!payCheck || payCheck.status !== 'STAGED_PENDING_AUTH') {
-          throw new Error(`Expected payments STAGED_PENDING_AUTH, got ${payCheck?.status}`);
-        }
-        if (probe.verifiedCount < 15) {
-          throw new Error(`Expected 15 verified components, got ${probe.verifiedCount}`);
+        if (
+          !dbCheck || !emailCheck || !payCheck ||
+          dbCheck.status !== 'UNVERIFIED' ||
+          emailCheck.status !== 'UNVERIFIED' ||
+          payCheck.status !== 'UNVERIFIED' ||
+          probe.overallStatus !== 'DEGRADED' ||
+          probe.verifiedCount !== 0
+        ) {
+          throw new Error(`Health report overstated readiness: db=${dbCheck?.status}, email=${emailCheck?.status}, payments=${payCheck?.status}, verified=${probe.verifiedCount}`);
         }
 
-        return `Truthful health probe verified: ${probe.verifiedCount}/${probe.totalComponents} operational. Staged dependencies truthfully indicated.`;
+        return `Health report truthfully classifies ${probe.totalComponents} components as unverified; no live provider/database/backup probes are claimed.`;
       }
     );
 
