@@ -248,6 +248,36 @@ export class PostgresPersistenceAdapter {
     }
   }
 
+  /**
+   * Non-production deployments may connect only to exact, explicitly allowlisted database hosts.
+   * This avoids relying on hostname substrings such as "prod", which do not identify Supabase projects.
+   */
+  public static validateDatabaseTarget(
+    rawUrl: string,
+    operationalMode: PhumulaniOperationalMode,
+    allowedNonProductionHosts: string[] = []
+  ): { valid: boolean; error?: string; host?: string } {
+    try {
+      const host = new URL(rawUrl).hostname.toLowerCase();
+      if (operationalMode === 'PRODUCTION_ONLY') return { valid: true, host };
+      if (['localhost', '127.0.0.1', '::1'].includes(host)) return { valid: true, host };
+
+      const allowlist = new Set(
+        allowedNonProductionHosts.map((value) => value.trim().toLowerCase()).filter(Boolean)
+      );
+      if (!allowlist.has(host)) {
+        return {
+          valid: false,
+          error: `DATABASE_TARGET_NOT_ALLOWLISTED: Non-production mode (${operationalMode}) cannot connect to external database host "${host}" unless it is explicitly listed in PHUMULANI_NONPROD_DATABASE_HOSTS.`,
+          host,
+        };
+      }
+      return { valid: true, host };
+    } catch {
+      return { valid: false, error: 'DATABASE_TARGET_INVALID: Unable to parse database target hostname.' };
+    }
+  }
+
   public static buildPostgresSslConfig(connectionString: string): { rejectUnauthorized: true; ca?: string } | undefined {
     const u = new URL(connectionString);
     const sslParam = (u.searchParams.get('ssl') || '').toLowerCase();
@@ -376,14 +406,19 @@ export class PostgresPersistenceAdapter {
         this.pool = null;
         throw new Error(`[PostgresAdapter] FATAL: ${this.connectionError}`);
       }
-      if (
-        policy.effectiveMode !== 'PRODUCTION_ONLY' &&
-        (dbUrl.toLowerCase().includes('prod') || dbUrl.toLowerCase().includes('production'))
-      ) {
-        this.connectionError = `PRODUCTION_NOT_AUTHORIZED: Non-production mode (${policy.effectiveMode}) cannot connect automatically to a production database target.`;
-        this.isInitialized = false;
-        this.pool = null;
-        throw new Error(`[PostgresAdapter] FATAL: ${this.connectionError}`);
+      if (policy.effectiveMode !== 'PRODUCTION_ONLY') {
+        const allowedNonProductionHosts = (process.env.PHUMULANI_NONPROD_DATABASE_HOSTS || '').split(',');
+        const targetCheck = PostgresPersistenceAdapter.validateDatabaseTarget(
+          dbUrl,
+          policy.effectiveMode,
+          allowedNonProductionHosts
+        );
+        if (!targetCheck.valid) {
+          this.connectionError = targetCheck.error || 'DATABASE_TARGET_NOT_ALLOWLISTED';
+          this.isInitialized = false;
+          this.pool = null;
+          throw new Error(`[PostgresAdapter] FATAL: ${this.connectionError}`);
+        }
       }
       console.log('[PostgresAdapter] Production DATABASE_URL detected. Initializing PostgreSQL client pool...');
       let candidatePool: any = null;
