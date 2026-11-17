@@ -151,7 +151,8 @@ async function run() {
       const productionResults = await Promise.all(candidates.map(url => adapter.verifyExternalConnection(url)));
       const productionBlocked = productionResults.every(result =>
         !result.success &&
-        result.state !== 'EXTERNAL_CONNECTION_FAILED' &&
+        (result.state === 'PRODUCTION_NOT_AUTHORIZED' ||
+          (result.state === 'EXTERNAL_CONNECTION_FAILED' && result.error?.startsWith('DATABASE_TARGET_INVALID:'))) &&
         !JSON.stringify(result).includes('configured-secret') &&
         !JSON.stringify(result).includes('attacker-secret')
       );
