@@ -7,7 +7,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
-import ts from 'typescript';
+import * as ts from 'typescript/lib/typescript.js';
 
 const APPROVED_HEXES = new Set([
   '#F97316', // Sunrise Orange
