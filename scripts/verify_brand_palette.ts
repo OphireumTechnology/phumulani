@@ -102,15 +102,16 @@ function auditContrastInTsx(file: string, src: string): string[] {
   };
   const visit=(n:ts.Node,parent:string):void=>{
     if(ts.isJsxElement(n)){ const o=n.openingElement, tag=o.tagName.getText(sf), line=sf.getLineAndCharacterOfPosition(o.getStart(sf)).line+1;
-      const cs=classes(o.attributes); let surface=parent; if(cs) cs.forEach(v=>{surface=check(tag,line,v,parent);});
-      n.children.forEach(ch=>visit(ch,surface)); return; }
+      const cs=classes(o.attributes);
+      const surfaces=cs ? [...new Set(cs.map(v=>check(tag,line,v,parent)))] : [parent];
+      n.children.forEach(ch=>surfaces.forEach(surface=>visit(ch,surface))); return; }
     if(ts.isJsxSelfClosingElement(n)){ const line=sf.getLineAndCharacterOfPosition(n.getStart(sf)).line+1, cs=classes(n.attributes);
       if(cs) cs.forEach(v=>check(n.tagName.getText(sf),line,v,parent)); return; }
     if(ts.isJsxFragment(n)){ n.children.forEach(ch=>visit(ch,parent)); return; }
     if(ts.isJsxExpression(n)){ if(n.expression) visit(n.expression,parent); return; }
     ts.forEachChild(n,ch=>visit(ch,parent));
   };
-  visit(sf,'light'); return issues;
+  visit(sf,'light'); return [...new Set(issues)];
 }
 const EXTRA_UI_FILES = [
   'index.html',
