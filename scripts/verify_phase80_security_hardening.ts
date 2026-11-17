@@ -88,7 +88,6 @@ async function run() {
   const { AuthSecurityService } = await import('../src/services/authSecurityService');
   const { MemberCaseworkerService } = await import('../src/services/memberCaseworkerService');
   const { VolunteerOperationsService } = await import('../src/services/volunteerOperationsService');
-  const { spawnSync } = await import('node:child_process');
 
   // ---------------------------------------------------------------------------
   // BLOCK 80.1: Startup and non-production database targets fail closed
