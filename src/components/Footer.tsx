@@ -24,12 +24,12 @@ interface FooterProps {
 
 export const Footer: React.FC<FooterProps> = ({ onViewChange, onOpenMediaRegistry }) => {
   return (
-    <footer className="bg-phumulani-charcoal text-phumulani-cream text-xs no-print font-lato">
+    <footer className="bg-phumulani-charcoal text-phumulani-cream text-xs no-print">
       {/* Cultural Geometric Divider Trim */}
-      <BrandPatternDivider variant="ribbon" height={6} />
+      <BrandPatternDivider variant="ribbon" height={5} />
 
       {/* Emergency Hotline Bar */}
-      <div className="bg-phumulani-earth text-white py-3.5 px-4 border-b border-phumulani-orange">
+      <div className="bg-phumulani-earth text-white py-3.5 px-4 border-b border-phumulani-charcoal/20">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 font-heading">
           <div className="flex flex-wrap items-center gap-2 min-w-0">
             <PhoneCall className="w-4 h-4 text-phumulani-gold shrink-0" strokeWidth={1.75} aria-hidden="true" />
@@ -41,7 +41,7 @@ export const Footer: React.FC<FooterProps> = ({ onViewChange, onOpenMediaRegistr
           </div>
           <button
             onClick={() => window.location.replace('https://weather.com')}
-            className="text-[11px] bg-phumulani-charcoal hover:bg-phumulani-orange text-white border border-white px-3 py-1.5 rounded-md font-bold flex items-center gap-1.5 cursor-pointer transition-colors duration-150 shadow-xs focus-visible:ring-2 focus-visible:ring-phumulani-gold"
+            className="text-[11px] bg-phumulani-charcoal hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white border border-phumulani-cream/40 px-3 py-1.5 rounded-md font-bold flex items-center gap-1.5 cursor-pointer transition-colors duration-150 shadow-xs focus-visible:ring-2 focus-visible:ring-phumulani-gold"
           >
             <span>Safe Exit</span>
             <ExternalLink className="w-3 h-3" strokeWidth={1.75} aria-hidden="true" />
@@ -53,17 +53,17 @@ export const Footer: React.FC<FooterProps> = ({ onViewChange, onOpenMediaRegistr
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
           {/* Col 1: Brand & Mission */}
           <div className="space-y-4">
-            <div className="bg-white p-2.5 rounded-xl inline-block shadow-xs border border-phumulani-cream">
+            <div className="bg-white p-2.5 rounded-xl inline-block shadow-xs border border-phumulani-cream/50">
               <PhumulaniLogo
                 variant="full"
                 className="h-10 w-auto max-w-[220px]"
                 alt="Phumulani — The voice of immigrants and refugees in America"
               />
             </div>
-            <p className="text-phumulani-cream text-xs leading-relaxed font-sans">
+            <p className="text-phumulani-cream/90 text-xs leading-relaxed">
               Phumulani is a Zulu word meaning &quot;lover of peace&quot;. Empowering immigrant and refugee survivors through trauma-informed healing, culturally grounded advocacy, stable housing, and economic independence.
             </p>
-            <div className="space-y-1.5 text-[11px] text-phumulani-cream font-sans pt-1">
+            <div className="space-y-1.5 text-[11px] text-phumulani-cream pt-1">
               <div className="text-phumulani-gold font-semibold font-heading">
                 Comfort Dondo, Founder &amp; Executive Director
               </div>
@@ -89,7 +89,7 @@ export const Footer: React.FC<FooterProps> = ({ onViewChange, onOpenMediaRegistr
               <BookOpen className="w-3.5 h-3.5 text-phumulani-gold shrink-0" strokeWidth={1.75} aria-hidden="true" />
               <span>Verified Programs</span>
             </div>
-            <ul className="space-y-2 text-phumulani-cream font-sans leading-snug">
+            <ul className="space-y-2 text-phumulani-cream/90 leading-snug">
               <li>Trauma-Informed Healing &amp; Wellness</li>
               <li>Case Management &amp; Legal Advocacy</li>
               <li>Safe Housing &amp; The Healing Home</li>
@@ -134,19 +134,19 @@ export const Footer: React.FC<FooterProps> = ({ onViewChange, onOpenMediaRegistr
               <LockKeyhole className="w-3.5 h-3.5 text-phumulani-green shrink-0" strokeWidth={1.75} aria-hidden="true" />
               <span>Trust &amp; Confidentiality</span>
             </div>
-            <div className="flex items-start gap-2 text-white bg-phumulani-charcoal p-3 rounded-xl border border-phumulani-teal">
+            <div className="flex items-start gap-2.5 text-white bg-phumulani-charcoal p-3.5 rounded-xl border border-phumulani-teal/40">
               <ShieldCheck className="w-4 h-4 text-phumulani-green shrink-0 mt-0.5" strokeWidth={1.75} aria-hidden="true" />
               <span className="leading-relaxed">
                 Isolated survivor boundary with zero general AI retrieval (VAWA § 1367).
               </span>
             </div>
-            <p className="text-[11px] text-phumulani-cream leading-relaxed font-sans">
+            <p className="text-[11px] text-phumulani-cream/90 leading-relaxed">
               Phumulani is a recognized 501(c)(3) nonprofit charity. Contributions are tax-deductible. Target accessibility: WCAG 2.2 AA compliant.
             </p>
           </div>
         </div>
 
-        <div className="mt-12 pt-6 border-t border-phumulani-earth flex flex-wrap items-center justify-between text-phumulani-cream gap-3">
+        <div className="mt-12 pt-6 border-t border-phumulani-cream/15 flex flex-wrap items-center justify-between text-phumulani-cream/90 gap-3">
           <div>
             © {new Date().getFullYear()} Phumulani (Minnesota African Women Against Violence). All rights reserved. Registered 501(c)(3) public charity.
           </div>

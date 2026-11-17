@@ -829,7 +829,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       {/* Toast Notification */}
       {toast && (
         <div
-          className={`fixed bottom-5 right-5 z-50 px-4 py-3 rounded-xl shadow-xl text-xs font-semibold flex items-center gap-2 border animate-bounce ${
+          className={`fixed bottom-5 right-5 z-50 px-4 py-3 rounded-xl shadow-lg text-xs font-semibold flex items-center gap-2 border ${
             toast.type === 'success'
               ? 'bg-phumulani-charcoal text-phumulani-cream border-phumulani-green'
               : toast.type === 'error'
@@ -842,15 +842,15 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       )}
 
       {/* Top Banner & Primary Actions */}
-      <div className="bg-phumulani-charcoal p-6 rounded-2xl border border-phumulani-cream text-white shadow-xl">
+      <div className="bg-phumulani-charcoal p-6 rounded-2xl border border-white/10 text-white shadow-sm">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-phumulani-teal text-phumulani-charcoal border border-phumulani-cream mb-2">
-              <span className="w-2 h-2 rounded-full bg-phumulani-teal animate-pulse"></span>
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md text-xs font-semibold bg-phumulani-teal/15 text-phumulani-teal border border-phumulani-teal/35 mb-2">
+              <span className="w-2 h-2 rounded-full bg-phumulani-teal"></span>
               Universal Email Connector Framework (Stage 1 Real Mailbox Management)
             </div>
-            <h2 className="text-2xl font-bold tracking-tight">Enterprise Connected Mailboxes & Provider Manager</h2>
-            <p className="text-phumulani-cream text-sm mt-1 max-w-2xl">
+            <h2 className="text-2xl font-bold font-heading tracking-tight">Enterprise Connected Mailboxes & Provider Manager</h2>
+            <p className="text-phumulani-cream/80 text-sm mt-1 max-w-2xl">
               Connect Gmail, Google Workspace, Outlook, and Microsoft 365 through official OAuth 2.0 PKCE.
               Select active mailboxes, enforce Quad-Action human approvals, monitor sync health, and protect survivor correspondence via VAWA Section 1367 air-gap isolation.
             </p>
@@ -858,13 +858,13 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
           <div className="flex items-center gap-2.5 flex-wrap">
             <button
               onClick={() => setShowCleanupPanel(!showCleanupPanel)}
-              className="px-4 py-2.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-phumulani-gold font-medium text-xs rounded-xl border border-phumulani-gold transition-colors flex items-center gap-1.5"
+              className="px-4 py-2.5 bg-white/5 hover:bg-white/10 text-phumulani-gold font-medium text-xs rounded-xl border border-phumulani-gold/50 transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               {showCleanupPanel ? 'Hide Demo Cleanup' : 'Safe Demo Cleanup'}
             </button>
             <button
               onClick={() => setShowConfigGuide(!showConfigGuide)}
-              className="px-4 py-2.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-phumulani-cream font-medium text-xs rounded-xl border border-phumulani-teal transition-colors flex items-center gap-1.5"
+              className="px-4 py-2.5 bg-white/5 hover:bg-white/10 text-phumulani-cream font-medium text-xs rounded-xl border border-phumulani-teal/40 transition-colors flex items-center gap-1.5 cursor-pointer"
             >
               <svg className="w-4 h-4 text-phumulani-teal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -876,7 +876,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                 resetWizard();
                 setIsWizardOpen(true);
               }}
-              className="px-5 py-2.5 bg-phumulani-teal hover:bg-phumulani-gold text-phumulani-charcoal font-medium text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2"
+              className="px-5 py-2.5 bg-phumulani-teal hover:bg-phumulani-teal/85 text-phumulani-charcoal font-semibold text-sm rounded-xl shadow-xs transition-colors flex items-center justify-center gap-2 cursor-pointer"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -886,7 +886,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
             {onClose && (
               <button
                 onClick={onClose}
-                className="px-4 py-2.5 bg-phumulani-charcoal hover:bg-phumulani-orange text-phumulani-cream text-xs font-semibold rounded-xl border border-phumulani-teal"
+                className="px-4 py-2.5 bg-white/5 hover:bg-white/10 text-phumulani-cream text-xs font-semibold rounded-xl border border-phumulani-teal/40 transition-colors cursor-pointer"
               >
                 Back to Inbox
               </button>
@@ -895,30 +895,30 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
         </div>
 
         {/* Operational Metrics Cards */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mt-6 pt-6 border-t border-phumulani-teal">
-          <div className="bg-phumulani-charcoal rounded-xl p-3 border border-phumulani-teal">
-            <div className="text-xs text-phumulani-cream uppercase font-semibold">Configured Accounts</div>
-            <div className="text-2xl font-bold text-white mt-1">{totalAccounts}</div>
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4 mt-6 pt-6 border-t border-white/10 tabular-nums">
+          <div className="bg-white/5 rounded-xl p-3 border border-phumulani-teal/30">
+            <div className="text-xs text-phumulani-cream/75 uppercase font-semibold">Configured Accounts</div>
+            <div className="text-2xl font-bold font-heading text-white mt-1">{totalAccounts}</div>
             <div className="text-xs text-phumulani-teal mt-0.5">Canonical & Custom</div>
           </div>
-          <div className="bg-phumulani-charcoal rounded-xl p-3 border border-phumulani-teal">
-            <div className="text-xs text-phumulani-cream uppercase font-semibold">Connection Health</div>
-            <div className="text-2xl font-bold text-phumulani-green mt-1">{healthyAccounts} / {totalAccounts}</div>
-            <div className="text-xs text-phumulani-cream mt-0.5">TLS Handshake Verified</div>
+          <div className="bg-white/5 rounded-xl p-3 border border-phumulani-teal/30">
+            <div className="text-xs text-phumulani-cream/75 uppercase font-semibold">Connection Health</div>
+            <div className="text-2xl font-bold font-heading text-phumulani-green mt-1">{healthyAccounts} / {totalAccounts}</div>
+            <div className="text-xs text-phumulani-cream/70 mt-0.5">TLS Handshake Verified</div>
           </div>
-          <div className="bg-phumulani-charcoal rounded-xl p-3 border border-phumulani-teal">
-            <div className="text-xs text-phumulani-cream uppercase font-semibold">Ingested Inbound</div>
-            <div className="text-2xl font-bold text-phumulani-teal mt-1">{totalMessagesIn}</div>
-            <div className="text-xs text-phumulani-cream mt-0.5">Durable Cursor Synced</div>
+          <div className="bg-white/5 rounded-xl p-3 border border-phumulani-teal/30">
+            <div className="text-xs text-phumulani-cream/75 uppercase font-semibold">Ingested Inbound</div>
+            <div className="text-2xl font-bold font-heading text-phumulani-teal mt-1">{totalMessagesIn}</div>
+            <div className="text-xs text-phumulani-cream/70 mt-0.5">Durable Cursor Synced</div>
           </div>
-          <div className="bg-phumulani-charcoal rounded-xl p-3 border border-phumulani-teal">
-            <div className="text-xs text-phumulani-cream uppercase font-semibold">Approved Outbound</div>
-            <div className="text-2xl font-bold text-phumulani-gold mt-1">{totalMessagesOut}</div>
-            <div className="text-xs text-phumulani-cream mt-0.5">Quad-Action Gated</div>
+          <div className="bg-white/5 rounded-xl p-3 border border-phumulani-teal/30">
+            <div className="text-xs text-phumulani-cream/75 uppercase font-semibold">Approved Outbound</div>
+            <div className="text-2xl font-bold font-heading text-phumulani-gold mt-1">{totalMessagesOut}</div>
+            <div className="text-xs text-phumulani-cream/70 mt-0.5">Quad-Action Gated</div>
           </div>
-          <div className="bg-phumulani-charcoal rounded-xl p-3 border border-phumulani-teal">
-            <div className="text-xs text-phumulani-cream uppercase font-semibold">Air-Gapped Mailboxes</div>
-            <div className="text-2xl font-bold text-phumulani-gold mt-1">{airGappedAccounts}</div>
+          <div className="bg-white/5 rounded-xl p-3 border border-phumulani-teal/30">
+            <div className="text-xs text-phumulani-cream/75 uppercase font-semibold">Air-Gapped Mailboxes</div>
+            <div className="text-2xl font-bold font-heading text-phumulani-gold mt-1">{airGappedAccounts}</div>
             <div className="text-xs text-phumulani-gold mt-0.5">VAWA 1367 Compliant</div>
           </div>
         </div>
@@ -990,11 +990,11 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
       {/* Admin Safe Demonstration Data Cleanup Panel (Block 76.2) */}
       {showCleanupPanel && (
-        <div className="bg-white border border-phumulani-gold rounded-2xl p-5 shadow-sm space-y-4 text-xs">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-phumulani-cream pb-3">
+        <div className="bg-white border border-phumulani-gold/50 rounded-2xl p-5 shadow-xs space-y-4 text-xs">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-phumulani-charcoal/10 pb-3">
             <div>
               <h3 className="text-sm font-bold text-phumulani-charcoal">Safe Demonstration Email Data Cleanup</h3>
-              <p className="text-phumulani-charcoal mt-0.5">
+              <p className="text-phumulani-charcoal/75 mt-0.5">
                 Inspects email stores only after creating a timestamped backup. Donor records, grant pipelines, payments, audit logs, and any uncertain records are strictly preserved.
               </p>
             </div>
@@ -1002,27 +1002,27 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               type="button"
               onClick={handleRunCleanupDryRun}
               disabled={cleanupLoading}
-              className="px-3.5 py-2 bg-phumulani-charcoal hover:bg-phumulani-orange text-white rounded-xl font-semibold disabled:opacity-50"
+              className="px-3.5 py-2 bg-phumulani-charcoal hover:bg-phumulani-charcoal/90 text-white rounded-xl font-semibold disabled:opacity-50 cursor-pointer transition-colors"
             >
               {cleanupLoading ? 'Inspecting...' : 'Run Dry-Run & Create Backup'}
             </button>
           </div>
 
           {cleanupDryRun && (
-            <div className="bg-phumulani-cream border border-phumulani-gold rounded-xl p-4 space-y-3">
+            <div className="bg-phumulani-cream/60 border border-phumulani-gold/45 rounded-xl p-4 space-y-3">
               <div className="font-bold text-phumulani-charcoal">Dry-Run Inspection Report (Approval Required)</div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                <div className="bg-white p-2.5 rounded-lg border border-phumulani-gold">
-                  <div className="text-phumulani-charcoal">Confirmed Demo Records</div>
-                  <div className="text-lg font-bold text-phumulani-earth">{cleanupDryRun.confirmedDemoCount}</div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 tabular-nums">
+                <div className="bg-white p-2.5 rounded-lg border border-phumulani-gold/40">
+                  <div className="text-phumulani-charcoal/70">Confirmed Demo Records</div>
+                  <div className="text-lg font-bold font-heading text-phumulani-earth">{cleanupDryRun.confirmedDemoCount}</div>
                 </div>
-                <div className="bg-white p-2.5 rounded-lg border border-phumulani-green">
-                  <div className="text-phumulani-charcoal">Genuine Records Preserved</div>
-                  <div className="text-lg font-bold text-phumulani-earth">{cleanupDryRun.genuinePreservedCount}</div>
+                <div className="bg-white p-2.5 rounded-lg border border-phumulani-green/40">
+                  <div className="text-phumulani-charcoal/70">Genuine Records Preserved</div>
+                  <div className="text-lg font-bold font-heading text-phumulani-earth">{cleanupDryRun.genuinePreservedCount}</div>
                 </div>
-                <div className="bg-white p-2.5 rounded-lg border border-phumulani-cream">
-                  <div className="text-phumulani-charcoal">Uncertain Preserved</div>
-                  <div className="text-lg font-bold text-phumulani-charcoal">{cleanupDryRun.uncertainPreservedCount}</div>
+                <div className="bg-white p-2.5 rounded-lg border border-phumulani-charcoal/12">
+                  <div className="text-phumulani-charcoal/70">Uncertain Preserved</div>
+                  <div className="text-lg font-bold font-heading text-phumulani-charcoal">{cleanupDryRun.uncertainPreservedCount}</div>
                 </div>
               </div>
               <div className="font-mono text-[11px] text-phumulani-charcoal break-all">
@@ -1033,7 +1033,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                   type="checkbox"
                   checked={cleanupApprovalChecked}
                   onChange={(e) => setCleanupApprovalChecked(e.target.checked)}
-                  className="rounded border-phumulani-cream"
+                  className="rounded border-phumulani-charcoal/25"
                 />
                 <span>I confirm deletion of ONLY confirmed demonstration email records listed in this dry-run.</span>
               </label>
@@ -1041,7 +1041,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                 type="button"
                 onClick={handleExecuteSafeCleanup}
                 disabled={!cleanupApprovalChecked || cleanupExecuting}
-                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold disabled:opacity-50"
+                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-earth/90 text-white rounded-xl font-bold disabled:opacity-50 cursor-pointer transition-colors"
               >
                 {cleanupExecuting ? 'Executing Cleanup...' : 'Approve & Execute Confirmed Cleanup'}
               </button>
@@ -1049,7 +1049,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
           )}
 
           {cleanupResult && (
-            <div className="bg-phumulani-cream border border-phumulani-green rounded-xl p-3 text-phumulani-charcoal space-y-1">
+            <div className="bg-phumulani-green/12 border border-phumulani-green/40 rounded-xl p-3 text-phumulani-charcoal space-y-1">
               <div className="font-bold">Cleanup Audit Entry Recorded</div>
               <div>Deleted confirmed demo records: {cleanupResult.deletedCount} | Genuine preserved: {cleanupResult.genuinePreservedCount} | Uncertain preserved: {cleanupResult.uncertainPreservedCount}</div>
               <div className="font-mono text-[11px]">Audit Ledger ID: {cleanupResult.auditLedgerId}</div>
@@ -1057,11 +1057,11 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
           )}
 
           {/* Phase 79.1 Complete Email Data Reset & Clean Installation */}
-          <div className="pt-4 mt-4 border-t border-phumulani-cream space-y-3">
+          <div className="pt-4 mt-4 border-t border-phumulani-charcoal/10 space-y-3">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
               <div>
                 <h4 className="text-sm font-bold text-phumulani-charcoal">Complete Email Data Reset & Clean Installation</h4>
-                <p className="text-phumulani-charcoal mt-0.5">
+                <p className="text-phumulani-charcoal/75 mt-0.5">
                   Removes all email messages, threads, drafts, approvals, mailbox connections, and vaulted OAuth credentials after SHA-256 backup verification. Unrelated donor CRM, grants, safeguarding, and audit ledger records are untouched.
                 </p>
               </div>
@@ -1069,27 +1069,27 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                 type="button"
                 onClick={handleRunCompleteResetDryRun}
                 disabled={completeResetLoading}
-                className="px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-semibold disabled:opacity-50 shrink-0"
+                className="px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-earth/90 text-white rounded-xl font-semibold disabled:opacity-50 shrink-0 cursor-pointer transition-colors"
               >
                 {completeResetLoading ? 'Preparing Backup...' : 'Run Complete Reset Dry-Run'}
               </button>
             </div>
 
             {completeResetDryRun && (
-              <div className="bg-phumulani-cream border border-phumulani-earth rounded-xl p-4 space-y-3">
+              <div className="bg-phumulani-earth/8 border border-phumulani-earth/35 rounded-xl p-4 space-y-3">
                 <div className="font-bold text-phumulani-charcoal">Complete Email Reset Dry-Run (Explicit Admin Confirmation Required)</div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-                  <div className="bg-white p-2.5 rounded-lg border border-phumulani-earth">
-                    <div className="text-phumulani-charcoal">Operational Email Items</div>
-                    <div className="text-lg font-bold text-phumulani-earth">{completeResetDryRun.totalOperationalItemsFound}</div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 tabular-nums">
+                  <div className="bg-white p-2.5 rounded-lg border border-phumulani-earth/35">
+                    <div className="text-phumulani-charcoal/70">Operational Email Items</div>
+                    <div className="text-lg font-bold font-heading text-phumulani-earth">{completeResetDryRun.totalOperationalItemsFound}</div>
                   </div>
-                  <div className="bg-white p-2.5 rounded-lg border border-phumulani-earth">
-                    <div className="text-phumulani-charcoal">Mailbox Connections</div>
-                    <div className="text-lg font-bold text-phumulani-earth">{completeResetDryRun.mailboxConnectionsToRemove?.length || 0}</div>
+                  <div className="bg-white p-2.5 rounded-lg border border-phumulani-earth/35">
+                    <div className="text-phumulani-charcoal/70">Mailbox Connections</div>
+                    <div className="text-lg font-bold font-heading text-phumulani-earth">{completeResetDryRun.mailboxConnectionsToRemove?.length || 0}</div>
                   </div>
-                  <div className="bg-white p-2.5 rounded-lg border border-phumulani-green">
-                    <div className="text-phumulani-charcoal">Legal Holds Preserved</div>
-                    <div className="text-lg font-bold text-phumulani-earth">{completeResetDryRun.legalHoldPreservedCount || 0}</div>
+                  <div className="bg-white p-2.5 rounded-lg border border-phumulani-green/40">
+                    <div className="text-phumulani-charcoal/70">Legal Holds Preserved</div>
+                    <div className="text-lg font-bold font-heading text-phumulani-earth">{completeResetDryRun.legalHoldPreservedCount || 0}</div>
                   </div>
                 </div>
                 <div className="font-mono text-[11px] text-phumulani-charcoal break-all">
@@ -1100,7 +1100,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                     type="checkbox"
                     checked={completeResetApprovalChecked}
                     onChange={(e) => setCompleteResetApprovalChecked(e.target.checked)}
-                    className="rounded border-phumulani-cream"
+                    className="rounded border-phumulani-charcoal/25"
                   />
                   <span>I confirm permanent removal of all persisted operational email data and vaulted mailbox credentials after backup verification.</span>
                 </label>
@@ -1108,7 +1108,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                   type="button"
                   onClick={handleExecuteCompleteReset}
                   disabled={!completeResetApprovalChecked || completeResetExecuting}
-                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl font-bold disabled:opacity-50"
+                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-earth/90 text-white rounded-xl font-bold disabled:opacity-50 cursor-pointer transition-colors"
                 >
                   {completeResetExecuting ? 'Resetting Email System...' : 'Confirm & Execute Complete Email Reset'}
                 </button>
@@ -1116,7 +1116,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
             )}
 
             {completeResetResult && (
-              <div className="bg-phumulani-cream border border-phumulani-green rounded-xl p-3 text-phumulani-charcoal space-y-1">
+              <div className="bg-phumulani-green/12 border border-phumulani-green/40 rounded-xl p-3 text-phumulani-charcoal space-y-1">
                 <div className="font-bold">Complete Email Reset Executed ({completeResetResult.resetMarkerVersion})</div>
                 <div>Deleted records: {completeResetResult.totalDeleted} | Vault entries purged: {completeResetResult.vaultEntriesPurged} | Legal holds preserved: {completeResetResult.legalHoldPreservedCount}</div>
                 <div className="font-mono text-[11px]">Audit Ledger ID: {completeResetResult.auditLedgerId}</div>
@@ -1127,18 +1127,18 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       )}
 
       {/* Main Account Inventory List */}
-      <div className="bg-white rounded-2xl shadow-sm border border-phumulani-cream overflow-hidden">
-        <div className="p-5 border-b border-phumulani-cream flex items-center justify-between">
+      <div className="bg-white rounded-2xl shadow-xs border border-phumulani-charcoal/12 overflow-hidden">
+        <div className="p-5 border-b border-phumulani-charcoal/10 flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-bold text-phumulani-charcoal">Configured Email Connections</h3>
-            <p className="text-xs text-phumulani-charcoal mt-0.5">
+            <h3 className="text-lg font-bold font-heading text-phumulani-charcoal">Configured Email Connections</h3>
+            <p className="text-xs text-phumulani-charcoal/70 mt-0.5">
               Provider adapters normalize data across REST APIs and RFC protocols into unified inbox pipelines.
             </p>
           </div>
           <div className="flex items-center gap-2">
             <button
               onClick={fetchConnections}
-              className="text-xs font-medium text-phumulani-earth hover:text-phumulani-earth px-3 py-1.5 rounded-lg border border-phumulani-teal hover:bg-phumulani-cream flex items-center gap-1.5"
+              className="text-xs font-medium text-phumulani-earth px-3 py-1.5 rounded-lg border border-phumulani-teal/45 hover:bg-phumulani-teal/12 flex items-center gap-1.5 cursor-pointer transition-colors"
             >
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -1149,8 +1149,8 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
         </div>
 
         {loading ? (
-          <div className="p-12 text-center text-phumulani-charcoal text-sm">
-            <div className="inline-block animate-spin w-6 h-6 border-2 border-phumulani-cream border-t-transparent rounded-full mb-2"></div>
+          <div className="p-12 text-center text-phumulani-charcoal/75 text-sm">
+            <div className="inline-block animate-spin w-6 h-6 border-2 border-phumulani-earth border-t-transparent rounded-full mb-2"></div>
             <div>Loading universal email connections...</div>
           </div>
         ) : connections.length === 0 ? (
@@ -1158,7 +1158,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
             <div className="font-semibold text-phumulani-charcoal text-base">
               No Email Accounts Connected
             </div>
-            <p className="text-xs text-phumulani-charcoal max-w-md mx-auto leading-relaxed">
+            <p className="text-xs text-phumulani-charcoal/75 max-w-md mx-auto leading-relaxed">
               Your Email Command Center is ready. Connect and authorize your organizational email accounts to begin receiving and managing messages.
             </p>
             <button
@@ -1166,13 +1166,13 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                 resetWizard();
                 setIsWizardOpen(true);
               }}
-              className="px-4 py-2 bg-phumulani-earth text-white rounded-xl text-xs font-semibold shadow hover:bg-phumulani-orange cursor-pointer"
+              className="px-4 py-2 bg-phumulani-earth text-white rounded-xl text-xs font-semibold shadow-xs hover:bg-phumulani-earth/90 cursor-pointer transition-colors"
             >
               Connect Email Account
             </button>
           </div>
         ) : (
-          <div className="divide-y divide-phumulani-cream">
+          <div className="divide-y divide-phumulani-charcoal/10">
             {connections.map((conn) => {
               const descriptor = PROVIDER_DESCRIPTORS[conn.provider];
               const isAirGapped = conn.safeguardingClassification === 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP';
@@ -1181,46 +1181,46 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               const isSyncPaused = conn.syncStatus === ('SYNC_PAUSED' as any) || (conn as any).metadata?.paused;
 
               // Compute Badge Styling for the 9 required interface states
-              let stateBadgeClass = 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream';
+              let stateBadgeClass = 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-charcoal/15';
               let stateDotColor = 'bg-phumulani-charcoal';
 
               switch (uiState) {
                 case 'Connected':
-                  stateBadgeClass = 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green font-semibold';
-                  stateDotColor = 'bg-phumulani-green animate-pulse';
+                  stateBadgeClass = 'bg-phumulani-green/12 text-phumulani-charcoal border-phumulani-green/45 font-semibold';
+                  stateDotColor = 'bg-phumulani-green';
                   break;
                 case 'Synchronizing':
-                  stateBadgeClass = 'bg-phumulani-cream text-phumulani-earth border-phumulani-teal font-semibold';
-                  stateDotColor = 'bg-phumulani-teal animate-spin';
+                  stateBadgeClass = 'bg-phumulani-teal/12 text-phumulani-earth border-phumulani-teal/45 font-semibold';
+                  stateDotColor = 'bg-phumulani-teal';
                   break;
                 case 'Initial synchronization':
-                  stateBadgeClass = 'bg-phumulani-cream text-phumulani-earth border-phumulani-teal font-semibold';
+                  stateBadgeClass = 'bg-phumulani-teal/12 text-phumulani-earth border-phumulani-teal/45 font-semibold';
                   stateDotColor = 'bg-phumulani-charcoal';
                   break;
                 case 'Connecting':
-                  stateBadgeClass = 'bg-phumulani-cream text-phumulani-earth border-phumulani-teal font-semibold';
-                  stateDotColor = 'bg-phumulani-teal animate-ping';
+                  stateBadgeClass = 'bg-phumulani-teal/12 text-phumulani-earth border-phumulani-teal/45 font-semibold';
+                  stateDotColor = 'bg-phumulani-teal';
                   break;
                 case 'Sync paused':
-                  stateBadgeClass = 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-gold font-semibold';
+                  stateBadgeClass = 'bg-phumulani-gold/15 text-phumulani-charcoal border-phumulani-gold/45 font-semibold';
                   stateDotColor = 'bg-phumulani-gold';
                   break;
                 case 'Authorization required':
-                  stateBadgeClass = 'bg-phumulani-cream text-phumulani-earth border-phumulani-orange font-bold';
-                  stateDotColor = 'bg-phumulani-orange animate-bounce';
-                  break;
-                case 'Connection error':
-                  stateBadgeClass = 'bg-phumulani-cream text-phumulani-earth border-phumulani-earth font-bold';
+                  stateBadgeClass = 'bg-phumulani-orange/12 text-phumulani-earth border-phumulani-orange/45 font-bold';
                   stateDotColor = 'bg-phumulani-orange';
                   break;
+                case 'Connection error':
+                  stateBadgeClass = 'bg-phumulani-earth/12 text-phumulani-earth border-phumulani-earth/45 font-bold';
+                  stateDotColor = 'bg-phumulani-earth';
+                  break;
                 case 'Disconnected':
-                  stateBadgeClass = 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream';
-                  stateDotColor = 'bg-phumulani-charcoal';
+                  stateBadgeClass = 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-charcoal/15';
+                  stateDotColor = 'bg-phumulani-charcoal/60';
                   break;
                 case 'Not connected':
                 default:
-                  stateBadgeClass = 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-cream';
-                  stateDotColor = 'bg-phumulani-charcoal';
+                  stateBadgeClass = 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-charcoal/15';
+                  stateDotColor = 'bg-phumulani-charcoal/60';
                   break;
               }
 
@@ -1228,20 +1228,20 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                 <div
                   key={conn.id}
                   className={`p-5 transition-colors ${
-                    isActive ? 'bg-phumulani-cream border-l-4 border-phumulani-earth' : 'hover:bg-phumulani-cream'
+                    isActive ? 'bg-phumulani-earth/8 ring-1 ring-inset ring-phumulani-earth/25' : 'hover:bg-phumulani-cream/40'
                   }`}
                 >
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                     <div className="space-y-1.5 flex-1">
                       <div className="flex items-center gap-2.5 flex-wrap">
-                        <span className={`px-2.5 py-0.5 text-xs font-semibold rounded-full border ${descriptor?.badgeColor || 'bg-phumulani-cream text-phumulani-charcoal'}`}>
+                        <span className={`px-2.5 py-0.5 text-xs font-semibold rounded-sm border ${descriptor?.badgeColor || 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-charcoal/15'}`}>
                           {descriptor?.name || conn.provider}
                         </span>
 
                         <h4 className="font-semibold text-phumulani-charcoal text-base">{conn.displayName}</h4>
 
                         {isActive && (
-                          <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-phumulani-earth text-white shadow-sm flex items-center gap-1">
+                          <span className="px-2 py-0.5 text-xs font-bold rounded-sm bg-phumulani-earth text-white shadow-2xs flex items-center gap-1">
                             <span className="w-1.5 h-1.5 rounded-full bg-white"></span>
                             ACTIVE MAILBOX
                           </span>
@@ -1249,33 +1249,33 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
                         {/* Exact 9-State Status Badge + Canonical 8-State Lifecycle Pill */}
                         <span
-                          className={`px-2.5 py-0.5 text-xs rounded-full border flex items-center gap-1.5 ${stateBadgeClass}`}
+                          className={`px-2 py-0.5 text-xs rounded-sm border flex items-center gap-1.5 ${stateBadgeClass}`}
                         >
                           <span className={`w-2 h-2 rounded-full ${stateDotColor}`}></span>
                           {uiState}
                         </span>
 
                         {(conn as any).lifecycleState && (
-                          <span className="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-phumulani-cream text-phumulani-charcoal border border-phumulani-cream">
+                          <span className="px-2 py-0.5 text-[10px] font-mono font-bold rounded-sm bg-phumulani-cream text-phumulani-charcoal border border-phumulani-charcoal/12">
                             {(conn as any).lifecycleState}
                           </span>
                         )}
 
                         {isAirGapped && (
-                          <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-phumulani-cream text-phumulani-earth border border-phumulani-earth flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-phumulani-orange"></span>
+                          <span className="px-2 py-0.5 text-xs font-bold rounded-sm bg-phumulani-earth/10 text-phumulani-earth border border-phumulani-earth/35 flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-phumulani-earth"></span>
                             AIR-GAPPED SAFEGUARDING
                           </span>
                         )}
 
                         {conn.credentialWarning && (
-                          <span className="px-2 py-0.5 text-[10px] font-bold rounded-full bg-phumulani-cream text-phumulani-earth border border-phumulani-gold">
+                          <span className="px-2 py-0.5 text-[10px] font-bold rounded-sm bg-phumulani-gold/15 text-phumulani-earth border border-phumulani-gold/45">
                             Token Expiring Soon
                           </span>
                         )}
                       </div>
 
-                      <div className="text-xs text-phumulani-charcoal flex flex-wrap gap-x-4 gap-y-1">
+                      <div className="text-xs text-phumulani-charcoal/80 flex flex-wrap gap-x-4 gap-y-1 tabular-nums">
                         <span><strong>Email:</strong> {conn.emailAddress}</span>
                         <span><strong>Owner:</strong> {conn.accountOwner}</span>
                         <span><strong>Department:</strong> {conn.department}</span>
@@ -1292,7 +1292,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                         )}
                         {((conn as any).configurationStatus === 'BLOCKED_BY_CONFIGURATION' ||
                           (!(conn as any).credentialsConfigured && uiState === 'Not connected')) && (
-                          <span className="px-2 py-0.5 rounded bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold font-semibold">
+                          <span className="px-2 py-0.5 rounded-sm bg-phumulani-gold/15 text-phumulani-charcoal border border-phumulani-gold/45 font-semibold">
                             BLOCKED_BY_CONFIGURATION — Live OAuth / provider credentials not configured
                           </span>
                         )}
@@ -1308,8 +1308,8 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                           disabled={isActive}
                           className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-colors ${
                             isActive
-                              ? 'bg-phumulani-cream text-phumulani-earth cursor-default opacity-80'
-                              : 'bg-phumulani-earth hover:bg-phumulani-orange text-white shadow-sm'
+                              ? 'bg-phumulani-earth/12 text-phumulani-earth cursor-default'
+                              : 'bg-phumulani-earth hover:bg-phumulani-earth/90 text-white shadow-xs cursor-pointer'
                           }`}
                         >
                           {isActive ? 'Active' : 'Set Active'}
@@ -1332,11 +1332,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       {/* Pause / Resume Sync */}
                       <button
                         onClick={() => handleTogglePauseSync(conn)}
-                        className={`px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1 ${
-                          isSyncPaused
-                            ? 'bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal'
-                            : 'bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-charcoal'
-                        }`}
+                        className="px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors flex items-center gap-1 bg-phumulani-cream hover:bg-phumulani-gold/25 text-phumulani-charcoal border border-phumulani-charcoal/10 cursor-pointer"
                         title={isSyncPaused ? 'Resume Background Sync' : 'Pause Background Sync'}
                       >
                         {isSyncPaused ? (
@@ -1361,7 +1357,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       {(uiState === 'Authorization required' || uiState === 'Connection error' || conn.authMethod === 'OAUTH2') && (
                         <button
                           onClick={() => handleOpenReauthorize(conn)}
-                          className="px-2.5 py-1.5 text-xs font-semibold bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-earth rounded-lg transition-colors flex items-center gap-1 border border-phumulani-orange"
+                          className="px-2.5 py-1.5 text-xs font-semibold bg-phumulani-orange/12 hover:bg-phumulani-orange/20 text-phumulani-earth rounded-lg transition-colors flex items-center gap-1 border border-phumulani-orange/40 cursor-pointer"
                         >
                           <svg className="w-3.5 h-3.5 text-phumulani-earth" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
@@ -1373,7 +1369,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       {/* Edit Mailbox Permissions */}
                       <button
                         onClick={() => handleOpenEditPermissions(conn)}
-                        className="px-2.5 py-1.5 text-xs font-medium bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-lg transition-colors flex items-center gap-1"
+                        className="px-2.5 py-1.5 text-xs font-medium bg-phumulani-cream hover:bg-phumulani-charcoal/10 text-phumulani-charcoal rounded-lg transition-colors flex items-center gap-1 cursor-pointer"
                         title="Edit Permissions & Governance"
                       >
                         <svg className="w-3.5 h-3.5 text-phumulani-charcoal" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1385,7 +1381,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       {/* Test TLS / Connectivity */}
                       <button
                         onClick={() => handleVerifyHealth(conn.id)}
-                        className="px-2.5 py-1.5 text-xs font-medium bg-phumulani-cream hover:bg-phumulani-teal text-phumulani-earth rounded-lg transition-colors"
+                        className="px-2.5 py-1.5 text-xs font-medium bg-phumulani-cream hover:bg-phumulani-teal/20 text-phumulani-earth rounded-lg transition-colors cursor-pointer"
                         title="Test TLS & DNS Handshake"
                       >
                         Test TLS
@@ -1394,7 +1390,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       {/* Sync History & Diagnostics */}
                       <button
                         onClick={() => setInspectSyncHistory(conn)}
-                        className="px-2.5 py-1.5 text-xs font-medium bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-earth rounded-lg transition-colors"
+                        className="px-2.5 py-1.5 text-xs font-medium bg-phumulani-cream hover:bg-phumulani-charcoal/10 text-phumulani-earth rounded-lg transition-colors cursor-pointer"
                         title="Review Errors & Sync History"
                       >
                         History
@@ -1403,7 +1399,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       {/* Folders */}
                       <button
                         onClick={() => handleInspectFolders(conn)}
-                        className="px-2.5 py-1.5 text-xs font-medium bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-earth rounded-lg transition-colors"
+                        className="px-2.5 py-1.5 text-xs font-medium bg-phumulani-cream hover:bg-phumulani-charcoal/10 text-phumulani-earth rounded-lg transition-colors cursor-pointer"
                       >
                         Folders
                       </button>
@@ -1411,7 +1407,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       {/* Evidence */}
                       <button
                         onClick={() => handleInspectEvidence(conn)}
-                        className="px-2.5 py-1.5 text-xs font-medium bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-earth rounded-lg transition-colors"
+                        className="px-2.5 py-1.5 text-xs font-medium bg-phumulani-cream hover:bg-phumulani-charcoal/10 text-phumulani-earth rounded-lg transition-colors cursor-pointer"
                       >
                         Evidence
                       </button>
@@ -1419,7 +1415,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       {/* AI Triage */}
                       <button
                         onClick={() => handleRunAiTriage(conn)}
-                        className="px-2.5 py-1.5 text-xs font-medium bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-charcoal rounded-lg transition-colors"
+                        className="px-2.5 py-1.5 text-xs font-medium bg-phumulani-cream hover:bg-phumulani-gold/25 text-phumulani-charcoal rounded-lg transition-colors cursor-pointer"
                       >
                         AI Triage
                       </button>
@@ -1428,7 +1424,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       {conn.authMethod === 'OAUTH2' && (
                         <button
                           onClick={() => handleRefreshToken(conn.id)}
-                          className="px-2.5 py-1.5 text-xs font-medium bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-lg transition-colors"
+                          className="px-2.5 py-1.5 text-xs font-medium bg-phumulani-cream hover:bg-phumulani-charcoal/10 text-phumulani-charcoal rounded-lg transition-colors cursor-pointer"
                         >
                           Refresh
                         </button>
@@ -1437,7 +1433,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       {/* Revoke */}
                       <button
                         onClick={() => handleRevokeToken(conn.id)}
-                        className="px-2.5 py-1.5 text-xs font-medium bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-earth rounded-lg transition-colors"
+                        className="px-2.5 py-1.5 text-xs font-medium bg-phumulani-cream hover:bg-phumulani-earth/12 text-phumulani-earth rounded-lg transition-colors cursor-pointer"
                       >
                         Revoke
                       </button>
@@ -1445,10 +1441,10 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       {/* Disconnect / Reconnect */}
                       <button
                         onClick={() => handleToggleDisconnect(conn)}
-                        className={`px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors ${
+                        className={`px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors cursor-pointer ${
                           conn.authStatus === 'DISCONNECTED'
-                            ? 'bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-charcoal'
-                            : 'bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal'
+                            ? 'bg-phumulani-cream hover:bg-phumulani-gold/25 text-phumulani-charcoal'
+                            : 'bg-phumulani-cream hover:bg-phumulani-charcoal/10 text-phumulani-charcoal'
                         }`}
                       >
                         {conn.authStatus === 'DISCONNECTED' ? 'Reconnect' : 'Disconnect'}
@@ -1459,13 +1455,13 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                         <div className="inline-flex items-center gap-1">
                           <button
                             onClick={() => handleDelete(conn.id)}
-                            className="px-2 py-1 text-[11px] font-bold bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg cursor-pointer"
+                            className="px-2 py-1 text-[11px] font-bold bg-phumulani-earth hover:bg-phumulani-earth/90 text-white rounded-lg cursor-pointer"
                           >
                             Confirm Delete
                           </button>
                           <button
                             onClick={() => setConfirmDeleteId(null)}
-                            className="px-2 py-1 text-[11px] font-medium bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-lg cursor-pointer"
+                            className="px-2 py-1 text-[11px] font-medium bg-phumulani-cream hover:bg-phumulani-charcoal/10 text-phumulani-charcoal rounded-lg cursor-pointer"
                           >
                             Cancel
                           </button>
@@ -1494,24 +1490,24 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       {/* 6-STEP CONNECT EMAIL ACCOUNT WIZARD MODAL (REAL OAUTH INTEGRATION)       */}
       {/* ========================================================================= */}
       {isWizardOpen && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-phumulani-cream overflow-hidden animate-fade-in">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-xl border border-phumulani-charcoal/15 overflow-hidden animate-fade-in">
             {/* Modal Header */}
             <div className="bg-phumulani-charcoal px-6 py-4 text-white flex items-center justify-between shrink-0">
               <div>
-                <h3 className="font-bold text-lg">Connect Email Account</h3>
-                <p className="text-xs text-phumulani-cream">Step {wizardStep} of 6 — Universal Connector Provisioning</p>
+                <h3 className="font-bold font-heading text-lg">Connect Email Account</h3>
+                <p className="text-xs text-phumulani-cream/75">Step {wizardStep} of 6 — Universal Connector Provisioning</p>
               </div>
               <button
                 onClick={() => setIsWizardOpen(false)}
-                className="text-phumulani-cream hover:text-white text-lg font-bold"
+                className="text-phumulani-cream/80 hover:text-white text-lg font-bold cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
             {/* Stepper Indicator */}
-            <div className="bg-phumulani-cream px-6 py-2.5 flex items-center justify-between border-b border-phumulani-cream text-xs shrink-0">
+            <div className="bg-phumulani-cream/70 px-6 py-2.5 flex items-center justify-between border-b border-phumulani-charcoal/12 text-xs shrink-0">
               {['Email & Discovery', 'Provider', 'Auth Credentials', 'TLS Verification', 'Permissions', 'Review'].map(
                 (title, idx) => {
                   const stepNum = idx + 1;
@@ -1562,7 +1558,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       value={wizardEmail}
                       onChange={(e) => handleDiscover(e.target.value)}
                       placeholder="e.g. info@phumulani.org, partner@outlook.com"
-                      className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-phumulani-cream focus:outline-none focus:ring-2 focus:ring-phumulani-cream"
+                      className="w-full px-3.5 py-2.5 text-sm rounded-xl border border-phumulani-charcoal/15 focus:outline-none focus:ring-2 focus:ring-phumulani-teal/30 focus:border-phumulani-teal"
                     />
                     {wizardEmail.trim().length > 0 && !EMAIL_FORMAT_REGEX.test(wizardEmail.trim()) && (
                       <p className="text-[11px] text-phumulani-earth mt-1">
@@ -1572,7 +1568,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                   </div>
 
                   {discoveryResult && (
-                    <div className="p-4 rounded-xl bg-phumulani-cream border border-phumulani-teal text-xs text-phumulani-earth space-y-1.5">
+                    <div className="p-4 rounded-xl bg-phumulani-cream/60 border border-phumulani-teal/40 text-xs text-phumulani-earth space-y-1.5">
                       <div className="font-bold flex items-center gap-1.5 text-phumulani-earth">
                         <svg className="w-4 h-4 text-phumulani-earth" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -1583,7 +1579,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       <div>
                         <strong>Suggested Auth:</strong> {discoveryResult.suggestedAuthMethod}
                         {discoveryResult.dnsStatus && (
-                          <span className="ml-2 font-mono text-[11px] px-1.5 py-0.5 rounded bg-white border border-phumulani-teal">
+                          <span className="ml-2 font-mono text-[11px] px-1.5 py-0.5 rounded bg-white border border-phumulani-teal/40">
                             DNS: {discoveryResult.dnsStatus}
                           </span>
                         )}
@@ -1600,7 +1596,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                           </ul>
                         </div>
                       )}
-                      <div className="text-[11px] text-phumulani-charcoal bg-phumulani-cream border border-phumulani-gold rounded-lg p-2 mt-1">
+                      <div className="text-[11px] text-phumulani-charcoal bg-phumulani-gold/15 border border-phumulani-gold/40 rounded-lg p-2 mt-1">
                         MX records identify mail routing only. Account ownership and authorization require OAuth 2.0 or credential verification before this mailbox can connect.
                       </div>
                     </div>
@@ -1612,7 +1608,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               {wizardStep === 2 && (
                 <div className="space-y-4">
                   <h4 className="text-sm font-bold text-phumulani-charcoal">Select Provider & Protocol</h4>
-                  <p className="text-xs text-phumulani-charcoal">
+                  <p className="text-xs text-phumulani-charcoal/75">
                     Choose the provider adapter that corresponds to this email mailbox service.
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-72 overflow-y-auto">
@@ -1627,12 +1623,12 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                           }}
                           className={`p-3 rounded-xl border cursor-pointer transition-all ${
                             isSelected
-                              ? 'border-phumulani-cream bg-phumulani-cream shadow-sm'
-                              : 'border-phumulani-cream hover:border-phumulani-cream'
+                              ? 'border-phumulani-earth/45 bg-phumulani-earth/8 ring-1 ring-inset ring-phumulani-earth/25'
+                              : 'border-phumulani-charcoal/12 hover:border-phumulani-charcoal/25 bg-white'
                           }`}
                         >
                           <div className="font-semibold text-xs text-phumulani-charcoal">{desc.name}</div>
-                          <div className="text-[11px] text-phumulani-charcoal mt-0.5 line-clamp-2">{desc.description}</div>
+                          <div className="text-[11px] text-phumulani-charcoal/70 mt-0.5 line-clamp-2">{desc.description}</div>
                           <div className="text-[10px] text-phumulani-earth font-medium mt-1">Recommended: {desc.recommendedAuthMethod}</div>
                         </div>
                       );
@@ -1645,7 +1641,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               {wizardStep === 3 && (
                 <div className="space-y-4">
                   <h4 className="text-sm font-bold text-phumulani-charcoal">Official Provider Authorization</h4>
-                  <p className="text-xs text-phumulani-charcoal">
+                  <p className="text-xs text-phumulani-charcoal/75">
                     Initiate official authorization. Account will NOT be marked connected until the provider validates authorization.
                   </p>
                   <div>
@@ -1653,7 +1649,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                     <select
                       value={selectedAuthMethod}
                       onChange={(e) => setSelectedAuthMethod(e.target.value as AuthMethodType)}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-phumulani-cream focus:outline-none focus:ring-2 focus:ring-phumulani-cream"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-phumulani-charcoal/15 focus:outline-none focus:ring-2 focus:ring-phumulani-teal/30"
                     >
                       <option value="OAUTH2">OAuth 2.0 PKCE Authorization Code (Gmail & Outlook)</option>
                       <option value="APP_PASSWORD">App-Specific Password (Yahoo, iCloud, Zoho)</option>
@@ -1664,13 +1660,13 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
                   {/* REAL OAUTH 2.0 PKCE SECTION */}
                   {selectedAuthMethod === 'OAUTH2' && (
-                    <div className="space-y-3 p-4 rounded-xl bg-phumulani-cream border border-phumulani-cream">
+                    <div className="space-y-3 p-4 rounded-xl bg-phumulani-cream/60 border border-phumulani-charcoal/12">
                       <div className="flex items-center justify-between">
                         <div>
                           <div className="font-semibold text-xs text-phumulani-charcoal">
                             {selectedProvider === 'MICROSOFT' ? 'Microsoft Entra ID' : 'Google Workspace'} OAuth 2.0 PKCE Flow
                           </div>
-                          <div className="text-[11px] text-phumulani-charcoal">
+                          <div className="text-[11px] text-phumulani-charcoal/75">
                             Server generates cryptographic PKCE verifier, challenge, and CSRF state token.
                           </div>
                         </div>
@@ -1678,7 +1674,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                           type="button"
                           onClick={handleInitiateOAuthInWizard}
                           disabled={isInitiatingOAuth}
-                          className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold shadow transition-colors"
+                          className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-earth/90 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors cursor-pointer"
                         >
                           {isInitiatingOAuth ? 'Generating...' : 'Initiate Authorization'}
                         </button>
@@ -1699,11 +1695,11 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       )}
 
                       {oauthData && (
-                        <div className="space-y-3 pt-3 border-t border-phumulani-cream text-xs">
-                          <div className="bg-white p-3 rounded-lg border border-phumulani-cream space-y-1.5">
+                        <div className="space-y-3 pt-3 border-t border-phumulani-charcoal/10 text-xs">
+                          <div className="bg-white p-3 rounded-lg border border-phumulani-charcoal/12 space-y-1.5">
                             <div className="text-phumulani-earth font-bold flex items-center justify-between">
                               <span>Authorization Challenge Generated</span>
-                              <span className="text-[10px] text-phumulani-charcoal font-mono">TTL: 10m</span>
+                              <span className="text-[10px] text-phumulani-charcoal/70 font-mono">TTL: 10m</span>
                             </div>
                             <div className="text-[11px] text-phumulani-charcoal font-mono break-all">
                               <strong>Client ID:</strong> {oauthData.clientId}
@@ -1719,7 +1715,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                                 href={oauthData.authUrl}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold shadow transition-colors"
+                                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-earth/90 text-white rounded-lg text-xs font-semibold shadow-xs transition-colors"
                               >
                                 <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -1740,13 +1736,13 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                                 value={oauthAuthCodeInput}
                                 onChange={(e) => setOauthAuthCodeInput(e.target.value)}
                                 placeholder="Paste authorization code returned from provider callback"
-                                className="flex-1 px-3 py-1.5 text-xs rounded-lg border border-phumulani-cream font-mono"
+                                className="flex-1 px-3 py-1.5 text-xs rounded-lg border border-phumulani-charcoal/15 font-mono"
                               />
                               <button
                                 type="button"
                                 onClick={handleExchangeOAuthCode}
                                 disabled={isExchangingCode || !oauthAuthCodeInput.trim()}
-                                className="px-3.5 py-1.5 bg-phumulani-green hover:bg-phumulani-teal text-phumulani-charcoal rounded-lg text-xs font-semibold disabled:opacity-50"
+                                className="px-3.5 py-1.5 bg-phumulani-green hover:bg-phumulani-green/85 text-phumulani-charcoal rounded-lg text-xs font-semibold disabled:opacity-50 cursor-pointer transition-colors"
                               >
                                 {isExchangingCode ? 'Exchanging...' : 'Exchange & Verify'}
                               </button>
@@ -1840,7 +1836,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                   <button
                     onClick={handleTestVerify}
                     disabled={isVerifying}
-                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-semibold shadow transition-colors"
+                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-earth/90 text-white rounded-xl text-xs font-semibold shadow-xs transition-colors cursor-pointer"
                   >
                     {isVerifying ? 'Verifying TLS...' : 'Execute Connection Test'}
                   </button>
@@ -1848,8 +1844,8 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                   {verificationHealth && (
                     <div className={`p-4 rounded-xl border text-xs space-y-1.5 ${
                       verificationHealth.healthy
-                        ? 'bg-phumulani-cream border-phumulani-green text-phumulani-charcoal'
-                        : 'bg-phumulani-cream border-phumulani-earth text-phumulani-earth'
+                        ? 'bg-phumulani-green/12 border-phumulani-green/45 text-phumulani-charcoal'
+                        : 'bg-phumulani-earth/10 border-phumulani-earth/40 text-phumulani-earth'
                     }`}>
                       <div className="font-bold flex items-center gap-1.5">
                         <span className={`w-2 h-2 rounded-full ${verificationHealth.healthy ? 'bg-phumulani-green' : 'bg-phumulani-orange'}`}></span>
@@ -1868,7 +1864,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               {wizardStep === 5 && (
                 <div className="space-y-4">
                   <h4 className="text-sm font-bold text-phumulani-charcoal">Governance & Safeguarding Settings</h4>
-                  <p className="text-xs text-phumulani-charcoal">
+                  <p className="text-xs text-phumulani-charcoal/75">
                     Configure institutional ownership and data isolation classification.
                   </p>
                   <div>
@@ -1877,7 +1873,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       type="text"
                       value={accountOwner}
                       onChange={(e) => setAccountOwner(e.target.value)}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-phumulani-cream"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-phumulani-charcoal/15"
                     />
                   </div>
                   <div>
@@ -1886,7 +1882,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       type="text"
                       value={department}
                       onChange={(e) => setDepartment(e.target.value)}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-phumulani-cream"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-phumulani-charcoal/15"
                     />
                   </div>
                   <div>
@@ -1894,7 +1890,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                     <select
                       value={sendingPermission}
                       onChange={(e) => setSendingPermission(e.target.value as ConnectorSendingPermission)}
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-phumulani-cream font-semibold"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-phumulani-charcoal/15 font-semibold"
                     >
                       <option value="AUTHORIZED_PILOT">Authorized Pilot (Requires Human Approval Gate)</option>
                       <option value="LIVE_AUTHORIZED">Live Authorized (Human Approval Enforced)</option>
@@ -1911,7 +1907,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                           e.target.value as 'GENERAL' | 'RESTRICTED' | 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP'
                         )
                       }
-                      className="w-full px-3 py-2 text-xs rounded-xl border border-phumulani-cream font-semibold"
+                      className="w-full px-3 py-2 text-xs rounded-xl border border-phumulani-charcoal/15 font-semibold"
                     >
                       <option value="GENERAL">General Operational Communications</option>
                       <option value="RESTRICTED">Restricted Executive / Casework Communications</option>
@@ -1927,10 +1923,10 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               {wizardStep === 6 && (
                 <div className="space-y-4">
                   <h4 className="text-sm font-bold text-phumulani-charcoal">Review & Complete Registration</h4>
-                  <p className="text-xs text-phumulani-charcoal">
+                  <p className="text-xs text-phumulani-charcoal/75">
                     Confirm configuration parameters before registering this mailbox into the universal connector registry.
                   </p>
-                  <div className="bg-phumulani-cream rounded-xl p-4 border border-phumulani-cream text-xs space-y-2">
+                  <div className="bg-phumulani-cream/60 rounded-xl p-4 border border-phumulani-charcoal/12 text-xs space-y-2">
                     <div><strong>Mailbox Email:</strong> {wizardEmail}</div>
                     <div><strong>Provider:</strong> {PROVIDER_DESCRIPTORS[selectedProvider]?.name || selectedProvider}</div>
                     <div><strong>Authentication:</strong> {selectedAuthMethod} {oauthVerified && '(Verified via PKCE)'}</div>
@@ -1948,11 +1944,11 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
             </div>
 
             {/* Modal Footer Controls */}
-            <div className="bg-phumulani-cream px-6 py-4 border-t border-phumulani-cream flex items-center justify-between shrink-0">
+            <div className="bg-phumulani-cream/70 px-6 py-4 border-t border-phumulani-charcoal/12 flex items-center justify-between shrink-0">
               <button
                 onClick={() => setWizardStep(Math.max(1, wizardStep - 1))}
                 disabled={wizardStep === 1}
-                className="px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:text-phumulani-earth disabled:opacity-40 transition-colors"
+                className="px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:text-phumulani-earth disabled:opacity-40 transition-colors cursor-pointer"
               >
                 Back
               </button>
@@ -1960,7 +1956,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                 <button
                   onClick={() => setWizardStep(wizardStep + 1)}
                   disabled={!EMAIL_FORMAT_REGEX.test(wizardEmail.trim())}
-                  className="px-5 py-2 text-xs font-semibold bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl shadow disabled:opacity-50 transition-colors"
+                  className="px-5 py-2 text-xs font-semibold bg-phumulani-earth hover:bg-phumulani-earth/90 text-white rounded-xl shadow-xs disabled:opacity-50 transition-colors cursor-pointer"
                 >
                   Continue
                 </button>
@@ -1968,7 +1964,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                 <button
                   onClick={handleSaveConnection}
                   disabled={isSaving}
-                  className="px-5 py-2 text-xs font-semibold bg-phumulani-green hover:bg-phumulani-teal text-phumulani-charcoal rounded-xl shadow transition-colors"
+                  className="px-5 py-2 text-xs font-semibold bg-phumulani-green hover:bg-phumulani-green/85 text-phumulani-charcoal rounded-xl shadow-xs transition-colors cursor-pointer"
                 >
                   {isSaving ? 'Registering...' : 'Confirm & Save Connection'}
                 </button>
@@ -1982,16 +1978,16 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       {/* EDIT PERMISSIONS MODAL                                                    */}
       {/* ========================================================================= */}
       {editingPermissionsConn && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-phumulani-cream p-6 space-y-4 animate-fade-in">
-            <div className="flex items-center justify-between border-b pb-3">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full shadow-xl border border-phumulani-charcoal/15 p-6 space-y-4 animate-fade-in">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
-                <h4 className="font-bold text-phumulani-charcoal text-base">Mailbox Permissions & Policy</h4>
-                <p className="text-xs text-phumulani-charcoal font-mono">{editingPermissionsConn.emailAddress}</p>
+                <h4 className="font-bold font-heading text-phumulani-charcoal text-base">Mailbox Permissions & Policy</h4>
+                <p className="text-xs text-phumulani-charcoal/75 font-mono">{editingPermissionsConn.emailAddress}</p>
               </div>
               <button
                 onClick={() => setEditingPermissionsConn(null)}
-                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold"
+                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold cursor-pointer"
               >
                 ✕
               </button>
@@ -2004,7 +2000,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                   type="text"
                   value={editOwner}
                   onChange={(e) => setEditOwner(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-phumulani-cream"
+                  className="w-full px-3 py-2 rounded-lg border border-phumulani-charcoal/15"
                 />
               </div>
 
@@ -2014,7 +2010,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                   type="text"
                   value={editDepartment}
                   onChange={(e) => setEditDepartment(e.target.value)}
-                  className="w-full px-3 py-2 rounded-lg border border-phumulani-cream"
+                  className="w-full px-3 py-2 rounded-lg border border-phumulani-charcoal/15"
                 />
               </div>
 
@@ -2023,7 +2019,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                 <select
                   value={editPermission}
                   onChange={(e) => setEditPermission(e.target.value as ConnectorSendingPermission)}
-                  className="w-full px-3 py-2 rounded-lg border border-phumulani-cream font-semibold"
+                  className="w-full px-3 py-2 rounded-lg border border-phumulani-charcoal/15 font-semibold"
                 >
                   <option value="AUTHORIZED_PILOT">AUTHORIZED_PILOT (Standard Human Approval Gating)</option>
                   <option value="LIVE_AUTHORIZED">LIVE_AUTHORIZED (Strict Human Approval Gating)</option>
@@ -2041,7 +2037,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                       e.target.value as 'GENERAL' | 'RESTRICTED' | 'CONFIDENTIAL_SAFEGUARDING_AIR_GAP'
                     )
                   }
-                  className="w-full px-3 py-2 rounded-lg border border-phumulani-cream font-semibold"
+                  className="w-full px-3 py-2 rounded-lg border border-phumulani-charcoal/15 font-semibold"
                 >
                   <option value="GENERAL">GENERAL — Standard Communications</option>
                   <option value="RESTRICTED">RESTRICTED — Executive / Casework</option>
@@ -2052,17 +2048,17 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-2 pt-3 border-t">
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-phumulani-charcoal/10">
               <button
                 onClick={() => setEditingPermissionsConn(null)}
-                className="px-4 py-2 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-xl text-xs font-semibold"
+                className="px-4 py-2 bg-phumulani-cream hover:bg-phumulani-charcoal/10 text-phumulani-charcoal rounded-xl text-xs font-semibold cursor-pointer transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSavePermissions}
                 disabled={isSavingPermissions}
-                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-semibold shadow"
+                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-earth/90 text-white rounded-xl text-xs font-semibold shadow-xs cursor-pointer transition-colors"
               >
                 {isSavingPermissions ? 'Saving...' : 'Save Permissions'}
               </button>
@@ -2075,22 +2071,22 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       {/* REAUTHORIZATION MODAL                                                    */}
       {/* ========================================================================= */}
       {reauthorizingConn && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-phumulani-cream p-6 space-y-4 animate-fade-in">
-            <div className="flex items-center justify-between border-b pb-3">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full shadow-xl border border-phumulani-charcoal/15 p-6 space-y-4 animate-fade-in">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
-                <h4 className="font-bold text-phumulani-charcoal text-base">Reauthorize Account Connection</h4>
-                <p className="text-xs text-phumulani-charcoal font-mono">{reauthorizingConn.emailAddress}</p>
+                <h4 className="font-bold font-heading text-phumulani-charcoal text-base">Reauthorize Account Connection</h4>
+                <p className="text-xs text-phumulani-charcoal/75 font-mono">{reauthorizingConn.emailAddress}</p>
               </div>
               <button
                 onClick={() => setReauthorizingConn(null)}
-                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold"
+                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <p className="text-xs text-phumulani-charcoal">
+            <p className="text-xs text-phumulani-charcoal/80">
               Re-authenticate with the provider to refresh tokens, renew API access, and resume automatic background synchronization.
             </p>
 
@@ -2100,7 +2096,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                   href={reauthData.authUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-xl shadow"
+                  className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-phumulani-earth hover:bg-phumulani-earth/90 text-white text-xs font-semibold rounded-xl shadow-xs transition-colors"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
@@ -2115,23 +2111,23 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                     value={reauthCodeInput}
                     onChange={(e) => setReauthCodeInput(e.target.value)}
                     placeholder="Enter code from provider redirect..."
-                    className="w-full px-3 py-2 text-xs rounded-xl border border-phumulani-cream font-mono"
+                    className="w-full px-3 py-2 text-xs rounded-xl border border-phumulani-charcoal/15 font-mono"
                   />
                 </div>
               </div>
             )}
 
-            <div className="flex items-center justify-end gap-2 pt-3 border-t">
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-phumulani-charcoal/10">
               <button
                 onClick={() => setReauthorizingConn(null)}
-                className="px-4 py-2 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-xl text-xs font-semibold"
+                className="px-4 py-2 bg-phumulani-cream hover:bg-phumulani-charcoal/10 text-phumulani-charcoal rounded-xl text-xs font-semibold cursor-pointer transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleCompleteReauthorize}
                 disabled={isReauthorizing || !reauthCodeInput.trim()}
-                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-xl text-xs font-semibold shadow disabled:opacity-50"
+                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-earth/90 text-white rounded-xl text-xs font-semibold shadow-xs disabled:opacity-50 cursor-pointer transition-colors"
               >
                 {isReauthorizing ? 'Exchanging...' : 'Complete Reauthorization'}
               </button>
@@ -2144,58 +2140,58 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       {/* SYNC HISTORY & DIAGNOSTICS MODAL                                          */}
       {/* ========================================================================= */}
       {inspectSyncHistory && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-phumulani-cream p-6 space-y-4 animate-fade-in max-h-[85vh] flex flex-col">
-            <div className="flex items-center justify-between border-b pb-3">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full shadow-xl border border-phumulani-charcoal/15 p-6 space-y-4 animate-fade-in max-h-[85vh] flex flex-col">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
-                <h4 className="font-bold text-phumulani-charcoal text-base">Synchronization History & Error Log</h4>
-                <p className="text-xs text-phumulani-charcoal font-mono">{inspectSyncHistory.emailAddress}</p>
+                <h4 className="font-bold font-heading text-phumulani-charcoal text-base">Synchronization History & Error Log</h4>
+                <p className="text-xs text-phumulani-charcoal/75 font-mono">{inspectSyncHistory.emailAddress}</p>
               </div>
               <button
                 onClick={() => setInspectSyncHistory(null)}
-                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold"
+                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
             <div className="flex-1 overflow-y-auto space-y-3 text-xs pr-1">
-              <div className="p-3 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-1.5">
+              <div className="p-3 bg-phumulani-cream/60 rounded-xl border border-phumulani-charcoal/12 space-y-1.5">
                 <div className="font-bold text-phumulani-charcoal">Mailbox Checkpoint Metadata</div>
                 <div><strong>Current State:</strong> {getMailboxUIState(inspectSyncHistory)}</div>
                 <div><strong>Sync Cursor:</strong> {inspectSyncHistory.syncCursor || 'Initial checkpoint'}</div>
                 <div><strong>Cursor Type:</strong> {inspectSyncHistory.cursorType || 'N/A'}</div>
                 <div><strong>Last Successful Sync:</strong> {inspectSyncHistory.lastSuccessfulSyncAt ? new Date(inspectSyncHistory.lastSuccessfulSyncAt).toLocaleString() : 'Never'}</div>
-                <div><strong>Sync Failure Count:</strong> {inspectSyncHistory.syncFailureCount || 0}</div>
+                <div className="tabular-nums"><strong>Sync Failure Count:</strong> {inspectSyncHistory.syncFailureCount || 0}</div>
               </div>
 
               {inspectSyncHistory.lastError ? (
-                <div className="p-3 bg-phumulani-cream rounded-xl border border-phumulani-earth text-phumulani-earth space-y-1">
+                <div className="p-3 bg-phumulani-earth/10 rounded-xl border border-phumulani-earth/35 text-phumulani-earth space-y-1">
                   <div className="font-bold">Recent Connection Error:</div>
                   <div className="font-mono text-[11px] break-all">{inspectSyncHistory.lastError}</div>
                 </div>
               ) : (
-                <div className="p-3 bg-phumulani-cream rounded-xl border border-phumulani-green text-phumulani-charcoal">
+                <div className="p-3 bg-phumulani-green/12 rounded-xl border border-phumulani-green/40 text-phumulani-charcoal">
                   No active connection errors reported. Provider session is operating normally.
                 </div>
               )}
 
               {inspectSyncHistory.currentEvidence && (
-                <div className="p-3 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-1">
+                <div className="p-3 bg-phumulani-cream/60 rounded-xl border border-phumulani-charcoal/12 space-y-1">
                   <div className="font-bold text-phumulani-charcoal">Latest TLS Handshake Diagnostic</div>
-                  <div><strong>Round-Trip Latency:</strong> {inspectSyncHistory.currentEvidence.roundTripLatencyMs}ms</div>
+                  <div className="tabular-nums"><strong>Round-Trip Latency:</strong> {inspectSyncHistory.currentEvidence.roundTripLatencyMs}ms</div>
                   <div><strong>TLS Protocol:</strong> {inspectSyncHistory.currentEvidence.tlsVersion}</div>
                   <div><strong>Cipher Suite:</strong> {inspectSyncHistory.currentEvidence.cipherSuite}</div>
                   <div><strong>DNS Resolution:</strong> {inspectSyncHistory.currentEvidence.dnsResolution}</div>
-                  <div className="text-phumulani-charcoal">{inspectSyncHistory.currentEvidence.diagnosticsDetail}</div>
+                  <div className="text-phumulani-charcoal/80">{inspectSyncHistory.currentEvidence.diagnosticsDetail}</div>
                 </div>
               )}
             </div>
 
-            <div className="text-right pt-2 border-t">
+            <div className="text-right pt-2 border-t border-phumulani-charcoal/10">
               <button
                 onClick={() => setInspectSyncHistory(null)}
-                className="px-4 py-2 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-xl text-xs font-semibold"
+                className="px-4 py-2 bg-phumulani-cream hover:bg-phumulani-charcoal/10 text-phumulani-charcoal rounded-xl text-xs font-semibold cursor-pointer transition-colors"
               >
                 Close
               </button>
@@ -2206,22 +2202,22 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
       {/* Capability Inspection Modal */}
       {inspectCapabilities && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-phumulani-cream p-6 space-y-4 animate-fade-in">
-            <div className="flex items-center justify-between border-b pb-3">
-              <h4 className="font-bold text-phumulani-charcoal text-base">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full shadow-xl border border-phumulani-charcoal/15 p-6 space-y-4 animate-fade-in">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
+              <h4 className="font-bold font-heading text-phumulani-charcoal text-base">
                 Capability Matrix — {PROVIDER_DESCRIPTORS[inspectCapabilities.provider]?.name || inspectCapabilities.provider}
               </h4>
               <button
                 onClick={() => setInspectCapabilities(null)}
-                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold"
+                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold cursor-pointer"
               >
                 ✕
               </button>
             </div>
             <div className="grid grid-cols-2 gap-2 text-xs">
               {Object.entries(inspectCapabilities.capabilities).map(([key, val]) => (
-                <div key={key} className="p-2 rounded-lg bg-phumulani-cream border border-phumulani-cream flex items-center justify-between">
+                <div key={key} className="p-2 rounded-lg bg-phumulani-cream/60 border border-phumulani-charcoal/10 flex items-center justify-between">
                   <span className="text-phumulani-charcoal">{key.replace(/^supports/, '')}:</span>
                   <span className={`font-semibold ${typeof val === 'boolean' ? (val ? 'text-phumulani-earth' : 'text-phumulani-charcoal') : 'text-phumulani-charcoal'}`}>
                     {typeof val === 'boolean' ? (val ? 'YES' : 'NO') : Array.isArray(val) ? val.join(', ') : String(val)}
@@ -2232,7 +2228,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
             <div className="text-right pt-2">
               <button
                 onClick={() => setInspectCapabilities(null)}
-                className="px-4 py-2 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-xl text-xs font-medium"
+                className="px-4 py-2 bg-phumulani-cream hover:bg-phumulani-charcoal/10 text-phumulani-charcoal rounded-xl text-xs font-medium cursor-pointer transition-colors"
               >
                 Close
               </button>
@@ -2243,41 +2239,41 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
       {/* Evidence History Inspection Modal */}
       {inspectEvidence && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-xl w-full shadow-2xl border border-phumulani-cream p-6 space-y-4 animate-fade-in max-h-[85vh] flex flex-col">
-            <div className="flex items-center justify-between border-b pb-3">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-xl w-full shadow-xl border border-phumulani-charcoal/15 p-6 space-y-4 animate-fade-in max-h-[85vh] flex flex-col">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
-                <h4 className="font-bold text-phumulani-charcoal text-base">Provider Verification Evidence</h4>
-                <p className="text-xs text-phumulani-charcoal font-mono">{inspectEvidence.mailboxEmail}</p>
+                <h4 className="font-bold font-heading text-phumulani-charcoal text-base">Provider Verification Evidence</h4>
+                <p className="text-xs text-phumulani-charcoal/75 font-mono">{inspectEvidence.mailboxEmail}</p>
               </div>
               <button
                 onClick={() => setInspectEvidence(null)}
-                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold"
+                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold cursor-pointer"
               >
                 ✕
               </button>
             </div>
             <div className="flex-1 overflow-y-auto space-y-3 pr-1 text-xs">
               {inspectEvidence.evidenceHistory.length === 0 ? (
-                <div className="p-4 text-center text-phumulani-charcoal">No evidence recorded yet.</div>
+                <div className="p-4 text-center text-phumulani-charcoal/70">No evidence recorded yet.</div>
               ) : (
                 inspectEvidence.evidenceHistory.map((ev, idx) => (
-                  <div key={idx} className="p-3 rounded-xl bg-phumulani-cream border border-phumulani-cream space-y-1">
+                  <div key={idx} className="p-3 rounded-xl bg-phumulani-cream/60 border border-phumulani-charcoal/12 space-y-1">
                     <div className="flex items-center justify-between font-bold text-phumulani-charcoal">
                       <span>Status: {ev.state}</span>
-                      <span className="text-[10px] text-phumulani-charcoal font-mono">{new Date(ev.timestamp).toLocaleString()}</span>
+                      <span className="text-[10px] text-phumulani-charcoal/70 font-mono">{new Date(ev.timestamp).toLocaleString()}</span>
                     </div>
-                    <div><strong>Latency:</strong> {ev.roundTripLatencyMs}ms · <strong>TLS:</strong> {ev.tlsVersion} ({ev.cipherSuite})</div>
+                    <div className="tabular-nums"><strong>Latency:</strong> {ev.roundTripLatencyMs}ms · <strong>TLS:</strong> {ev.tlsVersion} ({ev.cipherSuite})</div>
                     <div><strong>DNS:</strong> {ev.dnsResolution}</div>
-                    <div className="text-phumulani-charcoal">{ev.diagnosticsDetail}</div>
+                    <div className="text-phumulani-charcoal/80">{ev.diagnosticsDetail}</div>
                   </div>
                 ))
               )}
             </div>
-            <div className="text-right pt-2 border-t">
+            <div className="text-right pt-2 border-t border-phumulani-charcoal/10">
               <button
                 onClick={() => setInspectEvidence(null)}
-                className="px-4 py-2 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-xl text-xs font-medium"
+                className="px-4 py-2 bg-phumulani-cream hover:bg-phumulani-charcoal/10 text-phumulani-charcoal rounded-xl text-xs font-medium cursor-pointer transition-colors"
               >
                 Close
               </button>
@@ -2288,31 +2284,31 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
       {/* Folder Inspection Modal */}
       {inspectFolders && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl border border-phumulani-cream p-6 space-y-4 animate-fade-in">
-            <div className="flex items-center justify-between border-b pb-3">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full shadow-xl border border-phumulani-charcoal/15 p-6 space-y-4 animate-fade-in">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
-                <h4 className="font-bold text-phumulani-charcoal text-base">Folder Inspection</h4>
-                <p className="text-xs text-phumulani-charcoal font-mono">{inspectFolders.mailboxEmail}</p>
+                <h4 className="font-bold font-heading text-phumulani-charcoal text-base">Folder Inspection</h4>
+                <p className="text-xs text-phumulani-charcoal/75 font-mono">{inspectFolders.mailboxEmail}</p>
               </div>
               <button
                 onClick={() => setInspectFolders(null)}
-                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold"
+                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold cursor-pointer"
               >
                 ✕
               </button>
             </div>
             <div className="space-y-2 text-xs max-h-72 overflow-y-auto">
               {inspectFolders.folders.map((f) => (
-                <div key={f.id} className="p-2.5 rounded-xl bg-phumulani-cream border border-phumulani-cream flex items-center justify-between">
+                <div key={f.id} className="p-2.5 rounded-xl bg-phumulani-cream/60 border border-phumulani-charcoal/12 flex items-center justify-between">
                   <div>
                     <span className="font-semibold text-phumulani-charcoal">{f.name}</span>
-                    <span className="text-[10px] text-phumulani-charcoal ml-2 font-mono">({f.type})</span>
+                    <span className="text-[10px] text-phumulani-charcoal/70 ml-2 font-mono">({f.type})</span>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right tabular-nums">
                     <span className="font-bold text-phumulani-charcoal">{f.totalMessageCount} msgs</span>
                     {f.unreadMessageCount > 0 && (
-                      <span className="ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] bg-phumulani-cream text-phumulani-earth font-bold">
+                      <span className="ml-1.5 px-1.5 py-0.5 rounded-sm text-[10px] bg-phumulani-earth/12 text-phumulani-earth font-bold">
                         {f.unreadMessageCount} new
                       </span>
                     )}
@@ -2320,10 +2316,10 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                 </div>
               ))}
             </div>
-            <div className="text-right pt-2 border-t">
+            <div className="text-right pt-2 border-t border-phumulani-charcoal/10">
               <button
                 onClick={() => setInspectFolders(null)}
-                className="px-4 py-2 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-xl text-xs font-medium"
+                className="px-4 py-2 bg-phumulani-cream hover:bg-phumulani-charcoal/10 text-phumulani-charcoal rounded-xl text-xs font-medium cursor-pointer transition-colors"
               >
                 Close
               </button>
@@ -2334,23 +2330,23 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
       {/* AI Triage & Recommendation Modal */}
       {triageModal && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full shadow-2xl border border-phumulani-cream p-6 space-y-4 animate-fade-in">
-            <div className="flex items-center justify-between border-b pb-3">
+        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full shadow-xl border border-phumulani-charcoal/15 p-6 space-y-4 animate-fade-in">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
-                <h4 className="font-bold text-phumulani-charcoal text-base">AI Governed Triage Inspection</h4>
-                <p className="text-xs text-phumulani-charcoal font-mono">{triageModal.mailboxEmail}</p>
+                <h4 className="font-bold font-heading text-phumulani-charcoal text-base">AI Governed Triage Inspection</h4>
+                <p className="text-xs text-phumulani-charcoal/75 font-mono">{triageModal.mailboxEmail}</p>
               </div>
               <button
                 onClick={() => setTriageModal(null)}
-                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold"
+                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold cursor-pointer"
               >
                 ✕
               </button>
             </div>
             {triageModal.result && (
               <div className="space-y-3 text-xs">
-                <div className="p-3 bg-phumulani-cream border border-phumulani-teal rounded-xl space-y-1">
+                <div className="p-3 bg-phumulani-cream/60 border border-phumulani-teal/40 rounded-xl space-y-1">
                   <div><strong>Classified Category:</strong> {triageModal.result.category}</div>
                   <div><strong>Assigned Priority:</strong> {triageModal.result.priority}</div>
                   <div><strong>Recommended Department:</strong> {triageModal.result.suggestedDepartment}</div>
@@ -2362,7 +2358,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                   </div>
                 </div>
                 {triageModal.result.aiDraftSuggestion && (
-                  <div className="p-3 bg-phumulani-cream border border-phumulani-cream rounded-xl space-y-1">
+                  <div className="p-3 bg-phumulani-cream/60 border border-phumulani-charcoal/12 rounded-xl space-y-1">
                     <div className="font-bold text-phumulani-charcoal">AI Suggested Draft (Subject to Human Approval):</div>
                     <div className="text-phumulani-charcoal font-mono whitespace-pre-line text-[11px]">
                       {triageModal.result.aiDraftSuggestion}
@@ -2371,10 +2367,10 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
                 )}
               </div>
             )}
-            <div className="text-right pt-2 border-t">
+            <div className="text-right pt-2 border-t border-phumulani-charcoal/10">
               <button
                 onClick={() => setTriageModal(null)}
-                className="px-4 py-2 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-xl text-xs font-medium"
+                className="px-4 py-2 bg-phumulani-cream hover:bg-phumulani-charcoal/10 text-phumulani-charcoal rounded-xl text-xs font-medium cursor-pointer transition-colors"
               >
                 Close
               </button>

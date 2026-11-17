@@ -78,17 +78,17 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
 
   return (
     <div
-      className={`bg-white border-r border-phumulani-cream flex flex-col overflow-hidden select-none ${className}`}
+      className={`bg-white border-r border-phumulani-charcoal/12 flex flex-col overflow-hidden select-none ${className}`}
       aria-label="Message List"
     >
       {/* Top Filter & Search Controls */}
-      <div className="p-3 border-b border-phumulani-cream bg-phumulani-cream space-y-2">
+      <div className="p-3 border-b border-phumulani-charcoal/12 bg-phumulani-cream/70 space-y-2">
         {/* Prominent Search Field */}
         <div className="flex items-center gap-2">
           {onOpenFolders && (
             <button
               onClick={onOpenFolders}
-              className="md:hidden px-2.5 py-1.5 text-phumulani-charcoal hover:text-phumulani-earth bg-white border border-phumulani-cream rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer shrink-0 shadow-2xs"
+              className="md:hidden px-2.5 py-1.5 text-phumulani-charcoal hover:text-phumulani-earth bg-white border border-phumulani-charcoal/15 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer shrink-0 shadow-2xs"
               title="Open folders sidebar"
             >
               <Inbox className="w-3.5 h-3.5 text-phumulani-earth" />
@@ -96,18 +96,18 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
             </button>
           )}
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-phumulani-charcoal absolute left-2.5 top-2.5 pointer-events-none" />
+            <Search className="w-4 h-4 text-phumulani-charcoal/55 absolute left-2.5 top-2.5 pointer-events-none" />
             <input
               type="text"
               placeholder="Search sender, subject, keywords..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-8 pr-7 py-1.5 text-xs bg-white border border-phumulani-cream rounded-lg focus:outline-none focus:border-phumulani-earth text-phumulani-charcoal placeholder-phumulani-charcoal transition-colors"
+              className="w-full pl-8 pr-7 py-1.5 text-xs bg-white border border-phumulani-charcoal/15 rounded-lg focus:outline-none focus:border-phumulani-earth text-phumulani-charcoal placeholder:text-phumulani-charcoal/50 transition-colors"
             />
             {searchQuery && (
               <button
                 onClick={() => onSearchChange('')}
-                className="absolute right-2 top-2 text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
+                className="absolute right-2 top-2 text-phumulani-charcoal/60 hover:text-phumulani-earth cursor-pointer"
                 aria-label="Clear message search"
               >
                 <X className="w-3.5 h-3.5" />
@@ -127,7 +127,7 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
                 className={`px-2.5 py-1 rounded-md font-medium text-xs whitespace-nowrap transition-colors cursor-pointer ${
                   isActive
                     ? 'bg-phumulani-earth text-white shadow-2xs font-semibold'
-                    : 'bg-white hover:bg-phumulani-cream text-phumulani-charcoal border border-phumulani-cream'
+                    : 'bg-white hover:bg-phumulani-cream/80 text-phumulani-charcoal border border-phumulani-charcoal/15'
                 }`}
               >
                 {tab.label}
@@ -140,30 +140,30 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
         <div className="flex items-center justify-between text-xs pt-0.5">
           <button
             onClick={() => setIsAdvancedFiltersOpen(!isAdvancedFiltersOpen)}
-            className="flex items-center gap-1 text-[11px] font-semibold text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
+            className="flex items-center gap-1 text-[11px] font-semibold text-phumulani-charcoal/80 hover:text-phumulani-earth cursor-pointer"
             aria-expanded={isAdvancedFiltersOpen}
           >
-            <Filter className="w-3 h-3 text-phumulani-charcoal" />
+            <Filter className="w-3 h-3 text-phumulani-charcoal/70" />
             <span>Advanced Filters</span>
             {isAdvancedFiltersOpen ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
           </button>
 
-          <span className="text-[11px] text-phumulani-charcoal font-mono tabular-nums">
+          <span className="text-[11px] text-phumulani-charcoal/70 font-mono tabular-nums">
             {threads.length} {threads.length === 1 ? 'message' : 'messages'}
           </span>
         </div>
 
         {/* Advanced Filters Panel */}
         {isAdvancedFiltersOpen && (
-          <div className="pt-2 border-t border-phumulani-cream grid grid-cols-2 gap-2 text-xs animate-fadeIn">
+          <div className="pt-2 border-t border-phumulani-charcoal/10 grid grid-cols-2 gap-2 text-xs animate-fadeIn">
             <div>
-              <label className="text-[10px] uppercase font-bold text-phumulani-charcoal block mb-0.5">
+              <label className="text-[10px] uppercase font-bold text-phumulani-charcoal/70 block mb-0.5">
                 Priority:
               </label>
               <select
                 value={priorityFilter}
                 onChange={(e) => onPriorityFilterChange(e.target.value)}
-                className="w-full text-xs font-medium bg-white border border-phumulani-cream rounded p-1 text-phumulani-charcoal"
+                className="w-full text-xs font-medium bg-white border border-phumulani-charcoal/15 rounded-md p-1 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
               >
                 <option value="all">All Priorities</option>
                 <option value="P0">P0 — Critical (&lt;1h)</option>
@@ -175,13 +175,13 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
             </div>
 
             <div>
-              <label className="text-[10px] uppercase font-bold text-phumulani-charcoal block mb-0.5">
+              <label className="text-[10px] uppercase font-bold text-phumulani-charcoal/70 block mb-0.5">
                 Category:
               </label>
               <select
                 value={categoryFilter}
                 onChange={(e) => onCategoryFilterChange(e.target.value)}
-                className="w-full text-xs font-medium bg-white border border-phumulani-cream rounded p-1 text-phumulani-charcoal truncate"
+                className="w-full text-xs font-medium bg-white border border-phumulani-charcoal/15 rounded-md p-1 text-phumulani-charcoal truncate focus:border-phumulani-earth focus:outline-none"
               >
                 <option value="all">All 25 Categories</option>
                 {Object.entries(EMAIL_CATEGORY_METADATA).map(([catKey, meta]) => (
@@ -196,19 +196,19 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
       </div>
 
       {/* Message List Rows (Area C) */}
-      <div className="flex-1 overflow-y-auto divide-y divide-phumulani-cream">
+      <div className="flex-1 overflow-y-auto divide-y divide-phumulani-charcoal/10">
         {threads.length === 0 ? (
           mailboxes.length === 0 ? (
             <div className="p-8 text-center text-phumulani-charcoal text-xs flex flex-col items-center justify-center h-full">
-              <Inbox className="w-10 h-10 mx-auto mb-3 text-phumulani-charcoal" />
-              <p className="font-bold text-phumulani-charcoal text-sm">No Email Accounts Connected</p>
-              <p className="text-xs text-phumulani-charcoal mt-1.5 max-w-xs text-center leading-relaxed">
+              <Inbox className="w-10 h-10 mx-auto mb-3 text-phumulani-charcoal/40" />
+              <p className="font-heading font-bold text-phumulani-charcoal text-sm">No Email Accounts Connected</p>
+              <p className="text-xs text-phumulani-charcoal/70 mt-1.5 max-w-xs text-center leading-relaxed">
                 Your Email Command Center is ready. Connect and authorize your organizational email accounts to begin receiving and managing messages.
               </p>
               {onOpenManageAccounts && (
                 <button
                   onClick={onOpenManageAccounts}
-                  className="mt-4 px-3.5 py-2 text-xs font-semibold bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
+                  className="mt-4 px-3.5 py-2 text-xs font-semibold bg-phumulani-earth hover:bg-phumulani-earth/90 text-white rounded-lg transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
                 >
                   <Inbox className="w-3.5 h-3.5" />
                   <span>Connect Email Account</span>
@@ -217,9 +217,9 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
             </div>
           ) : (
             <div className="p-8 text-center text-phumulani-charcoal text-xs flex flex-col items-center justify-center h-full">
-              <Inbox className="w-8 h-8 mx-auto mb-2 opacity-40 text-phumulani-charcoal" />
+              <Inbox className="w-8 h-8 mx-auto mb-2 text-phumulani-charcoal/35" />
               <p className="font-semibold text-phumulani-charcoal">Inbox is empty</p>
-              <p className="text-[11px] text-phumulani-charcoal mt-1">
+              <p className="text-[11px] text-phumulani-charcoal/70 mt-1">
                 {searchQuery || priorityFilter !== 'all' || categoryFilter !== 'all'
                   ? 'No messages matched your active search or filters.'
                   : 'There are no messages in this connected mailbox.'}
@@ -254,10 +254,10 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
                 }}
                 className={`p-3 text-left transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-phumulani-earth ${
                   isSelected
-                    ? 'bg-phumulani-cream border-l-3 border-phumulani-earth'
+                    ? 'bg-phumulani-earth/10 ring-1 ring-inset ring-phumulani-earth/25'
                     : isUnread
-                    ? 'bg-white hover:bg-phumulani-cream font-medium'
-                    : 'bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal'
+                    ? 'bg-white hover:bg-phumulani-cream/70 font-medium'
+                    : 'bg-phumulani-cream/35 hover:bg-phumulani-cream/75 text-phumulani-charcoal'
                 }`}
               >
                 {/* Row 1: Sender & Date */}
@@ -272,7 +272,7 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
                     </span>
                   </div>
 
-                  <span className="text-[11px] font-mono tabular-nums text-phumulani-charcoal shrink-0">
+                  <span className="text-[11px] font-mono tabular-nums text-phumulani-charcoal/65 shrink-0">
                     {dateDisplay}
                   </span>
                 </div>
@@ -283,7 +283,7 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
                 </div>
 
                 {/* Row 3: One-line clean preview */}
-                <p className="text-[11px] text-phumulani-charcoal line-clamp-1 leading-snug">
+                <p className="text-[11px] text-phumulani-charcoal/70 line-clamp-1 leading-snug">
                   {previewText}
                 </p>
 
@@ -291,8 +291,8 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
                 <div className="flex flex-wrap items-center gap-1.5 mt-2 text-[10px]">
                   {/* Priority Badge ONLY when P0 or P1 */}
                   {isPriority && (
-                    <span className={`px-1.5 py-0.2 rounded font-bold uppercase text-[9px] ${
-                      thread.priority === 'P0' ? 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth' : 'bg-phumulani-cream text-phumulani-earth border border-phumulani-orange'
+                    <span className={`px-1.5 py-0.2 rounded-sm font-bold uppercase text-[9px] ${
+                      thread.priority === 'P0' ? 'bg-phumulani-earth/10 text-phumulani-earth border border-phumulani-earth/30' : 'bg-phumulani-gold/15 text-phumulani-charcoal border border-phumulani-gold/50'
                     }`}>
                       {thread.priority}
                     </span>
@@ -300,7 +300,7 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
 
                   {/* Pending Approval Badge */}
                   {hasPendingApproval && (
-                    <span className="flex items-center gap-1 px-1.5 py-0.2 rounded bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold font-medium text-[9px]">
+                    <span className="flex items-center gap-1 px-1.5 py-0.2 rounded-sm bg-phumulani-gold/15 text-phumulani-charcoal border border-phumulani-gold/40 font-medium text-[9px]">
                       <Sparkles className="w-2.5 h-2.5 text-phumulani-earth" />
                       Approval Req
                     </span>
@@ -308,15 +308,15 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
 
                   {/* Assigned Staff Indicator */}
                   {thread.assignedStaffName && (
-                    <span className="flex items-center gap-1 text-phumulani-charcoal font-medium">
-                      <UserCheck className="w-2.5 h-2.5 text-phumulani-charcoal" />
+                    <span className="flex items-center gap-1 text-phumulani-charcoal/75 font-medium">
+                      <UserCheck className="w-2.5 h-2.5 text-phumulani-charcoal/60" />
                       <span className="truncate max-w-[100px]">{thread.assignedStaffName}</span>
                     </span>
                   )}
 
                   {/* SLA Target indicator */}
                   {thread.slaDeadline && (
-                    <span className="text-phumulani-charcoal font-mono ml-auto">
+                    <span className="text-phumulani-charcoal/65 font-mono tabular-nums ml-auto">
                       SLA: {new Date(thread.slaDeadline).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   )}

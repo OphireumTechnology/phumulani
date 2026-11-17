@@ -59,31 +59,29 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-earth max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-fadeIn">
+      <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-charcoal/15 max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-fadeIn">
         {/* TOP STAGING BANNER */}
-        <div className="bg-phumulani-gold text-phumulani-charcoal px-5 py-2.5 flex items-center justify-between font-bold text-xs tracking-wider uppercase border-b border-phumulani-earth">
+        <div className="bg-phumulani-cream text-phumulani-charcoal px-5 py-2.5 flex items-center justify-between font-bold text-xs tracking-wider uppercase border-b border-phumulani-gold/40">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 fill-phumulani-charcoal" />
-            <span>STAGING ENVIRONMENT — NOT PRODUCTION</span>
-            <span className="font-mono bg-phumulani-charcoal text-phumulani-gold px-2 py-0.5 rounded text-[10px]">
-              v13.0-PREVIEW (SHA: 4f81c9a)
-            </span>
+            <AlertTriangle className="w-4 h-4 text-phumulani-earth" />
+            <span>Staging Sandbox — Synthetic Demonstration Data</span>
           </div>
           <button
             onClick={onClose}
-            className="p-1 hover:bg-phumulani-cream rounded cursor-pointer"
+            className="p-1 hover:bg-white rounded-md cursor-pointer transition-colors"
             title="Close Preview"
+            aria-label="Close Preview"
           >
             <X className="w-4 h-4 text-phumulani-charcoal" />
           </button>
         </div>
 
         {/* MODAL HEADER */}
-        <div className="p-6 border-b border-phumulani-cream flex flex-wrap items-center justify-between gap-4">
+        <div className="p-6 border-b border-phumulani-charcoal/12 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h2 className="text-xl font-bold font-serif text-phumulani-earth flex items-center gap-2">
+            <h2 className="text-xl font-bold font-heading text-phumulani-earth flex items-center gap-2.5">
               <span>Client Staging Preview Sandbox</span>
-              <span className="text-xs font-mono font-semibold text-phumulani-charcoal bg-phumulani-green px-2 py-0.5 rounded-full border border-phumulani-charcoal">
+              <span className="text-[11px] font-sans font-semibold text-phumulani-charcoal bg-phumulani-green/15 px-2.5 py-0.5 rounded-md border border-phumulani-green">
                 Sandbox Active
               </span>
             </h2>
@@ -95,14 +93,14 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
           <div className="flex items-center gap-2">
             <button
               onClick={() => onOpenFeedback('Staging Preview Feedback')}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white text-xs font-semibold rounded-lg shadow-xs cursor-pointer transition-colors"
             >
               <Send className="w-3.5 h-3.5" />
               <span>Submit Staging Feedback</span>
             </button>
             <button
               onClick={onClose}
-              className="px-3 py-1.5 border border-phumulani-earth text-phumulani-earth hover:bg-phumulani-cream text-xs font-semibold rounded-lg cursor-pointer"
+              className="px-3.5 py-2 border border-phumulani-charcoal/20 text-phumulani-charcoal hover:bg-phumulani-cream text-xs font-semibold rounded-lg cursor-pointer transition-colors"
             >
               Exit Staging
             </button>
@@ -110,10 +108,10 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
         </div>
 
         {/* TAB NAVIGATION */}
-        <div className="flex border-b border-phumulani-earth bg-phumulani-cream px-6 gap-2 text-xs font-semibold">
+        <div className="flex border-b border-phumulani-charcoal/12 bg-phumulani-cream px-6 gap-2 text-xs font-semibold font-heading overflow-x-auto">
           <button
             onClick={() => setActiveTab('overview')}
-            className={`py-2.5 px-3 border-b-2 transition-colors cursor-pointer ${
+            className={`py-2.5 px-3 border-b-2 transition-colors cursor-pointer whitespace-nowrap ${
               activeTab === 'overview'
                 ? 'border-phumulani-earth text-phumulani-earth font-bold bg-white'
                 : 'border-transparent text-phumulani-charcoal hover:text-phumulani-earth'
@@ -123,7 +121,7 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('test_donate')}
-            className={`py-2.5 px-3 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 ${
+            className={`py-2.5 px-3 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               activeTab === 'test_donate'
                 ? 'border-phumulani-earth text-phumulani-earth font-bold bg-white'
                 : 'border-transparent text-phumulani-charcoal hover:text-phumulani-earth'
@@ -134,7 +132,7 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('test_volunteer')}
-            className={`py-2.5 px-3 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 ${
+            className={`py-2.5 px-3 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               activeTab === 'test_volunteer'
                 ? 'border-phumulani-earth text-phumulani-earth font-bold bg-white'
                 : 'border-transparent text-phumulani-charcoal hover:text-phumulani-earth'
@@ -145,7 +143,7 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
           </button>
           <button
             onClick={() => setActiveTab('safeguards')}
-            className={`py-2.5 px-3 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 ${
+            className={`py-2.5 px-3 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
               activeTab === 'safeguards'
                 ? 'border-phumulani-earth text-phumulani-earth font-bold bg-white'
                 : 'border-transparent text-phumulani-charcoal hover:text-phumulani-earth'
@@ -160,32 +158,31 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
         <div className="p-6 overflow-y-auto flex-1 text-xs">
           {activeTab === 'overview' && (
             <div className="space-y-4">
-              <div className="p-4 bg-phumulani-cream border border-phumulani-teal rounded-xl flex items-start gap-3">
+              <div className="p-4 bg-phumulani-cream border border-phumulani-charcoal/12 rounded-xl flex items-start gap-3">
                 <Sparkles className="w-5 h-5 text-phumulani-earth shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="font-bold text-phumulani-earth text-sm">Verified Staging Environment Active</h4>
+                  <h4 className="font-bold font-heading text-phumulani-earth text-sm">Verified Staging Environment Active</h4>
                   <p className="text-phumulani-charcoal mt-1 leading-relaxed">
-                    This staging environment is deployed from commit <code className="font-mono bg-white border border-phumulani-teal px-1 py-0.5 rounded text-[11px]">4f81c9a</code>.
                     Authorized Phumulani representatives can test navigation, program details, instant tax receipt generation,
-                    and community intake without impacting real donor records or organizational mailboxes.
+                    and community intake in this sandbox without impacting real donor records or organizational mailboxes.
                   </p>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                <div className="p-3 bg-phumulani-cream border border-phumulani-earth rounded-xl">
-                  <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">Environment Node</span>
-                  <div className="font-bold text-phumulani-earth mt-1">Node.js 22 (Vite 8.3)</div>
-                  <p className="text-phumulani-charcoal text-[11px] mt-0.5">Port 3000 (0.0.0.0)</p>
+                <div className="p-3.5 bg-phumulani-cream/70 border border-phumulani-charcoal/12 rounded-xl">
+                  <span className="text-[10px] font-bold uppercase text-phumulani-charcoal tracking-wider">Environment Runtime</span>
+                  <div className="font-bold font-heading text-phumulani-earth mt-1">Vite SPA + Express</div>
+                  <p className="text-phumulani-charcoal text-[11px] mt-0.5 tabular-nums">Port 3000</p>
                 </div>
-                <div className="p-3 bg-phumulani-cream border border-phumulani-earth rounded-xl">
-                  <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">Deployment Target</span>
-                  <div className="font-bold text-phumulani-earth mt-1">Staging Preview</div>
+                <div className="p-3.5 bg-phumulani-cream/70 border border-phumulani-charcoal/12 rounded-xl">
+                  <span className="text-[10px] font-bold uppercase text-phumulani-charcoal tracking-wider">Deployment Target</span>
+                  <div className="font-bold font-heading text-phumulani-earth mt-1">Staging Preview</div>
                   <p className="text-phumulani-charcoal text-[11px] mt-0.5">Isolated from live production</p>
                 </div>
-                <div className="p-3 bg-phumulani-cream border border-phumulani-green rounded-xl">
-                  <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">Safeguarding Boundary</span>
-                  <div className="font-bold text-phumulani-charcoal mt-1 flex items-center gap-1">
+                <div className="p-3.5 bg-phumulani-cream/70 border border-phumulani-green/40 rounded-xl">
+                  <span className="text-[10px] font-bold uppercase text-phumulani-charcoal tracking-wider">Safeguarding Boundary</span>
+                  <div className="font-bold font-heading text-phumulani-charcoal mt-1 flex items-center gap-1">
                     <ShieldCheck className="w-3.5 h-3.5 text-phumulani-green" />
                     <span>VAWA Zero-Leakage</span>
                   </div>
@@ -193,8 +190,8 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
                 </div>
               </div>
 
-              <div className="border border-phumulani-earth rounded-xl p-4 space-y-2">
-                <h4 className="font-bold text-phumulani-earth">Available Feature Demonstrations in Staging:</h4>
+              <div className="border border-phumulani-charcoal/12 rounded-xl p-4 space-y-2 bg-white">
+                <h4 className="font-bold font-heading text-phumulani-earth">Available Feature Demonstrations in Staging:</h4>
                 <ul className="space-y-1.5 text-phumulani-charcoal list-disc list-inside">
                   <li><strong>Public Website:</strong> 6 core community programs with authentic photos and book showcase.</li>
                   <li><strong>Instant 501(c)(3) Receipt Engine:</strong> Generates official printable tax deduction receipts with IRS compliance text.</li>
@@ -207,41 +204,41 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
 
           {activeTab === 'test_donate' && (
             <div className="space-y-4 max-w-lg">
-              <div className="p-3 bg-phumulani-cream border border-phumulani-gold rounded-lg text-phumulani-charcoal text-xs">
+              <div className="p-3.5 bg-phumulani-cream border border-phumulani-charcoal/12 rounded-lg text-phumulani-charcoal text-xs">
                 <strong>Simulated Test Payment:</strong> No actual funds will be transferred. Use this sandbox form to verify receipt formatting and donor acknowledgment copy.
               </div>
 
               {testDonationSuccess && (
-                <div className="p-3 bg-phumulani-green border border-phumulani-charcoal rounded-lg text-phumulani-charcoal font-semibold flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-phumulani-charcoal" />
-                  <span>Test Donation of ${testDonationAmount} processed in sandbox! Receipt generated.</span>
+                <div className="p-3.5 bg-phumulani-green/15 border border-phumulani-green rounded-lg text-phumulani-charcoal font-semibold flex items-center gap-2 tabular-nums">
+                  <CheckCircle2 className="w-4 h-4 text-phumulani-charcoal shrink-0" />
+                  <span>Test Donation of ${testDonationAmount} processed in sandbox. Receipt generated.</span>
                 </div>
               )}
 
               <form onSubmit={handleSimulateDonation} className="space-y-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-phumulani-charcoal uppercase">Simulated Donor Name</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal uppercase tracking-wide">Simulated Donor Name</label>
                   <input
                     type="text"
                     value={testDonorName}
                     onChange={(e) => setTestDonorName(e.target.value)}
-                    className="w-full mt-1 border border-phumulani-earth rounded-lg p-2 text-xs focus:ring-1 focus:ring-phumulani-orange outline-none"
+                    className="w-full mt-1 border border-phumulani-charcoal/20 rounded-lg p-2.5 text-xs focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-phumulani-charcoal uppercase">Amount ($)</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal uppercase tracking-wide">Amount ($)</label>
                   <input
                     type="number"
                     value={testDonationAmount}
                     onChange={(e) => setTestDonationAmount(e.target.value)}
-                    className="w-full mt-1 border border-phumulani-earth rounded-lg p-2 text-xs focus:ring-1 focus:ring-phumulani-orange outline-none"
+                    className="w-full mt-1 border border-phumulani-charcoal/20 rounded-lg p-2.5 text-xs tabular-nums focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-phumulani-charcoal uppercase">Designated Fund</label>
-                  <select className="w-full mt-1 border border-phumulani-earth rounded-lg p-2 text-xs focus:ring-1 focus:ring-phumulani-orange outline-none bg-white text-phumulani-charcoal">
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal uppercase tracking-wide">Designated Fund</label>
+                  <select className="w-full mt-1 border border-phumulani-charcoal/20 rounded-lg p-2.5 text-xs focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none bg-white text-phumulani-charcoal">
                     <option>Survivor Safe Housing Bridge Fund ($1,200 Deposit)</option>
                     <option>Immigrant Women Entrepreneurship Lab</option>
                     <option>General Operational Support</option>
@@ -249,7 +246,7 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white font-bold rounded-lg cursor-pointer"
+                  className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white font-bold rounded-lg cursor-pointer transition-colors"
                 >
                   Process Sandbox Donation &amp; Verify Receipt
                 </button>
@@ -259,34 +256,34 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
 
           {activeTab === 'test_volunteer' && (
             <div className="space-y-4 max-w-lg">
-              <div className="p-3 bg-phumulani-cream border border-phumulani-teal rounded-lg text-phumulani-charcoal text-xs">
+              <div className="p-3.5 bg-phumulani-cream border border-phumulani-charcoal/12 rounded-lg text-phumulani-charcoal text-xs">
                 <strong>Simulated Volunteer Intake:</strong> Test the application workflow and tracking ID generation in sandbox mode.
               </div>
 
               {testVolSuccess && (
-                <div className="p-3 bg-phumulani-green border border-phumulani-charcoal rounded-lg text-phumulani-charcoal font-semibold flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-phumulani-charcoal" />
+                <div className="p-3.5 bg-phumulani-green/15 border border-phumulani-green rounded-lg text-phumulani-charcoal font-semibold flex items-center gap-2 tabular-nums">
+                  <CheckCircle2 className="w-4 h-4 text-phumulani-charcoal shrink-0" />
                   <span>Volunteer application logged in staging with Tracking ID: VOL-TEST-9981</span>
                 </div>
               )}
 
               <form onSubmit={handleSimulateVolunteer} className="space-y-3">
                 <div>
-                  <label className="block text-[11px] font-bold text-phumulani-charcoal uppercase">Applicant Full Name</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal uppercase tracking-wide">Applicant Full Name</label>
                   <input
                     type="text"
                     value={testVolName}
                     onChange={(e) => setTestVolName(e.target.value)}
-                    className="w-full mt-1 border border-phumulani-earth rounded-lg p-2 text-xs focus:ring-1 focus:ring-phumulani-orange outline-none"
+                    className="w-full mt-1 border border-phumulani-charcoal/20 rounded-lg p-2.5 text-xs focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-bold text-phumulani-charcoal uppercase">Desired Opportunity</label>
+                  <label className="block text-[11px] font-bold text-phumulani-charcoal uppercase tracking-wide">Desired Opportunity</label>
                   <select
                     value={testVolRole}
                     onChange={(e) => setTestVolRole(e.target.value)}
-                    className="w-full mt-1 border border-phumulani-earth rounded-lg p-2 text-xs focus:ring-1 focus:ring-phumulani-orange outline-none bg-white text-phumulani-charcoal"
+                    className="w-full mt-1 border border-phumulani-charcoal/20 rounded-lg p-2.5 text-xs focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none bg-white text-phumulani-charcoal"
                   >
                     <option>Youth Mentor &amp; Tutor</option>
                     <option>Job Readiness Coach</option>
@@ -295,7 +292,7 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white font-bold rounded-lg cursor-pointer"
+                  className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white font-bold rounded-lg cursor-pointer transition-colors"
                 >
                   Submit Staging Application
                 </button>
@@ -305,10 +302,10 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
 
           {activeTab === 'safeguards' && (
             <div className="space-y-4">
-              <div className="p-4 bg-phumulani-cream border-2 border-phumulani-earth rounded-xl flex items-start gap-3">
+              <div className="p-4 bg-phumulani-cream border border-phumulani-earth/30 rounded-xl flex items-start gap-3">
                 <ShieldAlert className="w-5 h-5 text-phumulani-earth shrink-0 mt-0.5" />
                 <div>
-                  <h4 className="font-bold text-phumulani-earth text-sm">VAWA Survivor Privacy Isolation Protocol</h4>
+                  <h4 className="font-bold font-heading text-phumulani-earth text-sm">VAWA Survivor Privacy Isolation Protocol</h4>
                   <p className="text-phumulani-charcoal mt-1 leading-relaxed">
                     Under the Violence Against Women Act (VAWA) and Minnesota state confidentiality laws, confidential survivor intake
                     information, emergency shelter locations, and order-for-protection filings are strictly quarantined.
@@ -317,22 +314,22 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
               </div>
 
               <div className="space-y-2">
-                <h4 className="font-bold text-phumulani-earth">Isolation Invariants Enforced:</h4>
+                <h4 className="font-bold font-heading text-phumulani-earth">Isolation Invariants Enforced:</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <div className="p-3 bg-phumulani-cream border border-phumulani-earth rounded-lg space-y-1">
-                    <span className="font-bold text-phumulani-earth">1. Zero Database Contamination</span>
+                  <div className="p-3.5 bg-phumulani-cream/70 border border-phumulani-charcoal/12 rounded-lg space-y-1">
+                    <span className="font-bold font-heading text-phumulani-earth">01. Zero Database Contamination</span>
                     <p className="text-phumulani-charcoal text-[11px]">Real survivor records are never copied or mirrored to staging environments.</p>
                   </div>
-                  <div className="p-3 bg-phumulani-cream border border-phumulani-earth rounded-lg space-y-1">
-                    <span className="font-bold text-phumulani-earth">2. Financial Anonymity</span>
+                  <div className="p-3.5 bg-phumulani-cream/70 border border-phumulani-charcoal/12 rounded-lg space-y-1">
+                    <span className="font-bold font-heading text-phumulani-earth">02. Financial Anonymity</span>
                     <p className="text-phumulani-charcoal text-[11px]">Live banking details and donor credit cards are replaced with synthetic tokens.</p>
                   </div>
-                  <div className="p-3 bg-phumulani-cream border border-phumulani-earth rounded-lg space-y-1">
-                    <span className="font-bold text-phumulani-earth">3. Mailbox Quarantine</span>
+                  <div className="p-3.5 bg-phumulani-cream/70 border border-phumulani-charcoal/12 rounded-lg space-y-1">
+                    <span className="font-bold font-heading text-phumulani-earth">03. Mailbox Quarantine</span>
                     <p className="text-phumulani-charcoal text-[11px]">Private organizational mailboxes are inaccessible from staging test views.</p>
                   </div>
-                  <div className="p-3 bg-phumulani-cream border border-phumulani-earth rounded-lg space-y-1">
-                    <span className="font-bold text-phumulani-earth">4. Immutable Audit Logging</span>
+                  <div className="p-3.5 bg-phumulani-cream/70 border border-phumulani-charcoal/12 rounded-lg space-y-1">
+                    <span className="font-bold font-heading text-phumulani-earth">04. Immutable Audit Logging</span>
                     <p className="text-phumulani-charcoal text-[11px]">All staging preview accesses are recorded in the Master Audit Register.</p>
                   </div>
                 </div>
@@ -342,13 +339,13 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
         </div>
 
         {/* MODAL FOOTER */}
-        <div className="p-4 bg-phumulani-cream border-t border-phumulani-earth flex items-center justify-between">
+        <div className="p-4 bg-phumulani-cream border-t border-phumulani-charcoal/12 flex items-center justify-between">
           <span className="text-[11px] text-phumulani-charcoal font-mono">
             Security Status: Verified Synthetic Fixtures Only
           </span>
           <button
             onClick={onClose}
-            className="px-4 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-earth text-white font-semibold rounded-lg text-xs cursor-pointer"
+            className="px-4 py-1.5 bg-phumulani-charcoal hover:bg-phumulani-earth text-white font-semibold rounded-lg text-xs cursor-pointer transition-colors"
           >
             Close Staging Preview
           </button>

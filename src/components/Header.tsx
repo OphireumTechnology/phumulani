@@ -217,13 +217,13 @@ export const Header: React.FC<HeaderProps> = ({
       {/* ========================================================
           LEVEL 2: SAFETY & ACCESSIBILITY BAR
           ======================================================== */}
-      <div className="bg-phumulani-charcoal text-white py-1.5 px-2 min-[400px]:px-4 text-xs max-w-full overflow-hidden border-b border-phumulani-earth">
+      <div className="bg-phumulani-charcoal text-phumulani-cream py-1.5 px-2 min-[400px]:px-4 text-xs max-w-full overflow-hidden border-b border-phumulani-charcoal">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-1.5 min-[400px]:gap-2 sm:gap-4 min-w-0">
           <div className="flex items-center gap-1.5 min-[400px]:gap-2 min-w-0 flex-1 overflow-hidden">
             <ShieldCheck className="w-3.5 h-3.5 text-phumulani-gold shrink-0" strokeWidth={1.75} aria-hidden="true" />
-            <span className="text-[11px] text-phumulani-cream truncate font-lato">
+            <span className="text-[11px] text-phumulani-cream truncate">
               Confidential Support &amp; Safety: Use <strong>Safe Exit</strong> or press{' '}
-              <kbd className="bg-phumulani-earth text-white px-1 py-0.5 rounded text-[10px] border border-phumulani-orange font-mono">
+              <kbd className="bg-phumulani-earth text-white px-1.5 py-0.5 rounded text-[10px] border border-phumulani-gold font-mono">
                 ESC
               </kbd>{' '}
               twice.
@@ -242,7 +242,7 @@ export const Header: React.FC<HeaderProps> = ({
                 aria-label="Select Language"
                 value={currentLang}
                 onChange={(e) => onLangChange(e.target.value)}
-                className="bg-phumulani-charcoal border border-phumulani-cream text-white rounded px-1.5 min-[400px]:px-2 py-0.5 text-[11px] font-medium max-w-[105px] min-[400px]:max-w-[155px] sm:max-w-none focus:ring-1 focus:ring-phumulani-gold outline-none cursor-pointer transition-colors"
+                className="bg-phumulani-charcoal border border-phumulani-cream/40 text-white rounded-md px-1.5 min-[400px]:px-2 py-0.5 text-[11px] font-medium max-w-[105px] min-[400px]:max-w-[155px] sm:max-w-none focus:ring-1 focus:ring-phumulani-gold outline-none cursor-pointer transition-colors"
               >
                 {languages.map((l) => (
                   <option key={l.code} value={l.code} className="bg-white text-phumulani-charcoal">
@@ -252,14 +252,14 @@ export const Header: React.FC<HeaderProps> = ({
               </select>
             </div>
 
-            <span className="text-phumulani-cream" aria-hidden="true">
+            <span className="text-phumulani-cream/40" aria-hidden="true">
               |
             </span>
 
             {/* Quick Safe Exit Button */}
             <button
               onClick={handleSafeExit}
-              className="bg-phumulani-earth hover:bg-phumulani-orange text-white font-bold px-2 min-[400px]:px-2.5 py-1 rounded text-[11px] transition-colors duration-150 flex items-center gap-1 cursor-pointer font-heading tracking-wide whitespace-nowrap focus-visible:ring-2 focus-visible:ring-phumulani-gold"
+              className="bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white font-bold px-2.5 py-1 rounded-md text-[11px] transition-colors duration-150 flex items-center gap-1 cursor-pointer font-heading tracking-wide whitespace-nowrap focus-visible:ring-2 focus-visible:ring-phumulani-gold"
               title="Instant safe exit to Weather.com (replaces browser history)"
             >
               <span>SAFE EXIT</span>
@@ -272,7 +272,7 @@ export const Header: React.FC<HeaderProps> = ({
       {/* ========================================================
           LEVEL 3: MAIN WEBSITE NAVIGATION
           ======================================================== */}
-      <div className="bg-white border-b border-phumulani-cream">
+      <div className="bg-white border-b border-phumulani-charcoal/15">
         <div className="max-w-7xl mx-auto px-2 min-[400px]:px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-1 min-[400px]:gap-2 lg:gap-4 h-[68px] sm:h-20 min-w-0 w-full">
             {/* LEFT: Official Phumulani Logo */}
@@ -323,11 +323,11 @@ export const Header: React.FC<HeaderProps> = ({
             </nav>
 
             {/* RIGHT: Primary Action Group with Uniform Height */}
-            <div className="flex items-center gap-1 sm:gap-2 shrink-0">
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               {/* Get Help Accent Button */}
               <button
                 onClick={() => navigateToSection('get-help-section')}
-                className="hidden min-[400px]:flex h-9 sm:h-10 min-w-[38px] items-center justify-center gap-1.5 bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-earth hover:text-phumulani-charcoal border border-phumulani-earth px-2.5 sm:px-3.5 rounded-lg text-xs font-semibold transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer font-heading shadow-2xs focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                className="hidden min-[400px]:flex h-9 sm:h-10 min-w-[38px] items-center justify-center gap-1.5 bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-earth hover:text-phumulani-charcoal border border-phumulani-earth/25 px-2.5 sm:px-3.5 rounded-lg text-xs font-semibold transition-all duration-150 cursor-pointer font-heading whitespace-nowrap focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 title="Discreet support routing & emergency help"
                 aria-label="Get Help"
               >
@@ -338,7 +338,7 @@ export const Header: React.FC<HeaderProps> = ({
               {/* Donate CTA Button */}
               <button
                 onClick={() => navigateToSection('donate-section')}
-                className="h-9 sm:h-10 min-w-[38px] flex items-center justify-center gap-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white px-2.5 min-[400px]:px-3 sm:px-4 rounded-lg text-xs font-bold transition-all duration-150 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer font-heading tracking-wide shadow-xs hover:shadow-sm focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                className="h-9 sm:h-10 min-w-[38px] flex items-center justify-center gap-1.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white px-2.5 min-[400px]:px-3 sm:px-4 rounded-lg text-xs font-bold transition-all duration-150 cursor-pointer font-heading tracking-wide shadow-xs whitespace-nowrap focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 aria-label="Donate"
               >
                 <Heart className="w-3.5 h-3.5 shrink-0" strokeWidth={1.75} aria-hidden="true" />
@@ -351,7 +351,7 @@ export const Header: React.FC<HeaderProps> = ({
                   onClick={() => setPortalsDropdownOpen(!portalsDropdownOpen)}
                   aria-haspopup="menu"
                   aria-expanded={portalsDropdownOpen}
-                  className="h-9 sm:h-10 flex items-center gap-1.5 text-xs font-medium px-3 rounded-lg bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-charcoal border border-phumulani-earth transition-all duration-150 cursor-pointer font-heading focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                  className="h-9 sm:h-10 flex items-center gap-1.5 text-xs font-semibold px-3 rounded-lg bg-white hover:bg-phumulani-cream text-phumulani-charcoal border border-phumulani-charcoal/20 transition-all duration-150 cursor-pointer font-heading whitespace-nowrap focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                   title="Access Portals &amp; Staff Command"
                 >
                   <Layers3 className="w-3.5 h-3.5 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
@@ -374,9 +374,9 @@ export const Header: React.FC<HeaderProps> = ({
                       animate={{ opacity: 1, y: 0, scale: 1 }}
                       exit={{ opacity: 0, y: 4, scale: 0.98 }}
                       transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
-                      className="absolute right-0 mt-2 w-76 bg-white rounded-xl shadow-xl border border-phumulani-earth py-2 z-50"
+                      className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-xl border border-phumulani-charcoal/15 py-2 z-50"
                     >
-                      <div className="px-3 py-1.5 text-[10px] uppercase font-bold tracking-wider text-phumulani-earth border-b border-phumulani-cream mb-1">
+                      <div className="px-3.5 py-1.5 text-[10px] uppercase font-bold tracking-wider text-phumulani-earth border-b border-phumulani-cream mb-1">
                         Application Portals
                       </div>
                       {portals.map((portal) => {
@@ -390,22 +390,22 @@ export const Header: React.FC<HeaderProps> = ({
                               onViewChange(portal.id);
                               setPortalsDropdownOpen(false);
                             }}
-                            className={`w-full text-left px-3 py-2 flex items-start gap-2.5 hover:bg-phumulani-cream transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth ${
-                              isActive ? 'bg-phumulani-cream border-l-2 border-phumulani-earth' : ''
+                            className={`w-full text-left px-3.5 py-2.5 flex items-start gap-2.5 hover:bg-phumulani-cream transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth ${
+                              isActive ? 'bg-phumulani-cream font-semibold' : ''
                             }`}
                           >
                             <div
-                              className={`p-1.5 rounded-md mt-0.5 ${
-                                isActive ? 'bg-phumulani-earth text-white' : 'bg-phumulani-cream text-phumulani-charcoal'
+                              className={`p-1.5 rounded-lg mt-0.5 ${
+                                isActive ? 'bg-phumulani-earth text-white' : 'bg-phumulani-cream text-phumulani-earth'
                               }`}
                             >
                               <Icon className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
                             </div>
                             <div className="min-w-0">
-                              <div className={`text-xs font-semibold ${isActive ? 'text-phumulani-earth' : 'text-phumulani-charcoal'}`}>
+                              <div className={`text-xs font-heading font-semibold ${isActive ? 'text-phumulani-earth' : 'text-phumulani-charcoal'}`}>
                                 {portal.label}
                               </div>
-                              <div className="text-[10px] text-phumulani-charcoal line-clamp-1">{portal.desc}</div>
+                              <div className="text-[11px] text-phumulani-charcoal/80 line-clamp-1">{portal.desc}</div>
                             </div>
                           </button>
                         );
@@ -418,7 +418,7 @@ export const Header: React.FC<HeaderProps> = ({
               {/* In-App Notification Center Bell */}
               <button
                 onClick={() => setNotificationModalOpen(true)}
-                className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 relative items-center justify-center rounded-lg bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-charcoal border border-phumulani-earth transition-all duration-150 cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                className="flex h-9 w-9 sm:h-10 sm:w-10 shrink-0 relative items-center justify-center rounded-lg bg-white hover:bg-phumulani-cream text-phumulani-charcoal border border-phumulani-charcoal/20 transition-all duration-150 cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 title="Open Notification Center"
                 aria-label="Open Notification Center"
               >
@@ -433,7 +433,7 @@ export const Header: React.FC<HeaderProps> = ({
               {/* Mobile Drawer Button */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="xl:hidden h-9 w-9 sm:h-10 sm:w-10 shrink-0 flex items-center justify-center text-phumulani-charcoal hover:text-phumulani-earth rounded-lg hover:bg-phumulani-cream border border-phumulani-cream transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                className="xl:hidden h-9 w-9 sm:h-10 sm:w-10 shrink-0 flex items-center justify-center text-phumulani-charcoal hover:text-phumulani-earth rounded-lg hover:bg-phumulani-cream border border-phumulani-charcoal/15 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 aria-label="Toggle Navigation Menu"
                 aria-expanded={mobileMenuOpen}
                 aria-controls="public-mobile-navigation"
@@ -480,9 +480,9 @@ export const Header: React.FC<HeaderProps> = ({
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }
                     }}
-                    className={`min-h-[44px] min-w-0 flex items-center px-2.5 py-2 rounded-lg transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left ${
+                    className={`min-h-[44px] min-w-0 flex items-center px-3 py-2 rounded-lg transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left ${
                       isActive
-                        ? 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth font-bold'
+                        ? 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth/40 font-bold'
                         : 'hover:bg-phumulani-cream text-phumulani-charcoal'
                     }`}
                   >
@@ -493,7 +493,7 @@ export const Header: React.FC<HeaderProps> = ({
 
               <button
                 onClick={() => navigateToSection('get-help-section')}
-                className="min-h-[44px] min-w-0 flex items-center gap-1.5 px-2.5 py-2 rounded-lg bg-phumulani-cream text-phumulani-earth border border-phumulani-earth font-bold transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
+                className="min-h-[44px] min-w-0 flex items-center gap-1.5 px-3 py-2 rounded-lg bg-phumulani-cream text-phumulani-earth border border-phumulani-earth/30 font-bold transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth text-left"
               >
                 <LifeBuoy className="w-3.5 h-3.5 shrink-0" strokeWidth={1.75} aria-hidden="true" />
                 <span className="truncate">Get Help (Safe)</span>

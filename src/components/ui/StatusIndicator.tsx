@@ -1,7 +1,7 @@
 /**
  * @license
  * SPDX-License-Identifier: Apache-2.0
- * StatusIndicator — Standardized Operational Status Badge Component
+ * StatusIndicator — Standardized Operational Status Component
  * Clean, restrained professional indicators for administrative dashboards and workflows
  */
 
@@ -41,64 +41,64 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = ({
     ACTIVE: {
       bg: 'bg-phumulani-green',
       text: 'text-phumulani-charcoal',
-      border: 'border-phumulani-charcoal',
-      icon: <CheckCircle2 className="w-3 h-3 text-phumulani-charcoal" />,
+      border: 'border-phumulani-green',
+      icon: <CheckCircle2 className="w-3 h-3 text-phumulani-charcoal shrink-0" />,
       defaultLabel: 'Active',
     },
     VERIFIED: {
       bg: 'bg-phumulani-teal',
       text: 'text-phumulani-charcoal',
-      border: 'border-phumulani-charcoal',
-      icon: <ShieldCheck className="w-3 h-3 text-phumulani-charcoal" />,
+      border: 'border-phumulani-teal',
+      icon: <ShieldCheck className="w-3 h-3 text-phumulani-charcoal shrink-0" />,
       defaultLabel: 'Verified',
     },
     PENDING: {
       bg: 'bg-phumulani-gold',
       text: 'text-phumulani-charcoal',
-      border: 'border-phumulani-charcoal',
-      icon: <Clock className="w-3 h-3 text-phumulani-charcoal" />,
+      border: 'border-phumulani-gold',
+      icon: <Clock className="w-3 h-3 text-phumulani-charcoal shrink-0" />,
       defaultLabel: 'Pending',
     },
     REQUIRES_APPROVAL: {
       bg: 'bg-phumulani-gold',
       text: 'text-phumulani-charcoal',
       border: 'border-phumulani-orange',
-      icon: <AlertTriangle className="w-3 h-3 text-phumulani-charcoal" />,
+      icon: <AlertTriangle className="w-3 h-3 text-phumulani-charcoal shrink-0" />,
       defaultLabel: 'Requires Approval',
     },
     FUNDING_DEPENDENT: {
       bg: 'bg-phumulani-gold',
       text: 'text-phumulani-charcoal',
-      border: 'border-phumulani-earth',
-      icon: <HelpCircle className="w-3 h-3 text-phumulani-charcoal" />,
+      border: 'border-phumulani-earth/30',
+      icon: <HelpCircle className="w-3 h-3 text-phumulani-charcoal shrink-0" />,
       defaultLabel: 'Funding Dependent',
     },
     COMPLETED: {
       bg: 'bg-phumulani-cream',
       text: 'text-phumulani-charcoal',
-      border: 'border-phumulani-charcoal',
-      icon: <CheckCircle2 className="w-3 h-3 text-phumulani-charcoal" />,
+      border: 'border-phumulani-charcoal/20',
+      icon: <CheckCircle2 className="w-3 h-3 text-phumulani-charcoal shrink-0" />,
       defaultLabel: 'Completed',
     },
     FAILED: {
       bg: 'bg-phumulani-earth',
       text: 'text-white',
       border: 'border-phumulani-earth',
-      icon: <XCircle className="w-3 h-3 text-current" />,
+      icon: <XCircle className="w-3 h-3 text-current shrink-0" />,
       defaultLabel: 'Failed',
     },
     DRAFT: {
       bg: 'bg-phumulani-cream',
       text: 'text-phumulani-charcoal',
-      border: 'border-phumulani-earth',
-      icon: <Clock className="w-3 h-3 text-phumulani-charcoal" />,
+      border: 'border-phumulani-charcoal/20',
+      icon: <Clock className="w-3 h-3 text-phumulani-charcoal shrink-0" />,
       defaultLabel: 'Draft',
     },
     IN_REVIEW: {
       bg: 'bg-phumulani-teal',
       text: 'text-phumulani-charcoal',
-      border: 'border-phumulani-charcoal',
-      icon: <Clock className="w-3 h-3 text-phumulani-charcoal" />,
+      border: 'border-phumulani-teal',
+      icon: <Clock className="w-3 h-3 text-phumulani-charcoal shrink-0" />,
       defaultLabel: 'In Review',
     },
   };
@@ -106,8 +106,8 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = ({
   const config = configs[normalized] || {
     bg: 'bg-phumulani-cream',
     text: 'text-phumulani-charcoal',
-    border: 'border-phumulani-charcoal',
-    icon: <Clock className="w-3 h-3 text-phumulani-charcoal" />,
+    border: 'border-phumulani-charcoal/20',
+    icon: <Clock className="w-3 h-3 text-phumulani-charcoal shrink-0" />,
     defaultLabel: status,
   };
 
@@ -118,7 +118,7 @@ export const StatusIndicator: React.FC<StatusIndicatorProps> = ({
 
   return (
     <span
-      className={`inline-flex items-center rounded-full border ${config.bg} ${config.text} ${config.border} ${sizeClasses} font-heading select-none ${className}`}
+      className={`inline-flex items-center rounded-md border ${config.bg} ${config.text} ${config.border} ${sizeClasses} font-heading font-semibold select-none whitespace-nowrap ${className}`}
     >
       {config.icon}
       <span>{label || config.defaultLabel}</span>

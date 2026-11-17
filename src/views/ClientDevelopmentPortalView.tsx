@@ -135,33 +135,33 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
   return (
     <div className="min-h-screen bg-phumulani-cream flex flex-col font-sans text-phumulani-charcoal">
       {/* 1. MASTER HEADER — SECTION 04 SPECIFICATION */}
-      <header className="bg-white border-b border-phumulani-cream sticky top-0 z-30 shadow-xs">
+      <header className="bg-white border-b border-phumulani-charcoal/12 sticky top-0 z-30">
         <div className="px-6 py-4 flex flex-wrap items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-mono font-bold tracking-widest uppercase bg-phumulani-cream text-phumulani-earth border border-phumulani-teal px-2 py-0.5 rounded-full">
+            <div className="flex items-center gap-2 text-xs">
+              <span className="font-mono font-bold tracking-widest uppercase text-phumulani-earth">
                 CLIENT PORTAL
               </span>
-              <span className="text-phumulani-charcoal">·</span>
-              <span className="text-xs font-semibold text-phumulani-charcoal">
+              <span className="text-phumulani-charcoal/40" aria-hidden="true">·</span>
+              <span className="font-semibold text-phumulani-charcoal/85">
                 Partner: {overview.developmentOrganization}
               </span>
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold font-serif text-phumulani-charcoal tracking-tight mt-0.5">
+            <h1 className="text-xl sm:text-2xl font-bold font-heading text-phumulani-charcoal tracking-tight mt-0.5">
               PHUMULANI AI COMMUNITY PLATFORM
             </h1>
-            <p className="text-xs font-medium text-phumulani-charcoal">
-              Development Progress & Project Transparency
+            <p className="text-xs font-medium text-phumulani-charcoal/75">
+              Development Progress &amp; Project Transparency
             </p>
           </div>
 
           <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            {/* Quick Status Pill */}
-            <div className="hidden md:flex flex-col text-right text-xs">
+            {/* Quick Status */}
+            <div className="hidden md:flex flex-col text-right text-xs tabular-nums">
               <span className="font-semibold text-phumulani-charcoal">
                 Current Phase: <strong className="text-phumulani-earth">{overview.currentApprovedPhase}</strong>
               </span>
-              <span className="text-[11px] text-phumulani-charcoal font-mono">
+              <span className="text-[11px] text-phumulani-charcoal/75 font-mono">
                 Release: {overview.currentReleaseVersion}
               </span>
             </div>
@@ -169,26 +169,26 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
             {/* Launch Staging Sandbox */}
             <button
               onClick={() => setIsStagingModalOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-phumulani-gold hover:bg-phumulani-orange text-phumulani-charcoal text-xs font-bold rounded-lg shadow-xs transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-gold hover:bg-phumulani-orange text-phumulani-charcoal text-xs font-bold rounded-lg transition-colors cursor-pointer whitespace-nowrap"
               title="Launch protected staging preview"
             >
-              <Eye className="w-3.5 h-3.5 text-phumulani-charcoal" />
+              <Eye className="w-3.5 h-3.5" />
               <span>Launch Staging Preview</span>
             </button>
 
             {/* Submit Client Feedback */}
             <button
               onClick={() => setIsFeedbackModalOpen(true)}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-bold rounded-lg shadow-xs transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal text-xs font-bold rounded-lg transition-colors cursor-pointer whitespace-nowrap"
             >
-              <Send className="w-3.5 h-3.5 text-white" />
+              <Send className="w-3.5 h-3.5" />
               <span>Submit Feedback</span>
             </button>
 
             {/* Exit to Public */}
             <button
               onClick={() => onViewChange('public')}
-              className="px-2.5 py-1.5 border border-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal text-xs font-semibold rounded-lg cursor-pointer"
+              className="px-3 py-2 border border-phumulani-charcoal/20 hover:bg-phumulani-cream text-phumulani-charcoal text-xs font-semibold rounded-lg cursor-pointer transition-colors whitespace-nowrap"
             >
               Public Website
             </button>
@@ -200,13 +200,13 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
       <div className="flex-1 flex overflow-hidden">
         {/* LEFT COLLAPSIBLE SIDEBAR — SECTION 05 */}
         <aside
-          className={`bg-white border-r border-phumulani-cream transition-all duration-200 flex flex-col shrink-0 ${
+          className={`bg-white border-r border-phumulani-charcoal/12 transition-all duration-200 flex flex-col shrink-0 ${
             isSidebarOpen ? 'w-64' : 'w-16'
           }`}
         >
-          <div className="p-3 border-b border-phumulani-cream flex items-center justify-between">
+          <div className="p-3 border-b border-phumulani-charcoal/12 flex items-center justify-between">
             {isSidebarOpen && (
-              <span className="text-[11px] font-bold uppercase tracking-wider text-phumulani-charcoal">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-phumulani-charcoal/75">
                 Navigation
               </span>
             )}
@@ -389,17 +389,17 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
           {activeSection === 'dashboard' && (
             <div className="space-y-6">
               {/* Top Banner Notice */}
-              <div className="p-4 bg-phumulani-cream border border-phumulani-teal rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs text-phumulani-earth">
+              <div className="p-4 bg-white border border-phumulani-teal/40 rounded-xl flex flex-wrap items-center justify-between gap-3 text-xs text-phumulani-earth">
                 <div className="flex items-center gap-2.5">
                   <Sparkles className="w-5 h-5 text-phumulani-earth shrink-0" />
                   <div>
                     <span className="font-bold">Next Expected Milestone:</span>{' '}
-                    <span>{overview.nextExpectedMilestone}</span>
+                    <span className="text-phumulani-charcoal">{overview.nextExpectedMilestone}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 font-medium">
-                  <span>Last update: {new Date(overview.lastVerifiedProjectUpdate).toLocaleTimeString()}</span>
-                  <span className="font-mono bg-phumulani-cream text-phumulani-earth px-2 py-0.5 rounded font-bold">
+                <div className="flex items-center gap-3 font-medium tabular-nums">
+                  <span className="text-phumulani-charcoal/80">Last update: {new Date(overview.lastVerifiedProjectUpdate).toLocaleTimeString()}</span>
+                  <span className="font-mono bg-phumulani-cream text-phumulani-earth px-2.5 py-0.5 rounded-md font-bold border border-phumulani-charcoal/12">
                     Delivery: {overview.kpis.currentProjectDeliveryStatus}
                   </span>
                 </div>
@@ -407,85 +407,85 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
 
               {/* 12 EXECUTIVE KPI CARDS GRID */}
               <div>
-                <h2 className="text-xs font-bold uppercase tracking-wider text-phumulani-charcoal mb-3">
-                  Executive KPI Performance Grid (Audited & Verified Values)
+                <h2 className="font-heading text-xs font-bold uppercase tracking-wider text-phumulani-charcoal/80 mb-3">
+                  Executive KPI Performance Grid (Audited &amp; Verified Values)
                 </h2>
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 tabular-nums">
                   {/* Card 1: Verified Progress */}
-                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">1. Verified Progress</span>
-                    <div className="text-xl font-extrabold text-phumulani-earth mt-1">
+                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-charcoal/12">
+                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal/75">1. Verified Progress</span>
+                    <div className="font-heading text-xl font-extrabold text-phumulani-earth mt-1">
                       {overview.kpis.verifiedProgressPercent}%
                     </div>
-                    <span className="text-[10px] text-phumulani-charcoal">Approved weighted sum</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75">Approved weighted sum</span>
                   </div>
 
                   {/* Card 2: Completed Milestones */}
-                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">2. Milestones Done</span>
-                    <div className="text-xl font-extrabold text-phumulani-earth mt-1">
+                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-charcoal/12">
+                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal/75">2. Milestones Done</span>
+                    <div className="font-heading text-xl font-extrabold text-phumulani-earth mt-1">
                       {overview.kpis.completedMilestonesCount}
                     </div>
-                    <span className="text-[10px] text-phumulani-charcoal">Signed off / verified</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75">Signed off / verified</span>
                   </div>
 
                   {/* Card 3: Active Milestones */}
-                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">3. Active Milestones</span>
-                    <div className="text-xl font-extrabold text-phumulani-earth mt-1">
+                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-charcoal/12">
+                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal/75">3. Active Milestones</span>
+                    <div className="font-heading text-xl font-extrabold text-phumulani-earth mt-1">
                       {overview.kpis.activeMilestonesCount}
                     </div>
-                    <span className="text-[10px] text-phumulani-charcoal">In testing & review</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75">In testing &amp; review</span>
                   </div>
 
                   {/* Card 4: Pending Milestones */}
-                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">4. Pending Milestones</span>
-                    <div className="text-xl font-extrabold text-phumulani-charcoal mt-1">
+                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-charcoal/12">
+                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal/75">4. Pending Milestones</span>
+                    <div className="font-heading text-xl font-extrabold text-phumulani-charcoal mt-1">
                       {overview.kpis.pendingMilestonesCount}
                     </div>
-                    <span className="text-[10px] text-phumulani-charcoal">Scheduled in roadmap</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75">Scheduled in roadmap</span>
                   </div>
 
                   {/* Card 5: Features Delivered */}
-                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">5. Features Delivered</span>
-                    <div className="text-xl font-extrabold text-phumulani-earth mt-1">
+                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-charcoal/12">
+                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal/75">5. Features Delivered</span>
+                    <div className="font-heading text-xl font-extrabold text-phumulani-earth mt-1">
                       {overview.kpis.featuresDeliveredCount}
                     </div>
-                    <span className="text-[10px] text-phumulani-charcoal">Completed & functional</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75">Completed &amp; functional</span>
                   </div>
 
                   {/* Card 6: Features Awaiting Acceptance */}
-                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">6. Awaiting Accept</span>
-                    <div className="text-xl font-extrabold text-phumulani-earth mt-1">
+                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-charcoal/12">
+                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal/75">6. Awaiting Accept</span>
+                    <div className="font-heading text-xl font-extrabold text-phumulani-earth mt-1">
                       {overview.kpis.featuresAwaitingAcceptanceCount}
                     </div>
-                    <span className="text-[10px] text-phumulani-charcoal">Ready for sign-off</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75">Ready for sign-off</span>
                   </div>
 
                   {/* Card 7: Open Issues */}
-                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">7. Open Feedback</span>
-                    <div className="text-xl font-extrabold text-phumulani-charcoal mt-1">
+                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-charcoal/12">
+                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal/75">7. Open Feedback</span>
+                    <div className="font-heading text-xl font-extrabold text-phumulani-charcoal mt-1">
                       {overview.kpis.openDevelopmentIssuesCount}
                     </div>
-                    <span className="text-[10px] text-phumulani-charcoal">Under assessment</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75">Under assessment</span>
                   </div>
 
                   {/* Card 8: Resolved Issues */}
-                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">8. Resolved Issues</span>
-                    <div className="text-xl font-extrabold text-phumulani-earth mt-1">
+                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-charcoal/12">
+                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal/75">8. Resolved Issues</span>
+                    <div className="font-heading text-xl font-extrabold text-phumulani-earth mt-1">
                       {overview.kpis.resolvedDevelopmentIssuesCount}
                     </div>
-                    <span className="text-[10px] text-phumulani-charcoal">Verified & closed</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75">Verified &amp; closed</span>
                   </div>
 
                   {/* Card 9: Latest Build */}
-                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">9. Latest Build</span>
+                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-charcoal/12">
+                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal/75">9. Latest Build</span>
                     <div className="text-sm font-bold font-mono text-phumulani-charcoal mt-1 truncate">
                       SHA: {overview.kpis.latestSuccessfulBuildSha}
                     </div>
@@ -493,39 +493,39 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                   </div>
 
                   {/* Card 10: Verified Deployment */}
-                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">10. Verified Deploy</span>
+                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-charcoal/12">
+                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal/75">10. Verified Deploy</span>
                     <div className="text-xs font-bold text-phumulani-charcoal mt-1 truncate">
                       {overview.kpis.latestVerifiedDeploymentEnv}
                     </div>
-                    <span className="text-[10px] text-phumulani-charcoal">Staging sandbox active</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75">Staging sandbox active</span>
                   </div>
 
                   {/* Card 11: Pending Client Approvals */}
-                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">11. Pending Approvals</span>
-                    <div className="text-xl font-extrabold text-phumulani-earth mt-1">
+                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-charcoal/12">
+                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal/75">11. Pending Approvals</span>
+                    <div className="font-heading text-xl font-extrabold text-phumulani-earth mt-1">
                       {overview.kpis.pendingClientApprovalsCount}
                     </div>
-                    <span className="text-[10px] text-phumulani-charcoal">Milestones awaiting</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75">Milestones awaiting</span>
                   </div>
 
                   {/* Card 12: Delivery Status */}
-                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">12. Delivery Status</span>
+                  <div className="bg-white p-3.5 rounded-xl border border-phumulani-charcoal/12">
+                    <span className="text-[10px] font-bold uppercase text-phumulani-charcoal/75">12. Delivery Status</span>
                     <div className="text-sm font-bold text-phumulani-earth mt-1 flex items-center gap-1">
                       <CheckCircle2 className="w-3.5 h-3.5" />
                       <span>{overview.kpis.currentProjectDeliveryStatus}</span>
                     </div>
-                    <span className="text-[10px] text-phumulani-charcoal">On schedule</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75">On schedule</span>
                   </div>
                 </div>
               </div>
 
               {/* DUAL PROGRESS GAUGES */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white p-5 rounded-2xl border border-phumulani-cream shadow-xs">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 bg-white p-5 rounded-2xl border border-phumulani-charcoal/12 tabular-nums">
                 <div>
-                  <div className="flex justify-between text-xs font-semibold mb-1">
+                  <div className="flex justify-between text-xs font-semibold mb-1.5">
                     <span className="text-phumulani-charcoal">Verified Milestone Progress</span>
                     <span className="font-bold text-phumulani-earth">{progressMetrics.verifiedProgressPercent}%</span>
                   </div>
@@ -535,7 +535,7 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                 </div>
 
                 <div>
-                  <div className="flex justify-between text-xs font-semibold mb-1">
+                  <div className="flex justify-between text-xs font-semibold mb-1.5">
                     <span className="text-phumulani-charcoal">Testing Pass Rate</span>
                     <span className="font-bold text-phumulani-earth">{progressMetrics.testingProgress}%</span>
                   </div>
@@ -545,7 +545,7 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                 </div>
 
                 <div>
-                  <div className="flex justify-between text-xs font-semibold mb-1">
+                  <div className="flex justify-between text-xs font-semibold mb-1.5">
                     <span className="text-phumulani-charcoal">Implementation Deliverables</span>
                     <span className="font-bold text-phumulani-earth">{progressMetrics.implementationProgress}%</span>
                   </div>
@@ -555,7 +555,7 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                 </div>
 
                 <div>
-                  <div className="flex justify-between text-xs font-semibold mb-1">
+                  <div className="flex justify-between text-xs font-semibold mb-1.5">
                     <span className="text-phumulani-charcoal">Client Acceptance</span>
                     <span className="font-bold text-phumulani-earth">{progressMetrics.clientAcceptanceProgress}%</span>
                   </div>
@@ -566,20 +566,20 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
               </div>
 
               {/* RECENT ACTIVITY STREAM PREVIEW */}
-              <div className="bg-white rounded-2xl border border-phumulani-cream p-5 space-y-3">
+              <div className="bg-white rounded-2xl border border-phumulani-charcoal/12 p-5 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="font-bold text-phumulani-charcoal text-sm font-serif">
+                  <h3 className="font-bold text-phumulani-charcoal text-sm font-heading">
                     Live Verified Development Events
                   </h3>
                   <button
                     onClick={() => setActiveSection('activity')}
-                    className="text-xs text-phumulani-earth hover:text-phumulani-earth font-semibold cursor-pointer"
+                    className="text-xs text-phumulani-earth hover:underline font-semibold cursor-pointer"
                   >
                     View All ({activities.length}) →
                   </button>
                 </div>
 
-                <div className="divide-y divide-phumulani-cream">
+                <div className="divide-y divide-phumulani-charcoal/10">
                   {activities.slice(0, 4).map((act) => (
                     <div key={act.id} className="py-2.5 flex items-start justify-between gap-3 text-xs">
                       <div className="space-y-0.5">
@@ -604,11 +604,11 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
           {/* SECTION: ROADMAP TIMELINE */}
           {activeSection === 'roadmap' && (
             <div className="space-y-6">
-              <div className="bg-white p-5 rounded-2xl border border-phumulani-cream">
-                <h3 className="text-base font-bold text-phumulani-charcoal font-serif">
-                  Development Milestone Timeline & Deliverables
+              <div className="bg-white p-6 rounded-2xl border border-phumulani-charcoal/12">
+                <h3 className="text-base font-bold text-phumulani-charcoal font-heading">
+                  Development Milestone Timeline &amp; Deliverables
                 </h3>
-                <p className="text-xs text-phumulani-charcoal mt-1">
+                <p className="text-xs text-phumulani-charcoal/80 mt-1 tabular-nums">
                   Progress is computed exclusively from verified milestone weights ({progressMetrics.verifiedMilestonesWeight}/{progressMetrics.totalApprovedWeights} points).
                 </p>
 
@@ -616,24 +616,24 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                   {milestones.map((m) => {
                     const isApproved = m.developmentStatus === 'CLIENT_APPROVED' || m.developmentStatus === 'PRODUCTION_VERIFIED';
                     return (
-                      <div key={m.id} className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-2">
+                      <div key={m.id} className="p-4 bg-phumulani-cream/60 rounded-xl border border-phumulani-charcoal/12 space-y-2.5">
                         <div className="flex flex-wrap items-start justify-between gap-2">
                           <div>
-                            <span className="text-[10px] font-mono font-bold bg-white px-2 py-0.5 rounded border border-phumulani-cream text-phumulani-charcoal">
+                            <span className="text-[10px] font-mono font-bold bg-white px-2 py-0.5 rounded-md border border-phumulani-charcoal/12 text-phumulani-charcoal tabular-nums">
                               {m.id}
                             </span>
-                            <h4 className="font-bold text-phumulani-charcoal text-sm mt-1">{m.title}</h4>
+                            <h4 className="font-heading font-bold text-phumulani-charcoal text-sm mt-1.5">{m.title}</h4>
                           </div>
 
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 tabular-nums">
                             <span className="text-xs font-mono font-bold text-phumulani-charcoal">Weight: {m.weight}%</span>
                             <span
-                              className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full ${
+                              className={`text-[11px] font-bold px-2.5 py-0.5 rounded-md border ${
                                 isApproved
-                                  ? 'bg-phumulani-cream text-phumulani-charcoal'
+                                  ? 'bg-phumulani-green/15 text-phumulani-charcoal border-phumulani-green/40'
                                   : m.developmentStatus === 'READY_FOR_CLIENT_REVIEW'
-                                  ? 'bg-phumulani-cream text-phumulani-charcoal'
-                                  : 'bg-phumulani-cream text-phumulani-charcoal'
+                                  ? 'bg-phumulani-gold/15 text-phumulani-charcoal border-phumulani-gold/40'
+                                  : 'bg-white text-phumulani-charcoal border-phumulani-charcoal/15'
                               }`}
                             >
                               {m.developmentStatus}
@@ -641,9 +641,9 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                           </div>
                         </div>
 
-                        <p className="text-xs text-phumulani-charcoal leading-relaxed">{m.description}</p>
+                        <p className="text-xs text-phumulani-charcoal/85 leading-relaxed">{m.description}</p>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2 border-t border-phumulani-cream text-xs text-phumulani-charcoal">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 pt-2 border-t border-phumulani-charcoal/10 text-xs text-phumulani-charcoal tabular-nums">
                           <div>Assigned Owner: <strong>{m.assignedOwner}</strong></div>
                           <div>Target Completion: <strong>{new Date(m.targetDate).toLocaleDateString()}</strong></div>
                         </div>
@@ -651,8 +651,8 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                         {/* Deliverables checklist */}
                         <div className="space-y-1 pt-1">
                           {m.deliverables.map((d) => (
-                            <div key={d.id} className="flex items-center gap-2 text-[11px] text-phumulani-charcoal">
-                              <CheckCircle2 className={`w-3.5 h-3.5 ${d.isCompleted ? 'text-phumulani-earth' : 'text-phumulani-charcoal'}`} />
+                            <div key={d.id} className="flex items-center gap-2 text-[11px] text-phumulani-charcoal/85">
+                              <CheckCircle2 className={`w-3.5 h-3.5 shrink-0 ${d.isCompleted ? 'text-phumulani-earth' : 'text-phumulani-charcoal/45'}`} />
                               <span>{d.title} — {d.description}</span>
                             </div>
                           ))}
@@ -663,10 +663,10 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                           <div className="pt-2 flex justify-end">
                             <button
                               onClick={() => setApprovalModalMilestone(m)}
-                              className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-orange text-white font-bold text-xs rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
+                              className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal font-bold text-xs rounded-lg transition-colors cursor-pointer flex items-center gap-1.5"
                             >
                               <ThumbsUp className="w-3.5 h-3.5" />
-                              <span>Review & Formally Sign Off</span>
+                              <span>Review &amp; Formally Sign Off</span>
                             </button>
                           </div>
                         )}
@@ -681,11 +681,11 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
           {/* SECTION: DELIVERED FEATURES */}
           {activeSection === 'features' && (
             <div className="space-y-6">
-              <div className="bg-white p-5 rounded-2xl border border-phumulani-cream space-y-4">
-                <h3 className="text-base font-bold text-phumulani-charcoal font-serif">
+              <div className="bg-white p-6 rounded-2xl border border-phumulani-charcoal/12 space-y-4">
+                <h3 className="text-base font-bold text-phumulani-charcoal font-heading">
                   Delivered Platform Features ({features.length})
                 </h3>
-                <p className="text-xs text-phumulani-charcoal">
+                <p className="text-xs text-phumulani-charcoal/75">
                   Select a feature to inspect implementation requirements, acceptance criteria, and verified commit hashes.
                 </p>
 
@@ -696,23 +696,23 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                       <div
                         key={f.id}
                         onClick={() => setSelectedFeature(f)}
-                        className={`p-4 rounded-xl border transition-all cursor-pointer space-y-2 ${
+                        className={`p-4 rounded-xl border transition-colors cursor-pointer space-y-2 ${
                           isSelected
-                            ? 'border-phumulani-earth bg-phumulani-cream ring-1 ring-phumulani-earth'
-                            : 'border-phumulani-cream hover:border-phumulani-cream bg-white'
+                            ? 'border-phumulani-earth bg-phumulani-cream/70 ring-1 ring-phumulani-earth'
+                            : 'border-phumulani-charcoal/12 hover:border-phumulani-earth/40 bg-white'
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal px-2 py-0.5 rounded">
+                          <span className="font-mono text-[10px] font-bold bg-phumulani-cream text-phumulani-charcoal px-2 py-0.5 rounded-md border border-phumulani-charcoal/10">
                             {f.id} · {f.category}
                           </span>
-                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-phumulani-cream text-phumulani-charcoal">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-phumulani-green/15 text-phumulani-charcoal border border-phumulani-green/35">
                             {f.status}
                           </span>
                         </div>
-                        <h4 className="font-bold text-phumulani-charcoal text-xs">{f.title}</h4>
-                        <p className="text-[11px] text-phumulani-charcoal line-clamp-2 leading-relaxed">{f.description}</p>
-                        <div className="flex justify-between items-center text-[10px] text-phumulani-charcoal pt-2 border-t border-phumulani-cream">
+                        <h4 className="font-heading font-bold text-phumulani-charcoal text-xs">{f.title}</h4>
+                        <p className="text-[11px] text-phumulani-charcoal/80 line-clamp-2 leading-relaxed">{f.description}</p>
+                        <div className="flex justify-between items-center text-[10px] text-phumulani-charcoal/75 pt-2 border-t border-phumulani-charcoal/10">
                           <span>Owner: {f.assignedOwner}</span>
                           <span className="font-mono">Evidence: {f.evidenceSha}</span>
                         </div>
@@ -727,34 +727,34 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
           {/* SECTION: ACTIVITY FEED */}
           {activeSection === 'activity' && (
             <div className="space-y-6">
-              <div className="bg-white p-5 rounded-2xl border border-phumulani-cream space-y-4">
-                <h3 className="text-base font-bold text-phumulani-charcoal font-serif">
+              <div className="bg-white p-6 rounded-2xl border border-phumulani-charcoal/12 space-y-4">
+                <h3 className="text-base font-bold text-phumulani-charcoal font-heading">
                   Chronological Development Activity Stream
                 </h3>
-                <p className="text-xs text-phumulani-charcoal">
+                <p className="text-xs text-phumulani-charcoal/75">
                   Audited events across Google AI Studio, GitHub, GitHub Actions, and Windows sync controller.
                 </p>
 
-                <div className="divide-y divide-phumulani-cream">
+                <div className="divide-y divide-phumulani-charcoal/10">
                   {activities.map((act) => (
                     <div key={act.id} className="py-3 space-y-1 text-xs">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-[10px] font-bold bg-phumulani-cream px-1.5 py-0.2 rounded text-phumulani-charcoal">
+                          <span className="font-mono text-[10px] font-bold bg-phumulani-cream px-1.5 py-0.5 rounded-md border border-phumulani-charcoal/10 text-phumulani-charcoal">
                             {act.type}
                           </span>
                           <strong className="text-phumulani-charcoal">{act.title}</strong>
                         </div>
-                        <span className="text-[10px] text-phumulani-charcoal font-mono">
-                          {new Date(act.timestamp).toLocaleString()}
+                        <span className="text-[10px] text-phumulani-charcoal/70 font-mono tabular-nums">
+                          {new Date(act.timestamp).toLocaleTimeString()}
                         </span>
                       </div>
-                      <p className="text-phumulani-charcoal leading-relaxed">{act.clientDescription}</p>
-                      <div className="flex items-center gap-3 text-[10px] text-phumulani-charcoal font-mono pt-1">
+                      <p className="text-phumulani-charcoal/85 leading-relaxed">{act.clientDescription}</p>
+                      <div className="flex flex-wrap items-center gap-2 text-[10px] text-phumulani-charcoal/75 font-mono pt-1">
                         <span>Actor: {act.responsibleActor}</span>
-                        <span>·</span>
+                        <span aria-hidden="true">·</span>
                         <span>System: {act.sourceSystem}</span>
-                        <span>·</span>
+                        <span aria-hidden="true">·</span>
                         <span>Reference: {act.evidenceReference}</span>
                       </div>
                     </div>
@@ -767,18 +767,18 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
           {/* SECTION: WORKSTATION SYNC VERIFICATION */}
           {activeSection === 'sync_verification' && (
             <div className="space-y-6">
-              <div className="bg-white p-5 rounded-2xl border border-phumulani-cream space-y-4">
-                <h3 className="text-base font-bold text-phumulani-charcoal font-serif">
+              <div className="bg-white p-6 rounded-2xl border border-phumulani-charcoal/12 space-y-4">
+                <h3 className="text-base font-bold text-phumulani-charcoal font-heading">
                   Local Windows Development Synchronization Hub
                 </h3>
-                <p className="text-xs text-phumulani-charcoal">
+                <p className="text-xs text-phumulani-charcoal/75">
                   Verifies working tree state between local developer storage and the GitHub remote.
                 </p>
 
-                <div className="p-4 bg-phumulani-cream border border-phumulani-cream rounded-xl space-y-3 text-xs">
+                <div className="p-4 bg-phumulani-cream/70 border border-phumulani-charcoal/12 rounded-xl space-y-3 text-xs">
                   <div className="flex items-center justify-between">
                     <span className="font-bold text-phumulani-charcoal">Current Synchronization Status</span>
-                    <span className="font-mono font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded">
+                    <span className="font-mono font-bold text-phumulani-charcoal bg-phumulani-green/15 border border-phumulani-green/35 px-2.5 py-0.5 rounded-md">
                       {localSync.status}
                     </span>
                   </div>
@@ -788,7 +788,7 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                     <div>Local Commit: {localSync.localCommit}</div>
                     <div>Remote Commit: {localSync.remoteCommit}</div>
                   </div>
-                  <div className="p-3 bg-white border border-phumulani-cream rounded-lg text-phumulani-charcoal leading-relaxed">
+                  <div className="p-3 bg-white border border-phumulani-charcoal/12 rounded-lg text-phumulani-charcoal leading-relaxed">
                     <strong>Summary for Client Review:</strong> {localSync.sanitizedSummary}
                   </div>
                 </div>
@@ -799,11 +799,11 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
           {/* SECTION: APPROVALS */}
           {activeSection === 'approvals' && (
             <div className="space-y-6">
-              <div className="bg-white p-5 rounded-2xl border border-phumulani-cream space-y-4">
-                <h3 className="text-base font-bold text-phumulani-charcoal font-serif">
-                  Formal Client Milestone Sign-Off & Approvals
+              <div className="bg-white p-6 rounded-2xl border border-phumulani-charcoal/12 space-y-4">
+                <h3 className="text-base font-bold text-phumulani-charcoal font-heading">
+                  Formal Client Milestone Sign-Off &amp; Approvals
                 </h3>
-                <p className="text-xs text-phumulani-charcoal">
+                <p className="text-xs text-phumulani-charcoal/75">
                   Authorized client representatives can review deliverable evidence and grant version-bound approvals.
                 </p>
 
@@ -812,19 +812,19 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                     const isPending = m.developmentStatus === 'READY_FOR_CLIENT_REVIEW';
                     const hasApprovals = m.approvals && m.approvals.length > 0;
                     return (
-                      <div key={m.id} className="p-4 border border-phumulani-cream rounded-xl bg-phumulani-cream space-y-2 text-xs">
-                        <div className="flex items-center justify-between">
+                      <div key={m.id} className="p-4 border border-phumulani-charcoal/12 rounded-xl bg-phumulani-cream/60 space-y-2.5 text-xs">
+                        <div className="flex flex-wrap items-center justify-between gap-2">
                           <div>
-                            <span className="font-mono text-[10px] font-bold bg-white px-2 py-0.5 rounded border text-phumulani-charcoal">
+                            <span className="font-mono text-[10px] font-bold bg-white px-2 py-0.5 rounded-md border border-phumulani-charcoal/15 text-phumulani-charcoal">
                               {m.id}
                             </span>
                             <span className="font-bold text-phumulani-charcoal ml-2">{m.title}</span>
                           </div>
                           <span
-                            className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                            className={`text-[10px] font-bold px-2.5 py-0.5 rounded-md border ${
                               m.developmentStatus === 'CLIENT_APPROVED' || m.developmentStatus === 'PRODUCTION_VERIFIED'
-                                ? 'bg-phumulani-cream text-phumulani-charcoal'
-                                : 'bg-phumulani-cream text-phumulani-charcoal'
+                                ? 'bg-phumulani-green/15 text-phumulani-charcoal border-phumulani-green/40'
+                                : 'bg-white text-phumulani-charcoal border-phumulani-charcoal/15'
                             }`}
                           >
                             {m.developmentStatus}
@@ -832,22 +832,22 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                         </div>
 
                         {hasApprovals && (
-                          <div className="p-2.5 bg-white border border-phumulani-cream rounded-lg space-y-1 text-[11px]">
+                          <div className="p-3 bg-white border border-phumulani-charcoal/12 rounded-lg space-y-1 text-[11px]">
                             <span className="font-bold text-phumulani-charcoal">Latest Recorded Approval:</span>
                             {m.approvals.map((app) => (
-                              <div key={app.id} className="text-phumulani-charcoal">
+                              <div key={app.id} className="text-phumulani-charcoal/85">
                                 <strong>{app.approverName}</strong> ({app.approverRole}) — Decision: <span className="font-bold text-phumulani-charcoal">{app.decision}</span> on artifact <code className="font-mono bg-phumulani-cream px-1">{app.approvedArtifactVersion}</code> at {new Date(app.timestamp).toLocaleString()}.
-                                <p className="italic text-phumulani-charcoal">"{app.comments}"</p>
+                                <p className="italic text-phumulani-charcoal/80 mt-0.5">&quot;{app.comments}&quot;</p>
                               </div>
                             ))}
                           </div>
                         )}
 
                         {isPending && (
-                          <div className="flex justify-end pt-2">
+                          <div className="flex justify-end pt-1">
                             <button
                               onClick={() => setApprovalModalMilestone(m)}
-                              className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white font-bold text-xs rounded-lg cursor-pointer flex items-center gap-1.5"
+                              className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal font-bold text-xs rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors"
                             >
                               <ThumbsUp className="w-3.5 h-3.5" />
                               <span>Authorize Milestone Acceptance</span>
@@ -865,40 +865,42 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
           {/* SECTION: FEEDBACK LIST */}
           {activeSection === 'feedback_list' && (
             <div className="space-y-6">
-              <div className="bg-white p-5 rounded-2xl border border-phumulani-cream space-y-4">
+              <div className="bg-white p-6 rounded-2xl border border-phumulani-charcoal/12 space-y-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-base font-bold text-phumulani-charcoal font-serif">
-                    Client Feedback & Observations ({feedbacks.length})
+                  <h3 className="text-base font-bold text-phumulani-charcoal font-heading">
+                    Client Feedback &amp; Observations ({feedbacks.length})
                   </h3>
                   <button
                     onClick={() => setIsFeedbackModalOpen(true)}
-                    className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-bold rounded-lg cursor-pointer"
+                    className="px-3.5 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal text-xs font-bold rounded-lg cursor-pointer transition-colors"
                   >
                     + Submit New Feedback
                   </button>
                 </div>
 
-                <div className="divide-y divide-phumulani-cream border border-phumulani-cream rounded-xl overflow-hidden">
+                <div className="divide-y divide-phumulani-charcoal/10 border border-phumulani-charcoal/12 rounded-xl overflow-hidden">
                   {feedbacks.map((f) => (
-                    <div key={f.id} className="p-4 space-y-1.5 text-xs hover:bg-phumulani-cream">
-                      <div className="flex items-center justify-between">
+                    <div key={f.id} className="p-4 space-y-1.5 text-xs hover:bg-phumulani-cream/40 transition-colors">
+                      <div className="flex items-center justify-between gap-2">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs font-bold bg-phumulani-cream px-2 py-0.5 rounded text-phumulani-charcoal">
+                          <span className="font-mono text-xs font-bold bg-phumulani-cream border border-phumulani-charcoal/12 px-2 py-0.5 rounded-md text-phumulani-charcoal">
                             {f.id}
                           </span>
                           <strong className="text-phumulani-charcoal">{f.title}</strong>
                         </div>
                         <span
-                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                            f.status === 'RESOLVED' ? 'bg-phumulani-cream text-phumulani-charcoal' : 'bg-phumulani-cream text-phumulani-charcoal'
+                          className={`text-[10px] font-bold px-2.5 py-0.5 rounded-md border ${
+                            f.status === 'RESOLVED'
+                              ? 'bg-phumulani-green/15 text-phumulani-charcoal border-phumulani-green/35'
+                              : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-charcoal/15'
                           }`}
                         >
                           {f.status}
                         </span>
                       </div>
-                      <p className="text-phumulani-charcoal leading-relaxed">{f.description}</p>
+                      <p className="text-phumulani-charcoal/85 leading-relaxed">{f.description}</p>
                       {f.resolutionNotes && (
-                        <div className="p-2 bg-phumulani-cream border border-phumulani-green rounded text-[11px] text-phumulani-charcoal">
+                        <div className="p-2.5 bg-phumulani-green/15 border border-phumulani-green/35 rounded-lg text-[11px] text-phumulani-charcoal">
                           <strong>Resolution:</strong> {f.resolutionNotes}
                         </div>
                       )}
@@ -912,36 +914,36 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
           {/* SECTION: REPORTS */}
           {activeSection === 'reports' && (
             <div className="space-y-6">
-              <div className="bg-white p-5 rounded-2xl border border-phumulani-cream space-y-4">
-                <h3 className="text-base font-bold text-phumulani-charcoal font-serif">
+              <div className="bg-white p-6 rounded-2xl border border-phumulani-charcoal/12 space-y-4">
+                <h3 className="text-base font-bold text-phumulani-charcoal font-heading">
                   Automated Weekly Development Reports
                 </h3>
-                <p className="text-xs text-phumulani-charcoal">
+                <p className="text-xs text-phumulani-charcoal/75">
                   Comprehensive progress reports grounded strictly in verified system data.
                 </p>
 
                 {weeklyReports.map((r) => (
-                  <div key={r.id} className="border border-phumulani-cream rounded-xl p-5 space-y-3 text-xs bg-phumulani-cream">
-                    <div className="flex items-center justify-between border-b border-phumulani-cream pb-2">
+                  <div key={r.id} className="border border-phumulani-charcoal/12 rounded-xl p-5 space-y-3 text-xs bg-phumulani-cream/60">
+                    <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-2.5">
                       <div>
-                        <span className="font-mono font-bold bg-phumulani-cream text-phumulani-earth px-2 py-0.5 rounded">
+                        <span className="font-mono font-bold bg-white border border-phumulani-charcoal/12 text-phumulani-earth px-2 py-0.5 rounded-md">
                           {r.id}
                         </span>
-                        <span className="font-bold text-phumulani-charcoal ml-2">Period: {r.reportingPeriod}</span>
+                        <span className="font-bold text-phumulani-charcoal ml-2 tabular-nums">Period: {r.reportingPeriod}</span>
                       </div>
                       <button
                         onClick={() => window.print()}
-                        className="px-2.5 py-1 bg-white border border-phumulani-cream text-phumulani-charcoal font-semibold rounded hover:bg-phumulani-cream cursor-pointer flex items-center gap-1"
+                        className="px-3 py-1.5 bg-white border border-phumulani-charcoal/20 text-phumulani-charcoal font-semibold rounded-lg hover:bg-phumulani-cream cursor-pointer flex items-center gap-1 transition-colors"
                       >
                         <Download className="w-3.5 h-3.5" />
                         <span>Print Report</span>
                       </button>
                     </div>
-                    <div className="text-phumulani-charcoal leading-relaxed">
+                    <div className="text-phumulani-charcoal/90 leading-relaxed">
                       <strong>Executive Summary:</strong> {r.executiveSummary}
                     </div>
-                    <div className="text-phumulani-charcoal">
-                      <strong>GitHub & CI Activity:</strong> {r.githubActivitySummary}
+                    <div className="text-phumulani-charcoal/85">
+                      <strong>GitHub &amp; CI Activity:</strong> {r.githubActivitySummary}
                     </div>
                   </div>
                 ))}
@@ -952,26 +954,26 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
           {/* SECTION: DOCUMENTS */}
           {activeSection === 'documents' && (
             <div className="space-y-6">
-              <div className="bg-white p-5 rounded-2xl border border-phumulani-cream space-y-4">
-                <h3 className="text-base font-bold text-phumulani-charcoal font-serif">
+              <div className="bg-white p-6 rounded-2xl border border-phumulani-charcoal/12 space-y-4">
+                <h3 className="text-base font-bold text-phumulani-charcoal font-heading">
                   Official Project Document Library
                 </h3>
-                <p className="text-xs text-phumulani-charcoal">
+                <p className="text-xs text-phumulani-charcoal/75">
                   Approved proposals, architecture blueprints, test registers, and media preservation manifests.
                 </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {documents.map((doc) => (
-                    <div key={doc.id} className="p-4 bg-phumulani-cream border border-phumulani-cream rounded-xl space-y-2 text-xs">
+                    <div key={doc.id} className="p-4 bg-phumulani-cream/60 border border-phumulani-charcoal/12 rounded-xl space-y-2 text-xs">
                       <div className="flex justify-between items-start">
-                        <span className="text-[10px] font-bold uppercase text-phumulani-charcoal">{doc.category}</span>
-                        <span className="text-[10px] font-mono bg-white px-2 py-0.5 rounded border border-phumulani-cream">
+                        <span className="text-[10px] font-bold uppercase text-phumulani-charcoal/75">{doc.category}</span>
+                        <span className="text-[10px] font-mono bg-white px-2 py-0.5 rounded-md border border-phumulani-charcoal/12">
                           {doc.accessTier}
                         </span>
                       </div>
-                      <h4 className="font-bold text-phumulani-charcoal">{doc.title}</h4>
-                      <p className="text-[11px] text-phumulani-charcoal">{doc.description}</p>
-                      <div className="flex items-center justify-between text-[10px] text-phumulani-charcoal font-mono pt-2 border-t border-phumulani-cream">
+                      <h4 className="font-heading font-bold text-phumulani-charcoal">{doc.title}</h4>
+                      <p className="text-[11px] text-phumulani-charcoal/80">{doc.description}</p>
+                      <div className="flex items-center justify-between text-[10px] text-phumulani-charcoal/75 font-mono pt-2 border-t border-phumulani-charcoal/10">
                         <span>SHA: {doc.sha256Hash.substring(0, 10)}...</span>
                         <span>{doc.version}</span>
                       </div>
@@ -984,13 +986,13 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
         </main>
 
         {/* RIGHT CONTEXT PANEL — SECTION 05 */}
-        <aside className="hidden xl:flex flex-col w-80 bg-white border-l border-phumulani-cream p-5 overflow-y-auto shrink-0 space-y-5 text-xs">
+        <aside className="hidden xl:flex flex-col w-80 bg-white border-l border-phumulani-charcoal/12 p-5 overflow-y-auto shrink-0 space-y-5 text-xs">
           <div>
-            <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal">Context Inspector</span>
-            <h4 className="font-bold text-phumulani-charcoal text-sm mt-1">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/70">Context Inspector</span>
+            <h4 className="font-heading font-bold text-phumulani-charcoal text-sm mt-1">
               {selectedFeature ? selectedFeature.title : 'Feature Details'}
             </h4>
-            <span className="text-[10px] font-mono text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded border border-phumulani-teal mt-1 inline-block">
+            <span className="text-[10px] font-mono text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded-md border border-phumulani-teal/40 mt-1.5 inline-block">
               {selectedFeature?.id || 'FEAT-INSPECT'} · {selectedFeature?.category}
             </span>
           </div>
@@ -1055,16 +1057,16 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
       {isFeedbackModalOpen && (
         <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6 space-y-4 animate-fadeIn text-xs">
-            <h3 className="font-bold text-phumulani-charcoal font-serif text-base">
+            <h3 className="font-bold text-phumulani-charcoal font-heading text-base">
               Submit Client Feedback or Observation
             </h3>
-            <p className="text-phumulani-charcoal">
+            <p className="text-phumulani-charcoal/80">
               Your feedback is directly routed to the development team lead and tracked with a unique reference number.
             </p>
 
             {feedbackSuccessMsg && (
-              <div className="p-3 bg-phumulani-cream border border-phumulani-green rounded-lg text-phumulani-charcoal font-bold flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
+              <div className="p-3 bg-phumulani-green/15 border border-phumulani-green/40 rounded-lg text-phumulani-charcoal font-bold flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-phumulani-charcoal" />
                 <span>Feedback submitted successfully! Registered in audit trail.</span>
               </div>
             )}
@@ -1075,7 +1077,7 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                 <select
                   value={feedbackType}
                   onChange={(e) => setFeedbackType(e.target.value)}
-                  className="w-full mt-1 border border-phumulani-cream rounded-lg p-2 text-xs focus:ring-1 focus:ring-phumulani-earth outline-none"
+                  className="w-full mt-1 border border-phumulani-charcoal/20 rounded-lg p-2 text-xs focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none bg-white text-phumulani-charcoal"
                 >
                   <option>General Feedback</option>
                   <option>Design Change</option>
@@ -1096,7 +1098,7 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                   value={feedbackTitle}
                   onChange={(e) => setFeedbackTitle(e.target.value)}
                   placeholder="e.g. Clarify Safe Housing Bridge Fund impact text"
-                  className="w-full mt-1 border border-phumulani-cream rounded-lg p-2 text-xs focus:ring-1 focus:ring-phumulani-earth outline-none"
+                  className="w-full mt-1 border border-phumulani-charcoal/20 rounded-lg p-2 text-xs focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none bg-white text-phumulani-charcoal"
                   required
                 />
               </div>
@@ -1108,7 +1110,7 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                   onChange={(e) => setFeedbackDesc(e.target.value)}
                   placeholder="Provide concrete details or suggestions..."
                   rows={4}
-                  className="w-full mt-1 border border-phumulani-cream rounded-lg p-2 text-xs focus:ring-1 focus:ring-phumulani-earth outline-none"
+                  className="w-full mt-1 border border-phumulani-charcoal/20 rounded-lg p-2 text-xs focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none bg-white text-phumulani-charcoal"
                   required
                 />
               </div>
@@ -1118,7 +1120,7 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                 <select
                   value={feedbackPriority}
                   onChange={(e) => setFeedbackPriority(e.target.value)}
-                  className="w-full mt-1 border border-phumulani-cream rounded-lg p-2 text-xs focus:ring-1 focus:ring-phumulani-earth outline-none"
+                  className="w-full mt-1 border border-phumulani-charcoal/20 rounded-lg p-2 text-xs focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none bg-white text-phumulani-charcoal"
                 >
                   <option value="LOW">Low</option>
                   <option value="MEDIUM">Medium</option>
@@ -1131,13 +1133,13 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                 <button
                   type="button"
                   onClick={() => setIsFeedbackModalOpen(false)}
-                  className="px-3 py-1.5 border border-phumulani-cream rounded-lg text-phumulani-charcoal font-semibold cursor-pointer"
+                  className="px-3 py-1.5 border border-phumulani-charcoal/20 rounded-lg text-phumulani-charcoal font-semibold cursor-pointer hover:bg-phumulani-cream transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white font-bold rounded-lg cursor-pointer flex items-center gap-1.5"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal font-bold rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors"
                 >
                   <Send className="w-3.5 h-3.5" />
                   <span>Submit Observation</span>
@@ -1151,11 +1153,11 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
       {/* 5. FORMAL MILESTONE SIGN-OFF MODAL */}
       {approvalModalMilestone && (
         <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4 animate-fadeIn text-xs">
-            <h3 className="font-bold text-phumulani-charcoal font-serif text-base">
+          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6 space-y-4 text-xs border border-phumulani-charcoal/15">
+            <h3 className="font-bold text-phumulani-charcoal font-heading text-base">
               Milestone Sign-Off: {approvalModalMilestone.id}
             </h3>
-            <p className="text-phumulani-charcoal">
+            <p className="text-phumulani-charcoal/85">
               You are certifying that <strong>{approvalModalMilestone.title}</strong> has been inspected, tested, and accepted on release artifact <code className="font-mono bg-phumulani-cream px-1">v13.0-PREVIEW</code>.
             </p>
 
@@ -1166,14 +1168,14 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
                 onChange={(e) => setApprovalComments(e.target.value)}
                 placeholder="Enter sign-off comments or conditions..."
                 rows={3}
-                className="w-full mt-1 border border-phumulani-cream rounded-lg p-2 text-xs focus:ring-1 focus:ring-phumulani-earth outline-none"
+                className="w-full mt-1 border border-phumulani-charcoal/20 rounded-lg p-2 text-xs focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none bg-white text-phumulani-charcoal"
               />
             </div>
 
             <div className="flex justify-between items-center pt-2">
               <button
                 onClick={() => handleFormalApproval('REJECTED')}
-                className="px-3 py-1.5 bg-phumulani-cream text-phumulani-earth border border-phumulani-earth hover:bg-phumulani-cream rounded-lg font-bold cursor-pointer"
+                className="px-3 py-1.5 bg-phumulani-cream text-phumulani-earth border border-phumulani-earth/40 hover:bg-phumulani-earth hover:text-white rounded-lg font-bold cursor-pointer transition-colors"
               >
                 Request Revision
               </button>
@@ -1181,13 +1183,13 @@ export const ClientDevelopmentPortalView: React.FC<ClientDevelopmentPortalViewPr
               <div className="flex gap-2">
                 <button
                   onClick={() => setApprovalModalMilestone(null)}
-                  className="px-3 py-1.5 border border-phumulani-cream rounded-lg text-phumulani-charcoal font-semibold cursor-pointer"
+                  className="px-3 py-1.5 border border-phumulani-charcoal/20 rounded-lg text-phumulani-charcoal font-semibold cursor-pointer hover:bg-phumulani-cream transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={() => handleFormalApproval('APPROVED')}
-                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white font-bold rounded-lg cursor-pointer flex items-center gap-1.5"
+                  className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal font-bold rounded-lg cursor-pointer flex items-center gap-1.5 transition-colors"
                 >
                   <Check className="w-3.5 h-3.5" />
                   <span>Confirm Approval</span>

@@ -90,7 +90,7 @@ export const FounderSection: React.FC = () => {
   return (
     <section
       id="founder-section"
-      className="space-y-16 py-16 border-t border-phumulani-earth bg-white scroll-mt-28"
+      className="space-y-16 py-16 border-t border-phumulani-charcoal/12 bg-white scroll-mt-28"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         {/* 1. Header with Brand Crest */}
@@ -112,7 +112,7 @@ export const FounderSection: React.FC = () => {
           {/* Left: Authentic Executive Portrait */}
           <div className="lg:col-span-5 flex justify-center">
             <div className="relative max-w-[520px] w-full">
-              <div className="relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 border border-phumulani-earth bg-white group">
+              <div className="relative rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 border border-phumulani-charcoal/15 bg-white group">
                 <SafeImage
                   src={FOUNDER_IMAGE}
                   fallbackType="founder"
@@ -124,7 +124,7 @@ export const FounderSection: React.FC = () => {
                   width={1254}
                   height={1254}
                 />
-                <div className="p-4 sm:p-5 bg-phumulani-cream border-t border-phumulani-earth text-center">
+                <div className="p-4 sm:p-5 bg-phumulani-cream border-t border-phumulani-charcoal/12 text-center">
                   <div className="font-heading font-bold text-base text-phumulani-earth">
                     Comfort Dondo
                   </div>
@@ -141,7 +141,7 @@ export const FounderSection: React.FC = () => {
 
           {/* Right: Authentic Founding Story & Mission */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="bg-phumulani-cream border border-phumulani-earth p-5 sm:p-6 rounded-xl shadow-2xs">
+            <div className="bg-phumulani-cream border border-phumulani-charcoal/12 p-5 sm:p-6 rounded-xl shadow-2xs">
               <Quote className="w-6 h-6 text-phumulani-earth mb-2" strokeWidth={1.75} aria-hidden="true" />
               <p className="font-display-serif text-base sm:text-lg text-phumulani-charcoal italic leading-relaxed">
                 &ldquo;In Zulu, <em>Phumulani</em> means &lsquo;to rest&rsquo; or &lsquo;peace&rsquo;. When I fled violence as an immigrant mother in Minnesota, I realized that surviving is not enough. Survivors need a place of true spiritual rest, familiar meals, cultural sisterhood, and real economic keys to rebuild their lives.&rdquo;
@@ -159,33 +159,33 @@ export const FounderSection: React.FC = () => {
                 In 2017, Comfort established <strong>Phumulani: Minnesota African Women Against Violence</strong> as a grassroots 501(c)(3) nonprofit in Brooklyn Park. Under her guidance, Phumulani pioneered culturally specific <em>Healing Homes</em>, weekly <em>Tea Healing Circles</em>, Order for Protection court accompaniment, and the <em>Immigrant Women Entrepreneurship Lab</em>.
               </p>
               <p>
-                Today, Phumulani has walked beside over <strong>1,450 survivors and families</strong> across Hennepin, Ramsey, and surrounding Minnesota counties, distributing more than $480,000 in emergency rental aid and lease bridge funding.
+                Today, Phumulani has walked beside over <strong className="tabular-nums">1,450 survivors and families</strong> across Hennepin, Ramsey, and surrounding Minnesota counties, distributing more than <span className="tabular-nums font-semibold">$480,000</span> in emergency rental aid and lease bridge funding.
               </p>
             </div>
 
             {/* Core Values Pillars */}
-            <div className="grid grid-cols-3 gap-3 pt-2">
-              <div className="bg-phumulani-cream p-3.5 rounded-xl border border-phumulani-teal text-center hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-2">
+              <div className="bg-phumulani-cream p-4 rounded-xl border border-phumulani-charcoal/12 text-center hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
                 <ShieldCheck className="w-5 h-5 text-phumulani-earth mx-auto mb-1.5" strokeWidth={1.75} aria-hidden="true" />
                 <div className="font-heading font-bold text-xs text-phumulani-earth">Rest &amp; Refuge</div>
-                <div className="text-[10px] text-phumulani-charcoal mt-0.5">Culturally safe shelter</div>
+                <div className="text-[11px] text-phumulani-charcoal mt-0.5">Culturally safe shelter</div>
               </div>
-              <div className="bg-phumulani-cream p-3.5 rounded-xl border border-phumulani-green text-center hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
+              <div className="bg-phumulani-cream p-4 rounded-xl border border-phumulani-charcoal/12 text-center hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
                 <HeartHandshake className="w-5 h-5 text-phumulani-green mx-auto mb-1.5" strokeWidth={1.75} aria-hidden="true" />
                 <div className="font-heading font-bold text-xs text-phumulani-earth">Sisterhood</div>
-                <div className="text-[10px] text-phumulani-charcoal mt-0.5">Tea Healing Circles</div>
+                <div className="text-[11px] text-phumulani-charcoal mt-0.5">Tea Healing Circles</div>
               </div>
-              <div className="bg-phumulani-cream p-3.5 rounded-xl border border-phumulani-orange text-center hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
+              <div className="bg-phumulani-cream p-4 rounded-xl border border-phumulani-charcoal/12 text-center hover:-translate-y-0.5 hover:shadow-xs transition-all duration-200">
                 <Award className="w-5 h-5 text-phumulani-orange mx-auto mb-1.5" strokeWidth={1.75} aria-hidden="true" />
                 <div className="font-heading font-bold text-xs text-phumulani-earth">Autonomy</div>
-                <div className="text-[10px] text-phumulani-charcoal mt-0.5">Workforce &amp; LLC grants</div>
+                <div className="text-[11px] text-phumulani-charcoal mt-0.5">Workforce &amp; LLC grants</div>
               </div>
             </div>
           </div>
         </RevealSection>
 
         {/* 2.5 Executive Leadership in Action & Policy Advocacy */}
-        <RevealSection className="bg-phumulani-cream rounded-2xl border border-phumulani-earth overflow-hidden shadow-sm grid grid-cols-1 lg:grid-cols-12 items-center">
+        <RevealSection className="bg-phumulani-cream rounded-2xl border border-phumulani-charcoal/12 overflow-hidden shadow-xs grid grid-cols-1 lg:grid-cols-12 items-stretch">
           <div className="lg:col-span-7 relative aspect-[16/9] lg:aspect-auto lg:h-full bg-phumulani-cream overflow-hidden">
             <SafeImage
               src="/media/phumulani/founder-legacy/leadership.jpg"
@@ -196,7 +196,7 @@ export const FounderSection: React.FC = () => {
               loading="lazy"
             />
           </div>
-          <div className="lg:col-span-5 p-6 sm:p-8 space-y-4">
+          <div className="lg:col-span-5 p-6 sm:p-8 space-y-4 flex flex-col justify-center">
             <div className="text-xs font-bold text-phumulani-earth font-heading uppercase tracking-wider">
               Community Leadership in Action
             </div>
@@ -206,7 +206,7 @@ export const FounderSection: React.FC = () => {
             <p className="text-xs sm:text-sm text-phumulani-charcoal leading-relaxed font-sans">
               Beyond direct crisis intervention, Comfort Dondo mobilizes grassroots leaders, faith coalitions, and civic partners across the Twin Cities to dismantle barriers in domestic violence statutes and expand culturally specific protections.
             </p>
-            <div className="space-y-2 pt-3 border-t border-phumulani-earth text-xs text-phumulani-charcoal">
+            <div className="space-y-2 pt-3 border-t border-phumulani-charcoal/12 text-xs text-phumulani-charcoal">
               <div className="flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 text-phumulani-green shrink-0" strokeWidth={1.75} aria-hidden="true" />
                 <span>Minnesota Coalition for Battered Women &amp; Violence Free MN</span>
@@ -225,7 +225,7 @@ export const FounderSection: React.FC = () => {
 
         {/* 3. Original Video Preservation: Founder Interview */}
         <RevealSection className="space-y-5">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2 border-b border-phumulani-earth pb-3">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2 border-b border-phumulani-charcoal/12 pb-3">
             <div>
               <div className="text-xs font-bold text-phumulani-earth font-heading tracking-wider uppercase">
                 Authentic Video Archive
@@ -245,7 +245,7 @@ export const FounderSection: React.FC = () => {
             </div>
 
             <div className="lg:col-span-4 space-y-4">
-              <div className="bg-phumulani-cream p-5 rounded-2xl border border-phumulani-gold space-y-3">
+              <div className="bg-phumulani-cream p-5 rounded-2xl border border-phumulani-charcoal/12 space-y-3">
                 <div className="font-heading font-bold text-base text-phumulani-earth flex items-center gap-2">
                   <Film className="w-4 h-4 text-phumulani-orange" strokeWidth={1.75} aria-hidden="true" />
                   <span>About This Interview</span>
@@ -253,7 +253,7 @@ export const FounderSection: React.FC = () => {
                 <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">
                   In this foundational interview, Comfort Dondo details how cultural meals, linguistic safety, and holistic healing allow survivors to release trauma. She explains the essential role of community partnerships in Minnesota and why dignified housing must precede workforce transitions.
                 </p>
-                <div className="text-[11px] text-phumulani-charcoal space-y-1 pt-2 border-t border-phumulani-earth">
+                <div className="text-[11px] text-phumulani-charcoal space-y-1 pt-2 border-t border-phumulani-charcoal/12">
                   <div>
                     <strong>Speaker:</strong> Comfort Dondo (Founder)
                   </div>
@@ -267,7 +267,7 @@ export const FounderSection: React.FC = () => {
               </div>
 
               {newsVideo && (
-                <div className="bg-phumulani-cream p-4 rounded-xl border border-phumulani-teal text-xs text-phumulani-charcoal space-y-2">
+                <div className="bg-phumulani-cream p-4 rounded-xl border border-phumulani-charcoal/12 text-xs text-phumulani-charcoal space-y-2">
                   <div className="font-bold text-phumulani-earth font-heading flex items-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4 text-phumulani-green" strokeWidth={1.75} aria-hidden="true" />
                     <span>Also Featured On CCX Media News</span>
@@ -292,7 +292,7 @@ export const FounderSection: React.FC = () => {
 
         {/* 4. Authentic Publications by Comfort Dondo */}
         <div className="space-y-6 pt-4">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2 border-b border-phumulani-earth pb-3">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2 border-b border-phumulani-charcoal/12 pb-3">
             <div>
               <div className="text-xs font-bold text-phumulani-earth font-heading tracking-wider uppercase flex items-center gap-1.5">
                 <BookOpen className="w-3.5 h-3.5 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
@@ -310,8 +310,8 @@ export const FounderSection: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {publications.map((book, idx) => (
               <RevealItem key={book.id} index={idx} className="flex">
-                <div className="bg-white rounded-2xl border border-phumulani-earth hover:border-phumulani-orange overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col w-full group">
-                  {/* Luxury Showcase Frame: Editorial Photographic Environment + 3D Hardcover Book Mockup */}
+                <div className="bg-white rounded-2xl border border-phumulani-charcoal/12 hover:border-phumulani-earth/40 overflow-hidden shadow-xs hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col w-full group">
+                  {/* Editorial Showcase Frame: Editorial Photographic Environment + 3D Hardcover Book Mockup */}
                   <div className="relative h-80 sm:h-88 md:h-80 lg:h-88 overflow-hidden bg-phumulani-charcoal flex items-center justify-center p-4 select-none">
                     {/* Editorial Background Photography */}
                     <SafeImage
@@ -327,20 +327,6 @@ export const FounderSection: React.FC = () => {
                     {/* Cinematic Vignette */}
                     <div className="absolute inset-0 bg-gradient-to-t from-phumulani-charcoal/90 via-phumulani-charcoal/30 to-phumulani-charcoal/20" />
                     <div className="absolute inset-0 bg-gradient-to-b from-phumulani-charcoal/40 via-transparent to-phumulani-charcoal/80 pointer-events-none" />
-
-                    {/* Top Metadata */}
-                    <div className="absolute top-3 left-3 z-10 flex items-center gap-1.5">
-                      <span className="bg-phumulani-charcoal text-phumulani-cream text-[10px] font-mono px-2 py-0.5 rounded border border-phumulani-cream shadow-sm">
-                        {book.year}
-                      </span>
-                    </div>
-
-                    <div className="absolute top-3 right-3 z-10">
-                      <div className="bg-phumulani-charcoal text-phumulani-gold px-2.5 py-1 rounded-md text-[10px] font-bold border border-phumulani-gold font-heading tracking-wide shadow-md flex items-center gap-1">
-                        <Sparkles className="w-2.5 h-2.5" strokeWidth={1.75} aria-hidden="true" />
-                        <span>{book.tag}</span>
-                      </div>
-                    </div>
 
                     {/* 3D Hardcover Book Mockup */}
                     <div className="relative z-10 w-36 sm:w-40 md:w-36 lg:w-40 aspect-[2/3] transition-all duration-300 ease-out transform group-hover:-translate-y-1.5 group-hover:scale-103 group-hover:rotate-1">
@@ -368,15 +354,16 @@ export const FounderSection: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Subtle Gold Divider */}
-                  <div className="h-0.5 w-full bg-gradient-to-r from-transparent via-phumulani-gold to-transparent" />
+                  {/* Subtle Gold Hairline Accent */}
+                  <div className="h-px w-full bg-gradient-to-r from-transparent via-phumulani-gold to-transparent" />
 
                   {/* Publication Details */}
                   <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-4 bg-white">
                     <div className="space-y-1.5">
-                      <div className="flex items-center justify-between text-[11px] font-heading">
+                      <div className="flex items-center gap-2 text-[11px] font-heading">
                         <span className="text-phumulani-earth font-semibold">{book.tag}</span>
-                        <span className="text-phumulani-charcoal font-mono text-[10px]">{book.year} Publication</span>
+                        <span aria-hidden="true" className="text-phumulani-charcoal/40">·</span>
+                        <span className="text-phumulani-charcoal tabular-nums">{book.year}</span>
                       </div>
                       <h4 className="font-heading text-lg font-bold text-phumulani-earth group-hover:text-phumulani-orange transition-colors leading-snug">
                         {book.title}
@@ -389,7 +376,7 @@ export const FounderSection: React.FC = () => {
                       </p>
                     </div>
 
-                    <div className="pt-3 border-t border-phumulani-cream flex items-center justify-between">
+                    <div className="pt-3 border-t border-phumulani-charcoal/10 flex items-center justify-between">
                       <button
                         onClick={() => setSelectedBook(book.id)}
                         className="text-xs font-bold text-phumulani-earth hover:text-phumulani-orange flex items-center gap-1 cursor-pointer font-heading group/btn focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
@@ -397,7 +384,7 @@ export const FounderSection: React.FC = () => {
                         <span>Read Excerpts &amp; Details</span>
                         <ChevronRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-0.5" strokeWidth={1.75} aria-hidden="true" />
                       </button>
-                      <span className="text-[11px] text-phumulani-charcoal font-medium">By Comfort Dondo</span>
+                      <span className="text-[11px] text-phumulani-charcoal font-medium">Comfort Dondo</span>
                     </div>
                   </div>
                 </div>
@@ -407,8 +394,8 @@ export const FounderSection: React.FC = () => {
         </div>
 
         {/* 5. Authentic Community Circle Spotlight — The Tea Healing Circle Model */}
-        <RevealSection className="bg-phumulani-cream rounded-2xl border border-phumulani-gold p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-          <div className="lg:col-span-7 rounded-xl overflow-hidden shadow-sm border border-phumulani-earth bg-white aspect-[16/9] relative">
+        <RevealSection className="bg-phumulani-cream rounded-2xl border border-phumulani-charcoal/12 p-6 sm:p-8 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="lg:col-span-7 rounded-xl overflow-hidden shadow-xs border border-phumulani-charcoal/12 bg-white aspect-[16/9] relative">
             <SafeImage
               src="/images/programs/tea-healing-circle-premium.webp"
               fallbackSrc="/images/homepage/community-hero.svg"
@@ -431,8 +418,8 @@ export const FounderSection: React.FC = () => {
             <p className="text-xs sm:text-sm text-phumulani-charcoal leading-relaxed font-sans">
               Originated by Comfort Dondo at Phumulani, weekly Tea Healing Circles create a confidential sanctuary where African immigrant women gather to drink spiced tea, decompress from chronic survival stress, and share experiences without judgment.
             </p>
-            <div className="p-3.5 bg-white rounded-xl border border-phumulani-gold text-xs text-phumulani-charcoal space-y-1">
-              <div className="font-bold text-phumulani-earth font-heading">Weekly Facilitation:</div>
+            <div className="p-4 bg-white rounded-xl border border-phumulani-charcoal/12 text-xs text-phumulani-charcoal space-y-1">
+              <div className="font-bold text-phumulani-earth font-heading">Weekly Facilitation</div>
               <div className="font-sans">Certified trauma advocates &amp; intergenerational peer mentors.</div>
             </div>
           </div>
@@ -449,14 +436,14 @@ export const FounderSection: React.FC = () => {
           }}
           className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn"
         >
-          <div className="bg-white rounded-2xl max-w-2xl w-full border border-phumulani-earth shadow-2xl p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl max-w-2xl w-full border border-phumulani-charcoal/15 shadow-2xl p-6 sm:p-8 space-y-6 max-h-[90vh] overflow-y-auto">
             {(() => {
               const book = publications.find((b) => b.id === selectedBook)!;
               return (
                 <>
-                  <div className="flex justify-between items-start border-b border-phumulani-cream pb-4">
+                  <div className="flex justify-between items-start border-b border-phumulani-charcoal/12 pb-4">
                     <div className="space-y-1">
-                      <span className="text-[11px] font-bold text-phumulani-earth uppercase tracking-wider font-heading">
+                      <span className="text-[11px] font-bold text-phumulani-earth uppercase tracking-wider font-heading tabular-nums">
                         {book.tag} · {book.year}
                       </span>
                       <h3 className="font-heading text-2xl font-bold text-phumulani-earth">{book.title}</h3>
@@ -473,7 +460,7 @@ export const FounderSection: React.FC = () => {
 
                   <div className="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center">
                     <div className="sm:col-span-4 flex justify-center">
-                      <div className="relative w-full max-w-[200px] aspect-[3/4] rounded-xl overflow-hidden p-3 bg-phumulani-charcoal flex items-center justify-center border border-phumulani-earth shadow-lg">
+                      <div className="relative w-full max-w-[200px] aspect-[3/4] rounded-xl overflow-hidden p-3 bg-phumulani-charcoal flex items-center justify-center border border-phumulani-charcoal/15 shadow-lg">
                         <SafeImage
                           src={book.editorialImage}
                           fallbackSrc={book.cover}
@@ -500,20 +487,20 @@ export const FounderSection: React.FC = () => {
                     </div>
                     <div className="sm:col-span-8 space-y-3 text-xs sm:text-sm text-phumulani-charcoal leading-relaxed font-sans">
                       <p>{book.synopsis}</p>
-                      <p className="text-[11px] text-phumulani-charcoal italic bg-phumulani-cream p-3 rounded-lg border border-phumulani-gold">
+                      <p className="text-[11px] text-phumulani-charcoal italic bg-phumulani-cream p-3 rounded-lg border border-phumulani-charcoal/12">
                         {book.attribution}
                       </p>
                     </div>
                   </div>
 
-                  <div className="space-y-3 pt-2 border-t border-phumulani-cream">
+                  <div className="space-y-3 pt-2 border-t border-phumulani-charcoal/12">
                     <div className="text-xs font-bold text-phumulani-earth uppercase tracking-wide font-heading">
-                      Selected Excerpt:
+                      Selected Excerpt
                     </div>
                     {book.excerpts.map((excerpt, i) => (
                       <div
                         key={i}
-                        className="p-4 bg-phumulani-cream border border-phumulani-earth rounded-xl text-xs sm:text-sm italic font-display-serif text-phumulani-charcoal leading-relaxed"
+                        className="p-4 bg-phumulani-cream border border-phumulani-charcoal/12 rounded-xl text-xs sm:text-sm italic font-display-serif text-phumulani-charcoal leading-relaxed"
                       >
                         {excerpt}
                       </div>
@@ -523,7 +510,7 @@ export const FounderSection: React.FC = () => {
                   <div className="flex justify-end pt-2">
                     <button
                       onClick={() => setSelectedBook(null)}
-                      className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold cursor-pointer font-heading shadow-sm focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                      className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg text-xs font-bold cursor-pointer font-heading shadow-sm transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                     >
                       Close Window
                     </button>

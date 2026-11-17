@@ -6909,10 +6909,10 @@ function sendOAuthCallbackResponse(
   const messageText = String(payload.message || payload.error || (payload.success ? 'You may close this window.' : 'Authorization could not be completed.'));
   const escapedText = messageText.replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch] || ch));
   return res.status(statusCode).type('html').send(`<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><title>${title}</title><style>.phumulani-close-btn{background:#B3340F;color:#FFFFFF;border:none;border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer;}.phumulani-close-btn:hover{background:#EF5C2C;}</style></head>
-<body style="font-family:system-ui,sans-serif;padding:24px;background:#EFEBD1;color:#333333;">
-  <div style="max-width:460px;margin:40px auto;background:#FFFFFF;border:1px solid #B3340F;border-radius:12px;padding:20px;">
-    <h2 style="margin:0 0 8px 0;font-size:18px;color:#B3340F;">${heading}</h2>
+<html lang="en"><head><meta charset="utf-8"><title>${title}</title><style>.phumulani-close-btn{background:#A63C14;color:#FFFFFF;border:none;border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer;}.phumulani-close-btn:hover{background:#F97316;color:#333333;}</style></head>
+<body style="font-family:system-ui,sans-serif;padding:24px;background:#F7F3E0;color:#333333;">
+  <div style="max-width:460px;margin:40px auto;background:#FFFFFF;border:1px solid #A63C14;border-radius:12px;padding:20px;">
+    <h2 style="margin:0 0 8px 0;font-size:18px;color:#A63C14;">${heading}</h2>
     <p style="margin:0 0 16px 0;font-size:14px;color:#333333;">${escapedText}</p>
     <button onclick="window.close()" class="phumulani-close-btn">Close Window</button>
   </div>

@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  * EmptyState — Reusable Empty State Component
- * Palette: Deep Earth (#B3340F), Peace Orange (#EF5C2C), Soft Cream (#EFEBD1), Charcoal (#333333)
+ * Palette: Deep Earth (#A63C14), Sunrise Orange (#F97316), Soft Cream (#F7F3E0), Charcoal (#333333)
  */
 
 import React from 'react';
@@ -28,14 +28,14 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 }) => {
   return (
     <div
-      className={`bg-white rounded-2xl border border-phumulani-earth p-8 sm:p-12 text-center max-w-lg mx-auto my-6 space-y-4 shadow-2xs ${className}`}
+      className={`bg-white rounded-2xl border border-phumulani-charcoal/15 p-8 sm:p-12 text-center max-w-lg mx-auto my-6 space-y-4 shadow-2xs ${className}`}
     >
-      <div className="w-14 h-14 rounded-full bg-phumulani-cream border border-phumulani-earth flex items-center justify-center mx-auto text-phumulani-earth">
-        {icon || <Inbox className="w-7 h-7 text-phumulani-earth" />}
+      <div className="w-12 h-12 rounded-xl bg-phumulani-cream border border-phumulani-charcoal/15 flex items-center justify-center mx-auto text-phumulani-earth">
+        {icon || <Inbox className="w-6 h-6 text-phumulani-earth" />}
       </div>
-      <div className="space-y-1">
+      <div className="space-y-1.5">
         <h3 className="font-heading font-bold text-base text-phumulani-earth">{title}</h3>
-        <p className="text-xs text-phumulani-charcoal font-sans leading-relaxed">{description}</p>
+        <p className="text-xs text-phumulani-charcoal/90 leading-relaxed">{description}</p>
       </div>
       {actionLabel && onAction && (
         <div className="pt-2">

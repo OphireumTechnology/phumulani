@@ -433,8 +433,8 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
   return (
     <div className="space-y-16 pb-20 font-sans min-w-0 overflow-x-clip">
-      {/* 1. HERO BANNER - ELEGANT NONPROFIT REFINEMENT */}
-      <section className="relative overflow-hidden bg-phumulani-cream pt-10 sm:pt-14 pb-14 sm:pb-18 border-b border-phumulani-gold">
+      {/* 1. HERO BANNER */}
+      <section className="relative overflow-hidden bg-phumulani-cream pt-10 sm:pt-14 pb-14 sm:pb-18 border-b border-phumulani-charcoal/12">
         {/* Culturally grounded low-contrast geometric lattice background accent */}
         <div className="hidden md:block absolute right-0 bottom-0 w-[520px] h-[410px] pointer-events-none">
           <CulturalGeometricAccent variant="hero-lattice" className="w-full h-full" />
@@ -451,13 +451,12 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 className="flex flex-wrap items-center gap-2 text-xs font-semibold tracking-wider uppercase text-phumulani-earth font-heading"
               >
                 <span>Minnesota 501(c)(3)</span>
-                <span aria-hidden="true" className="text-phumulani-charcoal">
+                <span aria-hidden="true" className="text-phumulani-charcoal/50">
                   ·
                 </span>
                 <span>The Voice of Immigrants &amp; Refugees</span>
               </motion.div>
 
-              {/* Exact wording with responsive typography and balanced breaks */}
               <motion.h1
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -469,7 +468,6 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 <span className="text-phumulani-earth">&amp; Autonomy</span>
               </motion.h1>
 
-              {/* Official Mission Statement */}
               <motion.p
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -479,7 +477,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 To empower immigrant and refugee survivors through culturally specific advocacy, safety, housing stability, education, and economic opportunity.
               </motion.p>
 
-              {/* Standardized 3 CTA Buttons with consistent heights and 44px+ touch targets */}
+              {/* Action Controls */}
               <motion.div
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -490,9 +488,9 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   onClick={() => {
                     document.getElementById('donate-section')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="min-h-[44px] h-12 bg-phumulani-earth hover:bg-phumulani-orange text-white px-5 sm:px-6 rounded-lg text-xs sm:text-sm font-heading font-bold shadow-xs hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-orange group"
+                  className="min-h-[44px] h-12 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white px-5 sm:px-6 rounded-lg text-xs sm:text-sm font-heading font-bold shadow-xs hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-orange group whitespace-nowrap"
                 >
-                  <Heart className="w-4 h-4 fill-white transition-transform duration-200 group-hover:scale-110" strokeWidth={1.75} aria-hidden="true" />
+                  <Heart className="w-4 h-4 transition-transform duration-200 group-hover:scale-110" strokeWidth={1.75} aria-hidden="true" />
                   <span>Support Our Mission</span>
                 </button>
 
@@ -500,9 +498,9 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   onClick={() => {
                     document.getElementById('get-involved-section')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="min-h-[44px] h-12 bg-white hover:bg-phumulani-gold text-phumulani-earth hover:text-phumulani-charcoal border border-phumulani-earth px-5 sm:px-6 rounded-lg text-xs sm:text-sm font-heading font-semibold transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth"
+                  className="min-h-[44px] h-12 bg-white hover:bg-phumulani-gold/25 text-phumulani-charcoal border border-phumulani-charcoal/20 px-5 sm:px-6 rounded-lg text-xs sm:text-sm font-heading font-semibold transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth whitespace-nowrap"
                 >
-                  <UsersRound className="w-4 h-4" strokeWidth={1.75} aria-hidden="true" />
+                  <UsersRound className="w-4 h-4 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
                   <span>Become a Volunteer or Mentor</span>
                 </button>
 
@@ -510,7 +508,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   onClick={() => {
                     document.getElementById('get-help-section')?.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="min-h-[44px] h-12 bg-phumulani-cream hover:bg-white text-phumulani-earth border border-phumulani-earth px-4 sm:px-5 rounded-lg text-xs sm:text-sm font-heading font-semibold transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth"
+                  className="min-h-[44px] h-12 bg-transparent hover:bg-white text-phumulani-earth border border-phumulani-earth/35 px-4 sm:px-5 rounded-lg text-xs sm:text-sm font-heading font-semibold transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-phumulani-earth whitespace-nowrap"
                 >
                   <LifeBuoy className="w-4 h-4 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
                   <span>Need Help? Safe Routing</span>
@@ -525,9 +523,9 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               transition={{ duration: 0.65, delay: 0.16, ease: [0.22, 1, 0.36, 1] }}
               className="lg:col-span-5"
             >
-              <div className="bg-white rounded-2xl border border-phumulani-gold shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+              <div className="bg-white rounded-2xl border border-phumulani-charcoal/12 shadow-md hover:shadow-xl transition-shadow duration-300 overflow-hidden">
                 {/* Official Community Hero Photography */}
-                <div className="relative aspect-[4/3] bg-phumulani-charcoal overflow-hidden border-b border-phumulani-cream group">
+                <div className="relative aspect-[4/3] bg-phumulani-charcoal overflow-hidden border-b border-phumulani-charcoal/10 group">
                   <SafeImage
                     src={HERO_IMAGE}
                     fallbackSrc="/media/homepage/phumulani-homepage-hero.webp"
@@ -536,22 +534,23 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                     className="w-full h-full object-cover object-center transition-transform duration-700 ease-out group-hover:scale-[1.02]"
                     loading="eager"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-phumulani-charcoal/80 via-transparent to-transparent pointer-events-none" />
-                  <div className="absolute bottom-3 left-3 bg-phumulani-charcoal backdrop-blur-md text-white px-3 py-1 rounded-md text-[11px] font-heading font-semibold tracking-wide border border-phumulani-gold shadow-sm">
-                    Culturally Grounded Sanctuary
+                  <div className="absolute inset-0 bg-gradient-to-t from-phumulani-charcoal/85 via-phumulani-charcoal/15 to-transparent pointer-events-none flex items-end p-4">
+                    <span className="text-white font-heading font-semibold text-xs tracking-wide">
+                      Culturally Grounded Sanctuary · Minneapolis, MN
+                    </span>
                   </div>
                 </div>
 
                 <div className="p-5 sm:p-6 space-y-4">
                   {/* Founder Identification */}
-                  <div className="flex items-center justify-between border-b border-phumulani-cream pb-3 gap-2">
+                  <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3 gap-2">
                     <div className="flex items-center gap-3 min-w-0">
                       <SafeImage
                         src={FOUNDER_IMAGE}
                         fallbackType="founder"
                         initials="CD"
                         alt="Phumulani Foundation Founder — Official Corporate Portrait"
-                        className="w-12 h-12 rounded-xl object-contain bg-white border border-phumulani-earth shrink-0"
+                        className="w-12 h-12 rounded-xl object-contain bg-white border border-phumulani-charcoal/15 shrink-0"
                         loading="lazy"
                         decoding="async"
                         width={1254}
@@ -586,16 +585,16 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   </p>
 
                   <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div className="bg-phumulani-cream p-3.5 rounded-xl border border-phumulani-gold">
-                      <div className="font-heading text-lg font-extrabold text-phumulani-earth">
+                    <div className="bg-phumulani-cream p-3.5 rounded-xl border border-phumulani-charcoal/12">
+                      <div className="font-heading text-lg font-extrabold text-phumulani-earth tabular-nums">
                         <CountUpMetric value={1450} suffix="+" immediate />
                       </div>
                       <div className="text-[11px] text-phumulani-charcoal mt-0.5 font-medium">
                         Survivors &amp; Families
                       </div>
                     </div>
-                    <div className="bg-phumulani-cream p-3.5 rounded-xl border border-phumulani-gold">
-                      <div className="font-heading text-lg font-extrabold text-phumulani-earth">
+                    <div className="bg-phumulani-cream p-3.5 rounded-xl border border-phumulani-charcoal/12">
+                      <div className="font-heading text-lg font-extrabold text-phumulani-earth tabular-nums">
                         <CountUpMetric value={480} prefix="$" suffix="k+" formatWithCommas={false} immediate />
                       </div>
                       <div className="text-[11px] text-phumulani-charcoal mt-0.5 font-medium">
@@ -604,12 +603,12 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                     </div>
                   </div>
 
-                  <div className="p-2.5 bg-phumulani-cream border border-phumulani-teal rounded-xl flex items-center justify-between text-xs gap-2">
+                  <div className="p-2.5 bg-phumulani-cream/70 border border-phumulani-charcoal/12 rounded-xl flex items-center justify-between text-xs gap-2">
                     <div className="flex items-center gap-2 text-phumulani-charcoal">
                       <ShieldCheck className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
                       <span className="font-medium text-[11px]">Strict Survivor Confidentiality</span>
                     </div>
-                    <span className="text-[10px] text-phumulani-earth font-mono font-semibold inline-flex items-center gap-1 shrink-0">
+                    <span className="text-[10px] text-phumulani-earth font-mono font-semibold inline-flex items-center gap-1 shrink-0 tabular-nums">
                       <LockKeyhole className="w-3 h-3" strokeWidth={1.75} aria-hidden="true" />
                       <span>VAWA § 1367</span>
                     </span>
@@ -621,7 +620,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         </div>
       </section>
 
-      {/* 1.5 OFFICIAL CORE VALUES (FROM BRAND IDENTITY GUIDE REFERENCE A) */}
+      {/* 1.5 OFFICIAL CORE VALUES */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <RevealSection className="text-center max-w-2xl mx-auto mb-9 space-y-2.5">
           <div className="text-xs font-bold text-phumulani-earth font-heading uppercase tracking-wider">
@@ -672,8 +671,8 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
             const Icon = val.icon;
             return (
               <RevealItem key={val.title} index={idx}>
-                <div className="h-full bg-phumulani-cream p-4 sm:p-5 rounded-2xl border border-phumulani-gold hover:border-phumulani-earth text-center hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col items-center">
-                  <div className="w-12 h-12 rounded-full bg-white border border-phumulani-gold flex items-center justify-center mb-3 shadow-2xs">
+                <div className="h-full bg-white p-4 sm:p-5 rounded-2xl border border-phumulani-charcoal/12 hover:border-phumulani-earth/40 text-center hover:shadow-md hover:-translate-y-1 transition-all duration-200 flex flex-col items-center">
+                  <div className="w-11 h-11 rounded-xl bg-phumulani-cream border border-phumulani-charcoal/12 flex items-center justify-center mb-3 shadow-2xs">
                     <Icon className="w-5 h-5 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
                   </div>
                   <h3 className="font-heading font-bold text-sm text-phumulani-charcoal leading-snug">
@@ -691,12 +690,12 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
       {/* 2. STATS & COMMUNITY IMPACT SUMMARY */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <RevealSection className="bg-white rounded-2xl border border-phumulani-gold shadow-sm overflow-hidden">
+        <RevealSection className="bg-white rounded-2xl border border-phumulani-charcoal/12 shadow-xs overflow-hidden">
           <BrandPatternDivider variant="subtle" height={4} />
           <div className="p-6 sm:p-8">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center divide-y lg:divide-y-0 lg:divide-x divide-phumulani-cream">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 text-center divide-y lg:divide-y-0 lg:divide-x divide-phumulani-charcoal/10">
               <div className="p-2">
-                <div className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-earth">
+                <div className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-earth tabular-nums">
                   <CountUpMetric value={1450} suffix="+" />
                 </div>
                 <div className="text-xs text-phumulani-charcoal font-medium mt-1.5">
@@ -704,7 +703,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 </div>
               </div>
               <div className="p-2 pt-6 lg:pt-2">
-                <div className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-earth">
+                <div className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-earth tabular-nums">
                   <CountUpMetric value={480000} prefix="$" suffix="+" />
                 </div>
                 <div className="text-xs text-phumulani-charcoal font-medium mt-1.5">
@@ -712,7 +711,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 </div>
               </div>
               <div className="p-2 pt-6 lg:pt-2">
-                <div className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-earth">
+                <div className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-earth tabular-nums">
                   <CountUpMetric value={92} suffix="%" formatWithCommas={false} />
                 </div>
                 <div className="text-xs text-phumulani-charcoal font-medium mt-1.5">
@@ -720,7 +719,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 </div>
               </div>
               <div className="p-2 pt-6 lg:pt-2">
-                <div className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-earth">
+                <div className="font-heading text-3xl sm:text-4xl font-extrabold text-phumulani-earth tabular-nums">
                   <CountUpMetric value={100} suffix="%" formatWithCommas={false} />
                 </div>
                 <div className="text-xs text-phumulani-charcoal font-medium mt-1.5">
@@ -792,9 +791,9 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
             return (
               <RevealItem key={prog.id} index={idx} className="flex">
-                <div className="bg-white rounded-2xl border border-phumulani-cream overflow-hidden flex flex-col justify-between w-full hover:border-phumulani-earth hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group">
+                <div className="bg-white rounded-2xl border border-phumulani-charcoal/12 overflow-hidden flex flex-col justify-between w-full hover:border-phumulani-earth/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group">
                   {/* Authentic Program Artwork */}
-                  <div className="aspect-[4/3] w-full bg-phumulani-cream overflow-hidden border-b border-phumulani-cream">
+                  <div className="aspect-[4/3] w-full bg-phumulani-cream overflow-hidden border-b border-phumulani-charcoal/10">
                     <SafeImage
                       src={progMedia.src}
                       fallbackSrc={progMedia.fallback}
@@ -827,9 +826,9 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                         </p>
                       </div>
 
-                      <div className="pt-2 space-y-1.5 border-t border-phumulani-cream">
+                      <div className="pt-2 space-y-1.5 border-t border-phumulani-charcoal/10">
                         <div className="text-[11px] font-semibold font-heading text-phumulani-charcoal">
-                          Key Services:
+                          Key Services
                         </div>
                         <ul className="text-[11px] text-phumulani-charcoal space-y-1 font-sans">
                           {prog.keyServices.slice(0, 3).map((s, idx2) => (
@@ -842,7 +841,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                       </div>
                     </div>
 
-                    <div className="pt-4 border-t border-phumulani-cream flex items-center justify-between text-xs">
+                    <div className="pt-4 border-t border-phumulani-charcoal/10 flex items-center justify-between text-xs">
                       <span className="text-phumulani-charcoal font-medium tabular-nums">
                         {prog.beneficiariesCount}+ Supported
                       </span>
@@ -863,18 +862,18 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
       </section>
 
       {/* 4. FOUNDER STORY & ABOUT PHUMULANI */}
-      <section id="about-section" className="bg-phumulani-cream py-16 border-y border-phumulani-gold scroll-mt-28">
+      <section id="about-section" className="bg-white py-16 border-y border-phumulani-charcoal/12 scroll-mt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <RevealSection className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             <div className="lg:col-span-5 space-y-4">
-              <div className="bg-white rounded-2xl p-6 border border-phumulani-gold shadow-md space-y-4">
+              <div className="bg-phumulani-cream rounded-2xl p-6 border border-phumulani-charcoal/12 shadow-xs space-y-4">
                 <div className="flex items-center gap-4">
                   <SafeImage
                     src={FOUNDER_IMAGE}
                     fallbackType="founder"
                     initials="CD"
                     alt="Phumulani Foundation Founder — Official Corporate Portrait"
-                    className="w-20 h-20 rounded-2xl object-contain bg-white border-2 border-phumulani-earth shadow-md shrink-0"
+                    className="w-20 h-20 rounded-2xl object-contain bg-white border border-phumulani-charcoal/15 shadow-xs shrink-0"
                     loading="lazy"
                     decoding="async"
                     width={1254}
@@ -893,7 +892,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   </div>
                 </div>
 
-                <p className="text-xs sm:text-[13px] text-phumulani-charcoal leading-relaxed italic font-display-serif py-2 border-y border-phumulani-cream">
+                <p className="text-xs sm:text-[13px] text-phumulani-charcoal leading-relaxed italic font-display-serif py-2 border-y border-phumulani-charcoal/10">
                   &ldquo;Healing is not merely surviving an ordeal—it is finding the courage, community, and economic standing to dream boldly again. Phumulani exists so no immigrant survivor walks alone.&rdquo;
                 </p>
 
@@ -924,7 +923,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
             <div className="lg:col-span-7 space-y-6">
               {/* Community Solidarity Hero Visual */}
-              <div className="relative rounded-2xl overflow-hidden border border-phumulani-teal shadow-md aspect-[16/9] group">
+              <div className="relative rounded-2xl overflow-hidden border border-phumulani-charcoal/12 shadow-md aspect-[16/9] group">
                 <SafeImage
                   src="/media/phumulani/about/community-solidarity.jpg"
                   fallbackSrc="/images/homepage/community-hero.svg"
@@ -1007,7 +1006,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   ].map((leader) => (
                     <div
                       key={leader.name}
-                      className="bg-white p-3 rounded-xl border border-phumulani-cream hover:border-phumulani-earth hover:-translate-y-0.5 shadow-2xs transition-all duration-200 space-y-1.5"
+                      className="bg-phumulani-cream/60 p-3 rounded-xl border border-phumulani-charcoal/12 hover:border-phumulani-earth/40 hover:-translate-y-0.5 shadow-2xs transition-all duration-200 space-y-1.5"
                     >
                       <SafeImage
                         src={leader.src}
@@ -1055,7 +1054,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         </RevealSection>
 
         {/* Featured Volunteer Action Banner */}
-        <RevealSection className="mb-8 rounded-2xl overflow-hidden border border-phumulani-teal shadow-sm bg-phumulani-charcoal text-white grid grid-cols-1 lg:grid-cols-12 items-center">
+        <RevealSection className="mb-8 rounded-2xl overflow-hidden border border-phumulani-charcoal/15 shadow-sm bg-phumulani-charcoal text-white grid grid-cols-1 lg:grid-cols-12 items-stretch">
           <div className="lg:col-span-7 relative aspect-[16/9] lg:aspect-auto lg:h-full bg-phumulani-charcoal overflow-hidden">
             <SafeImage
               src="/media/phumulani/get-involved/volunteers.jpg"
@@ -1066,7 +1065,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               loading="lazy"
             />
           </div>
-          <div className="lg:col-span-5 p-6 sm:p-8 space-y-3.5">
+          <div className="lg:col-span-5 p-6 sm:p-8 space-y-3.5 flex flex-col justify-center">
             <div className="inline-flex items-center gap-1.5 text-xs font-bold font-heading text-phumulani-gold uppercase tracking-wider">
               <HandHeart className="w-4 h-4 text-phumulani-gold" strokeWidth={1.75} aria-hidden="true" />
               <span>Community In Action</span>
@@ -1074,8 +1073,8 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
             <h3 className="font-heading text-2xl font-bold text-white">
               Every Hour Contributed Creates Safety
             </h3>
-            <p className="text-xs sm:text-sm text-phumulani-teal leading-relaxed font-sans">
-              Our volunteers package dignity kits, accompany survivors to court appointments, mentor youth, and host bilingual conversation circles. Join over 120 active volunteers across the Twin Cities.
+            <p className="text-xs sm:text-sm text-phumulani-cream leading-relaxed font-sans">
+              Our volunteers package dignity kits, accompany survivors to court appointments, mentor youth, and host bilingual conversation circles. Join over <span className="tabular-nums font-semibold">120</span> active volunteers across the Twin Cities.
             </p>
             <div className="pt-2 text-xs text-phumulani-gold font-semibold flex items-center gap-2 font-heading">
               <CheckCircle2 className="w-4 h-4 shrink-0" strokeWidth={1.75} aria-hidden="true" />
@@ -1085,11 +1084,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         </RevealSection>
 
         {submittedAppId && (
-          <div className="mb-6 p-4 bg-phumulani-cream border border-phumulani-green rounded-xl flex items-center justify-between text-xs text-phumulani-charcoal">
+          <div className="mb-6 p-4 bg-white border border-phumulani-green rounded-xl flex items-center justify-between text-xs text-phumulani-charcoal">
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
               <span>
-                Application submitted successfully! Your tracking ID is <strong>{submittedAppId}</strong>. A volunteer coordinator has received your profile.
+                Application submitted successfully! Your tracking ID is <strong className="tabular-nums">{submittedAppId}</strong>. A volunteer coordinator has received your profile.
               </span>
             </div>
             <button
@@ -1104,15 +1103,15 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {opportunities.map((opp, idx) => (
             <RevealItem key={opp.id} index={idx} className="flex">
-              <div className="bg-white rounded-2xl border border-phumulani-cream p-5 flex flex-col justify-between w-full hover:border-phumulani-earth hover:shadow-md hover:-translate-y-1 transition-all duration-200">
+              <div className="bg-white rounded-2xl border border-phumulani-charcoal/12 p-5 flex flex-col justify-between w-full hover:border-phumulani-earth/40 hover:shadow-md hover:-translate-y-1 transition-all duration-200">
                 <div className="space-y-3">
-                  <div className="flex justify-between items-start gap-2 text-[10px] font-heading">
+                  <div className="flex justify-between items-start gap-2 text-[11px] font-heading">
                     <span className="font-semibold text-phumulani-earth">
                       {opp.commitment}
                     </span>
                     {opp.urgent && (
-                      <span className="font-bold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded border border-phumulani-gold shrink-0">
-                        Urgent Need
+                      <span className="font-bold text-phumulani-earth shrink-0">
+                        · Urgent Need
                       </span>
                     )}
                   </div>
@@ -1125,7 +1124,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                     {opp.description}
                   </p>
 
-                  <div className="text-[11px] text-phumulani-charcoal space-y-1 pt-2 border-t border-phumulani-cream font-sans">
+                  <div className="text-[11px] text-phumulani-charcoal space-y-1 pt-2 border-t border-phumulani-charcoal/10 font-sans">
                     <div className="flex items-center gap-1.5">
                       <MapPin className="w-3.5 h-3.5 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
                       <span>{opp.location}</span>
@@ -1139,7 +1138,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
                 <button
                   onClick={() => setSelectedOpportunity(opp)}
-                  className="mt-5 w-full min-h-[42px] bg-phumulani-earth hover:bg-phumulani-orange text-white py-2.5 px-3 rounded-lg text-xs font-semibold font-heading transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                  className="mt-5 w-full min-h-[42px] bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white py-2.5 px-3 rounded-lg text-xs font-semibold font-heading transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 >
                   Apply for Opportunity
                 </button>
@@ -1149,10 +1148,10 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         </div>
       </section>
 
-      {/* 6. DONATION & FUNDRAISING (HOSTED CHECKOUT SIMULATOR) */}
+      {/* 6. DONATION & FUNDRAISING */}
       <section
         id="donate-section"
-        className="bg-phumulani-charcoal text-white py-16 relative overflow-hidden border-t border-phumulani-teal scroll-mt-28"
+        className="bg-phumulani-charcoal text-white py-16 relative overflow-hidden border-t border-phumulani-gold/30 scroll-mt-28"
       >
         <div className="hidden lg:block absolute top-0 right-0 w-[420px] h-[260px] pointer-events-none">
           <CulturalGeometricAccent variant="dark-woven" className="w-full h-full" />
@@ -1176,7 +1175,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               </p>
 
               {/* Community Celebration & Gratitude Visual */}
-              <div className="relative rounded-xl overflow-hidden border border-phumulani-earth shadow-md aspect-[16/9] group">
+              <div className="relative rounded-xl overflow-hidden border border-white/15 shadow-md aspect-[16/9] group">
                 <SafeImage
                   src="/media/phumulani/donations/impact-gathering.jpg"
                   fallbackSrc="/images/events/community-celebration.svg"
@@ -1209,14 +1208,14 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                       className={`p-4 rounded-xl border transition-all duration-200 cursor-pointer ${
                         isSelected
                           ? 'bg-phumulani-charcoal border-phumulani-orange shadow-md'
-                          : 'bg-phumulani-charcoal border-phumulani-teal hover:border-phumulani-gold'
+                          : 'bg-phumulani-charcoal border-white/15 hover:border-phumulani-gold'
                       }`}
                     >
                       <div className="flex justify-between items-start text-xs font-semibold font-heading gap-2">
                         <span className="text-white">{camp.title}</span>
                         <span className="text-phumulani-gold tabular-nums shrink-0">{percent}% Funded</span>
                       </div>
-                      <div className="w-full bg-phumulani-charcoal border border-phumulani-teal rounded-full h-2 my-2 overflow-hidden">
+                      <div className="w-full bg-white/15 rounded-full h-2 my-2 overflow-hidden">
                         <div
                           className="bg-phumulani-orange h-2 rounded-full transition-all duration-500"
                           style={{ width: `${percent}%` }}
@@ -1236,9 +1235,9 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
             {/* Right Column: Checkout Form */}
             <div className="lg:col-span-6">
-              <div className="bg-white text-phumulani-charcoal rounded-2xl p-6 sm:p-8 shadow-2xl border border-phumulani-gold">
+              <div className="bg-white text-phumulani-charcoal rounded-2xl p-6 sm:p-8 shadow-2xl border border-phumulani-charcoal/12">
                 <form onSubmit={handleDonationSubmit} className="space-y-5">
-                  <div className="flex justify-between items-center border-b border-phumulani-cream pb-3 gap-2">
+                  <div className="flex justify-between items-center border-b border-phumulani-charcoal/10 pb-3 gap-2">
                     <div className="font-heading text-xl font-bold text-phumulani-charcoal">
                       Make a Donation
                     </div>
@@ -1281,10 +1280,10 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                           key={amt}
                           type="button"
                           onClick={() => setDonationAmount(amt)}
-                          className={`py-2.5 rounded-lg text-xs font-bold font-heading border transition-colors cursor-pointer ${
+                          className={`py-2.5 rounded-lg text-xs font-bold font-heading tabular-nums border transition-colors cursor-pointer ${
                             donationAmount === amt
-                              ? 'bg-phumulani-cream border-phumulani-orange text-phumulani-earth'
-                              : 'bg-white border-phumulani-cream text-phumulani-charcoal hover:border-phumulani-cream'
+                              ? 'bg-phumulani-cream border-phumulani-earth text-phumulani-earth'
+                              : 'bg-white border-phumulani-charcoal/20 text-phumulani-charcoal hover:border-phumulani-earth'
                           }`}
                         >
                           ${amt}
@@ -1296,7 +1295,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   {/* Custom Amount */}
                   <div>
                     <label className="block text-xs font-medium text-phumulani-charcoal mb-1 font-sans">
-                      Or Enter Custom Amount:
+                      Or Enter Custom Amount
                     </label>
                     <div className="relative">
                       <span className="absolute left-3 top-2.5 text-phumulani-charcoal font-bold text-xs">$</span>
@@ -1305,7 +1304,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                         min="5"
                         value={donationAmount}
                         onChange={(e) => setDonationAmount(Number(e.target.value))}
-                        className="w-full pl-7 pr-3 py-2 text-xs font-bold font-heading border border-phumulani-cream rounded-lg focus:ring-1 focus:ring-phumulani-earth outline-none"
+                        className="w-full pl-7 pr-3 py-2 text-xs font-bold font-heading tabular-nums border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none"
                       />
                     </div>
                   </div>
@@ -1319,7 +1318,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                         value={donorName}
                         onChange={(e) => setDonorName(e.target.value)}
                         placeholder="Marcus Vance"
-                        className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none font-sans"
+                        className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none font-sans"
                       />
                     </div>
                     <div>
@@ -1329,22 +1328,22 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                         value={donorEmail}
                         onChange={(e) => setDonorEmail(e.target.value)}
                         placeholder="donor@example.com"
-                        className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none font-sans"
+                        className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none font-sans"
                       />
                     </div>
                   </div>
 
                   {/* Payment Gateway Status & Transparency Banner */}
-                  <div className={`p-3.5 rounded-xl text-xs space-y-1.5 ${
+                  <div className={`p-3.5 rounded-xl text-xs space-y-1.5 border ${
                     gatewayConfig.liveCheckoutEnabled
-                      ? 'bg-phumulani-cream border border-phumulani-green text-phumulani-charcoal'
-                      : 'bg-phumulani-cream border border-phumulani-gold text-phumulani-charcoal'
+                      ? 'bg-phumulani-cream border-phumulani-green text-phumulani-charcoal'
+                      : 'bg-phumulani-cream border-phumulani-charcoal/15 text-phumulani-charcoal'
                   }`}>
-                    <div className="font-heading font-bold flex items-center gap-1.5">
-                      <ShieldCheck className={`w-4 h-4 ${gatewayConfig.liveCheckoutEnabled ? 'text-phumulani-earth' : 'text-phumulani-earth'}`} />
+                    <div className="font-heading font-bold flex items-center gap-1.5 text-phumulani-earth">
+                      <ShieldCheck className="w-4 h-4 shrink-0" />
                       <span>{gatewayConfig.liveCheckoutEnabled ? 'Live Verified Payment Gateway (Stripe SSL)' : 'Payment Gateway In Configuration Mode'}</span>
                     </div>
-                    <p className="text-[11px] leading-relaxed font-sans opacity-90">
+                    <p className="text-[11px] leading-relaxed font-sans">
                       {gatewayConfig.liveCheckoutEnabled
                         ? 'Payments are processed directly via secure PCI-DSS Level 1 provider checkout. Your tax receipt is generated upon webhook verification.'
                         : 'Online credit card charging is temporarily disabled pending production merchant credentials. You may record a tax-deductible donor pledge below or contact donations@phumulani.org for wire/ACH transfer.'}
@@ -1361,13 +1360,13 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   {pledgeConfirmed ? (
                     <div className="p-5 bg-phumulani-cream border border-phumulani-teal rounded-xl space-y-3 text-center">
                       <CheckCircle2 className="w-8 h-8 text-phumulani-earth mx-auto" />
-                      <div className="font-heading text-base font-bold text-phumulani-earth">
+                      <div className="font-heading text-base font-bold text-phumulani-earth tabular-nums">
                         Donor Pledge Recorded: {pledgeConfirmed.reference}
                       </div>
-                      <p className="text-xs text-phumulani-charcoal font-sans leading-relaxed">
+                      <p className="text-xs text-phumulani-charcoal font-sans leading-relaxed tabular-nums">
                         Thank you for pledging <strong>${pledgeConfirmed.amount}</strong> toward <em>{pledgeConfirmed.campaignTitle}</em>. Our Finance Office will contact you to coordinate funds transfer.
                       </p>
-                      <div className="text-[11px] text-phumulani-charcoal font-sans bg-white p-2.5 rounded-lg border border-phumulani-teal">
+                      <div className="text-[11px] text-phumulani-charcoal font-sans bg-white p-2.5 rounded-lg border border-phumulani-charcoal/12">
                         Official 501(c)(3) tax receipt is legally issued upon verified funds settlement.
                       </div>
                       <button
@@ -1394,7 +1393,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                       <button
                         type="submit"
                         disabled={isDonating}
-                        className="w-full py-3 bg-phumulani-earth hover:bg-phumulani-orange disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg text-sm font-heading font-bold shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-orange"
+                        className="w-full py-3 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg text-sm font-heading font-bold shadow-md transition-colors flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-orange tabular-nums"
                       >
                         {isDonating ? (
                           <>
@@ -1403,7 +1402,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                           </>
                         ) : (
                           <>
-                            <Heart className="w-4 h-4 fill-white" />
+                            <Heart className="w-4 h-4" />
                             <span>
                               {gatewayConfig.liveCheckoutEnabled
                                 ? `Proceed to Secure Checkout ($${donationAmount})`
@@ -1480,8 +1479,8 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
             return (
               <RevealItem key={evt.id} index={idx} className="flex">
-                <div className="bg-white rounded-2xl border border-phumulani-cream overflow-hidden flex flex-col justify-between w-full hover:border-phumulani-earth hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group">
-                  <div className="aspect-[16/9] w-full bg-phumulani-cream overflow-hidden border-b border-phumulani-cream">
+                <div className="bg-white rounded-2xl border border-phumulani-charcoal/12 overflow-hidden flex flex-col justify-between w-full hover:border-phumulani-earth/40 hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group">
+                  <div className="aspect-[16/9] w-full bg-phumulani-cream overflow-hidden border-b border-phumulani-charcoal/10">
                     <SafeImage
                       src={eventImgConfig.src}
                       fallbackSrc={eventImgConfig.fallback}
@@ -1499,7 +1498,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                         <span className="font-semibold font-heading text-phumulani-earth">
                           {evt.category}
                         </span>
-                        <span className="text-[11px] font-bold font-heading bg-phumulani-cream text-phumulani-charcoal px-2.5 py-0.5 rounded border border-phumulani-gold tabular-nums shrink-0">
+                        <span className="text-[11px] font-semibold font-heading text-phumulani-charcoal tabular-nums shrink-0">
                           {isFull ? `Waitlist Active (${evt.waitlistCount})` : `${evt.capacity - evt.registeredCount} Seats Left`}
                         </span>
                       </div>
@@ -1512,7 +1511,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                         {evt.description}
                       </p>
 
-                      <div className="space-y-1.5 text-xs text-phumulani-charcoal pt-3 border-t border-phumulani-cream font-sans">
+                      <div className="space-y-1.5 text-xs text-phumulani-charcoal pt-3 border-t border-phumulani-charcoal/10 font-sans">
                         <div className="flex items-center gap-2">
                           <CalendarDays className="w-3.5 h-3.5 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
                           <span>
@@ -1526,7 +1525,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                         </div>
                         <div className="flex items-center gap-2">
                           <Clock className="w-3.5 h-3.5 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
-                          <span>{evt.time}</span>
+                          <span className="tabular-nums">{evt.time}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <MapPin className="w-3.5 h-3.5 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
@@ -1535,13 +1534,13 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                       </div>
                     </div>
 
-                    <div className="mt-6 pt-4 border-t border-phumulani-cream">
+                    <div className="mt-6 pt-4 border-t border-phumulani-charcoal/10">
                       <button
                         onClick={() => setSelectedEvent(evt)}
                         className={`w-full min-h-[42px] py-2.5 rounded-lg text-xs font-semibold font-heading transition-colors cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-phumulani-earth ${
                           isFull
                             ? 'bg-phumulani-gold hover:bg-phumulani-orange text-phumulani-charcoal font-bold'
-                            : 'bg-phumulani-earth hover:bg-phumulani-orange text-white'
+                            : 'bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white'
                         }`}
                       >
                         {isFull ? 'Join Priority Waitlist' : 'RSVP / Register'}
@@ -1555,14 +1554,14 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         </div>
       </section>
 
-      {/* 8. DISCREET GET HELP HUB & SAFE EXIT (SECTION 4.2 & 6.5) */}
+      {/* 8. DISCREET GET HELP HUB & SAFE EXIT */}
       <section id="get-help-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-28">
-        <RevealSection className="bg-phumulani-cream border-2 border-phumulani-earth rounded-2xl p-6 sm:p-10 shadow-sm">
+        <RevealSection className="bg-white border border-phumulani-earth/30 rounded-2xl p-6 sm:p-10 shadow-sm">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             <div className="lg:col-span-5 space-y-4">
               <div className="inline-flex items-center gap-2 text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">
                 <LifeBuoy className="w-4 h-4 text-phumulani-earth" strokeWidth={1.75} aria-hidden="true" />
-                <span>CONFIDENTIAL SAFEGUARDING ROUTE</span>
+                <span>Confidential Safeguarding Route</span>
               </div>
 
               <h2 className="font-heading text-3xl font-extrabold text-phumulani-earth">
@@ -1573,10 +1572,10 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 If you are an immigrant or refugee survivor in Minnesota seeking safety, shelter, or legal protection, you can reach out here discreetly.
               </p>
 
-              <div className="bg-white p-4 rounded-xl border border-phumulani-earth text-xs space-y-2 text-phumulani-charcoal font-sans">
+              <div className="bg-phumulani-cream p-4 rounded-xl border border-phumulani-charcoal/12 text-xs space-y-2 text-phumulani-charcoal font-sans">
                 <div className="font-bold font-heading text-phumulani-earth flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
-                  <span>Our Privacy &amp; Safeguarding Guarantees:</span>
+                  <span>Privacy &amp; Safeguarding Guarantees</span>
                 </div>
                 <ul className="space-y-1 list-disc list-inside text-[11px] text-phumulani-charcoal">
                   <li>No third-party tracking scripts or advertising cookies</li>
@@ -1586,14 +1585,14 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 </ul>
               </div>
 
-              <div className="p-3.5 bg-white border border-phumulani-gold rounded-xl text-xs text-phumulani-earth flex items-center justify-between gap-2">
+              <div className="p-4 bg-phumulani-cream border border-phumulani-charcoal/12 rounded-xl text-xs text-phumulani-earth flex items-center justify-between gap-2">
                 <div>
-                  <div className="font-bold font-heading">Immediate Crisis Line 24/7:</div>
+                  <div className="font-bold font-heading">Immediate Crisis Line 24/7</div>
                   <div className="text-sm font-semibold font-heading tabular-nums">1-866-223-1111 (Call or Text)</div>
                 </div>
                 <button
                   onClick={() => window.location.replace('https://weather.com')}
-                  className="bg-phumulani-earth hover:bg-phumulani-orange text-white px-3 py-2 rounded-lg text-xs font-semibold font-heading flex items-center gap-1 cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                  className="bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white px-3.5 py-2 rounded-lg text-xs font-semibold font-heading flex items-center gap-1 cursor-pointer shrink-0 transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                 >
                   <span>Quick Exit</span>
                   <ExternalLink className="w-3 h-3" strokeWidth={1.75} aria-hidden="true" />
@@ -1602,13 +1601,13 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
             </div>
 
             {/* Discreet Intake Form */}
-            <div className="lg:col-span-7 bg-white rounded-2xl p-6 border border-phumulani-earth shadow-sm">
+            <div className="lg:col-span-7 bg-phumulani-cream/40 rounded-2xl p-6 border border-phumulani-charcoal/12">
               {helpSubmittedCode ? (
                 <div className="space-y-4 text-center py-6">
-                  <div className="w-12 h-12 bg-phumulani-cream text-phumulani-charcoal rounded-full flex items-center justify-center mx-auto">
+                  <div className="w-12 h-12 bg-phumulani-cream text-phumulani-charcoal rounded-full flex items-center justify-center mx-auto border border-phumulani-charcoal/12">
                     <CheckCircle2 className="w-6 h-6 text-phumulani-earth" />
                   </div>
-                  <div className="font-heading text-xl font-bold text-phumulani-charcoal">
+                  <div className="font-heading text-xl font-bold text-phumulani-charcoal tabular-nums">
                     Safe Intake Reference: {helpSubmittedCode}
                   </div>
                   <p className="text-xs text-phumulani-charcoal max-w-md mx-auto leading-relaxed font-sans">
@@ -1616,14 +1615,14 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   </p>
                   <button
                     onClick={() => setHelpSubmittedCode(null)}
-                    className="text-xs font-semibold font-heading text-phumulani-earth hover:underline"
+                    className="text-xs font-semibold font-heading text-phumulani-earth hover:underline cursor-pointer"
                   >
                     Submit another discreet inquiry
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleHelpSubmit} className="space-y-4">
-                  <div className="font-heading text-base font-bold text-phumulani-charcoal border-b border-phumulani-cream pb-2">
+                  <div className="font-heading text-base font-bold text-phumulani-charcoal border-b border-phumulani-charcoal/10 pb-2">
                     Discreet Communication Intake
                   </div>
 
@@ -1633,7 +1632,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                       <select
                         value={helpMethod}
                         onChange={(e) => setHelpMethod(e.target.value as any)}
-                        className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white text-xs font-sans"
+                        className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none bg-white text-xs font-sans"
                       >
                         <option value="safe_email">Safe Email (one only you access)</option>
                         <option value="phone">Phone / WhatsApp (Voice or Text)</option>
@@ -1646,7 +1645,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                       <select
                         value={helpLanguage}
                         onChange={(e) => setHelpLanguage(e.target.value)}
-                        className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white text-xs font-sans"
+                        className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none bg-white text-xs font-sans"
                       >
                         <option value="Somali">Soomaali (Somali)</option>
                         <option value="Oromo">Afaan Oromoo (Oromo)</option>
@@ -1660,14 +1659,14 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
                   <div className="text-xs">
                     <label className="block font-medium text-phumulani-charcoal mb-1 font-sans">
-                      Safest Time of Day to Contact:
+                      Safest Time of Day to Contact
                     </label>
                     <input
                       type="text"
                       value={helpSafeTime}
                       onChange={(e) => setHelpSafeTime(e.target.value)}
                       placeholder="e.g., Weekday mornings 10am-12pm when alone"
-                      className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none text-xs font-sans"
+                      className="w-full px-3 py-2 bg-white border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none text-xs font-sans"
                       required
                     />
                   </div>
@@ -1676,7 +1675,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                     <div className="p-3 bg-phumulani-cream border border-phumulani-earth rounded-lg text-xs text-phumulani-earth flex items-start gap-2">
                       <AlertTriangle className="w-4 h-4 shrink-0 text-phumulani-earth mt-0.5" />
                       <div>
-                        <div className="font-bold">Submission Notice:</div>
+                        <div className="font-bold">Submission Notice</div>
                         <div>{helpError}</div>
                       </div>
                     </div>
@@ -1684,14 +1683,14 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
                   <div className="text-xs">
                     <label className="block font-medium text-phumulani-charcoal mb-1 font-sans">
-                      Brief Message or Safe Phone / Email:
+                      Brief Message or Safe Phone / Email
                     </label>
                     <textarea
                       rows={3}
                       value={helpNotes}
                       onChange={(e) => setHelpNotes(e.target.value)}
                       placeholder="Enter safe contact info and general need (housing, court support, food). Do not include dangerous details."
-                      className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none text-xs font-sans focus:border-phumulani-earth"
+                      className="w-full px-3 py-2 bg-white border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none text-xs font-sans"
                       required
                     />
                   </div>
@@ -1699,7 +1698,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   <button
                     type="submit"
                     disabled={isSubmittingHelp}
-                    className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-orange disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg text-xs font-bold font-heading transition-colors cursor-pointer shadow-xs flex items-center justify-center gap-2"
+                    className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg text-xs font-bold font-heading transition-colors cursor-pointer shadow-xs flex items-center justify-center gap-2"
                   >
                     {isSubmittingHelp ? (
                       <>
@@ -1722,8 +1721,8 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         </RevealSection>
       </section>
 
-      {/* 9. MISSION, VISION & CORE VALUES (#mission-section) */}
-      <section id="mission-section" className="bg-gradient-to-b from-white to-phumulani-cream py-16 border-t border-phumulani-cream scroll-mt-28">
+      {/* 9. MISSION, VISION & CORE VALUES */}
+      <section id="mission-section" className="bg-white py-16 border-t border-phumulani-charcoal/12 scroll-mt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
           <RevealSection className="text-center max-w-3xl mx-auto space-y-3">
             <div className="inline-flex items-center gap-1.5 text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">
@@ -1763,8 +1762,8 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               },
             ].map((item, idx) => (
               <RevealItem key={item.num} index={idx} className="flex">
-                <div className="bg-white p-6 rounded-2xl border border-phumulani-cream shadow-xs space-y-3 hover:border-phumulani-earth hover:shadow-md hover:-translate-y-1 transition-all duration-200 w-full">
-                  <div className="w-10 h-10 rounded-xl bg-phumulani-cream border border-phumulani-gold text-phumulani-earth flex items-center justify-center font-bold font-heading tabular-nums">
+                <div className="bg-phumulani-cream/70 p-6 rounded-2xl border border-phumulani-charcoal/12 shadow-2xs space-y-3 hover:border-phumulani-earth/40 hover:shadow-md hover:-translate-y-1 transition-all duration-200 w-full">
+                  <div className="w-10 h-10 rounded-xl bg-white border border-phumulani-charcoal/15 text-phumulani-earth flex items-center justify-center font-bold font-heading tabular-nums">
                     {item.num}
                   </div>
                   <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">{item.title}</h3>
@@ -1776,7 +1775,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         </div>
       </section>
 
-      {/* 10. STRATEGIC PARTNERSHIPS & ALLIANCES (#partnerships-section) */}
+      {/* 10. STRATEGIC PARTNERSHIPS & ALLIANCES */}
       <section id="partnerships-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 scroll-mt-28">
         <RevealSection className="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-10 gap-4">
           <div>
@@ -1795,7 +1794,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               const el = document.getElementById('contact-section');
               if (el) el.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="px-4 py-2.5 border-2 border-phumulani-earth text-phumulani-earth hover:bg-phumulani-cream rounded-lg text-xs font-bold font-heading flex items-center gap-1.5 cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth group"
+            className="px-4 py-2.5 bg-white border border-phumulani-earth/40 text-phumulani-earth hover:bg-phumulani-earth hover:text-white rounded-lg text-xs font-bold font-heading flex items-center gap-1.5 cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth group whitespace-nowrap"
           >
             <span>Partner With Phumulani</span>
             <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" strokeWidth={1.75} aria-hidden="true" />
@@ -1832,7 +1831,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
             const Icon = partner.icon;
             return (
               <RevealItem key={partner.title} index={idx} className="flex">
-                <div className="bg-white p-5 rounded-2xl border border-phumulani-cream hover:border-phumulani-earth hover:shadow-md hover:-translate-y-1 transition-all duration-200 shadow-2xs space-y-2.5 w-full">
+                <div className="bg-white p-5 rounded-2xl border border-phumulani-charcoal/12 hover:border-phumulani-earth/40 hover:shadow-md hover:-translate-y-1 transition-all duration-200 shadow-2xs space-y-2.5 w-full">
                   <div className="flex items-center gap-2 text-xs font-bold font-heading text-phumulani-earth">
                     <Icon className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
                     <span>{partner.title}</span>
@@ -1848,8 +1847,8 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         </div>
       </section>
 
-      {/* 11. NEWS, COMMUNITY BULLETINS & PUBLICATIONS (#news-section) */}
-      <section id="news-section" className="bg-phumulani-cream py-16 border-y border-phumulani-gold scroll-mt-28">
+      {/* 11. NEWS, COMMUNITY BULLETINS & PUBLICATIONS */}
+      <section id="news-section" className="bg-white py-16 border-y border-phumulani-charcoal/12 scroll-mt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           <RevealSection className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
             <div>
@@ -1896,16 +1895,16 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               },
             ].map((item, idx) => (
               <RevealItem key={item.title} index={idx} className="flex">
-                <div className="bg-white rounded-2xl p-6 border border-phumulani-cream shadow-xs flex flex-col justify-between space-y-4 w-full hover:border-phumulani-earth hover:shadow-md hover:-translate-y-1 transition-all duration-200">
+                <div className="bg-phumulani-cream/60 rounded-2xl p-6 border border-phumulani-charcoal/12 shadow-2xs flex flex-col justify-between space-y-4 w-full hover:border-phumulani-earth/40 hover:shadow-md hover:-translate-y-1 transition-all duration-200">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between text-xs text-phumulani-charcoal font-sans gap-2">
                       <span className="font-bold font-heading text-phumulani-earth">{item.badge}</span>
-                      <span>{item.meta}</span>
+                      <span className="tabular-nums">{item.meta}</span>
                     </div>
                     <h3 className="font-heading text-xl font-bold text-phumulani-charcoal">{item.title}</h3>
                     <p className="text-xs text-phumulani-charcoal leading-relaxed font-sans">{item.desc}</p>
                   </div>
-                  <div className="pt-4 border-t border-phumulani-cream flex items-center justify-between text-xs gap-2">
+                  <div className="pt-4 border-t border-phumulani-charcoal/10 flex items-center justify-between text-xs gap-2">
                     <span className="font-bold text-phumulani-charcoal font-sans">{item.leftFooter}</span>
                     <span className="text-phumulani-earth font-semibold font-heading text-right">{item.rightFooter}</span>
                   </div>
@@ -1916,7 +1915,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         </div>
       </section>
 
-      {/* 12. SURVIVOR RIGHTS & COMMUNITY RESOURCES (#resources-section) */}
+      {/* 12. SURVIVOR RIGHTS & COMMUNITY RESOURCES */}
       <section id="resources-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-8 scroll-mt-28">
         <RevealSection className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-4">
           <div>
@@ -1932,15 +1931,15 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
             </p>
           </div>
 
-          <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 bg-phumulani-cream p-1.5 rounded-xl text-xs max-w-full border border-phumulani-gold">
+          <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 bg-white p-1.5 rounded-xl text-xs max-w-full border border-phumulani-charcoal/15">
             {(['all', 'legal', 'housing', 'healing', 'workforce'] as const).map((cat) => (
               <button
                 key={cat}
                 onClick={() => setResourceFilter(cat)}
-                className={`px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg font-semibold font-heading capitalize cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth ${
+                className={`px-3 py-1.5 rounded-lg font-semibold font-heading capitalize cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth ${
                   resourceFilter === cat
                     ? 'bg-phumulani-earth text-white shadow-2xs'
-                    : 'text-phumulani-charcoal hover:text-phumulani-earth'
+                    : 'text-phumulani-charcoal hover:text-phumulani-earth hover:bg-phumulani-cream/60'
                 }`}
               >
                 {cat}
@@ -1950,7 +1949,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         </RevealSection>
 
         {downloadNotice && (
-          <div className="p-3 bg-phumulani-cream border border-phumulani-teal rounded-xl text-xs font-semibold text-phumulani-earth flex items-center justify-between font-sans">
+          <div className="p-3 bg-white border border-phumulani-teal rounded-xl text-xs font-semibold text-phumulani-earth flex items-center justify-between font-sans">
             <span>{downloadNotice}</span>
             <button onClick={() => setDownloadNotice(null)} className="text-phumulani-earth cursor-pointer">
               ✕
@@ -1963,11 +1962,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
             .filter((res) => resourceFilter === 'all' || res.category === resourceFilter)
             .map((res, idx) => (
               <RevealItem key={res.id} index={idx} className="flex">
-                <div className="bg-white p-5 rounded-2xl border border-phumulani-cream shadow-xs space-y-3 flex flex-col justify-between w-full hover:border-phumulani-earth hover:shadow-md hover:-translate-y-1 transition-all duration-200">
+                <div className="bg-white p-5 rounded-2xl border border-phumulani-charcoal/12 shadow-2xs space-y-3 flex flex-col justify-between w-full hover:border-phumulani-earth/40 hover:shadow-md hover:-translate-y-1 transition-all duration-200">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-[11px] text-phumulani-charcoal font-sans gap-2">
                       <span className="font-bold font-heading text-phumulani-earth">{res.tag}</span>
-                      <span>
+                      <span className="tabular-nums">
                         {res.format} · {res.fileSize}
                       </span>
                     </div>
@@ -1981,7 +1980,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   <button
                     type="button"
                     onClick={() => handleDownloadResource(res)}
-                    className="w-full min-h-[40px] py-2 bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-earth hover:text-phumulani-charcoal border border-phumulani-gold rounded-lg text-xs font-semibold font-heading flex items-center justify-center gap-1.5 cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                    className="w-full min-h-[40px] py-2 bg-phumulani-cream hover:bg-phumulani-earth text-phumulani-earth hover:text-white border border-phumulani-charcoal/12 rounded-lg text-xs font-semibold font-heading flex items-center justify-center gap-1.5 cursor-pointer transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                   >
                     <Download className="w-3.5 h-3.5" strokeWidth={1.75} aria-hidden="true" />
                     <span>Download {res.format}</span>
@@ -1992,8 +1991,8 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         </div>
       </section>
 
-      {/* 13. CONTACT INFORMATION & SECURE INQUIRY (#contact-section) */}
-      <section id="contact-section" className="bg-phumulani-cream py-16 border-t border-phumulani-gold scroll-mt-28">
+      {/* 13. CONTACT INFORMATION & SECURE INQUIRY */}
+      <section id="contact-section" className="bg-phumulani-cream py-16 border-t border-phumulani-charcoal/12 scroll-mt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
             <div className="lg:col-span-5 space-y-6">
@@ -2008,25 +2007,25 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               </div>
 
               <div className="space-y-4 text-xs font-sans">
-                <div className="flex items-start gap-3 bg-white p-3.5 rounded-xl border border-phumulani-gold shadow-2xs">
+                <div className="flex items-start gap-3 bg-white p-3.5 rounded-xl border border-phumulani-charcoal/12 shadow-2xs">
                   <MapPin className="w-4 h-4 text-phumulani-earth shrink-0 mt-0.5" />
                   <div>
                     <div className="font-bold font-heading text-phumulani-charcoal">Mailing &amp; Operational Address</div>
                     <div className="text-phumulani-charcoal">Phumulani (Minnesota African Women Against Violence)</div>
-                    <div className="text-phumulani-charcoal">PO Box, Minneapolis, MN 55404</div>
+                    <div className="text-phumulani-charcoal tabular-nums">PO Box, Minneapolis, MN 55404</div>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 bg-white p-3.5 rounded-xl border border-phumulani-gold shadow-2xs">
+                <div className="flex items-start gap-3 bg-white p-3.5 rounded-xl border border-phumulani-charcoal/12 shadow-2xs">
                   <PhoneCall className="w-4 h-4 text-phumulani-earth shrink-0 mt-0.5" />
                   <div>
                     <div className="font-bold font-heading text-phumulani-charcoal">Phone Communications</div>
-                    <div className="text-phumulani-charcoal">General Admin: <a href="tel:6122519421" className="text-phumulani-earth font-semibold hover:underline">612-251-9421</a> (Mon–Fri 9am–5pm)</div>
-                    <div className="text-phumulani-earth font-semibold font-heading mt-0.5">24/7 Day One Crisis Line: 1-866-223-1111</div>
+                    <div className="text-phumulani-charcoal tabular-nums">General Admin: <a href="tel:6122519421" className="text-phumulani-earth font-semibold hover:underline">612-251-9421</a> (Mon–Fri 9am–5pm)</div>
+                    <div className="text-phumulani-earth font-semibold font-heading mt-0.5 tabular-nums">24/7 Day One Crisis Line: 1-866-223-1111</div>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-3 bg-white p-3.5 rounded-xl border border-phumulani-gold shadow-2xs">
+                <div className="flex items-start gap-3 bg-white p-3.5 rounded-xl border border-phumulani-charcoal/12 shadow-2xs">
                   <Mail className="w-4 h-4 text-phumulani-earth shrink-0 mt-0.5" />
                   <div>
                     <div className="font-bold font-heading text-phumulani-charcoal">Department Mailboxes</div>
@@ -2037,7 +2036,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 </div>
 
                 {/* Peaceful Lake Sanctuary Visual */}
-                <div className="relative rounded-2xl overflow-hidden border border-phumulani-teal shadow-2xs aspect-[16/9] group">
+                <div className="relative rounded-2xl overflow-hidden border border-phumulani-charcoal/12 shadow-2xs aspect-[16/9] group">
                   <SafeImage
                     src="/media/phumulani/contact/lake-haven.jpg"
                     fallbackSrc="/images/homepage/community-hero.svg"
@@ -2056,7 +2055,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               </div>
             </div>
 
-            <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl border border-phumulani-gold shadow-sm">
+            <div className="lg:col-span-7 bg-white p-6 sm:p-8 rounded-2xl border border-phumulani-charcoal/12 shadow-xs">
               <h3 className="font-heading text-xl font-bold text-phumulani-charcoal mb-1">
                 Send a General Inquiry
               </h3>
@@ -2077,10 +2076,10 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   ) : (
                     <CheckCircle2 className="w-8 h-8 text-phumulani-earth mx-auto" />
                   )}
-                  <div className="font-heading text-lg font-bold text-phumulani-earth">
+                  <div className="font-heading text-lg font-bold text-phumulani-earth tabular-nums">
                     Inquiry Saved: {contactSubmittedCode}
                   </div>
-                  <div className="inline-block px-3 py-1 rounded-md text-[11px] font-heading font-bold uppercase tracking-wider border bg-white text-phumulani-charcoal border-phumulani-cream">
+                  <div className="inline-block px-3 py-1 rounded-md text-[11px] font-heading font-bold uppercase tracking-wider border bg-white text-phumulani-charcoal border-phumulani-charcoal/15">
                     {contactDeliveryStatus === 'EMAIL_SENT'
                       ? 'Email Sent'
                       : contactDeliveryStatus === 'EMAIL_DELIVERY_FAILED'
@@ -2124,7 +2123,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                         value={contactName}
                         onChange={(e) => setContactName(e.target.value)}
                         placeholder="First and Last Name"
-                        className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none focus:border-phumulani-earth"
+                        className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
                       />
                     </div>
 
@@ -2136,7 +2135,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                         value={contactEmail}
                         onChange={(e) => setContactEmail(e.target.value)}
                         placeholder="you@example.com"
-                        className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none focus:border-phumulani-earth"
+                        className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
                       />
                     </div>
                   </div>
@@ -2147,7 +2146,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                       <select
                         value={contactDepartment}
                         onChange={(e) => setContactDepartment(e.target.value)}
-                        className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white text-phumulani-charcoal"
+                        className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 bg-white text-phumulani-charcoal"
                       >
                         <option value="General Inquiries">General Inquiries</option>
                         <option value="Community Programs & Cohorts">Community Programs &amp; Cohorts</option>
@@ -2165,7 +2164,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                         value={contactSubject}
                         onChange={(e) => setContactSubject(e.target.value)}
                         placeholder="Brief summary of inquiry"
-                        className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none focus:border-phumulani-earth"
+                        className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
                       />
                     </div>
                   </div>
@@ -2178,14 +2177,14 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                       value={contactMessage}
                       onChange={(e) => setContactMessage(e.target.value)}
                       placeholder="Please share how our team can assist you..."
-                      className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none focus:border-phumulani-earth"
+                      className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
                     />
                   </div>
 
                   <button
                     type="submit"
                     disabled={isSubmittingContact}
-                    className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-orange disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg font-bold font-heading flex items-center justify-center gap-1.5 cursor-pointer shadow-xs focus-visible:ring-2 focus-visible:ring-phumulani-earth"
+                    className="w-full py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal disabled:bg-phumulani-cream disabled:text-phumulani-charcoal text-white rounded-lg font-bold font-heading flex items-center justify-center gap-1.5 cursor-pointer shadow-xs transition-colors focus-visible:ring-2 focus-visible:ring-phumulani-earth"
                   >
                     {isSubmittingContact ? (
                       <>
@@ -2206,9 +2205,9 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         </div>
       </section>
 
-      {/* 14. PRIVACY NOTICE & SAFEGUARDING (#privacy-section) */}
+      {/* 14. PRIVACY NOTICE & SAFEGUARDING */}
       <section id="privacy-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-6 scroll-mt-28">
-        <RevealSection className="border-b border-phumulani-cream pb-4">
+        <RevealSection className="border-b border-phumulani-charcoal/12 pb-4">
           <div className="text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">
             Compliance &amp; Ethics
           </div>
@@ -2222,7 +2221,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-phumulani-charcoal">
           <RevealItem index={0} className="flex">
-            <div className="bg-white p-5 rounded-2xl border border-phumulani-cream hover:border-phumulani-earth hover:shadow-md transition-all duration-200 shadow-2xs space-y-2 w-full">
+            <div className="bg-white p-5 rounded-2xl border border-phumulani-charcoal/12 hover:border-phumulani-earth/40 hover:shadow-md transition-all duration-200 shadow-2xs space-y-2 w-full">
               <div className="font-bold font-heading text-phumulani-charcoal flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
                 <span>Survivor Confidentiality Safeguards</span>
@@ -2234,7 +2233,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
           </RevealItem>
 
           <RevealItem index={1} className="flex">
-            <div className="bg-white p-5 rounded-2xl border border-phumulani-cream hover:border-phumulani-earth hover:shadow-md transition-all duration-200 shadow-2xs space-y-2 w-full">
+            <div className="bg-white p-5 rounded-2xl border border-phumulani-charcoal/12 hover:border-phumulani-earth/40 hover:shadow-md transition-all duration-200 shadow-2xs space-y-2 w-full">
               <div className="font-bold font-heading text-phumulani-charcoal flex items-center gap-1.5">
                 <LockKeyhole className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
                 <span>Donor Bill of Rights &amp; Privacy</span>
@@ -2246,7 +2245,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
           </RevealItem>
 
           <RevealItem index={2} className="flex">
-            <div className="bg-white p-5 rounded-2xl border border-phumulani-cream hover:border-phumulani-earth hover:shadow-md transition-all duration-200 shadow-2xs space-y-2 w-full">
+            <div className="bg-white p-5 rounded-2xl border border-phumulani-charcoal/12 hover:border-phumulani-earth/40 hover:shadow-md transition-all duration-200 shadow-2xs space-y-2 w-full">
               <div className="font-bold font-heading text-phumulani-charcoal flex items-center gap-1.5">
                 <Globe className="w-4 h-4 text-phumulani-earth shrink-0" strokeWidth={1.75} aria-hidden="true" />
                 <span>Zero Commercial Ad Tracking</span>
@@ -2259,10 +2258,10 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
         </div>
       </section>
 
-      {/* 15. ACCESSIBILITY STATEMENT (#accessibility-section) */}
+      {/* 15. ACCESSIBILITY STATEMENT */}
       <section id="accessibility-section" className="bg-phumulani-charcoal text-white py-16 scroll-mt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <RevealSection className="border-b border-phumulani-earth pb-4">
+          <RevealSection className="border-b border-white/15 pb-4">
             <div className="inline-flex items-center gap-1.5 text-xs font-bold text-phumulani-gold uppercase tracking-wider font-heading">
               <Accessibility className="w-4 h-4 text-phumulani-gold" strokeWidth={1.75} aria-hidden="true" />
               <span>Universal Design</span>
@@ -2276,36 +2275,36 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
           </RevealSection>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-xs">
-            <div className="bg-phumulani-charcoal p-4 rounded-xl border border-phumulani-teal space-y-2">
+            <div className="bg-phumulani-charcoal p-4 rounded-xl border border-white/15 space-y-2">
               <div className="font-bold text-phumulani-gold font-heading">Keyboard Navigation</div>
               <p className="text-phumulani-cream leading-relaxed font-sans">
                 Full Tab, Shift+Tab, and Enter keyboard focus traversal with visible high-contrast focus rings and zero keyboard traps.
               </p>
             </div>
 
-            <div className="bg-phumulani-charcoal p-4 rounded-xl border border-phumulani-teal space-y-2">
+            <div className="bg-phumulani-charcoal p-4 rounded-xl border border-white/15 space-y-2">
               <div className="font-bold text-phumulani-gold font-heading">Screen Reader Support</div>
               <p className="text-phumulani-cream leading-relaxed font-sans">
                 Semantic HTML5 landmarks (header, nav, main, section, footer) and explicit ARIA labels for non-text SVGs and modal dialogues.
               </p>
             </div>
 
-            <div className="bg-phumulani-charcoal p-4 rounded-xl border border-phumulani-teal space-y-2">
+            <div className="bg-phumulani-charcoal p-4 rounded-xl border border-white/15 space-y-2">
               <div className="font-bold text-phumulani-gold font-heading">Contrast &amp; Scalability</div>
               <p className="text-phumulani-cream leading-relaxed font-sans">
                 Color contrast ratios meet or exceed 4.5:1 for body copy and 7:1 for headings. Text can be enlarged up to 200% without loss of layout.
               </p>
             </div>
 
-            <div className="bg-phumulani-charcoal p-4 rounded-xl border border-phumulani-teal space-y-2">
+            <div className="bg-phumulani-charcoal p-4 rounded-xl border border-white/15 space-y-2">
               <div className="font-bold text-phumulani-gold font-heading">Emergency Safe Exit</div>
               <p className="text-phumulani-cream leading-relaxed font-sans">
-                Double-pressing the <kbd className="bg-phumulani-charcoal px-1 py-0.5 rounded text-[10px] border border-phumulani-teal">ESC</kbd> key anywhere immediately replaces the current page with weather.com for personal safety.
+                Double-pressing the <kbd className="bg-phumulani-charcoal px-1.5 py-0.5 rounded text-[10px] border border-white/25">ESC</kbd> key anywhere immediately replaces the current page with weather.com for personal safety.
               </p>
             </div>
           </div>
 
-          <div className="text-[11px] text-phumulani-cream border-t border-phumulani-earth pt-4 flex flex-wrap justify-between items-center gap-3">
+          <div className="text-[11px] text-phumulani-cream border-t border-white/15 pt-4 flex flex-wrap justify-between items-center gap-3">
             <span>
               Accessibility Coordinator: <code>access@phumulani.org</code> · Designed in continuous conformance with WCAG 2.2 Level AA guidelines.
             </span>
@@ -2329,34 +2328,35 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
           }}
           className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
         >
-          <div className="bg-white rounded-2xl max-w-2xl w-full border border-phumulani-cream shadow-2xl p-6 sm:p-8 space-y-5 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-start border-b border-phumulani-cream pb-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full border border-phumulani-charcoal/15 shadow-2xl p-6 sm:p-8 space-y-5 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-start border-b border-phumulani-charcoal/12 pb-4">
               <div>
-                <span className="text-xs font-bold text-phumulani-earth uppercase tracking-wider">
+                <span className="text-xs font-bold font-heading text-phumulani-earth uppercase tracking-wider">
                   Program Deep Dive
                 </span>
-                <h3 className="font-serif text-2xl font-bold text-phumulani-charcoal mt-1">
+                <h3 className="font-heading text-2xl font-bold text-phumulani-charcoal mt-1">
                   {selectedProgram.name}
                 </h3>
               </div>
               <button
                 onClick={() => setSelectedProgram(null)}
-                className="p-1.5 text-phumulani-charcoal hover:text-phumulani-earth rounded-md"
+                aria-label="Close program dialog"
+                className="p-1.5 text-phumulani-charcoal hover:text-phumulani-earth rounded-md cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
             <p className="text-xs text-phumulani-charcoal leading-relaxed font-medium italic">
-              "{selectedProgram.tagline}"
+              &ldquo;{selectedProgram.tagline}&rdquo;
             </p>
 
             <div className="text-xs text-phumulani-charcoal space-y-3 leading-relaxed">
               <p>{selectedProgram.fullDetails}</p>
             </div>
 
-            <div className="bg-phumulani-cream p-4 rounded-xl space-y-2 text-xs border border-phumulani-cream">
-              <div className="font-bold text-phumulani-charcoal">Eligibility & Access:</div>
+            <div className="bg-phumulani-cream p-4 rounded-xl space-y-2 text-xs border border-phumulani-charcoal/12">
+              <div className="font-bold font-heading text-phumulani-charcoal">Eligibility &amp; Access</div>
               <p className="text-phumulani-charcoal">{selectedProgram.eligibility}</p>
               <div className="pt-2 flex flex-wrap gap-4 text-phumulani-charcoal text-[11px]">
                 <span>Lead Coordinator: <strong>{selectedProgram.leadCoordinator}</strong></span>
@@ -2367,7 +2367,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
             <div className="pt-2 flex justify-end gap-3">
               <button
                 onClick={() => setSelectedProgram(null)}
-                className="px-4 py-2 border border-phumulani-cream text-phumulani-charcoal rounded-lg text-xs font-semibold hover:bg-phumulani-cream"
+                className="px-4 py-2 border border-phumulani-charcoal/20 text-phumulani-charcoal rounded-lg text-xs font-semibold hover:bg-phumulani-cream cursor-pointer transition-colors"
               >
                 Close
               </button>
@@ -2376,7 +2376,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   setSelectedProgram(null);
                   document.getElementById('get-involved-section')?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="px-4 py-2 bg-phumulani-earth text-white rounded-lg text-xs font-semibold hover:bg-phumulani-orange"
+                className="px-4 py-2 bg-phumulani-earth text-white rounded-lg text-xs font-semibold hover:bg-phumulani-orange hover:text-phumulani-charcoal cursor-pointer transition-colors"
               >
                 Inquire as Volunteer / Partner
               </button>
@@ -2395,19 +2395,20 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
           }}
           className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
         >
-          <div className="bg-white rounded-2xl max-w-lg w-full border border-phumulani-cream shadow-2xl p-6 sm:p-8 space-y-5 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-start border-b border-phumulani-cream pb-3">
+          <div className="bg-white rounded-2xl max-w-lg w-full border border-phumulani-charcoal/15 shadow-2xl p-6 sm:p-8 space-y-5 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-start border-b border-phumulani-charcoal/12 pb-3">
               <div>
-                <span className="text-[10px] font-bold text-phumulani-earth uppercase tracking-wider">
+                <span className="text-[10px] font-bold font-heading text-phumulani-earth uppercase tracking-wider">
                   Volunteer Application
                 </span>
-                <h3 className="font-serif text-xl font-bold text-phumulani-charcoal mt-0.5">
+                <h3 className="font-heading text-xl font-bold text-phumulani-charcoal mt-0.5">
                   {selectedOpportunity.title}
                 </h3>
               </div>
               <button
                 onClick={() => setSelectedOpportunity(null)}
-                className="p-1.5 text-phumulani-charcoal hover:text-phumulani-earth"
+                aria-label="Close volunteer application dialog"
+                className="p-1.5 text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
               >
                 ✕
               </button>
@@ -2422,11 +2423,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   value={volFullName}
                   onChange={(e) => setVolFullName(e.target.value)}
                   placeholder="Amara Diallo"
-                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
+                  className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none"
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-semibold text-phumulani-charcoal mb-1">Email</label>
                   <input
@@ -2435,7 +2436,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                     value={volEmail}
                     onChange={(e) => setVolEmail(e.target.value)}
                     placeholder="amara@example.com"
-                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
+                    className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none"
                   />
                 </div>
                 <div>
@@ -2446,12 +2447,12 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                     value={volPhone}
                     onChange={(e) => setVolPhone(e.target.value)}
                     placeholder="(612) 555-0192"
-                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
+                    className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none"
                   />
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-semibold text-phumulani-charcoal mb-1">Preferred Language(s)</label>
                   <input
@@ -2459,7 +2460,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                     value={volLanguage}
                     onChange={(e) => setVolLanguage(e.target.value)}
                     placeholder="English, Somali, French..."
-                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
+                    className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none"
                   />
                 </div>
                 <div>
@@ -2467,7 +2468,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   <select
                     value={volAvailability}
                     onChange={(e) => setVolAvailability(e.target.value)}
-                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white text-xs"
+                    className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none bg-white text-xs"
                   >
                     <option value="Weekday Evenings">Weekday Evenings</option>
                     <option value="Saturday Mornings">Saturday Mornings</option>
@@ -2478,13 +2479,13 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
               </div>
 
               <div>
-                <label className="block font-semibold text-phumulani-charcoal mb-1">Skills & Experience</label>
+                <label className="block font-semibold text-phumulani-charcoal mb-1">Skills &amp; Experience</label>
                 <input
                   type="text"
                   value={volSkills}
                   onChange={(e) => setVolSkills(e.target.value)}
                   placeholder="e.g. Tutoring, HR, Legal research, Event organizing"
-                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
+                  className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none"
                 />
               </div>
 
@@ -2496,11 +2497,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   value={volMotivation}
                   onChange={(e) => setVolMotivation(e.target.value)}
                   placeholder="Share a few sentences about your motivation..."
-                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
+                  className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none"
                 />
               </div>
 
-              <div className="p-3 bg-phumulani-cream border border-phumulani-teal rounded-lg space-y-2">
+              <div className="p-3 bg-phumulani-cream border border-phumulani-charcoal/12 rounded-lg space-y-2">
                 <div className="flex items-start gap-2">
                   <input
                     type="checkbox"
@@ -2520,13 +2521,13 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedOpportunity(null)}
-                  className="px-4 py-2 border border-phumulani-cream text-phumulani-charcoal rounded-lg font-medium"
+                  className="px-4 py-2 border border-phumulani-charcoal/20 text-phumulani-charcoal rounded-lg font-medium hover:bg-phumulani-cream cursor-pointer transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold"
+                  className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg font-bold cursor-pointer transition-colors"
                 >
                   Submit Application
                 </button>
@@ -2546,19 +2547,20 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
           }}
           className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
         >
-          <div className="bg-white rounded-2xl max-w-md w-full border border-phumulani-cream shadow-2xl p-6 space-y-4">
-            <div className="flex justify-between items-start border-b border-phumulani-cream pb-3">
+          <div className="bg-white rounded-2xl max-w-md w-full border border-phumulani-charcoal/15 shadow-2xl p-6 space-y-4">
+            <div className="flex justify-between items-start border-b border-phumulani-charcoal/12 pb-3">
               <div>
-                <span className="text-[10px] font-bold text-phumulani-earth uppercase tracking-wider">
+                <span className="text-[10px] font-bold font-heading text-phumulani-earth uppercase tracking-wider">
                   Event Registration
                 </span>
-                <h3 className="font-serif text-lg font-bold text-phumulani-charcoal mt-0.5">
+                <h3 className="font-heading text-lg font-bold text-phumulani-charcoal mt-0.5">
                   {selectedEvent.title}
                 </h3>
               </div>
               <button
                 onClick={() => setSelectedEvent(null)}
-                className="p-1 text-phumulani-charcoal hover:text-phumulani-earth"
+                aria-label="Close event dialog"
+                className="p-1 text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
               >
                 ✕
               </button>
@@ -2572,7 +2574,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   required
                   value={rsvpName}
                   onChange={(e) => setRsvpName(e.target.value)}
-                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
+                  className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none"
                 />
               </div>
 
@@ -2583,7 +2585,7 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   required
                   value={rsvpEmail}
                   onChange={(e) => setRsvpEmail(e.target.value)}
-                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
+                  className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none"
                 />
               </div>
 
@@ -2594,11 +2596,11 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                   value={rsvpPhone}
                   onChange={(e) => setRsvpPhone(e.target.value)}
                   placeholder="612-555-0100"
-                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
+                  className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 outline-none"
                 />
               </div>
 
-              <div className="p-3 bg-phumulani-cream border border-phumulani-cream rounded-lg text-[11px] text-phumulani-charcoal space-y-1">
+              <div className="p-3 bg-phumulani-cream border border-phumulani-charcoal/12 rounded-lg text-[11px] text-phumulani-charcoal space-y-1 tabular-nums">
                 <div><strong>Accessibility notes:</strong> {selectedEvent.accessibilityNotes}</div>
                 <div><strong>Live capacity check:</strong> {selectedEvent.registeredCount} / {selectedEvent.capacity} booked</div>
               </div>
@@ -2607,13 +2609,13 @@ export const PublicWebsiteView: React.FC<PublicWebsiteViewProps> = ({
                 <button
                   type="button"
                   onClick={() => setSelectedEvent(null)}
-                  className="px-3 py-2 border border-phumulani-cream text-phumulani-charcoal rounded-lg"
+                  className="px-3.5 py-2 border border-phumulani-charcoal/20 text-phumulani-charcoal rounded-lg hover:bg-phumulani-cream cursor-pointer transition-colors"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold"
+                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg font-bold cursor-pointer transition-colors"
                 >
                   Confirm Registration
                 </button>

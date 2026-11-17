@@ -71,7 +71,7 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
 
   return (
     <div
-      className="bg-phumulani-cream border-b border-phumulani-cream text-xs px-3 sm:px-4 py-2 transition-all"
+      className="bg-phumulani-cream/70 border-b border-phumulani-charcoal/12 text-xs px-3 sm:px-4 py-2 transition-all"
       data-testid="email-summary-strip"
     >
       <div className="flex items-start sm:items-center justify-between gap-2">
@@ -81,7 +81,7 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
             {/* Connected Mailboxes */}
             <div
               data-testid="metric-connected-mailboxes"
-              className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white border border-phumulani-cream text-phumulani-charcoal font-medium"
+              className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white border border-phumulani-charcoal/12 text-phumulani-charcoal font-medium"
             >
               <Mail className="w-3.5 h-3.5 text-phumulani-earth" />
               <span>Connected mailboxes</span>
@@ -97,14 +97,14 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
               onClick={() => onFilterClick('all')}
               className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-xs cursor-pointer ${
                 activeFilter === 'all'
-                  ? 'bg-phumulani-cream text-phumulani-earth font-bold border border-phumulani-teal'
-                  : 'text-phumulani-charcoal hover:bg-phumulani-cream font-medium'
+                  ? 'bg-phumulani-teal/15 text-phumulani-earth font-bold border border-phumulani-teal/50'
+                  : 'text-phumulani-charcoal hover:bg-white/80 font-medium border border-transparent'
               }`}
               title="View Inbox"
             >
               <Inbox className="w-3.5 h-3.5 text-phumulani-earth" />
               <span>Inbox</span>
-              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.2 rounded border border-phumulani-cream text-[11px]">
+              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.2 rounded-sm border border-phumulani-charcoal/12 text-[11px]">
                 {inboxCount}
               </span>
             </button>
@@ -116,13 +116,13 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
               onClick={() => onFilterClick('unread')}
               className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-xs cursor-pointer ${
                 activeFilter === 'unread'
-                  ? 'bg-phumulani-cream text-phumulani-earth font-bold border border-phumulani-teal'
-                  : 'text-phumulani-charcoal hover:bg-phumulani-cream font-medium'
+                  ? 'bg-phumulani-teal/15 text-phumulani-earth font-bold border border-phumulani-teal/50'
+                  : 'text-phumulani-charcoal hover:bg-white/80 font-medium border border-transparent'
               }`}
               title="Filter by unread messages"
             >
               <span>Unread</span>
-              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.2 rounded border border-phumulani-cream text-[11px]">
+              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.2 rounded-sm border border-phumulani-charcoal/12 text-[11px]">
                 {unreadCount}
               </span>
             </button>
@@ -134,14 +134,14 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
               onClick={() => onFilterClick('priority')}
               className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-xs cursor-pointer ${
                 activeFilter === 'priority'
-                  ? 'bg-phumulani-cream text-phumulani-earth font-bold border border-phumulani-earth'
-                  : 'text-phumulani-charcoal hover:bg-phumulani-cream font-medium'
+                  ? 'bg-phumulani-earth/10 text-phumulani-earth font-bold border border-phumulani-earth/40'
+                  : 'text-phumulani-charcoal hover:bg-white/80 font-medium border border-transparent'
               }`}
               title="Filter by high priority and critical triage"
             >
               <AlertTriangle className="w-3.5 h-3.5 text-phumulani-earth" />
               <span>Priority</span>
-              <span className="font-mono tabular-nums font-bold text-phumulani-earth bg-white px-1.5 py-0.2 rounded border border-phumulani-earth text-[11px]">
+              <span className="font-mono tabular-nums font-bold text-phumulani-earth bg-white px-1.5 py-0.2 rounded-sm border border-phumulani-earth/30 text-[11px]">
                 {priorityCount}
               </span>
             </button>
@@ -151,12 +151,12 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
               type="button"
               data-testid="metric-drafts"
               onClick={() => onFilterClick('drafts')}
-              className="flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-xs cursor-pointer text-phumulani-charcoal hover:bg-phumulani-cream font-medium"
+              className="flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-xs cursor-pointer text-phumulani-charcoal hover:bg-white/80 font-medium border border-transparent"
               title="View drafts"
             >
-              <FileEdit className="w-3.5 h-3.5 text-phumulani-charcoal" />
+              <FileEdit className="w-3.5 h-3.5 text-phumulani-charcoal/75" />
               <span>Drafts</span>
-              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.2 rounded border border-phumulani-cream text-[11px]">
+              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.2 rounded-sm border border-phumulani-charcoal/12 text-[11px]">
                 {draftsCount}
               </span>
             </button>
@@ -166,12 +166,12 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
               type="button"
               data-testid="metric-sent"
               onClick={() => onFilterClick('sent')}
-              className="flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-xs cursor-pointer text-phumulani-charcoal hover:bg-phumulani-cream font-medium"
+              className="flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-xs cursor-pointer text-phumulani-charcoal hover:bg-white/80 font-medium border border-transparent"
               title="View sent messages"
             >
-              <Send className="w-3.5 h-3.5 text-phumulani-charcoal" />
+              <Send className="w-3.5 h-3.5 text-phumulani-charcoal/75" />
               <span>Sent</span>
-              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.2 rounded border border-phumulani-cream text-[11px]">
+              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.2 rounded-sm border border-phumulani-charcoal/12 text-[11px]">
                 {sentCount}
               </span>
             </button>
@@ -183,14 +183,14 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
               onClick={() => onFilterClick('awaiting_approval')}
               className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-xs cursor-pointer ${
                 activeFilter === 'awaiting_approval'
-                  ? 'bg-phumulani-cream text-phumulani-charcoal font-bold border border-phumulani-gold'
-                  : 'text-phumulani-charcoal hover:bg-phumulani-cream font-medium'
+                  ? 'bg-phumulani-gold/15 text-phumulani-charcoal font-bold border border-phumulani-gold/50'
+                  : 'text-phumulani-charcoal hover:bg-white/80 font-medium border border-transparent'
               }`}
               title="Filter by pending human reviews"
             >
               <Sparkles className="w-3.5 h-3.5 text-phumulani-earth" />
               <span>Awaiting approval</span>
-              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.2 rounded border border-phumulani-gold text-[11px]">
+              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.2 rounded-sm border border-phumulani-gold/50 text-[11px]">
                 {awaitingApprovalCount}
               </span>
             </button>
@@ -202,14 +202,14 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
               onClick={() => onFilterClick('follow_ups')}
               className={`flex items-center gap-1.5 px-2 py-0.5 rounded-md transition-colors text-xs cursor-pointer ${
                 activeFilter === 'follow_ups'
-                  ? 'bg-phumulani-cream text-phumulani-earth font-bold border border-phumulani-teal'
-                  : 'text-phumulani-charcoal hover:bg-phumulani-cream font-medium'
+                  ? 'bg-phumulani-teal/15 text-phumulani-earth font-bold border border-phumulani-teal/50'
+                  : 'text-phumulani-charcoal hover:bg-white/80 font-medium border border-transparent'
               }`}
               title="Filter by follow-up tasks"
             >
               <Clock className="w-3.5 h-3.5 text-phumulani-earth" />
               <span>Follow-ups</span>
-              <span className="font-mono tabular-nums font-bold text-phumulani-earth bg-white px-1.5 py-0.2 rounded border border-phumulani-teal text-[11px]">
+              <span className="font-mono tabular-nums font-bold text-phumulani-earth bg-white px-1.5 py-0.2 rounded-sm border border-phumulani-teal/50 text-[11px]">
                 {followUpsCount}
               </span>
             </button>
@@ -220,8 +220,8 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
                 data-testid="status-active-sync"
                 className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] font-medium ${
                   autoSyncEnabled
-                    ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green'
-                    : 'bg-white text-phumulani-charcoal border-phumulani-cream'
+                    ? 'bg-phumulani-green/15 text-phumulani-charcoal border-phumulani-green/40'
+                    : 'bg-white text-phumulani-charcoal/75 border-phumulani-charcoal/12'
                 }`}
               >
                 <RefreshCw className="w-3 h-3" />
@@ -232,8 +232,8 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
                 data-testid="status-auto-sending"
                 className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] font-medium ${
                   autoSendingEnabled
-                    ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-green'
-                    : 'bg-white text-phumulani-charcoal border-phumulani-cream'
+                    ? 'bg-phumulani-green/15 text-phumulani-charcoal border-phumulani-green/40'
+                    : 'bg-white text-phumulani-charcoal/75 border-phumulani-charcoal/12'
                 }`}
               >
                 <span>Automatic email sending:</span>
@@ -244,8 +244,8 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
         ) : (
           <div className="flex items-center gap-2 text-phumulani-charcoal text-xs">
             <span className="font-medium">Metrics Summary</span>
-            <span className="text-phumulani-charcoal">·</span>
-            <span className="font-mono text-[11px] tabular-nums">
+            <span className="text-phumulani-charcoal/55">·</span>
+            <span className="font-mono text-[11px] tabular-nums text-phumulani-charcoal/80">
               {connectedMailboxesCount} mailboxes · {inboxCount} inbox · {unreadCount} unread · {priorityCount} priority · {awaitingApprovalCount} approvals
             </span>
           </div>
@@ -255,7 +255,7 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
         <button
           type="button"
           onClick={toggleCollapsed}
-          className="text-phumulani-charcoal hover:text-phumulani-earth text-[11px] flex items-center gap-1 px-1.5 py-0.5 hover:bg-phumulani-cream rounded cursor-pointer shrink-0 ml-2"
+          className="text-phumulani-charcoal/75 hover:text-phumulani-earth text-[11px] flex items-center gap-1 px-1.5 py-0.5 hover:bg-white/80 rounded cursor-pointer shrink-0 ml-2 transition-colors"
           title={isCollapsed ? 'Expand metric strip' : 'Collapse metric strip'}
           aria-expanded={!isCollapsed}
         >

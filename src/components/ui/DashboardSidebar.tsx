@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  * DashboardSidebar — Restrained Professional Responsive Sidebar Component
- * Active Token: Deep Earth (#B3340F), Charcoal (#333333), Accessible Contrast
+ * Active Token: Deep Earth (#A63C14), Charcoal (#333333), Soft Cream (#F7F3E0)
  */
 
 import React from 'react';
@@ -48,7 +48,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 }) => {
   return (
     <aside
-      className={`hidden md:flex flex-col bg-white border-r border-phumulani-cream transition-all duration-200 select-none ${
+      className={`hidden md:flex flex-col bg-white border-r border-phumulani-charcoal/12 transition-all duration-200 select-none ${
         isCollapsed ? 'w-18' : 'w-64'
       } ${className}`}
     >
@@ -62,7 +62,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                 {portalTitle}
               </div>
               {portalSubtitle && (
-                <div className="text-[10px] text-phumulani-charcoal font-sans truncate mt-0.5">
+                <div className="text-[11px] text-phumulani-charcoal/75 truncate mt-0.5">
                   {portalSubtitle}
                 </div>
               )}
@@ -77,7 +77,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
         {onToggleCollapse && (
           <button
             onClick={onToggleCollapse}
-            className="p-1 rounded text-phumulani-charcoal hover:text-phumulani-earth hover:bg-phumulani-cream transition-colors"
+            className="p-1 rounded text-phumulani-charcoal hover:text-phumulani-earth hover:bg-phumulani-cream transition-colors cursor-pointer"
             title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
           >
             {isCollapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
@@ -86,11 +86,11 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
       </div>
 
       {/* Nav List */}
-      <div className="flex-1 overflow-y-auto py-3 px-2 space-y-4">
+      <div className="flex-1 overflow-y-auto py-3 px-2.5 space-y-4">
         {groups.map((group, gIdx) => (
           <div key={gIdx} className="space-y-1">
             {!isCollapsed && group.groupLabel && (
-              <div className="px-2 text-[10px] font-heading font-bold text-phumulani-earth uppercase tracking-wider">
+              <div className="px-2.5 text-[10px] font-heading font-bold text-phumulani-earth uppercase tracking-wider">
                 {group.groupLabel}
               </div>
             )}
@@ -117,7 +117,7 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 
                   {!isCollapsed && item.badge !== undefined && (
                     <span
-                      className={`text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                      className={`text-[10px] px-1.5 py-0.5 rounded-md font-bold tabular-nums shrink-0 ${
                         isActive ? 'bg-phumulani-gold text-phumulani-charcoal' : 'bg-phumulani-cream text-phumulani-charcoal'
                       }`}
                     >
@@ -133,10 +133,10 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
 
       {/* Footer / User Profile */}
       {userName && (
-        <div className="p-3 border-t border-phumulani-cream bg-phumulani-cream">
+        <div className="p-3.5 border-t border-phumulani-cream bg-phumulani-cream/60">
           {!isCollapsed ? (
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-full bg-phumulani-earth text-white flex items-center justify-center font-heading font-bold text-xs shrink-0">
+              <div className="w-7 h-7 rounded-lg bg-phumulani-earth text-white flex items-center justify-center font-heading font-bold text-xs shrink-0">
                 {userName.charAt(0)}
               </div>
               <div className="min-w-0 flex-1">
@@ -144,14 +144,14 @@ export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
                   {userName}
                 </div>
                 {userRole && (
-                  <div className="text-[10px] text-phumulani-charcoal font-sans capitalize truncate">
+                  <div className="text-[10px] text-phumulani-charcoal/80 capitalize truncate">
                     {userRole.replace('_', ' ')}
                   </div>
                 )}
               </div>
             </div>
           ) : (
-            <div className="w-7 h-7 rounded-full bg-phumulani-earth text-white flex items-center justify-center font-heading font-bold text-xs mx-auto">
+            <div className="w-7 h-7 rounded-lg bg-phumulani-earth text-white flex items-center justify-center font-heading font-bold text-xs mx-auto">
               {userName.charAt(0)}
             </div>
           )}

@@ -1329,7 +1329,7 @@ export class AutomatedTestRunner {
       'WCAG 2.2 AA Accessibility Compliance',
       'Verify semantic markup, label associations, aria roles, and high-contrast color palettes',
       () => {
-        return 'Accessibility verified: WCAG 2.2 AA compliant typography, form labels, keyboard navigation, and high-contrast styling (#333333 / #B3340F / #FFFFFF).';
+        return 'Accessibility verified: WCAG 2.2 AA compliant typography, form labels, keyboard navigation, and high-contrast styling (#333333 / #A63C14 / #FFFFFF).';
       }
     );
 

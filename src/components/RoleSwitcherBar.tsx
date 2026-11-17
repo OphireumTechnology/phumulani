@@ -140,7 +140,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
   }
 
   return (
-    <div className="bg-phumulani-charcoal text-phumulani-cream text-xs border-b-2 border-phumulani-earth no-print z-50 w-full transition-all shadow-sm">
+    <div className="bg-phumulani-charcoal text-phumulani-cream text-xs border-b border-phumulani-earth/40 no-print z-50 w-full transition-all shadow-sm">
       {/* COMPACT REFINED CONTROL BAR */}
       <div className="py-1.5 px-3 sm:px-4 flex items-center justify-between gap-2 max-w-7xl mx-auto">
         <div className="flex items-center gap-2 min-w-0">
@@ -148,7 +148,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
             onClick={toggleCollapsed}
             aria-expanded={!isCollapsed}
             aria-controls="demo-tools-panel"
-            className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-phumulani-charcoal hover:bg-phumulani-earth text-white font-semibold text-[11px] border border-phumulani-gold transition-colors cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-phumulani-gold"
+            className="flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-phumulani-charcoal hover:bg-phumulani-earth text-white font-semibold text-[11px] border border-phumulani-cream/30 transition-colors cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-phumulani-gold"
             title="Toggle Demo Simulation Tools"
           >
             <Sparkles className="w-3 h-3 text-phumulani-gold shrink-0" strokeWidth={1.75} aria-hidden="true" />
@@ -159,7 +159,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
           <span className="text-phumulani-cream text-[11px] truncate hidden sm:inline">
             <span className="text-phumulani-gold font-medium">Active Role:</span>{' '}
             <strong className="text-white font-semibold">{currentUser.name}</strong>{' '}
-            <span className="text-phumulani-cream">({roleLabels[currentUser.role] || currentUser.role})</span>
+            <span className="text-phumulani-cream/85">({roleLabels[currentUser.role] || currentUser.role})</span>
           </span>
         </div>
 
@@ -180,9 +180,9 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
       {!isCollapsed && (
         <div
           id="demo-tools-panel"
-          className="border-t border-phumulani-earth bg-phumulani-charcoal py-2.5 px-3 sm:px-4 flex flex-col gap-2.5 animate-fadeIn"
+          className="border-t border-phumulani-cream/15 bg-phumulani-charcoal py-2.5 px-3 sm:px-4 flex flex-col gap-2.5 animate-fadeIn max-w-7xl mx-auto"
         >
-          <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-phumulani-earth">
+          <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-phumulani-cream/15">
             {/* Role Simulation Selector */}
             <div className="flex items-center gap-2 min-w-0">
               <label htmlFor="role-simulation-select" className="text-phumulani-cream text-[11px] font-semibold shrink-0">
@@ -193,7 +193,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
                 aria-label="Role Simulation"
                 value={currentUser.id}
                 onChange={(e) => handleUserSelect(e.target.value)}
-                className="bg-white text-phumulani-charcoal border border-phumulani-earth rounded px-2.5 py-1 text-xs focus:ring-1 focus:ring-phumulani-gold outline-none font-medium cursor-pointer max-w-[260px] truncate"
+                className="bg-white text-phumulani-charcoal border border-phumulani-cream rounded-md px-2.5 py-1 text-xs focus:ring-1 focus:ring-phumulani-gold outline-none font-medium cursor-pointer max-w-[260px] truncate"
               >
                 {users.map((u) => (
                   <option key={u.id} value={u.id}>
@@ -204,19 +204,19 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
             </div>
 
             <div className="flex items-center gap-2">
-              <div className="flex items-center gap-1.5 text-white bg-phumulani-charcoal px-2.5 py-1 rounded border border-phumulani-green text-[11px]">
+              <div className="flex items-center gap-1.5 text-white bg-phumulani-charcoal px-2.5 py-1 rounded-md border border-phumulani-green/50 text-[11px]">
                 <ShieldCheck className="w-3.5 h-3.5 text-phumulani-green" strokeWidth={1.75} aria-hidden="true" />
                 <span>Simulated MFA: {currentUser.mfaEnabled ? 'Enforced' : 'Standard'}</span>
               </div>
 
               <button
                 onClick={handleResetData}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded border transition-colors text-[11px] cursor-pointer ${
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md border transition-colors text-[11px] cursor-pointer ${
                   resetStatus === 'confirming'
                     ? 'bg-phumulani-earth border-phumulani-gold text-white font-bold'
                     : resetStatus === 'done'
                     ? 'bg-phumulani-green border-phumulani-cream text-phumulani-charcoal font-bold'
-                    : 'bg-phumulani-charcoal hover:bg-phumulani-earth text-phumulani-cream hover:text-white border-phumulani-cream'
+                    : 'bg-phumulani-charcoal hover:bg-phumulani-earth text-phumulani-cream hover:text-white border-phumulani-cream/30'
                 }`}
                 title="Restore baseline test records"
               >
@@ -244,148 +244,36 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
               Portals:
             </span>
 
-            <button
-              onClick={() => onViewChange('public')}
-              className={`px-2 py-0.5 rounded text-[11px] font-semibold transition-colors ${
-                activeView === 'public'
-                  ? 'bg-phumulani-cream text-phumulani-charcoal border border-white'
-                  : 'bg-phumulani-charcoal text-phumulani-cream hover:text-white border border-phumulani-cream'
-              }`}
-            >
-              Public Website
-            </button>
-
-            <button
-              onClick={() => onViewChange('community')}
-              className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
-                activeView === 'community'
-                  ? 'bg-phumulani-teal text-phumulani-charcoal border border-phumulani-cream'
-                  : 'bg-phumulani-charcoal text-phumulani-teal hover:text-white border border-phumulani-teal'
-              }`}
-            >
-              Community Member
-            </button>
-
-            <button
-              onClick={() => onViewChange('community')}
-              className="px-2 py-0.5 rounded text-[11px] font-bold bg-phumulani-charcoal text-phumulani-green hover:text-white border border-phumulani-green transition-colors"
-            >
-              Volunteer
-            </button>
-
-            <button
-              onClick={() => onViewChange('donor')}
-              className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
-                activeView === 'donor'
-                  ? 'bg-phumulani-earth text-white border border-phumulani-cream'
-                  : 'bg-phumulani-charcoal text-phumulani-gold hover:text-white border border-phumulani-orange'
-              }`}
-            >
-              Donor
-            </button>
-
-            <button
-              onClick={() => onViewChange('staff')}
-              className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
-                activeView === 'staff'
-                  ? 'bg-phumulani-teal text-phumulani-charcoal border border-phumulani-cream'
-                  : 'bg-phumulani-charcoal text-phumulani-teal hover:text-white border border-phumulani-teal'
-              }`}
-            >
-              Staff
-            </button>
-
-            <button
-              onClick={() => onViewChange('master-admin')}
-              className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
-                activeView === 'master-admin'
-                  ? 'bg-phumulani-gold text-phumulani-charcoal border border-phumulani-cream'
-                  : 'bg-phumulani-charcoal text-phumulani-gold hover:text-white border border-phumulani-gold'
-              }`}
-            >
-              <ShieldCheck className="w-3 h-3" strokeWidth={1.75} aria-hidden="true" />
-              <span>Master Admin</span>
-            </button>
-
-            <button
-              onClick={() => onViewChange('email-command')}
-              className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
-                activeView === 'email-command'
-                  ? 'bg-phumulani-teal text-phumulani-charcoal border border-phumulani-cream'
-                  : 'bg-phumulani-charcoal text-phumulani-teal hover:text-white border border-phumulani-teal'
-              }`}
-            >
-              <Mail className="w-3 h-3" strokeWidth={1.75} aria-hidden="true" />
-              <span>Email Admin</span>
-            </button>
-
-            <button
-              onClick={() => onViewChange('client-development')}
-              className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
-                activeView === 'client-development'
-                  ? 'bg-phumulani-gold text-phumulani-charcoal border border-phumulani-cream'
-                  : 'bg-phumulani-charcoal text-phumulani-gold hover:text-white border border-phumulani-gold'
-              }`}
-            >
-              <Sparkles className="w-3 h-3" />
-              <span>Client Portal</span>
-            </button>
-
-            <button
-              onClick={() => onViewChange('development-ops')}
-              className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
-                activeView === 'development-ops'
-                  ? 'bg-phumulani-teal text-phumulani-charcoal border border-phumulani-cream'
-                  : 'bg-phumulani-charcoal text-phumulani-teal hover:text-white border border-phumulani-teal'
-              }`}
-            >
-              DevOps
-            </button>
-
-            <button
-              onClick={() => onViewChange('fundraising')}
-              className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
-                activeView === 'fundraising'
-                  ? 'bg-phumulani-teal text-phumulani-charcoal border border-phumulani-cream'
-                  : 'bg-phumulani-charcoal text-phumulani-teal hover:text-white border border-phumulani-teal'
-              }`}
-            >
-              Fundraising CRM
-            </button>
-
-            <button
-              onClick={() => onViewChange('email-command')}
-              className={`px-2 py-0.5 rounded text-[11px] font-bold transition-colors ${
-                activeView === 'email-command'
-                  ? 'bg-phumulani-green text-phumulani-charcoal border border-phumulani-cream'
-                  : 'bg-phumulani-charcoal text-phumulani-green hover:text-white border border-phumulani-green'
-              }`}
-            >
-              Email Command
-            </button>
-
-            <button
-              onClick={() => onViewChange('production-status')}
-              className={`px-2 py-0.5 rounded text-[11px] transition-colors ${
-                activeView === 'production-status'
-                  ? 'bg-phumulani-teal text-phumulani-charcoal border border-phumulani-cream font-bold'
-                  : 'bg-phumulani-charcoal text-phumulani-cream hover:text-white border border-phumulani-cream'
-              }`}
-            >
-              Live Status
-            </button>
-
-            <button
-              onClick={() => onViewChange('readiness')}
-              className={`flex items-center gap-1 px-2 py-0.5 rounded text-[11px] transition-colors ${
-                activeView === 'readiness'
-                  ? 'bg-phumulani-gold text-phumulani-charcoal border border-phumulani-cream font-bold'
-                  : 'bg-phumulani-charcoal text-phumulani-cream hover:text-white border border-phumulani-gold'
-              }`}
-            >
-              <UserCheck className="w-3 h-3 text-phumulani-gold" />
-              <span>12 Gates</span>
-            </button>
+            {[
+              { id: 'public', label: 'Public Website' },
+              { id: 'community', label: 'Community Member' },
+              { id: 'donor', label: 'Donor' },
+              { id: 'staff', label: 'Staff' },
+              { id: 'master-admin', label: 'Master Admin', icon: ShieldCheck },
+              { id: 'email-command', label: 'Email Admin', icon: Mail },
+              { id: 'client-development', label: 'Client Portal', icon: Sparkles },
+              { id: 'development-ops', label: 'DevOps' },
+              { id: 'fundraising', label: 'Fundraising CRM' },
+              { id: 'production-status', label: 'Live Status' },
+              { id: 'readiness', label: '12 Gates', icon: UserCheck },
+            ].map((p) => {
+              const Icon = p.icon;
+              const isActive = activeView === p.id;
+              return (
+                <button
+                  key={p.id}
+                  onClick={() => onViewChange(p.id)}
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-[11px] font-semibold transition-colors cursor-pointer whitespace-nowrap shrink-0 ${
+                    isActive
+                      ? 'bg-phumulani-gold text-phumulani-charcoal border border-phumulani-gold'
+                      : 'bg-phumulani-charcoal text-phumulani-cream hover:bg-phumulani-earth hover:text-white border border-phumulani-cream/25'
+                  }`}
+                >
+                  {Icon && <Icon className="w-3 h-3 shrink-0" strokeWidth={1.75} aria-hidden="true" />}
+                  <span>{p.label}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
       )}

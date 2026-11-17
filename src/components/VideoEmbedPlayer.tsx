@@ -69,30 +69,30 @@ export const VideoEmbedPlayer: React.FC<VideoEmbedPlayerProps> = ({ media }) => 
   return (
     <section
       aria-label="The Phumulani Story: Founder Interview"
-      className="bg-phumulani-charcoal rounded-2xl overflow-hidden shadow-xl border border-phumulani-earth text-white flex flex-col w-full"
+      className="bg-phumulani-charcoal rounded-2xl overflow-hidden shadow-lg border border-phumulani-charcoal/20 text-white flex flex-col w-full"
     >
       {/* 1. Header Attribution & Safeguarding Indicator */}
-      <div className="bg-phumulani-charcoal px-3 sm:px-4 py-2 sm:py-2.5 flex flex-wrap items-center justify-between gap-1.5 sm:gap-2 text-xs border-b border-phumulani-earth min-w-0 max-w-full">
-        <div className="flex items-center gap-1.5 sm:gap-2 min-w-0 flex-1 max-w-full">
+      <div className="bg-phumulani-charcoal px-3 sm:px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 text-xs border-b border-white/10 min-w-0 max-w-full">
+        <div className="flex items-center gap-2 min-w-0 flex-1 max-w-full">
           <Film className="w-3.5 h-3.5 text-phumulani-gold shrink-0" aria-hidden="true" />
-          <h4 className="font-semibold text-white truncate text-[11px] sm:text-xs">
+          <h4 className="font-heading font-semibold text-white truncate text-xs">
             {media.title}
           </h4>
         </div>
-        <div className="flex flex-wrap items-center gap-1 sm:gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 shrink-0 text-[10px]">
           {videoMeta?.hasCaptions && (
-            <span className="inline-flex items-center gap-1 bg-phumulani-teal text-phumulani-charcoal border border-phumulani-cream px-1.5 py-0.5 rounded text-[9px] sm:text-[10px] font-bold">
-              <Subtitles className="w-2.5 h-2.5 sm:w-3 sm:h-3 shrink-0" aria-hidden="true" />
-              <span>CC<span className="hidden min-[360px]:inline"> / CAPTIONS</span></span>
+            <span className="inline-flex items-center gap-1 bg-phumulani-teal text-phumulani-charcoal px-2 py-0.5 rounded-md font-bold">
+              <Subtitles className="w-3 h-3 shrink-0" aria-hidden="true" />
+              <span>CC</span>
             </span>
           )}
-          <span className="text-[9px] sm:text-[10px] text-phumulani-charcoal bg-phumulani-green border border-phumulani-cream px-1.5 py-0.5 rounded font-mono font-bold">
-            <span className="hidden min-[360px]:inline">VERIFIED </span>PRESERVATION
+          <span className="text-phumulani-charcoal bg-phumulani-green px-2 py-0.5 rounded-md font-mono font-bold">
+            VERIFIED
           </span>
         </div>
       </div>
 
-      {/* 2. Responsive 16:9 Native Video Canvas (No simulated overlay blocking controls) */}
+      {/* 2. Responsive 16:9 Native Video Canvas */}
       <div className="relative aspect-video w-full overflow-hidden bg-phumulani-charcoal">
         <iframe
           title="The Phumulani Story: Finding Peace, Rest and Autonomy"
@@ -106,7 +106,7 @@ export const VideoEmbedPlayer: React.FC<VideoEmbedPlayerProps> = ({ media }) => 
       </div>
 
       {/* 3. Clearly Visible Reliable Fallback & Embed Diagnosis Banner */}
-      <div className="bg-phumulani-charcoal px-4 py-3 border-t border-phumulani-earth flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs">
+      <div className="bg-phumulani-charcoal px-4 py-3 border-t border-white/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs">
         <div className="flex items-start sm:items-center gap-2 text-phumulani-cream">
           <AlertCircle className="w-4 h-4 text-phumulani-gold shrink-0 mt-0.5 sm:mt-0" aria-hidden="true" />
           <div>
@@ -127,23 +127,23 @@ export const VideoEmbedPlayer: React.FC<VideoEmbedPlayerProps> = ({ media }) => 
         <button
           type="button"
           onClick={() => setUseHashUrl(!useHashUrl)}
-          className="text-[11px] text-phumulani-cream hover:text-white inline-flex items-center gap-1 cursor-pointer transition-colors px-2 py-1 rounded bg-phumulani-earth hover:bg-phumulani-orange border border-phumulani-gold"
+          className="text-[11px] text-white hover:text-phumulani-charcoal inline-flex items-center gap-1 cursor-pointer transition-colors px-2.5 py-1 rounded-lg bg-phumulani-earth hover:bg-phumulani-orange border border-phumulani-gold/40"
           title="Toggle authorized embed source with unlisted security hash"
         >
-          <RefreshCw className="w-3 h-3 text-phumulani-gold" aria-hidden="true" />
-          <span>{useHashUrl ? 'Standard Embed' : 'Trouble playing? Try authorized stream'}</span>
+          <RefreshCw className="w-3 h-3 shrink-0" aria-hidden="true" />
+          <span>{useHashUrl ? 'Standard Embed' : 'Try authorized stream'}</span>
         </button>
       </div>
 
       {/* 4. Attribution Bar & Transcript Toggle */}
-      <div className="bg-phumulani-charcoal p-4 border-t border-phumulani-earth flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs">
+      <div className="bg-phumulani-charcoal p-4 border-t border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 text-xs">
         <div className="space-y-0.5 text-phumulani-cream text-[11px]">
           <div>
             <strong className="text-white">Producer / Copyright:</strong> {media.copyrightOwner}
           </div>
-          <div className="flex items-center gap-1 text-phumulani-cream font-mono text-[10px]">
+          <div className="flex items-center gap-1 text-phumulani-cream/90 font-mono text-[10px]">
             <span>SHA-256 Checksum:</span>
-            <span className="truncate max-w-[200px]">{media.checksumSha256}</span>
+            <span className="truncate max-w-[200px] tabular-nums">{media.checksumSha256}</span>
           </div>
         </div>
 
@@ -152,9 +152,9 @@ export const VideoEmbedPlayer: React.FC<VideoEmbedPlayerProps> = ({ media }) => 
             <button
               type="button"
               onClick={() => setShowTranscript(!showTranscript)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-semibold transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-phumulani-gold"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg text-xs font-semibold transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-phumulani-gold"
             >
-              <Info className="w-3.5 h-3.5 text-phumulani-gold" aria-hidden="true" />
+              <Info className="w-3.5 h-3.5" aria-hidden="true" />
               <span>{showTranscript ? 'Hide Summary' : 'Read Summary'}</span>
               {showTranscript ? <ChevronUp className="w-3.5 h-3.5" aria-hidden="true" /> : <ChevronDown className="w-3.5 h-3.5" aria-hidden="true" />}
             </button>
@@ -174,12 +174,12 @@ export const VideoEmbedPlayer: React.FC<VideoEmbedPlayerProps> = ({ media }) => 
 
       {/* 5. Accessible Summary / Transcript Drawer */}
       {showTranscript && videoMeta?.transcriptSummary && (
-        <div className="bg-phumulani-cream border-t border-phumulani-earth p-4 text-xs text-phumulani-charcoal space-y-2 animate-in fade-in">
-          <div className="font-bold text-phumulani-earth flex items-center gap-1.5">
+        <div className="bg-phumulani-cream border-t border-phumulani-charcoal/12 p-4 text-xs text-phumulani-charcoal space-y-2 animate-in fade-in">
+          <div className="font-bold font-heading text-phumulani-earth flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4 text-phumulani-green" aria-hidden="true" />
             <span>Preserved Video Transcript &amp; Editorial Summary</span>
           </div>
-          <p className="leading-relaxed bg-white p-3.5 rounded-xl border border-phumulani-earth font-sans text-phumulani-charcoal">
+          <p className="leading-relaxed bg-white p-3.5 rounded-xl border border-phumulani-charcoal/12 font-sans text-phumulani-charcoal">
             {videoMeta.transcriptSummary}
           </p>
         </div>

@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  * DataTable — Reusable Accessible Responsive Table Component
- * Professional dashboard styling: clean white surface, subtle slate borders, teal headers
+ * Official Palette: Soft Cream (#F7F3E0), Charcoal (#333333), Deep Earth (#A63C14), White (#FFFFFF)
  */
 
 import React from 'react';
@@ -34,9 +34,9 @@ export function DataTable<T>({
 }: DataTableProps<T>) {
   if (isLoading) {
     return (
-      <div className="bg-white rounded-xl border border-phumulani-earth p-8 text-center">
-        <div className="w-8 h-8 border-3 border-phumulani-earth border-t-transparent rounded-full animate-spin mx-auto mb-2" />
-        <span className="text-xs text-phumulani-charcoal font-sans">Loading data...</span>
+      <div className="bg-white rounded-xl border border-phumulani-charcoal/15 p-8 text-center">
+        <div className="w-8 h-8 border-2 border-phumulani-earth border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+        <span className="text-xs text-phumulani-charcoal">Loading data...</span>
       </div>
     );
   }
@@ -46,10 +46,10 @@ export function DataTable<T>({
   }
 
   return (
-    <div className={`overflow-x-auto rounded-xl border border-phumulani-earth bg-white shadow-2xs ${className}`}>
+    <div className={`overflow-x-auto rounded-xl border border-phumulani-charcoal/15 bg-white shadow-2xs ${className}`}>
       <table className="w-full text-left border-collapse text-xs">
         <thead>
-          <tr className="bg-phumulani-cream border-b border-phumulani-earth">
+          <tr className="bg-phumulani-cream border-b border-phumulani-charcoal/15">
             {columns.map((col) => {
               const alignClass =
                 col.align === 'center'
@@ -69,11 +69,11 @@ export function DataTable<T>({
             })}
           </tr>
         </thead>
-        <tbody className="divide-y divide-phumulani-cream font-sans">
+        <tbody className="divide-y divide-phumulani-cream tabular-nums">
           {data.map((item, rowIdx) => (
             <tr
               key={keyExtractor(item, rowIdx)}
-              className="hover:bg-phumulani-cream transition-colors"
+              className="hover:bg-phumulani-cream/60 transition-colors"
             >
               {columns.map((col) => {
                 const alignClass =

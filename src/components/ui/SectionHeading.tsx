@@ -2,7 +2,6 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  * SectionHeading — Accessible, Responsive Brand Section Heading
- * Fonts: Montserrat Bold (Headings), Montserrat SemiBold (Subheadings), Lato (Description)
  */
 
 import React from 'react';
@@ -31,9 +30,9 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
   }[align];
 
   return (
-    <div id={id} className={`max-w-3xl space-y-2 mb-8 sm:mb-10 ${alignClasses} ${className}`}>
+    <div id={id} className={`max-w-3xl space-y-2.5 mb-8 sm:mb-10 ${alignClasses} ${className}`}>
       {eyebrow && (
-        <div className="text-xs font-bold text-phumulani-earth font-heading uppercase tracking-wider">
+        <div className="text-[11px] font-bold text-phumulani-earth font-heading uppercase tracking-[0.12em]">
           {eyebrow}
         </div>
       )}
@@ -41,7 +40,7 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
         {title}
       </h2>
       {subtitle && (
-        <p className="text-xs sm:text-sm text-phumulani-charcoal font-sans leading-relaxed">
+        <p className="text-sm text-phumulani-charcoal/90 leading-relaxed">
           {subtitle}
         </p>
       )}

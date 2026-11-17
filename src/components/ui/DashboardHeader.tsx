@@ -2,7 +2,7 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  * DashboardHeader — Restrained Professional Dashboard Header Component
- * Design Tokens: Deep Earth (#B3340F), Charcoal (#333333), Soft Cream (#EFEBD1), White (#FFFFFF)
+ * Design Tokens: Deep Earth (#A63C14), Charcoal (#333333), Soft Cream (#F7F3E0), White (#FFFFFF)
  */
 
 import React from 'react';
@@ -27,13 +27,9 @@ export interface DashboardHeaderProps {
 export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   portalTitle,
   activeItemLabel,
-  userName,
-  userRole,
   unreadCount = 0,
   onViewChange,
   onOpenNotifications,
-  onToggleSidebar,
-  isSidebarCollapsed,
   portals,
   activePortalId,
   className = '',
@@ -45,25 +41,25 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   };
 
   return (
-    <header className={`bg-white border-b border-phumulani-cream px-4 sm:px-6 h-14 flex items-center justify-between z-30 sticky top-0 shadow-2xs ${className}`}>
+    <header className={`bg-white border-b border-phumulani-charcoal/12 px-4 sm:px-6 h-14 flex items-center justify-between z-30 sticky top-0 shadow-2xs ${className}`}>
       {/* Left: Breadcrumbs & Toggle */}
       <div className="flex items-center gap-3 min-w-0">
         <button
           onClick={() => onViewChange('public')}
-          className="flex items-center gap-1.5 text-xs text-phumulani-charcoal hover:text-phumulani-earth font-heading font-medium"
+          className="flex items-center gap-1.5 text-xs text-phumulani-charcoal hover:text-phumulani-earth font-heading font-medium cursor-pointer"
           title="Return to Public Website"
         >
           <BrandLogo variant="mark" size={24} className="shrink-0" />
           <span className="hidden sm:inline">Phumulani</span>
         </button>
 
-        <span className="text-phumulani-earth hidden sm:inline">/</span>
+        <span className="text-phumulani-charcoal/40 hidden sm:inline">/</span>
 
         <span className="font-heading font-bold text-xs sm:text-sm text-phumulani-charcoal truncate">
           {portalTitle}
         </span>
 
-        <span className="text-phumulani-earth hidden md:inline">/</span>
+        <span className="text-phumulani-charcoal/40 hidden md:inline">/</span>
 
         <span className="font-heading font-bold text-xs text-phumulani-earth hidden md:inline truncate">
           {activeItemLabel}
@@ -84,15 +80,15 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           <div className="relative">
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center gap-1.5 text-xs font-heading font-semibold px-2.5 py-1 rounded-lg bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-charcoal border border-phumulani-earth transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 text-xs font-heading font-semibold px-3 py-1.5 rounded-lg bg-white hover:bg-phumulani-cream text-phumulani-charcoal border border-phumulani-charcoal/20 transition-colors cursor-pointer"
             >
               <span>Portals</span>
               <ChevronDown className="w-3 h-3 text-phumulani-charcoal" />
             </button>
 
             {dropdownOpen && (
-              <div className="absolute right-0 mt-1.5 w-60 bg-white rounded-xl shadow-xl border border-phumulani-earth py-1.5 z-50">
-                <div className="px-3 py-1 text-[10px] font-heading uppercase font-bold text-phumulani-earth">
+              <div className="absolute right-0 mt-1.5 w-60 bg-white rounded-xl shadow-xl border border-phumulani-charcoal/15 py-1.5 z-50">
+                <div className="px-3 py-1 text-[10px] font-heading uppercase font-bold text-phumulani-earth border-b border-phumulani-cream mb-1">
                   Switch Portal
                 </div>
                 {portals.map((p) => (
@@ -102,10 +98,10 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
                       onViewChange(p.id);
                       setDropdownOpen(false);
                     }}
-                    className={`w-full text-left px-3 py-1.5 text-xs flex items-center gap-2 hover:bg-phumulani-cream transition-colors ${
+                    className={`w-full text-left px-3 py-1.5 text-xs flex items-center gap-2 hover:bg-phumulani-cream transition-colors cursor-pointer ${
                       p.id === activePortalId
                         ? 'font-bold text-phumulani-earth bg-phumulani-cream'
-                        : 'text-phumulani-charcoal font-sans'
+                        : 'text-phumulani-charcoal'
                     }`}
                   >
                     <span>{p.label}</span>
@@ -119,13 +115,13 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
         {onOpenNotifications && (
           <button
             onClick={onOpenNotifications}
-            className="relative p-1.5 rounded-lg bg-phumulani-cream hover:bg-phumulani-gold text-phumulani-charcoal transition-colors cursor-pointer"
+            className="relative p-1.5 rounded-lg bg-white hover:bg-phumulani-cream border border-phumulani-charcoal/20 text-phumulani-charcoal transition-colors cursor-pointer"
             title="Notification Center"
             aria-label="Notification Center"
           >
             <Bell className="w-4 h-4 text-phumulani-earth" />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-phumulani-earth text-white font-bold text-[9px] px-1.5 py-0.2 rounded-full ring-2 ring-white">
+              <span className="absolute -top-1 -right-1 bg-phumulani-earth text-white font-bold text-[9px] px-1.5 py-0.2 rounded-full ring-2 ring-white tabular-nums">
                 {unreadCount}
               </span>
             )}
@@ -134,7 +130,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
 
         <button
           onClick={handleSafeExit}
-          className="bg-phumulani-earth hover:bg-phumulani-orange text-white font-heading font-bold px-2.5 py-1 rounded text-xs transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
+          className="bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white font-heading font-bold px-2.5 py-1.5 rounded-lg text-xs transition-colors flex items-center gap-1 shadow-xs cursor-pointer"
           title="Instant safe exit to Weather.com (replaces browser history)"
         >
           <span>SAFE EXIT</span>

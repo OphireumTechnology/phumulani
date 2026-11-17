@@ -14,29 +14,21 @@ import {
   Calendar,
   DollarSign,
   Briefcase,
-  ShieldCheck,
   CheckCircle2,
-  AlertTriangle,
-  Clock,
   Sparkles,
   Send,
   Lock,
-  Search,
-  Filter,
   Check,
-  X,
-  Edit3,
   ShieldAlert,
-  ArrowRight,
   Eye,
   PlusCircle,
   Camera,
   Image as ImageIcon,
-  ExternalLink,
   BarChart3,
+  X,
 } from 'lucide-react';
 import { PortalLayout } from '../components/PortalLayout';
-import { PHUMULANI_MEDIA_INVENTORY, MediaAsset, getSafeguardingQueueMedia } from '../services/mediaInventory';
+import { PHUMULANI_MEDIA_INVENTORY, MediaAsset } from '../services/mediaInventory';
 import { IntegratedReportingTab } from '../components/masterAdmin/IntegratedReportingTab';
 import { SafeImage } from '../components/SafeImage';
 
@@ -199,8 +191,6 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
     setTimeout(() => setActionFeedback(null), 3000);
   };
 
-  const isSafeguardingOfficer = currentUser.role === 'safeguarding_officer' || currentUser.role === 'safeguarding_lead' || currentUser.role === 'executive_director';
-
   const pendingInboxCount = messages.filter((m) => m.status === 'unread' || m.status === 'draft_ready').length;
   const pendingVolunteersCount = applications.filter((a) => a.status === 'submitted' || a.status === 'screening_review').length;
   const pendingAICount = approvalTasks.filter((t) => t.status === 'pending').length;
@@ -242,1013 +232,1014 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
     >
       <div className="space-y-6">
         {/* Top Banner */}
-        <div className="bg-phumulani-charcoal text-white rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-sm border border-phumulani-teal">
-          <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-2 text-xs font-semibold text-phumulani-teal bg-phumulani-charcoal px-3 py-0.5 rounded-full border border-phumulani-teal">
+        <div className="bg-phumulani-charcoal text-white rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border border-phumulani-teal/40">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 text-[11px] font-semibold text-phumulani-teal tracking-wider uppercase">
               <Briefcase className="w-3.5 h-3.5 text-phumulani-teal" />
-              <span>STAFF COMMAND CENTER</span>
+              <span>Staff Command Center</span>
             </div>
-            <h1 className="font-serif text-2xl font-bold">
-              Operations & Triage Command
+            <h1 className="font-heading text-2xl sm:text-3xl font-bold tracking-tight text-white">
+              Operations &amp; Triage Command
             </h1>
-            <p className="text-xs text-phumulani-cream max-w-xl">
+            <p className="text-sm text-phumulani-cream/90 max-w-2xl leading-relaxed">
               Human-in-the-loop operational management: review AI-triaged email, screen volunteer candidates, reconcile financial ledgers, and oversee events.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-3">
-            <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl p-3 text-center min-w-[100px]">
-              <div className="font-serif text-lg font-bold text-phumulani-gold">{pendingInboxCount}</div>
-              <div className="text-[10px] text-phumulani-cream">Pending Triage</div>
+            <div className="bg-phumulani-charcoal border border-phumulani-teal/50 rounded-xl p-3 text-center min-w-[96px]">
+              <div className="font-heading text-lg font-bold text-phumulani-gold tabular-nums">{pendingInboxCount}</div>
+              <div className="text-[11px] text-phumulani-cream/80 mt-0.5">Pending Triage</div>
             </div>
-            <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl p-3 text-center min-w-[100px]">
-              <div className="font-serif text-lg font-bold text-phumulani-gold">{pendingVolunteersCount}</div>
-              <div className="text-[10px] text-phumulani-cream">To Screen</div>
+            <div className="bg-phumulani-charcoal border border-phumulani-teal/50 rounded-xl p-3 text-center min-w-[96px]">
+              <div className="font-heading text-lg font-bold text-phumulani-gold tabular-nums">{pendingVolunteersCount}</div>
+              <div className="text-[11px] text-phumulani-cream/80 mt-0.5">To Screen</div>
             </div>
-            <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl p-3 text-center min-w-[100px]">
-              <div className="font-serif text-lg font-bold text-phumulani-gold">{restrictedIntakes.length}</div>
-              <div className="text-[10px] text-phumulani-cream">Safeguarding</div>
+            <div className="bg-phumulani-charcoal border border-phumulani-teal/50 rounded-xl p-3 text-center min-w-[96px]">
+              <div className="font-heading text-lg font-bold text-phumulani-gold tabular-nums">{restrictedIntakes.length}</div>
+              <div className="text-[11px] text-phumulani-cream/80 mt-0.5">Safeguarding</div>
             </div>
-            <div
+            <button
+              type="button"
               onClick={() => setActiveTab('media')}
-              className="bg-phumulani-charcoal border border-phumulani-teal hover:border-phumulani-green rounded-xl p-3 text-center min-w-[100px] cursor-pointer transition-colors"
+              className="bg-phumulani-charcoal border border-phumulani-teal/50 hover:border-phumulani-green rounded-xl p-3 text-center min-w-[96px] cursor-pointer transition-colors"
             >
-              <div className="font-serif text-lg font-bold text-phumulani-cream">{PHUMULANI_MEDIA_INVENTORY.length}</div>
-              <div className="text-[10px] text-phumulani-cream">Media Vault</div>
-            </div>
-            <div
+              <div className="font-heading text-lg font-bold text-phumulani-cream tabular-nums">{PHUMULANI_MEDIA_INVENTORY.length}</div>
+              <div className="text-[11px] text-phumulani-cream/80 mt-0.5">Media Vault</div>
+            </button>
+            <button
+              type="button"
               onClick={() => onViewChange('email-command')}
-              className="bg-phumulani-earth hover:bg-phumulani-orange border border-phumulani-teal rounded-xl p-3 text-center min-w-[110px] cursor-pointer transition-colors text-white"
+              className="bg-phumulani-earth hover:bg-phumulani-orange border border-phumulani-teal/50 rounded-xl p-3 text-center min-w-[110px] cursor-pointer transition-colors text-white hover:text-phumulani-charcoal"
               title="Open Master Email Administration (/admin/master/email)"
             >
-              <div className="font-serif text-lg font-bold text-white">Email Admin</div>
-              <div className="text-[10px] text-white">Command Center →</div>
-            </div>
+              <div className="font-heading text-lg font-bold">Email Admin</div>
+              <div className="text-[11px] mt-0.5">Command Center →</div>
+            </button>
           </div>
         </div>
 
         {actionFeedback && (
-          <div className="bg-phumulani-cream border border-phumulani-green text-phumulani-charcoal px-4 py-3 rounded-xl text-xs font-medium flex items-center justify-between shadow-xs animate-in fade-in">
+          <div className="bg-phumulani-green/15 border border-phumulani-green/40 text-phumulani-charcoal px-4 py-3 rounded-xl text-xs font-medium flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-phumulani-earth shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-phumulani-charcoal shrink-0" />
               <span>{actionFeedback}</span>
             </div>
             <button
               onClick={() => setActionFeedback(null)}
-              className="text-phumulani-earth hover:text-phumulani-charcoal font-bold ml-2 cursor-pointer"
+              aria-label="Dismiss notification"
+              className="text-phumulani-charcoal hover:text-phumulani-earth font-bold ml-2 cursor-pointer p-1"
             >
-              ✕
+              <X className="w-3.5 h-3.5" />
             </button>
           </div>
         )}
 
-      {/* TAB 1: UNIFIED INBOX & AI TRIAGE (WORKFLOW A) */}
-      {activeTab === 'inbox' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white rounded-xl border border-phumulani-cream overflow-hidden shadow-xs min-h-[580px]">
-          {/* Left Column: Messages List */}
-          <div className="lg:col-span-5 border-r border-phumulani-cream divide-y divide-phumulani-cream overflow-y-auto max-h-[700px]">
-            <div className="p-3 bg-phumulani-cream border-b border-phumulani-cream flex justify-between items-center text-xs font-semibold text-phumulani-charcoal">
-              <div className="flex items-center gap-2">
-                <span>Inbox Queue (Workflow A)</span>
-                <button
-                  type="button"
-                  onClick={() => onViewChange('email-command')}
-                  className="text-[10px] font-bold text-phumulani-earth hover:text-phumulani-earth bg-phumulani-cream border border-phumulani-teal px-2 py-0.5 rounded-full cursor-pointer"
-                  title="Open Master Email Administration (/admin/master/email)"
-                >
-                  Full Email Admin →
-                </button>
+        {/* TAB 1: UNIFIED INBOX & AI TRIAGE (WORKFLOW A) */}
+        {activeTab === 'inbox' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white rounded-xl border border-phumulani-charcoal/12 overflow-hidden min-h-[580px]">
+            {/* Left Column: Messages List */}
+            <div className="lg:col-span-5 border-r border-phumulani-charcoal/12 divide-y divide-phumulani-charcoal/10 overflow-y-auto max-h-[700px]">
+              <div className="p-3.5 bg-phumulani-cream/70 border-b border-phumulani-charcoal/12 flex justify-between items-center text-xs font-semibold text-phumulani-charcoal">
+                <div className="flex items-center gap-2">
+                  <span>Inbox Queue (Workflow A)</span>
+                  <button
+                    type="button"
+                    onClick={() => onViewChange('email-command')}
+                    className="text-[11px] font-bold text-phumulani-earth hover:underline bg-white border border-phumulani-teal/40 px-2 py-0.5 rounded-md cursor-pointer"
+                    title="Open Master Email Administration (/admin/master/email)"
+                  >
+                    Full Email Admin →
+                  </button>
+                </div>
+                <span className="text-[11px] text-phumulani-charcoal/70">Agent A02</span>
               </div>
-              <span className="text-[11px] text-phumulani-charcoal">Classified by Agent A02</span>
+
+              {messages.map((msg) => {
+                const isSelected = selectedMessage?.id === msg.id;
+                return (
+                  <div
+                    key={msg.id}
+                    onClick={() => {
+                      setSelectedMessage(msg);
+                      setDraftEditText(msg.aiDraftReply || '');
+                    }}
+                    className={`p-4 transition-colors cursor-pointer ${
+                      isSelected
+                        ? 'bg-phumulani-cream/80 ring-1 ring-inset ring-phumulani-earth/40'
+                        : 'hover:bg-phumulani-cream/40'
+                    }`}
+                  >
+                    <div className="flex justify-between items-start text-xs">
+                      <span className="font-bold text-phumulani-charcoal">{msg.fromName}</span>
+                      <span className="text-[11px] text-phumulani-charcoal/70 font-mono tabular-nums">
+                        {new Date(msg.receivedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                      </span>
+                    </div>
+
+                    <div className="font-semibold text-xs text-phumulani-charcoal mt-1 line-clamp-1">
+                      {msg.subject}
+                    </div>
+
+                    <div className="text-[11px] text-phumulani-charcoal/75 line-clamp-2 mt-1">
+                      {msg.body}
+                    </div>
+
+                    <div className="mt-3 flex items-center justify-between text-[10px]">
+                      <div className="flex items-center gap-1.5">
+                        {msg.isSafeguardingAlert ? (
+                          <span className="text-white bg-phumulani-earth font-bold px-2 py-0.5 rounded-md flex items-center gap-1">
+                            <ShieldAlert className="w-3 h-3" />
+                            <span>SAFEGUARDING HALT</span>
+                          </span>
+                        ) : (
+                          <span className="text-phumulani-charcoal bg-phumulani-cream border border-phumulani-charcoal/12 px-2 py-0.5 rounded-md capitalize">
+                            {msg.category.replace('_', ' ')}
+                          </span>
+                        )}
+                      </div>
+
+                      <span className="font-semibold px-2 py-0.5 rounded-md text-phumulani-earth bg-white border border-phumulani-charcoal/12 capitalize">
+                        {msg.status.replace('_', ' ')}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
-            {messages.map((msg) => {
-              const isSelected = selectedMessage?.id === msg.id;
-              return (
-                <div
-                  key={msg.id}
-                  onClick={() => {
-                    setSelectedMessage(msg);
-                    setDraftEditText(msg.aiDraftReply || '');
-                  }}
-                  className={`p-4 transition-all cursor-pointer ${
-                    isSelected ? 'bg-phumulani-cream border-l-4 border-phumulani-earth' : 'hover:bg-phumulani-cream'
-                  }`}
-                >
-                  <div className="flex justify-between items-start text-xs">
-                    <span className="font-bold text-phumulani-charcoal">{msg.fromName}</span>
-                    <span className="text-[10px] text-phumulani-charcoal font-mono">
-                      {new Date(msg.receivedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </span>
-                  </div>
-
-                  <div className="font-semibold text-xs text-phumulani-charcoal mt-1 line-clamp-1">
-                    {msg.subject}
-                  </div>
-
-                  <div className="text-[11px] text-phumulani-charcoal line-clamp-2 mt-1">
-                    {msg.body}
-                  </div>
-
-                  <div className="mt-3 flex items-center justify-between text-[10px]">
-                    <div className="flex items-center gap-1.5">
-                      {msg.isSafeguardingAlert ? (
-                        <span className="text-phumulani-earth bg-phumulani-cream font-bold px-2 py-0.5 rounded flex items-center gap-1">
-                          <ShieldAlert className="w-3 h-3" />
-                          <span>SAFEGUARDING HALT</span>
-                        </span>
-                      ) : (
-                        <span className="text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded capitalize">
-                          {msg.category.replace('_', ' ')}
-                        </span>
-                      )}
+            {/* Right Column: Message Detail & AI Draft Review */}
+            <div className="lg:col-span-7 p-6 flex flex-col justify-between space-y-6 overflow-y-auto max-h-[700px]">
+              {selectedMessage ? (
+                <div className="space-y-6">
+                  {/* Header */}
+                  <div className="border-b border-phumulani-charcoal/12 pb-4 space-y-2.5">
+                    <div className="flex flex-wrap justify-between items-start gap-2">
+                      <div>
+                        <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">
+                          {selectedMessage.subject}
+                        </h3>
+                        <div className="text-xs text-phumulani-charcoal/80 mt-0.5">
+                          From: <strong className="text-phumulani-charcoal">{selectedMessage.fromName}</strong> ({selectedMessage.fromEmail})
+                        </div>
+                      </div>
+                      <span className="text-xs text-phumulani-charcoal/70 font-mono tabular-nums">
+                        {new Date(selectedMessage.receivedAt).toLocaleString()}
+                      </span>
                     </div>
 
-                    <span
-                      className={`font-semibold px-2 py-0.5 rounded ${
-                        msg.status === 'sent'
-                          ? 'text-phumulani-earth bg-phumulani-cream'
-                          : msg.status === 'escalated'
-                          ? 'text-phumulani-earth bg-phumulani-cream'
-                          : 'text-phumulani-earth bg-phumulani-cream'
-                      }`}
-                    >
-                      {msg.status.replace('_', ' ')}
-                    </span>
+                    {selectedMessage.isSafeguardingAlert && (
+                      <div className="p-3.5 bg-phumulani-cream border border-phumulani-earth/40 rounded-lg text-xs text-phumulani-earth font-medium flex items-center gap-2">
+                        <ShieldAlert className="w-4 h-4 text-phumulani-earth shrink-0" />
+                        <span>
+                          SAFEGUARDING ISOLATION: Message contains trauma/crisis disclosure. Automated AI responses are permanently halted per Principle 1.4. Assigned to Sister Miriam K.
+                        </span>
+                      </div>
+                    )}
                   </div>
-                </div>
-              );
-            })}
-          </div>
 
-          {/* Right Column: Message Detail & AI Draft Review */}
-          <div className="lg:col-span-7 p-6 flex flex-col justify-between space-y-6 overflow-y-auto max-h-[700px]">
-            {selectedMessage ? (
-              <div className="space-y-6">
-                {/* Header */}
-                <div className="border-b border-phumulani-cream pb-4 space-y-2">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
-                        {selectedMessage.subject}
-                      </h3>
-                      <div className="text-xs text-phumulani-charcoal mt-0.5">
-                        From: <strong>{selectedMessage.fromName}</strong> ({selectedMessage.fromEmail})
+                  {/* Original Body */}
+                  <div className="bg-phumulani-cream/60 rounded-xl p-4 border border-phumulani-charcoal/12 text-xs text-phumulani-charcoal leading-relaxed whitespace-pre-wrap">
+                    {selectedMessage.body}
+                  </div>
+
+                  {/* AI Triage & Draft Section (Disabled if safeguarding alert) */}
+                  {!selectedMessage.isSafeguardingAlert ? (
+                    <div className="bg-white rounded-xl border border-phumulani-teal/40 p-5 space-y-4">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center gap-2">
+                          <Sparkles className="w-4 h-4 text-phumulani-earth" />
+                          <span className="font-heading text-xs font-bold text-phumulani-charcoal">
+                            AI Draft Proposal (Agent A02 · Email Manager)
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => handleGenerateDraft(selectedMessage)}
+                          disabled={isGeneratingDraft}
+                          className="text-xs text-phumulani-earth hover:underline font-semibold flex items-center gap-1 cursor-pointer"
+                        >
+                          <Sparkles className="w-3 h-3" />
+                          <span>Regenerate Draft</span>
+                        </button>
+                      </div>
+
+                      {selectedMessage.aiReasoning && (
+                        <div className="text-[11px] text-phumulani-earth bg-phumulani-cream/70 p-2.5 rounded-lg border border-phumulani-teal/35">
+                          <strong>Triage Reasoning:</strong> {selectedMessage.aiReasoning}
+                        </div>
+                      )}
+
+                      <div>
+                        <label className="block text-[11px] font-semibold text-phumulani-charcoal mb-1">
+                          Staff Review &amp; Edit (Changes will be audited):
+                        </label>
+                        <textarea
+                          rows={6}
+                          value={draftEditText}
+                          onChange={(e) => setDraftEditText(e.target.value)}
+                          className="w-full p-3 border border-phumulani-charcoal/20 rounded-lg text-xs outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 font-sans leading-relaxed bg-white text-phumulani-charcoal"
+                          disabled={selectedMessage.status === 'sent'}
+                        />
+                      </div>
+
+                      <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
+                        <div className="text-[11px] text-phumulani-charcoal/75 flex items-center gap-1">
+                          <Lock className="w-3 h-3 text-phumulani-charcoal/70" />
+                          <span>Requires human staff sign-off before transmission</span>
+                        </div>
+
+                        {selectedMessage.status === 'sent' ? (
+                          <span className="text-xs font-bold text-phumulani-charcoal flex items-center gap-1 bg-phumulani-green/15 px-3 py-1.5 rounded-lg border border-phumulani-green/40">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-charcoal" />
+                            <span>Sent &amp; Logged by {selectedMessage.approvedBy || currentUser.name}</span>
+                          </span>
+                        ) : (
+                          <button
+                            onClick={() => handleApproveSend(selectedMessage.id)}
+                            className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
+                          >
+                            <Send className="w-3.5 h-3.5" />
+                            <span>Authorize &amp; Send Email</span>
+                          </button>
+                        )}
                       </div>
                     </div>
-                    <span className="text-xs text-phumulani-charcoal font-mono">
-                      {new Date(selectedMessage.receivedAt).toLocaleString()}
-                    </span>
-                  </div>
-
-                  {selectedMessage.isSafeguardingAlert && (
-                    <div className="p-3 bg-phumulani-cream border border-phumulani-earth rounded-lg text-xs text-phumulani-earth font-medium flex items-center gap-2">
-                      <ShieldAlert className="w-4 h-4 text-phumulani-earth shrink-0" />
-                      <span>
-                        SAFEGUARDING ISOLATION: Message contains trauma/crisis disclosure. Automated AI responses are permanently halted per Principle 1.4. Assigned to Sister Miriam K.
-                      </span>
+                  ) : (
+                    <div className="p-4 bg-phumulani-cream/70 rounded-xl border border-phumulani-charcoal/15 text-xs text-phumulani-charcoal space-y-2">
+                      <div className="font-bold text-phumulani-charcoal">Restricted Human Handling:</div>
+                      <p className="leading-relaxed">
+                        This message was isolated from ordinary CRM and AI workflows. Please open the &quot;Restricted Survivor Route&quot; tab to review emergency safety notes and manage confidential outreach.
+                      </p>
                     </div>
                   )}
                 </div>
-
-                {/* Original Body */}
-                <div className="bg-phumulani-cream rounded-xl p-4 border border-phumulani-cream text-xs text-phumulani-charcoal leading-relaxed whitespace-pre-wrap">
-                  {selectedMessage.body}
+              ) : (
+                <div className="flex items-center justify-center h-full text-xs text-phumulani-charcoal/70">
+                  Select a message from the queue to view triage notes.
                 </div>
-
-                {/* AI Triage & Draft Section (Disabled if safeguarding alert) */}
-                {!selectedMessage.isSafeguardingAlert ? (
-                  <div className="bg-white rounded-xl border border-phumulani-teal p-5 space-y-4 shadow-2xs">
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center gap-2">
-                        <Sparkles className="w-4 h-4 text-phumulani-earth" />
-                        <span className="font-serif text-xs font-bold text-phumulani-charcoal">
-                          AI Draft Proposal (Agent A02 · Email Manager)
-                        </span>
-                      </div>
-                      <button
-                        onClick={() => handleGenerateDraft(selectedMessage)}
-                        disabled={isGeneratingDraft}
-                        className="text-xs text-phumulani-earth hover:underline font-semibold flex items-center gap-1 cursor-pointer"
-                      >
-                        <Sparkles className="w-3 h-3" />
-                        <span>Regenerate Draft</span>
-                      </button>
-                    </div>
-
-                    {selectedMessage.aiReasoning && (
-                      <div className="text-[11px] text-phumulani-earth bg-phumulani-cream p-2.5 rounded-lg border border-phumulani-teal">
-                        <strong>Triage Reasoning:</strong> {selectedMessage.aiReasoning}
-                      </div>
-                    )}
-
-                    <div>
-                      <label className="block text-[11px] font-semibold text-phumulani-charcoal mb-1">
-                        Staff Review & Edit (Changes will be audited):
-                      </label>
-                      <textarea
-                        rows={6}
-                        value={draftEditText}
-                        onChange={(e) => setDraftEditText(e.target.value)}
-                        className="w-full p-3 border border-phumulani-cream rounded-lg text-xs outline-none focus:ring-1 focus:ring-phumulani-earth font-sans leading-relaxed"
-                        disabled={selectedMessage.status === 'sent'}
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between pt-2">
-                      <div className="text-[11px] text-phumulani-charcoal flex items-center gap-1">
-                        <Lock className="w-3 h-3 text-phumulani-charcoal" />
-                        <span>Requires human staff sign-off before transmission</span>
-                      </div>
-
-                      {selectedMessage.status === 'sent' ? (
-                        <span className="text-xs font-bold text-phumulani-earth flex items-center gap-1 bg-phumulani-cream px-3 py-1.5 rounded-lg border border-phumulani-green">
-                          <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-earth" />
-                          <span>Sent & Logged by {selectedMessage.approvedBy || currentUser.name}</span>
-                        </span>
-                      ) : (
-                        <button
-                          onClick={() => handleApproveSend(selectedMessage.id)}
-                          className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer shadow-xs"
-                        >
-                          <Send className="w-3.5 h-3.5" />
-                          <span>Authorize & Send Email</span>
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ) : (
-                  <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream text-xs text-phumulani-charcoal space-y-2">
-                    <div className="font-bold text-phumulani-charcoal">Restricted Human Handling:</div>
-                    <p>
-                      This message was isolated from ordinary CRM and AI workflows. Please open the "Restricted Survivor Route" tab to review emergency safety notes and manage confidential outreach.
-                    </p>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="flex items-center justify-center h-full text-xs text-phumulani-charcoal">
-                Select a message from the queue to view triage notes.
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* TAB 2: VOLUNTEER SCREENING QUEUE (WORKFLOW B) */}
-      {activeTab === 'volunteers' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs">
-          {/* Applications list */}
-          <div className="lg:col-span-5 border-r border-phumulani-cream pr-4 space-y-3">
-            <h3 className="font-serif text-base font-bold text-phumulani-charcoal pb-2 border-b border-phumulani-cream">
-              Applications to Screen
-            </h3>
-            {applications.map((app) => (
-              <div
-                key={app.id}
-                onClick={() => setScreeningApp(app)}
-                className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
-                  screeningApp?.id === app.id
-                    ? 'bg-phumulani-cream border-phumulani-earth'
-                    : 'bg-white border-phumulani-cream hover:border-phumulani-cream'
-                }`}
-              >
-                <div className="flex justify-between items-start text-xs">
-                  <span className="font-bold text-phumulani-charcoal">{app.fullName}</span>
-                  <span className="font-mono text-[10px] text-phumulani-charcoal">{app.trackingId}</span>
-                </div>
-                <div className="text-[11px] text-phumulani-charcoal mt-1">{app.opportunityTitle}</div>
-                <div className="mt-2 flex justify-between items-center text-[10px]">
-                  <span className="text-phumulani-charcoal">{app.preferredLanguage}</span>
-                  <span className="font-semibold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded capitalize">
-                    {app.status.replace('_', ' ')}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Screening Review Form */}
-          <div className="lg:col-span-7 pl-2 space-y-5">
-            {screeningApp ? (
-              <div className="space-y-5 text-xs">
-                <div className="flex justify-between items-start border-b border-phumulani-cream pb-3">
-                  <div>
-                    <span className="font-mono text-[11px] font-bold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded">
-                      {screeningApp.trackingId}
-                    </span>
-                    <h3 className="font-serif text-xl font-bold text-phumulani-charcoal mt-1">
-                      {screeningApp.fullName}
-                    </h3>
-                    <div className="text-phumulani-charcoal mt-0.5">
-                      Email: {screeningApp.email} · Phone: {screeningApp.phone}
-                    </div>
-                  </div>
-                  <span className="font-bold text-xs uppercase text-phumulani-charcoal bg-phumulani-cream px-2.5 py-1 rounded">
-                    Status: {screeningApp.status.replace('_', ' ')}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4 bg-phumulani-cream p-4 rounded-xl border border-phumulani-cream">
-                  <div>
-                    <span className="text-phumulani-charcoal">Stated Skills:</span>
-                    <div className="font-semibold text-phumulani-charcoal mt-0.5">{screeningApp.skills.join(', ')}</div>
-                  </div>
-                  <div>
-                    <span className="text-phumulani-charcoal">Availability:</span>
-                    <div className="font-semibold text-phumulani-charcoal mt-0.5">{screeningApp.availability.join(', ')}</div>
-                  </div>
-                </div>
-
-                <div>
-                  <span className="font-semibold text-phumulani-charcoal">Applicant Motivation:</span>
-                  <p className="mt-1 p-3 bg-white border border-phumulani-cream rounded-lg text-phumulani-charcoal leading-relaxed">
-                    "{screeningApp.motivation}"
-                  </p>
-                </div>
-
-                {screeningApp.aiSuggestedMatchNotes && (
-                  <div className="p-3 bg-phumulani-cream border border-phumulani-teal rounded-lg text-phumulani-charcoal space-y-1">
-                    <div className="font-bold text-phumulani-earth flex items-center gap-1.5">
-                      <Sparkles className="w-3.5 h-3.5 text-phumulani-earth" />
-                      <span>Agent A04 (Volunteer Recruiter) Advisory Matching:</span>
-                    </div>
-                    <p className="text-[11px]">{screeningApp.aiSuggestedMatchNotes}</p>
-                  </div>
-                )}
-
-                <div>
-                  <label className="block font-semibold text-phumulani-charcoal mb-1">
-                    Coordinator Screening Notes:
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={screeningNotes}
-                    onChange={(e) => setScreeningNotes(e.target.value)}
-                    placeholder="Enter interview feedback, background check reference numbers, or orientation schedule notes..."
-                    className="w-full p-2.5 border border-phumulani-cream rounded-lg outline-none text-xs"
-                  />
-                </div>
-
-                {/* Workflow B Action Buttons */}
-                <div className="pt-2 flex flex-wrap gap-2">
-                  <button
-                    onClick={() => handleUpdateVolunteerStatus(screeningApp.id, 'screening_review')}
-                    className="px-3 py-2 bg-phumulani-cream text-phumulani-earth border border-phumulani-teal rounded-lg font-semibold hover:bg-phumulani-cream cursor-pointer"
-                  >
-                    Mark Screening In-Progress
-                  </button>
-                  <button
-                    onClick={() => handleUpdateVolunteerStatus(screeningApp.id, 'orientation_scheduled')}
-                    className="px-3 py-2 bg-phumulani-cream text-phumulani-earth border border-phumulani-earth rounded-lg font-semibold hover:bg-phumulani-cream cursor-pointer"
-                  >
-                    Schedule Orientation
-                  </button>
-                  <button
-                    onClick={() => handleUpdateVolunteerStatus(screeningApp.id, 'approved_active')}
-                    className="px-4 py-2 bg-phumulani-earth text-white rounded-lg font-bold hover:bg-phumulani-orange cursor-pointer flex items-center gap-1.5"
-                  >
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span>Approve Active Placement</span>
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="text-phumulani-charcoal text-xs">Select an applicant to review.</div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* TAB 3: EVENT OPERATIONS (WORKFLOW D) */}
-      {activeTab === 'events' && (
-        <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
-                Community Events & Workshops (Workflow D)
-              </h3>
-              <p className="text-xs text-phumulani-charcoal mt-1">
-                Enforce venue capacity limits, manage attendee registration, and promote waitlist entries.
-              </p>
-            </div>
-            <button
-              onClick={() => setShowNewEventModal(true)}
-              className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
-            >
-              <PlusCircle className="w-3.5 h-3.5" />
-              <span>Create New Event</span>
-            </button>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-phumulani-cream text-phumulani-charcoal border-y border-phumulani-cream">
-                <tr>
-                  <th className="py-2.5 px-3 font-semibold">Event Title</th>
-                  <th className="py-2.5 px-3 font-semibold">Date & Time</th>
-                  <th className="py-2.5 px-3 font-semibold">Category</th>
-                  <th className="py-2.5 px-3 font-semibold">Capacity</th>
-                  <th className="py-2.5 px-3 font-semibold">Registrations</th>
-                  <th className="py-2.5 px-3 font-semibold">Waitlist</th>
-                  <th className="py-2.5 px-3 font-semibold">Status</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-phumulani-cream">
-                {events.map((evt) => (
-                  <tr key={evt.id} className="hover:bg-phumulani-cream">
-                    <td className="py-3 px-3 font-bold text-phumulani-charcoal">{evt.title}</td>
-                    <td className="py-3 px-3 text-phumulani-charcoal">
-                      <div>{evt.date}</div>
-                      <div className="text-[11px] text-phumulani-charcoal">{evt.time}</div>
-                    </td>
-                    <td className="py-3 px-3 text-phumulani-charcoal">{evt.category}</td>
-                    <td className="py-3 px-3 font-mono font-bold text-phumulani-charcoal">{evt.capacity} max</td>
-                    <td className="py-3 px-3 font-bold text-phumulani-earth">
-                      {evt.registeredCount} booked
-                    </td>
-                    <td className="py-3 px-3">
-                      {evt.waitlistCount > 0 ? (
-                        <span className="text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded font-bold">
-                          {evt.waitlistCount} waiting
-                        </span>
-                      ) : (
-                        <span className="text-phumulani-charcoal">0</span>
-                      )}
-                    </td>
-                    <td className="py-3 px-3">
-                      <span className="text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded font-semibold text-[11px]">
-                        Published
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* TAB 4: DONATIONS & LEDGER (WORKFLOW C) */}
-      {activeTab === 'finance' && (
-        <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
-                Financial Ledger & Webhook Reconciliation (Workflow C)
-              </h3>
-              <p className="text-xs text-phumulani-charcoal mt-1">
-                Only provider-verified transactions write to ledger. Dual human control for any refund or bank change.
-              </p>
-            </div>
-            <div className="flex items-center gap-2 text-xs font-semibold text-phumulani-charcoal bg-phumulani-cream px-3 py-1.5 rounded-lg border border-phumulani-green">
-              <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
-              <span>100% Transactions Reconciled</span>
-            </div>
-          </div>
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-phumulani-cream text-phumulani-charcoal border-y border-phumulani-cream">
-                <tr>
-                  <th className="py-2.5 px-3 font-semibold">Txn ID</th>
-                  <th className="py-2.5 px-3 font-semibold">Donor</th>
-                  <th className="py-2.5 px-3 font-semibold">Campaign</th>
-                  <th className="py-2.5 px-3 font-semibold">Amount</th>
-                  <th className="py-2.5 px-3 font-semibold">Receipt #</th>
-                  <th className="py-2.5 px-3 font-semibold">Reconciliation</th>
-                  <th className="py-2.5 px-3 font-semibold">Action</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-phumulani-cream">
-                {donations.map((don) => (
-                  <tr key={don.id} className="hover:bg-phumulani-cream">
-                    <td className="py-3 px-3 font-mono text-phumulani-charcoal">{don.transactionId}</td>
-                    <td className="py-3 px-3 font-medium text-phumulani-charcoal">{don.donorName}</td>
-                    <td className="py-3 px-3 text-phumulani-charcoal">{don.campaignTitle}</td>
-                    <td className="py-3 px-3 font-bold text-phumulani-charcoal">${don.amount.toLocaleString()}.00</td>
-                    <td className="py-3 px-3 font-mono font-bold text-phumulani-earth">{don.receiptNumber}</td>
-                    <td className="py-3 px-3">
-                      {don.reconciled ? (
-                        <span className="text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded font-semibold text-[11px] flex items-center gap-1 w-fit">
-                          <CheckCircle2 className="w-3 h-3" />
-                          <span>Reconciled</span>
-                        </span>
-                      ) : (
-                        <span className="text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded font-semibold text-[11px]">
-                          Pending batch
-                        </span>
-                      )}
-                    </td>
-                    <td className="py-3 px-3">
-                      <button
-                        onClick={() => onOpenReceipt(don)}
-                        className="text-xs font-semibold text-phumulani-earth hover:underline"
-                      >
-                        Inspect
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* TAB 5: AI APPROVAL QUEUE (SECTION 7.3 & 11.6) */}
-      {activeTab === 'ai_queue' && (
-        <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-6">
-          <div>
-            <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
-              Centralized AI Approval Queue
-            </h3>
-            <p className="text-xs text-phumulani-charcoal mt-1">
-              "AI drafts, humans decide." Outbound communications, grant narratives, public events, and campaign texts require authorized staff approval.
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            {approvalTasks.map((task) => (
-              <div
-                key={task.id}
-                className="p-5 rounded-xl border border-phumulani-cream hover:border-phumulani-cream transition-all space-y-4"
-              >
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded">
-                        {task.agentId} ({task.agentName})
-                      </span>
-                      <h4 className="font-serif font-bold text-base text-phumulani-charcoal">{task.title}</h4>
-                    </div>
-                    <div className="text-xs text-phumulani-charcoal mt-1">
-                      Context: {task.contextSummary} · Queued at {new Date(task.createdAt).toLocaleString()}
-                    </div>
-                  </div>
-
-                  <span
-                    className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${
-                      task.status === 'approved'
-                        ? 'bg-phumulani-cream text-phumulani-charcoal'
-                        : task.status === 'rejected'
-                        ? 'bg-phumulani-cream text-phumulani-earth'
-                        : 'bg-phumulani-cream text-phumulani-charcoal'
-                    }`}
-                  >
-                    {task.status}
-                  </span>
-                </div>
-
-                <div className="p-4 bg-phumulani-cream rounded-xl border border-phumulani-cream text-xs text-phumulani-charcoal leading-relaxed">
-                  <strong>Proposed Output:</strong>
-                  <p className="mt-1 font-serif text-phumulani-charcoal whitespace-pre-wrap">
-                    {task.proposedContent}
-                  </p>
-                </div>
-
-                {task.status === 'pending' && (
-                  <div className="flex justify-end gap-3 pt-1">
-                    <button
-                      onClick={() => {
-                        db.resolveApprovalTask(task.id, 'rejected', 'Staff requested revision.');
-                        setActionFeedback(`Task ${task.id} rejected.`);
-                      }}
-                      className="px-4 py-2 border border-phumulani-cream text-phumulani-earth hover:bg-phumulani-cream rounded-lg text-xs font-bold transition-colors cursor-pointer"
-                    >
-                      Reject
-                    </button>
-                    <button
-                      onClick={() => {
-                        db.resolveApprovalTask(task.id, 'approved', 'Staff approved without change.');
-                        setActionFeedback(`Task ${task.id} approved and executed.`);
-                      }}
-                      className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
-                    >
-                      <Check className="w-4 h-4" />
-                      <span>Approve & Authorize Action</span>
-                    </button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* TAB 6: RESTRICTED SURVIVOR ROUTE (WORKFLOW E & SECTION 13) */}
-      {activeTab === 'restricted' && (
-        <div className="bg-phumulani-cream border-2 border-phumulani-earth rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs">
-          <div className="flex justify-between items-start">
-            <div className="space-y-1">
-              <div className="inline-flex items-center gap-2 text-xs font-bold text-phumulani-earth bg-phumulani-cream px-3 py-1 rounded-full border border-phumulani-earth">
-                <ShieldAlert className="w-3.5 h-3.5 text-phumulani-earth" />
-                <span>RESTRICTED SURVIVOR SERVICES BOUNDARY (SECTION 13)</span>
-              </div>
-              <h3 className="font-serif text-2xl font-bold text-phumulani-earth">
-                Isolated Confidential Intake Queue
-              </h3>
-              <p className="text-xs text-phumulani-charcoal max-w-2xl leading-relaxed">
-                This environment is completely segregated from the public CRM, general analytics, and external AI agents. Only certified Safeguarding Officers and trauma advocates have access.
-              </p>
-            </div>
-
-            <div className="bg-white p-3 rounded-xl border border-phumulani-earth text-xs text-right">
-              <div className="text-phumulani-charcoal">Authorized Officer:</div>
-              <div className="font-bold text-phumulani-earth">{currentUser.name}</div>
-              <div className="text-[10px] text-phumulani-earth font-semibold mt-0.5">Role Verified</div>
-            </div>
-          </div>
-
-          <div className="space-y-4">
-            {restrictedIntakes.map((item) => (
-              <div
-                key={item.id}
-                className="bg-white rounded-xl border border-phumulani-earth p-5 shadow-xs space-y-3"
-              >
-                <div className="flex justify-between items-start">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded">
-                      {item.anonymousCode}
-                    </span>
-                    <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${
-                        item.urgencyLevel === 'immediate_safety'
-                          ? 'bg-phumulani-earth text-white animate-pulse'
-                          : 'bg-phumulani-cream text-phumulani-charcoal'
-                      }`}
-                    >
-                      {item.urgencyLevel.replace('_', ' ')}
-                    </span>
-                  </div>
-                  <span className="text-xs text-phumulani-charcoal font-mono">
-                    Received: {new Date(item.createdAt).toLocaleString()}
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs bg-phumulani-cream p-3 rounded-lg border border-phumulani-cream">
-                  <div>
-                    <span className="text-phumulani-charcoal">Language:</span>
-                    <div className="font-semibold text-phumulani-charcoal">{item.languageNeeded}</div>
-                  </div>
-                  <div>
-                    <span className="text-phumulani-charcoal">Contact Method:</span>
-                    <div className="font-semibold text-phumulani-charcoal capitalize">{item.preferredContactMethod.replace('_', ' ')}</div>
-                  </div>
-                  <div>
-                    <span className="text-phumulani-charcoal">Safe Window:</span>
-                    <div className="font-semibold text-phumulani-charcoal">{item.safeTimeToContact}</div>
-                  </div>
-                </div>
-
-                <div className="p-3 bg-phumulani-cream rounded-lg text-xs font-mono text-phumulani-charcoal">
-                  {item.notesEncryptedSummary}
-                </div>
-
-                <div className="flex justify-between items-center text-xs pt-1">
-                  <span className="text-phumulani-charcoal">
-                    Lead Advocate: <strong>{item.assignedSpecialist}</strong>
-                  </span>
-                  <button
-                    onClick={() => {
-                      setActionFeedback(`Confidential safety protocol initiated for reference ${item.anonymousCode}. A certified trauma advocate will make discreet contact during the designated safe window.`);
-                      setTimeout(() => setActionFeedback(null), 6000);
-                    }}
-                    className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold cursor-pointer"
-                  >
-                    Initiate Safe Outreach
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* TAB 7: MEDIA PRESERVATION & SAFEGUARDING REGISTRY */}
-      {activeTab === 'media' && (
-        <div className="space-y-6">
-          {/* Top safeguard header & actions */}
-          <div className="bg-white rounded-2xl border border-phumulani-cream p-6 shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div>
-              <div className="flex items-center gap-2 text-xs font-bold text-phumulani-earth uppercase tracking-wider mb-1">
-                <Camera className="w-4 h-4 text-phumulani-earth" />
-                <span>Authentic Media Preservation & Safeguarding Registry</span>
-              </div>
-              <h2 className="font-serif text-xl font-bold text-phumulani-charcoal">
-                Visual Assets & Digital Dignity Protocol
-              </h2>
-              <p className="text-xs text-phumulani-charcoal mt-1 max-w-2xl leading-relaxed">
-                Phumulani maintains a strict Zero-AI Generation Rule for real individuals. All 19 media assets represent real community members, founder Comfort Dondo, board leaders, publications, and cultural programs. Identifiable survivor records are never published without written re-consent.
-              </p>
-            </div>
-
-            <div className="flex items-center gap-2.5 shrink-0">
-              {onOpenMediaRegistry && (
-                <button
-                  type="button"
-                  onClick={onOpenMediaRegistry}
-                  className="px-4 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-2 cursor-pointer"
-                >
-                  <Eye className="w-4 h-4" />
-                  <span>Inspect Full Registry Modal</span>
-                </button>
               )}
             </div>
           </div>
+        )}
 
-          {/* Backup Location & Integrity Notice */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-phumulani-cream border border-phumulani-cream rounded-xl p-4 space-y-1">
-              <span className="text-[11px] font-bold text-phumulani-charcoal uppercase tracking-wider">Local Backup Path</span>
-              <p className="font-mono text-xs font-semibold text-phumulani-charcoal break-all">
-                D:\Phumulani\Backups\MediaArchive
-              </p>
-              <p className="text-[10px] text-phumulani-charcoal">Automated mirror with SHA-256 integrity verification.</p>
+        {/* TAB 2: VOLUNTEER SCREENING QUEUE (WORKFLOW B) */}
+        {activeTab === 'volunteers' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-white rounded-xl border border-phumulani-charcoal/12 p-6">
+            {/* Applications list */}
+            <div className="lg:col-span-5 lg:border-r lg:border-phumulani-charcoal/12 lg:pr-5 space-y-3">
+              <h3 className="font-heading text-base font-bold text-phumulani-charcoal pb-2 border-b border-phumulani-charcoal/12">
+                Applications to Screen
+              </h3>
+              {applications.map((app) => (
+                <div
+                  key={app.id}
+                  onClick={() => setScreeningApp(app)}
+                  className={`p-3.5 rounded-xl border transition-colors cursor-pointer ${
+                    screeningApp?.id === app.id
+                      ? 'bg-phumulani-cream/80 border-phumulani-earth'
+                      : 'bg-white border-phumulani-charcoal/12 hover:border-phumulani-earth/40'
+                  }`}
+                >
+                  <div className="flex justify-between items-start text-xs">
+                    <span className="font-bold text-phumulani-charcoal">{app.fullName}</span>
+                    <span className="font-mono text-[10px] text-phumulani-charcoal/75 tabular-nums">{app.trackingId}</span>
+                  </div>
+                  <div className="text-[11px] text-phumulani-charcoal/80 mt-1">{app.opportunityTitle}</div>
+                  <div className="mt-2 flex justify-between items-center text-[10px]">
+                    <span className="text-phumulani-charcoal/75">{app.preferredLanguage}</span>
+                    <span className="font-semibold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded-md border border-phumulani-charcoal/10 capitalize">
+                      {app.status.replace('_', ' ')}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
 
-            <div className="bg-phumulani-cream border border-phumulani-green rounded-xl p-4 space-y-1">
-              <span className="text-[11px] font-bold text-phumulani-charcoal uppercase tracking-wider">Public Web Cleared</span>
-              <div className="font-serif text-2xl font-bold text-phumulani-charcoal">17 Assets</div>
-              <p className="text-[10px] text-phumulani-earth">All rights verified, founder approved, zero synthetic faces.</p>
-            </div>
-
-            <div className="bg-phumulani-cream border border-phumulani-earth rounded-xl p-4 space-y-1">
-              <span className="text-[11px] font-bold text-phumulani-earth uppercase tracking-wider">Withheld / Staged (Safeguarding)</span>
-              <div className="font-serif text-2xl font-bold text-phumulani-earth">
-                {stagedMediaList.filter((m) => m.publicationStatus !== 'published').length} Assets
-              </div>
-              <p className="text-[10px] text-phumulani-earth">Protected under VAWA & Minnesota confidentiality laws.</p>
-            </div>
-          </div>
-
-          {/* Staged & Withheld Media Safeguarding Queue */}
-          <div className="bg-white rounded-2xl border border-phumulani-earth shadow-xs overflow-hidden">
-            <div className="p-4 bg-phumulani-cream border-b border-phumulani-earth flex justify-between items-center">
-              <div className="flex items-center gap-2">
-                <ShieldAlert className="w-4 h-4 text-phumulani-earth" />
-                <h3 className="font-serif text-sm font-bold text-phumulani-earth">
-                  Safeguarding Review Queue — Staged & Withheld Assets
-                </h3>
-              </div>
-              <span className="text-[11px] bg-phumulani-cream text-phumulani-earth font-bold px-2.5 py-0.5 rounded-full">
-                Review Gate Active
-              </span>
-            </div>
-
-            <div className="divide-y divide-phumulani-cream p-4 space-y-4">
-              {stagedMediaList.map((asset) => (
-                <div key={asset.id} className="p-4 rounded-xl border border-phumulani-cream bg-phumulani-cream flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                  <div className="space-y-1.5 flex-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-mono text-xs font-bold text-phumulani-charcoal bg-white px-2 py-0.5 rounded border border-phumulani-cream">
-                        {asset.id}
+            {/* Screening Review Form */}
+            <div className="lg:col-span-7 lg:pl-2 space-y-5">
+              {screeningApp ? (
+                <div className="space-y-5 text-xs">
+                  <div className="flex flex-wrap justify-between items-start gap-2 border-b border-phumulani-charcoal/12 pb-3">
+                    <div>
+                      <span className="font-mono text-[11px] font-bold text-phumulani-earth bg-phumulani-cream border border-phumulani-charcoal/12 px-2 py-0.5 rounded-md tabular-nums">
+                        {screeningApp.trackingId}
                       </span>
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${
-                        asset.publicationStatus === 'withheld'
-                          ? 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth'
-                          : asset.publicationStatus === 'staged'
-                          ? 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-gold'
-                          : 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green'
-                      }`}>
-                        {asset.publicationStatus}
-                      </span>
-                      <span className="text-xs font-bold text-phumulani-charcoal">{asset.title}</span>
-                    </div>
-
-                    <p className="text-xs text-phumulani-charcoal">{asset.caption}</p>
-
-                    {asset.sensitiveContextNotes && (
-                      <div className="p-2.5 bg-phumulani-cream rounded-lg text-[11px] text-phumulani-earth border border-phumulani-earth font-medium">
-                        <strong>Safeguarding Note:</strong> {asset.sensitiveContextNotes}
+                      <h3 className="font-heading text-xl font-bold text-phumulani-charcoal mt-1.5">
+                        {screeningApp.fullName}
+                      </h3>
+                      <div className="text-phumulani-charcoal/80 mt-0.5">
+                        Email: {screeningApp.email} · Phone: {screeningApp.phone}
                       </div>
-                    )}
+                    </div>
+                    <span className="font-bold text-[11px] uppercase text-phumulani-charcoal bg-phumulani-cream border border-phumulani-charcoal/15 px-2.5 py-1 rounded-md">
+                      Status: {screeningApp.status.replace('_', ' ')}
+                    </span>
+                  </div>
 
-                    <div className="text-[10px] text-phumulani-charcoal font-mono">
-                      Checksum: {asset.checksumSha256.slice(0, 16)}... | Rights: {asset.usageAuthorization}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-phumulani-cream/70 p-4 rounded-xl border border-phumulani-charcoal/12">
+                    <div>
+                      <span className="text-phumulani-charcoal/75">Stated Skills:</span>
+                      <div className="font-semibold text-phumulani-charcoal mt-0.5">{screeningApp.skills.join(', ')}</div>
+                    </div>
+                    <div>
+                      <span className="text-phumulani-charcoal/75">Availability:</span>
+                      <div className="font-semibold text-phumulani-charcoal mt-0.5">{screeningApp.availability.join(', ')}</div>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2 shrink-0">
-                    {asset.publicationStatus !== 'published' ? (
-                      <>
+                  <div>
+                    <span className="font-semibold text-phumulani-charcoal">Applicant Motivation:</span>
+                    <p className="mt-1.5 p-3.5 bg-white border border-phumulani-charcoal/15 rounded-lg text-phumulani-charcoal leading-relaxed">
+                      &quot;{screeningApp.motivation}&quot;
+                    </p>
+                  </div>
+
+                  {screeningApp.aiSuggestedMatchNotes && (
+                    <div className="p-3.5 bg-phumulani-cream/70 border border-phumulani-teal/40 rounded-lg text-phumulani-charcoal space-y-1">
+                      <div className="font-bold text-phumulani-earth flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-phumulani-earth" />
+                        <span>Agent A04 (Volunteer Recruiter) Advisory Matching:</span>
+                      </div>
+                      <p className="text-[11px] leading-relaxed">{screeningApp.aiSuggestedMatchNotes}</p>
+                    </div>
+                  )}
+
+                  <div>
+                    <label className="block font-semibold text-phumulani-charcoal mb-1">
+                      Coordinator Screening Notes:
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={screeningNotes}
+                      onChange={(e) => setScreeningNotes(e.target.value)}
+                      placeholder="Enter interview feedback, background check reference numbers, or orientation schedule notes..."
+                      className="w-full p-2.5 border border-phumulani-charcoal/20 rounded-lg outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 text-xs bg-white text-phumulani-charcoal"
+                    />
+                  </div>
+
+                  {/* Workflow B Action Buttons */}
+                  <div className="pt-2 flex flex-wrap gap-2">
+                    <button
+                      onClick={() => handleUpdateVolunteerStatus(screeningApp.id, 'screening_review')}
+                      className="px-3.5 py-2 bg-white text-phumulani-earth border border-phumulani-teal/50 rounded-lg font-semibold hover:bg-phumulani-cream cursor-pointer transition-colors"
+                    >
+                      Mark Screening In-Progress
+                    </button>
+                    <button
+                      onClick={() => handleUpdateVolunteerStatus(screeningApp.id, 'orientation_scheduled')}
+                      className="px-3.5 py-2 bg-white text-phumulani-earth border border-phumulani-earth/50 rounded-lg font-semibold hover:bg-phumulani-cream cursor-pointer transition-colors"
+                    >
+                      Schedule Orientation
+                    </button>
+                    <button
+                      onClick={() => handleUpdateVolunteerStatus(screeningApp.id, 'approved_active')}
+                      className="px-4 py-2 bg-phumulani-earth text-white rounded-lg font-bold hover:bg-phumulani-orange hover:text-phumulani-charcoal cursor-pointer flex items-center gap-1.5 transition-colors"
+                    >
+                      <CheckCircle2 className="w-4 h-4" />
+                      <span>Approve Active Placement</span>
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="text-phumulani-charcoal/70 text-xs">Select an applicant to review.</div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: EVENT OPERATIONS (WORKFLOW D) */}
+        {activeTab === 'events' && (
+          <div className="bg-white rounded-xl border border-phumulani-charcoal/12 p-6 space-y-6">
+            <div className="flex flex-wrap justify-between items-center gap-4 border-b border-phumulani-charcoal/12 pb-4">
+              <div>
+                <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">
+                  Community Events &amp; Workshops (Workflow D)
+                </h3>
+                <p className="text-xs text-phumulani-charcoal/75 mt-1">
+                  Enforce venue capacity limits, manage attendee registration, and promote waitlist entries.
+                </p>
+              </div>
+              <button
+                onClick={() => setShowNewEventModal(true)}
+                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
+              >
+                <PlusCircle className="w-3.5 h-3.5" />
+                <span>Create New Event</span>
+              </button>
+            </div>
+
+            <div className="overflow-x-auto rounded-lg border border-phumulani-charcoal/12">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-phumulani-cream/70 text-phumulani-charcoal border-b border-phumulani-charcoal/15">
+                  <tr>
+                    <th className="py-3 px-3.5 font-semibold">Event Title</th>
+                    <th className="py-3 px-3.5 font-semibold">Date &amp; Time</th>
+                    <th className="py-3 px-3.5 font-semibold">Category</th>
+                    <th className="py-3 px-3.5 font-semibold">Capacity</th>
+                    <th className="py-3 px-3.5 font-semibold">Registrations</th>
+                    <th className="py-3 px-3.5 font-semibold">Waitlist</th>
+                    <th className="py-3 px-3.5 font-semibold">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-phumulani-charcoal/10 tabular-nums">
+                  {events.map((evt) => (
+                    <tr key={evt.id} className="hover:bg-phumulani-cream/40 transition-colors">
+                      <td className="py-3 px-3.5 font-bold text-phumulani-charcoal">{evt.title}</td>
+                      <td className="py-3 px-3.5 text-phumulani-charcoal">
+                        <div>{evt.date}</div>
+                        <div className="text-[11px] text-phumulani-charcoal/70">{evt.time}</div>
+                      </td>
+                      <td className="py-3 px-3.5 text-phumulani-charcoal">{evt.category}</td>
+                      <td className="py-3 px-3.5 font-mono font-bold text-phumulani-charcoal">{evt.capacity} max</td>
+                      <td className="py-3 px-3.5 font-bold text-phumulani-earth">
+                        {evt.registeredCount} booked
+                      </td>
+                      <td className="py-3 px-3.5">
+                        {evt.waitlistCount > 0 ? (
+                          <span className="text-phumulani-charcoal bg-phumulani-gold/20 border border-phumulani-gold/40 px-2 py-0.5 rounded-md font-bold">
+                            {evt.waitlistCount} waiting
+                          </span>
+                        ) : (
+                          <span className="text-phumulani-charcoal/70">0</span>
+                        )}
+                      </td>
+                      <td className="py-3 px-3.5">
+                        <span className="text-phumulani-charcoal bg-phumulani-green/15 border border-phumulani-green/35 px-2 py-0.5 rounded-md font-semibold text-[11px]">
+                          Published
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: DONATIONS & LEDGER (WORKFLOW C) */}
+        {activeTab === 'finance' && (
+          <div className="bg-white rounded-xl border border-phumulani-charcoal/12 p-6 space-y-6">
+            <div className="flex flex-wrap justify-between items-center gap-4 border-b border-phumulani-charcoal/12 pb-4">
+              <div>
+                <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">
+                  Financial Ledger &amp; Webhook Reconciliation (Workflow C)
+                </h3>
+                <p className="text-xs text-phumulani-charcoal/75 mt-1">
+                  Only provider-verified transactions write to ledger. Dual human control for any refund or bank change.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 text-xs font-semibold text-phumulani-charcoal bg-phumulani-green/15 px-3 py-1.5 rounded-lg border border-phumulani-green/40">
+                <CheckCircle2 className="w-4 h-4 text-phumulani-charcoal" />
+                <span>100% Transactions Reconciled</span>
+              </div>
+            </div>
+
+            <div className="overflow-x-auto rounded-lg border border-phumulani-charcoal/12">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-phumulani-cream/70 text-phumulani-charcoal border-b border-phumulani-charcoal/15">
+                  <tr>
+                    <th className="py-3 px-3.5 font-semibold">Txn ID</th>
+                    <th className="py-3 px-3.5 font-semibold">Donor</th>
+                    <th className="py-3 px-3.5 font-semibold">Campaign</th>
+                    <th className="py-3 px-3.5 font-semibold">Amount</th>
+                    <th className="py-3 px-3.5 font-semibold">Receipt #</th>
+                    <th className="py-3 px-3.5 font-semibold">Reconciliation</th>
+                    <th className="py-3 px-3.5 font-semibold">Action</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-phumulani-charcoal/10 tabular-nums">
+                  {donations.map((don) => (
+                    <tr key={don.id} className="hover:bg-phumulani-cream/40 transition-colors">
+                      <td className="py-3 px-3.5 font-mono text-phumulani-charcoal">{don.transactionId}</td>
+                      <td className="py-3 px-3.5 font-medium text-phumulani-charcoal">{don.donorName}</td>
+                      <td className="py-3 px-3.5 text-phumulani-charcoal">{don.campaignTitle}</td>
+                      <td className="py-3 px-3.5 font-bold text-phumulani-charcoal">${don.amount.toLocaleString()}.00</td>
+                      <td className="py-3 px-3.5 font-mono font-bold text-phumulani-earth">{don.receiptNumber}</td>
+                      <td className="py-3 px-3.5">
+                        {don.reconciled ? (
+                          <span className="text-phumulani-charcoal bg-phumulani-green/15 border border-phumulani-green/35 px-2 py-0.5 rounded-md font-semibold text-[11px] inline-flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3 text-phumulani-charcoal" />
+                            <span>Reconciled</span>
+                          </span>
+                        ) : (
+                          <span className="text-phumulani-charcoal bg-phumulani-gold/15 border border-phumulani-gold/40 px-2 py-0.5 rounded-md font-semibold text-[11px]">
+                            Pending batch
+                          </span>
+                        )}
+                      </td>
+                      <td className="py-3 px-3.5">
                         <button
-                          type="button"
-                          onClick={() => handleWithholdMediaRelease(asset.id, 'Withheld per active protection order precautions.')}
-                          className="px-3 py-1.5 bg-phumulani-cream hover:bg-phumulani-cream text-phumulani-earth text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+                          onClick={() => onOpenReceipt(don)}
+                          className="text-xs font-semibold text-phumulani-earth hover:underline cursor-pointer"
                         >
-                          Enforce Withhold
+                          Inspect
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => handleApproveMediaRelease(asset.id)}
-                          className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white text-xs font-bold rounded-lg transition-colors shadow-xs cursor-pointer"
-                        >
-                          Authorize Release
-                        </button>
-                      </>
-                    ) : (
-                      <span className="text-xs font-bold text-phumulani-earth bg-phumulani-cream px-3 py-1.5 rounded-lg border border-phumulani-green flex items-center gap-1.5">
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span>Cleared for Web</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 5: AI APPROVAL QUEUE (SECTION 7.3 & 11.6) */}
+        {activeTab === 'ai_queue' && (
+          <div className="bg-white rounded-xl border border-phumulani-charcoal/12 p-6 space-y-6">
+            <div className="border-b border-phumulani-charcoal/12 pb-4">
+              <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">
+                Centralized AI Approval Queue
+              </h3>
+              <p className="text-xs text-phumulani-charcoal/75 mt-1">
+                &quot;AI drafts, humans decide.&quot; Outbound communications, grant narratives, public events, and campaign texts require authorized staff approval.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {approvalTasks.map((task) => (
+                <div
+                  key={task.id}
+                  className="p-5 rounded-xl border border-phumulani-charcoal/15 space-y-4"
+                >
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-mono text-xs font-bold text-phumulani-charcoal bg-phumulani-cream border border-phumulani-charcoal/12 px-2 py-0.5 rounded-md">
+                          {task.agentId} ({task.agentName})
+                        </span>
+                        <h4 className="font-heading font-bold text-base text-phumulani-charcoal">{task.title}</h4>
+                      </div>
+                      <div className="text-xs text-phumulani-charcoal/75 mt-1 tabular-nums">
+                        Context: {task.contextSummary} · Queued at {new Date(task.createdAt).toLocaleString()}
+                      </div>
+                    </div>
+
+                    <span
+                      className={`text-[11px] font-bold px-2.5 py-0.5 rounded-md uppercase tracking-wider shrink-0 ${
+                        task.status === 'approved'
+                          ? 'bg-phumulani-green/15 text-phumulani-charcoal border border-phumulani-green/35'
+                          : task.status === 'rejected'
+                          ? 'bg-phumulani-cream text-phumulani-earth border border-phumulani-earth/30'
+                          : 'bg-phumulani-gold/15 text-phumulani-charcoal border border-phumulani-gold/40'
+                      }`}
+                    >
+                      {task.status}
+                    </span>
+                  </div>
+
+                  <div className="p-4 bg-phumulani-cream/60 rounded-xl border border-phumulani-charcoal/10 text-xs text-phumulani-charcoal leading-relaxed">
+                    <strong>Proposed Output:</strong>
+                    <p className="mt-1.5 text-phumulani-charcoal/90 whitespace-pre-wrap">
+                      {task.proposedContent}
+                    </p>
+                  </div>
+
+                  {task.status === 'pending' && (
+                    <div className="flex justify-end gap-3 pt-1">
+                      <button
+                        onClick={() => {
+                          db.resolveApprovalTask(task.id, 'rejected', 'Staff requested revision.');
+                          setActionFeedback(`Task ${task.id} rejected.`);
+                        }}
+                        className="px-4 py-2 border border-phumulani-charcoal/20 text-phumulani-earth hover:bg-phumulani-cream rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                      >
+                        Reject
+                      </button>
+                      <button
+                        onClick={() => {
+                          db.resolveApprovalTask(task.id, 'approved', 'Staff approved without change.');
+                          setActionFeedback(`Task ${task.id} approved and executed.`);
+                        }}
+                        className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <Check className="w-4 h-4" />
+                        <span>Approve &amp; Authorize Action</span>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 6: RESTRICTED SURVIVOR ROUTE (WORKFLOW E & SECTION 13) */}
+        {activeTab === 'restricted' && (
+          <div className="bg-phumulani-cream/70 border border-phumulani-earth/40 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div className="flex flex-wrap justify-between items-start gap-4">
+              <div className="space-y-1.5">
+                <div className="inline-flex items-center gap-2 text-xs font-bold text-phumulani-earth">
+                  <ShieldAlert className="w-4 h-4 text-phumulani-earth" />
+                  <span>RESTRICTED SURVIVOR SERVICES BOUNDARY (SECTION 13)</span>
+                </div>
+                <h3 className="font-heading text-2xl font-bold text-phumulani-earth">
+                  Isolated Confidential Intake Queue
+                </h3>
+                <p className="text-xs text-phumulani-charcoal/85 max-w-2xl leading-relaxed">
+                  This environment is completely segregated from the public CRM, general analytics, and external AI agents. Only certified Safeguarding Officers and trauma advocates have access.
+                </p>
+              </div>
+
+              <div className="bg-white p-3.5 rounded-xl border border-phumulani-earth/40 text-xs text-right">
+                <div className="text-phumulani-charcoal/75">Authorized Officer:</div>
+                <div className="font-bold text-phumulani-earth mt-0.5">{currentUser.name}</div>
+                <div className="text-[10px] text-phumulani-earth font-semibold mt-0.5">Role Verified</div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {restrictedIntakes.map((item) => (
+                <div
+                  key={item.id}
+                  className="bg-white rounded-xl border border-phumulani-earth/35 p-5 space-y-3"
+                >
+                  <div className="flex flex-wrap justify-between items-start gap-2">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xs font-bold text-phumulani-earth bg-phumulani-cream border border-phumulani-earth/25 px-2.5 py-0.5 rounded-md tabular-nums">
+                        {item.anonymousCode}
                       </span>
-                    )}
+                      <span
+                        className={`text-[10px] font-bold px-2.5 py-0.5 rounded-md uppercase ${
+                          item.urgencyLevel === 'immediate_safety'
+                            ? 'bg-phumulani-earth text-white'
+                            : 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-charcoal/15'
+                        }`}
+                      >
+                        {item.urgencyLevel.replace('_', ' ')}
+                      </span>
+                    </div>
+                    <span className="text-xs text-phumulani-charcoal/75 font-mono tabular-nums">
+                      Received: {new Date(item.createdAt).toLocaleString()}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs bg-phumulani-cream/70 p-3.5 rounded-lg border border-phumulani-charcoal/10">
+                    <div>
+                      <span className="text-phumulani-charcoal/70">Language:</span>
+                      <div className="font-semibold text-phumulani-charcoal mt-0.5">{item.languageNeeded}</div>
+                    </div>
+                    <div>
+                      <span className="text-phumulani-charcoal/70">Contact Method:</span>
+                      <div className="font-semibold text-phumulani-charcoal capitalize mt-0.5">{item.preferredContactMethod.replace('_', ' ')}</div>
+                    </div>
+                    <div>
+                      <span className="text-phumulani-charcoal/70">Safe Window:</span>
+                      <div className="font-semibold text-phumulani-charcoal mt-0.5">{item.safeTimeToContact}</div>
+                    </div>
+                  </div>
+
+                  <div className="p-3 bg-phumulani-cream/60 rounded-lg text-xs font-mono text-phumulani-charcoal border border-phumulani-charcoal/10">
+                    {item.notesEncryptedSummary}
+                  </div>
+
+                  <div className="flex flex-wrap justify-between items-center gap-2 text-xs pt-1">
+                    <span className="text-phumulani-charcoal/85">
+                      Lead Advocate: <strong className="text-phumulani-charcoal">{item.assignedSpecialist}</strong>
+                    </span>
+                    <button
+                      onClick={() => {
+                        setActionFeedback(`Confidential safety protocol initiated for reference ${item.anonymousCode}. A certified trauma advocate will make discreet contact during the designated safe window.`);
+                        setTimeout(() => setActionFeedback(null), 6000);
+                      }}
+                      className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-lg font-bold cursor-pointer transition-colors"
+                    >
+                      Initiate Safe Outreach
+                    </button>
                   </div>
                 </div>
               ))}
             </div>
           </div>
+        )}
 
-          {/* Published Media Inventory Gallery */}
-          <div className="bg-white rounded-2xl border border-phumulani-cream p-6 shadow-xs space-y-4">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        {/* TAB 7: MEDIA PRESERVATION & SAFEGUARDING REGISTRY */}
+        {activeTab === 'media' && (
+          <div className="space-y-6">
+            {/* Top safeguard header & actions */}
+            <div className="bg-white rounded-2xl border border-phumulani-charcoal/12 p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
               <div>
-                <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
-                  Approved Public Visual Assets ({PHUMULANI_MEDIA_INVENTORY.filter((m) => m.publicationStatus === 'published').length})
-                </h3>
-                <p className="text-xs text-phumulani-charcoal">Live on public portal views, founder profile, and programs.</p>
+                <div className="flex items-center gap-2 text-xs font-bold text-phumulani-earth uppercase tracking-wider mb-1">
+                  <Camera className="w-4 h-4 text-phumulani-earth" />
+                  <span>Authentic Media Preservation &amp; Safeguarding Registry</span>
+                </div>
+                <h2 className="font-heading text-xl font-bold text-phumulani-charcoal">
+                  Visual Assets &amp; Digital Dignity Protocol
+                </h2>
+                <p className="text-xs text-phumulani-charcoal/80 mt-1 max-w-2xl leading-relaxed">
+                  Phumulani maintains a strict Zero-AI Generation Rule for real individuals. All 19 media assets represent real community members, founder Comfort Dondo, board leaders, publications, and cultural programs. Identifiable survivor records are never published without written re-consent.
+                </p>
               </div>
 
-              {/* Category pills */}
-              <div className="flex flex-wrap gap-1.5">
-                {['all', 'founder', 'publications', 'programs', 'events', 'leadership', 'branding'].map((cat) => (
+              <div className="flex items-center gap-2.5 shrink-0">
+                {onOpenMediaRegistry && (
                   <button
-                    key={cat}
-                    onClick={() => setMediaCategoryFilter(cat)}
-                    className={`px-3 py-1 rounded-lg text-xs font-semibold capitalize transition-all cursor-pointer ${
-                      mediaCategoryFilter === cat
-                        ? 'bg-phumulani-earth text-white shadow-xs'
-                        : 'bg-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream'
-                    }`}
+                    type="button"
+                    onClick={onOpenMediaRegistry}
+                    className="px-4 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal text-xs font-bold rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
                   >
-                    {cat}
+                    <Eye className="w-4 h-4" />
+                    <span>Inspect Full Registry Modal</span>
                   </button>
+                )}
+              </div>
+            </div>
+
+            {/* Backup Location & Integrity Notice */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-white border border-phumulani-charcoal/12 rounded-xl p-4 space-y-1">
+                <span className="text-[11px] font-bold text-phumulani-charcoal/75 uppercase tracking-wider">Local Backup Path</span>
+                <p className="font-mono text-xs font-semibold text-phumulani-charcoal break-all">
+                  D:\Phumulani\Backups\MediaArchive
+                </p>
+                <p className="text-[11px] text-phumulani-charcoal/70">Automated mirror with SHA-256 integrity verification.</p>
+              </div>
+
+              <div className="bg-phumulani-green/15 border border-phumulani-green/40 rounded-xl p-4 space-y-1">
+                <span className="text-[11px] font-bold text-phumulani-charcoal uppercase tracking-wider">Public Web Cleared</span>
+                <div className="font-heading text-2xl font-bold text-phumulani-charcoal tabular-nums">17 Assets</div>
+                <p className="text-[11px] text-phumulani-charcoal/80">All rights verified, founder approved, zero synthetic faces.</p>
+              </div>
+
+              <div className="bg-white border border-phumulani-earth/40 rounded-xl p-4 space-y-1">
+                <span className="text-[11px] font-bold text-phumulani-earth uppercase tracking-wider">Withheld / Staged (Safeguarding)</span>
+                <div className="font-heading text-2xl font-bold text-phumulani-earth tabular-nums">
+                  {stagedMediaList.filter((m) => m.publicationStatus !== 'published').length} Assets
+                </div>
+                <p className="text-[11px] text-phumulani-earth/90">Protected under VAWA &amp; Minnesota confidentiality laws.</p>
+              </div>
+            </div>
+
+            {/* Staged & Withheld Media Safeguarding Queue */}
+            <div className="bg-white rounded-2xl border border-phumulani-earth/40 overflow-hidden">
+              <div className="p-4 bg-phumulani-cream/70 border-b border-phumulani-earth/25 flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <ShieldAlert className="w-4 h-4 text-phumulani-earth" />
+                  <h3 className="font-heading text-sm font-bold text-phumulani-earth">
+                    Safeguarding Review Queue — Staged &amp; Withheld Assets
+                  </h3>
+                </div>
+                <span className="text-[11px] bg-white text-phumulani-earth border border-phumulani-earth/30 font-bold px-2.5 py-0.5 rounded-md">
+                  Review Gate Active
+                </span>
+              </div>
+
+              <div className="p-4 space-y-4">
+                {stagedMediaList.map((asset) => (
+                  <div key={asset.id} className="p-4 rounded-xl border border-phumulani-charcoal/12 bg-phumulani-cream/50 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div className="space-y-1.5 flex-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-mono text-xs font-bold text-phumulani-charcoal bg-white px-2 py-0.5 rounded-md border border-phumulani-charcoal/15 tabular-nums">
+                          {asset.id}
+                        </span>
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md uppercase ${
+                          asset.publicationStatus === 'withheld'
+                            ? 'bg-phumulani-earth text-white'
+                            : asset.publicationStatus === 'staged'
+                            ? 'bg-phumulani-gold/20 text-phumulani-charcoal border border-phumulani-gold/40'
+                            : 'bg-phumulani-green/15 text-phumulani-charcoal border border-phumulani-green/40'
+                        }`}>
+                          {asset.publicationStatus}
+                        </span>
+                        <span className="text-xs font-bold text-phumulani-charcoal">{asset.title}</span>
+                      </div>
+
+                      <p className="text-xs text-phumulani-charcoal/85">{asset.caption}</p>
+
+                      {asset.sensitiveContextNotes && (
+                        <div className="p-2.5 bg-white rounded-lg text-[11px] text-phumulani-earth border border-phumulani-earth/35 font-medium">
+                          <strong>Safeguarding Note:</strong> {asset.sensitiveContextNotes}
+                        </div>
+                      )}
+
+                      <div className="text-[10px] text-phumulani-charcoal/70 font-mono">
+                        Checksum: {asset.checksumSha256.slice(0, 16)}... | Rights: {asset.usageAuthorization}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 shrink-0">
+                      {asset.publicationStatus !== 'published' ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={() => handleWithholdMediaRelease(asset.id, 'Withheld per active protection order precautions.')}
+                            className="px-3 py-1.5 bg-white hover:bg-phumulani-cream border border-phumulani-charcoal/20 text-phumulani-earth text-xs font-semibold rounded-lg transition-colors cursor-pointer"
+                          >
+                            Enforce Withhold
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleApproveMediaRelease(asset.id)}
+                            className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal text-xs font-bold rounded-lg transition-colors cursor-pointer"
+                          >
+                            Authorize Release
+                          </button>
+                        </>
+                      ) : (
+                        <span className="text-xs font-bold text-phumulani-charcoal bg-phumulani-green/15 px-3 py-1.5 rounded-lg border border-phumulani-green/40 flex items-center gap-1.5">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-charcoal" />
+                          <span>Cleared for Web</span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pt-2">
-              {PHUMULANI_MEDIA_INVENTORY.filter(
-                (item) => mediaCategoryFilter === 'all' || item.category === mediaCategoryFilter
-              ).map((asset) => (
-                <div
-                  key={asset.id}
-                  className="rounded-xl border border-phumulani-cream bg-phumulani-cream overflow-hidden hover:border-phumulani-cream hover:shadow-sm transition-all flex flex-col justify-between"
-                >
-                  <div className="aspect-video bg-phumulani-charcoal relative overflow-hidden flex items-center justify-center">
-                    {asset.localPath.endsWith('.svg') || asset.localPath.endsWith('.png') ? (
-                      <SafeImage
-                        src={asset.localPath}
-                        alt={asset.altText}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="p-4 text-center">
-                        <ImageIcon className="w-8 h-8 text-phumulani-cream mx-auto mb-1" />
-                        <span className="text-[11px] font-bold text-phumulani-cream uppercase">{asset.mediaType}</span>
-                      </div>
-                    )}
-                    <span className="absolute top-2 left-2 bg-phumulani-charcoal backdrop-blur-xs text-white text-[9px] font-mono px-2 py-0.5 rounded">
-                      {asset.category}
-                    </span>
-                  </div>
+            {/* Published Media Inventory Gallery */}
+            <div className="bg-white rounded-2xl border border-phumulani-charcoal/12 p-6 space-y-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                  <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">
+                    Approved Public Visual Assets ({PHUMULANI_MEDIA_INVENTORY.filter((m) => m.publicationStatus === 'published').length})
+                  </h3>
+                  <p className="text-xs text-phumulani-charcoal/75">Live on public portal views, founder profile, and programs.</p>
+                </div>
 
-                  <div className="p-3.5 space-y-1.5 flex-1 flex flex-col justify-between">
-                    <div>
-                      <h4 className="font-serif text-xs font-bold text-phumulani-charcoal line-clamp-1">{asset.title}</h4>
-                      <p className="text-[11px] text-phumulani-charcoal line-clamp-2 mt-0.5 leading-snug">{asset.caption}</p>
-                    </div>
+                {/* Category filters */}
+                <div className="flex flex-wrap gap-1.5">
+                  {['all', 'founder', 'publications', 'programs', 'events', 'leadership', 'branding'].map((cat) => (
+                    <button
+                      key={cat}
+                      onClick={() => setMediaCategoryFilter(cat)}
+                      className={`px-3 py-1 rounded-lg text-xs font-semibold capitalize transition-colors cursor-pointer ${
+                        mediaCategoryFilter === cat
+                          ? 'bg-phumulani-earth text-white'
+                          : 'bg-phumulani-cream/70 border border-phumulani-charcoal/12 text-phumulani-charcoal hover:bg-phumulani-cream'
+                      }`}
+                    >
+                      {cat}
+                    </button>
+                  ))}
+                </div>
+              </div>
 
-                    <div className="pt-2 border-t border-phumulani-cream flex items-center justify-between text-[10px]">
-                      <span className="font-mono text-phumulani-charcoal">{asset.checksumSha256.slice(0, 10)}...</span>
-                      <span className={`px-2 py-0.5 rounded font-bold uppercase ${
-                        asset.safeguardingReviewStatus === 'cleared_for_public_web'
-                          ? 'bg-phumulani-cream text-phumulani-charcoal'
-                          : 'bg-phumulani-cream text-phumulani-earth'
-                      }`}>
-                        {asset.safeguardingReviewStatus === 'cleared_for_public_web' ? 'Cleared' : 'Restricted'}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pt-2">
+                {PHUMULANI_MEDIA_INVENTORY.filter(
+                  (item) => mediaCategoryFilter === 'all' || item.category === mediaCategoryFilter
+                ).map((asset) => (
+                  <div
+                    key={asset.id}
+                    className="rounded-xl border border-phumulani-charcoal/12 bg-phumulani-cream/40 overflow-hidden hover:border-phumulani-earth/40 transition-colors flex flex-col justify-between"
+                  >
+                    <div className="aspect-video bg-phumulani-charcoal relative overflow-hidden flex items-center justify-center">
+                      {asset.localPath.endsWith('.svg') || asset.localPath.endsWith('.png') ? (
+                        <SafeImage
+                          src={asset.localPath}
+                          alt={asset.altText}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="p-4 text-center">
+                          <ImageIcon className="w-8 h-8 text-phumulani-cream mx-auto mb-1" />
+                          <span className="text-[11px] font-bold text-phumulani-cream uppercase">{asset.mediaType}</span>
+                        </div>
+                      )}
+                      <span className="absolute top-2 left-2 bg-phumulani-charcoal text-white text-[9px] font-mono px-2 py-0.5 rounded-md">
+                        {asset.category}
                       </span>
                     </div>
+
+                    <div className="p-3.5 space-y-1.5 flex-1 flex flex-col justify-between bg-white">
+                      <div>
+                        <h4 className="font-heading text-xs font-bold text-phumulani-charcoal line-clamp-1">{asset.title}</h4>
+                        <p className="text-[11px] text-phumulani-charcoal/75 line-clamp-2 mt-0.5 leading-snug">{asset.caption}</p>
+                      </div>
+
+                      <div className="pt-2 border-t border-phumulani-charcoal/10 flex items-center justify-between text-[10px]">
+                        <span className="font-mono text-phumulani-charcoal/75">{asset.checksumSha256.slice(0, 10)}...</span>
+                        <span className={`px-2 py-0.5 rounded-md font-bold uppercase ${
+                          asset.safeguardingReviewStatus === 'cleared_for_public_web'
+                            ? 'bg-phumulani-green/15 text-phumulani-charcoal'
+                            : 'bg-phumulani-cream text-phumulani-earth'
+                        }`}>
+                          {asset.safeguardingReviewStatus === 'cleared_for_public_web' ? 'Cleared' : 'Restricted'}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 8: STAFF OPERATIONS REPORTS (M41.08) */}
+        {activeTab === 'reports' && (
+          <IntegratedReportingTab currentUser={currentUser} />
+        )}
+
+        {/* CREATE EVENT MODAL */}
+        {showNewEventModal && (
+          <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl max-w-lg w-full border border-phumulani-charcoal/15 shadow-2xl p-6 space-y-4">
+              <div className="flex justify-between items-start border-b border-phumulani-charcoal/12 pb-3">
+                <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">
+                  Create &amp; Publish Community Event
+                </h3>
+                <button
+                  onClick={() => setShowNewEventModal(false)}
+                  aria-label="Close modal"
+                  className="text-phumulani-charcoal/70 hover:text-phumulani-earth p-1 cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <form onSubmit={handleCreateEvent} className="space-y-4 text-xs">
+                <div>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Event Title</label>
+                  <input
+                    type="text"
+                    required
+                    value={newEventTitle}
+                    onChange={(e) => setNewEventTitle(e.target.value)}
+                    placeholder="e.g. Immigrant Small Business Tax Clinic"
+                    className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 bg-white text-phumulani-charcoal"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-semibold text-phumulani-charcoal mb-1">Date</label>
+                    <input
+                      type="date"
+                      required
+                      value={newEventDate}
+                      onChange={(e) => setNewEventDate(e.target.value)}
+                      className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 bg-white text-phumulani-charcoal"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-semibold text-phumulani-charcoal mb-1">Time</label>
+                    <input
+                      type="text"
+                      required
+                      value={newEventTime}
+                      onChange={(e) => setNewEventTime(e.target.value)}
+                      placeholder="10:00 AM - 1:00 PM CST"
+                      className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 bg-white text-phumulani-charcoal"
+                    />
                   </div>
                 </div>
-              ))}
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-semibold text-phumulani-charcoal mb-1">Location</label>
+                    <input
+                      type="text"
+                      required
+                      value={newEventLocation}
+                      onChange={(e) => setNewEventLocation(e.target.value)}
+                      className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 bg-white text-phumulani-charcoal"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-semibold text-phumulani-charcoal mb-1">Capacity Limit</label>
+                    <input
+                      type="number"
+                      min="5"
+                      max="500"
+                      required
+                      value={newEventCapacity}
+                      onChange={(e) => setNewEventCapacity(Number(e.target.value))}
+                      className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 font-bold bg-white text-phumulani-charcoal tabular-nums"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1">Description</label>
+                  <textarea
+                    rows={3}
+                    required
+                    value={newEventDesc}
+                    onChange={(e) => setNewEventDesc(e.target.value)}
+                    placeholder="Briefly describe the workshop, agenda, and targeted immigrant community cohort..."
+                    className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 bg-white text-phumulani-charcoal"
+                  />
+                </div>
+
+                <div className="flex justify-end gap-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowNewEventModal(false)}
+                    className="px-4 py-2 border border-phumulani-charcoal/20 text-phumulani-charcoal hover:bg-phumulani-cream rounded-lg cursor-pointer transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white hover:text-phumulani-charcoal rounded-lg font-bold cursor-pointer transition-colors"
+                  >
+                    Publish Event
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* TAB 8: STAFF OPERATIONS REPORTS (M41.08) */}
-      {activeTab === 'reports' && (
-        <IntegratedReportingTab currentUser={currentUser} />
-      )}
-
-      {/* CREATE EVENT MODAL */}
-      {showNewEventModal && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full border border-phumulani-cream shadow-2xl p-6 space-y-4">
-            <div className="flex justify-between items-start border-b border-phumulani-cream pb-3">
-              <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
-                Create & Publish Community Event
-              </h3>
-              <button onClick={() => setShowNewEventModal(false)} className="text-phumulani-charcoal hover:text-phumulani-earth">
-                ✕
-              </button>
-            </div>
-
-            <form onSubmit={handleCreateEvent} className="space-y-4 text-xs">
-              <div>
-                <label className="block font-semibold text-phumulani-charcoal mb-1">Event Title</label>
-                <input
-                  type="text"
-                  required
-                  value={newEventTitle}
-                  onChange={(e) => setNewEventTitle(e.target.value)}
-                  placeholder="e.g. Immigrant Small Business Tax Clinic"
-                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-phumulani-charcoal mb-1">Date</label>
-                  <input
-                    type="date"
-                    required
-                    value={newEventDate}
-                    onChange={(e) => setNewEventDate(e.target.value)}
-                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-phumulani-charcoal mb-1">Time</label>
-                  <input
-                    type="text"
-                    required
-                    value={newEventTime}
-                    onChange={(e) => setNewEventTime(e.target.value)}
-                    placeholder="10:00 AM - 1:00 PM CST"
-                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block font-semibold text-phumulani-charcoal mb-1">Location</label>
-                  <input
-                    type="text"
-                    required
-                    value={newEventLocation}
-                    onChange={(e) => setNewEventLocation(e.target.value)}
-                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
-                  />
-                </div>
-                <div>
-                  <label className="block font-semibold text-phumulani-charcoal mb-1">Capacity Limit</label>
-                  <input
-                    type="number"
-                    min="5"
-                    max="500"
-                    required
-                    value={newEventCapacity}
-                    onChange={(e) => setNewEventCapacity(Number(e.target.value))}
-                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none font-bold"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block font-semibold text-phumulani-charcoal mb-1">Description</label>
-                <textarea
-                  rows={3}
-                  required
-                  value={newEventDesc}
-                  onChange={(e) => setNewEventDesc(e.target.value)}
-                  placeholder="Briefly describe the workshop, agenda, and targeted immigrant community cohort..."
-                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
-                />
-              </div>
-
-              <div className="flex justify-end gap-2 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowNewEventModal(false)}
-                  className="px-4 py-2 border border-phumulani-cream text-phumulani-charcoal rounded-lg"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold"
-                >
-                  Publish Event
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+        )}
       </div>
     </PortalLayout>
   );

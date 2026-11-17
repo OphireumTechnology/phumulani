@@ -98,15 +98,15 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
 
   return (
     <aside
-      className={`bg-white border-r border-phumulani-cream transition-all duration-200 flex flex-col shrink-0 select-none ${
+      className={`bg-white border-r border-phumulani-charcoal/12 transition-all duration-200 flex flex-col shrink-0 select-none ${
         isCollapsed ? 'w-16' : 'w-64'
       } ${className}`}
       aria-label="Email Navigation Sidebar"
     >
       {/* Top Header Bar / Sidebar Toggle */}
-      <div className="p-3 border-b border-phumulani-cream flex items-center justify-between">
+      <div className="p-3 border-b border-phumulani-charcoal/10 flex items-center justify-between">
         {!isCollapsed && (
-          <span className="text-[11px] font-bold uppercase tracking-wider text-phumulani-charcoal">
+          <span className="font-heading text-[11px] font-bold uppercase tracking-wider text-phumulani-charcoal/70">
             Mail Folders
           </span>
         )}
@@ -114,7 +114,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
           <button
             onClick={onToggleCollapse}
             aria-label={isCollapsed ? 'Expand Email Sidebar' : 'Collapse Email Sidebar'}
-            className="p-1 text-phumulani-charcoal hover:text-phumulani-earth hover:bg-phumulani-cream rounded-md transition-colors cursor-pointer ml-auto"
+            className="p-1 text-phumulani-charcoal/70 hover:text-phumulani-earth hover:bg-phumulani-cream/80 rounded-md transition-colors cursor-pointer ml-auto"
             title={isCollapsed ? 'Expand Sidebar' : 'Collapse Sidebar'}
           >
             {isCollapsed ? <PanelLeftOpen className="w-4 h-4" /> : <PanelLeftClose className="w-4 h-4" />}
@@ -129,7 +129,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
           {!isCollapsed && (
             <button
               onClick={() => toggleGroup('everyday')}
-              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
+              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/65 hover:text-phumulani-earth cursor-pointer"
             >
               <span>Everyday Email</span>
               {groupOpen.everyday ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
@@ -145,7 +145,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'phumulani_ai'
                     ? 'bg-phumulani-earth text-white shadow-2xs'
-                    : 'text-phumulani-earth bg-phumulani-cream hover:bg-phumulani-gold hover:text-phumulani-charcoal border border-phumulani-teal'
+                    : 'text-phumulani-earth bg-phumulani-teal/12 hover:bg-phumulani-teal/25 border border-phumulani-teal/40'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -153,7 +153,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                   {!isCollapsed && <span className="truncate font-bold">Phumulani Ai</span>}
                 </div>
                 {!isCollapsed && (
-                  <span className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded ${activeTab === 'phumulani_ai' ? 'bg-phumulani-charcoal text-phumulani-teal' : 'bg-phumulani-earth text-white'}`}>
+                  <span className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-sm ${activeTab === 'phumulani_ai' ? 'bg-phumulani-charcoal text-phumulani-teal' : 'bg-phumulani-earth text-white'}`}>
                     LOCAL
                   </span>
                 )}
@@ -175,10 +175,10 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 </div>
                 {!isCollapsed && unreadCount > 0 && (
                   <span
-                    className={`text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded-full font-bold ${
+                    className={`text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded-sm font-bold ${
                       activeTab === 'all_mailboxes' || activeTab === 'conversations'
                         ? 'bg-phumulani-charcoal text-phumulani-teal'
-                        : 'bg-phumulani-cream text-phumulani-earth'
+                        : 'bg-phumulani-earth/10 text-phumulani-earth'
                     }`}
                   >
                     {unreadCount}
@@ -193,7 +193,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'priority'
                     ? 'bg-phumulani-earth text-white shadow-2xs'
-                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream/80'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -202,8 +202,8 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 </div>
                 {!isCollapsed && priorityCount > 0 && (
                   <span
-                    className={`text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded-full font-bold ${
-                      activeTab === 'priority' ? 'bg-phumulani-charcoal text-phumulani-teal' : 'bg-phumulani-cream text-phumulani-earth'
+                    className={`text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded-sm font-bold ${
+                      activeTab === 'priority' ? 'bg-phumulani-charcoal text-phumulani-teal' : 'bg-phumulani-earth/10 text-phumulani-earth'
                     }`}
                   >
                     {priorityCount}
@@ -218,7 +218,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'drafts'
                     ? 'bg-phumulani-earth text-white shadow-2xs'
-                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream/80'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -239,7 +239,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 className={`w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                   activeTab === 'approvals'
                     ? 'bg-phumulani-earth text-white shadow-2xs'
-                    : 'text-phumulani-charcoal hover:bg-phumulani-cream'
+                    : 'text-phumulani-charcoal hover:bg-phumulani-cream/80'
                 }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
@@ -248,8 +248,8 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 </div>
                 {!isCollapsed && approvalsCount > 0 && (
                   <span
-                    className={`text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded-full font-bold ${
-                      activeTab === 'approvals' ? 'bg-phumulani-charcoal text-phumulani-teal' : 'bg-phumulani-cream text-phumulani-charcoal'
+                    className={`text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded-sm font-bold ${
+                      activeTab === 'approvals' ? 'bg-phumulani-charcoal text-phumulani-teal' : 'bg-phumulani-gold/20 text-phumulani-charcoal'
                     }`}
                   >
                     {approvalsCount}
@@ -335,11 +335,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
         </div>
 
         {/* GROUP 2: CONTACTS & COMMUNICATIONS (Collapsed by default) */}
-        <div className="space-y-0.5 pt-1 border-t border-phumulani-cream">
+        <div className="space-y-0.5 pt-2 border-t border-phumulani-charcoal/10">
           {!isCollapsed && (
             <button
               onClick={() => toggleGroup('contacts')}
-              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
+              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/65 hover:text-phumulani-earth cursor-pointer"
             >
               <span>Contacts & CRM</span>
               {groupOpen.contacts ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
@@ -404,11 +404,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
         </div>
 
         {/* GROUP 3: MANAGEMENT & REPORTING (Collapsed by default) */}
-        <div className="space-y-0.5 pt-1 border-t border-phumulani-cream">
+        <div className="space-y-0.5 pt-2 border-t border-phumulani-charcoal/10">
           {!isCollapsed && (
             <button
               onClick={() => toggleGroup('management')}
-              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
+              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/65 hover:text-phumulani-earth cursor-pointer"
             >
               <span>Management & Reports</span>
               {groupOpen.management ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
@@ -487,11 +487,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
 
         {/* GROUP 4: SETTINGS & CONNECTIONS (Collapsed by default) */}
         {(isSuperAdmin || isSupervisor) && (
-          <div className="space-y-0.5 pt-1 border-t border-phumulani-cream">
+          <div className="space-y-0.5 pt-2 border-t border-phumulani-charcoal/10">
             {!isCollapsed && (
               <button
                 onClick={() => toggleGroup('settings')}
-                className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer"
+                className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/65 hover:text-phumulani-earth cursor-pointer"
               >
                 <span>Settings & Connectors</span>
                 {groupOpen.settings ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
@@ -545,7 +545,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
       </nav>
 
       {/* Footer Profile Status */}
-      <div className="p-2.5 border-t border-phumulani-cream bg-phumulani-cream">
+      <div className="p-2.5 border-t border-phumulani-charcoal/10 bg-phumulani-cream/70">
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-full bg-phumulani-charcoal text-white font-bold text-xs flex items-center justify-center shrink-0">
             {currentUser.name.charAt(0)}
@@ -553,7 +553,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
           {!isCollapsed && (
             <div className="min-w-0 flex-1">
               <div className="text-xs font-bold text-phumulani-charcoal truncate">{currentUser.name}</div>
-              <div className="text-[10px] text-phumulani-charcoal truncate">{currentUser.email}</div>
+              <div className="text-[10px] text-phumulani-charcoal/70 truncate">{currentUser.email}</div>
             </div>
           )}
         </div>

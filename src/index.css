@@ -2,12 +2,12 @@
 @source "../index.html";
 
 @theme {
-  --color-phumulani-orange: #EF5C2C;
-  --color-phumulani-earth: #B3340F;
-  --color-phumulani-teal: #62C4B4;
-  --color-phumulani-gold: #F7B24A;
-  --color-phumulani-cream: #EFEBD1;
-  --color-phumulani-green: #6AAD7C;
+  --color-phumulani-orange: #F97316;
+  --color-phumulani-earth: #A63C14;
+  --color-phumulani-teal: #60C3B4;
+  --color-phumulani-gold: #F7B733;
+  --color-phumulani-cream: #F7F3E0;
+  --color-phumulani-green: #4CAF7C;
   --color-phumulani-charcoal: #333333;
   --color-phumulani-white: #FFFFFF;
   --color-white: #FFFFFF;
@@ -16,13 +16,13 @@
 
 @layer base {
   :root {
-    /* Official Phumulani Brand Manual Colors (Working Draft v1.0, Section 5.3, p. 14) */
-    --phumulani-orange: #EF5C2C;
-    --phumulani-earth: #B3340F;
-    --phumulani-teal: #62C4B4;
-    --phumulani-gold: #F7B24A;
-    --phumulani-cream: #EFEBD1;
-    --phumulani-green: #6AAD7C;
+    /* Official Phumulani Master Brand Color System */
+    --phumulani-orange: #F97316;
+    --phumulani-earth: #A63C14;
+    --phumulani-teal: #60C3B4;
+    --phumulani-gold: #F7B733;
+    --phumulani-cream: #F7F3E0;
+    --phumulani-green: #4CAF7C;
     --phumulani-charcoal: #333333;
     --phumulani-white: #FFFFFF;
 
@@ -31,7 +31,8 @@
     --color-secondary: var(--phumulani-teal);
     --color-accent: var(--phumulani-gold);
 
-    --color-background: var(--phumulani-white);
+    /* Soft Cream primary light canvas + White elevated cards */
+    --color-background: var(--phumulani-cream);
     --color-background-soft: var(--phumulani-cream);
 
     --color-surface: var(--phumulani-white);
@@ -40,7 +41,7 @@
     --color-heading: var(--phumulani-earth);
     --color-text: var(--phumulani-charcoal);
 
-    --color-border: var(--phumulani-earth);
+    --color-border: var(--phumulani-cream);
     --color-success: var(--phumulani-green);
     --color-warning: var(--phumulani-gold);
     --color-error: var(--phumulani-earth);
@@ -57,11 +58,10 @@
     --brand-alert-red: var(--phumulani-earth);
     --brand-soft-bg: var(--phumulani-cream);
 
-    /* Typography */
-    font-family: 'Lato', system-ui, -apple-system, sans-serif;
+    /* Cohesive Typography */
+    font-family: 'Plus Jakarta Sans', 'Lato', system-ui, -apple-system, sans-serif;
   }
 
-  /* Smooth anchor scrolling for desktop & mobile navigation */
   html {
     scroll-behavior: smooth;
     background-color: var(--color-background);
@@ -76,26 +76,30 @@
     overflow-x: hidden;
     margin: 0;
     padding: 0;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Headings: Montserrat Bold / SemiBold (Brand Identity Guide) */
+  /* Headings & UI Structural Typography */
   h1, h2, h3, h4, h5, h6, .font-heading {
-    font-family: 'Montserrat', system-ui, sans-serif;
+    font-family: 'Montserrat', 'Plus Jakarta Sans', system-ui, sans-serif;
+    text-wrap: balance;
+    letter-spacing: -0.015em;
   }
 
-  /* Quotes and selected accents: Merriweather / Playfair Display */
-  blockquote, .font-quote, .font-serif {
-    font-family: 'Merriweather', Georgia, serif;
+  /* Editorial Quotes & Literary Accents */
+  blockquote, .font-quote, .font-serif, .font-display-serif {
+    font-family: 'Playfair Display', 'Merriweather', Georgia, serif;
   }
 }
 
 /* Brand Utility Classes */
-.font-montserrat { font-family: 'Montserrat', system-ui, sans-serif; }
-.font-lato { font-family: 'Lato', system-ui, sans-serif; }
+.font-montserrat { font-family: 'Montserrat', 'Plus Jakarta Sans', system-ui, sans-serif; }
+.font-lato { font-family: 'Lato', 'Plus Jakarta Sans', system-ui, sans-serif; }
 .font-merriweather { font-family: 'Merriweather', Georgia, serif; }
 .font-display-serif { font-family: 'Playfair Display', 'Merriweather', Georgia, serif; }
+.tabular-nums { font-variant-numeric: tabular-nums; }
 
 .bg-ubuntu-orange { background-color: var(--phumulani-orange); }
 .bg-unity-teal { background-color: var(--phumulani-teal); }
@@ -123,11 +127,35 @@
   background-size: auto 100%;
 }
 
+/* Subtle refined card & focus polish */
+.phumulani-card {
+  background-color: var(--phumulani-white);
+  border: 1px solid #3333331F;
+  border-radius: 1rem;
+  box-shadow: 0 1px 2px #3333330A;
+}
+
+.phumulani-card-interactive {
+  background-color: var(--phumulani-white);
+  border: 1px solid #33333326;
+  border-radius: 1rem;
+  box-shadow: 0 1px 3px #3333330F;
+  transition: border-color 180ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 180ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.phumulani-card-interactive:hover {
+  border-color: #A63C144D;
+  box-shadow: 0 10px 24px -10px #3333331F;
+  transform: translateY(-1px);
+}
+
 /* Compositor-only micro-animations */
 @keyframes phumulaniFadeIn {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
@@ -136,7 +164,7 @@
 }
 
 .animate-fadeIn {
-  animation: phumulaniFadeIn 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: phumulaniFadeIn 180ms cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 .nav-link-underline {
@@ -153,7 +181,7 @@
   background-color: var(--phumulani-earth);
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 .nav-link-underline:hover::after,
 .nav-link-underline[data-active='true']::after {
@@ -169,11 +197,11 @@
   background: var(--phumulani-cream);
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--phumulani-earth);
+  background: #A63C1480;
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--phumulani-orange);
+  background: var(--phumulani-earth);
 }
 
 /* Executive Founder Portrait */

@@ -651,49 +651,49 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
   return (
     <div className="flex h-screen w-full flex-col bg-phumulani-cream text-phumulani-charcoal font-sans antialiased overflow-hidden">
       {/* Top Header Bar */}
-      <header className="flex h-16 w-full items-center justify-between border-b border-phumulani-cream bg-white px-6 shadow-sm z-30">
+      <header className="flex h-16 w-full items-center justify-between border-b border-phumulani-charcoal/12 bg-white px-6 shadow-2xs z-30">
         <div className="flex items-center space-x-4">
           <button
             onClick={() => onBackToMaster && onBackToMaster()}
-            className="flex items-center space-x-1.5 rounded-lg border border-phumulani-cream bg-phumulani-cream px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream transition-colors"
+            className="flex items-center space-x-1.5 rounded-lg border border-phumulani-charcoal/15 bg-phumulani-cream/70 px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream transition-colors cursor-pointer"
           >
-            <svg className="h-4 w-4 text-phumulani-charcoal" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="h-4 w-4 text-phumulani-charcoal/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             <span>Master Dashboard</span>
           </button>
 
-          <div className="h-6 w-px bg-phumulani-cream" />
+          <div className="h-6 w-px bg-phumulani-charcoal/15" />
 
-          <div className="flex items-center space-x-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-phumulani-charcoal text-white shadow-sm font-bold text-sm">
+          <div className="flex items-center space-x-3">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-phumulani-charcoal text-phumulani-cream shadow-2xs font-heading font-bold text-xs tracking-wider">
               PH
             </div>
             <div>
               <div className="flex items-center space-x-2">
-                <h1 className="text-sm font-bold text-phumulani-charcoal tracking-tight">FUNDRAISING & DONOR INTELLIGENCE</h1>
-                <span className="inline-flex items-center rounded-full bg-phumulani-cream px-2 py-0.5 text-[10px] font-semibold text-phumulani-earth border border-phumulani-green">
-                  <span className="mr-1 h-1.5 w-1.5 rounded-full bg-phumulani-green animate-pulse" />
+                <h1 className="text-sm font-heading font-bold text-phumulani-charcoal tracking-tight">FUNDRAISING & DONOR INTELLIGENCE</h1>
+                <span className="inline-flex items-center rounded-md bg-phumulani-green/15 px-2 py-0.5 text-[10px] font-semibold text-phumulani-charcoal border border-phumulani-green/40">
+                  <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-phumulani-green" />
                   REAL DATABASE PERSISTED
                 </span>
-                <span className="inline-flex items-center rounded bg-phumulani-cream px-1.5 py-0.5 text-[10px] font-mono font-medium text-phumulani-earth border border-phumulani-teal">
+                <span className="inline-flex items-center rounded-md bg-phumulani-teal/12 px-1.5 py-0.5 text-[10px] font-mono font-medium text-phumulani-charcoal border border-phumulani-teal/40">
                   /admin/master/fundraising
                 </span>
               </div>
-              <p className="text-[11px] text-phumulani-charcoal">
-                Phumulani AI Community Platform • Branch: <code className="font-mono text-phumulani-charcoal">feature/phumulani-email-enterprise</code>
+              <p className="text-[11px] text-phumulani-charcoal/70">
+                Phumulani AI Community Platform • Branch: <code className="font-mono text-phumulani-charcoal/85">feature/phumulani-email-enterprise</code>
               </p>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2.5">
           {onOpenEmailCommand && (
             <button
               onClick={() => onOpenEmailCommand()}
-              className="flex items-center space-x-1.5 rounded-lg border border-phumulani-teal bg-phumulani-cream px-3 py-1.5 text-xs font-medium text-phumulani-earth hover:bg-phumulani-teal transition-colors"
+              className="flex items-center space-x-1.5 rounded-lg border border-phumulani-teal/50 bg-phumulani-teal/12 px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-teal/25 transition-colors cursor-pointer"
             >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="h-4 w-4 text-phumulani-charcoal" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
               <span>Email Command Center</span>
@@ -702,9 +702,9 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
           <button
             onClick={() => setShowImportModal(true)}
-            className="flex items-center space-x-1.5 rounded-lg border border-phumulani-cream bg-white px-3 py-1.5 text-xs font-medium text-phumulani-charcoal hover:bg-phumulani-cream shadow-sm"
+            className="flex items-center space-x-1.5 rounded-lg border border-phumulani-charcoal/15 bg-white px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream/70 shadow-2xs transition-colors cursor-pointer"
           >
-            <svg className="h-4 w-4 text-phumulani-charcoal" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="h-4 w-4 text-phumulani-charcoal/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
             </svg>
             <span>Import Donors</span>
@@ -712,7 +712,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
           <button
             onClick={() => setShowVerifyModal(true)}
-            className="flex items-center space-x-1.5 rounded-lg bg-phumulani-green px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-teal shadow-sm transition-colors"
+            className="flex items-center space-x-1.5 rounded-lg bg-phumulani-earth px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-2xs transition-colors cursor-pointer"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -722,7 +722,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
           <button
             onClick={() => setShowRightPanel(!showRightPanel)}
-            className="rounded-lg border border-phumulani-cream p-1.5 text-phumulani-charcoal hover:bg-phumulani-cream"
+            className="rounded-lg border border-phumulani-charcoal/15 p-1.5 text-phumulani-charcoal/80 hover:bg-phumulani-cream/70 transition-colors cursor-pointer"
             title="Toggle Context Panel"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -750,17 +750,17 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
         <aside
           className={`${
             sidebarCollapsed ? 'w-16' : 'w-64'
-          } flex flex-col border-r border-phumulani-cream bg-white transition-all duration-200 overflow-y-auto select-none`}
+          } flex flex-col border-r border-phumulani-charcoal/12 bg-white transition-all duration-200 overflow-y-auto select-none`}
         >
-          <div className="p-3 border-b border-phumulani-cream flex items-center justify-between">
+          <div className="p-3 border-b border-phumulani-charcoal/10 flex items-center justify-between">
             {!sidebarCollapsed && (
-              <span className="text-[11px] font-bold uppercase tracking-wider text-phumulani-charcoal">
+              <span className="text-[11px] font-heading font-bold uppercase tracking-wider text-phumulani-charcoal/70">
                 Fundraising Navigation
               </span>
             )}
             <button
               onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-              className="rounded p-1 text-phumulani-charcoal hover:bg-phumulani-cream hover:text-phumulani-earth"
+              className="rounded-md p-1 text-phumulani-charcoal/70 hover:bg-phumulani-cream hover:text-phumulani-earth transition-colors cursor-pointer"
               title="Collapse / Expand Sidebar"
             >
               <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -769,24 +769,24 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             </button>
           </div>
 
-          <div className="flex-1 px-2 py-3 space-y-4">
+          <div className="flex-1 px-2.5 py-3 space-y-5">
             {/* Group 1: OVERVIEW */}
             <div>
               {!sidebarCollapsed && (
-                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal mb-1">
+                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/55 mb-1.5">
                   01 — Command
                 </div>
               )}
               <div className="space-y-0.5">
                 <button
                   onClick={() => setActiveTab('command-center')}
-                  className={`w-full flex items-center space-x-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition-colors ${
+                  className={`w-full flex items-center space-x-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition-colors cursor-pointer ${
                     activeTab === 'command-center'
-                      ? 'bg-phumulani-earth text-white shadow-sm font-semibold'
-                      : 'text-phumulani-charcoal hover:bg-phumulani-cream'
+                      ? 'bg-phumulani-earth text-white shadow-2xs font-semibold'
+                      : 'text-phumulani-charcoal hover:bg-phumulani-cream/70'
                   }`}
                 >
-                  <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-4 w-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                   </svg>
                   {!sidebarCollapsed && <span>Command Center</span>}
@@ -794,13 +794,13 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
                 <button
                   onClick={() => setActiveTab('production-status')}
-                  className={`w-full flex items-center space-x-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition-colors ${
+                  className={`w-full flex items-center space-x-2.5 rounded-lg px-2.5 py-2 text-xs font-medium transition-colors cursor-pointer ${
                     activeTab === 'production-status'
-                      ? 'bg-phumulani-earth text-white shadow-sm font-semibold'
-                      : 'text-phumulani-charcoal hover:bg-phumulani-cream'
+                      ? 'bg-phumulani-earth text-white shadow-2xs font-semibold'
+                      : 'text-phumulani-charcoal hover:bg-phumulani-cream/70'
                   }`}
                 >
-                  <svg className="h-4 w-4 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="h-4 w-4 shrink-0 text-current" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                   </svg>
                   {!sidebarCollapsed && <span>Production Readiness</span>}
@@ -811,7 +811,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             {/* Group 2: DONOR INTELLIGENCE & CRM */}
             <div>
               {!sidebarCollapsed && (
-                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal mb-1">
+                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/55 mb-1.5">
                   02 — Donor Database
                 </div>
               )}
@@ -830,18 +830,18 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id as FundraisingSubRoute)}
-                    className={`w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors ${
+                    className={`w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors cursor-pointer ${
                       activeTab === item.id
-                        ? 'bg-phumulani-cream text-phumulani-earth font-semibold border-l-4 border-phumulani-earth'
-                        : 'text-phumulani-charcoal hover:bg-phumulani-cream'
+                        ? 'bg-phumulani-earth/10 text-phumulani-earth font-semibold ring-1 ring-phumulani-earth/25'
+                        : 'text-phumulani-charcoal font-medium hover:bg-phumulani-cream/70'
                     }`}
                   >
                     <div className="flex items-center space-x-2 truncate">
-                      <span className="h-1.5 w-1.5 rounded-full bg-phumulani-cream" />
+                      <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${activeTab === item.id ? 'bg-phumulani-earth' : 'bg-phumulani-charcoal/25'}`} />
                       {!sidebarCollapsed && <span className="truncate">{item.label}</span>}
                     </div>
                     {!sidebarCollapsed && (
-                      <span className="rounded-full bg-phumulani-cream px-1.5 py-0.2 text-[10px] font-mono text-phumulani-charcoal">
+                      <span className="rounded-sm bg-phumulani-cream px-1.5 py-0.5 text-[10px] font-mono tabular-nums text-phumulani-charcoal/80">
                         {item.count}
                       </span>
                     )}
@@ -853,7 +853,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             {/* Group 3: PIPELINE & CAMPAIGNS */}
             <div>
               {!sidebarCollapsed && (
-                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal mb-1">
+                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/55 mb-1.5">
                   03 — Campaigns & Grants
                 </div>
               )}
@@ -866,18 +866,18 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id as FundraisingSubRoute)}
-                    className={`w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors ${
+                    className={`w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors cursor-pointer ${
                       activeTab === item.id
-                        ? 'bg-phumulani-cream text-phumulani-earth font-semibold border-l-4 border-phumulani-earth'
-                        : 'text-phumulani-charcoal hover:bg-phumulani-cream'
+                        ? 'bg-phumulani-earth/10 text-phumulani-earth font-semibold ring-1 ring-phumulani-earth/25'
+                        : 'text-phumulani-charcoal font-medium hover:bg-phumulani-cream/70'
                     }`}
                   >
                     <div className="flex items-center space-x-2 truncate">
-                      <span className="h-1.5 w-1.5 rounded-full bg-phumulani-cream" />
+                      <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${activeTab === item.id ? 'bg-phumulani-earth' : 'bg-phumulani-teal'}`} />
                       {!sidebarCollapsed && <span className="truncate">{item.label}</span>}
                     </div>
                     {!sidebarCollapsed && (
-                      <span className="rounded-full bg-phumulani-cream px-1.5 py-0.2 text-[10px] font-mono text-phumulani-charcoal">
+                      <span className="rounded-sm bg-phumulani-cream px-1.5 py-0.5 text-[10px] font-mono tabular-nums text-phumulani-charcoal/80">
                         {item.count}
                       </span>
                     )}
@@ -889,7 +889,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             {/* Group 4: AI COMMUNICATIONS */}
             <div>
               {!sidebarCollapsed && (
-                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal mb-1">
+                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/55 mb-1.5">
                   04 — AI & Outreach
                 </div>
               )}
@@ -903,18 +903,18 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id as FundraisingSubRoute)}
-                    className={`w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors ${
+                    className={`w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors cursor-pointer ${
                       activeTab === item.id
-                        ? 'bg-phumulani-cream text-phumulani-earth font-semibold border-l-4 border-phumulani-earth'
-                        : 'text-phumulani-charcoal hover:bg-phumulani-cream'
+                        ? 'bg-phumulani-earth/10 text-phumulani-earth font-semibold ring-1 ring-phumulani-earth/25'
+                        : 'text-phumulani-charcoal font-medium hover:bg-phumulani-cream/70'
                     }`}
                   >
                     <div className="flex items-center space-x-2 truncate">
-                      <span className="h-1.5 w-1.5 rounded-full bg-phumulani-gold" />
+                      <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${activeTab === item.id ? 'bg-phumulani-earth' : 'bg-phumulani-gold'}`} />
                       {!sidebarCollapsed && <span className="truncate">{item.label}</span>}
                     </div>
                     {!sidebarCollapsed && item.count > 0 && (
-                      <span className="rounded-full bg-phumulani-cream px-1.5 py-0.2 text-[10px] font-mono font-semibold text-phumulani-charcoal">
+                      <span className="rounded-sm bg-phumulani-cream px-1.5 py-0.5 text-[10px] font-mono tabular-nums font-semibold text-phumulani-charcoal/85">
                         {item.count}
                       </span>
                     )}
@@ -926,7 +926,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             {/* Group 5: FINANCE & IMPACT */}
             <div>
               {!sidebarCollapsed && (
-                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal mb-1">
+                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/55 mb-1.5">
                   05 — Finance & Programs
                 </div>
               )}
@@ -942,18 +942,18 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id as FundraisingSubRoute)}
-                    className={`w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors ${
+                    className={`w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-xs transition-colors cursor-pointer ${
                       activeTab === item.id
-                        ? 'bg-phumulani-cream text-phumulani-earth font-semibold border-l-4 border-phumulani-earth'
-                        : 'text-phumulani-charcoal hover:bg-phumulani-cream'
+                        ? 'bg-phumulani-earth/10 text-phumulani-earth font-semibold ring-1 ring-phumulani-earth/25'
+                        : 'text-phumulani-charcoal font-medium hover:bg-phumulani-cream/70'
                     }`}
                   >
                     <div className="flex items-center space-x-2 truncate">
-                      <span className="h-1.5 w-1.5 rounded-full bg-phumulani-cream" />
+                      <span className={`h-1.5 w-1.5 rounded-full shrink-0 ${activeTab === item.id ? 'bg-phumulani-earth' : 'bg-phumulani-green'}`} />
                       {!sidebarCollapsed && <span className="truncate">{item.label}</span>}
                     </div>
                     {!sidebarCollapsed && item.count !== '' && (
-                      <span className="rounded-full bg-phumulani-cream px-1.5 py-0.2 text-[10px] font-mono text-phumulani-charcoal">
+                      <span className="rounded-sm bg-phumulani-cream px-1.5 py-0.5 text-[10px] font-mono tabular-nums text-phumulani-charcoal/80">
                         {item.count}
                       </span>
                     )}
@@ -972,17 +972,17 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
           {activeTab === 'command-center' && (
             <div className="space-y-6">
               {/* Header Title */}
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <h2 className="text-xl font-bold text-phumulani-charcoal tracking-tight">Enterprise Fundraising Command Center</h2>
-                  <p className="text-xs text-phumulani-charcoal">
+                  <h2 className="text-xl font-heading font-bold text-phumulani-charcoal tracking-tight">Enterprise Fundraising Command Center</h2>
+                  <p className="text-xs text-phumulani-charcoal/70 mt-0.5">
                     Live operational dashboard connected to verified database records. Pledges separated from verified cash revenue.
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   <button
                     onClick={() => setShowReconModal(true)}
-                    className="flex items-center space-x-1.5 rounded-lg border border-phumulani-gold bg-phumulani-cream px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-gold shadow-xs"
+                    className="flex items-center space-x-1.5 rounded-lg border border-phumulani-gold/60 bg-phumulani-gold/15 px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-gold/30 shadow-2xs transition-colors cursor-pointer"
                     title="Inspect $23,000 Program Funding Gap Reconciliation"
                   >
                     <svg className="h-4 w-4 text-phumulani-earth" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -996,7 +996,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                       setShowTestRunnerModal(true);
                       if (!testSummary) handleRunAllTests();
                     }}
-                    className="flex items-center space-x-1.5 rounded-lg border border-phumulani-teal bg-phumulani-cream px-3 py-1.5 text-xs font-semibold text-phumulani-earth hover:bg-phumulani-teal shadow-xs"
+                    className="flex items-center space-x-1.5 rounded-lg border border-phumulani-teal/50 bg-phumulani-teal/12 px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-teal/25 shadow-2xs transition-colors cursor-pointer"
                   >
                     <svg className="h-4 w-4 text-phumulani-earth" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -1006,14 +1006,14 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
                   <button
                     onClick={() => setActiveTab('production-status')}
-                    className="rounded-lg border border-phumulani-cream bg-white px-3 py-1.5 text-xs font-medium text-phumulani-charcoal hover:bg-phumulani-cream shadow-xs"
+                    className="rounded-lg border border-phumulani-charcoal/15 bg-white px-3 py-1.5 text-xs font-medium text-phumulani-charcoal hover:bg-phumulani-cream/70 shadow-2xs transition-colors cursor-pointer"
                   >
                     Production Health (18/18)
                   </button>
 
                   <button
                     onClick={() => setActiveTab('reports')}
-                    className="rounded-lg bg-phumulani-earth px-3 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-orange shadow-xs"
+                    className="rounded-lg bg-phumulani-earth px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-2xs transition-colors cursor-pointer"
                   >
                     Export 20 Reports
                   </button>
@@ -1141,100 +1141,100 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 ].map((card, idx) => (
                   <div
                     key={idx}
-                    className={`rounded-xl border p-4 bg-white shadow-sm transition-all hover:shadow-md ${
+                    className={`rounded-xl border p-4 shadow-2xs transition-all hover:shadow-sm ${
                       card.highlight
-                        ? 'border-phumulani-green bg-phumulani-cream'
+                        ? 'border-phumulani-green/50 bg-phumulani-green/10'
                         : card.alert
-                        ? 'border-phumulani-gold bg-phumulani-cream'
-                        : 'border-phumulani-cream'
+                        ? 'border-phumulani-gold/60 bg-phumulani-gold/12'
+                        : 'border-phumulani-charcoal/12 bg-white'
                     }`}
                   >
-                    <div className="flex items-center justify-between text-phumulani-charcoal text-[10px] font-mono">
+                    <div className="flex items-center justify-between text-phumulani-charcoal/60 text-[10px] font-mono">
                       <span>KPI {card.num}</span>
                       <span
-                        className={`rounded px-1.5 py-0.5 text-[9px] font-semibold uppercase ${
+                        className={`rounded-sm px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide ${
                           card.highlight
-                            ? 'bg-phumulani-cream text-phumulani-charcoal'
+                            ? 'bg-phumulani-green/20 text-phumulani-charcoal'
                             : card.alert
-                            ? 'bg-phumulani-cream text-phumulani-charcoal'
-                            : 'bg-phumulani-cream text-phumulani-charcoal'
+                            ? 'bg-phumulani-gold/25 text-phumulani-charcoal'
+                            : 'bg-phumulani-cream text-phumulani-charcoal/80'
                         }`}
                       >
                         {card.badge}
                       </span>
                     </div>
-                    <div className="mt-2">
-                      <div className="text-xl font-extrabold text-phumulani-charcoal tracking-tight">{card.val}</div>
+                    <div className="mt-2.5">
+                      <div className="text-xl font-heading font-extrabold text-phumulani-charcoal tracking-tight tabular-nums">{card.val}</div>
                       <div className="text-xs font-semibold text-phumulani-charcoal mt-0.5">{card.label}</div>
-                      <div className="text-[11px] text-phumulani-charcoal mt-1">{card.sub}</div>
+                      <div className="text-[11px] text-phumulani-charcoal/65 mt-1">{card.sub}</div>
                     </div>
                   </div>
                 ))}
               </div>
 
               {/* Section 5.2 Executive Summary & Priorities */}
-              <div className="rounded-xl border border-phumulani-cream bg-white p-5 shadow-sm space-y-4">
-                <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
-                  <div className="flex items-center space-x-2">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-phumulani-charcoal text-white text-xs font-bold">
+              <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-5 shadow-2xs space-y-4">
+                <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
+                  <div className="flex items-center space-x-2.5">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-phumulani-charcoal text-phumulani-cream text-xs font-bold">
                       A01
                     </div>
                     <div>
-                      <h3 className="text-sm font-bold text-phumulani-charcoal">Executive AI Briefing & Today's Fundraising Priorities</h3>
-                      <p className="text-[11px] text-phumulani-charcoal">Prepared by A01 Executive Assistant & A07 Fundraising Strategist</p>
+                      <h3 className="text-sm font-heading font-bold text-phumulani-charcoal">Executive AI Briefing & Today's Fundraising Priorities</h3>
+                      <p className="text-[11px] text-phumulani-charcoal/65">Prepared by A01 Executive Assistant & A07 Fundraising Strategist</p>
                     </div>
                   </div>
-                  <span className="text-[11px] font-mono text-phumulani-charcoal">
+                  <span className="text-[11px] font-mono text-phumulani-charcoal/65">
                     Updated: {new Date().toLocaleDateString()}
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                  <div className="rounded-lg border border-phumulani-cream bg-phumulani-cream p-3.5 space-y-2">
+                  <div className="rounded-lg border border-phumulani-gold/35 bg-phumulani-cream/55 p-3.5 space-y-2">
                     <div className="font-semibold text-phumulani-charcoal flex items-center space-x-1.5">
                       <span className="h-2 w-2 rounded-full bg-phumulani-gold" />
                       <span>Immediate Executive Actions</span>
                     </div>
-                    <ul className="space-y-1.5 text-phumulani-charcoal">
-                      <li>• <strong>Dr. Evelyn Vance</strong>: Capital naming proposal ($50,000) under final review. Recommended call by Comfort Dondo on Oct 30.</li>
-                      <li>• <strong>Medtronic CSR ($150,000)</strong>: Technical workforce narrative draft prepared. Human sign-off required.</li>
-                      <li>• <strong>1 Outreach Draft</strong> currently awaiting executive sign-off in the Approvals Center.</li>
+                    <ul className="space-y-1.5 text-phumulani-charcoal/85">
+                      <li>• <strong className="text-phumulani-charcoal">Dr. Evelyn Vance</strong>: Capital naming proposal ($50,000) under final review. Recommended call by Comfort Dondo on Oct 30.</li>
+                      <li>• <strong className="text-phumulani-charcoal">Medtronic CSR ($150,000)</strong>: Technical workforce narrative draft prepared. Human sign-off required.</li>
+                      <li>• <strong className="text-phumulani-charcoal">1 Outreach Draft</strong> currently awaiting executive sign-off in the Approvals Center.</li>
                     </ul>
                   </div>
 
-                  <div className="rounded-lg border border-phumulani-cream bg-phumulani-cream p-3.5 space-y-2">
+                  <div className="rounded-lg border border-phumulani-teal/35 bg-phumulani-cream/55 p-3.5 space-y-2">
                     <div className="font-semibold text-phumulani-charcoal flex items-center space-x-1.5">
                       <span className="h-2 w-2 rounded-full bg-phumulani-teal" />
                       <span>Statutory Grant Deadlines</span>
                     </div>
-                    <ul className="space-y-1.5 text-phumulani-charcoal">
-                      <li>• <strong>MN DHS Crime Victim Services</strong>: Quarterly expenditure vouchers due Oct 31 ($90,000 draw).</li>
-                      <li>• <strong>McKnight Foundation Renewal LOI</strong>: Two-year capacity grant ($200,000) submission window closes Nov 1.</li>
-                      <li>• <strong>Hennepin County</strong>: Outcome metrics submitted; site visit scheduled Nov 20.</li>
+                    <ul className="space-y-1.5 text-phumulani-charcoal/85">
+                      <li>• <strong className="text-phumulani-charcoal">MN DHS Crime Victim Services</strong>: Quarterly expenditure vouchers due Oct 31 ($90,000 draw).</li>
+                      <li>• <strong className="text-phumulani-charcoal">McKnight Foundation Renewal LOI</strong>: Two-year capacity grant ($200,000) submission window closes Nov 1.</li>
+                      <li>• <strong className="text-phumulani-charcoal">Hennepin County</strong>: Outcome metrics submitted; site visit scheduled Nov 20.</li>
                     </ul>
                   </div>
 
-                  <div className="rounded-lg border border-phumulani-cream bg-phumulani-cream p-3.5 space-y-2">
+                  <div className="rounded-lg border border-phumulani-green/35 bg-phumulani-cream/55 p-3.5 space-y-2">
                     <div className="font-semibold text-phumulani-charcoal flex items-center space-x-1.5">
                       <span className="h-2 w-2 rounded-full bg-phumulani-green" />
                       <span>Program Allocation Health</span>
                     </div>
-                    <ul className="space-y-1.5 text-phumulani-charcoal">
-                      <li>• <strong>Safe Haven Transitional Housing</strong>: $325,000 verified against $500,000 target ($175,000 remaining gap).</li>
-                      <li>• <strong>Immigrant Tech Pathways</strong>: $85,000 raised; 50 students enrolled.</li>
-                      <li>• <strong>Zero VAWA/Confidential disclosures</strong>: Strict safeguarding barrier verified intact.</li>
+                    <ul className="space-y-1.5 text-phumulani-charcoal/85">
+                      <li>• <strong className="text-phumulani-charcoal">Safe Haven Transitional Housing</strong>: $325,000 verified against $500,000 target ($175,000 remaining gap).</li>
+                      <li>• <strong className="text-phumulani-charcoal">Immigrant Tech Pathways</strong>: $85,000 raised; 50 students enrolled.</li>
+                      <li>• <strong className="text-phumulani-charcoal">Zero VAWA/Confidential disclosures</strong>: Strict safeguarding barrier verified intact.</li>
                     </ul>
                   </div>
                 </div>
               </div>
 
               {/* Active Campaigns Quick Visual */}
-              <div className="rounded-xl border border-phumulani-cream bg-white p-5 shadow-sm space-y-3">
+              <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-5 shadow-2xs space-y-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold text-phumulani-charcoal">Active Strategic Campaigns</h3>
+                  <h3 className="text-sm font-heading font-bold text-phumulani-charcoal">Active Strategic Campaigns</h3>
                   <button
                     onClick={() => setActiveTab('campaigns')}
-                    className="text-xs font-semibold text-phumulani-earth hover:underline"
+                    className="text-xs font-semibold text-phumulani-earth hover:underline cursor-pointer"
                   >
                     View All {campaigns.length} Campaigns →
                   </button>
@@ -1243,10 +1243,10 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   {campaigns.slice(0, 3).map((camp) => {
                     const pct = Math.min(100, Math.round((camp.fundsRaisedVerified / camp.fundingTarget) * 100));
                     return (
-                      <div key={camp.id} className="rounded-lg border border-phumulani-cream p-3 hover:bg-phumulani-cream transition-colors">
-                        <div className="flex items-center justify-between text-xs mb-1.5">
+                      <div key={camp.id} className="rounded-lg border border-phumulani-charcoal/12 p-3.5 hover:bg-phumulani-cream/50 transition-colors">
+                        <div className="flex items-center justify-between text-xs mb-2">
                           <span className="font-semibold text-phumulani-charcoal">{camp.title}</span>
-                          <span className="font-mono text-phumulani-charcoal">
+                          <span className="font-mono tabular-nums text-phumulani-charcoal">
                             ${camp.fundsRaisedVerified.toLocaleString()} / ${camp.fundingTarget.toLocaleString()} ({pct}%)
                           </span>
                         </div>
@@ -1256,9 +1256,9 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                             style={{ width: `${pct}%` }}
                           />
                         </div>
-                        <div className="flex items-center justify-between text-[11px] text-phumulani-charcoal mt-2">
+                        <div className="flex items-center justify-between text-[11px] text-phumulani-charcoal/70 mt-2">
                           <span>Manager: {camp.manager}</span>
-                          <span className="rounded bg-phumulani-cream px-1.5 py-0.5 text-[10px] font-medium text-phumulani-charcoal">
+                          <span className="rounded-sm bg-phumulani-cream px-2 py-0.5 text-[10px] font-semibold text-phumulani-charcoal">
                             Status: {camp.status}
                           </span>
                         </div>
@@ -1284,7 +1284,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               {/* Header & Controls */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <h2 className="text-xl font-bold text-phumulani-charcoal tracking-tight">
+                  <h2 className="text-xl font-heading font-bold text-phumulani-charcoal tracking-tight">
                     {activeTab === 'donors' && 'Donor Database Management'}
                     {activeTab === 'individuals' && 'Individual Giving Portfolio'}
                     {activeTab === 'major-gifts' && 'Major Donor Relationships ($10k+)'}
@@ -1295,7 +1295,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                     {activeTab === 'government' && 'Government Grant Programs'}
                     {activeTab === 'international' && 'International Funding & Diaspora Partners'}
                   </h2>
-                  <p className="text-xs text-phumulani-charcoal">
+                  <p className="text-xs text-phumulani-charcoal/70 mt-0.5">
                     Showing {filteredDonors.length} authorized records. Deduplication and CAN-SPAM consent verified.
                   </p>
                 </div>
@@ -1303,7 +1303,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 <div className="flex items-center space-x-2">
                   <button
                     onClick={() => setShowNewDonorModal(true)}
-                    className="flex items-center space-x-1.5 rounded-lg bg-phumulani-earth px-3 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-orange shadow-sm"
+                    className="flex items-center space-x-1.5 rounded-lg bg-phumulani-earth px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-2xs transition-colors cursor-pointer"
                   >
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -1313,9 +1313,9 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
                   <button
                     onClick={() => setShowImportModal(true)}
-                    className="flex items-center space-x-1.5 rounded-lg border border-phumulani-cream bg-white px-3 py-1.5 text-xs font-medium text-phumulani-charcoal hover:bg-phumulani-cream shadow-sm"
+                    className="flex items-center space-x-1.5 rounded-lg border border-phumulani-charcoal/15 bg-white px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream/70 shadow-2xs transition-colors cursor-pointer"
                   >
-                    <svg className="h-4 w-4 text-phumulani-charcoal" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="h-4 w-4 text-phumulani-charcoal/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
                     </svg>
                     <span>Import CSV</span>
@@ -1324,16 +1324,16 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               </div>
 
               {/* Filters & Search Bar */}
-              <div className="flex flex-wrap items-center gap-3 rounded-xl border border-phumulani-cream bg-white p-3 shadow-sm">
+              <div className="flex flex-wrap items-center gap-3 rounded-xl border border-phumulani-charcoal/12 bg-white p-3 shadow-2xs">
                 <div className="relative flex-1 min-w-[200px]">
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder="Search by donor name, email, organization, city..."
-                    className="w-full rounded-lg border border-phumulani-cream py-1.5 pl-8 pr-3 text-xs text-phumulani-charcoal placeholder-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                    className="w-full rounded-lg border border-phumulani-charcoal/15 bg-white py-1.5 pl-8 pr-3 text-xs text-phumulani-charcoal placeholder-phumulani-charcoal/45 focus:border-phumulani-earth focus:outline-none"
                   />
-                  <svg className="absolute left-2.5 top-2 h-4 w-4 text-phumulani-charcoal" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="absolute left-2.5 top-2 h-4 w-4 text-phumulani-charcoal/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
@@ -1341,7 +1341,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 <select
                   value={filterCategory}
                   onChange={(e) => setFilterCategory(e.target.value)}
-                  className="rounded-lg border border-phumulani-cream bg-white py-1.5 px-3 text-xs text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="rounded-lg border border-phumulani-charcoal/15 bg-white py-1.5 px-3 text-xs text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none cursor-pointer"
                 >
                   <option value="ALL">All Categories</option>
                   <option value="INDIVIDUAL_MAJOR">Individual Major Donors</option>
@@ -1357,7 +1357,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 <select
                   value={filterStage}
                   onChange={(e) => setFilterStage(e.target.value)}
-                  className="rounded-lg border border-phumulani-cream bg-white py-1.5 px-3 text-xs text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="rounded-lg border border-phumulani-charcoal/15 bg-white py-1.5 px-3 text-xs text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none cursor-pointer"
                 >
                   <option value="ALL">All Stages</option>
                   <option value="PROSPECT">Prospect</option>
@@ -1375,7 +1375,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                       setFilterCategory('ALL');
                       setFilterStage('ALL');
                     }}
-                    className="text-xs text-phumulani-charcoal hover:text-phumulani-earth underline"
+                    className="text-xs font-medium text-phumulani-earth hover:underline cursor-pointer"
                   >
                     Clear Filters
                   </button>
@@ -1383,10 +1383,10 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               </div>
 
               {/* Data Table */}
-              <div className="rounded-xl border border-phumulani-cream bg-white shadow-sm overflow-hidden">
+              <div className="rounded-xl border border-phumulani-charcoal/12 bg-white shadow-2xs overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
-                    <thead className="bg-phumulani-cream text-phumulani-charcoal font-semibold border-b border-phumulani-cream uppercase text-[10px] tracking-wider">
+                    <thead className="bg-phumulani-cream/70 text-phumulani-charcoal/80 font-semibold border-b border-phumulani-charcoal/12 uppercase text-[10px] tracking-wider">
                       <tr>
                         <th className="py-3 px-4">Donor Name & Org</th>
                         <th className="py-3 px-4">Contact Info</th>
@@ -1398,10 +1398,10 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                         <th className="py-3 px-4 text-right">Actions</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-phumulani-cream">
+                    <tbody className="divide-y divide-phumulani-charcoal/10">
                       {filteredDonors.length === 0 ? (
                         <tr>
-                          <td colSpan={8} className="py-8 text-center text-phumulani-charcoal">
+                          <td colSpan={8} className="py-8 text-center text-phumulani-charcoal/65">
                             No donor contacts match current filter criteria.
                           </td>
                         </tr>
@@ -1413,51 +1413,51 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                               key={donor.id}
                               onClick={() => setSelectedDonorId(donor.id)}
                               className={`cursor-pointer transition-colors ${
-                                isSelected ? 'bg-phumulani-cream font-medium' : 'hover:bg-phumulani-cream'
+                                isSelected ? 'bg-phumulani-cream/80 font-medium' : 'hover:bg-phumulani-cream/45'
                               }`}
                             >
                               <td className="py-3 px-4">
                                 <div className="font-semibold text-phumulani-charcoal">{donor.name}</div>
                                 {donor.organizationName && (
-                                  <div className="text-[11px] text-phumulani-charcoal">{donor.organizationName}</div>
+                                  <div className="text-[11px] text-phumulani-charcoal/70">{donor.organizationName}</div>
                                 )}
                               </td>
                               <td className="py-3 px-4">
                                 <div className="text-phumulani-charcoal font-mono text-[11px]">{donor.email}</div>
-                                {donor.phone && <div className="text-[11px] text-phumulani-charcoal">{donor.phone}</div>}
+                                {donor.phone && <div className="text-[11px] text-phumulani-charcoal/65">{donor.phone}</div>}
                               </td>
                               <td className="py-3 px-4">
-                                <span className="inline-flex rounded-full bg-phumulani-cream px-2 py-0.5 text-[10px] font-medium text-phumulani-charcoal">
+                                <span className="inline-flex rounded-sm bg-phumulani-cream/90 px-2 py-0.5 text-[10px] font-medium text-phumulani-charcoal border border-phumulani-charcoal/10">
                                   {donor.category.replace(/_/g, ' ')}
                                 </span>
                               </td>
                               <td className="py-3 px-4">
                                 <span
-                                  className={`inline-flex rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                                  className={`inline-flex rounded-sm px-2 py-0.5 text-[10px] font-semibold border ${
                                     donor.stage === 'STEWARDSHIP'
-                                      ? 'bg-phumulani-cream text-phumulani-charcoal'
+                                      ? 'bg-phumulani-green/15 text-phumulani-charcoal border-phumulani-green/35'
                                       : donor.stage === 'SOLICITATION'
-                                      ? 'bg-phumulani-cream text-phumulani-charcoal'
+                                      ? 'bg-phumulani-gold/20 text-phumulani-charcoal border-phumulani-gold/45'
                                       : donor.stage === 'LAPSED'
-                                      ? 'bg-phumulani-cream text-phumulani-earth'
-                                      : 'bg-phumulani-cream text-phumulani-earth'
+                                      ? 'bg-phumulani-earth/12 text-phumulani-earth border-phumulani-earth/30'
+                                      : 'bg-phumulani-teal/12 text-phumulani-charcoal border-phumulani-teal/35'
                                   }`}
                                 >
                                   {donor.stage}
                                 </span>
                               </td>
-                              <td className="py-3 px-4 font-mono font-bold text-phumulani-charcoal">
+                              <td className="py-3 px-4 font-mono tabular-nums font-bold text-phumulani-charcoal">
                                 ${donor.lifetimeGiving.toLocaleString()}
                               </td>
                               <td className="py-3 px-4">
-                                <span className="inline-flex rounded bg-phumulani-cream px-2 py-0.5 text-[10px] font-bold text-phumulani-earth border border-phumulani-teal">
+                                <span className="inline-flex rounded-sm bg-phumulani-teal/12 px-2 py-0.5 text-[10px] font-bold text-phumulani-charcoal border border-phumulani-teal/40">
                                   {donor.givingTier}
                                 </span>
                               </td>
                               <td className="py-3 px-4">
                                 {donor.consent.status === 'OPTED_IN' ? (
-                                  <span className="inline-flex items-center text-phumulani-earth text-[11px]">
-                                    <svg className="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <span className="inline-flex items-center text-phumulani-charcoal text-[11px] font-medium">
+                                    <svg className="h-3.5 w-3.5 mr-1 text-phumulani-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                                     </svg>
                                     Opted In
@@ -1478,7 +1478,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                                     setSelectedDonorId(donor.id);
                                     setShowDraftModal(true);
                                   }}
-                                  className="rounded border border-phumulani-cream bg-white px-2.5 py-1 text-[11px] font-medium text-phumulani-charcoal hover:bg-phumulani-cream"
+                                  className="rounded-md border border-phumulani-charcoal/15 bg-white px-2.5 py-1 text-[11px] font-semibold text-phumulani-charcoal hover:bg-phumulani-cream/80 transition-colors cursor-pointer"
                                 >
                                   AI Outreach
                                 </button>
@@ -1499,8 +1499,8 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <h2 className="text-xl font-bold text-phumulani-charcoal tracking-tight">Corporate Social Responsibility (CSR) & Sponsorships</h2>
-                  <p className="text-xs text-phumulani-charcoal">
+                  <h2 className="text-xl font-heading font-bold text-phumulani-charcoal tracking-tight">Corporate Social Responsibility (CSR) & Sponsorships</h2>
+                  <p className="text-xs text-phumulani-charcoal/70 mt-0.5">
                     Component 5 — Corporate ESG alignment, matching gift programs, and structured 5-tier community sponsorship packages.
                   </p>
                 </div>
@@ -1512,7 +1512,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                       setNewOppAmount(50000);
                       setShowAddOppModal(true);
                     }}
-                    className="rounded-lg bg-phumulani-earth px-3 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-orange shadow-xs flex items-center gap-1.5 cursor-pointer"
+                    className="rounded-lg bg-phumulani-earth px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>+ New Corporate Opportunity</span>
@@ -1520,9 +1520,9 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   <button
                     onClick={() => handleRunSpecializedWorkflow('csr')}
                     disabled={isExecutingPipeline}
-                    className="rounded-lg border border-phumulani-teal bg-phumulani-cream px-3 py-1.5 text-xs font-semibold text-phumulani-earth hover:bg-phumulani-teal shadow-xs flex items-center gap-1 cursor-pointer"
+                    className="rounded-lg border border-phumulani-teal/50 bg-phumulani-teal/12 px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-teal/25 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
                   >
-                    <Sparkles className="w-3.5 h-3.5" />
+                    <Sparkles className="w-3.5 h-3.5 text-phumulani-earth" />
                     <span>Run CSR Agent Workflow (A11)</span>
                   </button>
                 </div>
@@ -1531,18 +1531,18 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               {/* 5-Tier Sponsorship Matrix Banner */}
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
                 {[
-                  { tier: 'PLATINUM', amount: '$50,000+', desc: 'Executive Gala Title Sponsor & Annual Housing Naming', color: 'border-phumulani-earth bg-phumulani-cream text-phumulani-earth' },
-                  { tier: 'GOLD', amount: '$25,000', desc: 'Workforce Lab Technology & Classroom Sponsor', color: 'border-phumulani-gold bg-phumulani-cream text-phumulani-charcoal' },
-                  { tier: 'SILVER', amount: '$10,000', desc: 'Healing Sisterhood Banquet Table Sponsor', color: 'border-phumulani-cream bg-phumulani-cream text-phumulani-charcoal' },
-                  { tier: 'BRONZE', amount: '$5,000', desc: 'Career Pathways Workshop & Mentorship Sponsor', color: 'border-phumulani-orange bg-phumulani-cream text-phumulani-earth' },
-                  { tier: 'COMMUNITY', amount: '$2,500', desc: 'Supply Distribution & Emergency Care Kit Sponsor', color: 'border-phumulani-teal bg-phumulani-cream text-phumulani-earth' },
+                  { tier: 'PLATINUM', amount: '$50,000+', desc: 'Executive Gala Title Sponsor & Annual Housing Naming', color: 'border-phumulani-earth/45 bg-phumulani-earth/8 text-phumulani-earth' },
+                  { tier: 'GOLD', amount: '$25,000', desc: 'Workforce Lab Technology & Classroom Sponsor', color: 'border-phumulani-gold/60 bg-phumulani-gold/15 text-phumulani-charcoal' },
+                  { tier: 'SILVER', amount: '$10,000', desc: 'Healing Sisterhood Banquet Table Sponsor', color: 'border-phumulani-charcoal/20 bg-white text-phumulani-charcoal' },
+                  { tier: 'BRONZE', amount: '$5,000', desc: 'Career Pathways Workshop & Mentorship Sponsor', color: 'border-phumulani-orange/50 bg-phumulani-orange/10 text-phumulani-earth' },
+                  { tier: 'COMMUNITY', amount: '$2,500', desc: 'Supply Distribution & Emergency Care Kit Sponsor', color: 'border-phumulani-teal/50 bg-phumulani-teal/12 text-phumulani-charcoal' },
                 ].map((t) => (
                   <div key={t.tier} className={`rounded-xl border p-3 ${t.color} space-y-1`}>
                     <div className="flex items-center justify-between">
                       <span className="font-bold text-xs uppercase tracking-wider">{t.tier}</span>
-                      <span className="font-mono font-bold text-xs">{t.amount}</span>
+                      <span className="font-mono tabular-nums font-bold text-xs">{t.amount}</span>
                     </div>
-                    <p className="text-[10px] leading-tight opacity-80">{t.desc}</p>
+                    <p className="text-[10px] leading-tight text-phumulani-charcoal/75">{t.desc}</p>
                   </div>
                 ))}
               </div>
@@ -1550,38 +1550,38 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               {/* Corporate Partnerships Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {partnerships.map((p) => (
-                  <div key={p.id} className="rounded-xl border border-phumulani-cream bg-white p-4 shadow-xs space-y-3 flex flex-col justify-between">
-                    <div className="space-y-2">
+                  <div key={p.id} className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 shadow-2xs space-y-3 flex flex-col justify-between">
+                    <div className="space-y-2.5">
                       <div className="flex items-center justify-between">
-                        <span className="rounded bg-phumulani-cream px-2 py-0.5 text-[10px] font-bold text-phumulani-earth border border-phumulani-teal">
+                        <span className="rounded-sm bg-phumulani-teal/12 px-2 py-0.5 text-[10px] font-bold text-phumulani-charcoal border border-phumulani-teal/40">
                           {p.tier} SPONSOR • {p.partnershipType}
                         </span>
-                        <span className="text-[11px] font-mono text-phumulani-charcoal">
+                        <span className="text-[11px] font-mono text-phumulani-charcoal/70">
                           Status: <strong className="text-phumulani-earth">{p.status}</strong>
                         </span>
                       </div>
 
                       <div>
-                        <h4 className="text-base font-bold text-phumulani-charcoal">{p.companyName}</h4>
-                        <div className="text-xs text-phumulani-charcoal">
+                        <h4 className="text-base font-heading font-bold text-phumulani-charcoal">{p.companyName}</h4>
+                        <div className="text-xs text-phumulani-charcoal/75 mt-0.5">
                           Contact: <strong className="text-phumulani-charcoal">{p.contactPerson}</strong> ({p.contactEmail})
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-2 bg-phumulani-cream p-2.5 rounded-lg border border-phumulani-cream text-xs">
+                      <div className="grid grid-cols-2 gap-2 bg-phumulani-cream/65 p-2.5 rounded-lg border border-phumulani-charcoal/10 text-xs">
                         <div>
-                          <div className="text-[10px] text-phumulani-charcoal uppercase font-semibold">Proposed Commitment</div>
-                          <div className="font-mono font-bold text-phumulani-charcoal text-sm">${p.proposedContribution.toLocaleString()}</div>
+                          <div className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold">Proposed Commitment</div>
+                          <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm">${p.proposedContribution.toLocaleString()}</div>
                         </div>
                         <div>
-                          <div className="text-[10px] text-phumulani-charcoal uppercase font-semibold">Verified Received</div>
-                          <div className="font-mono font-bold text-phumulani-earth text-sm">${p.verifiedContributionReceived.toLocaleString()}</div>
+                          <div className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold">Verified Received</div>
+                          <div className="font-mono tabular-nums font-bold text-phumulani-earth text-sm">${p.verifiedContributionReceived.toLocaleString()}</div>
                         </div>
                       </div>
 
                       <div className="space-y-1">
-                        <div className="text-[10px] font-bold uppercase text-phumulani-charcoal">Sponsorship Benefits Package:</div>
-                        <ul className="text-xs text-phumulani-charcoal space-y-0.5 list-disc list-inside bg-phumulani-cream p-2 rounded">
+                        <div className="text-[10px] font-bold uppercase text-phumulani-charcoal/70">Sponsorship Benefits Package:</div>
+                        <ul className="text-xs text-phumulani-charcoal/85 space-y-0.5 list-disc list-inside bg-phumulani-cream/45 p-2.5 rounded-lg border border-phumulani-charcoal/8">
                           {p.benefitsPackage.map((b, idx) => (
                             <li key={idx}>{b}</li>
                           ))}
@@ -1589,7 +1589,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                       </div>
                     </div>
 
-                    <div className="pt-3 border-t border-phumulani-cream flex items-center justify-between">
+                    <div className="pt-3 border-t border-phumulani-charcoal/10 flex items-center justify-between">
                       <button
                         onClick={() => {
                           const t = db.executeFundraisingAgentTask('FUND-AI-011', {
@@ -1615,7 +1615,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                             notify(`Select corporate contact to initiate outreach.`);
                           }
                         }}
-                        className="rounded-lg bg-phumulani-earth px-3 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-orange shadow-xs cursor-pointer"
+                        className="rounded-lg bg-phumulani-earth px-3 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-2xs transition-colors cursor-pointer"
                       >
                         Draft CSR Outreach
                       </button>
@@ -1631,14 +1631,14 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <h2 className="text-xl font-bold text-phumulani-charcoal tracking-tight">Funding Opportunities Pipeline</h2>
-                  <p className="text-xs text-phumulani-charcoal">
+                  <h2 className="text-xl font-heading font-bold text-phumulani-charcoal tracking-tight">Funding Opportunities Pipeline</h2>
+                  <p className="text-xs text-phumulani-charcoal/70 mt-0.5">
                     Full 15-Stage Lifecycle with AI Mission Matching, Contextual Agents, and Human Approval Governance.
                   </p>
                 </div>
                 <button
                   onClick={() => setShowAddOppModal(true)}
-                  className="rounded-lg bg-phumulani-earth px-3.5 py-2 text-xs font-semibold text-white hover:bg-phumulani-orange shadow-xs flex items-center gap-1.5 cursor-pointer self-start sm:self-auto"
+                  className="rounded-lg bg-phumulani-earth px-3.5 py-2 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer self-start sm:self-auto"
                 >
                   <Plus className="w-3.5 h-3.5" />
                   <span>+ Add Opportunity</span>
@@ -1648,18 +1648,18 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               {/* Opportunities Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {opportunities.map((opp) => (
-                  <div key={opp.id} className="rounded-xl border border-phumulani-cream bg-white p-4 shadow-xs space-y-3 flex flex-col justify-between">
-                    <div className="space-y-2">
+                  <div key={opp.id} className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 shadow-2xs space-y-3 flex flex-col justify-between">
+                    <div className="space-y-2.5">
                       <div className="flex items-center justify-between text-[11px]">
-                        <span className="rounded bg-phumulani-cream px-2 py-0.5 font-semibold text-phumulani-earth border border-phumulani-teal">
+                        <span className="rounded-sm bg-phumulani-teal/12 px-2 py-0.5 font-semibold text-phumulani-charcoal border border-phumulani-teal/40">
                           {opp.category.replace(/_/g, ' ')}
                         </span>
-                        <span className="font-mono text-phumulani-charcoal">Match: <strong className="text-phumulani-earth">{opp.aiMatchScore}%</strong></span>
+                        <span className="font-mono text-phumulani-charcoal/75">Match: <strong className="text-phumulani-earth">{opp.aiMatchScore}%</strong></span>
                       </div>
 
                       <div>
-                        <h4 className="text-sm font-bold text-phumulani-charcoal">{opp.title}</h4>
-                        <div className="flex items-center gap-1.5 text-xs text-phumulani-charcoal mt-0.5">
+                        <h4 className="text-sm font-heading font-bold text-phumulani-charcoal">{opp.title}</h4>
+                        <div className="flex items-center gap-1.5 text-xs text-phumulani-charcoal/70 mt-0.5">
                           <span>Donor:</span>
                           <button
                             onClick={() => {
@@ -1673,34 +1673,34 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-3 gap-2 border-y border-phumulani-cream py-2 text-xs">
+                      <div className="grid grid-cols-3 gap-2 border-y border-phumulani-charcoal/10 py-2 text-xs">
                         <div>
-                          <div className="text-[10px] text-phumulani-charcoal uppercase font-medium">Target Amount</div>
-                          <div className="font-mono font-bold text-phumulani-charcoal">${opp.targetAmount.toLocaleString()}</div>
+                          <div className="text-[10px] text-phumulani-charcoal/65 uppercase font-medium">Target Amount</div>
+                          <div className="font-mono tabular-nums font-bold text-phumulani-charcoal">${opp.targetAmount.toLocaleString()}</div>
                         </div>
                         <div>
-                          <div className="text-[10px] text-phumulani-charcoal uppercase font-medium">Probability</div>
-                          <div className="font-mono font-bold text-phumulani-earth">{opp.probability}%</div>
+                          <div className="text-[10px] text-phumulani-charcoal/65 uppercase font-medium">Probability</div>
+                          <div className="font-mono tabular-nums font-bold text-phumulani-earth">{opp.probability}%</div>
                         </div>
                         <div>
-                          <div className="text-[10px] text-phumulani-charcoal uppercase font-medium">Close Date</div>
-                          <div className="font-mono text-phumulani-charcoal">{opp.expectedCloseDate}</div>
+                          <div className="text-[10px] text-phumulani-charcoal/65 uppercase font-medium">Close Date</div>
+                          <div className="font-mono tabular-nums text-phumulani-charcoal">{opp.expectedCloseDate}</div>
                         </div>
                       </div>
 
-                      <div className="space-y-1 text-[11px] text-phumulani-charcoal">
-                        <div><strong>Owner:</strong> <span className="text-phumulani-charcoal">{opp.assignedOwner}</span> · <strong>Program:</strong> <span className="text-phumulani-charcoal">{opp.programName}</span></div>
-                        {opp.nextAction && <div><strong>Next Action:</strong> <span className="text-phumulani-charcoal">{opp.nextAction}</span></div>}
-                        {opp.sourceEvidence && <div><strong>Evidence:</strong> <span className="text-phumulani-charcoal italic">{opp.sourceEvidence}</span></div>}
+                      <div className="space-y-1 text-[11px] text-phumulani-charcoal/80">
+                        <div><strong className="text-phumulani-charcoal">Owner:</strong> {opp.assignedOwner} · <strong className="text-phumulani-charcoal">Program:</strong> {opp.programName}</div>
+                        {opp.nextAction && <div><strong className="text-phumulani-charcoal">Next Action:</strong> {opp.nextAction}</div>}
+                        {opp.sourceEvidence && <div><strong className="text-phumulani-charcoal">Evidence:</strong> <span className="italic">{opp.sourceEvidence}</span></div>}
                       </div>
 
-                      <div className="text-[11px] text-phumulani-charcoal bg-phumulani-cream rounded-lg p-2 border border-phumulani-cream">
+                      <div className="text-[11px] text-phumulani-charcoal/85 bg-phumulani-cream/65 rounded-lg p-2.5 border border-phumulani-charcoal/10">
                         <strong className="text-phumulani-charcoal">AI Match Rationale:</strong> {opp.aiMatchRationale}
                       </div>
 
                       {/* 15-Stage Lifecycle Selector */}
                       <div className="space-y-1 pt-1">
-                        <label className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal block">
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/70 block">
                           Current Stage (15 Stages):
                         </label>
                         <select
@@ -1711,7 +1711,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                             refreshState();
                             notify(`Opportunity "${opp.title}" advanced to stage: ${newStage}`);
                           }}
-                          className="w-full bg-phumulani-cream border border-phumulani-cream rounded-lg py-1 px-2 text-xs font-semibold text-phumulani-charcoal focus:outline-none focus:border-phumulani-earth cursor-pointer"
+                          className="w-full bg-phumulani-cream/55 border border-phumulani-charcoal/15 rounded-lg py-1.5 px-2 text-xs font-semibold text-phumulani-charcoal focus:outline-none focus:border-phumulani-earth cursor-pointer"
                         >
                           {OPPORTUNITY_STAGES.map((s) => (
                             <option key={s.id} value={s.id}>
@@ -1723,8 +1723,8 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                     </div>
 
                     {/* Contextual AI Agent Actions */}
-                    <div className="pt-2 border-t border-phumulani-cream space-y-1.5">
-                      <div className="text-[10px] font-bold uppercase text-phumulani-charcoal flex items-center gap-1">
+                    <div className="pt-2.5 border-t border-phumulani-charcoal/10 space-y-1.5">
+                      <div className="text-[10px] font-bold uppercase text-phumulani-charcoal/70 flex items-center gap-1">
                         <Sparkles className="w-3 h-3 text-phumulani-earth" />
                         <span>Contextual AI Agent Assistance:</span>
                       </div>
@@ -1738,7 +1738,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                             refreshState();
                             notify(`Agent 06 (Eligibility Verifier) executed. Score: 95% Eligible.`);
                           }}
-                          className="text-[10px] font-semibold px-2 py-1 rounded bg-phumulani-cream hover:bg-phumulani-teal text-phumulani-earth border border-phumulani-teal cursor-pointer"
+                          className="text-[10px] font-semibold px-2 py-1 rounded-md bg-phumulani-teal/12 hover:bg-phumulani-teal/25 text-phumulani-charcoal border border-phumulani-teal/40 transition-colors cursor-pointer"
                           title="Run Agent 06 501(c)(3) Eligibility Verifier"
                         >
                           Audit Eligibility (A06)
@@ -1748,7 +1748,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                             setSelectedDonorId(opp.donorId);
                             setShowDraftModal(true);
                           }}
-                          className="text-[10px] font-semibold px-2 py-1 rounded bg-phumulani-cream hover:bg-phumulani-teal text-phumulani-earth border border-phumulani-teal cursor-pointer"
+                          className="text-[10px] font-semibold px-2 py-1 rounded-md bg-phumulani-teal/12 hover:bg-phumulani-teal/25 text-phumulani-charcoal border border-phumulani-teal/40 transition-colors cursor-pointer"
                           title="Run Agent 07 Outreach Drafter"
                         >
                           Draft Proposal (A07)
@@ -1762,7 +1762,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                             refreshState();
                             notify(`Agent 10 (Multi-Year Grant Tracker) verified 5/5 deliverables.`);
                           }}
-                          className="text-[10px] font-semibold px-2 py-1 rounded bg-phumulani-cream hover:bg-phumulani-teal text-phumulani-earth border border-phumulani-teal cursor-pointer"
+                          className="text-[10px] font-semibold px-2 py-1 rounded-md bg-phumulani-teal/12 hover:bg-phumulani-teal/25 text-phumulani-charcoal border border-phumulani-teal/40 transition-colors cursor-pointer"
                           title="Run Agent 10 Deliverables & Reporting Tracker"
                         >
                           Compliance (A10)
@@ -1780,8 +1780,8 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <h2 className="text-xl font-bold text-phumulani-charcoal tracking-tight">Institutional Grants & Foundation Management</h2>
-                  <p className="text-xs text-phumulani-charcoal">
+                  <h2 className="text-xl font-heading font-bold text-phumulani-charcoal tracking-tight">Institutional Grants & Foundation Management</h2>
+                  <p className="text-xs text-phumulani-charcoal/70 mt-0.5">
                     Component 4 — Statutory grant lifecycles, LOI submissions, compliance reporting deadlines, and 501(c)(3) eligibility checks.
                   </p>
                 </div>
@@ -1793,7 +1793,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                       setNewOppAmount(75000);
                       setShowAddOppModal(true);
                     }}
-                    className="rounded-lg bg-phumulani-earth px-3 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-orange shadow-xs flex items-center gap-1.5 cursor-pointer"
+                    className="rounded-lg bg-phumulani-earth px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>+ Create Grant Opportunity</span>
@@ -1801,9 +1801,9 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   <button
                     onClick={() => handleRunSpecializedWorkflow('grant')}
                     disabled={isExecutingPipeline}
-                    className="rounded-lg border border-phumulani-teal bg-phumulani-cream px-3 py-1.5 text-xs font-semibold text-phumulani-earth hover:bg-phumulani-teal shadow-xs flex items-center gap-1 cursor-pointer"
+                    className="rounded-lg border border-phumulani-teal/50 bg-phumulani-teal/12 px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-teal/25 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
                   >
-                    <Sparkles className="w-3.5 h-3.5" />
+                    <Sparkles className="w-3.5 h-3.5 text-phumulani-earth" />
                     <span>Run Grant Assistant Workflow (A05/A06/A07)</span>
                   </button>
                 </div>
@@ -1812,56 +1812,56 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               {/* Grants Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {grants.map((g) => (
-                  <div key={g.id} className="rounded-xl border border-phumulani-cream bg-white p-4 shadow-xs space-y-3 flex flex-col justify-between">
-                    <div className="space-y-2">
+                  <div key={g.id} className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 shadow-2xs space-y-3 flex flex-col justify-between">
+                    <div className="space-y-2.5">
                       <div className="flex items-center justify-between">
-                        <span className="rounded bg-phumulani-cream px-2 py-0.5 text-[10px] font-bold text-phumulani-earth border border-phumulani-teal">
+                        <span className="rounded-sm bg-phumulani-teal/12 px-2 py-0.5 text-[10px] font-bold text-phumulani-charcoal border border-phumulani-teal/40">
                           {g.grantmakerType.replace(/_/g, ' ')}
                         </span>
-                        <span className="rounded-full bg-phumulani-cream px-2 py-0.5 text-[10px] font-bold text-phumulani-charcoal">
+                        <span className="rounded-sm bg-phumulani-cream px-2 py-0.5 text-[10px] font-bold text-phumulani-charcoal border border-phumulani-charcoal/10">
                           {g.status}
                         </span>
                       </div>
 
                       <div>
-                        <h4 className="text-base font-bold text-phumulani-charcoal">{g.grantmakerName}</h4>
-                        <div className="text-xs text-phumulani-charcoal">
+                        <h4 className="text-base font-heading font-bold text-phumulani-charcoal">{g.grantmakerName}</h4>
+                        <div className="text-xs text-phumulani-charcoal/70 mt-0.5">
                           Program Allocation: <strong className="text-phumulani-charcoal">{g.programName}</strong>
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-2 gap-2 bg-phumulani-cream p-2.5 rounded-lg border border-phumulani-cream text-xs">
+                      <div className="grid grid-cols-2 gap-2 bg-phumulani-cream/65 p-2.5 rounded-lg border border-phumulani-charcoal/10 text-xs">
                         <div>
-                          <div className="text-[10px] text-phumulani-charcoal uppercase font-semibold">Amount Requested</div>
-                          <div className="font-mono font-bold text-phumulani-charcoal text-sm">${g.amountRequested.toLocaleString()}</div>
+                          <div className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold">Amount Requested</div>
+                          <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm">${g.amountRequested.toLocaleString()}</div>
                         </div>
                         <div>
-                          <div className="text-[10px] text-phumulani-charcoal uppercase font-semibold">Awarded / Verified</div>
-                          <div className="font-mono font-bold text-phumulani-earth text-sm">${g.amountAwarded.toLocaleString()}</div>
+                          <div className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold">Awarded / Verified</div>
+                          <div className="font-mono tabular-nums font-bold text-phumulani-earth text-sm">${g.amountAwarded.toLocaleString()}</div>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-2 text-xs">
-                        <div className="rounded border border-phumulani-cream p-2">
-                          <span className="text-[10px] text-phumulani-charcoal uppercase font-semibold block">Submission Deadline</span>
+                        <div className="rounded-lg border border-phumulani-charcoal/12 p-2.5">
+                          <span className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold block">Submission Deadline</span>
                           <span className="font-mono font-semibold text-phumulani-charcoal">{g.submissionDeadline}</span>
                         </div>
-                        <div className="rounded border border-phumulani-cream p-2">
-                          <span className="text-[10px] text-phumulani-charcoal uppercase font-semibold block">Reporting Deadline</span>
+                        <div className="rounded-lg border border-phumulani-charcoal/12 p-2.5">
+                          <span className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold block">Reporting Deadline</span>
                           <span className="font-mono font-semibold text-phumulani-charcoal">{g.reportingDeadline || 'Quarterly Ongoing'}</span>
                         </div>
                       </div>
 
-                      <div className="text-xs text-phumulani-charcoal bg-phumulani-cream p-2.5 rounded-lg">
+                      <div className="text-xs text-phumulani-charcoal/85 bg-phumulani-cream/55 p-2.5 rounded-lg border border-phumulani-charcoal/8">
                         <strong className="text-phumulani-charcoal">Proposal Summary:</strong> {g.proposalSummary}
                       </div>
 
                       <div className="space-y-1">
-                        <div className="text-[10px] font-bold uppercase text-phumulani-charcoal">Required Document Checklist:</div>
-                        <div className="flex flex-wrap gap-1">
+                        <div className="text-[10px] font-bold uppercase text-phumulani-charcoal/70">Required Document Checklist:</div>
+                        <div className="flex flex-wrap gap-1.5">
                           {g.requiredDocuments.map((doc, idx) => (
-                            <span key={idx} className="rounded bg-phumulani-cream text-phumulani-charcoal border border-phumulani-green px-2 py-0.5 text-[10px] flex items-center gap-1">
-                              <CheckCircle2 className="w-3 h-3 text-phumulani-earth" />
+                            <span key={idx} className="rounded-sm bg-phumulani-green/12 text-phumulani-charcoal border border-phumulani-green/40 px-2 py-0.5 text-[10px] font-medium flex items-center gap-1">
+                              <CheckCircle2 className="w-3 h-3 text-phumulani-green" />
                               <span>{doc}</span>
                             </span>
                           ))}
@@ -1869,8 +1869,8 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                       </div>
                     </div>
 
-                    <div className="pt-3 border-t border-phumulani-cream flex items-center justify-between text-xs">
-                      <div className="text-[11px] text-phumulani-charcoal">
+                    <div className="pt-3 border-t border-phumulani-charcoal/10 flex items-center justify-between text-xs">
+                      <div className="text-[11px] text-phumulani-charcoal/70">
                         Reviewer: <strong className="text-phumulani-charcoal">{g.internalReviewer}</strong>
                       </div>
                       <div className="flex items-center gap-1.5">
@@ -1883,7 +1883,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                             refreshState();
                             notify(`Agent 06 (Eligibility Verifier) verified 100% compliance for ${g.grantmakerName}.`);
                           }}
-                          className="rounded border border-phumulani-cream bg-white px-2.5 py-1 text-[11px] font-medium text-phumulani-charcoal hover:bg-phumulani-cream cursor-pointer"
+                          className="rounded-md border border-phumulani-charcoal/15 bg-white px-2.5 py-1 text-[11px] font-medium text-phumulani-charcoal hover:bg-phumulani-cream/80 transition-colors cursor-pointer"
                         >
                           Audit (A06)
                         </button>
@@ -1896,7 +1896,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                             refreshState();
                             notify(`Agent 10 scheduled reporting reminders and deliverables audit.`);
                           }}
-                          className="rounded bg-phumulani-earth px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-phumulani-orange cursor-pointer"
+                          className="rounded-md bg-phumulani-earth px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-phumulani-earth/90 transition-colors cursor-pointer"
                         >
                           Track Deliverables (A10)
                         </button>
@@ -1913,38 +1913,38 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-phumulani-charcoal tracking-tight">Fundraising Campaign Management</h2>
-                  <p className="text-xs text-phumulani-charcoal">
+                  <h2 className="text-xl font-heading font-bold text-phumulani-charcoal tracking-tight">Fundraising Campaign Management</h2>
+                  <p className="text-xs text-phumulani-charcoal/70 mt-0.5">
                     11-Stage Campaign Lifecycle: Draft → Program Review → Budget Review → Active → Reconciled.
                   </p>
                 </div>
                 <button
                   onClick={() => notify('Campaign Creation Wizard ready')}
-                  className="rounded-lg bg-phumulani-earth px-3 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-orange"
+                  className="rounded-lg bg-phumulani-earth px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-2xs transition-colors cursor-pointer"
                 >
                   + Create Campaign
                 </button>
               </div>
 
               {/* Controlled Fundraising Campaign Pilot (Section 06 / Milestone 11.05) */}
-              <div className="rounded-xl border-2 border-phumulani-earth bg-phumulani-cream p-5 shadow-sm space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-phumulani-cream pb-3">
+              <div className="rounded-xl border border-phumulani-earth/45 bg-phumulani-cream/75 p-5 shadow-2xs space-y-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-phumulani-charcoal/10 pb-3">
                   <div>
                     <div className="flex items-center space-x-2">
-                      <span className="rounded bg-phumulani-earth px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider">
+                      <span className="rounded-sm bg-phumulani-earth px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider">
                         Section 06 Pilot
                       </span>
-                      <h3 className="text-base font-bold text-phumulani-charcoal">
+                      <h3 className="text-base font-heading font-bold text-phumulani-charcoal">
                         Controlled Campaign Pilot: Safe Haven Capital Campaign
                       </h3>
                     </div>
-                    <p className="text-xs text-phumulani-charcoal mt-1">
+                    <p className="text-xs text-phumulani-charcoal/75 mt-1">
                       Controlled fundraising pilot on 4 pre-vetted donors with verified OPTED_IN email consent. Complete 11-metric auditable tracking under human oversight.
                     </p>
                   </div>
                   <button
                     onClick={handleRunPilotSimulation}
-                    className="flex items-center space-x-1.5 rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-bold text-white hover:bg-phumulani-orange shadow-sm whitespace-nowrap"
+                    className="flex items-center space-x-1.5 rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-bold text-white hover:bg-phumulani-earth/90 shadow-2xs whitespace-nowrap transition-colors cursor-pointer"
                   >
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
@@ -1955,58 +1955,58 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 </div>
 
                 {/* 11 Pilot Metrics Grid */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 text-xs">
-                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] text-phumulani-charcoal font-semibold uppercase">1. Authorized Recipients</span>
-                    <div className="font-mono font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.authorizedRecipientsCount} Donors</div>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 text-xs">
+                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
+                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">1. Authorized Recipients</span>
+                    <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.authorizedRecipientsCount} Donors</div>
                   </div>
-                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] text-phumulani-charcoal font-semibold uppercase">2. Accepted Sends</span>
-                    <div className="font-mono font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.acceptedSendsCount} Dispatched</div>
+                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
+                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">2. Accepted Sends</span>
+                    <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.acceptedSendsCount} Dispatched</div>
                   </div>
-                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] text-phumulani-charcoal font-semibold uppercase">3. Delivery Outcome</span>
+                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
+                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">3. Delivery Outcome</span>
                     <div className="font-mono font-bold text-phumulani-earth text-xs mt-1">{pilotMetrics.providerDeliveryOutcomes}</div>
                   </div>
-                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] text-phumulani-charcoal font-semibold uppercase">4. Bounce Rate</span>
-                    <div className="font-mono font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.bounceRate}%</div>
+                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
+                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">4. Bounce Rate</span>
+                    <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.bounceRate}%</div>
                   </div>
-                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] text-phumulani-charcoal font-semibold uppercase">5. Spam Complaints</span>
-                    <div className="font-mono font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.spamComplaints}</div>
+                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
+                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">5. Spam Complaints</span>
+                    <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.spamComplaints}</div>
                   </div>
-                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] text-phumulani-charcoal font-semibold uppercase">6. Unsubscribes</span>
-                    <div className="font-mono font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.unsubscribeRequests}</div>
+                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
+                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">6. Unsubscribes</span>
+                    <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.unsubscribeRequests}</div>
                   </div>
-                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] text-phumulani-charcoal font-semibold uppercase">7. Responses</span>
-                    <div className="font-mono font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.responsesReceived} Inquiries</div>
+                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
+                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">7. Responses</span>
+                    <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.responsesReceived} Inquiries</div>
                   </div>
-                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] text-phumulani-charcoal font-semibold uppercase">8. Qualified Inquiries</span>
-                    <div className="font-mono font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.qualifiedDonorInquiries} Proposals</div>
+                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
+                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">8. Qualified Inquiries</span>
+                    <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.qualifiedDonorInquiries} Proposals</div>
                   </div>
-                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] text-phumulani-charcoal font-semibold uppercase">9. Follow-Up Rate</span>
-                    <div className="font-mono font-bold text-phumulani-earth text-sm mt-0.5">{pilotMetrics.followUpCompletionRate}%</div>
+                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
+                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">9. Follow-Up Rate</span>
+                    <div className="font-mono tabular-nums font-bold text-phumulani-earth text-sm mt-0.5">{pilotMetrics.followUpCompletionRate}%</div>
                   </div>
-                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] text-phumulani-charcoal font-semibold uppercase">10. Verified Donations</span>
-                    <div className="font-mono font-bold text-phumulani-earth text-sm mt-0.5">${pilotMetrics.verifiedDonationsAmount.toLocaleString()}</div>
+                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
+                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">10. Verified Donations</span>
+                    <div className="font-mono tabular-nums font-bold text-phumulani-earth text-sm mt-0.5">${pilotMetrics.verifiedDonationsAmount.toLocaleString()}</div>
                   </div>
-                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] text-phumulani-charcoal font-semibold uppercase">11. Campaign Expenses</span>
-                    <div className="font-mono font-bold text-phumulani-charcoal text-sm mt-0.5">${pilotMetrics.campaignExpenses.toLocaleString()}</div>
+                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
+                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">11. Campaign Expenses</span>
+                    <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">${pilotMetrics.campaignExpenses.toLocaleString()}</div>
                   </div>
-                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-cream shadow-xs">
-                    <span className="text-[10px] text-phumulani-charcoal font-semibold uppercase">Audit Status</span>
+                  <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
+                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">Audit Status</span>
                     <div className="font-mono font-bold text-phumulani-earth text-xs mt-1">STATUS: {pilotMetrics.simulatedStatus}</div>
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center justify-between text-[11px] text-phumulani-charcoal bg-white rounded-lg px-3 py-2 border border-phumulani-cream">
+                <div className="flex flex-wrap items-center justify-between text-[11px] text-phumulani-charcoal/75 bg-white rounded-lg px-3 py-2 border border-phumulani-charcoal/10">
                   <span>Audit Trail Ref: <code className="font-mono text-phumulani-charcoal">{pilotMetrics.auditLogId}</code></span>
                   <span>Executed By: <strong className="text-phumulani-charcoal">{pilotMetrics.executedBy}</strong></span>
                   <span>Timestamp: <span className="font-mono text-phumulani-charcoal">{pilotMetrics.executionTimestamp}</span></span>
@@ -2018,29 +2018,29 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   const pct = Math.min(100, Math.round((camp.fundsRaisedVerified / (camp.fundingTarget || 1)) * 100));
 
                   return (
-                    <div key={camp.id} className="rounded-xl border border-phumulani-cream bg-white p-5 shadow-sm space-y-4">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-phumulani-cream pb-3">
+                    <div key={camp.id} className="rounded-xl border border-phumulani-charcoal/12 bg-white p-5 shadow-2xs space-y-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-phumulani-charcoal/10 pb-3">
                         <div>
                           <div className="flex items-center space-x-2">
-                            <h3 className="text-base font-bold text-phumulani-charcoal">{camp.title}</h3>
-                            <span className="rounded-full bg-phumulani-cream px-2.5 py-0.5 text-[10px] font-semibold text-phumulani-earth border border-phumulani-green">
+                            <h3 className="text-base font-heading font-bold text-phumulani-charcoal">{camp.title}</h3>
+                            <span className="rounded-sm bg-phumulani-green/15 px-2.5 py-0.5 text-[10px] font-semibold text-phumulani-charcoal border border-phumulani-green/40">
                               {camp.status}
                             </span>
                           </div>
-                          <p className="text-xs text-phumulani-charcoal mt-0.5">{camp.description}</p>
+                          <p className="text-xs text-phumulani-charcoal/70 mt-0.5">{camp.description}</p>
                         </div>
                         <div className="text-right">
-                          <div className="text-lg font-extrabold text-phumulani-charcoal font-mono">
+                          <div className="text-lg font-extrabold text-phumulani-charcoal font-mono tabular-nums">
                             ${camp.fundsRaisedVerified.toLocaleString()}
                           </div>
-                          <div className="text-[11px] text-phumulani-charcoal">Target: ${camp.fundingTarget.toLocaleString()}</div>
+                          <div className="text-[11px] text-phumulani-charcoal/65">Target: ${camp.fundingTarget.toLocaleString()}</div>
                         </div>
                       </div>
 
                       <div className="space-y-1.5">
                         <div className="flex items-center justify-between text-xs font-semibold text-phumulani-charcoal">
                           <span>Verified Raised Progress</span>
-                          <span>{pct}% Funded (${camp.fundingGap.toLocaleString()} gap)</span>
+                          <span className="tabular-nums">{pct}% Funded (${camp.fundingGap.toLocaleString()} gap)</span>
                         </div>
                         <div className="h-2.5 w-full rounded-full bg-phumulani-cream overflow-hidden">
                           <div
@@ -2050,18 +2050,18 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs bg-phumulani-cream rounded-lg p-3">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs bg-phumulani-cream/65 rounded-lg p-3 border border-phumulani-charcoal/8">
                         <div>
-                          <span className="text-phumulani-charcoal uppercase text-[10px] font-semibold">Category</span>
-                          <div className="font-medium text-phumulani-charcoal">{camp.programCategory}</div>
+                          <span className="text-phumulani-charcoal/65 uppercase text-[10px] font-semibold">Category</span>
+                          <div className="font-medium text-phumulani-charcoal mt-0.5">{camp.programCategory}</div>
                         </div>
                         <div>
-                          <span className="text-phumulani-charcoal uppercase text-[10px] font-semibold">Campaign Dates</span>
-                          <div className="font-medium text-phumulani-charcoal">{camp.startDate} to {camp.endDate}</div>
+                          <span className="text-phumulani-charcoal/65 uppercase text-[10px] font-semibold">Campaign Dates</span>
+                          <div className="font-medium text-phumulani-charcoal mt-0.5">{camp.startDate} to {camp.endDate}</div>
                         </div>
                         <div>
-                          <span className="text-phumulani-charcoal uppercase text-[10px] font-semibold">Eligible Audience</span>
-                          <div className="font-medium text-phumulani-charcoal">{camp.eligibleAudienceCount} Verified Donors</div>
+                          <span className="text-phumulani-charcoal/65 uppercase text-[10px] font-semibold">Eligible Audience</span>
+                          <div className="font-medium text-phumulani-charcoal mt-0.5">{camp.eligibleAudienceCount} Verified Donors</div>
                         </div>
                       </div>
                     </div>
@@ -2075,21 +2075,21 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
           {activeTab === 'agents' && (
             <div className="space-y-6">
               {/* Header Banner */}
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl bg-phumulani-charcoal p-6 text-white shadow-lg">
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <span className="rounded bg-phumulani-teal px-2 py-0.5 font-mono text-[11px] font-bold text-phumulani-charcoal border border-phumulani-teal">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 rounded-2xl bg-phumulani-charcoal p-6 text-white shadow-sm">
+                <div className="space-y-1.5">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="rounded-sm bg-phumulani-teal px-2 py-0.5 font-mono text-[11px] font-bold text-phumulani-charcoal">
                       MASTER WORKFORCE • 18 SPECIALIZED AGENTS
                     </span>
-                    <span className="flex items-center space-x-1 rounded bg-phumulani-green px-2 py-0.5 text-[11px] font-medium text-phumulani-charcoal border border-phumulani-green">
-                      <span className="h-1.5 w-1.5 rounded-full bg-phumulani-green animate-pulse" />
+                    <span className="flex items-center space-x-1.5 rounded-sm bg-phumulani-green/25 px-2 py-0.5 text-[11px] font-semibold text-phumulani-cream border border-phumulani-green/50">
+                      <span className="h-1.5 w-1.5 rounded-full bg-phumulani-green" />
                       <span>100% Operational</span>
                     </span>
                   </div>
-                  <h2 className="text-xl lg:text-2xl font-bold tracking-tight text-white">
+                  <h2 className="text-xl lg:text-2xl font-heading font-bold tracking-tight text-white">
                     AI Fundraising Workforce Operations Center
                   </h2>
-                  <p className="text-xs text-phumulani-cream max-w-2xl">
+                  <p className="text-xs text-phumulani-cream/85 max-w-2xl leading-relaxed">
                     Autonomous and supervised AI agents driving donor intelligence, opportunity discovery, customized proposal synthesis, financial reconciliation, and fail-closed human-in-the-loop governance.
                   </p>
                 </div>
@@ -2098,11 +2098,11 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   <button
                     onClick={handleRunFullOrchestration}
                     disabled={isExecutingPipeline}
-                    className="flex items-center space-x-2 rounded-xl bg-phumulani-green hover:bg-phumulani-teal px-4 py-2.5 text-xs font-bold text-phumulani-charcoal shadow-md transition-all disabled:opacity-50"
+                    className="flex items-center space-x-2 rounded-xl bg-phumulani-green hover:bg-phumulani-green/90 px-4 py-2.5 text-xs font-bold text-phumulani-charcoal shadow-2xs transition-colors disabled:opacity-50 cursor-pointer"
                   >
                     {isExecutingPipeline ? (
                       <>
-                        <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+                        <svg className="animate-spin h-4 w-4 text-phumulani-charcoal" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" />
                         </svg>
@@ -2121,7 +2121,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
                   <button
                     onClick={() => setShowTestRunnerModal(true)}
-                    className="flex items-center space-x-1.5 rounded-xl border border-phumulani-teal bg-phumulani-charcoal px-3.5 py-2.5 text-xs font-semibold text-phumulani-cream hover:bg-phumulani-orange hover:text-white transition-colors"
+                    className="flex items-center space-x-1.5 rounded-xl border border-phumulani-teal/50 bg-phumulani-charcoal px-3.5 py-2.5 text-xs font-semibold text-phumulani-cream hover:bg-phumulani-teal/20 transition-colors cursor-pointer"
                   >
                     <svg className="h-4 w-4 text-phumulani-teal" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -2133,12 +2133,12 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
               {/* Workforce Status Ribbon (4 KPIs) */}
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="rounded-xl border border-phumulani-cream bg-white p-4 shadow-sm">
-                  <div className="flex items-center justify-between text-phumulani-charcoal text-xs font-medium">
+                <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 shadow-2xs">
+                  <div className="flex items-center justify-between text-phumulani-charcoal/70 text-xs font-medium">
                     <span>Registered Workforce</span>
                     <span className="h-2 w-2 rounded-full bg-phumulani-green" />
                   </div>
-                  <div className="mt-1 text-2xl font-bold text-phumulani-charcoal font-mono">
+                  <div className="mt-1 text-2xl font-heading font-bold text-phumulani-charcoal font-mono tabular-nums">
                     {agents.length} / 18
                   </div>
                   <div className="text-[11px] text-phumulani-earth font-medium mt-0.5">
@@ -2146,29 +2146,29 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-phumulani-cream bg-white p-4 shadow-sm">
-                  <div className="flex items-center justify-between text-phumulani-charcoal text-xs font-medium">
+                <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 shadow-2xs">
+                  <div className="flex items-center justify-between text-phumulani-charcoal/70 text-xs font-medium">
                     <span>Tasks Completed</span>
                     <svg className="h-4 w-4 text-phumulani-earth" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
                     </svg>
                   </div>
-                  <div className="mt-1 text-2xl font-bold text-phumulani-charcoal font-mono">
+                  <div className="mt-1 text-2xl font-heading font-bold text-phumulani-charcoal font-mono tabular-nums">
                     {agents.reduce((sum, a) => sum + (a.completedTasksCount || 0), 0)}
                   </div>
-                  <div className="text-[11px] text-phumulani-charcoal mt-0.5">
+                  <div className="text-[11px] text-phumulani-charcoal/65 mt-0.5">
                     Immutable Audit Trail Logged
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-phumulani-cream bg-white p-4 shadow-sm">
-                  <div className="flex items-center justify-between text-phumulani-charcoal text-xs font-medium">
+                <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 shadow-2xs">
+                  <div className="flex items-center justify-between text-phumulani-charcoal/70 text-xs font-medium">
                     <span>Pending Human Sign-Offs</span>
                     <svg className="h-4 w-4 text-phumulani-earth" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                   </div>
-                  <div className="mt-1 text-2xl font-bold text-phumulani-earth font-mono">
+                  <div className="mt-1 text-2xl font-heading font-bold text-phumulani-earth font-mono tabular-nums">
                     {agents.reduce((sum, a) => sum + (a.pendingApprovalsCount || 0), 0)}
                   </div>
                   <div className="text-[11px] text-phumulani-earth font-medium mt-0.5">
@@ -2176,14 +2176,14 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-phumulani-cream bg-white p-4 shadow-sm">
-                  <div className="flex items-center justify-between text-phumulani-charcoal text-xs font-medium">
+                <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 shadow-2xs">
+                  <div className="flex items-center justify-between text-phumulani-charcoal/70 text-xs font-medium">
                     <span>VAWA Isolation & Quality</span>
                     <svg className="h-4 w-4 text-phumulani-earth" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
                   </div>
-                  <div className="mt-1 text-2xl font-bold text-phumulani-earth font-mono">
+                  <div className="mt-1 text-2xl font-heading font-bold text-phumulani-earth font-mono tabular-nums">
                     100%
                   </div>
                   <div className="text-[11px] text-phumulani-earth font-medium mt-0.5">
@@ -2193,16 +2193,16 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               </div>
 
               {/* Specialized Multi-Agent Workflows Bar (M-INT-05) */}
-              <div className="rounded-xl border border-phumulani-teal bg-phumulani-cream p-4 shadow-xs space-y-3">
+              <div className="rounded-xl border border-phumulani-teal/40 bg-phumulani-cream/75 p-4 shadow-2xs space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
                     <div className="flex items-center space-x-2">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-earth bg-phumulani-teal/15 border border-phumulani-teal/35 px-2 py-0.5 rounded-sm">
                         M-INT-05 Multi-Agent Chains
                       </span>
                       <span className="text-xs font-bold text-phumulani-charcoal">Dedicated Autonomous Workflows</span>
                     </div>
-                    <p className="text-[11px] text-phumulani-charcoal mt-0.5">
+                    <p className="text-[11px] text-phumulani-charcoal/70 mt-1">
                       Targeted multi-agent pipelines linking research, drafting, compliance, and verification across all 18 agents.
                     </p>
                   </div>
@@ -2212,60 +2212,60 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   <button
                     onClick={() => handleRunSpecializedWorkflow('grant')}
                     disabled={isExecutingPipeline}
-                    className="flex flex-col items-start p-2.5 rounded-lg border border-phumulani-teal bg-white hover:bg-phumulani-cream hover:border-phumulani-orange text-left transition-all shadow-2xs"
+                    className="flex flex-col items-start p-3 rounded-lg border border-phumulani-teal/40 bg-white hover:bg-phumulani-cream/65 hover:border-phumulani-earth/45 text-left transition-colors shadow-2xs cursor-pointer"
                   >
                     <span className="text-[10px] font-bold text-phumulani-earth">Grant Pipeline</span>
                     <span className="text-[11px] font-semibold text-phumulani-charcoal">Discovery → Proposal</span>
-                    <span className="text-[9px] text-phumulani-charcoal font-mono mt-1">FUND-AI-005, 006, 010, 007, 009, 008</span>
+                    <span className="text-[9px] text-phumulani-charcoal/65 font-mono mt-1">FUND-AI-005, 006, 010, 007, 009, 008</span>
                   </button>
 
                   <button
                     onClick={() => handleRunSpecializedWorkflow('csr')}
                     disabled={isExecutingPipeline}
-                    className="flex flex-col items-start p-2.5 rounded-lg border border-phumulani-teal bg-white hover:bg-phumulani-cream hover:border-phumulani-orange text-left transition-all shadow-2xs"
+                    className="flex flex-col items-start p-3 rounded-lg border border-phumulani-teal/40 bg-white hover:bg-phumulani-cream/65 hover:border-phumulani-earth/45 text-left transition-colors shadow-2xs cursor-pointer"
                   >
                     <span className="text-[10px] font-bold text-phumulani-earth">Corporate CSR</span>
                     <span className="text-[11px] font-semibold text-phumulani-charcoal">ESG Triage → Pitch</span>
-                    <span className="text-[9px] text-phumulani-charcoal font-mono mt-1">FUND-AI-011, 007, 009, 008</span>
+                    <span className="text-[9px] text-phumulani-charcoal/65 font-mono mt-1">FUND-AI-011, 007, 009, 008</span>
                   </button>
 
                   <button
                     onClick={() => handleRunSpecializedWorkflow('stewardship')}
                     disabled={isExecutingPipeline}
-                    className="flex flex-col items-start p-2.5 rounded-lg border border-phumulani-green bg-white hover:bg-phumulani-cream hover:border-phumulani-green text-left transition-all shadow-2xs"
+                    className="flex flex-col items-start p-3 rounded-lg border border-phumulani-green/45 bg-white hover:bg-phumulani-cream/65 hover:border-phumulani-green text-left transition-colors shadow-2xs cursor-pointer"
                   >
                     <span className="text-[10px] font-bold text-phumulani-earth">Donor Stewardship</span>
                     <span className="text-[11px] font-semibold text-phumulani-charcoal">Impact Update & Thanks</span>
-                    <span className="text-[9px] text-phumulani-charcoal font-mono mt-1">FUND-AI-012, 007, 008</span>
+                    <span className="text-[9px] text-phumulani-charcoal/65 font-mono mt-1">FUND-AI-012, 007, 008</span>
                   </button>
 
                   <button
                     onClick={() => handleRunSpecializedWorkflow('reconciliation')}
                     disabled={isExecutingPipeline}
-                    className="flex flex-col items-start p-2.5 rounded-lg border border-phumulani-gold bg-white hover:bg-phumulani-cream hover:border-phumulani-gold text-left transition-all shadow-2xs"
+                    className="flex flex-col items-start p-3 rounded-lg border border-phumulani-gold/60 bg-white hover:bg-phumulani-cream/65 hover:border-phumulani-gold text-left transition-colors shadow-2xs cursor-pointer"
                   >
                     <span className="text-[10px] font-bold text-phumulani-earth">Reconciliation</span>
                     <span className="text-[11px] font-semibold text-phumulani-charcoal">ACH, Checks & Pledges</span>
-                    <span className="text-[9px] text-phumulani-charcoal font-mono mt-1">FUND-AI-016, 017, 018</span>
+                    <span className="text-[9px] text-phumulani-charcoal/65 font-mono mt-1">FUND-AI-016, 017, 018</span>
                   </button>
 
                   <button
                     onClick={() => handleRunSpecializedWorkflow('velocity')}
                     disabled={isExecutingPipeline}
-                    className="flex flex-col items-start p-2.5 rounded-lg border border-phumulani-teal bg-white hover:bg-phumulani-cream hover:border-phumulani-orange text-left transition-all shadow-2xs"
+                    className="flex flex-col items-start p-3 rounded-lg border border-phumulani-teal/40 bg-white hover:bg-phumulani-cream/65 hover:border-phumulani-earth/45 text-left transition-colors shadow-2xs cursor-pointer"
                   >
                     <span className="text-[10px] font-bold text-phumulani-earth">Campaign Velocity</span>
                     <span className="text-[11px] font-semibold text-phumulani-charcoal">Burndown & Attrition</span>
-                    <span className="text-[9px] text-phumulani-charcoal font-mono mt-1">FUND-AI-013, 014, 015</span>
+                    <span className="text-[9px] text-phumulani-charcoal/65 font-mono mt-1">FUND-AI-013, 014, 015</span>
                   </button>
                 </div>
               </div>
 
               {/* Filter Toolbar */}
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-3 rounded-xl border border-phumulani-cream shadow-xs">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-3 rounded-xl border border-phumulani-charcoal/12 shadow-2xs">
                 {/* Search */}
                 <div className="relative flex-1 max-w-sm">
-                  <svg className="absolute left-3 top-2.5 h-4 w-4 text-phumulani-charcoal" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="absolute left-3 top-2.5 h-4 w-4 text-phumulani-charcoal/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                   <input
@@ -2273,12 +2273,12 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                     value={agentSearchQuery}
                     onChange={(e) => setAgentSearchQuery(e.target.value)}
                     placeholder="Search agents by code, name, role, or tool..."
-                    className="w-full pl-9 pr-3 py-1.5 rounded-lg border border-phumulani-cream text-xs text-phumulani-charcoal placeholder-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                    className="w-full pl-9 pr-3 py-1.5 rounded-lg border border-phumulani-charcoal/15 bg-white text-xs text-phumulani-charcoal placeholder-phumulani-charcoal/45 focus:border-phumulani-earth focus:outline-none"
                   />
                 </div>
 
                 {/* Categories */}
-                <div className="flex flex-wrap items-center gap-1">
+                <div className="flex flex-wrap items-center gap-1.5">
                   {[
                     'ALL',
                     'ORCHESTRATION',
@@ -2294,10 +2294,10 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                     <button
                       key={cat}
                       onClick={() => setAgentCategoryFilter(cat)}
-                      className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-colors ${
+                      className={`rounded-md px-2.5 py-1 text-[11px] font-semibold transition-colors cursor-pointer ${
                         agentCategoryFilter === cat
-                          ? 'bg-phumulani-earth text-white shadow-xs'
-                          : 'bg-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream'
+                          ? 'bg-phumulani-earth text-white shadow-2xs'
+                          : 'bg-phumulani-cream/75 text-phumulani-charcoal hover:bg-phumulani-cream'
                       }`}
                     >
                       {cat}
@@ -2311,30 +2311,30 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 {filteredAgents.map((agent) => (
                   <div
                     key={agent.id}
-                    className="flex flex-col justify-between rounded-xl border border-phumulani-cream bg-white p-5 shadow-xs hover:shadow-md transition-shadow"
+                    className="flex flex-col justify-between rounded-xl border border-phumulani-charcoal/12 bg-white p-5 shadow-2xs hover:shadow-sm transition-shadow"
                   >
                     <div className="space-y-3">
                       {/* Top Bar: Code, Category, Status */}
-                      <div className="flex items-center justify-between border-b border-phumulani-cream pb-2.5">
+                      <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-2.5">
                         <div className="flex items-center space-x-2">
-                          <span className="rounded bg-phumulani-cream px-2 py-0.5 font-mono text-[11px] font-bold text-phumulani-earth border border-phumulani-teal">
+                          <span className="rounded-sm bg-phumulani-teal/12 px-2 py-0.5 font-mono text-[11px] font-bold text-phumulani-charcoal border border-phumulani-teal/40">
                             {agent.id}
                           </span>
-                          <span className="text-[10px] font-mono text-phumulani-charcoal font-semibold">
+                          <span className="text-[10px] font-mono text-phumulani-charcoal/65 font-semibold">
                             {agent.code}
                           </span>
                         </div>
                         <div className="flex items-center space-x-1.5">
-                          <span className="rounded-full bg-phumulani-cream px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-phumulani-charcoal">
+                          <span className="rounded-sm bg-phumulani-cream px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-phumulani-charcoal/80 border border-phumulani-charcoal/10">
                             {agent.category}
                           </span>
                           <span
-                            className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
+                            className={`rounded-sm px-2 py-0.5 text-[9px] font-bold border ${
                               agent.status === 'RUNNING'
-                                ? 'bg-phumulani-cream text-phumulani-earth animate-pulse'
+                                ? 'bg-phumulani-green/15 text-phumulani-charcoal border-phumulani-green/40'
                                 : agent.status === 'WAITING_FOR_APPROVAL'
-                                ? 'bg-phumulani-cream text-phumulani-charcoal'
-                                : 'bg-phumulani-cream text-phumulani-charcoal'
+                                ? 'bg-phumulani-gold/20 text-phumulani-charcoal border-phumulani-gold/45'
+                                : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-charcoal/10'
                             }`}
                           >
                             {agent.status}
@@ -2344,29 +2344,29 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
                       {/* Agent Name & Role */}
                       <div>
-                        <h3 className="text-sm font-bold text-phumulani-charcoal">{agent.name}</h3>
+                        <h3 className="text-sm font-heading font-bold text-phumulani-charcoal">{agent.name}</h3>
                         <div className="text-xs font-medium text-phumulani-earth mt-0.5">{agent.role}</div>
-                        <p className="text-xs text-phumulani-charcoal mt-1 line-clamp-2 leading-relaxed">
+                        <p className="text-xs text-phumulani-charcoal/75 mt-1 line-clamp-2 leading-relaxed">
                           {agent.description}
                         </p>
                       </div>
 
                       {/* Tools & Safeguards */}
                       <div className="space-y-1.5">
-                        <div className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal">
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/65">
                           Assigned Capability Tools
                         </div>
                         <div className="flex flex-wrap gap-1">
                           {agent.assignedTools.slice(0, 3).map((tool, idx) => (
                             <span
                               key={idx}
-                              className="rounded bg-phumulani-cream px-2 py-0.5 font-mono text-[9px] text-phumulani-charcoal"
+                              className="rounded-sm bg-phumulani-cream/80 px-2 py-0.5 font-mono text-[9px] text-phumulani-charcoal border border-phumulani-charcoal/8"
                             >
                               {tool}
                             </span>
                           ))}
                           {agent.assignedTools.length > 3 && (
-                            <span className="rounded bg-phumulani-cream px-1.5 py-0.5 font-mono text-[9px] text-phumulani-charcoal">
+                            <span className="rounded-sm bg-phumulani-cream/80 px-1.5 py-0.5 font-mono text-[9px] text-phumulani-charcoal/70 border border-phumulani-charcoal/8">
                               +{agent.assignedTools.length - 3} more
                             </span>
                           )}
@@ -2374,24 +2374,24 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                       </div>
 
                       {/* Safeguarding Policy */}
-                      <div className="rounded-lg bg-phumulani-cream p-2.5 text-[11px] text-phumulani-charcoal border border-phumulani-cream space-y-1">
+                      <div className="rounded-lg bg-phumulani-cream/55 p-2.5 text-[11px] text-phumulani-charcoal border border-phumulani-charcoal/10 space-y-1">
                         <div className="flex items-center justify-between">
                           <span className="font-semibold text-phumulani-charcoal">Governance Gate:</span>
-                          <span className={`font-bold ${agent.requiresHumanApproval ? 'text-phumulani-earth' : 'text-phumulani-earth'}`}>
+                          <span className="font-bold text-phumulani-earth">
                             {agent.requiresHumanApproval ? 'Human Review Gate' : 'Autonomous Action'}
                           </span>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-phumulani-charcoal">Escalation Officer:</span>
+                          <span className="text-phumulani-charcoal/70">Escalation Officer:</span>
                           <span className="font-medium text-phumulani-charcoal">{agent.escalationOfficer}</span>
                         </div>
                       </div>
 
                       {/* Confidence Meter */}
                       <div>
-                        <div className="flex items-center justify-between text-[10px] font-semibold text-phumulani-charcoal mb-1">
+                        <div className="flex items-center justify-between text-[10px] font-semibold text-phumulani-charcoal/80 mb-1">
                           <span>Confidence Score</span>
-                          <span className="font-mono text-phumulani-earth">{agent.confidenceScore}%</span>
+                          <span className="font-mono tabular-nums text-phumulani-earth">{agent.confidenceScore}%</span>
                         </div>
                         <div className="h-1.5 w-full rounded-full bg-phumulani-cream overflow-hidden">
                           <div
@@ -2402,27 +2402,27 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                       </div>
 
                       {/* Metrics strip */}
-                      <div className="grid grid-cols-3 gap-1 pt-1 text-center text-[10px]">
-                        <div className="rounded bg-phumulani-cream p-1">
-                          <div className="font-mono font-bold text-phumulani-charcoal">{agent.completedTasksCount}</div>
-                          <div className="text-phumulani-charcoal">Tasks</div>
+                      <div className="grid grid-cols-3 gap-1.5 pt-1 text-center text-[10px]">
+                        <div className="rounded-md bg-phumulani-cream/70 p-1.5 border border-phumulani-charcoal/8">
+                          <div className="font-mono tabular-nums font-bold text-phumulani-charcoal">{agent.completedTasksCount}</div>
+                          <div className="text-phumulani-charcoal/70">Tasks</div>
                         </div>
-                        <div className="rounded bg-phumulani-cream p-1">
-                          <div className="font-mono font-bold text-phumulani-earth">{agent.pendingApprovalsCount}</div>
-                          <div className="text-phumulani-charcoal">Approvals</div>
+                        <div className="rounded-md bg-phumulani-cream/70 p-1.5 border border-phumulani-charcoal/8">
+                          <div className="font-mono tabular-nums font-bold text-phumulani-earth">{agent.pendingApprovalsCount}</div>
+                          <div className="text-phumulani-charcoal/70">Approvals</div>
                         </div>
-                        <div className="rounded bg-phumulani-cream p-1">
-                          <div className="font-mono font-bold text-phumulani-charcoal">0</div>
-                          <div className="text-phumulani-charcoal">Failures</div>
+                        <div className="rounded-md bg-phumulani-cream/70 p-1.5 border border-phumulani-charcoal/8">
+                          <div className="font-mono tabular-nums font-bold text-phumulani-charcoal">0</div>
+                          <div className="text-phumulani-charcoal/70">Failures</div>
                         </div>
                       </div>
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="pt-4 border-t border-phumulani-cream flex items-center space-x-2">
+                    <div className="pt-4 mt-3 border-t border-phumulani-charcoal/10 flex items-center space-x-2">
                       <button
                         onClick={() => handleOpenExecuteModal(agent)}
-                        className="flex-1 rounded-lg bg-phumulani-earth py-2 text-xs font-semibold text-white hover:bg-phumulani-orange transition-colors shadow-xs flex items-center justify-center space-x-1"
+                        className="flex-1 rounded-lg bg-phumulani-earth py-2 text-xs font-semibold text-white hover:bg-phumulani-earth/90 transition-colors shadow-2xs flex items-center justify-center space-x-1 cursor-pointer"
                       >
                         <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
@@ -2432,10 +2432,10 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
                       <button
                         onClick={() => setHistoryDrawerAgent(agent)}
-                        className="rounded-lg border border-phumulani-cream bg-white px-3 py-2 text-xs font-medium text-phumulani-charcoal hover:bg-phumulani-cream transition-colors shadow-xs"
+                        className="rounded-lg border border-phumulani-charcoal/15 bg-white px-3 py-2 text-xs font-medium text-phumulani-charcoal hover:bg-phumulani-cream/80 transition-colors shadow-2xs cursor-pointer"
                         title="View Task Audit Log"
                       >
-                        <svg className="h-3.5 w-3.5 text-phumulani-charcoal" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="h-3.5 w-3.5 text-phumulani-charcoal/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       </button>
@@ -2443,7 +2443,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                       {agent.pendingApprovalsCount > 0 && (
                         <button
                           onClick={() => setHistoryDrawerAgent(agent)}
-                          className="rounded-lg bg-phumulani-gold px-3 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-orange transition-colors shadow-xs"
+                          className="rounded-lg bg-phumulani-gold px-3 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-gold/85 transition-colors shadow-2xs cursor-pointer"
                           title="Pending Human Approval"
                         >
                           Review
@@ -2461,17 +2461,17 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-phumulani-charcoal tracking-tight">
+                  <h2 className="text-xl font-heading font-bold text-phumulani-charcoal tracking-tight">
                     {activeTab === 'approvals' ? 'Communications Approval Center (Human-in-the-Loop)' : 'AI Fundraising Outreach Center'}
                   </h2>
-                  <p className="text-xs text-phumulani-charcoal">
+                  <p className="text-xs text-phumulani-charcoal/70 mt-0.5">
                     Mandatory human review gate before external sending. Zero autonomous solicitations permitted.
                   </p>
                 </div>
                 {selectedDonor && (
                   <button
                     onClick={() => setShowDraftModal(true)}
-                    className="rounded-lg bg-phumulani-earth px-3 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-orange cursor-pointer"
+                    className="rounded-lg bg-phumulani-earth px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-2xs transition-colors cursor-pointer"
                   >
                     + Generate New AI Draft
                   </button>
@@ -2479,76 +2479,76 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               </div>
 
               {/* Google Workspace Live Dispatch Gating Banner */}
-              <div className="rounded-xl border border-phumulani-gold bg-phumulani-cream p-3 text-xs text-phumulani-charcoal flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-xs">
+              <div className="rounded-xl border border-phumulani-gold/60 bg-phumulani-gold/12 p-3 text-xs text-phumulani-charcoal flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-2xs">
                 <div className="flex items-center space-x-2">
-                  <span className="h-2 w-2 rounded-full bg-phumulani-gold animate-pulse" />
+                  <span className="h-2 w-2 rounded-full bg-phumulani-gold shrink-0" />
                   <span className="font-bold">LIVE DISPATCH BLOCKED — GOOGLE WORKSPACE OAUTH REQUIRED</span>
                   <span className="text-phumulani-earth hidden sm:inline">(Simulated Dispatch Mode Active for Testing & Staging Verification)</span>
                 </div>
-                <span className="rounded bg-phumulani-cream px-2 py-0.5 text-[10px] font-mono font-semibold text-phumulani-charcoal self-start sm:self-auto">
+                <span className="rounded-sm bg-white/80 border border-phumulani-charcoal/12 px-2 py-0.5 text-[10px] font-mono font-semibold text-phumulani-charcoal self-start sm:self-auto">
                   Air-Gapped & Governed
                 </span>
               </div>
 
               <div className="space-y-3">
                 {drafts.length === 0 ? (
-                  <div className="rounded-xl border border-dashed border-phumulani-cream p-8 text-center text-phumulani-charcoal text-xs">
+                  <div className="rounded-xl border border-dashed border-phumulani-charcoal/20 bg-white/60 p-8 text-center text-phumulani-charcoal/65 text-xs">
                     No outreach drafts currently in queue. Select a donor and click "AI Outreach" to generate tailored communications.
                   </div>
                 ) : (
                   drafts.map((draft) => (
-                    <div key={draft.id} className="rounded-xl border border-phumulani-cream bg-white p-5 shadow-sm space-y-3">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-phumulani-cream pb-2">
+                    <div key={draft.id} className="rounded-xl border border-phumulani-charcoal/12 bg-white p-5 shadow-2xs space-y-3">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-phumulani-charcoal/10 pb-2.5">
                         <div>
-                          <div className="flex items-center space-x-2">
-                            <span className="font-bold text-phumulani-charcoal text-sm">{draft.subject}</span>
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-heading font-bold text-phumulani-charcoal text-sm">{draft.subject}</span>
                             <span
-                              className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                              className={`rounded-sm px-2 py-0.5 text-[10px] font-semibold border ${
                                 draft.approvalStatus === 'APPROVED'
-                                  ? 'bg-phumulani-cream text-phumulani-charcoal'
+                                  ? 'bg-phumulani-green/15 text-phumulani-charcoal border-phumulani-green/40'
                                   : draft.approvalStatus === 'EXECUTED'
-                                  ? 'bg-phumulani-cream text-phumulani-earth'
+                                  ? 'bg-phumulani-teal/15 text-phumulani-charcoal border-phumulani-teal/40'
                                   : draft.approvalStatus === 'REJECTED'
-                                  ? 'bg-phumulani-cream text-phumulani-earth'
+                                  ? 'bg-phumulani-earth/12 text-phumulani-earth border-phumulani-earth/30'
                                   : draft.approvalStatus === 'CHANGES_REQUESTED'
-                                  ? 'bg-phumulani-cream text-phumulani-earth'
+                                  ? 'bg-phumulani-gold/20 text-phumulani-charcoal border-phumulani-gold/45'
                                   : draft.approvalStatus === 'RETURNED_TO_DRAFT'
-                                  ? 'bg-phumulani-cream text-phumulani-charcoal'
-                                  : 'bg-phumulani-cream text-phumulani-charcoal'
+                                  ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-charcoal/15'
+                                  : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-charcoal/15'
                               }`}
                             >
                               {draft.approvalStatus.replace(/_/g, ' ')}
                             </span>
                           </div>
-                          <div className="text-xs text-phumulani-charcoal mt-0.5">
+                          <div className="text-xs text-phumulani-charcoal/70 mt-1">
                             To: <span className="font-semibold text-phumulani-charcoal">{draft.recipientName}</span> ({draft.recipientEmail}) • Communication Type: <span className="font-mono text-phumulani-charcoal">{draft.communicationType}</span>
                           </div>
                         </div>
 
-                        <div className="text-right text-[11px] text-phumulani-charcoal">
+                        <div className="text-right text-[11px] text-phumulani-charcoal/70">
                           Tone: <span className="text-phumulani-charcoal font-medium">{draft.toneStyle}</span>
                         </div>
                       </div>
 
-                      <div className="rounded-lg bg-phumulani-cream p-3 text-xs text-phumulani-charcoal whitespace-pre-wrap font-sans border border-phumulani-cream">
+                      <div className="rounded-lg bg-phumulani-cream/55 p-3.5 text-xs text-phumulani-charcoal whitespace-pre-wrap font-sans border border-phumulani-charcoal/10 leading-relaxed">
                         {draft.bodyText}
                       </div>
 
                       {/* Review Notes or Rejection Reason if any */}
                       {draft.changeNotes && (
-                        <div className="rounded bg-phumulani-cream border border-phumulani-orange p-2.5 text-xs text-phumulani-earth">
-                          <strong>Staff Feedback / Changes Requested:</strong> {draft.changeNotes}
+                        <div className="rounded-lg bg-phumulani-gold/15 border border-phumulani-gold/50 p-2.5 text-xs text-phumulani-charcoal">
+                          <strong className="text-phumulani-earth">Staff Feedback / Changes Requested:</strong> {draft.changeNotes}
                         </div>
                       )}
                       {draft.rejectionReason && (
-                        <div className="rounded bg-phumulani-cream border border-phumulani-earth p-2.5 text-xs text-phumulani-earth">
+                        <div className="rounded-lg bg-phumulani-earth/10 border border-phumulani-earth/35 p-2.5 text-xs text-phumulani-earth">
                           <strong>Rejection Justification:</strong> {draft.rejectionReason}
                         </div>
                       )}
 
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-phumulani-charcoal pt-1">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-phumulani-charcoal/75 pt-1">
                         <div>
-                          <strong>Agent:</strong> {draft.aiAgentId} • <em>{draft.aiRationale}</em>
+                          <strong className="text-phumulani-charcoal">Agent:</strong> {draft.aiAgentId} • <em>{draft.aiRationale}</em>
                         </div>
 
                         <div className="flex flex-wrap items-center gap-1.5">
@@ -2556,19 +2556,19 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                             <>
                               <button
                                 onClick={() => handleApproveDraft(draft.id)}
-                                className="rounded-lg bg-phumulani-green px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-teal shadow-xs cursor-pointer"
+                                className="rounded-lg bg-phumulani-green px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-green/85 shadow-2xs transition-colors cursor-pointer"
                               >
                                 Approve Draft
                               </button>
                               <button
                                 onClick={() => handleOpenDecisionModal(draft.id, 'REQUEST_CHANGES')}
-                                className="rounded-lg bg-phumulani-gold px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-orange shadow-xs cursor-pointer"
+                                className="rounded-lg bg-phumulani-gold px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-gold/85 shadow-2xs transition-colors cursor-pointer"
                               >
                                 Request Changes
                               </button>
                               <button
                                 onClick={() => handleOpenDecisionModal(draft.id, 'REJECT')}
-                                className="rounded-lg bg-phumulani-earth px-3 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-orange shadow-xs cursor-pointer"
+                                className="rounded-lg bg-phumulani-earth px-3 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-2xs transition-colors cursor-pointer"
                               >
                                 Reject
                               </button>
@@ -2579,13 +2579,13 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                             <>
                               <button
                                 onClick={() => handleSendDraft(draft.id)}
-                                className="rounded-lg bg-phumulani-earth px-3 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-orange shadow-xs cursor-pointer"
+                                className="rounded-lg bg-phumulani-earth px-3 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-2xs transition-colors cursor-pointer"
                               >
                                 Dispatch Authorized Send
                               </button>
                               <button
                                 onClick={() => handleReturnToDraft(draft.id)}
-                                className="rounded-lg border border-phumulani-cream bg-white px-3 py-1.5 text-xs font-medium text-phumulani-charcoal hover:bg-phumulani-cream cursor-pointer"
+                                className="rounded-lg border border-phumulani-charcoal/15 bg-white px-3 py-1.5 text-xs font-medium text-phumulani-charcoal hover:bg-phumulani-cream/80 transition-colors cursor-pointer"
                               >
                                 Return to Draft
                               </button>
@@ -2595,7 +2595,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                           {draft.approvalStatus === 'REJECTED' && (
                             <button
                               onClick={() => handleReturnToDraft(draft.id)}
-                              className="rounded-lg border border-phumulani-cream bg-white px-3 py-1.5 text-xs font-medium text-phumulani-charcoal hover:bg-phumulani-cream cursor-pointer"
+                              className="rounded-lg border border-phumulani-charcoal/15 bg-white px-3 py-1.5 text-xs font-medium text-phumulani-charcoal hover:bg-phumulani-cream/80 transition-colors cursor-pointer"
                             >
                               Reopen as Draft
                             </button>
@@ -2603,7 +2603,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
                           {draft.approvalStatus === 'EXECUTED' && (
                             <span className="text-xs font-semibold text-phumulani-earth flex items-center">
-                              <CheckCircle2 className="w-4 h-4 mr-1 text-phumulani-earth" />
+                              <CheckCircle2 className="w-4 h-4 mr-1 text-phumulani-green" />
                               Dispatched ({draft.deliveryProviderMsgId || 'SIMULATED-SENT'})
                             </span>
                           )}
@@ -2621,8 +2621,8 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                 <div>
-                  <h2 className="text-xl font-bold text-phumulani-charcoal tracking-tight">Donor Stewardship & Retention Workflows</h2>
-                  <p className="text-xs text-phumulani-charcoal">
+                  <h2 className="text-xl font-heading font-bold text-phumulani-charcoal tracking-tight">Donor Stewardship & Retention Workflows</h2>
+                  <p className="text-xs text-phumulani-charcoal/70 mt-0.5">
                     Component 10 — 48-Hour Thank-You SLA compliance, annual impact reports, tax receipting, and lifetime donor stewardship.
                   </p>
                 </div>
@@ -2637,7 +2637,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                         setShowLogActivityModal(true);
                       }
                     }}
-                    className="rounded-lg bg-phumulani-earth px-3 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-orange shadow-xs flex items-center gap-1.5 cursor-pointer"
+                    className="rounded-lg bg-phumulani-earth px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>+ Log Stewardship Activity</span>
@@ -2645,9 +2645,9 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   <button
                     onClick={() => handleRunSpecializedWorkflow('stewardship')}
                     disabled={isExecutingPipeline}
-                    className="rounded-lg border border-phumulani-teal bg-phumulani-cream px-3 py-1.5 text-xs font-semibold text-phumulani-earth hover:bg-phumulani-teal shadow-xs flex items-center gap-1 cursor-pointer"
+                    className="rounded-lg border border-phumulani-teal/50 bg-phumulani-teal/12 px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-teal/25 shadow-2xs flex items-center gap-1.5 transition-colors cursor-pointer"
                   >
-                    <Sparkles className="w-3.5 h-3.5" />
+                    <Sparkles className="w-3.5 h-3.5 text-phumulani-earth" />
                     <span>Run Stewardship Agent (A12/A14)</span>
                   </button>
                 </div>
@@ -2655,59 +2655,59 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
               {/* Stewardship SLA & Retention Metrics */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
-                <div className="rounded-xl border border-phumulani-cream bg-white p-4 space-y-1">
-                  <span className="text-[10px] font-semibold uppercase text-phumulani-charcoal">48-Hour SLA Compliance</span>
-                  <div className="font-mono font-bold text-phumulani-earth text-lg">100%</div>
-                  <p className="text-[11px] text-phumulani-charcoal">All gifts acknowledged within 48 hours of bank receipt</p>
+                <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 space-y-1 shadow-2xs">
+                  <span className="text-[10px] font-semibold uppercase text-phumulani-charcoal/65">48-Hour SLA Compliance</span>
+                  <div className="font-mono tabular-nums font-bold text-phumulani-earth text-lg">100%</div>
+                  <p className="text-[11px] text-phumulani-charcoal/70">All gifts acknowledged within 48 hours of bank receipt</p>
                 </div>
-                <div className="rounded-xl border border-phumulani-cream bg-white p-4 space-y-1">
-                  <span className="text-[10px] font-semibold uppercase text-phumulani-charcoal">Active Stewardship Portfolio</span>
-                  <div className="font-mono font-bold text-phumulani-charcoal text-lg">
+                <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 space-y-1 shadow-2xs">
+                  <span className="text-[10px] font-semibold uppercase text-phumulani-charcoal/65">Active Stewardship Portfolio</span>
+                  <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-lg">
                     {donors.filter((d) => d.stage === 'STEWARDSHIP').length} Donors
                   </div>
-                  <p className="text-[11px] text-phumulani-charcoal">Currently nurtured post-gift relationships</p>
+                  <p className="text-[11px] text-phumulani-charcoal/70">Currently nurtured post-gift relationships</p>
                 </div>
-                <div className="rounded-xl border border-phumulani-cream bg-white p-4 space-y-1">
-                  <span className="text-[10px] font-semibold uppercase text-phumulani-charcoal">Verified Tax Receipts</span>
-                  <div className="font-mono font-bold text-phumulani-earth text-lg">
+                <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 space-y-1 shadow-2xs">
+                  <span className="text-[10px] font-semibold uppercase text-phumulani-charcoal/65">Verified Tax Receipts</span>
+                  <div className="font-mono tabular-nums font-bold text-phumulani-earth text-lg">
                     {contributions.filter((c) => c.taxReceiptIssued).length} / {contributions.length}
                   </div>
-                  <p className="text-[11px] text-phumulani-charcoal">501(c)(3) formal tax deduction receipts generated</p>
+                  <p className="text-[11px] text-phumulani-charcoal/70">501(c)(3) formal tax deduction receipts generated</p>
                 </div>
-                <div className="rounded-xl border border-phumulani-cream bg-white p-4 space-y-1">
-                  <span className="text-[10px] font-semibold uppercase text-phumulani-charcoal">Annual Retention Rate</span>
-                  <div className="font-mono font-bold text-phumulani-earth text-lg">88.4%</div>
-                  <p className="text-[11px] text-phumulani-charcoal">Second-year and recurring pledge commitment rate</p>
+                <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 space-y-1 shadow-2xs">
+                  <span className="text-[10px] font-semibold uppercase text-phumulani-charcoal/65">Annual Retention Rate</span>
+                  <div className="font-mono tabular-nums font-bold text-phumulani-earth text-lg">88.4%</div>
+                  <p className="text-[11px] text-phumulani-charcoal/70">Second-year and recurring pledge commitment rate</p>
                 </div>
               </div>
 
               {/* Stewardship Donor Roster */}
-              <div className="rounded-xl border border-phumulani-cream bg-white shadow-sm overflow-hidden">
-                <div className="p-3 border-b border-phumulani-cream bg-phumulani-cream flex items-center justify-between">
-                  <h3 className="text-xs font-bold text-phumulani-charcoal">Stewardship Queue & Impact Engagement</h3>
-                  <span className="text-[11px] text-phumulani-charcoal">Click donor row to view actionable timeline</span>
+              <div className="rounded-xl border border-phumulani-charcoal/12 bg-white shadow-2xs overflow-hidden">
+                <div className="p-3.5 border-b border-phumulani-charcoal/12 bg-phumulani-cream/65 flex items-center justify-between">
+                  <h3 className="text-xs font-heading font-bold text-phumulani-charcoal">Stewardship Queue & Impact Engagement</h3>
+                  <span className="text-[11px] text-phumulani-charcoal/65">Click donor row to view actionable timeline</span>
                 </div>
-                <div className="divide-y divide-phumulani-cream">
+                <div className="divide-y divide-phumulani-charcoal/10">
                   {donors
                     .filter((d) => d.stage === 'STEWARDSHIP' || d.lifetimeGiving > 5000)
                     .map((d) => (
                       <div
                         key={d.id}
                         onClick={() => setSelectedDonorId(d.id)}
-                        className={`p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer hover:bg-phumulani-cream transition-colors ${
-                          selectedDonor?.id === d.id ? 'bg-phumulani-cream font-medium' : ''
+                        className={`p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 cursor-pointer hover:bg-phumulani-cream/55 transition-colors ${
+                          selectedDonor?.id === d.id ? 'bg-phumulani-cream/80 font-medium' : ''
                         }`}
                       >
                         <div className="space-y-0.5">
-                          <div className="flex items-center space-x-2">
+                          <div className="flex flex-wrap items-center gap-2">
                             <span className="font-bold text-phumulani-charcoal text-xs">{d.name}</span>
-                            <span className="rounded bg-phumulani-cream px-1.5 py-0.2 text-[10px] font-semibold text-phumulani-earth border border-phumulani-teal">
+                            <span className="rounded-sm bg-phumulani-teal/12 px-1.5 py-0.5 text-[10px] font-semibold text-phumulani-charcoal border border-phumulani-teal/40">
                               {d.givingTier}
                             </span>
-                            <span className="text-phumulani-charcoal text-xs">•</span>
-                            <span className="text-xs text-phumulani-charcoal font-mono">${d.lifetimeGiving.toLocaleString()} Lifetime</span>
+                            <span className="text-phumulani-charcoal/40 text-xs">•</span>
+                            <span className="text-xs text-phumulani-charcoal font-mono tabular-nums">${d.lifetimeGiving.toLocaleString()} Lifetime</span>
                           </div>
-                          <div className="text-[11px] text-phumulani-charcoal">
+                          <div className="text-[11px] text-phumulani-charcoal/70">
                             Owner: <strong className="text-phumulani-charcoal">{d.relationshipOwner}</strong> • Last Gift: {d.lastGiftDate?.split('T')[0] || 'Recent'} • Category: {d.category.replace(/_/g, ' ')}
                           </div>
                         </div>
@@ -2720,7 +2720,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                               setDraftCommType('DONATION_ACKNOWLEDGMENT');
                               setShowDraftModal(true);
                             }}
-                            className="rounded-lg bg-phumulani-cream border border-phumulani-teal px-2.5 py-1 text-xs font-semibold text-phumulani-earth hover:bg-phumulani-teal cursor-pointer"
+                            className="rounded-lg bg-phumulani-teal/12 border border-phumulani-teal/50 px-2.5 py-1 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-teal/25 transition-colors cursor-pointer"
                           >
                             Draft Thank-You (A12)
                           </button>
@@ -2731,7 +2731,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                               setDraftCommType('IMPACT_REPORT');
                               setShowDraftModal(true);
                             }}
-                            className="rounded-lg bg-phumulani-earth px-2.5 py-1 text-xs font-semibold text-white hover:bg-phumulani-orange cursor-pointer"
+                            className="rounded-lg bg-phumulani-earth px-2.5 py-1 text-xs font-semibold text-white hover:bg-phumulani-earth/90 transition-colors cursor-pointer"
                           >
                             Send Impact Report (A14)
                           </button>
@@ -2748,22 +2748,22 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-phumulani-charcoal tracking-tight">Verified Contributions & Reconciliation</h2>
-                  <p className="text-xs text-phumulani-charcoal">
+                  <h2 className="text-xl font-heading font-bold text-phumulani-charcoal tracking-tight">Verified Contributions & Reconciliation</h2>
+                  <p className="text-xs text-phumulani-charcoal/70 mt-0.5">
                     Audit-verified revenue entries with tax receipt numbers. Pledges and unverified grants strictly excluded.
                   </p>
                 </div>
                 <button
                   onClick={() => setShowVerifyModal(true)}
-                  className="rounded-lg bg-phumulani-green px-3 py-1.5 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-teal"
+                  className="rounded-lg bg-phumulani-earth px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-2xs transition-colors cursor-pointer"
                 >
                   + Verify New Contribution
                 </button>
               </div>
 
-              <div className="rounded-xl border border-phumulani-cream bg-white shadow-sm overflow-hidden">
+              <div className="rounded-xl border border-phumulani-charcoal/12 bg-white shadow-2xs overflow-hidden">
                 <table className="w-full text-left text-xs border-collapse">
-                  <thead className="bg-phumulani-cream text-phumulani-charcoal font-semibold border-b border-phumulani-cream uppercase text-[10px]">
+                  <thead className="bg-phumulani-cream/70 text-phumulani-charcoal/80 font-semibold border-b border-phumulani-charcoal/12 uppercase text-[10px]">
                     <tr>
                       <th className="py-3 px-4">Receipt #</th>
                       <th className="py-3 px-4">Donor</th>
@@ -2775,31 +2775,31 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                       <th className="py-3 px-4 text-right">Date</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-phumulani-cream">
+                  <tbody className="divide-y divide-phumulani-charcoal/10">
                     {contributions.map((c) => (
-                      <tr key={c.id} className="hover:bg-phumulani-cream">
+                      <tr key={c.id} className="hover:bg-phumulani-cream/45 transition-colors">
                         <td className="py-3 px-4 font-mono font-bold text-phumulani-earth">{c.receiptNumber}</td>
                         <td className="py-3 px-4 font-semibold text-phumulani-charcoal">{c.donorName}</td>
-                        <td className="py-3 px-4 font-mono font-bold text-phumulani-charcoal">${c.amount.toLocaleString()}</td>
+                        <td className="py-3 px-4 font-mono tabular-nums font-bold text-phumulani-charcoal">${c.amount.toLocaleString()}</td>
                         <td className="py-3 px-4">
-                          <span className="rounded bg-phumulani-cream px-2 py-0.5 text-[10px] font-mono text-phumulani-charcoal">
+                          <span className="rounded-sm bg-phumulani-cream px-2 py-0.5 text-[10px] font-mono text-phumulani-charcoal border border-phumulani-charcoal/10">
                             {c.paymentMethod}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-phumulani-charcoal">{c.programName}</td>
+                        <td className="py-3 px-4 text-phumulani-charcoal/85">{c.programName}</td>
                         <td className="py-3 px-4">
                           <span
-                            className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${
+                            className={`rounded-sm px-2 py-0.5 text-[10px] font-medium border ${
                               c.restrictionType === 'UNRESTRICTED'
-                                ? 'bg-phumulani-cream text-phumulani-charcoal'
-                                : 'bg-phumulani-cream text-phumulani-charcoal font-semibold'
+                                ? 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-charcoal/10'
+                                : 'bg-phumulani-gold/15 text-phumulani-charcoal font-semibold border-phumulani-gold/40'
                             }`}
                           >
                             {c.restrictionType}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-phumulani-charcoal">{c.verifiedBy}</td>
-                        <td className="py-3 px-4 text-right font-mono text-phumulani-charcoal">{c.receivedAt.split('T')[0]}</td>
+                        <td className="py-3 px-4 text-phumulani-charcoal/80">{c.verifiedBy}</td>
+                        <td className="py-3 px-4 text-right font-mono tabular-nums text-phumulani-charcoal/75">{c.receivedAt.split('T')[0]}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -2813,8 +2813,8 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-phumulani-charcoal tracking-tight">Program Funding Allocations & Restrictions</h2>
-                  <p className="text-xs text-phumulani-charcoal">
+                  <h2 className="text-xl font-heading font-bold text-phumulani-charcoal tracking-tight">Program Funding Allocations & Restrictions</h2>
+                  <p className="text-xs text-phumulani-charcoal/70 mt-0.5">
                     10 Approved Program Categories (Section 15.1) tracking verified donations, grants, and remaining gaps.
                   </p>
                 </div>
@@ -2824,19 +2824,19 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 {programs.map((prog) => {
                   const pct = Math.min(100, Math.round((prog.allocatedFunding / (prog.fundingTarget || 1)) * 100));
                   return (
-                    <div key={prog.programId} className="rounded-xl border border-phumulani-cream bg-white p-4 shadow-sm space-y-3">
+                    <div key={prog.programId} className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 shadow-2xs space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="rounded bg-phumulani-cream px-2 py-0.5 text-[10px] font-semibold text-phumulani-earth border border-phumulani-teal">
+                        <span className="rounded-sm bg-phumulani-teal/12 px-2 py-0.5 text-[10px] font-semibold text-phumulani-charcoal border border-phumulani-teal/40">
                           {prog.category}
                         </span>
-                        <span className="text-[11px] text-phumulani-charcoal">Manager: {prog.manager}</span>
+                        <span className="text-[11px] text-phumulani-charcoal/70">Manager: {prog.manager}</span>
                       </div>
 
                       <div>
-                        <h4 className="text-sm font-bold text-phumulani-charcoal">{prog.programName}</h4>
+                        <h4 className="text-sm font-heading font-bold text-phumulani-charcoal">{prog.programName}</h4>
                         <div className="flex items-center justify-between text-xs mt-2">
-                          <span className="text-phumulani-charcoal">Allocated: <strong>${prog.allocatedFunding.toLocaleString()}</strong></span>
-                          <span className="text-phumulani-charcoal">Target: <strong>${prog.fundingTarget.toLocaleString()}</strong></span>
+                          <span className="text-phumulani-charcoal/80">Allocated: <strong className="font-mono tabular-nums text-phumulani-charcoal">${prog.allocatedFunding.toLocaleString()}</strong></span>
+                          <span className="text-phumulani-charcoal/80">Target: <strong className="font-mono tabular-nums text-phumulani-charcoal">${prog.fundingTarget.toLocaleString()}</strong></span>
                         </div>
                       </div>
 
@@ -2847,13 +2847,13 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                         />
                       </div>
 
-                      <div className="flex items-center justify-between text-[11px] text-phumulani-charcoal pt-1 border-t border-phumulani-cream">
-                        <span className="text-phumulani-earth font-semibold">Remaining Gap: ${prog.remainingGap.toLocaleString()}</span>
-                        <span>{pct}% Funded</span>
+                      <div className="flex items-center justify-between text-[11px] text-phumulani-charcoal/75 pt-2 border-t border-phumulani-charcoal/10">
+                        <span className="text-phumulani-earth font-semibold tabular-nums">Remaining Gap: ${prog.remainingGap.toLocaleString()}</span>
+                        <span className="tabular-nums font-medium">{pct}% Funded</span>
                       </div>
 
-                      <div className="text-[11px] text-phumulani-charcoal bg-phumulani-cream p-2 rounded">
-                        <strong>Restriction Notes:</strong> {prog.restrictionsNotes}
+                      <div className="text-[11px] text-phumulani-charcoal/85 bg-phumulani-cream/60 p-2.5 rounded-lg border border-phumulani-charcoal/8">
+                        <strong className="text-phumulani-charcoal">Restriction Notes:</strong> {prog.restrictionsNotes}
                       </div>
                     </div>
                   );
@@ -2867,19 +2867,19 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-phumulani-charcoal tracking-tight">Fundraising Reports Center (20 Reports)</h2>
-                  <p className="text-xs text-phumulani-charcoal">
+                  <h2 className="text-xl font-heading font-bold text-phumulani-charcoal tracking-tight">Fundraising Reports Center (20 Reports)</h2>
+                  <p className="text-xs text-phumulani-charcoal/70 mt-0.5">
                     Section 20 Master Directive: 20 Standard production report formats with actual database assertions.
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center space-x-3 rounded-xl border border-phumulani-cream bg-white p-3 shadow-sm">
-                <label className="text-xs font-semibold text-phumulani-charcoal">Select Report:</label>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3 rounded-xl border border-phumulani-charcoal/12 bg-white p-3.5 shadow-2xs">
+                <label className="text-xs font-semibold text-phumulani-charcoal shrink-0">Select Report:</label>
                 <select
                   value={selectedReportId}
                   onChange={(e) => setSelectedReportId(e.target.value)}
-                  className="rounded-lg border border-phumulani-cream bg-white py-1.5 px-3 text-xs text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none flex-1"
+                  className="rounded-lg border border-phumulani-charcoal/15 bg-white py-1.5 px-3 text-xs text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none flex-1 cursor-pointer"
                 >
                   <option value="verified_funding_received">1. Verified Funding Received & Cash Reconciliation</option>
                   <option value="program_funding_gaps">2. Program Funding Allocations & Gap Analysis</option>
@@ -2905,7 +2905,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
                 <button
                   onClick={() => notify(`Exported "${selectedReportId}" as audit-ready CSV/PDF dataset`)}
-                  className="rounded-lg bg-phumulani-earth px-3 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-orange"
+                  className="rounded-lg bg-phumulani-earth px-3.5 py-1.5 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-2xs transition-colors cursor-pointer shrink-0"
                 >
                   Export Report Dataset
                 </button>
@@ -2923,17 +2923,17 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   programs
                 );
                 return (
-                  <div className="rounded-xl border border-phumulani-cream bg-white p-5 shadow-sm space-y-4">
-                    <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
+                  <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-5 shadow-2xs space-y-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-phumulani-charcoal/10 pb-3">
                       <div>
-                        <h3 className="text-base font-bold text-phumulani-charcoal">{rep.title}</h3>
-                        <p className="text-xs text-phumulani-charcoal">Generated: {rep.generatedAt}</p>
+                        <h3 className="text-base font-heading font-bold text-phumulani-charcoal">{rep.title}</h3>
+                        <p className="text-xs text-phumulani-charcoal/65">Generated: {rep.generatedAt}</p>
                       </div>
-                      <div className="flex items-center space-x-4">
+                      <div className="flex flex-wrap items-center gap-4">
                         {Object.entries(rep.metrics).map(([k, v]) => (
                           <div key={k} className="text-right">
-                            <span className="text-[10px] text-phumulani-charcoal uppercase font-semibold">{k}</span>
-                            <div className="font-mono font-bold text-phumulani-charcoal text-sm">
+                            <span className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold">{k}</span>
+                            <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm">
                               {typeof v === 'number' && v > 1000 ? `$${v.toLocaleString()}` : v}
                             </div>
                           </div>
@@ -2943,7 +2943,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
                     <div className="overflow-x-auto">
                       <table className="w-full text-left text-xs border-collapse">
-                        <thead className="bg-phumulani-cream text-phumulani-charcoal uppercase text-[10px] font-semibold border-b border-phumulani-cream">
+                        <thead className="bg-phumulani-cream/70 text-phumulani-charcoal/80 uppercase text-[10px] font-semibold border-b border-phumulani-charcoal/12">
                           <tr>
                             {rep.rows[0] &&
                               Object.keys(rep.rows[0]).map((col) => (
@@ -2953,9 +2953,9 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                               ))}
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-phumulani-cream font-mono text-[11px]">
+                        <tbody className="divide-y divide-phumulani-charcoal/10 font-mono text-[11px]">
                           {rep.rows.map((r, i) => (
-                            <tr key={i} className="hover:bg-phumulani-cream">
+                            <tr key={i} className="hover:bg-phumulani-cream/45 transition-colors">
                               {Object.values(r).map((val: any, j) => (
                                 <td key={j} className="py-2.5 px-3 text-phumulani-charcoal">
                                   {val}
@@ -2977,29 +2977,29 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             <div className="space-y-4">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                 <div>
-                  <h2 className="text-xl font-bold text-phumulani-charcoal tracking-tight">
+                  <h2 className="text-xl font-heading font-bold text-phumulani-charcoal tracking-tight">
                     Section 13 — Live Production Health & Operations Monitoring
                   </h2>
-                  <p className="text-xs text-phumulani-charcoal">
+                  <p className="text-xs text-phumulani-charcoal/70 mt-0.5">
                     Real-time operational verification across all 18 platform components. Zero simulated green statuses for unconfigured services.
                   </p>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="inline-flex items-center rounded-full bg-phumulani-cream px-3 py-1 text-xs font-bold text-phumulani-charcoal">
+                  <span className="inline-flex items-center rounded-md bg-phumulani-green/15 border border-phumulani-green/40 px-3 py-1 text-xs font-bold text-phumulani-charcoal">
                     {readinessItems.filter((i) => i.implementationStatus === 'PRODUCTION VERIFIED').length} Verified
                   </span>
-                  <span className="inline-flex items-center rounded-full bg-phumulani-cream px-3 py-1 text-xs font-bold text-phumulani-earth">
+                  <span className="inline-flex items-center rounded-md bg-phumulani-teal/15 border border-phumulani-teal/40 px-3 py-1 text-xs font-bold text-phumulani-charcoal">
                     {readinessItems.filter((i) => i.implementationStatus === 'CONNECTED').length} Connected
                   </span>
-                  <span className="inline-flex items-center rounded-full bg-phumulani-cream px-3 py-1 text-xs font-bold text-phumulani-earth">
+                  <span className="inline-flex items-center rounded-md bg-phumulani-gold/20 border border-phumulani-gold/45 px-3 py-1 text-xs font-bold text-phumulani-charcoal">
                     {readinessItems.filter((i) => i.implementationStatus === 'TESTED').length} Tested
                   </span>
                 </div>
               </div>
 
-              <div className="rounded-xl border border-phumulani-cream bg-white shadow-sm overflow-hidden">
+              <div className="rounded-xl border border-phumulani-charcoal/12 bg-white shadow-2xs overflow-hidden">
                 <table className="w-full text-left text-xs border-collapse">
-                  <thead className="bg-phumulani-cream text-phumulani-charcoal uppercase text-[10px] font-semibold border-b border-phumulani-cream">
+                  <thead className="bg-phumulani-cream/70 text-phumulani-charcoal/80 uppercase text-[10px] font-semibold border-b border-phumulani-charcoal/12">
                     <tr>
                       <th className="py-3 px-4">Component & Section</th>
                       <th className="py-3 px-4">Operational Status</th>
@@ -3009,39 +3009,39 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                       <th className="py-3 px-4 text-right">Verification Date</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-phumulani-cream">
+                  <tbody className="divide-y divide-phumulani-charcoal/10">
                     {readinessItems.map((item) => {
                       const isVerified = item.implementationStatus === 'PRODUCTION VERIFIED';
                       const isConnected = item.implementationStatus === 'CONNECTED';
                       const isTested = item.implementationStatus === 'TESTED';
                       return (
-                        <tr key={item.id} className="hover:bg-phumulani-cream">
+                        <tr key={item.id} className="hover:bg-phumulani-cream/45 transition-colors">
                           <td className="py-3 px-4">
                             <div className="font-bold text-phumulani-charcoal">{item.component}</div>
-                            <div className="font-mono text-[10px] text-phumulani-charcoal">{item.section}</div>
+                            <div className="font-mono text-[10px] text-phumulani-charcoal/65">{item.section}</div>
                           </td>
                           <td className="py-3 px-4">
                             <span
-                              className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                              className={`rounded-sm px-2 py-0.5 text-[10px] font-bold border ${
                                 isVerified
-                                  ? 'bg-phumulani-cream text-phumulani-charcoal'
+                                  ? 'bg-phumulani-green/15 text-phumulani-charcoal border-phumulani-green/40'
                                   : isConnected
-                                  ? 'bg-phumulani-cream text-phumulani-earth'
+                                  ? 'bg-phumulani-teal/15 text-phumulani-charcoal border-phumulani-teal/40'
                                   : isTested
-                                  ? 'bg-phumulani-cream text-phumulani-earth'
-                                  : 'bg-phumulani-cream text-phumulani-charcoal'
+                                  ? 'bg-phumulani-gold/20 text-phumulani-charcoal border-phumulani-gold/45'
+                                  : 'bg-phumulani-cream text-phumulani-charcoal border-phumulani-charcoal/15'
                               }`}
                             >
                               {item.implementationStatus}
                             </span>
                           </td>
-                          <td className="py-3 px-4 text-phumulani-charcoal max-w-xs text-[11px]">
+                          <td className="py-3 px-4 text-phumulani-charcoal/85 max-w-xs text-[11px]">
                             {item.verificationMethod || item.integrationStatus}
                           </td>
                           <td className="py-3 px-4 max-w-xs">
                             <div className="text-phumulani-charcoal text-[11px] font-medium">{item.actualEvidence}</div>
                             {item.relevantLogs && (
-                              <div className="font-mono text-[10px] text-phumulani-charcoal mt-0.5 truncate">
+                              <div className="font-mono text-[10px] text-phumulani-charcoal/65 mt-0.5 truncate">
                                 {item.relevantLogs}
                               </div>
                             )}
@@ -3049,10 +3049,10 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                           <td className="py-3 px-4 text-[11px]">
                             <div className="font-medium text-phumulani-charcoal">{item.responsibleOwner}</div>
                             {item.responsibleAdministrator && (
-                              <div className="text-[10px] text-phumulani-charcoal">{item.responsibleAdministrator}</div>
+                              <div className="text-[10px] text-phumulani-charcoal/65">{item.responsibleAdministrator}</div>
                             )}
                           </td>
-                          <td className="py-3 px-4 text-right font-mono text-[11px] text-phumulani-charcoal">
+                          <td className="py-3 px-4 text-right font-mono tabular-nums text-[11px] text-phumulani-charcoal/75">
                             {item.lastVerification.split('T')[0]}
                           </td>
                         </tr>
@@ -3069,39 +3069,39 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
           {activeTab === 'compliance' && (
             <div className="space-y-4">
               <div>
-                <h2 className="text-xl font-bold text-phumulani-charcoal tracking-tight">Compliance, CAN-SPAM & Safeguarding Isolation</h2>
-                <p className="text-xs text-phumulani-charcoal">
+                <h2 className="text-xl font-heading font-bold text-phumulani-charcoal tracking-tight">Compliance, CAN-SPAM & Safeguarding Isolation</h2>
+                <p className="text-xs text-phumulani-charcoal/70 mt-0.5">
                   Enforces CAN-SPAM compliance, global suppression lists, and strict VAWA safeguarding boundaries.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="rounded-xl border border-phumulani-cream bg-white p-5 shadow-sm space-y-3">
-                  <div className="flex items-center space-x-2 text-phumulani-earth font-bold text-sm">
+                <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-5 shadow-2xs space-y-3">
+                  <div className="flex items-center space-x-2 text-phumulani-earth font-heading font-bold text-sm">
                     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
                     <span>CAN-SPAM & Email Compliance Invariants</span>
                   </div>
-                  <ul className="space-y-2 text-xs text-phumulani-charcoal">
-                    <li>• <strong>Physical Address Requirement:</strong> Every outbound email automatically includes Phumulani's registered 501(c)(3) Minneapolis corporate address.</li>
-                    <li>• <strong>One-Click Opt-Out:</strong> Direct unsubscribe link injected in all mass communications.</li>
-                    <li>• <strong>Global Suppression Sync:</strong> Senders on the opt-out register are automatically suppressed from marketing batches.</li>
-                    <li>• <strong>No Unsolicited Bulk Email:</strong> New imports flagged as PENDING consent until validated.</li>
+                  <ul className="space-y-2 text-xs text-phumulani-charcoal/85">
+                    <li>• <strong className="text-phumulani-charcoal">Physical Address Requirement:</strong> Every outbound email automatically includes Phumulani's registered 501(c)(3) Minneapolis corporate address.</li>
+                    <li>• <strong className="text-phumulani-charcoal">One-Click Opt-Out:</strong> Direct unsubscribe link injected in all mass communications.</li>
+                    <li>• <strong className="text-phumulani-charcoal">Global Suppression Sync:</strong> Senders on the opt-out register are automatically suppressed from marketing batches.</li>
+                    <li>• <strong className="text-phumulani-charcoal">No Unsolicited Bulk Email:</strong> New imports flagged as PENDING consent until validated.</li>
                   </ul>
                 </div>
 
-                <div className="rounded-xl border border-phumulani-cream bg-white p-5 shadow-sm space-y-3">
-                  <div className="flex items-center space-x-2 text-phumulani-earth font-bold text-sm">
+                <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-5 shadow-2xs space-y-3">
+                  <div className="flex items-center space-x-2 text-phumulani-earth font-heading font-bold text-sm">
                     <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                     <span>VAWA Safeguarding Boundary Enforcement</span>
                   </div>
-                  <ul className="space-y-2 text-xs text-phumulani-charcoal">
-                    <li>• <strong>Strict Data Quarantine:</strong> Survivor case codes (<code className="font-mono text-phumulani-charcoal">SAFE-MN-XXX</code>) are quarantined from general fundraising databases.</li>
-                    <li>• <strong>Zero Auto-Responder Leakage:</strong> Domestic abuse disclosures immediately trigger crisis escalation and suppress general fundraising AI agents.</li>
-                    <li>• <strong>Aggregate Reporting Only:</strong> Grant narratives use aggregate client counts without identifying personal survivor details.</li>
+                  <ul className="space-y-2 text-xs text-phumulani-charcoal/85">
+                    <li>• <strong className="text-phumulani-charcoal">Strict Data Quarantine:</strong> Survivor case codes (<code className="font-mono text-phumulani-charcoal">SAFE-MN-XXX</code>) are quarantined from general fundraising databases.</li>
+                    <li>• <strong className="text-phumulani-charcoal">Zero Auto-Responder Leakage:</strong> Domestic abuse disclosures immediately trigger crisis escalation and suppress general fundraising AI agents.</li>
+                    <li>• <strong className="text-phumulani-charcoal">Aggregate Reporting Only:</strong> Grant narratives use aggregate client counts without identifying personal survivor details.</li>
                   </ul>
                 </div>
               </div>
@@ -3110,29 +3110,29 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
           {/* TAB 11: SETTINGS */}
           {activeTab === 'settings' && (
-            <div className="rounded-xl border border-phumulani-cream bg-white p-5 shadow-sm space-y-4">
-              <h2 className="text-xl font-bold text-phumulani-charcoal tracking-tight">Fundraising Department Settings</h2>
+            <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-5 shadow-2xs space-y-4">
+              <h2 className="text-xl font-heading font-bold text-phumulani-charcoal tracking-tight">Fundraising Department Settings</h2>
               <div className="space-y-3 text-xs">
-                <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
+                <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
                   <div>
                     <div className="font-semibold text-phumulani-charcoal">Major Gift Threshold</div>
-                    <div className="text-phumulani-charcoal">Donations at or above this threshold trigger executive relationship tracking.</div>
+                    <div className="text-phumulani-charcoal/70 mt-0.5">Donations at or above this threshold trigger executive relationship tracking.</div>
                   </div>
-                  <span className="font-mono font-bold text-phumulani-charcoal">$10,000 USD</span>
+                  <span className="font-mono tabular-nums font-bold text-phumulani-charcoal">$10,000 USD</span>
                 </div>
-                <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
+                <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
                   <div>
                     <div className="font-semibold text-phumulani-charcoal">Dual Sign-Off Threshold</div>
-                    <div className="text-phumulani-charcoal">Requires both Master Admin and Finance Director approvals for high-value allocations.</div>
+                    <div className="text-phumulani-charcoal/70 mt-0.5">Requires both Master Admin and Finance Director approvals for high-value allocations.</div>
                   </div>
-                  <span className="font-mono font-bold text-phumulani-charcoal">$500 USD</span>
+                  <span className="font-mono tabular-nums font-bold text-phumulani-charcoal">$500 USD</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-semibold text-phumulani-charcoal">Outbound Communications Safe Hold</div>
-                    <div className="text-phumulani-charcoal">Holds all AI fundraising outreach drafts in approval queue before dispatch.</div>
+                    <div className="text-phumulani-charcoal/70 mt-0.5">Holds all AI fundraising outreach drafts in approval queue before dispatch.</div>
                   </div>
-                  <span className="rounded bg-phumulani-cream px-2 py-0.5 font-bold text-phumulani-charcoal">ENFORCED</span>
+                  <span className="rounded-sm bg-phumulani-green/15 border border-phumulani-green/40 px-2.5 py-0.5 font-bold text-phumulani-charcoal">ENFORCED</span>
                 </div>
               </div>
             </div>
@@ -3143,12 +3143,12 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             RIGHT CONTEXT PANEL
            ========================================================================= */}
         {showRightPanel && selectedDonor && (
-          <aside className="w-80 border-l border-phumulani-cream bg-white flex flex-col overflow-y-auto p-4 space-y-4">
-            <div className="flex items-center justify-between border-b border-phumulani-cream pb-2">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal">Donor Profile & Context</span>
+          <aside className="w-80 border-l border-phumulani-charcoal/12 bg-white flex flex-col overflow-y-auto p-4 space-y-4">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-2.5">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/65">Donor Profile & Context</span>
               <button
                 onClick={() => setShowRightPanel(false)}
-                className="text-phumulani-charcoal hover:text-phumulani-earth text-xs"
+                className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-xs cursor-pointer"
               >
                 ✕
               </button>
@@ -3156,73 +3156,73 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
             {/* Donor Header Card */}
             <div className="space-y-1">
-              <div className="flex items-center space-x-2">
-                <h3 className="text-base font-bold text-phumulani-charcoal">{selectedDonor.name}</h3>
-                <span className="rounded bg-phumulani-cream px-2 py-0.5 text-[9px] font-semibold text-phumulani-earth">
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="text-base font-heading font-bold text-phumulani-charcoal">{selectedDonor.name}</h3>
+                <span className="rounded-sm bg-phumulani-teal/12 border border-phumulani-teal/40 px-2 py-0.5 text-[9px] font-semibold text-phumulani-charcoal">
                   {selectedDonor.givingTier}
                 </span>
               </div>
               {selectedDonor.organizationName && (
-                <div className="text-xs text-phumulani-charcoal">{selectedDonor.organizationName}</div>
+                <div className="text-xs text-phumulani-charcoal/75">{selectedDonor.organizationName}</div>
               )}
-              <div className="text-xs font-mono text-phumulani-charcoal">{selectedDonor.email}</div>
+              <div className="text-xs font-mono text-phumulani-charcoal/75">{selectedDonor.email}</div>
             </div>
 
             {/* Quick Metrics */}
             <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="rounded-lg bg-phumulani-cream p-2.5">
-                <span className="text-[10px] text-phumulani-charcoal uppercase font-semibold">Lifetime Giving</span>
-                <div className="font-mono font-bold text-phumulani-charcoal text-sm">
+              <div className="rounded-lg bg-phumulani-cream/75 border border-phumulani-charcoal/10 p-2.5">
+                <span className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold">Lifetime Giving</span>
+                <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">
                   ${selectedDonor.lifetimeGiving.toLocaleString()}
                 </div>
               </div>
-              <div className="rounded-lg bg-phumulani-cream p-2.5">
-                <span className="text-[10px] text-phumulani-charcoal uppercase font-semibold">Largest Gift</span>
-                <div className="font-mono font-bold text-phumulani-earth text-sm">
+              <div className="rounded-lg bg-phumulani-cream/75 border border-phumulani-charcoal/10 p-2.5">
+                <span className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold">Largest Gift</span>
+                <div className="font-mono tabular-nums font-bold text-phumulani-earth text-sm mt-0.5">
                   ${selectedDonor.largestGift.toLocaleString()}
                 </div>
               </div>
             </div>
 
             {/* Stage & Relationship Owner */}
-            <div className="rounded-lg border border-phumulani-cream p-3 text-xs space-y-1.5">
+            <div className="rounded-lg border border-phumulani-charcoal/12 p-3 text-xs space-y-1.5">
               <div className="flex items-center justify-between">
-                <span className="text-phumulani-charcoal">Relationship Owner:</span>
+                <span className="text-phumulani-charcoal/70">Relationship Owner:</span>
                 <span className="font-semibold text-phumulani-charcoal">{selectedDonor.relationshipOwner}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-phumulani-charcoal">Stage:</span>
+                <span className="text-phumulani-charcoal/70">Stage:</span>
                 <span className="font-semibold text-phumulani-earth">{selectedDonor.stage}</span>
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-phumulani-charcoal">Total Gifts:</span>
-                <span className="font-mono text-phumulani-charcoal">{selectedDonor.giftCount} contributions</span>
+                <span className="text-phumulani-charcoal/70">Total Gifts:</span>
+                <span className="font-mono tabular-nums text-phumulani-charcoal">{selectedDonor.giftCount} contributions</span>
               </div>
               {selectedDonor.lastGiftDate && (
                 <div className="flex items-center justify-between">
-                  <span className="text-phumulani-charcoal">Last Contribution:</span>
-                  <span className="font-mono text-phumulani-charcoal">{selectedDonor.lastGiftDate.split('T')[0]}</span>
+                  <span className="text-phumulani-charcoal/70">Last Contribution:</span>
+                  <span className="font-mono tabular-nums text-phumulani-charcoal">{selectedDonor.lastGiftDate.split('T')[0]}</span>
                 </div>
               )}
             </div>
 
             {/* Consent Status */}
-            <div className="rounded-lg bg-phumulani-cream p-3 text-xs space-y-1 border border-phumulani-cream">
+            <div className="rounded-lg bg-phumulani-cream/65 p-3 text-xs space-y-1 border border-phumulani-charcoal/10">
               <div className="flex items-center justify-between">
                 <span className="font-semibold text-phumulani-charcoal">Consent Evidence:</span>
-                <span className={`font-bold ${selectedDonor.consent.status === 'OPTED_IN' ? 'text-phumulani-earth' : 'text-phumulani-earth'}`}>
+                <span className="font-bold text-phumulani-earth">
                   {selectedDonor.consent.status}
                 </span>
               </div>
-              <div className="text-[11px] text-phumulani-charcoal">{selectedDonor.consent.consentEvidence}</div>
+              <div className="text-[11px] text-phumulani-charcoal/75">{selectedDonor.consent.consentEvidence}</div>
             </div>
 
             {/* Program Interests */}
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal">Program Interests</span>
-              <div className="flex flex-wrap gap-1 mt-1.5">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/65">Program Interests</span>
+              <div className="flex flex-wrap gap-1.5 mt-1.5">
                 {selectedDonor.programInterests.map((interest, i) => (
-                  <span key={i} className="rounded-full bg-phumulani-cream px-2.5 py-0.5 text-[10px] font-medium text-phumulani-charcoal">
+                  <span key={i} className="rounded-sm bg-phumulani-cream border border-phumulani-charcoal/10 px-2 py-0.5 text-[10px] font-medium text-phumulani-charcoal">
                     {interest}
                   </span>
                 ))}
@@ -3231,20 +3231,20 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
             {/* Actionable Donor Intelligence Breakdown (Component 3) */}
             {donorIntelligence && (
-              <div className="rounded-xl border border-phumulani-teal bg-phumulani-cream p-3 text-xs space-y-2.5 shadow-2xs">
-                <div className="flex items-center justify-between border-b border-phumulani-cream pb-1.5">
+              <div className="rounded-xl border border-phumulani-teal/45 bg-phumulani-cream/70 p-3 text-xs space-y-2.5 shadow-2xs">
+                <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-1.5">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-earth flex items-center gap-1">
                     <Sparkles className="w-3 h-3 text-phumulani-earth" />
                     <span>Actionable Intelligence</span>
                   </span>
-                  <span className="font-mono text-[10px] font-bold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded-full">
+                  <span className="font-mono text-[10px] font-bold text-phumulani-charcoal bg-white border border-phumulani-teal/40 px-2 py-0.5 rounded-sm">
                     Propensity: {donorIntelligence.propensityScore ?? donorIntelligence.aiInterpretation.affinityScore}/100
                   </span>
                 </div>
 
                 <div className="space-y-1">
-                  <div className="text-[10px] font-bold text-phumulani-charcoal uppercase tracking-wider">1. Verified Facts</div>
-                  <ul className="text-[11px] text-phumulani-charcoal space-y-0.5 list-disc list-inside bg-white p-2 rounded border border-phumulani-cream">
+                  <div className="text-[10px] font-bold text-phumulani-charcoal/75 uppercase tracking-wider">1. Verified Facts</div>
+                  <ul className="text-[11px] text-phumulani-charcoal space-y-0.5 list-disc list-inside bg-white p-2 rounded-md border border-phumulani-charcoal/10">
                     {(donorIntelligence.verifiedFactsList || [
                       `Lifetime Giving: $${donorIntelligence.verifiedFacts.lifetimeGivingUSD.toLocaleString()} USD`,
                       `Verified Gifts: ${donorIntelligence.verifiedFacts.giftCount} contributions`,
@@ -3257,16 +3257,16 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 </div>
 
                 <div className="space-y-1">
-                  <div className="text-[10px] font-bold text-phumulani-charcoal uppercase tracking-wider">2. Predictive Propensity</div>
-                  <div className="rounded bg-white p-2 border border-phumulani-cream text-[11px] text-phumulani-charcoal space-y-1">
+                  <div className="text-[10px] font-bold text-phumulani-charcoal/75 uppercase tracking-wider">2. Predictive Propensity</div>
+                  <div className="rounded-md bg-white p-2 border border-phumulani-charcoal/10 text-[11px] text-phumulani-charcoal space-y-1">
                     <div className="flex justify-between">
-                      <span className="text-phumulani-charcoal">Readiness:</span>
+                      <span className="text-phumulani-charcoal/70">Readiness:</span>
                       <span className="font-semibold text-phumulani-earth">
                         {donorIntelligence.engagementReadiness ?? donorIntelligence.aiInterpretation.readinessToGive}
                       </span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-phumulani-charcoal">Capacity Tier:</span>
+                      <span className="text-phumulani-charcoal/70">Capacity Tier:</span>
                       <span className="font-semibold text-phumulani-earth">
                         {donorIntelligence.capacityTier ?? donorIntelligence.givingTier}
                       </span>
@@ -3277,7 +3277,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 {donorIntelligence.missingInformation.length > 0 && (
                   <div className="space-y-1">
                     <div className="text-[10px] font-bold text-phumulani-earth uppercase tracking-wider">3. Missing Intelligence</div>
-                    <ul className="text-[11px] text-phumulani-charcoal space-y-0.5 list-disc list-inside bg-phumulani-cream p-2 rounded border border-phumulani-gold">
+                    <ul className="text-[11px] text-phumulani-charcoal space-y-0.5 list-disc list-inside bg-phumulani-gold/12 p-2 rounded-md border border-phumulani-gold/45">
                       {donorIntelligence.missingInformation.map((info, idx) => (
                         <li key={idx}>{info}</li>
                       ))}
@@ -3285,7 +3285,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   </div>
                 )}
 
-                <div className="pt-1 border-t border-phumulani-cream text-[11px] text-phumulani-earth font-medium">
+                <div className="pt-1.5 border-t border-phumulani-charcoal/10 text-[11px] text-phumulani-earth font-medium">
                   <strong>Suggested Next Action:</strong> {donorIntelligence.suggestedNextAction ?? donorIntelligence.suggestedStaffAction}
                 </div>
               </div>
@@ -3293,7 +3293,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
             {/* Internal Notes */}
             {selectedDonor.internalNotes && (
-              <div className="rounded-lg bg-phumulani-cream p-3 text-xs border border-phumulani-gold text-phumulani-charcoal">
+              <div className="rounded-lg bg-phumulani-gold/12 p-3 text-xs border border-phumulani-gold/45 text-phumulani-charcoal">
                 <strong className="text-phumulani-charcoal block mb-1">Internal Notes:</strong>
                 {selectedDonor.internalNotes}
               </div>
@@ -3302,24 +3302,24 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             {/* Engagement Activities Timeline (Priority J) */}
             <div>
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal">Engagement Timeline</span>
-                <span className="text-[10px] font-mono text-phumulani-charcoal">{engagementActivities.length} events</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/65">Engagement Timeline</span>
+                <span className="text-[10px] font-mono tabular-nums text-phumulani-charcoal/65">{engagementActivities.length} events</span>
               </div>
               <div className="mt-2 space-y-2 max-h-48 overflow-y-auto pr-1">
                 {engagementActivities.length === 0 ? (
-                  <p className="text-[11px] text-phumulani-charcoal italic">No logged engagement activities yet.</p>
+                  <p className="text-[11px] text-phumulani-charcoal/60 italic">No logged engagement activities yet.</p>
                 ) : (
                   engagementActivities.map((act) => (
-                    <div key={act.id} className="rounded-lg border border-phumulani-cream bg-phumulani-cream p-2 text-xs space-y-1">
+                    <div key={act.id} className="rounded-lg border border-phumulani-charcoal/10 bg-phumulani-cream/55 p-2.5 text-xs space-y-1">
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-phumulani-charcoal text-[11px] truncate max-w-[170px]">{act.title}</span>
-                        <span className="text-[9px] font-mono text-phumulani-charcoal">{act.timestamp ? act.timestamp.split('T')[0] : ''}</span>
+                        <span className="text-[9px] font-mono text-phumulani-charcoal/65">{act.timestamp ? act.timestamp.split('T')[0] : ''}</span>
                       </div>
-                      <div className="text-[10px] text-phumulani-charcoal flex items-center justify-between">
-                        <span className="rounded bg-phumulani-cream px-1.5 py-0.2 text-[9px] font-bold text-phumulani-earth">{act.activityType}</span>
+                      <div className="text-[10px] text-phumulani-charcoal/70 flex items-center justify-between">
+                        <span className="rounded-sm bg-white border border-phumulani-charcoal/10 px-1.5 py-0.5 text-[9px] font-bold text-phumulani-earth">{act.activityType}</span>
                         <span className="truncate max-w-[100px]">{act.staffActor}</span>
                       </div>
-                      {act.summary && <p className="text-[10px] text-phumulani-charcoal line-clamp-2">{act.summary}</p>}
+                      {act.summary && <p className="text-[10px] text-phumulani-charcoal/80 line-clamp-2">{act.summary}</p>}
                     </div>
                   ))
                 )}
@@ -3330,7 +3330,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             <div className="pt-2 space-y-2">
               <button
                 onClick={() => setShowDraftModal(true)}
-                className="w-full rounded-lg bg-phumulani-earth py-2 text-xs font-semibold text-white hover:bg-phumulani-orange shadow-sm flex items-center justify-center space-x-1.5 cursor-pointer"
+                className="w-full rounded-lg bg-phumulani-earth py-2 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-2xs flex items-center justify-center space-x-1.5 transition-colors cursor-pointer"
               >
                 <Sparkles className="h-4 w-4" />
                 <span>Generate AI Outreach Draft</span>
@@ -3342,9 +3342,9 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   setNewActTitle(`Meeting with ${selectedDonor.name}`);
                   setShowLogActivityModal(true);
                 }}
-                className="w-full rounded-lg border border-phumulani-earth bg-phumulani-cream py-2 text-xs font-semibold text-phumulani-earth hover:bg-phumulani-teal shadow-xs flex items-center justify-center space-x-1.5 cursor-pointer"
+                className="w-full rounded-lg border border-phumulani-teal/50 bg-phumulani-teal/12 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-teal/25 shadow-2xs flex items-center justify-center space-x-1.5 transition-colors cursor-pointer"
               >
-                <Plus className="w-3.5 h-3.5" />
+                <Plus className="w-3.5 h-3.5 text-phumulani-earth" />
                 <span>+ Log Engagement Activity</span>
               </button>
 
@@ -3353,7 +3353,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   setVerifyDonorId(selectedDonor.id);
                   setShowVerifyModal(true);
                 }}
-                className="w-full rounded-lg border border-phumulani-cream bg-white py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream shadow-sm cursor-pointer"
+                className="w-full rounded-lg border border-phumulani-charcoal/15 bg-white py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream/80 shadow-2xs transition-colors cursor-pointer"
               >
                 Log Verified Contribution
               </button>
@@ -3368,14 +3368,14 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 1. IMPORT DONORS MODAL */}
       {showImportModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4">
-          <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+          <div className="w-full max-w-2xl rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
-                <h3 className="text-base font-bold text-phumulani-charcoal">Import Donor Contacts (CSV / JSON)</h3>
-                <p className="text-xs text-phumulani-charcoal">Imports and validates donor records with deduplication against existing database.</p>
+                <h3 className="font-heading text-base font-bold text-phumulani-charcoal">Import Donor Contacts (CSV / JSON)</h3>
+                <p className="text-xs text-phumulani-charcoal/70">Imports and validates donor records with deduplication against existing database.</p>
               </div>
-              <button onClick={() => setShowImportModal(false)} className="text-phumulani-charcoal hover:text-phumulani-earth text-sm">
+              <button onClick={() => setShowImportModal(false)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
@@ -3403,7 +3403,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               </div>
 
               <div>
-                <div className="flex items-center justify-between text-xs text-phumulani-charcoal mb-1">
+                <div className="flex items-center justify-between text-xs text-phumulani-charcoal/75 mb-1">
                   <span>Paste raw CSV rows (header: name, email, phone, organization, amount, etc.):</span>
                   <button
                     onClick={() => {
@@ -3411,7 +3411,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                         `name,email,organization,amount,category\nMarcus Thorne,marcus.thorne@example.com,Thorne Family Trust,25000,INDIVIDUAL_MAJOR\nKhadija Duale,khadija.duale@somaliaid.org,East Africa Relief,5000,INDIVIDUAL_RECURRING`
                       );
                     }}
-                    className="text-xs text-phumulani-earth hover:underline"
+                    className="text-xs font-medium text-phumulani-earth hover:underline cursor-pointer"
                   >
                     Load Sample CSV
                   </button>
@@ -3421,12 +3421,12 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   value={importText}
                   onChange={(e) => setImportText(e.target.value)}
                   placeholder="name,email,organization,amount,category..."
-                  className="w-full rounded-lg border border-phumulani-cream p-2.5 font-mono text-xs text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full rounded-lg border border-phumulani-charcoal/15 p-2.5 font-mono text-xs text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 />
               </div>
 
               {importResult && (
-                <div className="rounded-lg bg-phumulani-cream p-3 text-xs space-y-1.5 border border-phumulani-cream">
+                <div className="rounded-lg bg-phumulani-cream/70 p-3 text-xs space-y-1.5 border border-phumulani-charcoal/12">
                   <div className="font-bold text-phumulani-charcoal">Import Result Summary:</div>
                   <div className="text-phumulani-earth">• Valid Contacts Added: {importResult.newDonors.length}</div>
                   <div className="text-phumulani-earth">• Duplicates Identified (Merged): {importResult.duplicates.length}</div>
@@ -3437,16 +3437,16 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               )}
             </div>
 
-            <div className="flex items-center justify-end space-x-2 pt-3 border-t border-phumulani-cream">
+            <div className="flex items-center justify-end space-x-2 pt-3 border-t border-phumulani-charcoal/10">
               <button
                 onClick={() => setShowImportModal(false)}
-                className="rounded-lg border border-phumulani-cream px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream"
+                className="rounded-lg border border-phumulani-charcoal/15 px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream/80 transition-colors cursor-pointer"
               >
                 Close
               </button>
               <button
                 onClick={handleRunImport}
-                className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-orange shadow-sm"
+                className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-xs transition-colors cursor-pointer"
               >
                 Validate & Import Records
               </button>
@@ -3457,11 +3457,11 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 2. NEW DONOR MODAL */}
       {showNewDonorModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
-              <h3 className="text-base font-bold text-phumulani-charcoal">Create New Donor Contact</h3>
-              <button onClick={() => setShowNewDonorModal(false)} className="text-phumulani-charcoal hover:text-phumulani-earth text-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
+              <h3 className="font-heading text-base font-bold text-phumulani-charcoal">Create New Donor Contact</h3>
+              <button onClick={() => setShowNewDonorModal(false)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
@@ -3474,7 +3474,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   value={newDonorName}
                   onChange={(e) => setNewDonorName(e.target.value)}
                   placeholder="e.g. Dr. Jane Smith"
-                  className="w-full mt-1 rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full mt-1 rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 />
               </div>
 
@@ -3485,7 +3485,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   value={newDonorEmail}
                   onChange={(e) => setNewDonorEmail(e.target.value)}
                   placeholder="e.g. jsmith@example.org"
-                  className="w-full mt-1 rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full mt-1 rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 />
               </div>
 
@@ -3494,7 +3494,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 <select
                   value={newDonorCategory}
                   onChange={(e) => setNewDonorCategory(e.target.value)}
-                  className="w-full mt-1 rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full mt-1 rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 >
                   <option value="INDIVIDUAL_MAJOR">Individual Major Donor</option>
                   <option value="INDIVIDUAL_RECURRING">Individual Recurring</option>
@@ -3507,10 +3507,10 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               </div>
             </div>
 
-            <div className="flex items-center justify-end space-x-2 pt-3 border-t border-phumulani-cream">
+            <div className="flex items-center justify-end space-x-2 pt-3 border-t border-phumulani-charcoal/10">
               <button
                 onClick={() => setShowNewDonorModal(false)}
-                className="rounded-lg border border-phumulani-cream px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream"
+                className="rounded-lg border border-phumulani-charcoal/15 px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream/80 transition-colors cursor-pointer"
               >
                 Cancel
               </button>
@@ -3559,7 +3559,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   setSelectedDonorId(newContact.id);
                   notify(`Created donor profile for ${newContact.name}`);
                 }}
-                className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-orange"
+                className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-xs transition-colors cursor-pointer"
               >
                 Save Contact
               </button>
@@ -3570,14 +3570,14 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 3. AI OUTREACH GENERATOR MODAL */}
       {showDraftModal && selectedDonor && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4">
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+          <div className="w-full max-w-lg rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
-                <h3 className="text-base font-bold text-phumulani-charcoal">Generate AI Outreach Draft</h3>
-                <p className="text-xs text-phumulani-charcoal">Drafting tailored communication for {selectedDonor.name}</p>
+                <h3 className="font-heading text-base font-bold text-phumulani-charcoal">Generate AI Outreach Draft</h3>
+                <p className="text-xs text-phumulani-charcoal/70">Drafting tailored communication for {selectedDonor.name}</p>
               </div>
-              <button onClick={() => setShowDraftModal(false)} className="text-phumulani-charcoal hover:text-phumulani-earth text-sm">
+              <button onClick={() => setShowDraftModal(false)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
@@ -3588,7 +3588,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 <select
                   value={draftCommType}
                   onChange={(e) => setDraftCommType(e.target.value as CommunicationType)}
-                  className="w-full mt-1 rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full mt-1 rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 >
                   <option value="PROGRAM_INTRO">1. New Program Introduction</option>
                   <option value="DONOR_REENGAGEMENT">2. Existing Donor Re-engagement</option>
@@ -3614,7 +3614,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 <select
                   value={draftTone}
                   onChange={(e) => setDraftTone(e.target.value)}
-                  className="w-full mt-1 rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full mt-1 rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 >
                   <option value="Executive & Visionary">Executive & Visionary (Leadership)</option>
                   <option value="Corporate CSR Professional">Corporate CSR Professional (ESG Aligned)</option>
@@ -3624,21 +3624,21 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 </select>
               </div>
 
-              <div className="rounded-lg bg-phumulani-cream p-3 text-phumulani-charcoal border border-phumulani-teal">
+              <div className="rounded-lg bg-phumulani-teal/12 p-3 text-phumulani-charcoal border border-phumulani-teal/40">
                 <strong>Safety Gate:</strong> Generated draft will be queued in the Approvals Center. Human sign-off is required before sending.
               </div>
             </div>
 
-            <div className="flex items-center justify-end space-x-2 pt-3 border-t border-phumulani-cream">
+            <div className="flex items-center justify-end space-x-2 pt-3 border-t border-phumulani-charcoal/10">
               <button
                 onClick={() => setShowDraftModal(false)}
-                className="rounded-lg border border-phumulani-cream px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream"
+                className="rounded-lg border border-phumulani-charcoal/15 px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream/80 transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleGenerateDraft}
-                className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-orange"
+                className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-xs transition-colors cursor-pointer"
               >
                 Generate Draft & Submit to Review
               </button>
@@ -3649,14 +3649,14 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 4. VERIFY CONTRIBUTION MODAL */}
       {showVerifyModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
-                <h3 className="text-base font-bold text-phumulani-charcoal">Verify Financial Contribution</h3>
-                <p className="text-xs text-phumulani-charcoal">Only verified receipts count as recognized revenue.</p>
+                <h3 className="font-heading text-base font-bold text-phumulani-charcoal">Verify Financial Contribution</h3>
+                <p className="text-xs text-phumulani-charcoal/70">Only verified receipts count as recognized revenue.</p>
               </div>
-              <button onClick={() => setShowVerifyModal(false)} className="text-phumulani-charcoal hover:text-phumulani-earth text-sm">
+              <button onClick={() => setShowVerifyModal(false)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
@@ -3667,7 +3667,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 <select
                   value={verifyDonorId}
                   onChange={(e) => setVerifyDonorId(e.target.value)}
-                  className="w-full mt-1 rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full mt-1 rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 >
                   {donors.map((d) => (
                     <option key={d.id} value={d.id}>
@@ -3683,7 +3683,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   type="number"
                   value={verifyAmount}
                   onChange={(e) => setVerifyAmount(parseFloat(e.target.value) || 0)}
-                  className="w-full mt-1 rounded-lg border border-phumulani-cream p-2 font-mono text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full mt-1 rounded-lg border border-phumulani-charcoal/15 p-2 font-mono tabular-nums text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 />
               </div>
 
@@ -3692,7 +3692,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 <select
                   value={verifyPaymentMethod}
                   onChange={(e) => setVerifyPaymentMethod(e.target.value as any)}
-                  className="w-full mt-1 rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full mt-1 rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 >
                   <option value="ACH_TRANSFER">ACH Bank Transfer</option>
                   <option value="WIRE">Wire Transfer</option>
@@ -3706,7 +3706,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 <select
                   value={verifyProgramId}
                   onChange={(e) => setVerifyProgramId(e.target.value)}
-                  className="w-full mt-1 rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full mt-1 rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 >
                   {programs.map((p) => (
                     <option key={p.programId} value={p.programId}>
@@ -3721,7 +3721,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 <select
                   value={verifyRestriction}
                   onChange={(e) => setVerifyRestriction(e.target.value as any)}
-                  className="w-full mt-1 rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full mt-1 rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 >
                   <option value="RESTRICTED_PROGRAM">RESTRICTED_PROGRAM (Earmarked for designated initiative)</option>
                   <option value="UNRESTRICTED">UNRESTRICTED (General operational discretion)</option>
@@ -3732,16 +3732,16 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               </div>
             </div>
 
-            <div className="flex items-center justify-end space-x-2 pt-3 border-t border-phumulani-cream">
+            <div className="flex items-center justify-end space-x-2 pt-3 border-t border-phumulani-charcoal/10">
               <button
                 onClick={() => setShowVerifyModal(false)}
-                className="rounded-lg border border-phumulani-cream px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream"
+                className="rounded-lg border border-phumulani-charcoal/15 px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream/80 transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleVerifyContribution}
-                className="rounded-lg bg-phumulani-green px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-teal shadow-sm"
+                className="rounded-lg bg-phumulani-green px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-green/85 shadow-xs transition-colors cursor-pointer"
               >
                 Issue Verified Receipt
               </button>
@@ -3753,43 +3753,43 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
       {/* 4. FINANCIAL RECONCILIATION & DISCREPANCY AUDIT MODAL (SECTION 03 / DELIVERABLE 04 & 05) */}
       {showReconModal && (
 
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4">
-          <div className="w-full max-w-3xl rounded-2xl bg-white p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+          <div className="w-full max-w-3xl rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
-                <span className="rounded bg-phumulani-cream px-2 py-0.5 text-[10px] font-bold text-phumulani-charcoal uppercase tracking-wider">
+                <span className="rounded-sm bg-phumulani-cream px-2 py-0.5 text-[10px] font-bold text-phumulani-charcoal uppercase tracking-wider border border-phumulani-charcoal/12">
                   Deliverables 04 & 05
                 </span>
-                <h3 className="text-base font-bold text-phumulani-charcoal mt-1">
+                <h3 className="font-heading text-base font-bold text-phumulani-charcoal mt-1">
                   Financial Data Integrity & Program Funding Gap Reconciliation
                 </h3>
               </div>
-              <button onClick={() => setShowReconModal(false)} className="text-phumulani-charcoal hover:text-phumulani-earth text-sm">
+              <button onClick={() => setShowReconModal(false)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
 
             {/* Reconciliation KPI Metrics */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
-              <div className="rounded-xl bg-phumulani-cream p-3 border border-phumulani-cream">
-                <span className="text-[10px] text-phumulani-charcoal uppercase font-semibold">10-Program Sum (Database)</span>
-                <div className="text-lg font-extrabold text-phumulani-charcoal font-mono mt-0.5">
+              <div className="rounded-xl bg-phumulani-cream/70 p-3 border border-phumulani-charcoal/12">
+                <span className="text-[10px] text-phumulani-charcoal/70 uppercase font-semibold">10-Program Sum (Database)</span>
+                <div className="text-lg font-extrabold text-phumulani-charcoal font-heading tabular-nums mt-0.5">
                   ${reconDetails.calculatedGapTotal.toLocaleString()}.00
                 </div>
-                <div className="text-[11px] text-phumulani-charcoal">Authoritative programmatic ledger sum</div>
+                <div className="text-[11px] text-phumulani-charcoal/70">Authoritative programmatic ledger sum</div>
               </div>
 
-              <div className="rounded-xl bg-phumulani-cream p-3 border border-phumulani-cream">
-                <span className="text-[10px] text-phumulani-charcoal uppercase font-semibold">Reported Legacy KPI</span>
-                <div className="text-lg font-extrabold text-phumulani-charcoal font-mono mt-0.5">
+              <div className="rounded-xl bg-phumulani-cream/70 p-3 border border-phumulani-charcoal/12">
+                <span className="text-[10px] text-phumulani-charcoal/70 uppercase font-semibold">Reported Legacy KPI</span>
+                <div className="text-lg font-extrabold text-phumulani-charcoal font-heading tabular-nums mt-0.5">
                   ${reconDetails.reportedGapKPI.toLocaleString()}.00
                 </div>
-                <div className="text-[11px] text-phumulani-charcoal">Previous narrative dashboard text</div>
+                <div className="text-[11px] text-phumulani-charcoal/70">Previous narrative dashboard text</div>
               </div>
 
-              <div className="rounded-xl bg-phumulani-cream p-3 border border-phumulani-gold">
-                <span className="text-[10px] text-phumulani-charcoal uppercase font-bold">Investigated Discrepancy</span>
-                <div className="text-lg font-extrabold text-phumulani-charcoal font-mono mt-0.5">
+              <div className="rounded-xl bg-phumulani-gold/15 p-3 border border-phumulani-gold/50">
+                <span className="text-[10px] text-phumulani-charcoal/75 uppercase font-bold">Investigated Discrepancy</span>
+                <div className="text-lg font-extrabold text-phumulani-charcoal font-heading tabular-nums mt-0.5">
                   ${reconDetails.discrepancyAmount.toLocaleString()}.00
                 </div>
                 <div className="text-[11px] text-phumulani-earth font-medium">Reconciled & Documented</div>
@@ -3797,18 +3797,18 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             </div>
 
             {/* Root Cause & Technical Resolution Details */}
-            <div className="rounded-xl bg-phumulani-cream p-4 border border-phumulani-cream space-y-2 text-xs">
-              <h4 className="font-bold text-phumulani-charcoal">Investigation Root Cause & Accounting Resolution</h4>
-              <p className="text-phumulani-charcoal leading-relaxed">
-                <strong>Root Cause:</strong> {reconDetails.rootCause}
+            <div className="rounded-xl bg-phumulani-cream/70 p-4 border border-phumulani-charcoal/12 space-y-2 text-xs">
+              <h4 className="font-heading font-bold text-phumulani-charcoal">Investigation Root Cause & Accounting Resolution</h4>
+              <p className="text-phumulani-charcoal/85 leading-relaxed">
+                <strong className="text-phumulani-charcoal">Root Cause:</strong> {reconDetails.rootCause}
               </p>
-              <p className="text-phumulani-charcoal leading-relaxed">
-                <strong>Authoritative Source:</strong> {reconDetails.authoritativeSource}
+              <p className="text-phumulani-charcoal/85 leading-relaxed">
+                <strong className="text-phumulani-charcoal">Authoritative Source:</strong> {reconDetails.authoritativeSource}
               </p>
-              <p className="text-phumulani-charcoal leading-relaxed">
-                <strong>Action Taken:</strong> {reconDetails.actionTaken}
+              <p className="text-phumulani-charcoal/85 leading-relaxed">
+                <strong className="text-phumulani-charcoal">Action Taken:</strong> {reconDetails.actionTaken}
               </p>
-              <div className="flex flex-wrap items-center justify-between text-[11px] text-phumulani-charcoal pt-2 border-t border-phumulani-cream">
+              <div className="flex flex-wrap items-center justify-between text-[11px] text-phumulani-charcoal/75 pt-2 border-t border-phumulani-charcoal/10">
                 <span>Reconciled By: <strong className="text-phumulani-charcoal">{reconDetails.reconciledBy}</strong></span>
                 <span>Date: <span className="font-mono text-phumulani-charcoal">{reconDetails.reconciledAt.split('T')[0]}</span></span>
               </div>
@@ -3816,10 +3816,10 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
             {/* Program Breakdown Table */}
             <div>
-              <h4 className="font-bold text-phumulani-charcoal text-xs mb-2">Authoritative 10-Program Funding Ledger</h4>
-              <div className="rounded-xl border border-phumulani-cream overflow-hidden">
+              <h4 className="font-heading font-bold text-phumulani-charcoal text-xs mb-2">Authoritative 10-Program Funding Ledger</h4>
+              <div className="rounded-xl border border-phumulani-charcoal/12 overflow-hidden">
                 <table className="w-full text-left text-xs border-collapse">
-                  <thead className="bg-phumulani-cream text-phumulani-charcoal font-semibold border-b border-phumulani-cream uppercase text-[10px]">
+                  <thead className="bg-phumulani-cream text-phumulani-charcoal font-semibold border-b border-phumulani-charcoal/12 uppercase text-[10px]">
                     <tr>
                       <th className="py-2.5 px-3">Program</th>
                       <th className="py-2.5 px-3 text-right">Target ($)</th>
@@ -3828,9 +3828,9 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                       <th className="py-2.5 px-3 text-right">Remaining Gap ($)</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-phumulani-cream font-mono text-[11px]">
+                  <tbody className="divide-y divide-phumulani-charcoal/10 font-mono tabular-nums text-[11px]">
                     {reconDetails.programBreakdown.map((p) => (
-                      <tr key={p.programId} className="hover:bg-phumulani-cream">
+                      <tr key={p.programId} className="hover:bg-phumulani-cream/60 transition-colors">
                         <td className="py-2 px-3 font-sans text-phumulani-charcoal font-medium">{p.programName}</td>
                         <td className="py-2 px-3 text-right text-phumulani-charcoal">${p.fundingTarget.toLocaleString()}</td>
                         <td className="py-2 px-3 text-right text-phumulani-charcoal">${p.verifiedReceipts.toLocaleString()}</td>
@@ -3858,10 +3858,10 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               </div>
             </div>
 
-            <div className="flex items-center justify-end space-x-2 pt-2 border-t border-phumulani-cream">
+            <div className="flex items-center justify-end space-x-2 pt-2 border-t border-phumulani-charcoal/10">
               <button
                 onClick={() => setShowReconModal(false)}
-                className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-orange"
+                className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-earth/90 transition-colors cursor-pointer"
               >
                 Close Audit Register
               </button>
@@ -3872,47 +3872,47 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 5. AUTOMATED ACCEPTANCE TEST SUITE RUNNER MODAL (86 TESTS) */}
       {showTestRunnerModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4">
-          <div className="w-full max-w-4xl rounded-2xl bg-white p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+          <div className="w-full max-w-4xl rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
-                <span className="rounded bg-phumulani-cream px-2 py-0.5 text-[10px] font-bold text-phumulani-earth uppercase tracking-wider">
+                <span className="rounded-sm bg-phumulani-earth/10 px-2 py-0.5 text-[10px] font-bold text-phumulani-earth uppercase tracking-wider border border-phumulani-earth/25">
                   Milestone 11.01 & Deliverable 20
                 </span>
-                <h3 className="text-base font-bold text-phumulani-charcoal mt-1">
+                <h3 className="font-heading text-base font-bold text-phumulani-charcoal mt-1">
                   Automated Acceptance Test Suite Runner ({testSummary ? testSummary.total : 216} Tests Verified)
                 </h3>
               </div>
-              <button onClick={() => setShowTestRunnerModal(false)} className="text-phumulani-charcoal hover:text-phumulani-earth text-sm">
+              <button onClick={() => setShowTestRunnerModal(false)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
 
             {/* Test Controls & Summary */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-phumulani-cream p-4 rounded-xl border border-phumulani-cream">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-phumulani-cream/70 p-4 rounded-xl border border-phumulani-charcoal/12">
               <div className="flex items-center space-x-4">
                 <div>
-                  <span className="text-[10px] text-phumulani-charcoal uppercase font-semibold">Total Tests</span>
-                  <div className="font-mono font-bold text-phumulani-charcoal text-lg">
+                  <span className="text-[10px] text-phumulani-charcoal/70 uppercase font-semibold">Total Tests</span>
+                  <div className="font-heading tabular-nums font-bold text-phumulani-charcoal text-lg">
                     {testSummary ? testSummary.total : 216}
                   </div>
                 </div>
                 <div>
-                  <span className="text-[10px] text-phumulani-charcoal uppercase font-semibold">Passed</span>
-                  <div className="font-mono font-bold text-phumulani-earth text-lg">
+                  <span className="text-[10px] text-phumulani-charcoal/70 uppercase font-semibold">Passed</span>
+                  <div className="font-heading tabular-nums font-bold text-phumulani-earth text-lg">
                     {testSummary ? testSummary.passed : 216}
                   </div>
                 </div>
                 <div>
-                  <span className="text-[10px] text-phumulani-charcoal uppercase font-semibold">Failed</span>
-                  <div className="font-mono font-bold text-phumulani-charcoal text-lg">
+                  <span className="text-[10px] text-phumulani-charcoal/70 uppercase font-semibold">Failed</span>
+                  <div className="font-heading tabular-nums font-bold text-phumulani-charcoal text-lg">
                     {testSummary ? testSummary.failed : 0}
                   </div>
                 </div>
                 {testSummary && (
                   <div>
-                    <span className="text-[10px] text-phumulani-charcoal uppercase font-semibold">Execution Time</span>
-                    <div className="font-mono font-bold text-phumulani-charcoal text-sm mt-0.5">
+                    <span className="text-[10px] text-phumulani-charcoal/70 uppercase font-semibold">Execution Time</span>
+                    <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">
                       {testSummary.durationMs}ms
                     </div>
                   </div>
@@ -3922,7 +3922,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               <button
                 onClick={handleRunAllTests}
                 disabled={isRunningTests}
-                className="flex items-center space-x-1.5 rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-bold text-white hover:bg-phumulani-orange shadow-sm disabled:opacity-50"
+                className="flex items-center space-x-1.5 rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-bold text-white hover:bg-phumulani-earth/90 shadow-xs disabled:opacity-50 transition-colors cursor-pointer"
               >
                 {isRunningTests ? (
                   <span>Executing 86 Tests...</span>
@@ -3938,7 +3938,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               </button>
             </div>
 
-            {/* Category Filter Pills */}
+            {/* Category Filters */}
             <div className="flex flex-wrap gap-1.5 text-xs">
               {[
                 { id: 'ALL', label: 'All Tests (86)' },
@@ -3950,10 +3950,10 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 <button
                   key={cat.id}
                   onClick={() => setTestFilterCategory(cat.id)}
-                  className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                  className={`rounded-md px-3 py-1 text-xs font-medium transition-colors cursor-pointer ${
                     testFilterCategory === cat.id
                       ? 'bg-phumulani-earth text-white'
-                      : 'bg-phumulani-cream text-phumulani-charcoal hover:bg-phumulani-cream'
+                      : 'bg-phumulani-cream text-phumulani-charcoal border border-phumulani-charcoal/12 hover:bg-phumulani-cream/70'
                   }`}
                 >
                   {cat.label}
@@ -3969,40 +3969,40 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   .map((test: any) => (
                     <div
                       key={test.id}
-                      className="rounded-lg border border-phumulani-cream bg-white p-3 hover:bg-phumulani-cream transition-colors space-y-1 text-xs"
+                      className="rounded-lg border border-phumulani-charcoal/12 bg-white p-3 hover:bg-phumulani-cream/60 transition-colors space-y-1 text-xs"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           <span className="font-mono font-bold text-phumulani-charcoal">{test.id}</span>
                           <span className="font-semibold text-phumulani-charcoal">{test.name}</span>
-                          <span className="rounded bg-phumulani-cream px-1.5 py-0.2 text-[9px] font-mono text-phumulani-charcoal">
+                          <span className="rounded-sm bg-phumulani-cream px-1.5 py-0.2 text-[9px] font-mono text-phumulani-charcoal/80 border border-phumulani-charcoal/10">
                             {test.category}
                           </span>
                         </div>
                         <div className="flex items-center space-x-2">
-                          <span className="font-mono text-[10px] text-phumulani-charcoal">{test.durationMs}ms</span>
-                          <span className="rounded-full bg-phumulani-cream px-2 py-0.5 text-[10px] font-bold text-phumulani-charcoal">
+                          <span className="font-mono tabular-nums text-[10px] text-phumulani-charcoal/70">{test.durationMs}ms</span>
+                          <span className="rounded-sm bg-phumulani-green/15 border border-phumulani-green/40 px-2 py-0.5 text-[10px] font-bold text-phumulani-charcoal">
                             PASSED
                           </span>
                         </div>
                       </div>
-                      <div className="text-[11px] text-phumulani-charcoal">{test.description}</div>
-                      <div className="font-mono text-[11px] text-phumulani-charcoal bg-phumulani-cream rounded px-2 py-1 border border-phumulani-cream">
+                      <div className="text-[11px] text-phumulani-charcoal/75">{test.description}</div>
+                      <div className="font-mono text-[11px] text-phumulani-charcoal bg-phumulani-cream/70 rounded px-2 py-1 border border-phumulani-charcoal/10">
                         {test.details}
                       </div>
                     </div>
                   ))
               ) : (
-                <div className="rounded-xl border border-dashed border-phumulani-cream p-8 text-center text-phumulani-charcoal text-xs">
+                <div className="rounded-xl border border-dashed border-phumulani-charcoal/20 p-8 text-center text-phumulani-charcoal/70 text-xs">
                   Click "Run All 86 Tests" above to execute the complete verification suite.
                 </div>
               )}
             </div>
 
-            <div className="flex items-center justify-end space-x-2 pt-2 border-t border-phumulani-cream">
+            <div className="flex items-center justify-end space-x-2 pt-2 border-t border-phumulani-charcoal/10">
               <button
                 onClick={() => setShowTestRunnerModal(false)}
-                className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-orange"
+                className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-earth/90 transition-colors cursor-pointer"
               >
                 Close Runner
               </button>
@@ -4013,17 +4013,17 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 6. AGENT TASK EXECUTION MODAL */}
       {executingAgent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4">
-          <div className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+          <div className="w-full max-w-2xl rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
                 <div className="flex items-center space-x-2">
-                  <span className="rounded bg-phumulani-cream px-2 py-0.5 font-mono text-[11px] font-bold text-phumulani-earth border border-phumulani-teal">
+                  <span className="rounded-sm bg-phumulani-teal/12 px-2 py-0.5 font-mono text-[11px] font-bold text-phumulani-earth border border-phumulani-teal/40">
                     {executingAgent.id}
                   </span>
-                  <span className="font-semibold text-phumulani-charcoal text-sm">{executingAgent.name}</span>
+                  <span className="font-heading font-semibold text-phumulani-charcoal text-sm">{executingAgent.name}</span>
                 </div>
-                <div className="text-xs text-phumulani-charcoal mt-0.5">
+                <div className="text-xs text-phumulani-charcoal/70 mt-0.5">
                   Role: <span className="font-medium text-phumulani-charcoal">{executingAgent.role}</span> • Escalation: <span className="font-medium text-phumulani-charcoal">{executingAgent.escalationOfficer}</span>
                 </div>
               </div>
@@ -4032,25 +4032,25 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   setExecutingAgent(null);
                   setTaskExecutionResult(null);
                 }}
-                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm"
+                className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
             {/* Agent Schema Guidance */}
-            <div className="rounded-lg bg-phumulani-cream p-3 text-xs space-y-1.5 border border-phumulani-cream">
+            <div className="rounded-lg bg-phumulani-cream/70 p-3 text-xs space-y-1.5 border border-phumulani-charcoal/12">
               <div className="flex items-center justify-between">
                 <span className="font-bold text-phumulani-charcoal">Agent Contract & Capabilities:</span>
-                <span className={`text-[10px] font-bold px-2 py-0.5 rounded ${executingAgent.requiresHumanApproval ? 'bg-phumulani-cream text-phumulani-charcoal' : 'bg-phumulani-cream text-phumulani-charcoal'}`}>
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-sm border ${executingAgent.requiresHumanApproval ? 'bg-phumulani-gold/15 border-phumulani-gold/40 text-phumulani-charcoal' : 'bg-phumulani-green/15 border-phumulani-green/40 text-phumulani-charcoal'}`}>
                   {executingAgent.requiresHumanApproval ? 'Human Review Gate Required' : 'Autonomous Action'}
                 </span>
               </div>
-              <div className="text-[11px] text-phumulani-charcoal">
-                <strong>Input Schema:</strong> {executingAgent.inputSchemaSummary}
+              <div className="text-[11px] text-phumulani-charcoal/85">
+                <strong className="text-phumulani-charcoal">Input Schema:</strong> {executingAgent.inputSchemaSummary}
               </div>
-              <div className="text-[11px] text-phumulani-charcoal">
-                <strong>Expected Output:</strong> {executingAgent.outputSchemaSummary}
+              <div className="text-[11px] text-phumulani-charcoal/85">
+                <strong className="text-phumulani-charcoal">Expected Output:</strong> {executingAgent.outputSchemaSummary}
               </div>
             </div>
 
@@ -4063,20 +4063,20 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   value={taskTitleInput}
                   onChange={(e) => setTaskTitleInput(e.target.value)}
                   placeholder="e.g. Major Gift Capacity Evaluation for Marcus Thorne"
-                  className="w-full rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 />
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="font-semibold text-phumulani-charcoal">Input Parameters (JSON)</label>
-                  <span className="text-[10px] text-phumulani-charcoal font-mono">Valid JSON format</span>
+                  <span className="text-[10px] text-phumulani-charcoal/65 font-mono">Valid JSON format</span>
                 </div>
                 <textarea
                   rows={5}
                   value={taskPayloadJson}
                   onChange={(e) => setTaskPayloadJson(e.target.value)}
-                  className="w-full rounded-lg border border-phumulani-cream p-2.5 font-mono text-xs text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full rounded-lg border border-phumulani-charcoal/15 p-2.5 font-mono text-xs text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 />
               </div>
 
@@ -4086,13 +4086,13 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                     setExecutingAgent(null);
                     setTaskExecutionResult(null);
                   }}
-                  className="rounded-lg border border-phumulani-cream px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream"
+                  className="rounded-lg border border-phumulani-charcoal/15 px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream/80 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleExecuteAgentTask}
-                  className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-orange shadow-sm flex items-center space-x-1.5"
+                  className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-xs flex items-center space-x-1.5 transition-colors cursor-pointer"
                 >
                   <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
@@ -4104,19 +4104,19 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
             {/* Task Execution Result */}
             {taskExecutionResult && (
-              <div className="rounded-xl border border-phumulani-cream bg-phumulani-cream p-4 space-y-3 mt-4">
-                <div className="flex items-center justify-between border-b border-phumulani-cream pb-2">
+              <div className="rounded-xl border border-phumulani-charcoal/12 bg-phumulani-cream/70 p-4 space-y-3 mt-4">
+                <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-2">
                   <div className="flex items-center space-x-2">
                     <span className="font-bold text-phumulani-charcoal text-xs">Execution Outcome</span>
-                    <span className="font-mono text-[10px] text-phumulani-charcoal">ID: {taskExecutionResult.id}</span>
+                    <span className="font-mono text-[10px] text-phumulani-charcoal/70">ID: {taskExecutionResult.id}</span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <span className="font-mono text-[10px] text-phumulani-charcoal">{taskExecutionResult.durationMs}ms</span>
+                    <span className="font-mono tabular-nums text-[10px] text-phumulani-charcoal/70">{taskExecutionResult.durationMs}ms</span>
                     <span
-                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
+                      className={`rounded-sm px-2 py-0.5 text-[10px] font-bold border ${
                         taskExecutionResult.status === 'COMPLETED'
-                          ? 'bg-phumulani-cream text-phumulani-charcoal'
-                          : 'bg-phumulani-cream text-phumulani-charcoal'
+                          ? 'bg-phumulani-green/15 border-phumulani-green/40 text-phumulani-charcoal'
+                          : 'bg-phumulani-gold/15 border-phumulani-gold/40 text-phumulani-charcoal'
                       }`}
                     >
                       {taskExecutionResult.status}
@@ -4124,14 +4124,14 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   </div>
                 </div>
 
-                <div className="text-xs text-phumulani-charcoal bg-white p-3 rounded-lg border border-phumulani-cream">
+                <div className="text-xs text-phumulani-charcoal bg-white p-3 rounded-lg border border-phumulani-charcoal/12">
                   <strong className="block text-phumulani-charcoal mb-1">Synthesized Result:</strong>
                   {taskExecutionResult.outputResult}
                 </div>
 
                 {taskExecutionResult.structuredOutput && (
                   <div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal block mb-1">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/70 block mb-1">
                       Structured Payload Output
                     </span>
                     <pre className="rounded-lg bg-phumulani-charcoal p-3 text-[11px] font-mono text-phumulani-green overflow-x-auto max-h-48">
@@ -4142,14 +4142,14 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
                 {/* Human Sign-Off Gate */}
                 {taskExecutionResult.requiresHumanApproval && taskExecutionResult.status === 'WAITING_FOR_APPROVAL' && (
-                  <div className="rounded-lg bg-phumulani-cream p-3 border border-phumulani-gold flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div className="rounded-lg bg-phumulani-gold/15 p-3 border border-phumulani-gold/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="text-xs text-phumulani-charcoal">
                       <strong>Dual Human Gatekeeper Active:</strong> External actions on hold pending executive sign-off.
                     </div>
                     <div className="flex items-center space-x-2">
                       <button
                         onClick={() => handleApproveAgentTask(taskExecutionResult.id)}
-                        className="rounded-lg bg-phumulani-green px-3 py-1.5 text-xs font-bold text-phumulani-charcoal hover:bg-phumulani-teal shadow-sm"
+                        className="rounded-lg bg-phumulani-green px-3 py-1.5 text-xs font-bold text-phumulani-charcoal hover:bg-phumulani-green/85 shadow-xs transition-colors cursor-pointer"
                       >
                         Approve as {executingAgent.escalationOfficer}
                       </button>
@@ -4164,21 +4164,21 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 7. AGENT TASK AUDIT LOG & HISTORY DRAWER */}
       {historyDrawerAgent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4">
-          <div className="w-full max-w-3xl rounded-2xl bg-white p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+          <div className="w-full max-w-3xl rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
                 <div className="flex items-center space-x-2">
-                  <span className="rounded bg-phumulani-cream px-2 py-0.5 font-mono text-[11px] font-bold text-phumulani-earth border border-phumulani-teal">
+                  <span className="rounded-sm bg-phumulani-teal/12 px-2 py-0.5 font-mono text-[11px] font-bold text-phumulani-earth border border-phumulani-teal/40">
                     {historyDrawerAgent.id} • {historyDrawerAgent.code}
                   </span>
-                  <h3 className="text-base font-bold text-phumulani-charcoal">{historyDrawerAgent.name}</h3>
+                  <h3 className="font-heading text-base font-bold text-phumulani-charcoal">{historyDrawerAgent.name}</h3>
                 </div>
-                <p className="text-xs text-phumulani-charcoal mt-0.5">
+                <p className="text-xs text-phumulani-charcoal/70 mt-0.5">
                   Complete chronological mission execution audit trail and human sign-off history.
                 </p>
               </div>
-              <button onClick={() => setHistoryDrawerAgent(null)} className="text-phumulani-charcoal hover:text-phumulani-earth text-sm">
+              <button onClick={() => setHistoryDrawerAgent(null)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
@@ -4186,26 +4186,28 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             {/* Task List */}
             <div className="space-y-3">
               {historyDrawerAgent.recentTasks.length === 0 ? (
-                <div className="rounded-xl border border-dashed border-phumulani-cream p-8 text-center text-phumulani-charcoal text-xs">
+                <div className="rounded-xl border border-dashed border-phumulani-charcoal/20 p-8 text-center text-phumulani-charcoal/70 text-xs">
                   No mission executions currently logged for this agent.
                 </div>
               ) : (
                 historyDrawerAgent.recentTasks.map((t) => (
-                  <div key={t.id} className="rounded-xl border border-phumulani-cream bg-white p-4 space-y-2 shadow-xs">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-phumulani-cream pb-2">
+                  <div key={t.id} className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 space-y-2 shadow-2xs">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-phumulani-charcoal/10 pb-2">
                       <div>
                         <div className="flex items-center space-x-2">
                           <span className="font-mono font-bold text-phumulani-charcoal text-xs">{t.id}</span>
                           <span className="font-semibold text-phumulani-charcoal text-xs">{t.title}</span>
                           <span
-                            className={`rounded-full px-2 py-0.5 text-[9px] font-bold ${
-                              t.status === 'COMPLETED' ? 'bg-phumulani-cream text-phumulani-charcoal' : 'bg-phumulani-cream text-phumulani-charcoal'
+                            className={`rounded-sm px-2 py-0.5 text-[9px] font-bold border ${
+                              t.status === 'COMPLETED'
+                                ? 'bg-phumulani-green/15 border-phumulani-green/40 text-phumulani-charcoal'
+                                : 'bg-phumulani-gold/15 border-phumulani-gold/40 text-phumulani-charcoal'
                             }`}
                           >
                             {t.status}
                           </span>
                         </div>
-                        <div className="text-[10px] text-phumulani-charcoal font-mono mt-0.5">
+                        <div className="text-[10px] text-phumulani-charcoal/70 font-mono tabular-nums mt-0.5">
                           Started: {t.startedAt ? t.startedAt.replace('T', ' ').split('.')[0] : 'N/A'} • Duration: {t.durationMs || 100}ms
                         </div>
                       </div>
@@ -4213,7 +4215,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                       {t.requiresHumanApproval && (
                         <div className="text-right">
                           {t.approvalStatus === 'APPROVED' ? (
-                            <span className="rounded bg-phumulani-cream px-2 py-0.5 text-[10px] font-semibold text-phumulani-charcoal border border-phumulani-green">
+                            <span className="rounded-sm bg-phumulani-green/15 px-2 py-0.5 text-[10px] font-semibold text-phumulani-charcoal border border-phumulani-green/40">
                               Approved by {t.approvedBy || historyDrawerAgent.escalationOfficer}
                             </span>
                           ) : (
@@ -4222,7 +4224,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                                 handleApproveAgentTask(t.id);
                                 setHistoryDrawerAgent(db.getFundraisingAIAgent(historyDrawerAgent.id) || null);
                               }}
-                              className="rounded bg-phumulani-gold px-2.5 py-1 text-xs font-bold text-phumulani-charcoal hover:bg-phumulani-orange shadow-xs"
+                              className="rounded-md bg-phumulani-gold px-2.5 py-1 text-xs font-bold text-phumulani-charcoal hover:bg-phumulani-gold/85 shadow-2xs transition-colors cursor-pointer"
                             >
                               Sign Off & Authorize
                             </button>
@@ -4231,12 +4233,12 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                       )}
                     </div>
 
-                    <div className="text-xs text-phumulani-charcoal bg-phumulani-cream p-2.5 rounded-lg border border-phumulani-cream">
+                    <div className="text-xs text-phumulani-charcoal/85 bg-phumulani-cream/70 p-2.5 rounded-lg border border-phumulani-charcoal/10">
                       {t.outputResult}
                     </div>
 
                     {t.structuredOutput && (
-                      <details className="text-[10px] text-phumulani-charcoal cursor-pointer">
+                      <details className="text-[10px] text-phumulani-charcoal/75 cursor-pointer">
                         <summary className="font-semibold text-phumulani-charcoal hover:text-phumulani-earth">
                           View Structured JSON Payload
                         </summary>
@@ -4250,10 +4252,10 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               )}
             </div>
 
-            <div className="flex items-center justify-end space-x-2 pt-2 border-t border-phumulani-cream">
+            <div className="flex items-center justify-end space-x-2 pt-2 border-t border-phumulani-charcoal/10">
               <button
                 onClick={() => setHistoryDrawerAgent(null)}
-                className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-orange"
+                className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-earth/90 transition-colors cursor-pointer"
               >
                 Close Audit Register
               </button>
@@ -4264,14 +4266,14 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 8. CREATE OPPORTUNITY MODAL (COMPONENT 8) */}
       {showAddOppModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4">
-          <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+          <div className="w-full max-w-lg rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
-                <h3 className="text-base font-bold text-phumulani-charcoal">Create New Funding Opportunity</h3>
-                <p className="text-xs text-phumulani-charcoal">Add an institutional grant, major gift, or CSR partnership to the 15-stage pipeline.</p>
+                <h3 className="font-heading text-base font-bold text-phumulani-charcoal">Create New Funding Opportunity</h3>
+                <p className="text-xs text-phumulani-charcoal/70">Add an institutional grant, major gift, or CSR partnership to the 15-stage pipeline.</p>
               </div>
-              <button onClick={() => setShowAddOppModal(false)} className="text-phumulani-charcoal hover:text-phumulani-earth text-sm cursor-pointer">
+              <button onClick={() => setShowAddOppModal(false)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
@@ -4284,7 +4286,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   value={newOppTitle}
                   onChange={(e) => setNewOppTitle(e.target.value)}
                   placeholder="e.g. McKnight Foundation 2-Year Capacity Grant"
-                  className="w-full rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 />
               </div>
 
@@ -4295,7 +4297,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                     type="number"
                     value={newOppAmount}
                     onChange={(e) => setNewOppAmount(Number(e.target.value))}
-                    className="w-full rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal font-mono focus:border-phumulani-earth focus:outline-none"
+                    className="w-full rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal font-mono tabular-nums focus:border-phumulani-earth focus:outline-none"
                   />
                 </div>
                 <div>
@@ -4304,7 +4306,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                     type="date"
                     value={newOppCloseDate}
                     onChange={(e) => setNewOppCloseDate(e.target.value)}
-                    className="w-full rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal font-mono focus:border-phumulani-earth focus:outline-none"
+                    className="w-full rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal font-mono tabular-nums focus:border-phumulani-earth focus:outline-none"
                   />
                 </div>
               </div>
@@ -4315,7 +4317,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   <select
                     value={newOppDonorId}
                     onChange={(e) => setNewOppDonorId(e.target.value)}
-                    className="w-full rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                    className="w-full rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                   >
                     {donors.map((d) => (
                       <option key={d.id} value={d.id}>
@@ -4329,7 +4331,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   <select
                     value={newOppCategory}
                     onChange={(e) => setNewOppCategory(e.target.value)}
-                    className="w-full rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                    className="w-full rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                   >
                     <option value="INDIVIDUAL_MAJOR">Individual Major Donor ($10k+)</option>
                     <option value="CORP_CSR_PARTNERSHIP">Corporate CSR Partnership</option>
@@ -4347,7 +4349,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   <select
                     value={newOppProgramId}
                     onChange={(e) => setNewOppProgramId(e.target.value)}
-                    className="w-full rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                    className="w-full rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                   >
                     {programs.map((p) => (
                       <option key={p.programId} value={p.programId}>
@@ -4361,7 +4363,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   <select
                     value={newOppStage}
                     onChange={(e) => setNewOppStage(e.target.value as OpportunityStatus)}
-                    className="w-full rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                    className="w-full rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                   >
                     {OPPORTUNITY_STAGES.map((s) => (
                       <option key={s.id} value={s.id}>
@@ -4378,7 +4380,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   type="text"
                   value={newOppOwner}
                   onChange={(e) => setNewOppOwner(e.target.value)}
-                  className="w-full rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 />
               </div>
 
@@ -4389,7 +4391,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   value={newOppNextAction}
                   onChange={(e) => setNewOppNextAction(e.target.value)}
                   placeholder="e.g. Schedule preliminary briefing with Comfort Dondo"
-                  className="w-full rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 />
               </div>
 
@@ -4400,21 +4402,21 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   value={newOppEvidence}
                   onChange={(e) => setNewOppEvidence(e.target.value)}
                   placeholder="e.g. Inbound inquiry to executive@phumulani.org"
-                  className="w-full rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-end space-x-2 pt-3 border-t border-phumulani-cream">
+            <div className="flex items-center justify-end space-x-2 pt-3 border-t border-phumulani-charcoal/10">
               <button
                 onClick={() => setShowAddOppModal(false)}
-                className="rounded-lg border border-phumulani-cream px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream cursor-pointer"
+                className="rounded-lg border border-phumulani-charcoal/15 px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream/80 transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleCreateOpportunity}
-                className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-orange shadow-xs cursor-pointer"
+                className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-xs transition-colors cursor-pointer"
               >
                 Create Opportunity
               </button>
@@ -4425,14 +4427,14 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 9. LOG ENGAGEMENT ACTIVITY MODAL (COMPONENT 15) */}
       {showLogActivityModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
-                <h3 className="text-base font-bold text-phumulani-charcoal">Log Donor Engagement Activity</h3>
-                <p className="text-xs text-phumulani-charcoal">Record calls, in-person meetings, site visits, and follow-up deadlines.</p>
+                <h3 className="font-heading text-base font-bold text-phumulani-charcoal">Log Donor Engagement Activity</h3>
+                <p className="text-xs text-phumulani-charcoal/70">Record calls, in-person meetings, site visits, and follow-up deadlines.</p>
               </div>
-              <button onClick={() => setShowLogActivityModal(false)} className="text-phumulani-charcoal hover:text-phumulani-earth text-sm cursor-pointer">
+              <button onClick={() => setShowLogActivityModal(false)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
@@ -4443,7 +4445,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 <select
                   value={newActDonorId}
                   onChange={(e) => setNewActDonorId(e.target.value)}
-                  className="w-full rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 >
                   {donors.map((d) => (
                     <option key={d.id} value={d.id}>
@@ -4458,7 +4460,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 <select
                   value={newActType}
                   onChange={(e) => setNewActType(e.target.value)}
-                  className="w-full rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 >
                   <option value="MEETING">In-Person Meeting</option>
                   <option value="PHONE_CALL">Telephone Call</option>
@@ -4477,7 +4479,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   value={newActTitle}
                   onChange={(e) => setNewActTitle(e.target.value)}
                   placeholder="e.g. Q4 Executive Leadership Lunch with Comfort Dondo"
-                  className="w-full rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 />
               </div>
 
@@ -4488,7 +4490,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   value={newActSummary}
                   onChange={(e) => setNewActSummary(e.target.value)}
                   placeholder="Key discussion points, interest in Safe Haven transitional housing, and agreement on next steps..."
-                  className="w-full rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 />
               </div>
 
@@ -4512,22 +4514,22 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                     type="date"
                     value={newActFollowUpDate}
                     onChange={(e) => setNewActFollowUpDate(e.target.value)}
-                    className="w-full rounded-lg border border-phumulani-cream p-2 text-phumulani-charcoal font-mono focus:border-phumulani-earth focus:outline-none"
+                    className="w-full rounded-lg border border-phumulani-charcoal/15 p-2 text-phumulani-charcoal font-mono tabular-nums focus:border-phumulani-earth focus:outline-none"
                   />
                 </div>
               )}
             </div>
 
-            <div className="flex items-center justify-end space-x-2 pt-3 border-t border-phumulani-cream">
+            <div className="flex items-center justify-end space-x-2 pt-3 border-t border-phumulani-charcoal/10">
               <button
                 onClick={() => setShowLogActivityModal(false)}
-                className="rounded-lg border border-phumulani-cream px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream cursor-pointer"
+                className="rounded-lg border border-phumulani-charcoal/15 px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream/80 transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleLogEngagementActivity}
-                className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-orange shadow-xs cursor-pointer"
+                className="rounded-lg bg-phumulani-earth px-4 py-2 text-xs font-semibold text-white hover:bg-phumulani-earth/90 shadow-xs transition-colors cursor-pointer"
               >
                 Save Engagement Activity
               </button>
@@ -4538,14 +4540,14 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 10. APPROVAL DECISION MODAL: REQUEST CHANGES / REJECT (COMPONENT 13) */}
       {decisionModalDraftId && decisionType && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl space-y-4">
-            <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+          <div className="w-full max-w-md rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4">
+            <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
-                <h3 className="text-base font-bold text-phumulani-charcoal">
+                <h3 className="font-heading text-base font-bold text-phumulani-charcoal">
                   {decisionType === 'REQUEST_CHANGES' ? 'Request Changes on AI Draft' : 'Reject AI Outreach Draft'}
                 </h3>
-                <p className="text-xs text-phumulani-charcoal">
+                <p className="text-xs text-phumulani-charcoal/70">
                   Provide mandatory reviewer guidance to keep the human review audit trail complete.
                 </p>
               </div>
@@ -4554,7 +4556,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   setDecisionModalDraftId(null);
                   setDecisionType(null);
                 }}
-                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm cursor-pointer"
+                className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer"
               >
                 ✕
               </button>
@@ -4574,25 +4576,27 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                       ? 'e.g. Please align ask amount with Q4 board resolution and emphasize immigrant youth mentorship...'
                       : 'e.g. Funder previously declined solicitations in this cycle. Do not contact until next fiscal year...'
                   }
-                  className="w-full rounded-lg border border-phumulani-cream p-2.5 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
+                  className="w-full rounded-lg border border-phumulani-charcoal/15 p-2.5 text-phumulani-charcoal focus:border-phumulani-earth focus:outline-none"
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-end space-x-2 pt-3 border-t border-phumulani-cream">
+            <div className="flex items-center justify-end space-x-2 pt-3 border-t border-phumulani-charcoal/10">
               <button
                 onClick={() => {
                   setDecisionModalDraftId(null);
                   setDecisionType(null);
                 }}
-                className="rounded-lg border border-phumulani-cream px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream cursor-pointer"
+                className="rounded-lg border border-phumulani-charcoal/15 px-4 py-2 text-xs font-semibold text-phumulani-charcoal hover:bg-phumulani-cream/80 transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSubmitDecision}
-                className={`rounded-lg px-4 py-2 text-xs font-semibold text-white shadow-xs cursor-pointer ${
-                  decisionType === 'REQUEST_CHANGES' ? 'bg-phumulani-gold hover:bg-phumulani-orange' : 'bg-phumulani-earth hover:bg-phumulani-orange'
+                className={`rounded-lg px-4 py-2 text-xs font-semibold shadow-xs transition-colors cursor-pointer ${
+                  decisionType === 'REQUEST_CHANGES'
+                    ? 'bg-phumulani-gold text-phumulani-charcoal hover:bg-phumulani-gold/85'
+                    : 'bg-phumulani-earth text-white hover:bg-phumulani-earth/90'
                 }`}
               >
                 {decisionType === 'REQUEST_CHANGES' ? 'Submit Change Request' : 'Confirm Rejection'}

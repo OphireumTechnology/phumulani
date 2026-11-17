@@ -9,12 +9,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const APPROVED_HEXES = new Set([
-  '#EF5C2C', // Peace Orange
-  '#B3340F', // Deep Earth Orange/Brown
-  '#62C4B4', // Healing Teal
-  '#F7B24A', // Ancestral Gold
-  '#EFEBD1', // Soft Cream
-  '#6AAD7C', // Leaf Green
+  '#F97316', // Sunrise Orange
+  '#A63C14', // Deep Earth Orange Brown
+  '#60C3B4', // Healing Teal
+  '#F7B733', // Sunshine Gold
+  '#F7F3E0', // Soft Cream
+  '#4CAF7C', // Life Green
   '#333333', // Charcoal
   '#FFFFFF', // White (Neutral Exception)
   '#FFF',    // Short White (Neutral Exception)
@@ -217,14 +217,34 @@ for (const file of sourceFiles) {
 const BUILT_CSS_ALLOWED_HEXES = new Set([
   ...APPROVED_HEXES,
   '#333', // LightningCSS minified #333333
-  // Brand-derived alpha overlays (modal backdrops, photo vignettes, book sheen)
+  // Brand-derived alpha overlays (hairline borders, modal backdrops, photo vignettes, subtle elevation)
   '#3333',
   '#3336',
   '#3339',
   '#333C',
+  '#3333330A',
+  '#3333330F',
+  '#3333331A',
+  '#3333331F',
+  '#33333326',
   '#3333334D',
+  '#333333CC',
   '#333333E6',
-  '#F7B24A1A',
+  '#A63C1414',
+  '#A63C141A',
+  '#A63C1426',
+  '#A63C1433',
+  '#A63C144D',
+  '#A63C1480',
+  '#60C3B41A',
+  '#60C3B426',
+  '#60C3B433',
+  '#F7B7331A',
+  '#F7B73326',
+  '#4CAF7C1A',
+  '#4CAF7C26',
+  '#F7F3E080',
+  '#F7F3E0E6',
   '#FFFFFF1A',
   '#FFFFFFE6',
   // Tailwind v4 transparent gradient init & default box-shadow alpha tokens

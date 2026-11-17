@@ -6,51 +6,28 @@
 
 import React, { useState } from 'react';
 import { db } from '../services/db';
-import { User, VolunteerOpportunity } from '../types';
+import { User } from '../types';
 import {
   Users,
   CheckCircle2,
   Clock,
-  Calendar,
   BookOpen,
   Award,
   PlusCircle,
   FileText,
   ShieldCheck,
   Search,
-  Filter,
-  AlertCircle,
   ChevronRight,
   UserCheck,
   LifeBuoy,
   Shield,
   Download,
-  Send,
-  Sparkles,
-  Lock,
-  Heart,
-  Globe,
   Settings,
   Compass,
-  Bell,
-  FileCheck2,
-  Check,
-  Star,
-  MessageSquare,
-  ExternalLink,
-  Share2,
 } from 'lucide-react';
 import { PortalLayout } from '../components/PortalLayout';
 import { CommunityProgramsService } from '../services/communityProgramsService';
-import { phase35Service } from '../services/phase35Service';
 import { MemberSelfServiceSection } from '../components/portal/MemberSelfServiceSection';
-import {
-  IntegratedServiceRequest,
-  ResourceReferralRecord,
-  ProgramEnrollmentApplication,
-  CommunityNotification,
-  UserNotificationPreferences,
-} from '../types/phase35';
 
 interface CommunityPortalViewProps {
   currentUser: User;
@@ -140,11 +117,6 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
   const [logOpportunityTitle, setLogOpportunityTitle] = useState('Bilingual Youth Mentor & Tutor');
   const [logDescription, setLogDescription] = useState('');
   const [hoursFeedback, setHoursFeedback] = useState<string | null>(null);
-
-  // Safeguarding Training Quiz/Ack
-  const [trainingCompleted, setTrainingCompleted] = useState(true);
-  const [safeModule1, setSafeModule1] = useState(true);
-  const [safeModule2, setSafeModule2] = useState(true);
 
   // Search in opportunities
   const [oppSearch, setOppSearch] = useState('');
@@ -303,921 +275,932 @@ export const CommunityPortalView: React.FC<CommunityPortalViewProps> = ({
       onViewChange={onViewChange}
       navGroups={navGroups}
       activeItemId={activeTab}
-      onSelectNavItem={(id) => setActiveTab(id as any)}
+      onSelectNavItem={(id) => setActiveTab(id as CommunityPortalTab)}
     >
       <div className="space-y-6">
         {/* Top Banner / Welcome */}
-        <div className="bg-phumulani-charcoal text-white rounded-2xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-sm">
-          <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-2 text-xs font-semibold text-phumulani-teal bg-phumulani-charcoal px-3 py-0.5 rounded-full border border-phumulani-teal">
+        <div className="bg-phumulani-charcoal text-white rounded-2xl p-6 lg:p-7 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 shadow-sm border border-phumulani-charcoal/20">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-phumulani-teal">
               <Users className="w-3.5 h-3.5 text-phumulani-teal" />
-              <span>COMMUNITY &amp; VOLUNTEER PORTAL</span>
+              <span>Community &amp; Volunteer Portal</span>
             </div>
-            <h1 className="font-serif text-2xl font-bold">
-              Community Member &amp; Volunteer Self-Service Portal — Welcome back, {currentUser.name}
+            <h1 className="font-heading text-2xl font-bold tracking-tight text-white">
+              Welcome back, {currentUser.name}
             </h1>
-            <p className="text-xs text-phumulani-cream max-w-xl">
+            <p className="text-xs text-phumulani-cream max-w-xl leading-relaxed">
               Track your volunteer applications, verify service hours, complete safeguarding credentials, and support immigrant families across Minnesota.
             </p>
           </div>
 
-          <div className="flex gap-3">
-            <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl p-3 text-center min-w-[110px]">
-              <div className="font-serif text-xl font-bold text-phumulani-gold">{totalVerifiedHours} hrs</div>
-              <div className="text-[10px] text-phumulani-cream mt-0.5">Verified Service</div>
+          <div className="flex flex-wrap gap-3">
+            <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl px-4 py-3 text-center min-w-[116px]">
+              <div className="font-heading text-xl font-bold tabular-nums text-phumulani-gold">
+                {totalVerifiedHours} hrs
+              </div>
+              <div className="text-[11px] text-phumulani-cream mt-0.5">Verified Service</div>
             </div>
-            <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl p-3 text-center min-w-[110px]">
-              <div className="font-serif text-xl font-bold text-white">{applications.length}</div>
-              <div className="text-[10px] text-phumulani-cream mt-0.5">Applications</div>
+            <div className="bg-phumulani-charcoal border border-white/20 rounded-xl px-4 py-3 text-center min-w-[116px]">
+              <div className="font-heading text-xl font-bold tabular-nums text-white">
+                {pendingHours} hrs
+              </div>
+              <div className="text-[11px] text-phumulani-cream mt-0.5">Pending Review</div>
+            </div>
+            <div className="bg-phumulani-charcoal border border-phumulani-teal rounded-xl px-4 py-3 text-center min-w-[116px]">
+              <div className="font-heading text-xl font-bold tabular-nums text-white">
+                {applications.length}
+              </div>
+              <div className="text-[11px] text-phumulani-cream mt-0.5">Applications</div>
             </div>
           </div>
         </div>
 
-      {/* MEMBER SELF-SERVICE 9 VIEWS (M35.11) */}
-      {[
-        'service_requests',
-        'programs',
-        'enrollment_apps',
-        'resource_referrals',
-        'member_events',
-        'member_notifications',
-        'member_profile',
-        'comm_preferences',
-        'feedback_history',
-      ].includes(activeTab) && (
-        <MemberSelfServiceSection
-          activeTab={activeTab}
-          currentUser={currentUser}
-          onNavigateTab={(t) => setActiveTab(t as any)}
-        />
-      )}
+        {/* MEMBER SELF-SERVICE 9 VIEWS (M35.11) */}
+        {[
+          'service_requests',
+          'programs',
+          'enrollment_apps',
+          'resource_referrals',
+          'member_events',
+          'member_notifications',
+          'member_profile',
+          'comm_preferences',
+          'feedback_history',
+        ].includes(activeTab) && (
+          <MemberSelfServiceSection
+            activeTab={activeTab}
+            currentUser={currentUser}
+            onNavigateTab={(t) => setActiveTab(t as CommunityPortalTab)}
+          />
+        )}
 
-      {/* TAB 1: OVERVIEW */}
-      {activeTab === 'overview' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Column: Quick Stats & Active Assignment */}
-          <div className="lg:col-span-8 space-y-6">
-            {/* Active Assignment Card */}
-            <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-4">
-              <div className="flex justify-between items-start">
-                <div>
-                  <span className="text-[10px] font-bold text-phumulani-charcoal bg-phumulani-cream px-2.5 py-0.5 rounded">
-                    Active Placement
-                  </span>
-                  <h3 className="font-serif text-lg font-bold text-phumulani-charcoal mt-2">
-                    Bilingual Youth Mentor & Tutor
-                  </h3>
-                  <div className="text-xs text-phumulani-charcoal mt-0.5">
-                    Program: Youth & Sisterhood Mentorship Circles · Lead Coordinator: Amina Yusuf
+        {/* TAB 1: OVERVIEW */}
+        {activeTab === 'overview' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Left Column: Quick Stats & Active Assignment */}
+            <div className="lg:col-span-8 space-y-6">
+              {/* Active Assignment Card */}
+              <div className="bg-white rounded-2xl border border-phumulani-charcoal/12 p-6 shadow-xs space-y-5">
+                <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+                  <div className="space-y-1.5">
+                    <span className="inline-block text-[11px] font-bold uppercase tracking-wider text-phumulani-earth">
+                      Active Placement
+                    </span>
+                    <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">
+                      Bilingual Youth Mentor &amp; Tutor
+                    </h3>
+                    <div className="text-xs text-phumulani-charcoal">
+                      Youth &amp; Sisterhood Mentorship Circles · Lead Coordinator: Amina Yusuf
+                    </div>
+                  </div>
+                  <div className="sm:text-right bg-phumulani-cream px-3.5 py-2.5 rounded-xl border border-phumulani-charcoal/12">
+                    <div className="text-[11px] font-medium text-phumulani-charcoal">Next Circle</div>
+                    <div className="text-xs text-phumulani-earth font-bold font-heading tabular-nums mt-0.5">
+                      Thursday, 5:30 PM CST
+                    </div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <span className="text-xs font-semibold text-phumulani-charcoal">Next Circle:</span>
-                  <div className="text-xs text-phumulani-earth font-bold">Thursday, 5:30 PM CST</div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-phumulani-charcoal/12 text-xs">
+                  <div>
+                    <div className="text-phumulani-charcoal/80">Weekly Commitment</div>
+                    <div className="font-semibold text-phumulani-charcoal mt-0.5 tabular-nums">2.0 Hours / Week</div>
+                  </div>
+                  <div>
+                    <div className="text-phumulani-charcoal/80">Current Mentees</div>
+                    <div className="font-semibold text-phumulani-charcoal mt-0.5 tabular-nums">2 High School Students</div>
+                  </div>
+                  <div>
+                    <div className="text-phumulani-charcoal/80">Screening Status</div>
+                    <div className="font-semibold text-phumulani-charcoal flex items-center gap-1.5 mt-0.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-green" />
+                      <span>Cleared &amp; Active</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-3 border-t border-phumulani-cream text-xs">
-                <div>
-                  <div className="text-phumulani-charcoal">Weekly Commitment</div>
-                  <div className="font-semibold text-phumulani-charcoal mt-0.5">2.0 Hours / Week</div>
+              {/* Recent Volunteer Hours Table */}
+              <div className="bg-white rounded-2xl border border-phumulani-charcoal/12 p-6 shadow-xs space-y-4">
+                <div className="flex justify-between items-center">
+                  <h3 className="font-heading text-base font-bold text-phumulani-charcoal">
+                    Service Hours History
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('log_hours')}
+                    className="text-xs font-semibold text-phumulani-earth hover:underline flex items-center gap-1.5 cursor-pointer"
+                  >
+                    <PlusCircle className="w-3.5 h-3.5" />
+                    <span>Log New Hours</span>
+                  </button>
                 </div>
-                <div>
-                  <div className="text-phumulani-charcoal">Current Mentees</div>
-                  <div className="font-semibold text-phumulani-charcoal mt-0.5">2 Immigrant High Schoolers</div>
-                </div>
-                <div>
-                  <div className="text-phumulani-charcoal">Screening Status</div>
-                  <div className="font-semibold text-phumulani-earth flex items-center gap-1 mt-0.5">
-                    <CheckCircle2 className="w-3.5 h-3.5" />
-                    <span>Cleared & Active</span>
-                  </div>
+
+                <div className="overflow-x-auto">
+                  <table className="w-full text-left text-xs">
+                    <thead className="bg-phumulani-cream text-phumulani-charcoal border-y border-phumulani-charcoal/12 font-heading">
+                      <tr>
+                        <th className="py-2.5 px-3 font-semibold">Date</th>
+                        <th className="py-2.5 px-3 font-semibold">Activity</th>
+                        <th className="py-2.5 px-3 font-semibold">Hours</th>
+                        <th className="py-2.5 px-3 font-semibold">Verification</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-phumulani-charcoal/10">
+                      {hours.map((h) => (
+                        <tr key={h.id} className="hover:bg-phumulani-cream/60 transition-colors">
+                          <td className="py-3 px-3 text-phumulani-charcoal font-mono tabular-nums whitespace-nowrap">{h.date}</td>
+                          <td className="py-3 px-3">
+                            <div className="font-semibold text-phumulani-charcoal">{h.opportunityTitle}</div>
+                            <div className="text-[11px] text-phumulani-charcoal/80 mt-0.5">{h.activityDescription}</div>
+                          </td>
+                          <td className="py-3 px-3 font-bold text-phumulani-charcoal tabular-nums whitespace-nowrap">{h.hours} hrs</td>
+                          <td className="py-3 px-3">
+                            {h.verified ? (
+                              <span className="text-[11px] font-semibold text-phumulani-charcoal inline-flex items-center gap-1.5">
+                                <CheckCircle2 className="w-3.5 h-3.5 text-phumulani-green shrink-0" />
+                                <span>Verified by {h.verifiedBy}</span>
+                              </span>
+                            ) : (
+                              <span className="text-[11px] text-phumulani-earth bg-phumulani-cream border border-phumulani-charcoal/15 px-2.5 py-0.5 rounded-md font-medium whitespace-nowrap">
+                                Pending Review
+                              </span>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
 
-            {/* Recent Volunteer Hours Table */}
-            <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-4">
-              <div className="flex justify-between items-center">
-                <h3 className="font-serif text-base font-bold text-phumulani-charcoal">
-                  Service Hours History
+            {/* Right Column: Orientation & Credentials */}
+            <div className="lg:col-span-4 space-y-6">
+              <div className="bg-white rounded-2xl border border-phumulani-charcoal/12 p-6 shadow-xs space-y-4">
+                <h3 className="font-heading text-base font-bold text-phumulani-charcoal flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-phumulani-earth" />
+                  <span>Safeguarding Credentials</span>
                 </h3>
+                <p className="text-xs text-phumulani-charcoal leading-relaxed">
+                  Phumulani requires all volunteers to maintain annual trauma-informed safeguarding certification before accessing community spaces.
+                </p>
+
+                <div className="space-y-2.5 pt-1 text-xs">
+                  <div className="p-3 bg-phumulani-cream border border-phumulani-charcoal/12 rounded-xl flex items-center justify-between">
+                    <div>
+                      <div className="font-semibold text-phumulani-charcoal">Survivor Confidentiality</div>
+                      <div className="text-[11px] text-phumulani-earth tabular-nums">Valid through Oct 2027</div>
+                    </div>
+                    <CheckCircle2 className="w-4 h-4 text-phumulani-green shrink-0" />
+                  </div>
+
+                  <div className="p-3 bg-phumulani-cream border border-phumulani-charcoal/12 rounded-xl flex items-center justify-between">
+                    <div>
+                      <div className="font-semibold text-phumulani-charcoal">Criminal Background Check</div>
+                      <div className="text-[11px] text-phumulani-earth">BCA Minnesota Cleared</div>
+                    </div>
+                    <CheckCircle2 className="w-4 h-4 text-phumulani-green shrink-0" />
+                  </div>
+
+                  <div className="p-3 bg-phumulani-cream border border-phumulani-charcoal/12 rounded-xl flex items-center justify-between">
+                    <div>
+                      <div className="font-semibold text-phumulani-charcoal">Youth Mentorship Training</div>
+                      <div className="text-[11px] text-phumulani-earth tabular-nums">Completed 4-Hour Cohort</div>
+                    </div>
+                    <CheckCircle2 className="w-4 h-4 text-phumulani-green shrink-0" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Mentor Toolkit Link */}
+              <div className="bg-phumulani-cream rounded-2xl p-6 border border-phumulani-earth/30 space-y-3">
+                <div className="font-heading font-bold text-sm text-phumulani-earth flex items-center gap-2">
+                  <BookOpen className="w-4 h-4" />
+                  <span>Volunteer Learning Toolkit</span>
+                </div>
+                <p className="text-xs text-phumulani-charcoal leading-relaxed">
+                  Access culturally adapted curriculum guides, trauma-informed conversation starters, and Minnesota resource directories.
+                </p>
                 <button
-                  onClick={() => setActiveTab('log_hours')}
-                  className="text-xs font-semibold text-phumulani-earth hover:underline flex items-center gap-1"
+                  type="button"
+                  onClick={() => setActiveTab('training')}
+                  className="text-xs font-bold text-phumulani-earth hover:underline flex items-center gap-1 cursor-pointer"
                 >
-                  <PlusCircle className="w-3.5 h-3.5" />
-                  <span>Log New Hours</span>
+                  <span>Access Modules</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
                 </button>
               </div>
-
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-xs">
-                  <thead className="bg-phumulani-cream text-phumulani-charcoal border-y border-phumulani-cream">
-                    <tr>
-                      <th className="py-2.5 px-3 font-semibold">Date</th>
-                      <th className="py-2.5 px-3 font-semibold">Activity</th>
-                      <th className="py-2.5 px-3 font-semibold">Hours</th>
-                      <th className="py-2.5 px-3 font-semibold">Verification</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-phumulani-cream">
-                    {hours.map((h) => (
-                      <tr key={h.id} className="hover:bg-phumulani-cream">
-                        <td className="py-2.5 px-3 text-phumulani-charcoal font-mono">{h.date}</td>
-                        <td className="py-2.5 px-3">
-                          <div className="font-medium text-phumulani-charcoal">{h.opportunityTitle}</div>
-                          <div className="text-[11px] text-phumulani-charcoal">{h.activityDescription}</div>
-                        </td>
-                        <td className="py-2.5 px-3 font-bold text-phumulani-charcoal">{h.hours} hrs</td>
-                        <td className="py-2.5 px-3">
-                          {h.verified ? (
-                            <span className="text-[11px] font-semibold text-phumulani-earth flex items-center gap-1">
-                              <CheckCircle2 className="w-3.5 h-3.5" />
-                              <span>Verified by {h.verifiedBy}</span>
-                            </span>
-                          ) : (
-                            <span className="text-[11px] text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded font-medium">
-                              Pending Review
-                            </span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
             </div>
           </div>
+        )}
 
-          {/* Right Column: Orientation & Credentials */}
-          <div className="lg:col-span-4 space-y-6">
-            <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-4">
-              <h3 className="font-serif text-base font-bold text-phumulani-charcoal flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-phumulani-earth" />
-                <span>Safeguarding Credentials</span>
-              </h3>
-              <p className="text-xs text-phumulani-charcoal leading-relaxed">
-                Phumulani requires all volunteers to maintain annual trauma-informed safeguarding certification before accessing community spaces.
-              </p>
-
-              <div className="space-y-3 pt-2 text-xs">
-                <div className="p-3 bg-phumulani-cream border border-phumulani-green rounded-lg flex items-center justify-between">
-                  <div>
-                    <div className="font-semibold text-phumulani-charcoal">Survivor Confidentiality</div>
-                    <div className="text-[11px] text-phumulani-earth">Valid through Oct 2027</div>
-                  </div>
-                  <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
-                </div>
-
-                <div className="p-3 bg-phumulani-cream border border-phumulani-green rounded-lg flex items-center justify-between">
-                  <div>
-                    <div className="font-semibold text-phumulani-charcoal">Criminal Background Check</div>
-                    <div className="text-[11px] text-phumulani-earth">BCA Minnesota Cleared</div>
-                  </div>
-                  <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
-                </div>
-
-                <div className="p-3 bg-phumulani-cream border border-phumulani-teal rounded-lg flex items-center justify-between">
-                  <div>
-                    <div className="font-semibold text-phumulani-earth">Youth Mentorship Training</div>
-                    <div className="text-[11px] text-phumulani-earth">Completed 4-Hour Cohort</div>
-                  </div>
-                  <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
-                </div>
-              </div>
-            </div>
-
-            {/* Mentor Toolkit Link */}
-            <div className="bg-phumulani-cream rounded-xl p-6 border border-phumulani-earth space-y-3">
-              <div className="font-serif font-bold text-sm text-phumulani-earth flex items-center gap-2">
-                <BookOpen className="w-4 h-4" />
-                <span>Volunteer Learning Toolkit</span>
-              </div>
-              <p className="text-xs text-phumulani-charcoal leading-relaxed">
-                Access culturally adapted curriculum guides, trauma-informed conversation starters, and Minnesota resource directories.
-              </p>
-              <button
-                onClick={() => setActiveTab('training')}
-                className="text-xs font-bold text-phumulani-earth hover:underline flex items-center gap-1"
-              >
-                <span>Access Modules</span>
-                <ChevronRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* TAB: MEMBER PROFILE (M30.06) */}
-      {activeTab === 'member_profile' && (
-        <div className="max-w-3xl bg-white rounded-xl border border-phumulani-cream p-6 sm:p-8 shadow-xs space-y-6">
-          <div className="flex items-start justify-between border-b border-phumulani-cream pb-4">
-            <div>
-              <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
-                Community Member Profile & Preferences
-              </h3>
-              <p className="text-xs text-phumulani-charcoal mt-1">
-                Manage your identity, communication preferences, and accessibility requirements.
-              </p>
-            </div>
-            <span className="text-xs font-mono font-bold text-phumulani-earth bg-phumulani-cream px-2.5 py-1 rounded">
-              ID: {currentUser.id}
-            </span>
-          </div>
-
-          {profileSavedFeedback && (
-            <div className="p-4 bg-phumulani-cream border border-phumulani-green rounded-lg text-xs font-semibold text-phumulani-charcoal flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-phumulani-earth flex-shrink-0" />
-              <span>{profileSavedFeedback}</span>
-            </div>
-          )}
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
-            <div>
-              <label className="block font-semibold text-phumulani-charcoal mb-1">Full Legal / Preferred Name</label>
-              <input
-                type="text"
-                disabled
-                value={currentUser.name}
-                className="w-full px-3 py-2 border border-phumulani-cream rounded-lg bg-phumulani-cream text-phumulani-charcoal cursor-not-allowed"
-              />
-              <span className="text-[10px] text-phumulani-charcoal mt-1 block">Managed via core identity register</span>
-            </div>
-
-            <div>
-              <label className="block font-semibold text-phumulani-charcoal mb-1">Primary Email Address</label>
-              <input
-                type="email"
-                disabled
-                value={currentUser.email}
-                className="w-full px-3 py-2 border border-phumulani-cream rounded-lg bg-phumulani-cream text-phumulani-charcoal cursor-not-allowed"
-              />
-              <span className="text-[10px] text-phumulani-charcoal mt-1 block">Account authentication login</span>
-            </div>
-
-            <div>
-              <label className="block font-semibold text-phumulani-charcoal mb-1">Safe Contact Phone Number</label>
-              <input
-                type="tel"
-                value={memberPhone}
-                onChange={(e) => setMemberPhone(e.target.value)}
-                placeholder="+1 (612) 555-0149"
-                className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none focus:border-phumulani-earth"
-              />
-            </div>
-
-            <div>
-              <label className="block font-semibold text-phumulani-charcoal mb-1">Preferred Language</label>
-              <select
-                value={memberLanguage}
-                onChange={(e) => setMemberLanguage(e.target.value)}
-                className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white focus:border-phumulani-earth"
-              >
-                <option value="English">English</option>
-                <option value="Somali">Somali (Af-Soomaali)</option>
-                <option value="Oromo">Oromo (Afaan Oromoo)</option>
-                <option value="Amharic">Amharic (አማርኛ)</option>
-                <option value="Karen">Karen (S'gaw)</option>
-                <option value="Spanish">Spanish (Español)</option>
-                <option value="Arabic">Arabic (العربية)</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block font-semibold text-phumulani-charcoal mb-1">Safe Contact Preference</label>
-              <select
-                value={memberContactPref}
-                onChange={(e) => setMemberContactPref(e.target.value as 'email' | 'phone' | 'signal')}
-                className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white focus:border-phumulani-earth"
-              >
-                <option value="email">Email Only (Safe encrypted address)</option>
-                <option value="phone">Phone Call (Daytime 9am-5pm)</option>
-                <option value="signal">Signal / Secure Messaging</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block font-semibold text-phumulani-charcoal mb-1">Accessibility & Accommodations</label>
-              <input
-                type="text"
-                value={memberAccommodations}
-                onChange={(e) => setMemberAccommodations(e.target.value)}
-                placeholder="e.g. Wheelchair access, ASL interpreter, large print materials"
-                className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none focus:border-phumulani-earth"
-              />
-            </div>
-          </div>
-
-          <div className="pt-4 border-t border-phumulani-cream flex items-center justify-between">
-            <span className="text-[11px] text-phumulani-charcoal">
-              Changes update your persistent community record immediately.
-            </span>
-            <button
-              type="button"
-              onClick={handleSaveProfile}
-              className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
-            >
-              Save Profile Updates
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* TAB: GENERAL SERVICE REQUESTS (M30.06 Legacy) */}
-      {activeTab === 'legacy_service_requests' && (
-        <div className="space-y-6">
-          <div className="bg-white rounded-xl border border-phumulani-cream p-6 sm:p-8 shadow-xs space-y-6">
-            <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-phumulani-cream pb-4">
+        {/* TAB: LEGACY MEMBER PROFILE (M30.06) */}
+        {activeTab === 'legacy_member_profile' && (
+          <div className="max-w-3xl bg-white rounded-2xl border border-phumulani-charcoal/12 p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="flex items-start justify-between border-b border-phumulani-charcoal/12 pb-4">
               <div>
-                <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
-                  Request Community Services & Support
+                <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">
+                  Community Member Profile &amp; Preferences
                 </h3>
                 <p className="text-xs text-phumulani-charcoal mt-1">
-                  Connect with culturally responsive navigation, educational resources, career circles, or material aid.
+                  Manage your identity, communication preferences, and accessibility requirements.
                 </p>
               </div>
-              <div className="p-2.5 bg-phumulani-cream border border-phumulani-gold rounded-lg text-phumulani-charcoal text-[11px] max-w-sm">
-                <strong>Emergency Notice:</strong> If you are in immediate physical danger, please call <strong>911</strong> or the <strong>Minnesota Day One Crisis Hotline at 1-866-223-1111</strong>.
-              </div>
+              <span className="text-xs font-mono font-bold text-phumulani-earth bg-phumulani-cream border border-phumulani-charcoal/15 px-2.5 py-1 rounded-md tabular-nums">
+                ID: {currentUser.id}
+              </span>
             </div>
 
-            {serviceRequestFeedback && (
-              <div className="p-4 bg-phumulani-cream border border-phumulani-green rounded-lg text-xs font-semibold text-phumulani-charcoal flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-phumulani-earth flex-shrink-0" />
-                <span>{serviceRequestFeedback}</span>
+            {profileSavedFeedback && (
+              <div className="p-3.5 bg-phumulani-green/15 border border-phumulani-green rounded-lg text-xs font-semibold text-phumulani-charcoal flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-phumulani-charcoal shrink-0" />
+                <span>{profileSavedFeedback}</span>
               </div>
             )}
 
-            <form onSubmit={handleCreateServiceRequest} className="space-y-4 text-xs">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block font-semibold text-phumulani-charcoal mb-1">Service Program Need</label>
-                  <select
-                    value={serviceCategory}
-                    onChange={(e) => setServiceCategory(e.target.value as any)}
-                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white"
-                  >
-                    <option value="COMMUNITY_RESOURCE">Community Resource & Essentials</option>
-                    <option value="EMPLOYMENT_ASSISTANCE">Career & Employment Pathways</option>
-                    <option value="HOUSING_REFERRAL">Housing Support & Navigation</option>
-                    <option value="OTHER">General Mentorship & Inquiries</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block font-semibold text-phumulani-charcoal mb-1">Preferred Spoken Language</label>
-                  <select
-                    value={serviceLanguage}
-                    onChange={(e) => setServiceLanguage(e.target.value)}
-                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white"
-                  >
-                    <option value="English">English</option>
-                    <option value="Somali">Somali</option>
-                    <option value="Oromo">Oromo</option>
-                    <option value="Amharic">Amharic</option>
-                    <option value="Karen">Karen</option>
-                    <option value="Spanish">Spanish</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block font-semibold text-phumulani-charcoal mb-1">Safest Time for Contact</label>
-                  <select
-                    value={serviceSafeTime}
-                    onChange={(e) => setServiceSafeTime(e.target.value)}
-                    className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white"
-                  >
-                    <option value="Mornings (9am - 12pm)">Mornings (9am - 12pm)</option>
-                    <option value="Afternoons (12pm - 4pm)">Afternoons (12pm - 4pm)</option>
-                    <option value="Evenings (4pm - 7pm)">Evenings (4pm - 7pm)</option>
-                    <option value="Weekends Only">Weekends Only</option>
-                  </select>
-                </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 text-xs">
+              <div>
+                <label className="block font-semibold text-phumulani-charcoal mb-1.5">Full Legal / Preferred Name</label>
+                <input
+                  type="text"
+                  disabled
+                  value={currentUser.name}
+                  className="w-full px-3 py-2 border border-phumulani-charcoal/15 rounded-lg bg-phumulani-cream text-phumulani-charcoal cursor-not-allowed"
+                />
+                <span className="text-[10px] text-phumulani-charcoal/80 mt-1 block">Managed via core identity register</span>
               </div>
 
               <div>
-                <label className="block font-semibold text-phumulani-charcoal mb-1">Details & Specific Requests</label>
-                <textarea
-                  rows={3}
-                  required
-                  value={serviceDescription}
-                  onChange={(e) => setServiceDescription(e.target.value)}
-                  placeholder="Describe the support you are seeking or any questions for our advocates..."
-                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
+                <label className="block font-semibold text-phumulani-charcoal mb-1.5">Primary Email Address</label>
+                <input
+                  type="email"
+                  disabled
+                  value={currentUser.email}
+                  className="w-full px-3 py-2 border border-phumulani-charcoal/15 rounded-lg bg-phumulani-cream text-phumulani-charcoal cursor-not-allowed"
+                />
+                <span className="text-[10px] text-phumulani-charcoal/80 mt-1 block">Account authentication login</span>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-phumulani-charcoal mb-1.5">Safe Contact Phone Number</label>
+                <input
+                  type="tel"
+                  value={memberPhone}
+                  onChange={(e) => setMemberPhone(e.target.value)}
+                  placeholder="+1 (612) 555-0149"
+                  className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg bg-white outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
                 />
               </div>
 
-              <div className="flex items-center justify-between pt-2">
-                <span className="text-[11px] text-phumulani-charcoal">
-                  Protected under Phumulani's Trauma-Informed Privacy Shield.
-                </span>
-                <button
-                  type="submit"
-                  className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
+              <div>
+                <label className="block font-semibold text-phumulani-charcoal mb-1.5">Preferred Language</label>
+                <select
+                  value={memberLanguage}
+                  onChange={(e) => setMemberLanguage(e.target.value)}
+                  className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none bg-white focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
                 >
-                  Submit Service Request
-                </button>
+                  <option value="English">English</option>
+                  <option value="Somali">Somali (Af-Soomaali)</option>
+                  <option value="Oromo">Oromo (Afaan Oromoo)</option>
+                  <option value="Amharic">Amharic (አማርኛ)</option>
+                  <option value="Karen">Karen (S&apos;gaw)</option>
+                  <option value="Spanish">Spanish (Español)</option>
+                  <option value="Arabic">Arabic (العربية)</option>
+                </select>
               </div>
-            </form>
+
+              <div>
+                <label className="block font-semibold text-phumulani-charcoal mb-1.5">Safe Contact Preference</label>
+                <select
+                  value={memberContactPref}
+                  onChange={(e) => setMemberContactPref(e.target.value as 'email' | 'phone' | 'signal')}
+                  className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none bg-white focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
+                >
+                  <option value="email">Email Only (Safe encrypted address)</option>
+                  <option value="phone">Phone Call (Daytime 9am-5pm)</option>
+                  <option value="signal">Signal / Secure Messaging</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-phumulani-charcoal mb-1.5">Accessibility &amp; Accommodations</label>
+                <input
+                  type="text"
+                  value={memberAccommodations}
+                  onChange={(e) => setMemberAccommodations(e.target.value)}
+                  placeholder="e.g. Wheelchair access, ASL interpreter, large print materials"
+                  className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg bg-white outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
+                />
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-phumulani-charcoal/12 flex flex-wrap items-center justify-between gap-3">
+              <span className="text-[11px] text-phumulani-charcoal/80">
+                Changes update your persistent community record immediately.
+              </span>
+              <button
+                type="button"
+                onClick={handleSaveProfile}
+                className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
+              >
+                Save Profile Updates
+              </button>
+            </div>
           </div>
+        )}
 
-          {/* Past / Active Requests */}
-          <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-4">
-            <h4 className="font-serif text-sm font-bold text-phumulani-charcoal">
-              Your Submitted Requests ({memberServiceRequests.length})
-            </h4>
-
-            {memberServiceRequests.length === 0 ? (
-              <div className="p-6 text-center text-xs text-phumulani-charcoal bg-phumulani-cream rounded-lg">
-                No active service requests recorded yet.
+        {/* TAB: GENERAL SERVICE REQUESTS (M30.06 Legacy) */}
+        {activeTab === 'legacy_service_requests' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl border border-phumulani-charcoal/12 p-6 sm:p-8 shadow-xs space-y-6">
+              <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-phumulani-charcoal/12 pb-4">
+                <div>
+                  <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">
+                    Request Community Services &amp; Support
+                  </h3>
+                  <p className="text-xs text-phumulani-charcoal mt-1">
+                    Connect with culturally responsive navigation, educational resources, career circles, or material aid.
+                  </p>
+                </div>
+                <div className="p-3 bg-phumulani-cream border border-phumulani-gold rounded-lg text-phumulani-charcoal text-[11px] max-w-sm">
+                  <strong>Emergency Notice:</strong> If you are in immediate physical danger, please call <strong>911</strong> or the <strong>Minnesota Day One Crisis Hotline at 1-866-223-1111</strong>.
+                </div>
               </div>
-            ) : (
-              <div className="space-y-3">
-                {memberServiceRequests.map((req) => (
-                  <div key={req.id} className="p-4 border border-phumulani-cream rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-[11px] font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded">
-                          {req.id}
-                        </span>
-                        <span className="font-semibold text-xs text-phumulani-charcoal">{req.category}</span>
+
+              {serviceRequestFeedback && (
+                <div className="p-3.5 bg-phumulani-green/15 border border-phumulani-green rounded-lg text-xs font-semibold text-phumulani-charcoal flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-phumulani-charcoal shrink-0" />
+                  <span>{serviceRequestFeedback}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleCreateServiceRequest} className="space-y-4 text-xs">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block font-semibold text-phumulani-charcoal mb-1.5">Service Program Need</label>
+                    <select
+                      value={serviceCategory}
+                      onChange={(e) => setServiceCategory(e.target.value as 'COMMUNITY_RESOURCE' | 'EMPLOYMENT_ASSISTANCE' | 'HOUSING_REFERRAL' | 'OTHER')}
+                      className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none bg-white focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
+                    >
+                      <option value="COMMUNITY_RESOURCE">Community Resource &amp; Essentials</option>
+                      <option value="EMPLOYMENT_ASSISTANCE">Career &amp; Employment Pathways</option>
+                      <option value="HOUSING_REFERRAL">Housing Support &amp; Navigation</option>
+                      <option value="OTHER">General Mentorship &amp; Inquiries</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block font-semibold text-phumulani-charcoal mb-1.5">Preferred Spoken Language</label>
+                    <select
+                      value={serviceLanguage}
+                      onChange={(e) => setServiceLanguage(e.target.value)}
+                      className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none bg-white focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
+                    >
+                      <option value="English">English</option>
+                      <option value="Somali">Somali</option>
+                      <option value="Oromo">Oromo</option>
+                      <option value="Amharic">Amharic</option>
+                      <option value="Karen">Karen</option>
+                      <option value="Spanish">Spanish</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block font-semibold text-phumulani-charcoal mb-1.5">Safest Time for Contact</label>
+                    <select
+                      value={serviceSafeTime}
+                      onChange={(e) => setServiceSafeTime(e.target.value)}
+                      className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none bg-white focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
+                    >
+                      <option value="Mornings (9am - 12pm)">Mornings (9am - 12pm)</option>
+                      <option value="Afternoons (12pm - 4pm)">Afternoons (12pm - 4pm)</option>
+                      <option value="Evenings (4pm - 7pm)">Evenings (4pm - 7pm)</option>
+                      <option value="Weekends Only">Weekends Only</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1.5">Details &amp; Specific Requests</label>
+                  <textarea
+                    rows={3}
+                    required
+                    value={serviceDescription}
+                    onChange={(e) => setServiceDescription(e.target.value)}
+                    placeholder="Describe the support you are seeking or any questions for our advocates..."
+                    className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none bg-white focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
+                  />
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
+                  <span className="text-[11px] text-phumulani-charcoal/80">
+                    Protected under Phumulani&apos;s Trauma-Informed Privacy Shield.
+                  </span>
+                  <button
+                    type="submit"
+                    className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg font-bold text-xs transition-colors cursor-pointer"
+                  >
+                    Submit Service Request
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            {/* Past / Active Requests */}
+            <div className="bg-white rounded-2xl border border-phumulani-charcoal/12 p-6 shadow-xs space-y-4">
+              <h4 className="font-heading text-sm font-bold text-phumulani-charcoal tabular-nums">
+                Your Submitted Requests ({memberServiceRequests.length})
+              </h4>
+
+              {memberServiceRequests.length === 0 ? (
+                <div className="p-6 text-center text-xs text-phumulani-charcoal bg-phumulani-cream rounded-xl border border-phumulani-charcoal/12">
+                  No active service requests recorded yet.
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {memberServiceRequests.map((req) => (
+                    <div key={req.id} className="p-4 border border-phumulani-charcoal/12 rounded-xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                      <div className="space-y-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-mono text-[11px] font-bold text-phumulani-earth bg-phumulani-cream border border-phumulani-charcoal/12 px-2 py-0.5 rounded-md tabular-nums">
+                            {req.id}
+                          </span>
+                          <span className="font-semibold text-xs text-phumulani-charcoal">{req.category.replace(/_/g, ' ')}</span>
+                        </div>
+                        <p className="text-xs text-phumulani-charcoal">{req.notes}</p>
+                        <div className="text-[11px] text-phumulani-charcoal/80 tabular-nums">
+                          Language: {req.preferredLanguage} · Safe Contact: {req.safeContactTime} · Submitted: {new Date(req.submittedAt).toLocaleDateString()}
+                        </div>
                       </div>
-                      <p className="text-xs text-phumulani-charcoal">{req.notes}</p>
-                      <div className="text-[10px] text-phumulani-charcoal">
-                        Language: {req.preferredLanguage} · Safe Contact: {req.safeContactTime} · Submitted: {new Date(req.submittedAt).toLocaleDateString()}
+                      <span className="text-[10px] font-bold px-2.5 py-1 rounded-md uppercase bg-phumulani-cream text-phumulani-earth border border-phumulani-charcoal/15 whitespace-nowrap">
+                        {req.status.replace(/_/g, ' ')}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* TAB: PROGRAM ENROLLMENTS (M30.06 Legacy) */}
+        {activeTab === 'legacy_programs' && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl border border-phumulani-charcoal/12 p-6 shadow-xs space-y-4">
+              <div className="flex justify-between items-center gap-4">
+                <div>
+                  <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">
+                    Community Program Directory &amp; Cohorts
+                  </h3>
+                  <p className="text-xs text-phumulani-charcoal mt-1">
+                    Enroll in our community-led initiatives, workshops, and mentorship cohorts.
+                  </p>
+                </div>
+                <span className="text-xs font-bold text-phumulani-earth bg-phumulani-cream px-3 py-1 rounded-md border border-phumulani-charcoal/15 tabular-nums">
+                  {enrolledProgramIds.length} Enrolled
+                </span>
+              </div>
+
+              {enrollmentNotice && (
+                <div className="p-3.5 bg-phumulani-green/15 border border-phumulani-green rounded-lg text-xs font-semibold text-phumulani-charcoal flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-phumulani-charcoal shrink-0" />
+                  <span>{enrollmentNotice}</span>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                {programs.map((prog) => {
+                  const isEnrolled = enrolledProgramIds.includes(prog.id);
+                  return (
+                    <div
+                      key={prog.id}
+                      className={`p-5 rounded-xl border transition-all space-y-3 ${
+                        isEnrolled ? 'border-phumulani-earth/30 bg-phumulani-cream' : 'border-phumulani-charcoal/12 bg-white'
+                      }`}
+                    >
+                      <div className="flex justify-between items-start gap-2">
+                        <span className="text-[10px] font-mono font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded-md border border-phumulani-charcoal/12 uppercase">
+                          {prog.slug}
+                        </span>
+                        {isEnrolled && (
+                          <span className="text-[10px] font-bold text-phumulani-charcoal bg-phumulani-green/15 border border-phumulani-green px-2 py-0.5 rounded-md flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3 text-phumulani-charcoal" />
+                            <span>Enrolled</span>
+                          </span>
+                        )}
+                      </div>
+
+                      <h4 className="font-heading font-bold text-sm text-phumulani-charcoal">{prog.name}</h4>
+                      <p className="text-xs text-phumulani-charcoal leading-relaxed">{prog.description}</p>
+
+                      <div className="text-[11px] text-phumulani-charcoal space-y-0.5 pt-2 border-t border-phumulani-charcoal/10">
+                        <div><strong>Lead Coordinator:</strong> {prog.leadCoordinator}</div>
+                        <div><strong>Focus:</strong> {prog.tagline}</div>
+                      </div>
+
+                      <div className="pt-2">
+                        <button
+                          type="button"
+                          onClick={() => handleToggleEnrollment(prog.id, prog.name)}
+                          className={`w-full py-2 px-3 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
+                            isEnrolled
+                              ? 'bg-white text-phumulani-earth hover:bg-phumulani-cream border border-phumulani-earth/40'
+                              : 'bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white'
+                          }`}
+                        >
+                          {isEnrolled ? 'Withdraw from Program' : 'Enroll in Next Cohort'}
+                        </button>
                       </div>
                     </div>
-                    <span className="text-[10px] font-bold px-2.5 py-1 rounded-full uppercase bg-phumulani-cream text-phumulani-earth border border-phumulani-teal">
-                      {req.status}
-                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB: PRIVACY, CONSENT & DATA RIGHTS (M30.06) */}
+        {activeTab === 'privacy_consent' && (
+          <div className="max-w-3xl bg-white rounded-2xl border border-phumulani-charcoal/12 p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="space-y-1 border-b border-phumulani-charcoal/12 pb-4">
+              <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">
+                Data Rights, Consents &amp; Privacy Safeguards
+              </h3>
+              <p className="text-xs text-phumulani-charcoal">
+                Manage how Phumulani uses your information and download your complete personal data record.
+              </p>
+            </div>
+
+            {dataExportStatus && (
+              <div className="p-3.5 bg-phumulani-green/15 border border-phumulani-green rounded-lg text-xs font-semibold text-phumulani-charcoal flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-phumulani-charcoal shrink-0" />
+                <span>{dataExportStatus}</span>
+              </div>
+            )}
+
+            {/* VAWA 1367 Certification Banner */}
+            <div className="p-4 bg-phumulani-cream border border-phumulani-teal rounded-xl space-y-2">
+              <div className="flex items-center gap-2 text-xs font-bold font-heading text-phumulani-earth">
+                <ShieldCheck className="w-4 h-4 text-phumulani-earth" />
+                <span>Statutory Privacy Certification (VAWA Section 1367)</span>
+              </div>
+              <p className="text-xs text-phumulani-charcoal leading-relaxed">
+                Phumulani maintains an absolute quarantine firewall for all beneficiary intake records and sensitive case files. AI workforce agents, third-party analytics, and unauthorized personnel possess zero access to survivor identities or case narratives under 8 U.S.C. § 1367.
+              </p>
+            </div>
+
+            {/* Consent Toggles */}
+            <div className="space-y-3 text-xs pt-1">
+              <label className="flex items-start justify-between gap-4 p-4 border border-phumulani-charcoal/12 rounded-xl hover:bg-phumulani-cream/40 cursor-pointer transition-colors">
+                <div>
+                  <div className="font-bold text-phumulani-charcoal">Anonymized Impact &amp; Outcome Research</div>
+                  <p className="text-phumulani-charcoal/80 mt-0.5 leading-relaxed">
+                    Allow Phumulani to include aggregated, non-personally identifiable program graduation numbers in philanthropic grant reports.
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={consentOutcomeResearch}
+                  onChange={(e) => setConsentOutcomeResearch(e.target.checked)}
+                  className="w-4 h-4 mt-1 accent-phumulani-earth cursor-pointer shrink-0"
+                />
+              </label>
+
+              <label className="flex items-start justify-between gap-4 p-4 border border-phumulani-charcoal/12 rounded-xl hover:bg-phumulani-cream/40 cursor-pointer transition-colors">
+                <div>
+                  <div className="font-bold text-phumulani-charcoal">Cohort Scheduling &amp; Urgent Service SMS</div>
+                  <p className="text-phumulani-charcoal/80 mt-0.5 leading-relaxed">
+                    Receive SMS reminders for upcoming mentorship meetings, tutoring sessions, and program updates.
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={consentNotifications}
+                  onChange={(e) => setConsentNotifications(e.target.checked)}
+                  className="w-4 h-4 mt-1 accent-phumulani-earth cursor-pointer shrink-0"
+                />
+              </label>
+
+              <label className="flex items-start justify-between gap-4 p-4 border border-phumulani-charcoal/12 rounded-xl hover:bg-phumulani-cream/40 cursor-pointer transition-colors">
+                <div>
+                  <div className="font-bold text-phumulani-charcoal">Community Monthly Newsletter</div>
+                  <p className="text-phumulani-charcoal/80 mt-0.5 leading-relaxed">
+                    Receive our monthly community bulletin featuring cultural celebrations, new program launches, and donor highlights.
+                  </p>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={consentNewsletter}
+                  onChange={(e) => setConsentNewsletter(e.target.checked)}
+                  className="w-4 h-4 mt-1 accent-phumulani-earth cursor-pointer shrink-0"
+                />
+              </label>
+            </div>
+
+            {/* Data Export & Portability */}
+            <div className="pt-4 border-t border-phumulani-charcoal/12 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <div className="text-xs font-bold text-phumulani-charcoal">Personal Data Portability Archive</div>
+                <p className="text-[11px] text-phumulani-charcoal/80">Download a verified JSON copy of your profile, requests, and enrollments.</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleExportData}
+                className="px-4 py-2 bg-white border border-phumulani-charcoal/20 hover:bg-phumulani-cream text-phumulani-charcoal rounded-lg font-bold text-xs flex items-center gap-2 cursor-pointer transition-colors"
+              >
+                <Download className="w-4 h-4 text-phumulani-earth" />
+                <span>Export My Data Archive</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 2: APPLICATIONS TRACKING & 15-STAGE LIFECYCLE (M30.07) */}
+        {activeTab === 'applications' && (
+          <div className="bg-white rounded-2xl border border-phumulani-charcoal/12 p-6 shadow-xs space-y-8">
+            <div className="space-y-1">
+              <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">
+                Volunteer Lifecycle &amp; Application Management (M30.07)
+              </h3>
+              <p className="text-xs text-phumulani-charcoal">
+                End-to-end 15-stage workflow governing recruitment, AI matching, safeguarding clearance, deployment, and service hour certification.
+              </p>
+            </div>
+
+            {/* 15-Stage Master Lifecycle Flow Diagram */}
+            <div className="p-5 bg-phumulani-cream rounded-xl border border-phumulani-charcoal/12 space-y-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="text-xs font-bold font-heading text-phumulani-charcoal">
+                  Phumulani 15-Stage Volunteer Operational Pipeline
+                </span>
+                <span className="text-[11px] font-mono text-phumulani-earth bg-white px-2.5 py-0.5 rounded-md border border-phumulani-charcoal/15">
+                  Standard M30.07 Protocol
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 text-[11px]">
+                {[
+                  { num: '01', name: 'Discovery & Intake', desc: 'Web form submission & deduplication' },
+                  { num: '02', name: 'Identity & Legal', desc: 'Contact info & consent registration' },
+                  { num: '03', name: 'Skills & Language', desc: 'Multilingual fluency audit' },
+                  { num: '04', name: 'AI Match Evaluation', desc: 'Agent A04 skill recommendation' },
+                  { num: '05', name: 'Coordinator Review', desc: 'Human-in-the-loop screening' },
+                  { num: '06', name: 'Staff Interview', desc: 'Trauma-informed values interview' },
+                  { num: '07', name: 'Reference Audits', desc: 'Community peer references verified' },
+                  { num: '08', name: 'Criminal Background', desc: 'BCA & child protection check' },
+                  { num: '09', name: 'Safeguarding Module', desc: 'VAWA 1367 & confidentiality' },
+                  { num: '10', name: 'Staff Authorization', desc: 'Director credentialing approval' },
+                  { num: '11', name: 'Program Placement', desc: 'Assignment to youth or advocacy' },
+                  { num: '12', name: 'Shift Scheduling', desc: 'Calendar sync & slot reservation' },
+                  { num: '13', name: 'Hours Auditing', desc: 'Supervisor verification queue' },
+                  { num: '14', name: 'Quarterly Check-In', desc: 'Feedback & support review' },
+                  { num: '15', name: 'Milestone / Renewal', desc: 'Impact awards & annual recert' },
+                ].map((stage) => (
+                  <div
+                    key={stage.num}
+                    className="p-2.5 rounded-lg border bg-white border-phumulani-charcoal/12 space-y-1"
+                  >
+                    <div className="flex items-center gap-1.5 font-bold text-phumulani-charcoal">
+                      <span className="w-5 h-5 rounded-md bg-phumulani-earth text-white flex items-center justify-center text-[9px] font-mono tabular-nums shrink-0">
+                        {stage.num}
+                      </span>
+                      <span className="truncate">{stage.name}</span>
+                    </div>
+                    <p className="text-[10px] text-phumulani-charcoal/80 leading-tight">{stage.desc}</p>
                   </div>
                 ))}
               </div>
-            )}
-          </div>
-        </div>
-      )}
-
-      {/* TAB: PROGRAM ENROLLMENTS (M30.06 Legacy) */}
-      {activeTab === 'legacy_programs' && (
-        <div className="space-y-6">
-          <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
-                  Community Program Directory & Cohorts
-                </h3>
-                <p className="text-xs text-phumulani-charcoal mt-1">
-                  Enroll in our community-led initiatives, workshops, and mentorship cohorts.
-                </p>
-              </div>
-              <span className="text-xs font-bold text-phumulani-earth bg-phumulani-cream px-3 py-1 rounded-full border border-phumulani-cream">
-                {enrolledProgramIds.length} Enrolled
-              </span>
             </div>
 
-            {enrollmentNotice && (
-              <div className="p-4 bg-phumulani-cream border border-phumulani-teal rounded-lg text-xs font-semibold text-phumulani-earth flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-phumulani-earth flex-shrink-0" />
-                <span>{enrollmentNotice}</span>
-              </div>
-            )}
+            {/* Active Volunteer Applications */}
+            <div className="space-y-4">
+              <h4 className="font-heading text-sm font-bold text-phumulani-charcoal tabular-nums">
+                Active Application Records ({applications.length})
+              </h4>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-              {programs.map((prog) => {
-                const isEnrolled = enrolledProgramIds.includes(prog.id);
-                return (
-                  <div
-                    key={prog.id}
-                    className={`p-5 rounded-xl border transition-all space-y-3 ${
-                      isEnrolled ? 'border-phumulani-cream bg-phumulani-cream' : 'border-phumulani-cream bg-white'
-                    }`}
-                  >
-                    <div className="flex justify-between items-start">
-                      <span className="text-[10px] font-mono font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded uppercase">
-                        {prog.slug}
-                      </span>
-                      {isEnrolled && (
-                        <span className="text-[10px] font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded-full flex items-center gap-1">
-                          <CheckCircle2 className="w-3 h-3" /> Enrolled
-                        </span>
-                      )}
-                    </div>
-
-                    <h4 className="font-serif font-bold text-sm text-phumulani-charcoal">{prog.name}</h4>
-                    <p className="text-xs text-phumulani-charcoal leading-relaxed">{prog.description}</p>
-
-                    <div className="text-[11px] text-phumulani-charcoal space-y-0.5 pt-2 border-t border-phumulani-cream">
-                      <div><strong>Lead Coordinator:</strong> {prog.leadCoordinator}</div>
-                      <div><strong>Focus:</strong> {prog.tagline}</div>
-                    </div>
-
-                    <div className="pt-2">
-                      <button
-                        type="button"
-                        onClick={() => handleToggleEnrollment(prog.id, prog.name)}
-                        className={`w-full py-2 px-3 rounded-lg text-xs font-bold transition-colors cursor-pointer ${
-                          isEnrolled
-                            ? 'bg-phumulani-cream text-phumulani-earth hover:bg-phumulani-cream border border-phumulani-earth'
-                            : 'bg-phumulani-earth hover:bg-phumulani-orange text-white'
-                        }`}
-                      >
-                        {isEnrolled ? 'Withdraw from Program' : 'Enroll in Next Cohort'}
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* TAB: PRIVACY, CONSENT & DATA RIGHTS (M30.06) */}
-      {activeTab === 'privacy_consent' && (
-        <div className="max-w-3xl bg-white rounded-xl border border-phumulani-cream p-6 sm:p-8 shadow-xs space-y-6">
-          <div className="space-y-1 border-b border-phumulani-cream pb-4">
-            <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
-              Data Rights, Consents & Privacy Safeguards
-            </h3>
-            <p className="text-xs text-phumulani-charcoal">
-              Manage how Phumulani uses your information and download your complete personal data record.
-            </p>
-          </div>
-
-          {dataExportStatus && (
-            <div className="p-4 bg-phumulani-cream border border-phumulani-green rounded-lg text-xs font-semibold text-phumulani-charcoal flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-phumulani-earth flex-shrink-0" />
-              <span>{dataExportStatus}</span>
-            </div>
-          )}
-
-          {/* VAWA 1367 Certification Banner */}
-          <div className="p-4 bg-phumulani-cream border border-phumulani-teal rounded-xl space-y-2">
-            <div className="flex items-center gap-2 text-xs font-bold text-phumulani-earth">
-              <ShieldCheck className="w-4 h-4 text-phumulani-earth" />
-              <span>Statutory Privacy Certification (VAWA Section 1367)</span>
-            </div>
-            <p className="text-xs text-phumulani-charcoal leading-relaxed">
-              Phumulani maintains an absolute quarantine firewall for all beneficiary intake records and sensitive case files. AI workforce agents, third-party analytics, and unauthorized personnel possess zero access to survivor identities or case narratives under 8 U.S.C. § 1367.
-            </p>
-          </div>
-
-          {/* Consent Toggles */}
-          <div className="space-y-4 text-xs pt-2">
-            <div className="flex items-start justify-between gap-4 p-4 border border-phumulani-cream rounded-lg">
-              <div>
-                <div className="font-bold text-phumulani-charcoal">Anonymized Impact & Outcome Research</div>
-                <p className="text-phumulani-charcoal mt-0.5">
-                  Allow Phumulani to include aggregated, non-personally identifiable program graduation numbers in philanthropic grant reports.
-                </p>
-              </div>
-              <input
-                type="checkbox"
-                checked={consentOutcomeResearch}
-                onChange={(e) => setConsentOutcomeResearch(e.target.checked)}
-                className="w-4 h-4 mt-1 accent-phumulani-earth cursor-pointer"
-              />
-            </div>
-
-            <div className="flex items-start justify-between gap-4 p-4 border border-phumulani-cream rounded-lg">
-              <div>
-                <div className="font-bold text-phumulani-charcoal">Cohort Scheduling & Urgent Service SMS</div>
-                <p className="text-phumulani-charcoal mt-0.5">
-                  Receive SMS reminders for upcoming mentorship meetings, tutoring sessions, and program updates.
-                </p>
-              </div>
-              <input
-                type="checkbox"
-                checked={consentNotifications}
-                onChange={(e) => setConsentNotifications(e.target.checked)}
-                className="w-4 h-4 mt-1 accent-phumulani-earth cursor-pointer"
-              />
-            </div>
-
-            <div className="flex items-start justify-between gap-4 p-4 border border-phumulani-cream rounded-lg">
-              <div>
-                <div className="font-bold text-phumulani-charcoal">Community Monthly Newsletter</div>
-                <p className="text-phumulani-charcoal mt-0.5">
-                  Receive our monthly community bulletin featuring cultural celebrations, new program launches, and donor highlights.
-                </p>
-              </div>
-              <input
-                type="checkbox"
-                checked={consentNewsletter}
-                onChange={(e) => setConsentNewsletter(e.target.checked)}
-                className="w-4 h-4 mt-1 accent-phumulani-earth cursor-pointer"
-              />
-            </div>
-          </div>
-
-          {/* Data Export & Portability */}
-          <div className="pt-4 border-t border-phumulani-cream flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              <div className="text-xs font-bold text-phumulani-charcoal">Personal Data Portability Archive</div>
-              <p className="text-[11px] text-phumulani-charcoal">Download a verified JSON copy of your profile, requests, and enrollments.</p>
-            </div>
-            <button
-              type="button"
-              onClick={handleExportData}
-              className="px-4 py-2 border border-phumulani-cream hover:bg-phumulani-cream text-phumulani-charcoal rounded-lg font-bold text-xs flex items-center gap-2 cursor-pointer"
-            >
-              <Download className="w-4 h-4 text-phumulani-charcoal" />
-              <span>Export My Data Archive</span>
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* TAB 2: APPLICATIONS TRACKING & 15-STAGE LIFECYCLE (M30.07) */}
-      {activeTab === 'applications' && (
-        <div className="bg-white rounded-xl border border-phumulani-cream p-6 shadow-xs space-y-8">
-          <div className="space-y-1">
-            <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
-              Volunteer Lifecycle & Application Management (M30.07)
-            </h3>
-            <p className="text-xs text-phumulani-charcoal">
-              End-to-end 15-stage workflow governing recruitment, AI matching, safeguarding clearance, deployment, and service hour certification.
-            </p>
-          </div>
-
-          {/* 15-Stage Master Lifecycle Flow Diagram */}
-          <div className="p-5 bg-phumulani-cream rounded-xl border border-phumulani-cream space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-phumulani-charcoal">
-                Phumulani 15-Stage Volunteer Operational Pipeline
-              </span>
-              <span className="text-[11px] font-mono text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded border border-phumulani-teal">
-                Standard M30.07 Protocol
-              </span>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 text-[11px]">
-              {[
-                { num: '01', name: 'Discovery & Intake', desc: 'Web form submission & deduplication' },
-                { num: '02', name: 'Identity & Legal', desc: 'Contact info & consent registration' },
-                { num: '03', name: 'Skills & Language', desc: 'Multilingual fluency audit' },
-                { num: '04', name: 'AI Match Evaluation', desc: 'Agent A04 skill recommendation' },
-                { num: '05', name: 'Coordinator Review', desc: 'Human-in-the-loop screening' },
-                { num: '06', name: 'Staff Interview', desc: 'Trauma-informed values interview' },
-                { num: '07', name: 'Reference Audits', desc: 'Community peer references verified' },
-                { num: '08', name: 'Criminal Background', desc: 'BCA & child protection check' },
-                { num: '09', name: 'Safeguarding Module', desc: 'VAWA 1367 & confidentiality' },
-                { num: '10', name: 'Staff Authorization', desc: 'Director credentialing approval' },
-                { num: '11', name: 'Program Placement', desc: 'Assignment to youth or advocacy' },
-                { num: '12', name: 'Shift Scheduling', desc: 'Calendar sync & slot reservation' },
-                { num: '13', name: 'Hours Auditing', desc: 'Supervisor verification queue' },
-                { num: '14', name: 'Quarterly Check-In', desc: 'Feedback & support review' },
-                { num: '15', name: 'Milestone / Renewal', desc: 'Impact awards & annual recert' },
-              ].map((stage) => (
+              {applications.map((app) => (
                 <div
-                  key={stage.num}
-                  className="p-2.5 rounded-lg border bg-white border-phumulani-cream space-y-1"
+                  key={app.id}
+                  className="p-5 rounded-xl border border-phumulani-charcoal/12 hover:border-phumulani-earth/40 transition-all space-y-4 bg-white"
                 >
-                  <div className="flex items-center gap-1.5 font-bold text-phumulani-charcoal">
-                    <span className="w-5 h-5 rounded-full bg-phumulani-earth text-white flex items-center justify-center text-[9px] font-mono">
-                      {stage.num}
+                  <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                    <div>
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-mono text-xs font-bold text-phumulani-earth bg-phumulani-cream border border-phumulani-charcoal/12 px-2 py-0.5 rounded-md tabular-nums">
+                          {app.trackingId}
+                        </span>
+                        <h4 className="font-heading font-bold text-base text-phumulani-charcoal">
+                          {app.opportunityTitle}
+                        </h4>
+                      </div>
+                      <div className="text-xs text-phumulani-charcoal mt-1 tabular-nums">
+                        Applicant: <strong>{app.fullName}</strong> ({app.email}) · Submitted: {new Date(app.submittedAt).toLocaleDateString()}
+                      </div>
+                    </div>
+
+                    <span
+                      className={`text-[11px] font-bold px-2.5 py-1 rounded-md uppercase tracking-wider border ${
+                        app.status === 'approved_active'
+                          ? 'bg-phumulani-green/15 text-phumulani-charcoal border-phumulani-green'
+                          : 'bg-phumulani-cream text-phumulani-earth border-phumulani-charcoal/15'
+                      }`}
+                    >
+                      {app.status.replace('_', ' ')}
                     </span>
-                    <span className="truncate">{stage.name}</span>
                   </div>
-                  <p className="text-[10px] text-phumulani-charcoal leading-tight">{stage.desc}</p>
+
+                  {/* Workflow B Step Indicator */}
+                  <div className="bg-phumulani-cream p-3 rounded-lg border border-phumulani-charcoal/10 flex flex-wrap items-center justify-between gap-2 text-[11px] text-phumulani-charcoal">
+                    <span className={app.submittedAt ? 'font-bold text-phumulani-earth' : ''}>1. Application Received ✓</span>
+                    <span>→</span>
+                    <span className={app.aiSuggestedMatchNotes ? 'font-bold text-phumulani-earth' : ''}>2. AI Match Evaluated ✓</span>
+                    <span>→</span>
+                    <span className={app.status !== 'submitted' ? 'font-bold text-phumulani-earth' : 'text-phumulani-charcoal/70'}>3. Coordinator Screening</span>
+                    <span>→</span>
+                    <span className={app.safeguardingAcknowledged ? 'font-bold text-phumulani-earth' : 'text-phumulani-charcoal/70'}>4. Safeguarding Orientation</span>
+                    <span>→</span>
+                    <span className={app.status === 'approved_active' ? 'font-bold text-phumulani-earth' : 'text-phumulani-charcoal/70'}>5. Placement Approved</span>
+                  </div>
+
+                  {app.aiSuggestedMatchNotes && (
+                    <div className="p-3 bg-phumulani-cream border border-phumulani-teal rounded-lg text-xs space-y-1">
+                      <div className="font-semibold text-phumulani-earth">
+                        Agent A04 (Volunteer Recruiter) Advisory Assessment:
+                      </div>
+                      <p className="text-phumulani-charcoal leading-relaxed">{app.aiSuggestedMatchNotes}</p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
           </div>
+        )}
 
-          {/* Active Volunteer Applications */}
-          <div className="space-y-4">
-            <h4 className="font-serif text-sm font-bold text-phumulani-charcoal">
-              Active Application Records ({applications.length})
-            </h4>
-
-            {applications.map((app) => (
-              <div
-                key={app.id}
-                className="p-5 rounded-xl border border-phumulani-cream hover:border-phumulani-orange transition-all space-y-4"
-              >
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-bold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded">
-                        {app.trackingId}
-                      </span>
-                      <h4 className="font-serif font-bold text-base text-phumulani-charcoal">
-                        {app.opportunityTitle}
-                      </h4>
-                    </div>
-                    <div className="text-xs text-phumulani-charcoal mt-1">
-                      Applicant: <strong>{app.fullName}</strong> ({app.email}) · Submitted: {new Date(app.submittedAt).toLocaleDateString()}
-                    </div>
-                  </div>
-
-                  <span
-                    className={`text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider ${
-                      app.status === 'approved_active'
-                        ? 'bg-phumulani-cream text-phumulani-charcoal'
-                        : app.status === 'screening_review'
-                        ? 'bg-phumulani-cream text-phumulani-earth'
-                        : 'bg-phumulani-cream text-phumulani-charcoal'
-                    }`}
-                  >
-                    {app.status.replace('_', ' ')}
-                  </span>
-                </div>
-
-                {/* Workflow B Step Indicator */}
-                <div className="bg-phumulani-cream p-3 rounded-lg flex flex-wrap items-center justify-between gap-2 text-[11px] text-phumulani-charcoal">
-                  <span className={app.submittedAt ? 'font-bold text-phumulani-earth' : ''}>1. Application Received ✓</span>
-                  <span>→</span>
-                  <span className={app.aiSuggestedMatchNotes ? 'font-bold text-phumulani-earth' : ''}>2. AI Match Evaluated ✓</span>
-                  <span>→</span>
-                  <span className={app.status !== 'submitted' ? 'font-bold text-phumulani-earth' : 'text-phumulani-charcoal'}>3. Coordinator Screening</span>
-                  <span>→</span>
-                  <span className={app.safeguardingAcknowledged ? 'font-bold text-phumulani-earth' : 'text-phumulani-charcoal'}>4. Safeguarding Orientation</span>
-                  <span>→</span>
-                  <span className={app.status === 'approved_active' ? 'font-bold text-phumulani-earth' : 'text-phumulani-charcoal'}>5. Placement Approved</span>
-                </div>
-
-                {app.aiSuggestedMatchNotes && (
-                  <div className="p-3 bg-phumulani-cream border border-phumulani-teal rounded-lg text-xs space-y-1">
-                    <div className="font-semibold text-phumulani-earth flex items-center gap-1.5">
-                      <span>Agent A04 (Volunteer Recruiter) Advisory Assessment:</span>
-                    </div>
-                    <p className="text-phumulani-charcoal">{app.aiSuggestedMatchNotes}</p>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* TAB 3: LOG SERVICE HOURS */}
-      {activeTab === 'log_hours' && (
-        <div className="max-w-2xl bg-white rounded-xl border border-phumulani-cream p-6 sm:p-8 shadow-xs space-y-6">
-          <div>
-            <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
-              Log Volunteer Service Hours
-            </h3>
-            <p className="text-xs text-phumulani-charcoal mt-1">
-              Service hours are verified by program coordinators for community impact reporting and volunteer milestone recognition.
-            </p>
-          </div>
-
-          {hoursFeedback && (
-            <div className="p-4 bg-phumulani-cream border border-phumulani-green rounded-lg text-xs font-semibold text-phumulani-charcoal flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-phumulani-earth" />
-              <span>{hoursFeedback}</span>
+        {/* TAB 3: LOG SERVICE HOURS */}
+        {activeTab === 'log_hours' && (
+          <div className="max-w-2xl bg-white rounded-2xl border border-phumulani-charcoal/12 p-6 sm:p-8 shadow-xs space-y-6">
+            <div>
+              <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">
+                Log Volunteer Service Hours
+              </h3>
+              <p className="text-xs text-phumulani-charcoal mt-1">
+                Service hours are verified by program coordinators for community impact reporting and volunteer milestone recognition.
+              </p>
             </div>
-          )}
 
-          <form onSubmit={handleLogHoursSubmit} className="space-y-4 text-xs">
-            <div className="grid grid-cols-2 gap-4">
+            {hoursFeedback && (
+              <div className="p-3.5 bg-phumulani-green/15 border border-phumulani-green rounded-lg text-xs font-semibold text-phumulani-charcoal flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-phumulani-charcoal shrink-0" />
+                <span>{hoursFeedback}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleLogHoursSubmit} className="space-y-4 text-xs">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1.5">Service Date</label>
+                  <input
+                    type="date"
+                    required
+                    value={logDate}
+                    onChange={(e) => setLogDate(e.target.value)}
+                    className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg bg-white outline-none tabular-nums focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-phumulani-charcoal mb-1.5">Total Hours</label>
+                  <input
+                    type="number"
+                    step="0.5"
+                    min="0.5"
+                    max="12"
+                    required
+                    value={logHours}
+                    onChange={(e) => setLogHours(Number(e.target.value))}
+                    className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg bg-white outline-none tabular-nums focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
+                  />
+                </div>
+              </div>
+
               <div>
-                <label className="block font-semibold text-phumulani-charcoal mb-1">Service Date</label>
-                <input
-                  type="date"
+                <label className="block font-semibold text-phumulani-charcoal mb-1.5">Program / Activity Assignment</label>
+                <select
+                  value={logOpportunityTitle}
+                  onChange={(e) => setLogOpportunityTitle(e.target.value)}
+                  className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg outline-none bg-white text-xs focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
+                >
+                  {opportunities.map((o) => (
+                    <option key={o.id} value={o.title}>
+                      {o.title} ({o.programName})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block font-semibold text-phumulani-charcoal mb-1.5">Brief Description of Activities Completed</label>
+                <textarea
+                  rows={4}
                   required
-                  value={logDate}
-                  onChange={(e) => setLogDate(e.target.value)}
-                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
+                  value={logDescription}
+                  onChange={(e) => setLogDescription(e.target.value)}
+                  placeholder="e.g. Conducted 1-on-1 geometry tutoring, reviewed high school graduation requirements, assisted student with college scholarship search."
+                  className="w-full px-3 py-2 border border-phumulani-charcoal/20 rounded-lg bg-white outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
                 />
               </div>
-              <div>
-                <label className="block font-semibold text-phumulani-charcoal mb-1">Total Hours</label>
+
+              <button
+                type="submit"
+                className="py-2.5 px-5 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg font-bold transition-colors cursor-pointer"
+              >
+                Submit Service Record
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* TAB 4: TRAINING & SAFEGUARDING */}
+        {activeTab === 'training' && (
+          <div className="bg-white rounded-2xl border border-phumulani-charcoal/12 p-6 sm:p-8 shadow-xs space-y-6">
+            <div className="space-y-1">
+              <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">
+                Trauma-Informed Safeguarding &amp; Orientation Curriculum
+              </h3>
+              <p className="text-xs text-phumulani-charcoal">
+                Mandatory orientation governed by Phumulani Safeguarding Lead Sister Miriam K.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-1">
+              <div className="p-5 border border-phumulani-charcoal/12 rounded-xl space-y-3 bg-phumulani-cream/50">
+                <div className="flex items-center justify-between gap-2">
+                  <h4 className="font-heading font-bold text-sm text-phumulani-charcoal">
+                    Module 1: Cultural Humility &amp; Survivor Privacy
+                  </h4>
+                  <span className="text-[10px] font-bold text-phumulani-charcoal bg-phumulani-green/15 border border-phumulani-green px-2 py-0.5 rounded-md">
+                    Completed
+                  </span>
+                </div>
+                <p className="text-xs text-phumulani-charcoal leading-relaxed">
+                  Understanding Minnesota immigrant community dynamics, trauma triggers, language access rights, and the absolute prohibition on sharing beneficiary identities or locations.
+                </p>
+                <div className="text-[11px] text-phumulani-charcoal/80 tabular-nums">Duration: 45 Minutes · Verified</div>
+              </div>
+
+              <div className="p-5 border border-phumulani-charcoal/12 rounded-xl space-y-3 bg-phumulani-cream/50">
+                <div className="flex items-center justify-between gap-2">
+                  <h4 className="font-heading font-bold text-sm text-phumulani-charcoal">
+                    Module 2: Mandatory Escalation &amp; Emergency Protocols
+                  </h4>
+                  <span className="text-[10px] font-bold text-phumulani-charcoal bg-phumulani-green/15 border border-phumulani-green px-2 py-0.5 rounded-md">
+                    Completed
+                  </span>
+                </div>
+                <p className="text-xs text-phumulani-charcoal leading-relaxed">
+                  How to recognize imminent threat indicators, Minnesota mandated reporting obligations for vulnerable adults and children, and immediate escalation channels to designated officers.
+                </p>
+                <div className="text-[11px] text-phumulani-charcoal/80 tabular-nums">Duration: 60 Minutes · Verified</div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 5: OPPORTUNITIES DIRECTORY */}
+        {activeTab === 'opportunities' && (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between gap-4">
+              <div className="relative flex-1 max-w-md">
+                <Search className="w-4 h-4 absolute left-3 top-2.5 text-phumulani-charcoal/70" />
                 <input
-                  type="number"
-                  step="0.5"
-                  min="0.5"
-                  max="12"
-                  required
-                  value={logHours}
-                  onChange={(e) => setLogHours(Number(e.target.value))}
-                  className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
+                  type="text"
+                  value={oppSearch}
+                  onChange={(e) => setOppSearch(e.target.value)}
+                  placeholder="Search volunteer opportunities..."
+                  className="w-full pl-9 pr-3 py-2 text-xs border border-phumulani-charcoal/20 rounded-lg outline-none bg-white focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20"
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block font-semibold text-phumulani-charcoal mb-1">Program / Activity Assignment</label>
-              <select
-                value={logOpportunityTitle}
-                onChange={(e) => setLogOpportunityTitle(e.target.value)}
-                className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none bg-white text-xs"
-              >
-                {opportunities.map((o) => (
-                  <option key={o.id} value={o.title}>
-                    {o.title} ({o.programName})
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label className="block font-semibold text-phumulani-charcoal mb-1">Brief Description of Activities Completed</label>
-              <textarea
-                rows={4}
-                required
-                value={logDescription}
-                onChange={(e) => setLogDescription(e.target.value)}
-                placeholder="e.g. Conducted 1-on-1 geometry tutoring, reviewed high school graduation requirements, assisted student with college scholarship search."
-                className="w-full px-3 py-2 border border-phumulani-cream rounded-lg outline-none"
-              />
-            </div>
-
-            <button
-              type="submit"
-              className="py-2.5 px-5 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold transition-colors cursor-pointer"
-            >
-              Submit Service Record
-            </button>
-          </form>
-        </div>
-      )}
-
-      {/* TAB 4: TRAINING & SAFEGUARDING */}
-      {activeTab === 'training' && (
-        <div className="bg-white rounded-xl border border-phumulani-cream p-6 sm:p-8 shadow-xs space-y-6">
-          <div className="space-y-1">
-            <h3 className="font-serif text-lg font-bold text-phumulani-charcoal">
-              Trauma-Informed Safeguarding & Orientation Curriculum
-            </h3>
-            <p className="text-xs text-phumulani-charcoal">
-              Mandatory orientation governed by Phumulani Safeguarding Lead Sister Miriam K.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-            <div className="p-5 border border-phumulani-cream rounded-xl space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="font-serif font-bold text-sm text-phumulani-charcoal">
-                  Module 1: Cultural Humility & Survivor Privacy
-                </h4>
-                <span className="text-[10px] font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded">
-                  Completed
-                </span>
-              </div>
-              <p className="text-xs text-phumulani-charcoal leading-relaxed">
-                Understanding Minnesota immigrant community dynamics, trauma triggers, language access rights, and the absolute prohibition on sharing beneficiary identities or locations.
-              </p>
-              <div className="text-[11px] text-phumulani-charcoal">Duration: 45 Minutes · Verified</div>
-            </div>
-
-            <div className="p-5 border border-phumulani-cream rounded-xl space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="font-serif font-bold text-sm text-phumulani-charcoal">
-                  Module 2: Mandatory Escalation & Emergency Protocols
-                </h4>
-                <span className="text-[10px] font-bold text-phumulani-charcoal bg-phumulani-cream px-2 py-0.5 rounded">
-                  Completed
-                </span>
-              </div>
-              <p className="text-xs text-phumulani-charcoal leading-relaxed">
-                How to recognize imminent threat indicators, Minnesota mandated reporting obligations for vulnerable adults and children, and immediate escalation channels to designated officers.
-              </p>
-              <div className="text-[11px] text-phumulani-charcoal">Duration: 60 Minutes · Verified</div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* TAB 5: OPPORTUNITIES DIRECTORY */}
-      {activeTab === 'opportunities' && (
-        <div className="space-y-6">
-          <div className="flex flex-col sm:flex-row justify-between gap-4">
-            <div className="relative flex-1 max-w-md">
-              <Search className="w-4 h-4 absolute left-3 top-2.5 text-phumulani-charcoal" />
-              <input
-                type="text"
-                value={oppSearch}
-                onChange={(e) => setOppSearch(e.target.value)}
-                placeholder="Search volunteer opportunities..."
-                className="w-full pl-9 pr-3 py-2 text-xs border border-phumulani-cream rounded-lg outline-none bg-white"
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredOpps.map((o) => (
-              <div key={o.id} className="bg-white rounded-xl border border-phumulani-cream p-5 space-y-4">
-                <div className="flex justify-between items-start">
-                  <span className="text-[10px] font-semibold text-phumulani-earth bg-phumulani-cream px-2 py-0.5 rounded">
-                    {o.commitment}
-                  </span>
-                  <span className="text-xs text-phumulani-charcoal font-mono">{o.openSlots} openings</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredOpps.map((o) => (
+                <div key={o.id} className="bg-white rounded-2xl border border-phumulani-charcoal/12 p-5 space-y-3.5 shadow-xs">
+                  <div className="flex justify-between items-center text-[11px]">
+                    <span className="font-semibold text-phumulani-earth">{o.commitment}</span>
+                    <span className="text-phumulani-charcoal font-mono tabular-nums">{o.openSlots} openings</span>
+                  </div>
+                  <h4 className="font-heading font-bold text-base text-phumulani-charcoal">{o.title}</h4>
+                  <p className="text-xs text-phumulani-charcoal leading-relaxed">{o.description}</p>
+                  <div className="pt-3 text-[11px] text-phumulani-charcoal space-y-1 border-t border-phumulani-charcoal/10">
+                    <div><strong>Location:</strong> {o.location}</div>
+                    <div><strong>Languages:</strong> {o.languagesNeeded.join(', ')}</div>
+                  </div>
                 </div>
-                <h4 className="font-serif font-bold text-base text-phumulani-charcoal">{o.title}</h4>
-                <p className="text-xs text-phumulani-charcoal">{o.description}</p>
-                <div className="pt-2 text-[11px] text-phumulani-charcoal space-y-1 border-t border-phumulani-cream">
-                  <div><strong>Location:</strong> {o.location}</div>
-                  <div><strong>Languages:</strong> {o.languagesNeeded.join(', ')}</div>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
       </div>
     </PortalLayout>
   );

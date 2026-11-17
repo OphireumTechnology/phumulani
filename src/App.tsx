@@ -166,7 +166,7 @@ export default function App() {
 
   return (
     <MotionConfig reducedMotion="user">
-    <div className="min-h-screen flex flex-col bg-white text-phumulani-charcoal selection:bg-phumulani-cream selection:text-phumulani-earth">
+    <div className="min-h-screen flex flex-col bg-phumulani-cream text-phumulani-charcoal selection:bg-phumulani-gold selection:text-phumulani-charcoal">
       {/* 0. ACCESSIBILITY: SKIP TO MAIN CONTENT ANCHOR (WCAG 2.2 AA) */}
       <a
         href="#main-content"
@@ -202,14 +202,14 @@ export default function App() {
       {/* 3. ACTIVE APPLICATION PORTAL VIEW */}
       <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-none">
         {!hasViewAccess ? (
-          <div className="max-w-xl mx-auto my-20 p-8 bg-phumulani-cream border border-phumulani-earth rounded-2xl text-center space-y-4">
-            <h2 className="font-serif text-2xl font-bold text-phumulani-earth">Portal Access Restricted</h2>
-            <p className="text-sm text-phumulani-charcoal">
+          <div className="max-w-xl mx-auto my-20 p-8 bg-white border border-phumulani-charcoal/15 rounded-2xl shadow-sm text-center space-y-4">
+            <h2 className="font-heading text-2xl font-bold text-phumulani-earth">Portal Access Restricted</h2>
+            <p className="text-sm text-phumulani-charcoal leading-relaxed">
               Your active session role ({dbState.currentUser.role}) is not authorized to access this internal portal.
             </p>
             <button
               onClick={() => setActiveView('public')}
-              className="px-5 py-2.5 bg-phumulani-earth text-white rounded-lg text-xs font-bold hover:bg-phumulani-orange cursor-pointer transition-colors"
+              className="px-5 py-2.5 bg-phumulani-earth text-white rounded-lg text-xs font-heading font-bold hover:bg-phumulani-orange hover:text-phumulani-charcoal cursor-pointer transition-colors"
             >
               Return to Public Website
             </button>

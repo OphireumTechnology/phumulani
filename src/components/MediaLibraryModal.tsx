@@ -50,15 +50,15 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
 
   return (
     <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 no-print">
-      <div className="bg-white rounded-2xl max-w-5xl w-full border border-phumulani-earth shadow-2xl flex flex-col max-h-[92vh] overflow-hidden animate-in fade-in">
+      <div className="bg-white rounded-2xl max-w-5xl w-full border border-phumulani-charcoal/15 shadow-2xl flex flex-col max-h-[92vh] overflow-hidden animate-in fade-in">
         {/* Header */}
-        <div className="bg-phumulani-earth text-white p-5 flex items-center justify-between">
+        <div className="bg-phumulani-charcoal text-white p-5 flex items-center justify-between border-b border-phumulani-gold/30">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-phumulani-charcoal flex items-center justify-center border border-phumulani-gold">
+            <div className="w-10 h-10 rounded-xl bg-phumulani-earth flex items-center justify-center border border-phumulani-gold/40">
               <ShieldCheck className="w-5 h-5 text-phumulani-gold" />
             </div>
             <div>
-              <h3 className="font-serif text-lg sm:text-xl font-bold text-white">
+              <h3 className="font-heading text-lg sm:text-xl font-bold text-white">
                 Phumulani Media Preservation &amp; Safeguarding Registry
               </h3>
               <p className="text-xs text-phumulani-cream">
@@ -68,34 +68,35 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-phumulani-cream hover:text-white hover:bg-phumulani-charcoal rounded-lg cursor-pointer"
+            aria-label="Close registry"
+            className="p-2 text-phumulani-cream hover:text-phumulani-charcoal hover:bg-phumulani-orange rounded-lg cursor-pointer transition-colors"
           >
             ✕
           </button>
         </div>
 
         {/* Toolbar: Search, Filters & Export Manifest */}
-        <div className="p-4 bg-phumulani-cream border-b border-phumulani-earth flex flex-wrap items-center justify-between gap-3 text-xs">
+        <div className="p-4 bg-phumulani-cream border-b border-phumulani-charcoal/12 flex flex-wrap items-center justify-between gap-3 text-xs">
           <div className="flex items-center gap-2 flex-1 min-w-[240px]">
-            <Search className="w-4 h-4 text-phumulani-charcoal" />
+            <Search className="w-4 h-4 text-phumulani-charcoal shrink-0" />
             <input
               type="text"
               placeholder="Search title, caption, ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-white border border-phumulani-earth rounded-lg px-3 py-1.5 outline-none focus:ring-1 focus:ring-phumulani-orange text-phumulani-charcoal"
+              className="w-full bg-white border border-phumulani-charcoal/20 rounded-lg px-3 py-1.5 outline-none focus:border-phumulani-earth focus:ring-2 focus:ring-phumulani-earth/20 text-phumulani-charcoal"
             />
           </div>
 
-          <div className="flex items-center gap-2 overflow-x-auto py-1">
+          <div className="flex items-center gap-1.5 overflow-x-auto py-1">
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3 py-1 rounded-full text-[11px] font-semibold transition-colors cursor-pointer whitespace-nowrap ${
+                className={`px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-colors cursor-pointer whitespace-nowrap ${
                   selectedCategory === cat.id
                     ? 'bg-phumulani-earth text-white'
-                    : 'bg-white text-phumulani-charcoal hover:bg-phumulani-cream border border-phumulani-earth'
+                    : 'bg-white text-phumulani-charcoal hover:bg-phumulani-gold/25 border border-phumulani-charcoal/15'
                 }`}
               >
                 {cat.label}
@@ -105,7 +106,7 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
 
           <button
             onClick={handleCopyManifest}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-phumulani-cream text-phumulani-earth border border-phumulani-earth rounded-lg font-bold transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-phumulani-gold/20 text-phumulani-earth border border-phumulani-earth/30 rounded-lg font-bold transition-colors cursor-pointer whitespace-nowrap"
           >
             {copiedId === 'manifest' ? <Check className="w-3.5 h-3.5 text-phumulani-green" /> : <Copy className="w-3.5 h-3.5" />}
             <span>{copiedId === 'manifest' ? 'Manifest Copied!' : 'Copy JSON Manifest'}</span>
@@ -113,15 +114,15 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
         </div>
 
         {/* Safeguarding Notice Banner */}
-        <div className="bg-phumulani-gold border-b border-phumulani-earth px-4 py-2 text-[11px] text-phumulani-charcoal flex items-center justify-between">
+        <div className="bg-phumulani-cream/80 border-b border-phumulani-charcoal/12 px-4 py-2 text-[11px] text-phumulani-charcoal flex items-center justify-between gap-2">
           <div className="flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-phumulani-charcoal shrink-0" />
+            <ShieldAlert className="w-4 h-4 text-phumulani-earth shrink-0" />
             <span>
-              <strong>Section 6 Safeguarding Protocol:</strong> Only assets with confirmed consent &amp; cleared safeguarding review are published to the public website.
+              <strong className="font-heading text-phumulani-earth">Section 6 Safeguarding Protocol:</strong> Only assets with confirmed consent &amp; cleared safeguarding review are published to the public website.
             </span>
           </div>
-          <span className="font-mono text-[10px] text-phumulani-charcoal font-bold hidden sm:inline">
-            Local Backup: D:\Phumulani\Backups\MediaArchive
+          <span className="font-mono text-[10px] text-phumulani-charcoal font-semibold hidden sm:inline">
+            Archive: MediaArchive
           </span>
         </div>
 
@@ -130,15 +131,15 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
           {filteredMedia.map((asset) => (
             <div
               key={asset.id}
-              className={`rounded-xl border p-4 space-y-3 flex flex-col justify-between ${
+              className={`rounded-xl border border-phumulani-charcoal/12 p-4 space-y-3 flex flex-col justify-between shadow-2xs ${
                 asset.safeguardingReviewStatus === 'cleared_for_public_web'
-                  ? 'bg-white border-phumulani-earth shadow-2xs'
-                  : 'bg-phumulani-cream border-phumulani-earth shadow-2xs'
+                  ? 'bg-white'
+                  : 'bg-phumulani-cream/70'
               }`}
             >
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 {/* Media Preview or Icon */}
-                <div className="aspect-video bg-phumulani-cream rounded-lg overflow-hidden border border-phumulani-earth flex items-center justify-center relative">
+                <div className="aspect-video bg-phumulani-cream rounded-lg overflow-hidden border border-phumulani-charcoal/12 flex items-center justify-center relative">
                   {asset.mediaType === 'video_embed' ? (
                     <div className="w-full h-full bg-phumulani-charcoal flex flex-col items-center justify-center p-3 text-center">
                       <span className="text-[10px] text-phumulani-gold font-bold uppercase tracking-wider">Video Stream</span>
@@ -153,23 +154,22 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
                       loading="lazy"
                     />
                   )}
-                  <span
-                    className={`absolute top-2 right-2 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
-                      asset.safeguardingReviewStatus === 'cleared_for_public_web'
-                        ? 'bg-phumulani-green text-phumulani-charcoal border border-phumulani-charcoal'
-                        : 'bg-phumulani-earth text-white border border-phumulani-earth'
-                    }`}
-                  >
-                    {asset.safeguardingReviewStatus.replace(/_/g, ' ')}
-                  </span>
                 </div>
 
                 <div>
-                  <div className="flex items-center justify-between text-[10px] text-phumulani-charcoal font-mono">
-                    <span>{asset.id}</span>
-                    <span className="capitalize">{asset.category}</span>
+                  <div className="flex items-center justify-between gap-2 text-[10px] text-phumulani-charcoal font-mono">
+                    <span className="tabular-nums">{asset.id} · {asset.category}</span>
+                    <span
+                      className={`font-sans text-[10px] font-semibold px-1.5 py-0.5 rounded-md ${
+                        asset.safeguardingReviewStatus === 'cleared_for_public_web'
+                          ? 'bg-phumulani-green/15 text-phumulani-charcoal border border-phumulani-green'
+                          : 'bg-phumulani-earth text-white'
+                      }`}
+                    >
+                      {asset.safeguardingReviewStatus === 'cleared_for_public_web' ? 'Cleared' : 'Restricted'}
+                    </span>
                   </div>
-                  <h4 className="font-serif font-bold text-sm text-phumulani-earth mt-0.5 leading-snug">
+                  <h4 className="font-heading font-bold text-sm text-phumulani-earth mt-1 leading-snug">
                     {asset.title}
                   </h4>
                   <p className="text-[11px] text-phumulani-charcoal mt-1 line-clamp-2">
@@ -179,18 +179,18 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
               </div>
 
               {/* Technical & Audit Details */}
-              <div className="pt-2 border-t border-phumulani-cream space-y-1 text-[10px] text-phumulani-charcoal font-mono">
+              <div className="pt-2.5 border-t border-phumulani-charcoal/10 space-y-1 text-[10px] text-phumulani-charcoal font-mono">
                 <div className="truncate">Owner: {asset.copyrightOwner}</div>
-                <div className="truncate">Checksum: {asset.checksumSha256.slice(0, 20)}...</div>
+                <div className="truncate tabular-nums">Checksum: {asset.checksumSha256.slice(0, 20)}...</div>
                 <div className="flex justify-between items-center pt-1 font-sans">
-                  <span className="text-[10px] text-phumulani-earth font-semibold">
-                    Usage: {asset.usageAuthorization.slice(0, 32)}...
+                  <span className="text-[10px] text-phumulani-earth font-semibold truncate">
+                    Usage: {asset.usageAuthorization.slice(0, 30)}...
                   </span>
                   <a
                     href={asset.sourceUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-phumulani-earth hover:text-phumulani-orange hover:underline flex items-center gap-0.5"
+                    className="text-phumulani-earth hover:text-phumulani-orange hover:underline flex items-center gap-0.5 shrink-0"
                   >
                     <span>Source</span>
                     <ExternalLink className="w-2.5 h-2.5" />
@@ -202,13 +202,13 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
         </div>
 
         {/* Footer */}
-        <div className="p-4 bg-phumulani-cream border-t border-phumulani-earth flex justify-between items-center text-xs">
-          <span className="text-phumulani-charcoal">
-            Total Preserved Assets: <strong>{PHUMULANI_MEDIA_INVENTORY.length}</strong> (All verified &amp; checksummed)
+        <div className="p-4 bg-phumulani-cream border-t border-phumulani-charcoal/12 flex justify-between items-center text-xs">
+          <span className="text-phumulani-charcoal tabular-nums">
+            Total Preserved Assets: <strong>{PHUMULANI_MEDIA_INVENTORY.length}</strong> (Verified &amp; Checksummed)
           </span>
           <button
             onClick={onClose}
-            className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-orange text-white rounded-lg font-bold cursor-pointer"
+            className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-orange hover:text-phumulani-charcoal text-white rounded-lg font-bold cursor-pointer transition-colors"
           >
             Close Registry
           </button>
