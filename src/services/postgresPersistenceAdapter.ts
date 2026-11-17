@@ -260,15 +260,13 @@ export class PostgresPersistenceAdapter {
     try {
       const host = new URL(rawUrl).hostname.toLowerCase();
       if (operationalMode === 'PRODUCTION_ONLY') return { valid: true, host };
-      if (['localhost', '127.0.0.1', '::1'].includes(host)) return { valid: true, host };
-
       const allowlist = new Set(
         allowedNonProductionHosts.map((value) => value.trim().toLowerCase()).filter(Boolean)
       );
       if (!allowlist.has(host)) {
         return {
           valid: false,
-          error: `DATABASE_TARGET_NOT_ALLOWLISTED: Non-production mode (${operationalMode}) cannot connect to external database host "${host}" unless it is explicitly listed in PHUMULANI_NONPROD_DATABASE_HOSTS.`,
+          error: `DATABASE_TARGET_NOT_ALLOWLISTED: Non-production mode (${operationalMode}) cannot connect to database host "${host}" unless it is explicitly listed in PHUMULANI_NONPROD_DATABASE_HOSTS.`,
           host,
         };
       }
