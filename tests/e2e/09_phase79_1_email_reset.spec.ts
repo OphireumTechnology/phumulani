@@ -187,3 +187,49 @@ test('first boot does not erase independently stored email caches when app state
     subject: 'Cached correspondence must survive migration',
   });
 });
+
+test('corrupt persisted state is quarantined before a safe seed fallback', async ({ page }) => {
+  await page.goto('/');
+  const malformedState = '{"connectedMailboxes":[{"id":"mbx-existing"}],"donorProfiles":';
+
+  await page.evaluate((raw) => {
+    localStorage.setItem('phumulani_database_v1', raw);
+    localStorage.setItem(
+      'phumulani_email_cached_threads',
+      JSON.stringify([{ id: 'corrupt-state-cache-preserved', subject: 'Keep this cache' }])
+    );
+    sessionStorage.setItem('phumulani_email_session_draft', 'Keep this draft.');
+  }, malformedState);
+
+  await page.reload();
+
+  const recovery = await page.evaluate(() => {
+    const backupKeys: string[] = [];
+    for (let index = 0; index < localStorage.length; index += 1) {
+      const key = localStorage.key(index);
+      if (key?.startsWith('phumulani_database_v1.corrupt.')) backupKeys.push(key);
+    }
+
+    let activeStateIsValid = false;
+    try {
+      const activeState = localStorage.getItem('phumulani_database_v1');
+      activeStateIsValid = Boolean(activeState && JSON.parse(activeState));
+    } catch {
+      activeStateIsValid = false;
+    }
+
+    return {
+      backupValues: backupKeys.map((key) => localStorage.getItem(key)),
+      activeStateIsValid,
+      emailCache: JSON.parse(localStorage.getItem('phumulani_email_cached_threads') || 'null'),
+      sessionDraft: sessionStorage.getItem('phumulani_email_session_draft'),
+    };
+  });
+
+  expect(recovery.backupValues).toContain(malformedState);
+  expect(recovery.activeStateIsValid).toBe(true);
+  expect(recovery.emailCache).toEqual([
+    { id: 'corrupt-state-cache-preserved', subject: 'Keep this cache' },
+  ]);
+  expect(recovery.sessionDraft).toBe('Keep this draft.');
+});
