@@ -23,12 +23,32 @@ export interface SystemVerificationProbeReport {
   };
 }
 
+
+const VERIFIED_STATUSES = new Set<ProductionHealthCheckItem['status']>([
+  'LIVE', 'CONNECTED', 'ACTIVE', 'PROVISIONED', 'OPERATIONAL', 'VERIFIED', 'PASSED', 'CURRENT',
+]);
+const FAILED_STATUSES = new Set<ProductionHealthCheckItem['status']>([
+  'FAILED', 'OFFLINE', 'DISCONNECTED', 'BLOCKED',
+]);
+
+export function summarizeProductionHealthChecks(
+  checks: Array<Pick<ProductionHealthCheckItem, 'status'>>
+): { overallStatus: 'LIVE' | 'DEGRADED' | 'FAIL_CLOSED'; verifiedCount: number } {
+  const verifiedCount = checks.filter((check) => VERIFIED_STATUSES.has(check.status)).length;
+  const hasFailure = checks.some((check) => FAILED_STATUSES.has(check.status));
+  const allVerified = checks.length > 0 && verifiedCount === checks.length;
+
+  return {
+    overallStatus: hasFailure ? 'FAIL_CLOSED' : allVerified ? 'LIVE' : 'DEGRADED',
+    verifiedCount,
+  };
+}
+
 export class ProductionHealthService {
   /**
-   * Execute comprehensive live health check across the 15 enterprise components
+   * Report conservative readiness until independently executed live probes are implemented.
    */
   public static async probeAllComponents(): Promise<SystemVerificationProbeReport> {
-    const t0 = performance.now();
     const timestamp = new Date().toISOString();
     const state = db.getState();
 
@@ -37,195 +57,193 @@ export class ProductionHealthService {
         id: 'FRONTEND',
         name: 'Public & Enterprise React SPA',
         category: 'Core Infrastructure',
-        status: 'LIVE',
-        latencyMs: 14,
+        status: 'UNVERIFIED',
+        latencyMs: 0,
         lastChecked: timestamp,
         targetEndpoint: typeof window !== 'undefined' ? window.location.origin : 'https://app.phumulani.org',
-        verificationEvidence: 'Vite 8 production bundle loaded with 0 runtime errors. WCAG 2.2 AA compliant typography & Safe Exit operational.',
+        verificationEvidence: 'No live probe executed by this service; configured values and historical test results do not establish current readiness.',
         isFailClosed: false,
       },
       {
         id: 'BACKEND',
         name: 'Server API & Express Gateway',
         category: 'Core Infrastructure',
-        status: 'LIVE',
-        latencyMs: 22,
+        status: 'UNVERIFIED',
+        latencyMs: 0,
         lastChecked: timestamp,
         targetEndpoint: '/api/v1/health',
-        verificationEvidence: 'Server proxy middleware active on port 3000. Bearer token authorization and CSRF validation verified.',
+        verificationEvidence: 'No live probe executed by this service; configured values and historical test results do not establish current readiness.',
         isFailClosed: false,
       },
       {
         id: 'DATABASE',
         name: 'Enterprise Persistence & PostgreSQL Adapter',
         category: 'Core Infrastructure',
-        status: 'STAGED_READY',
-        latencyMs: 18,
+        status: 'UNVERIFIED',
+        latencyMs: 0,
         lastChecked: timestamp,
         targetEndpoint: 'localhost (isolated embedded durable)',
-        verificationEvidence: 'Isolated embedded durable JSON storage verified. External PostgreSQL staged and awaiting live DATABASE_URL configuration.',
+        verificationEvidence: 'No live probe executed by this service; configured values and historical test results do not establish current readiness.',
         isFailClosed: false,
       },
       {
         id: 'AUTHENTICATION',
         name: 'Identity Provider & WebAuthn MFA',
         category: 'Security & Governance',
-        status: 'ACTIVE',
-        latencyMs: 31,
+        status: 'UNVERIFIED',
+        latencyMs: 0,
         lastChecked: timestamp,
         targetEndpoint: 'https://auth.phumulani.org/oauth2/v1',
-        verificationEvidence: '13 accounts verified across 12 platform roles. MFA enforced on all privileged accounts. Phishing-resistant hardware key support active.',
+        verificationEvidence: 'No live probe executed by this service; configured values and historical test results do not establish current readiness.',
         isFailClosed: false,
       },
       {
         id: 'MASTER ADMIN',
         name: 'Super Administrator Role (PLATFORM_SUPER_ADMIN)',
         category: 'Security & Governance',
-        status: 'PROVISIONED',
-        latencyMs: 12,
+        status: 'UNVERIFIED',
+        latencyMs: 0,
         lastChecked: timestamp,
         targetEndpoint: '/admin/master',
-        verificationEvidence: 'Master Administrator account active (master.admin@phumulani.org). Single sign-on across all 15 operational dashboards verified with separation of duties.',
+        verificationEvidence: 'No live probe executed by this service; configured values and historical test results do not establish current readiness.',
         isFailClosed: false,
       },
       {
         id: 'VOLUNTEER PORTAL',
         name: 'Volunteer Lifecycle Engine',
         category: 'Operational Dashboards',
-        status: 'OPERATIONAL',
-        latencyMs: 25,
+        status: 'UNVERIFIED',
+        latencyMs: 0,
         lastChecked: timestamp,
         targetEndpoint: '/portal/volunteers',
-        verificationEvidence: 'Tracking IDs (PHM-VOL-2026-XXX) generating sequentially. Screening workflow, orientation checklists, and verified hours logging active.',
+        verificationEvidence: 'No live probe executed by this service; configured values and historical test results do not establish current readiness.',
         isFailClosed: false,
       },
       {
         id: 'DONOR PORTAL',
         name: 'Donor Giving & 501(c)(3) Receipts',
         category: 'Operational Dashboards',
-        status: 'OPERATIONAL',
-        latencyMs: 28,
+        status: 'UNVERIFIED',
+        latencyMs: 0,
         lastChecked: timestamp,
         targetEndpoint: '/portal/donors',
-        verificationEvidence: 'Official tax receipt generator (RCP-2026-XXXX) validated. Campaign progression and donor count incrementing with idempotency keys.',
+        verificationEvidence: 'No live probe executed by this service; configured values and historical test results do not establish current readiness.',
         isFailClosed: false,
       },
       {
         id: 'STAFF PORTAL',
         name: 'Staff Command Center & Triage',
         category: 'Operational Dashboards',
-        status: 'OPERATIONAL',
-        latencyMs: 19,
+        status: 'UNVERIFIED',
+        latencyMs: 0,
         lastChecked: timestamp,
         targetEndpoint: '/admin/staff',
-        verificationEvidence: '7 operational hubs active: Inbox Triage, Volunteer Screening, Events, Donations, AI Approvals, Restricted Intakes, and Media Vault.',
+        verificationEvidence: 'No live probe executed by this service; configured values and historical test results do not establish current readiness.',
         isFailClosed: false,
       },
       {
         id: 'EXECUTIVE PORTAL',
         name: 'Executive & Governance Dashboard',
         category: 'Operational Dashboards',
-        status: 'OPERATIONAL',
-        latencyMs: 21,
+        status: 'UNVERIFIED',
+        latencyMs: 0,
         lastChecked: timestamp,
         targetEndpoint: '/admin/governance',
-        verificationEvidence: 'Executive KPI scoreboard, Form 990 breakdown, board resolution voting register, and enterprise risk matrix with named mitigations active.',
+        verificationEvidence: 'No live probe executed by this service; configured values and historical test results do not establish current readiness.',
         isFailClosed: false,
       },
       {
         id: 'AI WORKFORCE',
         name: 'Autonomous AI Command (18 Agents)',
         category: 'Enterprise Integrations',
-        status: 'ACTIVE',
-        latencyMs: 45,
+        status: 'UNVERIFIED',
+        latencyMs: 0,
         lastChecked: timestamp,
         targetEndpoint: 'https://generativelanguage.googleapis.com/v1beta',
-        verificationEvidence: 'Agents A01-A18 supervised by Policy Gateway. 100% of autonomous money transfers and unauthorized external sends blocked. Kill switches armed.',
+        verificationEvidence: 'No live probe executed by this service; configured values and historical test results do not establish current readiness.',
         isFailClosed: false,
       },
       {
         id: 'EMAIL',
         name: 'Trauma-Informed Communications Gateway',
         category: 'Enterprise Integrations',
-        status: 'SIMULATED_OAUTH_PENDING',
-        latencyMs: 38,
+        status: 'UNVERIFIED',
+        latencyMs: 0,
         lastChecked: timestamp,
         targetEndpoint: 'Google Workspace (Gmail API)',
-        verificationEvidence: 'SIMULATED — LIVE OAUTH REQUIRED. Inbound simulated triage active; live external dispatch locked behind administrator OAuth consent.',
+        verificationEvidence: 'No live probe executed by this service; configured values and historical test results do not establish current readiness.',
         isFailClosed: false,
       },
       {
         id: 'PAYMENTS',
         name: 'Regulated Merchant Processor',
         category: 'Enterprise Integrations',
-        status: 'STAGED_PENDING_AUTH',
-        latencyMs: 42,
+        status: 'UNVERIFIED',
+        latencyMs: 0,
         lastChecked: timestamp,
         targetEndpoint: 'Financial Processor Gateway (ACH/Stripe)',
-        verificationEvidence: 'Awaiting financial merchant provider live API authorization. Demonstration transactions and synthetic pledges ($325k/$175k) strictly segregated.',
+        verificationEvidence: 'No live probe executed by this service; configured values and historical test results do not establish current readiness.',
         isFailClosed: false,
       },
       {
         id: 'BACKUPS',
         name: 'Local Disaster Recovery Automation',
         category: 'Core Infrastructure',
-        status: 'VERIFIED',
-        latencyMs: 16,
+        status: 'UNVERIFIED',
+        latencyMs: 0,
         lastChecked: timestamp,
         targetEndpoint: 'D:\\Phumulani\\Backups',
-        verificationEvidence: 'PowerShell 7+ and Bash CLI scripts verified. SHA-256 manifests generated across MediaArchive, Database DDL, and CodeCheckpoints.',
+        verificationEvidence: 'No live probe executed by this service; configured values and historical test results do not establish current readiness.',
         isFailClosed: false,
       },
       {
         id: 'SECURITY',
         name: 'VAWA Boundary & Tamper Safeguards',
         category: 'Security & Governance',
-        status: 'PASSED',
-        latencyMs: 15,
+        status: 'UNVERIFIED',
+        latencyMs: 0,
         lastChecked: timestamp,
         targetEndpoint: '/api/v1/safeguards/boundary',
-        verificationEvidence: 'Anonymous identifiers (SAFE-MN-XXX) segregated. Sister Miriam K. and Comfort Dondo strict dual access. Safe Exit disclaimer verified.',
+        verificationEvidence: 'No live probe executed by this service; configured values and historical test results do not establish current readiness.',
         isFailClosed: false,
       },
       {
         id: 'DEPLOYMENT',
         name: 'Production Release Infrastructure',
         category: 'Core Infrastructure',
-        status: 'CURRENT',
-        latencyMs: 20,
+        status: 'UNVERIFIED',
+        latencyMs: 0,
         lastChecked: timestamp,
         targetEndpoint: 'https://github.com/OphireumTechnology/phumulani',
-        verificationEvidence: 'Branch feature/phumulani-phase6-enterprise-integration verified. Clean TypeScript build (0 errors) and automated deploy workflows active.',
+        verificationEvidence: 'No live probe executed by this service; configured values and historical test results do not establish current readiness.',
         isFailClosed: false,
       },
     ];
 
-    // Log the health probe to immutable audit log
+    const summary = summarizeProductionHealthChecks(checks);
+
+    // Record a readiness summary without claiming that a live probe occurred.
     db.logAudit({
-      actorId: state.currentUser.id,
-      actorName: state.currentUser.name,
-      actorRole: state.currentUser.role,
-      action: 'PRODUCTION_HEALTH_PROBE_EXECUTED',
+      actorId: state.currentUser?.id || 'system',
+      actorName: state.currentUser?.name || 'System',
+      actorRole: state.currentUser?.role || 'system',
+      action: 'PRODUCTION_HEALTH_SUMMARY_REPORTED',
       resource: 'infrastructure:health_monitor',
-      details: `Executed live health check across 15 components. All 15 operational with average latency ${Math.round((performance.now() - t0) / 15)}ms.`,
+      details: `Reported ${summary.verifiedCount}/${checks.length} independently verified components; overall status ${summary.overallStatus}. This service has not executed live component probes.`,
     });
 
-    const isAllPassing = checks.every((c) => !['FAILED', 'OFFLINE', 'DISCONNECTED', 'BLOCKED'].includes(c.status));
-
     return {
-      overallStatus: isAllPassing ? 'LIVE' : 'DEGRADED',
-      verifiedCount: checks.filter((c) =>
-        ['LIVE', 'CONNECTED', 'OPERATIONAL', 'ACTIVE', 'PROVISIONED', 'VERIFIED', 'PASSED', 'CURRENT', 'STAGED_READY', 'SIMULATED_OAUTH_PENDING', 'STAGED_PENDING_AUTH'].includes(c.status)
-      ).length,
+      overallStatus: summary.overallStatus,
+      verifiedCount: summary.verifiedCount,
       totalComponents: checks.length,
       lastProbeTimestamp: timestamp,
       checks,
       environment: {
-        nodeEnv: 'production-ready',
-        platform: 'Google AI Studio & Cloud Run / GitHub Pages',
-        databaseTarget: 'PostgreSQL 15+ Enterprise Schema (Staged / Isolated Durable Store)',
-        authProvider: 'Enterprise Identity Provider (WebAuthn MFA)',
-        backupRoot: 'D:\\Phumulani\\Backups',
+        nodeEnv: 'unverified',
+        platform: 'unverified',
+        databaseTarget: 'unverified',
+        authProvider: 'unverified',
+        backupRoot: 'unverified',
       },
     };
   }
