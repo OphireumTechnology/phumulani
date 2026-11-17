@@ -550,10 +550,13 @@ class DatabaseService {
     return this.state;
   }
 
-  public resetDatabase(): void {
-    const fresh = getInitialState();
-    this.saveState(fresh);
-    this.appendAuditLog('DATABASE_RESET', 'Entire test database reset to baseline clean state.');
+  /**
+   * Legacy whole-state reset is permanently disabled. Browser state can contain
+   * real mailbox, donor, grant, safeguarding and audit records even in a demo UI.
+   * Cleanup must use an independently authorized provenance-checked workflow.
+   */
+  public resetDatabase(): never {
+    throw new Error('WHOLE_STATE_RESET_DISABLED: Use provenance-checked demo cleanup; existing records must be preserved.');
   }
 
   /**
