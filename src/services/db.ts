@@ -428,6 +428,8 @@ class DatabaseService {
 
   private loadState(): AppDatabaseState {
     const initial = getInitialState();
+    // The service is also imported by Node-side tests and SSR; there is no browser storage to read there.
+    if (typeof localStorage === 'undefined') return initial;
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
       if (stored) {
