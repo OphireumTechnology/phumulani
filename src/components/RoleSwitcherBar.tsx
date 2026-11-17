@@ -7,7 +7,7 @@
 import React from 'react';
 import { db } from '../services/db';
 import { User, UserRole } from '../types';
-import { UserCheck, ShieldCheck, RefreshCw, Sparkles, Mail } from 'lucide-react';
+import { UserCheck, ShieldCheck, Sparkles, Mail } from 'lucide-react';
 
 interface RoleSwitcherBarProps {
   currentUser: User;
@@ -44,21 +44,6 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
       } else if ((selected.role === 'community_advocate' || selected.role === 'community_member') && activeView !== 'community') {
         onViewChange('community');
       }
-    }
-  };
-
-  const [resetStatus, setResetStatus] = React.useState<'idle' | 'confirming' | 'done'>('idle');
-
-  const handleResetData = () => {
-    if (resetStatus === 'idle') {
-      setResetStatus('confirming');
-      setTimeout(() => setResetStatus('idle'), 4000);
-      return;
-    }
-    if (resetStatus === 'confirming') {
-      db.resetDatabase();
-      setResetStatus('done');
-      setTimeout(() => setResetStatus('idle'), 2500);
     }
   };
 
@@ -209,32 +194,7 @@ export const RoleSwitcherBar: React.FC<RoleSwitcherBarProps> = ({
                 <span>Simulated MFA: {currentUser.mfaEnabled ? 'Enforced' : 'Standard'}</span>
               </div>
 
-              <button
-                onClick={handleResetData}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md border transition-colors text-[11px] cursor-pointer ${
-                  resetStatus === 'confirming'
-                    ? 'bg-phumulani-earth border-phumulani-gold text-white font-bold'
-                    : resetStatus === 'done'
-                    ? 'bg-phumulani-green border-phumulani-cream text-phumulani-charcoal font-bold'
-                    : 'bg-phumulani-charcoal hover:bg-phumulani-earth text-phumulani-cream hover:text-white border-phumulani-cream/30'
-                }`}
-                title="Restore baseline test records"
-              >
-                <RefreshCw
-                  className={`w-3 h-3 transition-transform duration-300 ${
-                    resetStatus === 'done' ? 'text-phumulani-charcoal rotate-180' : 'text-phumulani-gold'
-                  }`}
-                  strokeWidth={1.75}
-                  aria-hidden="true"
-                />
-                <span>
-                  {resetStatus === 'confirming'
-                    ? 'Click to Confirm Reset'
-                    : resetStatus === 'done'
-                    ? 'Reset Complete!'
-                    : 'Reset Demo Data'}
-                </span>
-              </button>
+
             </div>
           </div>
 
