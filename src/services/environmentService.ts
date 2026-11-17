@@ -269,8 +269,8 @@ export class EnvironmentService {
   }
 
   /**
-   * Filters out demonstration records ($325k campaign fixtures, $175k soft pledges, $50k test transactions)
-   * when running in PRODUCTION_ONLY mode.
+   * Filters production donations by explicit synthetic provenance and verified payment status.
+   * Monetary amount is never a synthetic-data signal; genuine gifts may match historical fixture values.
    */
   public static filterProductionDonations<T extends { id?: string; amount?: number; isSynthetic?: boolean; paymentStatus?: string }>(
     donations: T[]
@@ -283,7 +283,6 @@ export class EnvironmentService {
     return donations.filter((d) => {
       if (d.isSynthetic) return false;
       if (d.id?.includes('synth') || d.id?.includes('fixture') || d.id?.includes('test-trans')) return false;
-      if (d.amount === 325000 || d.amount === 175000 || d.amount === 50000) return false;
       return d.paymentStatus === 'succeeded' || d.paymentStatus === 'VERIFIED_ACH';
     });
   }
