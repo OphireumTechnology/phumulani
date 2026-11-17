@@ -94,7 +94,7 @@ export const ProgramImpactTab: React.FC<Props> = ({ onOpenAiAssist }) => {
                 <span className="text-[10px] font-mono font-bold bg-phumulani-charcoal text-phumulani-teal px-2.5 py-0.5 rounded-full border border-phumulani-teal uppercase">
                   M25.11 · VERIFIED IMPACT LEDGER
                 </span>
-                <span className="text-[10px] font-mono font-bold bg-phumulani-earth text-phumulani-green px-2.5 py-0.5 rounded-full border border-phumulani-green uppercase">
+                <span className="text-[10px] font-mono font-bold bg-phumulani-earth text-phumulani-cream px-2.5 py-0.5 rounded-full border border-phumulani-green uppercase">
                   ZERO-SYNTHETIC GUARANTEE
                 </span>
               </div>
