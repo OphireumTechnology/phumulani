@@ -384,80 +384,69 @@ class DatabaseService {
     this.state = this.loadState();
   }
 
-  private clearBrowserEmailCaches(): void {
+  /**
+   * Version browser email storage without deleting persisted records or caches.
+   * Data cleanup is an explicit, provenance-checked, administrator-approved operation
+   * handled by DemoDataCleanupService; it must never run as a startup migration.
+   */
+  private applyVersionedEmailStorageMigration(state: AppDatabaseState): AppDatabaseState {
     try {
       localStorage.setItem(EMAIL_RESET_MARKER_STORAGE_KEY, EMAIL_RESET_MARKER_VERSION);
-      const localKeysToRemove: string[] = [];
-      for (let i = 0; i < localStorage.length; i++) {
-        const key = localStorage.key(i);
-        if (!key) continue;
-        if (
-          key !== STORAGE_KEY &&
-          key !== EMAIL_RESET_MARKER_STORAGE_KEY &&
-          (key.startsWith('phumulani_email_') || key.includes('email_cache') || key.includes('mailbox_cache'))
-        ) {
-          localKeysToRemove.push(key);
-        }
-      }
-      for (const k of localKeysToRemove) {
-        localStorage.removeItem(k);
-      }
     } catch {
-      // Ignore storage access restrictions
+      // Storage restrictions must not trigger destructive fallback or data deletion.
     }
-
-    try {
-      if (typeof sessionStorage !== 'undefined') {
-        const sessionKeysToRemove: string[] = [];
-        for (let i = 0; i < sessionStorage.length; i++) {
-          const key = sessionStorage.key(i);
-          if (key && (key.startsWith('phumulani_email_') || key.includes('email') || key.includes('mailbox'))) {
-            sessionKeysToRemove.push(key);
-          }
-        }
-        for (const k of sessionKeysToRemove) {
-          sessionStorage.removeItem(k);
-        }
-      }
-    } catch {
-      // Ignore sessionStorage restrictions
-    }
-
-    try {
-      if (typeof indexedDB !== 'undefined' && typeof indexedDB.deleteDatabase === 'function') {
-        indexedDB.deleteDatabase('phumulani_email_cache');
-        indexedDB.deleteDatabase('phumulani_email_store');
-      }
-    } catch {
-      // Ignore IndexedDB unavailability in Node/restricted browsers
-    }
-  }
-
-  private applyVersionedCleanEmailReset(state: AppDatabaseState): AppDatabaseState {
-    this.clearBrowserEmailCaches();
     return {
       ...state,
       emailResetMarkerVersion: EMAIL_RESET_MARKER_VERSION,
-      connectedMailboxes: [],
-      autoResponderRules: createCleanAutoResponderRules(),
-      autoResponderLogs: [],
-      enterpriseEmailThreads: [],
-      followUpTasks: [],
-      calendarProposals: [],
-      historicalImportJobs: [],
-      syncCheckpoints: [],
-      syncConflicts: [],
-      syncAuditLogs: [],
     };
+  }
+
+  /**
+   * Preserve unreadable persisted state before any fallback can write a fresh seed over it.
+   * The quarantined bytes remain available for an explicit recovery procedure.
+   */
+  private quarantineCorruptStoredState(raw: string): string | null {
+    const baseKey = `${STORAGE_KEY}.corrupt.${Date.now()}`;
+    let backupKey = baseKey;
+    let suffix = 0;
+
+    try {
+      while (localStorage.getItem(backupKey) !== null) {
+        suffix += 1;
+        backupKey = `${baseKey}.${suffix}`;
+      }
+      localStorage.setItem(backupKey, raw);
+      if (localStorage.getItem(backupKey) !== raw) {
+        return null;
+      }
+      return backupKey;
+    } catch {
+      // Never overwrite the original value if a verified quarantine copy cannot be made.
+      return null;
+    }
   }
 
   private loadState(): AppDatabaseState {
     const initial = getInitialState();
+    // The service is also imported by Node-side tests and SSR; there is no browser storage to read there.
+    if (typeof localStorage === 'undefined') return initial;
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
-      const markerInStorage = localStorage.getItem(EMAIL_RESET_MARKER_STORAGE_KEY);
       if (stored) {
-        const parsed = JSON.parse(stored);
+        let parsed: ReturnType<typeof JSON.parse>;
+        try {
+          parsed = JSON.parse(stored);
+        } catch (error) {
+          const backupKey = this.quarantineCorruptStoredState(stored);
+          if (!backupKey) {
+            console.error('[DatabaseService] Persisted state is unreadable and could not be safely quarantined; original storage was left untouched.', error);
+            return initial;
+          }
+          console.error(`[DatabaseService] Persisted state is unreadable and was preserved at localStorage key ${backupKey}; explicit recovery is required.`, error);
+          this.saveState(initial);
+          return initial;
+        }
+        const markerInStorage = localStorage.getItem(EMAIL_RESET_MARKER_STORAGE_KEY);
         const merged: AppDatabaseState = {
           ...initial,
           ...parsed,
@@ -510,16 +499,17 @@ class DatabaseService {
           parsed.emailResetMarkerVersion !== EMAIL_RESET_MARKER_VERSION ||
           markerInStorage !== EMAIL_RESET_MARKER_VERSION
         ) {
-          const migrated = this.applyVersionedCleanEmailReset(merged);
+          const migrated = this.applyVersionedEmailStorageMigration(merged);
           this.saveState(migrated);
           return migrated;
         }
         return merged;
       }
-    } catch {
-      // Fallback if parsing fails
+    } catch (error) {
+      // A storage read or migration error is not permission to replace persisted data.
+      console.error('[DatabaseService] Unable to read persisted application state; leaving existing storage untouched.', error);
+      return initial;
     }
-    this.clearBrowserEmailCaches();
     this.saveState(initial);
     return initial;
   }
@@ -650,9 +640,17 @@ class DatabaseService {
     return stats;
   }
 
+  /**
+   * Legacy client-side reset entry point retained for compatibility.
+   * Destructive cleanup now requires the explicit, backed-up, administrator-approved
+   * DemoDataCleanupService flow; this method only records the storage version.
+   */
   public executeClientCompleteEmailReset(): void {
-    const cleaned = this.applyVersionedCleanEmailReset(this.state);
-    this.saveState(cleaned);
+    this.saveState(this.applyVersionedEmailStorageMigration(this.state));
+    this.appendAuditLog(
+      'EMAIL_RESET_BLOCKED',
+      'Legacy automatic email reset was blocked. Use the approved provenance-checked cleanup workflow.'
+    );
   }
 
   // --- Auth & Role Switching ---
@@ -668,7 +666,7 @@ class DatabaseService {
       baseState.emailResetMarkerVersion !== EMAIL_RESET_MARKER_VERSION ||
       markerInStorage !== EMAIL_RESET_MARKER_VERSION
     ) {
-      baseState = this.applyVersionedCleanEmailReset(baseState);
+      baseState = this.applyVersionedEmailStorageMigration(baseState);
     }
     this.saveState({ ...baseState, currentUser: user });
     sessionTokenStore.syncStagedPersonaSession(user);
