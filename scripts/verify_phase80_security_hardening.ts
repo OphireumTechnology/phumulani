@@ -88,6 +88,22 @@ async function run() {
   const { AuthSecurityService } = await import('../src/services/authSecurityService');
   const { MemberCaseworkerService } = await import('../src/services/memberCaseworkerService');
   const { VolunteerOperationsService } = await import('../src/services/volunteerOperationsService');
+  const { ProductionHealthService } = await import('../src/services/productionHealthService');
+
+  // ---------------------------------------------------------------------------
+  // BLOCK 80.1: Health reporting must not equate staged/static data with live verification
+  // ---------------------------------------------------------------------------
+  const healthReport = await ProductionHealthService.probeAllComponents();
+  const healthReportPass =
+    healthReport.overallStatus === 'DEGRADED' &&
+    healthReport.verifiedCount === 0 &&
+    healthReport.checks.length === 15 &&
+    healthReport.checks.every((check) => check.status === 'UNVERIFIED');
+  record(
+    'P80-HEALTH-UNVERIFIED',
+    healthReportPass,
+    `overall=${healthReport.overallStatus}, verified=${healthReport.verifiedCount}/${healthReport.totalComponents}, allUnverified=${healthReport.checks.every((check) => check.status === 'UNVERIFIED')}`
+  );
 
   // ---------------------------------------------------------------------------
   // BLOCK 80.2: Strict Operational Modes & Fail-Closed Database Policy
