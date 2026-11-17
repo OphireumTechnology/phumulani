@@ -114,6 +114,7 @@ async function run(): Promise<void> {
   const origNodeEnv = process.env.NODE_ENV;
   const origMode = process.env.PHUMULANI_OPERATIONAL_MODE;
   const origDbUrl = process.env.DATABASE_URL;
+  const origNonProdHosts = process.env.PHUMULANI_NONPROD_DATABASE_HOSTS;
 
   try {
     console.log('=== BLOCK 70 SUITE: 1. Database Environment Policy ===');
@@ -197,6 +198,7 @@ async function run(): Promise<void> {
     // Configured but unreachable DATABASE_URL in STAGED_DEVELOPMENT must ALSO fail closed (no silent JSON fallback)
     process.env.NODE_ENV = 'development';
     process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
+    process.env.PHUMULANI_NONPROD_DATABASE_HOSTS = '127.0.0.1';
     const unreachableAdapter = createIsolatedAdapter(path.join(tempRoot, 'unreachable-pg'));
     (unreachableAdapter as any).databaseUrl = 'postgres://phumulani_user:UltraSecretPass99@127.0.0.1:59999/phumulani_db';
     let unreachableErr = '';
@@ -387,6 +389,8 @@ async function run(): Promise<void> {
     else process.env.PHUMULANI_OPERATIONAL_MODE = origMode;
     if (origDbUrl === undefined) delete process.env.DATABASE_URL;
     else process.env.DATABASE_URL = origDbUrl;
+    if (origNonProdHosts === undefined) delete process.env.PHUMULANI_NONPROD_DATABASE_HOSTS;
+    else process.env.PHUMULANI_NONPROD_DATABASE_HOSTS = origNonProdHosts;
 
     fs.rmSync(tempRoot, { recursive: true, force: true });
   }
