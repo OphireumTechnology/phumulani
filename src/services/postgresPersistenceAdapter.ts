@@ -794,16 +794,17 @@ export class PostgresPersistenceAdapter {
         return { success: false, state: 'PRODUCTION_NOT_AUTHORIZED', ssl: false,
           error: 'DATABASE_TARGET_NOT_CONFIGURED: Production database identity is missing.' };
       }
-      let configuredIdentity: URL;
-      try { configuredIdentity = new URL(configuredUrl); }
+      try { new URL(configuredUrl); }
       catch {
         return { success: false, state: 'PRODUCTION_NOT_AUTHORIZED', ssl: false,
           error: 'DATABASE_TARGET_INVALID: Configured production database URL is invalid.' };
       }
-      const identity = (u: URL) => [u.protocol, u.hostname.toLowerCase(), u.port || '5432', u.pathname, u.username].join('|');
-      if (identity(targetIdentity) !== identity(configuredIdentity)) {
+      // Production must never use caller-supplied credentials, SSL options or
+      // connection parameters. Require the exact configured URL, then use only
+      // the trusted server-side value to construct the pool.
+      if (targetUrl !== configuredUrl) {
         return { success: false, state: 'PRODUCTION_NOT_AUTHORIZED', ssl: false,
-          error: 'DATABASE_TARGET_NOT_AUTHORIZED: External verification must target the configured production database.' };
+          error: 'DATABASE_TARGET_NOT_AUTHORIZED: External verification must use the configured production database URL.' };
       }
     } else {
       const allowedHosts = (process.env.PHUMULANI_NONPROD_DATABASE_HOSTS || '').split(',').map(h => h.trim()).filter(Boolean);
