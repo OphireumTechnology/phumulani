@@ -146,19 +146,30 @@ async function run(): Promise<void> {
     const polStagedProd = EnvironmentService.getDatabasePolicy();
     record(
       'B70-03',
-      polStagedProd.policyCode === 'STAGED_DEVELOPMENT_AUTHORIZED' &&
-        polStagedProd.requireLiveDatabase === false &&
-        polStagedProd.allowEmbeddedFallback === true,
-      `Explicit STAGED_DEVELOPMENT preserves authorized embedded mode`
+      polStagedProd.policyCode === 'NODE_ENV_PRODUCTION_STAGED_FORBIDDEN' &&
+        polStagedProd.effectiveMode === 'PRODUCTION_ONLY' &&
+        polStagedProd.requireLiveDatabase === true &&
+        polStagedProd.allowEmbeddedFallback === false,
+      `NODE_ENV=production rejects explicit STAGED_DEVELOPMENT and fails closed (${polStagedProd.policyCode})`
     );
 
     process.env.NODE_ENV = 'test';
-    delete process.env.PHUMULANI_OPERATIONAL_MODE;
-    const polLocal = EnvironmentService.getDatabasePolicy();
+    const polStagedTest = EnvironmentService.getDatabasePolicy();
     record(
       'B70-04',
+      polStagedTest.policyCode === 'STAGED_DEVELOPMENT_AUTHORIZED' &&
+        polStagedTest.effectiveMode === 'STAGED_DEVELOPMENT' &&
+        polStagedTest.requireLiveDatabase === false &&
+        polStagedTest.allowEmbeddedFallback === true,
+      `Non-production test environment preserves explicit STAGED_DEVELOPMENT (${polStagedTest.policyCode})`
+    );
+
+    process.env.PHUMULANI_OPERATIONAL_MODE = 'LOCAL_DEVELOPMENT';
+    const polLocal = EnvironmentService.getDatabasePolicy();
+    record(
+      'B70-04-LOCAL',
       polLocal.policyCode === 'LOCAL_DEVELOPMENT' && polLocal.allowEmbeddedFallback === true,
-      `Non-production test environment preserves embedded storage (${polLocal.policyCode})`
+      `Non-production test environment preserves LOCAL_DEVELOPMENT (${polLocal.policyCode})`
     );
 
     console.log('\n=== BLOCK 70 SUITE: 2. Fail-Closed Initialization & Readiness ===');
