@@ -773,18 +773,45 @@ export class PostgresPersistenceAdapter {
       };
     }
 
-    // Fail-safe protection against unauthorized production database activation (M53.12)
-    if (
-      (targetUrl.toLowerCase().includes('prod') || targetUrl.toLowerCase().includes('production')) &&
-      process.env.PHUMULANI_OPERATIONAL_MODE !== 'PRODUCTION_AUTHORIZED' &&
-      process.env.PHUMULANI_OPERATIONAL_MODE !== 'PRODUCTION_ONLY'
-    ) {
-      return {
-        success: false,
-        state: 'PRODUCTION_NOT_AUTHORIZED',
-        ssl: false,
-        error: 'PRODUCTION_NOT_AUTHORIZED: Production database access is not authorized in STAGED_DEVELOPMENT mode.',
-      };
+    // Validate the caller-supplied target before constructing a connection pool.
+    // In production, external verification must use the configured database identity;
+    // in non-production, the target host must be explicitly allowlisted.
+    const policy = EnvironmentService.getDatabasePolicy();
+    const configuredUrl = this.resolveDatabaseUrl();
+    const isProduction = policy.nodeEnv === 'production' || policy.requireLiveDatabase;
+    let targetIdentity: URL;
+    try {
+      targetIdentity = new URL(targetUrl);
+      if (!['postgres:', 'postgresql:'].includes(targetIdentity.protocol)) {
+        throw new Error('Unsupported database URL protocol');
+      }
+    } catch {
+      return { success: false, state: 'EXTERNAL_CONNECTION_FAILED', ssl: false,
+        error: 'DATABASE_TARGET_INVALID: Expected a PostgreSQL connection URL.' };
+    }
+    if (isProduction) {
+      if (!configuredUrl) {
+        return { success: false, state: 'PRODUCTION_NOT_AUTHORIZED', ssl: false,
+          error: 'DATABASE_TARGET_NOT_CONFIGURED: Production database identity is missing.' };
+      }
+      let configuredIdentity: URL;
+      try { configuredIdentity = new URL(configuredUrl); }
+      catch {
+        return { success: false, state: 'PRODUCTION_NOT_AUTHORIZED', ssl: false,
+          error: 'DATABASE_TARGET_INVALID: Configured production database URL is invalid.' };
+      }
+      const identity = (u: URL) => [u.protocol, u.hostname.toLowerCase(), u.port || '5432', u.pathname, u.username].join('|');
+      if (identity(targetIdentity) !== identity(configuredIdentity)) {
+        return { success: false, state: 'PRODUCTION_NOT_AUTHORIZED', ssl: false,
+          error: 'DATABASE_TARGET_NOT_AUTHORIZED: External verification must target the configured production database.' };
+      }
+    } else {
+      const allowedHosts = (process.env.PHUMULANI_NONPROD_DATABASE_HOSTS || '').split(',').map(h => h.trim()).filter(Boolean);
+      const validation = PostgresPersistenceAdapter.validateDatabaseTarget(targetUrl, policy.effectiveMode, allowedHosts);
+      if (!validation.valid) {
+        return { success: false, state: 'PRODUCTION_NOT_AUTHORIZED', ssl: false,
+          error: validation.error || 'DATABASE_TARGET_NOT_ALLOWLISTED' };
+      }
     }
 
     const t0 = Date.now();
