@@ -96,7 +96,7 @@ async function readIndexedDb(page: any) {
 
 async function seedExistingEmailState(page: any, markerState: MarkerState) {
   await page.evaluate(
-    ({ markerState, fixture }) => {
+    ({ markerState, fixture }: { markerState: MarkerState; fixture: typeof preservedEmailState }) => {
       const raw = localStorage.getItem('phumulani_database_v1');
       const state = raw ? JSON.parse(raw) : {};
       Object.assign(state, fixture);
