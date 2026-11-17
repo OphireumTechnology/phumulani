@@ -88,6 +88,43 @@ async function run() {
   const { AuthSecurityService } = await import('../src/services/authSecurityService');
   const { MemberCaseworkerService } = await import('../src/services/memberCaseworkerService');
   const { VolunteerOperationsService } = await import('../src/services/volunteerOperationsService');
+  const { spawnSync } = await import('node:child_process');
+
+  // ---------------------------------------------------------------------------
+  // BLOCK 80.1: Startup and non-production database targets fail closed
+  // ---------------------------------------------------------------------------
+  const startCommand = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8')).scripts?.start || '';
+  const startupEnvGuardPass =
+    startCommand.includes('NODE_ENV must be explicitly set') &&
+    startCommand.includes('[ -z "$NODE_ENV" ]');
+  record('P80-STARTUP-NODE-ENV', startupEnvGuardPass, `startRequiresExplicitNodeEnv=${startupEnvGuardPass}`);
+
+  const supabaseShapedUrl = 'postgres://user:pass@db.projectref.supabase.co:5432/postgres?sslmode=require';
+  const supabaseUnlisted = PostgresPersistenceAdapter.validateDatabaseTarget(
+    supabaseShapedUrl,
+    'STAGED_DEVELOPMENT',
+    []
+  );
+  const supabaseAllowlisted = PostgresPersistenceAdapter.validateDatabaseTarget(
+    supabaseShapedUrl,
+    'STAGED_DEVELOPMENT',
+    ['db.projectref.supabase.co']
+  );
+  const productionTargetAllowed = PostgresPersistenceAdapter.validateDatabaseTarget(
+    supabaseShapedUrl,
+    'PRODUCTION_ONLY',
+    []
+  );
+  const dbHostAllowlistPass =
+    !supabaseUnlisted.valid &&
+    supabaseUnlisted.error?.includes('DATABASE_TARGET_NOT_ALLOWLISTED') === true &&
+    supabaseAllowlisted.valid &&
+    productionTargetAllowed.valid;
+  record(
+    'P80-DB-HOST-ALLOWLIST',
+    dbHostAllowlistPass,
+    `supabaseUnlistedBlocked=${!supabaseUnlisted.valid}, explicitStagingAllowlist=${supabaseAllowlisted.valid}, productionMode=${productionTargetAllowed.valid}`
+  );
 
   // ---------------------------------------------------------------------------
   // BLOCK 80.2: Strict Operational Modes & Fail-Closed Database Policy
@@ -95,6 +132,7 @@ async function run() {
   const origMode = process.env.PHUMULANI_OPERATIONAL_MODE;
   const origNodeEnv = process.env.NODE_ENV;
   const origDbUrl = process.env.DATABASE_URL;
+  const origNonProdHosts = process.env.PHUMULANI_NONPROD_DATABASE_HOSTS;
   const origDevFixtures = process.env.PHUMULANI_ENABLE_DEV_FIXTURES;
   const origEmailFixtures = process.env.PHUMULANI_EMAIL_TEST_FIXTURES;
 
@@ -137,12 +175,13 @@ async function run() {
     process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
     process.env.NODE_ENV = 'development';
     const adapter = PostgresPersistenceAdapter.getInstance();
+    process.env.PHUMULANI_NONPROD_DATABASE_HOSTS = '';
     process.env.DATABASE_URL = 'postgres://user:pass@prod-db.internal:5432/phumulani_production?sslmode=require';
     let stagedProdUrlBlocked = false;
     try {
       await adapter.initialize();
     } catch (e: any) {
-      stagedProdUrlBlocked = e.message.includes('PRODUCTION_NOT_AUTHORIZED');
+      stagedProdUrlBlocked = e.message.includes('DATABASE_TARGET_NOT_ALLOWLISTED');
     }
     delete process.env.DATABASE_URL;
     await adapter.initialize();
@@ -185,6 +224,8 @@ async function run() {
     else process.env.NODE_ENV = origNodeEnv;
     if (origDbUrl === undefined) delete process.env.DATABASE_URL;
     else process.env.DATABASE_URL = origDbUrl;
+    if (origNonProdHosts === undefined) delete process.env.PHUMULANI_NONPROD_DATABASE_HOSTS;
+    else process.env.PHUMULANI_NONPROD_DATABASE_HOSTS = origNonProdHosts;
     if (origDevFixtures === undefined) delete process.env.PHUMULANI_ENABLE_DEV_FIXTURES;
     else process.env.PHUMULANI_ENABLE_DEV_FIXTURES = origDevFixtures;
     if (origEmailFixtures === undefined) delete process.env.PHUMULANI_EMAIL_TEST_FIXTURES;
