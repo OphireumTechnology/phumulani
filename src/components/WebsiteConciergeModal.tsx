@@ -43,6 +43,9 @@ export const WebsiteConciergeModal: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [humanEscalated, setHumanEscalated] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const restoreLauncherFocus = useRef(false);
+  const launcherRef = useRef<HTMLButtonElement>(null);
 
   const quickQuestions = [
     'How do I volunteer with youth mentorship?',
@@ -57,15 +60,35 @@ export const WebsiteConciergeModal: React.FC = () => {
     }
   }, [messages, isOpen]);
 
-  // Keyboard accessibility: ESC key handling
+  // Keep keyboard navigation inside the active concierge dialog.
   useEffect(() => {
+    if (!isOpen) return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    restoreLauncherFocus.current = true;
+    dialog.focus();
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.defaultPrevented) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
         setIsOpen(false);
+      } else if (e.key === 'Tab') {
+        const controls = Array.from(dialog.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), select:not([disabled]), input:not([disabled]), textarea:not([disabled]), a[href], [tabindex="0"]'
+        )).filter(el => el.getClientRects().length > 0 && el.tabIndex >= 0 && getComputedStyle(el).visibility === 'visible');
+        const first = controls[0];
+        const last = controls[controls.length - 1];
+        if (!first || !last) { e.preventDefault(); dialog.focus(); return; }
+        const active = document.activeElement;
+        if (e.shiftKey && (active === first || active === dialog || !dialog.contains(active))) {
+          e.preventDefault(); last.focus();
+        } else if (!e.shiftKey && (active === last || active === dialog || !dialog.contains(active))) {
+          e.preventDefault(); first.focus();
+        }
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [isOpen]);
 
   const handleSend = async (textToSend?: string) => {
@@ -134,6 +157,7 @@ export const WebsiteConciergeModal: React.FC = () => {
               transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
               onClick={() => setIsOpen(true)}
               className="flex items-center gap-2.5 max-w-full bg-phumulani-earth hover:bg-phumulani-charcoal text-white px-4 py-2.5 sm:py-3 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer group border border-white/90 focus-visible:ring-2 focus-visible:ring-phumulani-gold"
+              ref={launcherRef}
               aria-label="Open Website Concierge"
             >
               <Bot
@@ -150,9 +174,16 @@ export const WebsiteConciergeModal: React.FC = () => {
       </div>
 
       {/* Concierge Dialog */}
-      <AnimatePresence>
+      <AnimatePresence onExitComplete={() => {
+        if (restoreLauncherFocus.current && !isOpen) {
+          restoreLauncherFocus.current = false;
+          launcherRef.current?.focus({ preventScroll: true });
+        }
+      }}>
         {isOpen && (
           <motion.div
+            ref={dialogRef}
+            tabIndex={-1}
             role="dialog"
             aria-labelledby="concierge-dialog-title"
             aria-modal="true"

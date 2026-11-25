@@ -2,7 +2,7 @@ name: Phumulani Comprehensive CI & Browser Verification Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, develop, 'feature/phase81-production-readiness' ]
   pull_request:
     branches: [ main, develop ]
   workflow_dispatch:

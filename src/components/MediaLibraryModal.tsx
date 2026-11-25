@@ -4,7 +4,7 @@
  * Phumulani Authentic Media Library & Safeguarding Inventory Modal
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ShieldCheck, ShieldAlert, FileText, Download, CheckCircle2, Lock, ExternalLink, Filter, Search, Copy, Check } from 'lucide-react';
 import { PHUMULANI_MEDIA_INVENTORY, MediaAsset } from '../services/mediaInventory';
 import { SafeImage } from './SafeImage';
@@ -19,14 +19,47 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
   const [searchTerm, setSearchTerm] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef(onClose);
+  useEffect(() => { closeRef.current = onClose; }, [onClose]);
+  const dialogOpen = isOpen;
   useEffect(() => {
-    if (!isOpen) return;
+    if (!dialogOpen) return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const previous = document.activeElement;
+    dialog.focus();
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.defaultPrevented) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeRef.current();
+      } else if (e.key === 'Tab') {
+        const controls = Array.from(dialog.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex="0"]'
+        )).filter(el => el.tabIndex >= 0 && el.getClientRects().length > 0 && getComputedStyle(el).visibility === 'visible');
+        const first = controls[0], last = controls[controls.length - 1];
+        const active = document.activeElement;
+        if (!first || !last) { e.preventDefault(); dialog.focus(); return; }
+        if (e.shiftKey && (active === first || active === dialog || !dialog.contains(active))) {
+          e.preventDefault(); last.focus();
+        } else if (!e.shiftKey && (active === last || active === dialog || !dialog.contains(active))) {
+          e.preventDefault(); first.focus();
+        }
+      }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      if (previous instanceof HTMLElement && previous.isConnected) previous.focus();
+    };
+  }, [dialogOpen]);
+
+  useEffect(() => {
+    if (!copiedId) return;
+    const timer = window.setTimeout(() => setCopiedId(null), 3000);
+    return () => window.clearTimeout(timer);
+  }, [copiedId]);
 
   if (!isOpen) return null;
 
@@ -39,10 +72,13 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
     return matchesCat && matchesSearch;
   });
 
-  const handleCopyManifest = () => {
-    navigator.clipboard.writeText(JSON.stringify(PHUMULANI_MEDIA_INVENTORY, null, 2));
-    setCopiedId('manifest');
-    setTimeout(() => setCopiedId(null), 3000);
+  const handleCopyManifest = async () => {
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(PHUMULANI_MEDIA_INVENTORY, null, 2));
+      setCopiedId('manifest');
+    } catch {
+      setCopiedId('error');
+    }
   };
 
   const categories = [
@@ -59,6 +95,8 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
 
   return (
     <div
+      ref={dialogRef}
+      tabIndex={-1}
       role="dialog"
       aria-modal="true"
       aria-label="Phumulani Media Preservation and Safeguarding Registry"
@@ -98,6 +136,7 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
             <Search className="w-4 h-4 text-phumulani-charcoal shrink-0" />
             <input
               type="text"
+              aria-label="Search media by title, caption or ID"
               placeholder="Search title, caption, ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -110,6 +149,7 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
+                aria-pressed={selectedCategory === cat.id}
                 className={`px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-colors cursor-pointer whitespace-nowrap ${
                   selectedCategory === cat.id
                     ? 'bg-phumulani-earth text-white'
@@ -126,7 +166,7 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
             className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-phumulani-gold/20 text-phumulani-earth border border-phumulani-earth/30 rounded-lg font-bold transition-colors cursor-pointer whitespace-nowrap"
           >
             {copiedId === 'manifest' ? <Check className="w-3.5 h-3.5 text-phumulani-green" /> : <Copy className="w-3.5 h-3.5" />}
-            <span>{copiedId === 'manifest' ? 'Manifest Copied!' : 'Copy JSON Manifest'}</span>
+            <span role="status">{copiedId === 'manifest' ? 'Manifest Copied!' : copiedId === 'error' ? 'Copy failed. Try again.' : 'Copy JSON Manifest'}</span>
           </button>
         </div>
 
