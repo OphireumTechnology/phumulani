@@ -4,7 +4,7 @@
  * Phumulani Authentic Media Library & Safeguarding Inventory Modal
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ShieldCheck, ShieldAlert, FileText, Download, CheckCircle2, Lock, ExternalLink, Filter, Search, Copy, Check } from 'lucide-react';
 import { PHUMULANI_MEDIA_INVENTORY, MediaAsset } from '../services/mediaInventory';
 import { SafeImage } from './SafeImage';
@@ -19,14 +19,41 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
   const [searchTerm, setSearchTerm] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef(onClose);
+  useEffect(() => { closeRef.current = onClose; }, [onClose]);
+  const dialogOpen = isOpen;
   useEffect(() => {
-    if (!isOpen) return;
+    if (!dialogOpen) return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const previous = document.activeElement;
+    dialog.focus();
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.defaultPrevented) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeRef.current();
+      } else if (e.key === 'Tab') {
+        const controls = Array.from(dialog.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex="0"]'
+        )).filter(el => el.tabIndex >= 0 && el.getClientRects().length > 0 && getComputedStyle(el).visibility === 'visible');
+        const first = controls[0], last = controls[controls.length - 1];
+        const active = document.activeElement;
+        if (!first || !last) { e.preventDefault(); dialog.focus(); return; }
+        if (e.shiftKey && (active === first || active === dialog || !dialog.contains(active))) {
+          e.preventDefault(); last.focus();
+        } else if (!e.shiftKey && (active === last || active === dialog || !dialog.contains(active))) {
+          e.preventDefault(); first.focus();
+        }
+      }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, onClose]);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      if (previous instanceof HTMLElement && previous.isConnected) previous.focus();
+    };
+  }, [dialogOpen]);
 
   if (!isOpen) return null;
 
@@ -59,6 +86,8 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
 
   return (
     <div
+      ref={dialogRef}
+      tabIndex={-1}
       role="dialog"
       aria-modal="true"
       aria-label="Phumulani Media Preservation and Safeguarding Registry"
