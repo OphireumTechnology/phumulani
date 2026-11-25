@@ -4,7 +4,7 @@
  * Official 501(c)(3) Donation Receipt & Tax Acknowledgment Component
  */
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Donation } from '../types';
 import { X, Printer, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { PhumulaniLogo } from './branding/PhumulaniLogo';
@@ -15,14 +15,41 @@ interface ReceiptModalProps {
 }
 
 export const ReceiptModal: React.FC<ReceiptModalProps> = ({ donation, onClose }) => {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef(onClose);
+  useEffect(() => { closeRef.current = onClose; }, [onClose]);
+  const dialogOpen = Boolean(donation);
   useEffect(() => {
-    if (!donation) return;
+    if (!dialogOpen) return;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const previous = document.activeElement;
+    dialog.focus();
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.defaultPrevented) return;
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        closeRef.current();
+      } else if (e.key === 'Tab') {
+        const controls = Array.from(dialog.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex="0"]'
+        )).filter(el => el.tabIndex >= 0 && el.getClientRects().length > 0 && getComputedStyle(el).visibility === 'visible');
+        const first = controls[0], last = controls[controls.length - 1];
+        const active = document.activeElement;
+        if (!first || !last) { e.preventDefault(); dialog.focus(); return; }
+        if (e.shiftKey && (active === first || active === dialog || !dialog.contains(active))) {
+          e.preventDefault(); last.focus();
+        } else if (!e.shiftKey && (active === last || active === dialog || !dialog.contains(active))) {
+          e.preventDefault(); first.focus();
+        }
+      }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [donation, onClose]);
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      if (previous instanceof HTMLElement && previous.isConnected) previous.focus();
+    };
+  }, [dialogOpen]);
 
   if (!donation) return null;
 
@@ -32,6 +59,8 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ donation, onClose })
 
   return (
     <div
+      ref={dialogRef}
+      tabIndex={-1}
       role="dialog"
       aria-modal="true"
       aria-label="Official 501(c)(3) Donation Receipt"
