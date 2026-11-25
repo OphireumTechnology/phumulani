@@ -127,7 +127,7 @@ export const VideoEmbedPlayer: React.FC<VideoEmbedPlayerProps> = ({ media }) => 
         <button
           type="button"
           onClick={() => setUseHashUrl(!useHashUrl)}
-          className="text-[11px] text-white hover:text-phumulani-charcoal inline-flex items-center gap-1 cursor-pointer transition-colors px-2.5 py-1 rounded-lg bg-phumulani-earth hover:bg-phumulani-charcoal border border-phumulani-gold/40"
+          className="text-[11px] text-white hover:text-phumulani-gold inline-flex items-center gap-1 cursor-pointer transition-colors px-2.5 py-1 rounded-lg bg-phumulani-earth hover:bg-phumulani-charcoal border border-phumulani-gold/40"
           title="Toggle authorized embed source with unlisted security hash"
         >
           <RefreshCw className="w-3 h-3 shrink-0" aria-hidden="true" />

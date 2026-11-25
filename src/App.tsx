@@ -12,10 +12,18 @@ import { Donation, UserRole } from './types';
 import { Header } from './components/Header';
 import { Footer } from './components/Footer';
 import { RoleSwitcherBar } from './components/RoleSwitcherBar';
-import { WebsiteConciergeModal } from './components/WebsiteConciergeModal';
-import { ReceiptModal } from './components/ReceiptModal';
-import { MediaLibraryModal } from './components/MediaLibraryModal';
-import { PublicWebsiteView } from './views/PublicWebsiteView';
+const WebsiteConciergeModal = React.lazy(() =>
+  import('./components/WebsiteConciergeModal').then((m) => ({ default: m.WebsiteConciergeModal }))
+);
+const ReceiptModal = React.lazy(() =>
+  import('./components/ReceiptModal').then((m) => ({ default: m.ReceiptModal }))
+);
+const MediaLibraryModal = React.lazy(() =>
+  import('./components/MediaLibraryModal').then((m) => ({ default: m.MediaLibraryModal }))
+);
+const PublicWebsiteView = React.lazy(() =>
+  import('./views/PublicWebsiteView').then((m) => ({ default: m.PublicWebsiteView }))
+);
 
 const CommunityPortalView = React.lazy(() =>
   import('./views/CommunityPortalView').then((m) => ({ default: m.CommunityPortalView }))
@@ -342,20 +350,26 @@ export default function App() {
         )}
       </main>
 
-      {/* 4. INTERACTIVE WEBSITE CONCIERGE (AGENT A10) */}
-      <WebsiteConciergeModal />
+      <Suspense fallback={null}>
+        {/* 4. INTERACTIVE WEBSITE CONCIERGE (AGENT A10) */}
+        <WebsiteConciergeModal />
 
-      {/* 5. OFFICIAL 501(C)(3) TAX RECEIPT PRINT/VIEW MODAL */}
-      <ReceiptModal
-        donation={activeReceiptDonation}
-        onClose={() => setActiveReceiptDonation(null)}
-      />
+        {/* 5. OFFICIAL 501(C)(3) TAX RECEIPT PRINT/VIEW MODAL */}
+        {activeReceiptDonation && (
+          <ReceiptModal
+            donation={activeReceiptDonation}
+            onClose={() => setActiveReceiptDonation(null)}
+          />
+        )}
 
-      {/* 5.5 AUTHENTIC MEDIA PRESERVATION & SAFEGUARDING REGISTRY MODAL */}
-      <MediaLibraryModal
-        isOpen={isMediaRegistryOpen}
-        onClose={() => setIsMediaRegistryOpen(false)}
-      />
+        {/* 5.5 AUTHENTIC MEDIA PRESERVATION & SAFEGUARDING REGISTRY MODAL */}
+        {isMediaRegistryOpen && (
+          <MediaLibraryModal
+            isOpen={isMediaRegistryOpen}
+            onClose={() => setIsMediaRegistryOpen(false)}
+          />
+        )}
+      </Suspense>
 
       {/* 6. GLOBAL FOOTER (on public view) */}
       {activeView === 'public' && (

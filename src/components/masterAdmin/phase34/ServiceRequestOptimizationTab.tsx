@@ -105,7 +105,7 @@ export const ServiceRequestOptimizationTab: React.FC<Props> = ({ currentUser }) 
                     }`}>
                       {req.status}
                     </span>
-                    <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded ${
+                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
                       req.priority === 'URGENT' ? 'bg-phumulani-cream text-phumulani-earth' : 'bg-phumulani-cream text-phumulani-charcoal'
                     }`}>
                       {req.priority}
@@ -234,7 +234,18 @@ export const ServiceRequestOptimizationTab: React.FC<Props> = ({ currentUser }) 
 
       {/* Escalation Modal */}
       {isEscalateOpen && selectedRequest && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Escalate Service Request"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsEscalateOpen(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setIsEscalateOpen(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 p-4"
+        >
           <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-xl border border-phumulani-cream space-y-4">
             <h3 className="text-base font-bold text-phumulani-charcoal">Escalate Service Request</h3>
             <p className="text-xs text-phumulani-charcoal">

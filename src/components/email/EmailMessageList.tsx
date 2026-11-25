@@ -96,21 +96,22 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
             </button>
           )}
           <div className="relative flex-1">
-            <Search className="w-4 h-4 text-phumulani-charcoal/55 absolute left-2.5 top-2.5 pointer-events-none" />
+            <Search className="w-4 h-4 text-phumulani-charcoal/75 absolute left-2.5 top-2.5 pointer-events-none" aria-hidden="true" />
             <input
               type="text"
+              aria-label="Filter messages by sender, subject, or keywords"
               placeholder="Search sender, subject, keywords..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-8 pr-7 py-1.5 text-xs bg-white border border-phumulani-charcoal/15 rounded-lg focus:outline-none focus:border-phumulani-earth text-phumulani-charcoal placeholder:text-phumulani-charcoal/50 transition-colors"
+              className="w-full pl-8 pr-7 py-1.5 text-xs bg-white border border-phumulani-charcoal/15 rounded-lg focus:outline-none focus:border-phumulani-earth focus-visible:ring-2 focus-visible:ring-phumulani-earth/30 text-phumulani-charcoal placeholder:text-phumulani-charcoal/75 transition-colors"
             />
             {searchQuery && (
               <button
                 onClick={() => onSearchChange('')}
-                className="absolute right-2 top-2 text-phumulani-charcoal/60 hover:text-phumulani-earth cursor-pointer"
+                className="absolute right-2 top-2 text-phumulani-charcoal/80 hover:text-phumulani-earth cursor-pointer"
                 aria-label="Clear message search"
               >
-                <X className="w-3.5 h-3.5" />
+                <X className="w-3.5 h-3.5" aria-hidden="true" />
               </button>
             )}
           </div>
@@ -200,7 +201,7 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
         {threads.length === 0 ? (
           mailboxes.length === 0 ? (
             <div className="p-8 text-center text-phumulani-charcoal text-xs flex flex-col items-center justify-center h-full">
-              <Inbox className="w-10 h-10 mx-auto mb-3 text-phumulani-charcoal/40" />
+              <Inbox className="w-10 h-10 mx-auto mb-3 text-phumulani-charcoal/40" aria-hidden="true" />
               <p className="font-heading font-bold text-phumulani-charcoal text-sm">No Email Accounts Connected</p>
               <p className="text-xs text-phumulani-charcoal/70 mt-1.5 max-w-xs text-center leading-relaxed">
                 Your Email Command Center is ready. Connect and authorize your organizational email accounts to begin receiving and managing messages.
@@ -210,14 +211,14 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
                   onClick={onOpenManageAccounts}
                   className="mt-4 px-3.5 py-2 text-xs font-semibold bg-phumulani-earth hover:bg-phumulani-earth/90 text-white rounded-lg transition-colors shadow-xs flex items-center gap-1.5 cursor-pointer"
                 >
-                  <Inbox className="w-3.5 h-3.5" />
+                  <Inbox className="w-3.5 h-3.5" aria-hidden="true" />
                   <span>Connect Email Account</span>
                 </button>
               )}
             </div>
           ) : (
             <div className="p-8 text-center text-phumulani-charcoal text-xs flex flex-col items-center justify-center h-full">
-              <Inbox className="w-8 h-8 mx-auto mb-2 text-phumulani-charcoal/35" />
+              <Inbox className="w-8 h-8 mx-auto mb-2 text-phumulani-charcoal/35" aria-hidden="true" />
               <p className="font-semibold text-phumulani-charcoal">Inbox is empty</p>
               <p className="text-[11px] text-phumulani-charcoal/70 mt-1">
                 {searchQuery || priorityFilter !== 'all' || categoryFilter !== 'all'
@@ -272,7 +273,7 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
                     </span>
                   </div>
 
-                  <span className="text-[11px] font-mono tabular-nums text-phumulani-charcoal/65 shrink-0">
+                  <span className="text-[11px] font-mono tabular-nums text-phumulani-charcoal/80 shrink-0">
                     {dateDisplay}
                   </span>
                 </div>
@@ -291,7 +292,7 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
                 <div className="flex flex-wrap items-center gap-1.5 mt-2 text-[10px]">
                   {/* Priority Badge ONLY when P0 or P1 */}
                   {isPriority && (
-                    <span className={`px-1.5 py-0.2 rounded-sm font-bold uppercase text-[9px] ${
+                    <span className={`px-1.5 py-0.5 rounded-sm font-bold uppercase text-[9px] ${
                       thread.priority === 'P0' ? 'bg-phumulani-earth/10 text-phumulani-earth border border-phumulani-earth/30' : 'bg-phumulani-gold/15 text-phumulani-charcoal border border-phumulani-gold/50'
                     }`}>
                       {thread.priority}
@@ -300,23 +301,23 @@ export const EmailMessageList: React.FC<EmailMessageListProps> = ({
 
                   {/* Pending Approval Badge */}
                   {hasPendingApproval && (
-                    <span className="flex items-center gap-1 px-1.5 py-0.2 rounded-sm bg-phumulani-gold/15 text-phumulani-charcoal border border-phumulani-gold/40 font-medium text-[9px]">
-                      <Sparkles className="w-2.5 h-2.5 text-phumulani-earth" />
+                    <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-sm bg-phumulani-gold/15 text-phumulani-charcoal border border-phumulani-gold/40 font-medium text-[9px]">
+                      <Sparkles className="w-2.5 h-2.5 text-phumulani-earth" aria-hidden="true" />
                       Approval Req
                     </span>
                   )}
 
                   {/* Assigned Staff Indicator */}
                   {thread.assignedStaffName && (
-                    <span className="flex items-center gap-1 text-phumulani-charcoal/75 font-medium">
-                      <UserCheck className="w-2.5 h-2.5 text-phumulani-charcoal/60" />
+                    <span className="flex items-center gap-1 text-phumulani-charcoal/80 font-medium">
+                      <UserCheck className="w-2.5 h-2.5 text-phumulani-charcoal/75" aria-hidden="true" />
                       <span className="truncate max-w-[100px]">{thread.assignedStaffName}</span>
                     </span>
                   )}
 
                   {/* SLA Target indicator */}
                   {thread.slaDeadline && (
-                    <span className="text-phumulani-charcoal/65 font-mono tabular-nums ml-auto">
+                    <span className="text-phumulani-charcoal/80 font-mono tabular-nums ml-auto">
                       SLA: {new Date(thread.slaDeadline).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </span>
                   )}

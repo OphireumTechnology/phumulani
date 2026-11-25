@@ -4,11 +4,10 @@
  * Official 501(c)(3) Donation Receipt & Tax Acknowledgment Component
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Donation } from '../types';
-import { X, Printer, CheckCircle2, ShieldCheck, Download } from 'lucide-react';
+import { X, Printer, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { PhumulaniLogo } from './branding/PhumulaniLogo';
-import { BrandPatternDivider } from './branding/BrandPatternDivider';
 
 interface ReceiptModalProps {
   donation: Donation | null;
@@ -16,6 +15,15 @@ interface ReceiptModalProps {
 }
 
 export const ReceiptModal: React.FC<ReceiptModalProps> = ({ donation, onClose }) => {
+  useEffect(() => {
+    if (!donation) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [donation, onClose]);
+
   if (!donation) return null;
 
   const handlePrint = () => {
@@ -23,7 +31,15 @@ export const ReceiptModal: React.FC<ReceiptModalProps> = ({ donation, onClose })
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Official 501(c)(3) Donation Receipt"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+    >
       <div className="bg-white rounded-2xl max-w-xl w-full border border-phumulani-charcoal/15 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Actions Bar */}
         <div className="bg-phumulani-cream p-3.5 flex items-center justify-between border-b border-phumulani-charcoal/12 no-print">

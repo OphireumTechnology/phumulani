@@ -176,9 +176,9 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
             >
               Phumulani
             </button>
-            <span className="text-phumulani-charcoal/40 hidden sm:inline">/</span>
+            <span className="text-phumulani-charcoal/75 hidden sm:inline" aria-hidden="true">/</span>
             <span className="font-semibold text-phumulani-charcoal truncate">{portalTitle}</span>
-            <span className="text-phumulani-charcoal/40">/</span>
+            <span className="text-phumulani-charcoal/75" aria-hidden="true">/</span>
             <span className="font-bold text-phumulani-earth truncate">{activeItemLabel}</span>
           </div>
         </div>
@@ -247,7 +247,7 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
           >
             <Bell className="w-4 h-4 text-phumulani-earth" />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-phumulani-earth text-white font-bold text-[9px] px-1.5 py-0.2 rounded-full ring-2 ring-white tabular-nums">
+              <span className="absolute -top-1 -right-1 bg-phumulani-earth text-white font-bold text-[9px] px-1.5 py-0.5 rounded-full ring-2 ring-white tabular-nums">
                 {unreadCount}
               </span>
             )}
@@ -366,7 +366,12 @@ export const PortalLayout: React.FC<PortalLayoutProps> = ({
 
         {/* MOBILE DRAWER SIDEBAR */}
         {mobileSidebarOpen && (
-          <div className="md:hidden fixed inset-0 z-50 flex">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Mobile portal navigation"
+            className="md:hidden fixed inset-0 z-50 flex"
+          >
             <div
               className="fixed inset-0 bg-phumulani-charcoal/80 backdrop-blur-xs"
               onClick={() => setMobileSidebarOpen(false)}

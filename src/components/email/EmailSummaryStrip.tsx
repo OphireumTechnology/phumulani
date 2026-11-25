@@ -104,7 +104,7 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
             >
               <Inbox className="w-3.5 h-3.5 text-phumulani-earth" />
               <span>Inbox</span>
-              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.2 rounded-sm border border-phumulani-charcoal/12 text-[11px]">
+              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.5 rounded-sm border border-phumulani-charcoal/12 text-[11px]">
                 {inboxCount}
               </span>
             </button>
@@ -122,7 +122,7 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
               title="Filter by unread messages"
             >
               <span>Unread</span>
-              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.2 rounded-sm border border-phumulani-charcoal/12 text-[11px]">
+              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.5 rounded-sm border border-phumulani-charcoal/12 text-[11px]">
                 {unreadCount}
               </span>
             </button>
@@ -141,7 +141,7 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
             >
               <AlertTriangle className="w-3.5 h-3.5 text-phumulani-earth" />
               <span>Priority</span>
-              <span className="font-mono tabular-nums font-bold text-phumulani-earth bg-white px-1.5 py-0.2 rounded-sm border border-phumulani-earth/30 text-[11px]">
+              <span className="font-mono tabular-nums font-bold text-phumulani-earth bg-white px-1.5 py-0.5 rounded-sm border border-phumulani-earth/30 text-[11px]">
                 {priorityCount}
               </span>
             </button>
@@ -156,7 +156,7 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
             >
               <FileEdit className="w-3.5 h-3.5 text-phumulani-charcoal/75" />
               <span>Drafts</span>
-              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.2 rounded-sm border border-phumulani-charcoal/12 text-[11px]">
+              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.5 rounded-sm border border-phumulani-charcoal/12 text-[11px]">
                 {draftsCount}
               </span>
             </button>
@@ -171,7 +171,7 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
             >
               <Send className="w-3.5 h-3.5 text-phumulani-charcoal/75" />
               <span>Sent</span>
-              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.2 rounded-sm border border-phumulani-charcoal/12 text-[11px]">
+              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.5 rounded-sm border border-phumulani-charcoal/12 text-[11px]">
                 {sentCount}
               </span>
             </button>
@@ -190,7 +190,7 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
             >
               <Sparkles className="w-3.5 h-3.5 text-phumulani-earth" />
               <span>Awaiting approval</span>
-              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.2 rounded-sm border border-phumulani-gold/50 text-[11px]">
+              <span className="font-mono tabular-nums font-bold text-phumulani-charcoal bg-white px-1.5 py-0.5 rounded-sm border border-phumulani-gold/50 text-[11px]">
                 {awaitingApprovalCount}
               </span>
             </button>
@@ -209,7 +209,7 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
             >
               <Clock className="w-3.5 h-3.5 text-phumulani-earth" />
               <span>Follow-ups</span>
-              <span className="font-mono tabular-nums font-bold text-phumulani-earth bg-white px-1.5 py-0.2 rounded-sm border border-phumulani-teal/50 text-[11px]">
+              <span className="font-mono tabular-nums font-bold text-phumulani-earth bg-white px-1.5 py-0.5 rounded-sm border border-phumulani-teal/50 text-[11px]">
                 {followUpsCount}
               </span>
             </button>
@@ -244,7 +244,7 @@ export const EmailSummaryStrip: React.FC<EmailSummaryStripProps> = ({
         ) : (
           <div className="flex items-center gap-2 text-phumulani-charcoal text-xs">
             <span className="font-medium">Metrics Summary</span>
-            <span className="text-phumulani-charcoal/55">·</span>
+            <span className="text-phumulani-charcoal/80" aria-hidden="true">·</span>
             <span className="font-mono text-[11px] tabular-nums text-phumulani-charcoal/80">
               {connectedMailboxesCount} mailboxes · {inboxCount} inbox · {unreadCount} unread · {priorityCount} priority · {awaitingApprovalCount} approvals
             </span>

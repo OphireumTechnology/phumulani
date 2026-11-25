@@ -1573,7 +1573,18 @@ export const CommunicationsGovernanceWorkspace: React.FC<CommunicationsGovernanc
 
       {/* MATERIAL-EDIT MODAL FOR EXISTING ITEMS */}
       {editingItem && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Edit Editorial Item ${editingItem.id}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setEditingItem(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setEditingItem(null);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto space-y-4 text-xs">
             <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div>
@@ -1584,7 +1595,7 @@ export const CommunicationsGovernanceWorkspace: React.FC<CommunicationsGovernanc
                   Notice: Any material edit to a reviewed/approved item automatically invalidates prior approval and resets stage to DRAFT.
                 </p>
               </div>
-              <button onClick={() => setEditingItem(null)} className="text-phumulani-charcoal font-bold cursor-pointer">✕</button>
+              <button onClick={() => setEditingItem(null)} aria-label="Close modal" className="text-phumulani-charcoal font-bold cursor-pointer">✕</button>
             </div>
             <form onSubmit={handleSaveEditorialEdit} className="space-y-3">
               <div>

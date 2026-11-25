@@ -89,7 +89,7 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
               <h1 className="font-heading font-bold text-phumulani-charcoal text-sm tracking-tight truncate">
                 Email Command Center
               </h1>
-              <span className="hidden sm:inline-block text-[10px] font-mono font-bold bg-phumulani-teal/15 text-phumulani-earth border border-phumulani-teal/40 px-1.5 py-0.2 rounded-sm uppercase">
+              <span className="hidden sm:inline-block text-[10px] font-mono font-bold bg-phumulani-teal/15 text-phumulani-earth border border-phumulani-teal/40 px-1.5 py-0.5 rounded-sm uppercase">
                 Staff
               </span>
             </div>
@@ -135,22 +135,22 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
         {/* Center: Search Field */}
         <div className="flex-1 max-w-md hidden md:block">
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-phumulani-charcoal/55 absolute left-2.5 top-2.5 pointer-events-none" />
+            <Search className="w-3.5 h-3.5 text-phumulani-charcoal/75 absolute left-2.5 top-2.5 pointer-events-none" aria-hidden="true" />
             <input
               type="text"
               aria-label="Search all messages"
               placeholder="Search sender, subject, keywords..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-8 pr-7 py-1 text-xs bg-phumulani-cream/70 border border-phumulani-charcoal/15 rounded-lg focus:outline-none focus:bg-white focus:border-phumulani-earth text-phumulani-charcoal transition-colors"
+              className="w-full pl-8 pr-7 py-1 text-xs bg-phumulani-cream/70 border border-phumulani-charcoal/15 rounded-lg focus:outline-none focus:bg-white focus:border-phumulani-earth focus-visible:ring-2 focus-visible:ring-phumulani-earth/30 text-phumulani-charcoal placeholder:text-phumulani-charcoal/75 transition-colors"
             />
             {searchQuery && (
               <button
                 onClick={() => onSearchChange('')}
-                className="absolute right-2 top-2 text-phumulani-charcoal/60 hover:text-phumulani-earth cursor-pointer"
+                className="absolute right-2 top-2 text-phumulani-charcoal/80 hover:text-phumulani-earth cursor-pointer focus-visible:ring-2 focus-visible:ring-phumulani-earth rounded"
                 aria-label="Clear search"
               >
-                <X className="w-3 h-3" />
+                <X className="w-3 h-3" aria-hidden="true" />
               </button>
             )}
           </div>
@@ -318,14 +318,15 @@ export const EmailCompactHeader: React.FC<EmailCompactHeaderProps> = ({
       {isSearchExpanded && (
         <div className="p-2 border-t border-phumulani-charcoal/10 md:hidden bg-phumulani-cream/70">
           <div className="relative">
-            <Search className="w-3.5 h-3.5 text-phumulani-charcoal/55 absolute left-2.5 top-2.5" />
+            <Search className="w-3.5 h-3.5 text-phumulani-charcoal/75 absolute left-2.5 top-2.5" aria-hidden="true" />
             <input
               type="text"
               autoFocus
+              aria-label="Search messages on mobile"
               placeholder="Search sender, subject, keywords..."
               value={searchQuery}
               onChange={(e) => onSearchChange(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-phumulani-charcoal/15 rounded-lg focus:outline-none focus:border-phumulani-earth text-phumulani-charcoal"
+              className="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-phumulani-charcoal/15 rounded-lg focus:outline-none focus:border-phumulani-earth text-phumulani-charcoal placeholder:text-phumulani-charcoal/75"
             />
           </div>
         </div>

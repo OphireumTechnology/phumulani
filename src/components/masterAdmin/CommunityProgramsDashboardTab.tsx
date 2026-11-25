@@ -560,7 +560,18 @@ export const CommunityProgramsDashboardTab: React.FC<Props> = ({
 
       {/* CREATE PROGRAM PROPOSAL MODAL */}
       {isCreateModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4 animate-fadeIn">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Draft New Community Program"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsCreateModalOpen(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setIsCreateModalOpen(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4 animate-fadeIn"
+        >
           <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream max-w-xl w-full p-6 text-xs space-y-4">
             <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div>
@@ -569,7 +580,8 @@ export const CommunityProgramsDashboardTab: React.FC<Props> = ({
               </div>
               <button
                 onClick={() => setIsCreateModalOpen(false)}
-                className="text-phumulani-charcoal hover:text-phumulani-earth font-bold text-base"
+                aria-label="Close modal"
+                className="text-phumulani-charcoal hover:text-phumulani-earth font-bold text-base cursor-pointer"
               >
                 ✕
               </button>

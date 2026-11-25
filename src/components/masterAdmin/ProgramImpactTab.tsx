@@ -94,7 +94,7 @@ export const ProgramImpactTab: React.FC<Props> = ({ onOpenAiAssist }) => {
                 <span className="text-[10px] font-mono font-bold bg-phumulani-charcoal text-phumulani-teal px-2.5 py-0.5 rounded-full border border-phumulani-teal uppercase">
                   M25.11 · VERIFIED IMPACT LEDGER
                 </span>
-                <span className="text-[10px] font-mono font-bold bg-phumulani-earth text-phumulani-green px-2.5 py-0.5 rounded-full border border-phumulani-green uppercase">
+                <span className="text-[10px] font-mono font-bold bg-phumulani-charcoal text-phumulani-green px-2.5 py-0.5 rounded-full border border-phumulani-green uppercase">
                   ZERO-SYNTHETIC GUARANTEE
                 </span>
               </div>
@@ -106,15 +106,16 @@ export const ProgramImpactTab: React.FC<Props> = ({ onOpenAiAssist }) => {
             <div className="flex items-center gap-2">
               <button
                 onClick={onOpenAiAssist}
-                className="px-3.5 py-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-white text-xs font-semibold rounded-xl border border-phumulani-teal flex items-center gap-1.5 transition-colors"
+                className="px-3.5 py-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-white text-xs font-semibold rounded-xl border border-phumulani-teal flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 <Sparkles className="w-3.5 h-3.5 text-phumulani-gold" />
                 <span>AI Impact Assistant</span>
               </button>
               <button
                 onClick={refreshData}
-                className="p-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-phumulani-teal rounded-xl border border-phumulani-teal transition-colors"
+                className="p-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-phumulani-teal hover:text-white rounded-xl border border-phumulani-teal transition-colors cursor-pointer"
                 title="Refresh metrics from ledger"
+                aria-label="Refresh metrics from ledger"
               >
                 <RefreshCw className="w-4 h-4" />
               </button>

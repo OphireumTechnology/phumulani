@@ -135,7 +135,7 @@ export const ExecutiveDecisionTab: React.FC<ExecutiveDecisionTabProps> = ({ curr
               <div>
                 <div className="flex items-center justify-between text-[10px] text-phumulani-charcoal mb-1">
                   <span className="font-mono font-bold text-phumulani-earth">{pri.targetQuarter}</span>
-                  <span className="px-1.5 py-0.2 rounded font-bold bg-phumulani-cream text-phumulani-charcoal">{pri.status}</span>
+                  <span className="px-1.5 py-0.5 rounded font-bold bg-phumulani-cream text-phumulani-charcoal">{pri.status}</span>
                 </div>
                 <div className="text-xs font-bold text-phumulani-charcoal line-clamp-2 mb-2">{pri.title}</div>
               </div>
@@ -252,14 +252,25 @@ export const ExecutiveDecisionTab: React.FC<ExecutiveDecisionTabProps> = ({ curr
 
       {/* Review & Decision Modal */}
       {selectedDecision && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Review decision ${selectedDecision.reference}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedDecision(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setSelectedDecision(null);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl border border-phumulani-cream space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-phumulani-cream">
               <div>
                 <span className="text-[10px] font-mono font-bold text-phumulani-earth">{selectedDecision.reference}</span>
                 <h3 className="text-sm font-bold text-phumulani-charcoal">{selectedDecision.title}</h3>
               </div>
-              <button onClick={() => setSelectedDecision(null)} className="text-phumulani-charcoal hover:text-phumulani-earth">
+              <button onClick={() => setSelectedDecision(null)} aria-label="Close modal" className="text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer">
                 <XCircle className="w-5 h-5" />
               </button>
             </div>

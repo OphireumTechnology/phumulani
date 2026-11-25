@@ -17,3 +17,5 @@ export * from './DashboardSidebar';
 export * from './StatusIndicator';
 export * from './DataTable';
 export * from './EmptyState';
+export * from './Modal';
+

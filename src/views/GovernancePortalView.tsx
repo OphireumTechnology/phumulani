@@ -4,7 +4,7 @@
  * Executive & Governance Portal (Application 5)
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { db } from '../services/db';
 import { User } from '../types';
 import {
@@ -42,6 +42,15 @@ export const GovernancePortalView: React.FC<GovernancePortalViewProps> = ({
 
   const [activeTab, setActiveTab] = useState<'kpis' | 'grants' | 'board' | 'risks' | 'audit' | 'board_reports'>('kpis');
   const [activeDocketGrant, setActiveDocketGrant] = useState<any | null>(null);
+
+  useEffect(() => {
+    if (!activeDocketGrant) return;
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setActiveDocketGrant(null);
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [activeDocketGrant]);
 
   const totalFundraisingYTD = donations
     .filter((d) => d.status === 'succeeded')
@@ -452,7 +461,18 @@ export const GovernancePortalView: React.FC<GovernancePortalViewProps> = ({
       </div>
 
       {activeDocketGrant && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Grant Proposal Docket for ${activeDocketGrant.funderName}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setActiveDocketGrant(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setActiveDocketGrant(null);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-lg w-full border border-phumulani-charcoal/15 shadow-2xl p-6 space-y-4">
             <div className="flex justify-between items-start border-b border-phumulani-charcoal/12 pb-3">
               <div>
@@ -484,7 +504,7 @@ export const GovernancePortalView: React.FC<GovernancePortalViewProps> = ({
             <div className="flex justify-end pt-2">
               <button
                 onClick={() => setActiveDocketGrant(null)}
-                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold cursor-pointer transition-colors"
+                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-bold cursor-pointer transition-colors"
               >
                 Close Docket
               </button>

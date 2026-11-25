@@ -340,7 +340,7 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
                 <span>{tab.label}</span>
                 {tab.count !== undefined && (
                   <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-mono ${
                       isActive ? 'bg-phumulani-charcoal text-phumulani-teal font-bold' : 'bg-phumulani-charcoal text-phumulani-cream'
                     }`}
                   >
@@ -1104,7 +1104,18 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* TRANSITION WORKFLOW MODAL */}
       {isTransitionModalOpen && selectedWorkflow && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Transition Workflow ${selectedWorkflow.id}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsTransitionModalOpen(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setIsTransitionModalOpen(false);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-phumulani-cream">
             <h3 className="font-serif font-bold text-phumulani-charcoal text-lg mb-1">
               Transition Workflow {selectedWorkflow.id}
@@ -1165,7 +1176,18 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* APPROVAL DECISION MODAL */}
       {isApprovalModalOpen && selectedApproval && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Executive Decision: ${selectedApproval.id}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsApprovalModalOpen(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setIsApprovalModalOpen(false);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-phumulani-cream">
             <h3 className="font-serif font-bold text-phumulani-charcoal text-lg mb-1">
               Executive Decision: {selectedApproval.id}
@@ -1224,7 +1246,18 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* NEW WORKFLOW MODAL */}
       {isNewWorkflowModalOpen && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Create Cross-Department Workflow"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsNewWorkflowModalOpen(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setIsNewWorkflowModalOpen(false);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-phumulani-cream">
             <h3 className="font-serif font-bold text-phumulani-charcoal text-lg mb-1">Create Cross-Department Workflow</h3>
             <p className="text-xs text-phumulani-charcoal mb-4">Initialize a coordinated initiative with required approval milestones.</p>
@@ -1327,7 +1360,18 @@ export const OperationsCommandCenterTab: React.FC<OperationsCommandCenterTabProp
 
       {/* NEW INCIDENT MODAL */}
       {isNewIncidentModalOpen && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Report Operational Incident"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsNewIncidentModalOpen(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setIsNewIncidentModalOpen(false);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-phumulani-cream">
             <h3 className="font-serif font-bold text-phumulani-charcoal text-lg mb-1">Report Operational Incident</h3>
             <p className="text-xs text-phumulani-charcoal mb-4">

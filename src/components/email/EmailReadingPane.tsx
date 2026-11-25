@@ -153,8 +153,8 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
     }
     return (
       <div className="flex-1 bg-white border border-phumulani-charcoal/12 rounded-2xl flex flex-col items-center justify-center p-12 text-center">
-        <div className="w-16 h-16 rounded-2xl bg-phumulani-cream/70 border border-phumulani-charcoal/12 flex items-center justify-center mb-4 text-phumulani-charcoal/60">
-          <Mail className="w-8 h-8 text-phumulani-charcoal/60 stroke-[1.5]" />
+        <div className="w-16 h-16 rounded-2xl bg-phumulani-cream/70 border border-phumulani-charcoal/12 flex items-center justify-center mb-4 text-phumulani-charcoal/80">
+          <Mail className="w-8 h-8 text-phumulani-charcoal/75 stroke-[1.5]" aria-hidden="true" />
         </div>
         <h3 className="font-heading text-base font-semibold text-phumulani-charcoal">No message selected</h3>
         <p className="text-xs text-phumulani-charcoal/70 max-w-sm mt-1">
@@ -315,12 +315,12 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
                   <span className="font-bold text-phumulani-charcoal truncate">{msg.senderName}</span>
                   <span className="text-phumulani-charcoal/70 font-mono text-[11px] truncate">&lt;{msg.senderEmail}&gt;</span>
                   {msg.isAutoResponse && (
-                    <span className="text-[10px] font-bold bg-phumulani-earth/10 text-phumulani-earth px-1.5 py-0.2 rounded-sm font-mono">
+                    <span className="text-[10px] font-bold bg-phumulani-earth/10 text-phumulani-earth px-1.5 py-0.5 rounded-sm font-mono">
                       Auto-Response ({msg.autoResponderRuleId})
                     </span>
                   )}
                 </div>
-                <span className="text-phumulani-charcoal/65 text-[11px] font-mono tabular-nums shrink-0 ml-2">
+                <span className="text-phumulani-charcoal/80 text-[11px] font-mono tabular-nums shrink-0 ml-2">
                   {new Date(msg.receivedAt).toLocaleString()}
                 </span>
               </div>
@@ -618,24 +618,25 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
         <div className="p-3">
           <button
             onClick={() => setIsCrmOpen(!isCrmOpen)}
+            aria-expanded={isCrmOpen}
             className="w-full flex items-center justify-between text-left text-xs font-bold text-phumulani-charcoal hover:text-phumulani-earth transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <DollarSign className="w-4 h-4 text-phumulani-earth" />
+              <DollarSign className="w-4 h-4 text-phumulani-earth" aria-hidden="true" />
               <span>CRM & Donor Details</span>
               {matchedDonor ? (
-                <span className="text-[10px] font-semibold px-2 py-0.2 rounded-sm bg-phumulani-green/15 text-phumulani-charcoal border border-phumulani-green/40">
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-sm bg-phumulani-green/15 text-phumulani-charcoal border border-phumulani-green/40">
                   {matchedDonor.name} · {matchedDonor.givingTier}
                 </span>
               ) : thread.crmLink ? (
-                <span className="text-[10px] font-semibold px-2 py-0.2 rounded-sm bg-phumulani-teal/15 text-phumulani-earth border border-phumulani-teal/40">
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded-sm bg-phumulani-teal/15 text-phumulani-earth border border-phumulani-teal/40">
                   Linked: {thread.crmLink.entityName}
                 </span>
               ) : (
-                <span className="text-[10px] text-phumulani-charcoal/60 font-normal">Unlinked</span>
+                <span className="text-[10px] text-phumulani-charcoal/80 font-normal">Unlinked</span>
               )}
             </div>
-            {isCrmOpen ? <ChevronUp className="w-4 h-4 text-phumulani-charcoal/70" /> : <ChevronDown className="w-4 h-4 text-phumulani-charcoal/70" />}
+            {isCrmOpen ? <ChevronUp className="w-4 h-4 text-phumulani-charcoal/75" aria-hidden="true" /> : <ChevronDown className="w-4 h-4 text-phumulani-charcoal/75" aria-hidden="true" />}
           </button>
 
           {isCrmOpen && (
@@ -774,16 +775,17 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
         <div className="p-3">
           <button
             onClick={() => setIsCollaborationOpen(!isCollaborationOpen)}
+            aria-expanded={isCollaborationOpen}
             className="w-full flex items-center justify-between text-left text-xs font-bold text-phumulani-charcoal hover:text-phumulani-earth transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <Lock className="w-4 h-4 text-phumulani-earth" />
+              <Lock className="w-4 h-4 text-phumulani-earth" aria-hidden="true" />
               <span>Internal Collaboration</span>
-              <span className="text-[10px] font-semibold px-2 py-0.2 rounded-sm bg-phumulani-gold/15 text-phumulani-charcoal border border-phumulani-gold/50">
+              <span className="text-[10px] font-semibold px-2 py-0.5 rounded-sm bg-phumulani-gold/15 text-phumulani-charcoal border border-phumulani-gold/50">
                 {thread.internalNotes?.length || 0} Staff Notes
               </span>
             </div>
-            {isCollaborationOpen ? <ChevronUp className="w-4 h-4 text-phumulani-charcoal/70" /> : <ChevronDown className="w-4 h-4 text-phumulani-charcoal/70" />}
+            {isCollaborationOpen ? <ChevronUp className="w-4 h-4 text-phumulani-charcoal/75" aria-hidden="true" /> : <ChevronDown className="w-4 h-4 text-phumulani-charcoal/75" aria-hidden="true" />}
           </button>
 
           {isCollaborationOpen && (
@@ -809,6 +811,7 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
               <div className="flex items-center gap-2 pt-1">
                 <input
                   type="text"
+                  aria-label="Add confidential note for caseworkers or team"
                   placeholder="Add confidential note for caseworkers or team..."
                   value={newInternalNote}
                   onChange={(e) => setNewInternalNote(e.target.value)}
@@ -818,7 +821,7 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
                       handleNoteSubmit();
                     }
                   }}
-                  className="flex-1 bg-white border border-phumulani-charcoal/15 rounded-md px-3 py-1.5 text-xs text-phumulani-charcoal placeholder:text-phumulani-charcoal/50 focus:border-phumulani-earth focus:outline-hidden"
+                  className="flex-1 bg-white border border-phumulani-charcoal/15 rounded-md px-3 py-1.5 text-xs text-phumulani-charcoal placeholder:text-phumulani-charcoal/75 focus:border-phumulani-earth focus:outline-hidden"
                 />
                 <button
                   type="button"
@@ -836,42 +839,43 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
         <div className="p-3">
           <button
             onClick={() => setIsTechOpen(!isTechOpen)}
+            aria-expanded={isTechOpen}
             className="w-full flex items-center justify-between text-left text-xs font-bold text-phumulani-charcoal hover:text-phumulani-earth transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <Tag className="w-4 h-4 text-phumulani-charcoal/70" />
+              <Tag className="w-4 h-4 text-phumulani-charcoal/75" aria-hidden="true" />
               <span>Technical Details & Headers</span>
-              <span className="text-[10px] font-mono text-phumulani-charcoal/65">
+              <span className="text-[10px] font-mono text-phumulani-charcoal/80">
                 {thread.providerMessageId || 'msg-auto'}
               </span>
             </div>
-            {isTechOpen ? <ChevronUp className="w-4 h-4 text-phumulani-charcoal/70" /> : <ChevronDown className="w-4 h-4 text-phumulani-charcoal/70" />}
+            {isTechOpen ? <ChevronUp className="w-4 h-4 text-phumulani-charcoal/75" aria-hidden="true" /> : <ChevronDown className="w-4 h-4 text-phumulani-charcoal/75" aria-hidden="true" />}
           </button>
 
           {isTechOpen && (
             <div className="mt-3 p-3 bg-phumulani-cream/65 border border-phumulani-charcoal/12 rounded-xl space-y-2 text-xs font-mono">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
                 <div>
-                  <span className="text-phumulani-charcoal/65 block">Thread ID:</span>
+                  <span className="text-phumulani-charcoal/80 block">Thread ID:</span>
                   <span className="text-phumulani-charcoal break-all">{thread.id}</span>
                 </div>
                 <div>
-                  <span className="text-phumulani-charcoal/65 block">Provider Message ID:</span>
+                  <span className="text-phumulani-charcoal/80 block">Provider Message ID:</span>
                   <span className="text-phumulani-charcoal break-all">{thread.providerMessageId || latestMsg?.providerMessageId || 'N/A'}</span>
                 </div>
                 <div>
-                  <span className="text-phumulani-charcoal/65 block">Ingest Connector:</span>
+                  <span className="text-phumulani-charcoal/80 block">Ingest Connector:</span>
                   <span className="text-phumulani-charcoal">{thread.isHistorical ? 'HISTORICAL_IMPORT' : 'MS_GRAPH_OAUTH / GOOGLE_WORKSPACE'}</span>
                 </div>
                 <div>
-                  <span className="text-phumulani-charcoal/65 block">SLA Deadline:</span>
+                  <span className="text-phumulani-charcoal/80 block">SLA Deadline:</span>
                   <span className="text-phumulani-charcoal">{new Date(thread.slaDeadline).toISOString()}</span>
                 </div>
               </div>
 
               {thread.labels && thread.labels.length > 0 && (
                 <div className="pt-2 border-t border-phumulani-charcoal/10">
-                  <span className="text-[10px] text-phumulani-charcoal/70 block mb-1">Message Labels:</span>
+                  <span className="text-[10px] text-phumulani-charcoal/80 block mb-1">Message Labels:</span>
                   <div className="flex flex-wrap gap-1">
                     {thread.labels.map((lbl: string) => (
                       <span key={lbl} className="bg-white border border-phumulani-charcoal/12 text-phumulani-charcoal px-1.5 py-0.5 rounded-sm text-[10px]">
@@ -889,28 +893,29 @@ export const EmailReadingPane: React.FC<EmailReadingPaneProps> = ({
         <div className="p-3">
           <button
             onClick={() => setIsAuditOpen(!isAuditOpen)}
+            aria-expanded={isAuditOpen}
             className="w-full flex items-center justify-between text-left text-xs font-bold text-phumulani-charcoal hover:text-phumulani-earth transition-colors cursor-pointer"
           >
             <div className="flex items-center gap-2">
-              <History className="w-4 h-4 text-phumulani-charcoal/70" />
+              <History className="w-4 h-4 text-phumulani-charcoal/75" aria-hidden="true" />
               <span>Audit History</span>
-              <span className="text-[10px] text-phumulani-charcoal/65 font-normal">
+              <span className="text-[10px] text-phumulani-charcoal/80 font-normal">
                 Immutable event trail
               </span>
             </div>
-            {isAuditOpen ? <ChevronUp className="w-4 h-4 text-phumulani-charcoal/70" /> : <ChevronDown className="w-4 h-4 text-phumulani-charcoal/70" />}
+            {isAuditOpen ? <ChevronUp className="w-4 h-4 text-phumulani-charcoal/75" aria-hidden="true" /> : <ChevronDown className="w-4 h-4 text-phumulani-charcoal/75" aria-hidden="true" />}
           </button>
 
           {isAuditOpen && (
             <div className="mt-3 p-3 bg-phumulani-cream/65 border border-phumulani-charcoal/12 rounded-xl space-y-2 text-xs">
-              <div className="flex items-center gap-2 text-[11px] text-phumulani-charcoal/75 border-b border-phumulani-charcoal/10 pb-1.5">
-                <Activity className="w-3.5 h-3.5 text-phumulani-earth" />
+              <div className="flex items-center gap-2 text-[11px] text-phumulani-charcoal/80 border-b border-phumulani-charcoal/10 pb-1.5">
+                <Activity className="w-3.5 h-3.5 text-phumulani-earth" aria-hidden="true" />
                 <span>Verification trail for compliance with non-profit donor governance</span>
               </div>
               <div className="space-y-1.5 font-mono text-[11px]">
                 <div className="flex items-start justify-between text-phumulani-charcoal">
                   <span>· Received & Scanned by Connector Gateway</span>
-                  <span className="text-phumulani-charcoal/65">{new Date(firstMsg?.receivedAt || thread.lastMessageAt).toLocaleTimeString()}</span>
+                  <span className="text-phumulani-charcoal/80">{new Date(firstMsg?.receivedAt || thread.lastMessageAt).toLocaleTimeString()}</span>
                 </div>
                 <div className="flex items-start justify-between text-phumulani-charcoal">
                   <span>· Classified as Category {EMAIL_CATEGORY_METADATA[thread.classification as EmailClassificationCategory]?.code || '00'} ({thread.classification})</span>

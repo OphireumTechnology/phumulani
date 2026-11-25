@@ -184,11 +184,11 @@ export const InternalNotificationsTab: React.FC<InternalNotificationsTabProps> =
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-mono text-[10px] font-bold text-phumulani-charcoal">{n.id}</span>
-                    <span className="font-mono text-[10px] uppercase font-bold text-phumulani-charcoal bg-white border px-1.5 py-0.2 rounded">
+                    <span className="font-mono text-[10px] uppercase font-bold text-phumulani-charcoal bg-white border px-1.5 py-0.5 rounded">
                       {n.category.replace(/_/g, ' ')}
                     </span>
                     <span
-                      className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-full ${
+                      className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-full ${
                         n.priority === 'CRITICAL'
                           ? 'bg-phumulani-cream text-phumulani-earth'
                           : n.priority === 'HIGH'

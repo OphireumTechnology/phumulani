@@ -390,7 +390,18 @@ export const UnifiedCommunityOperationsCenter: React.FC<UnifiedCommunityOperatio
 
       {/* ESCALATION MODAL */}
       {isEscalateModalOpen && selectedOp && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Escalate Operation ${selectedOp.id}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsEscalateModalOpen(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setIsEscalateModalOpen(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 p-4"
+        >
           <div className="bg-white rounded-xl max-w-md w-full p-6 space-y-4 shadow-xl">
             <h3 className="font-serif font-bold text-base text-phumulani-earth flex items-center gap-2">
               <AlertTriangle className="w-5 h-5 text-phumulani-earth" />

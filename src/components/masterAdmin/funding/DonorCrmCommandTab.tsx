@@ -275,13 +275,24 @@ export const DonorCrmCommandTab: React.FC<DonorCrmCommandTabProps> = ({ currentU
 
       {/* New Donor Modal */}
       {isNewDonorOpen && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Register Unified Donor Profile"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsNewDonorOpen(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setIsNewDonorOpen(false);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl border border-phumulani-cream space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-phumulani-cream">
               <h3 className="text-base font-serif font-bold text-phumulani-charcoal">
                 Register Unified Donor Profile
               </h3>
-              <button onClick={() => setIsNewDonorOpen(false)} className="text-phumulani-charcoal hover:text-phumulani-earth">✕</button>
+              <button onClick={() => setIsNewDonorOpen(false)} aria-label="Close modal" className="text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer">✕</button>
             </div>
 
             {crmError && (
@@ -377,13 +388,24 @@ export const DonorCrmCommandTab: React.FC<DonorCrmCommandTabProps> = ({ currentU
 
       {/* Tax Letter Drafting Modal */}
       {selectedDonorForLetter && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Draft 501(c)(3) Tax Acknowledgment for ${selectedDonorForLetter.name}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedDonorForLetter(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setSelectedDonorForLetter(null);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl border border-phumulani-cream space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-phumulani-cream">
               <h3 className="text-base font-serif font-bold text-phumulani-charcoal">
                 Draft 501(c)(3) Tax Acknowledgment: {selectedDonorForLetter.name}
               </h3>
-              <button onClick={() => setSelectedDonorForLetter(null)} className="text-phumulani-charcoal hover:text-phumulani-earth">✕</button>
+              <button onClick={() => setSelectedDonorForLetter(null)} aria-label="Close modal" className="text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer">✕</button>
             </div>
 
             <div className="space-y-3">

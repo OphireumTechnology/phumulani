@@ -119,7 +119,7 @@ export const KnowledgeSearchTab: React.FC<Props> = ({ currentUser }) => {
                     {d.id}
                   </span>
                   <h4 className="font-bold text-phumulani-charcoal text-sm">{d.title}</h4>
-                  <span className="text-[10px] bg-phumulani-cream text-phumulani-charcoal font-bold px-1.5 py-0.2 rounded">
+                  <span className="text-[10px] bg-phumulani-cream text-phumulani-charcoal font-bold px-1.5 py-0.5 rounded">
                     v{d.version}
                   </span>
                 </div>

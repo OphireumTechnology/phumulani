@@ -138,7 +138,7 @@ export const FundingCommandCenterTab: React.FC<FundingCommandCenterTabProps> = (
           <div className="flex items-center gap-2">
             <Lock className="w-4 h-4 text-phumulani-charcoal shrink-0" />
             <span>
-              <strong>Disconnected Infrastructure Status:</strong> Outbound emails queued as <code className="bg-phumulani-cream px-1 py-0.2 rounded font-mono text-phumulani-charcoal">STAGED_AUTHORIZATION_REQUIRED</code>. Zero synthetic revenue is generated.
+              <strong>Disconnected Infrastructure Status:</strong> Outbound emails queued as <code className="bg-phumulani-cream px-1 py-0.5 rounded font-mono text-phumulani-charcoal">STAGED_AUTHORIZATION_REQUIRED</code>. Zero synthetic revenue is generated.
             </span>
           </div>
           <div className="flex flex-wrap items-center gap-2 font-mono text-[11px]">

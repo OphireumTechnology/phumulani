@@ -26,6 +26,45 @@
     --phumulani-charcoal: #333333;
     --phumulani-white: #FFFFFF;
 
+    /* Canonical Long-Form Brand Variables (E2E & Brand Manual Contracts) */
+    --phumulani-peace-orange: var(--phumulani-orange);
+    --phumulani-deep-earth: var(--phumulani-earth);
+    --phumulani-healing-teal: var(--phumulani-teal);
+    --phumulani-ancestral-gold: var(--phumulani-gold);
+    --phumulani-soft-cream: var(--phumulani-cream);
+    --phumulani-leaf-green: var(--phumulani-green);
+
+    /* Standardized Enterprise Semantic Design Tokens (--brand-*) */
+    --brand-primary: var(--phumulani-earth);
+    --brand-secondary: var(--phumulani-teal);
+    --brand-accent: var(--phumulani-orange);
+    --brand-accent-gold: var(--phumulani-gold);
+    --brand-background: var(--phumulani-cream);
+    --brand-surface: var(--phumulani-white);
+    --brand-text-primary: var(--phumulani-charcoal);
+    --brand-text-secondary: var(--phumulani-earth);
+    --brand-border: #33333326;
+    --brand-focus: var(--phumulani-earth);
+    --brand-interactive: var(--phumulani-earth);
+    --brand-interactive-hover: var(--phumulani-charcoal);
+    --brand-interactive-active: var(--phumulani-charcoal);
+    --brand-success: var(--phumulani-green);
+    --brand-warning: var(--phumulani-gold);
+    --brand-error: var(--phumulani-earth);
+    --brand-info: var(--phumulani-teal);
+
+    /* Typography, Elevation, Radius & Motion Tokens */
+    --brand-font-heading: 'Montserrat', 'Plus Jakarta Sans', system-ui, sans-serif;
+    --brand-font-body: 'Lato', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --brand-font-quote: 'Playfair Display', 'Merriweather', Georgia, serif;
+    --brand-radius-sm: 0.375rem;
+    --brand-radius-md: 0.75rem;
+    --brand-radius-lg: 1rem;
+    --brand-shadow-sm: 0 1px 2px #3333330A;
+    --brand-shadow-md: 0 4px 12px -4px #3333331A;
+    --brand-shadow-lg: 0 14px 32px -12px #33333326;
+    --brand-transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+
     /* Semantic Tokens — Actions */
     --color-primary: var(--phumulani-orange);
     --color-primary-strong: var(--phumulani-earth);
@@ -112,7 +151,7 @@
     --brand-soft-bg: var(--phumulani-cream);
 
     /* Cohesive Typography */
-    font-family: 'Lato', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: var(--brand-font-body);
   }
 
   html {

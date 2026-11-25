@@ -5,7 +5,7 @@
  * M25.10: AI Planning Assistance, Checklists, Safeguarding Firewalls & Human Sign-off Policy
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AIProgramActionType, AIProgramRecommendation } from '../../types/communityPrograms';
 import { CommunityProgramsService } from '../../services/communityProgramsService';
 import {
@@ -43,6 +43,15 @@ export const ProgramAiIntelligenceModal: React.FC<Props> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleGenerate = (e: React.FormEvent) => {
@@ -71,7 +80,18 @@ export const ProgramAiIntelligenceModal: React.FC<Props> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4 animate-fadeIn">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Community Program Assistant"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      onKeyDown={(e) => {
+        if (e.key === 'Escape') onClose();
+      }}
+      className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4 animate-fadeIn"
+    >
       <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream max-w-2xl w-full p-6 text-xs space-y-4 max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
           <div className="flex items-center gap-2.5">
@@ -85,7 +105,7 @@ export const ProgramAiIntelligenceModal: React.FC<Props> = ({
               <h3 className="text-base font-bold text-phumulani-charcoal">Community Program Assistant</h3>
             </div>
           </div>
-          <button onClick={onClose} className="text-phumulani-charcoal hover:text-phumulani-earth font-bold text-base">
+          <button onClick={onClose} aria-label="Close modal" className="text-phumulani-charcoal hover:text-phumulani-earth font-bold text-base cursor-pointer">
             ✕
           </button>
         </div>

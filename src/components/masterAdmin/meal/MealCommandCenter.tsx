@@ -974,13 +974,25 @@ export const MealCommandCenter: React.FC = () => {
 
           {/* HTML EXPORT MODAL PREVIEW */}
           {exportPreviewHtml && (
-            <div className="fixed inset-0 bg-phumulani-charcoal/80 z-50 flex items-center justify-center p-4">
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label="Printable HTML Report Preview"
+              onClick={(e) => {
+                if (e.target === e.currentTarget) setExportPreviewHtml(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setExportPreviewHtml(null);
+              }}
+              className="fixed inset-0 bg-phumulani-charcoal/80 z-50 flex items-center justify-center p-4"
+            >
               <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[85vh] flex flex-col shadow-2xl">
                 <div className="p-4 border-b border-phumulani-cream flex items-center justify-between">
                   <h3 className="font-bold text-sm text-phumulani-charcoal">Printable HTML Report Preview</h3>
                   <button
                     onClick={() => setExportPreviewHtml(null)}
-                    className="text-phumulani-charcoal hover:text-phumulani-earth font-bold text-lg"
+                    aria-label="Close report preview dialog"
+                    className="text-phumulani-charcoal hover:text-phumulani-earth font-bold text-lg cursor-pointer"
                   >
                     ✕
                   </button>

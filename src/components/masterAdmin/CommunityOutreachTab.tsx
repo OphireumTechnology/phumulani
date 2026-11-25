@@ -265,14 +265,25 @@ export const CommunityOutreachTab: React.FC<Props> = ({ currentUserRole, current
 
       {/* CREATE OUTREACH MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4 animate-fadeIn">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Plan Community Outreach Initiative"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsModalOpen(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setIsModalOpen(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4 animate-fadeIn"
+        >
           <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream max-w-lg w-full p-6 text-xs space-y-4">
             <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div>
                 <span className="text-[10px] font-mono text-phumulani-earth font-bold uppercase">Field Operations</span>
                 <h3 className="text-base font-bold text-phumulani-charcoal">Plan Community Outreach Initiative</h3>
               </div>
-              <button onClick={() => setIsModalOpen(false)} className="text-phumulani-charcoal hover:text-phumulani-earth font-bold">
+              <button onClick={() => setIsModalOpen(false)} aria-label="Close modal" className="text-phumulani-charcoal hover:text-phumulani-earth font-bold cursor-pointer">
                 ✕
               </button>
             </div>

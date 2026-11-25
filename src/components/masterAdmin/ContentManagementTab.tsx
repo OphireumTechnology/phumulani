@@ -693,7 +693,18 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
 
       {/* 5. EDIT DRAFT MODAL */}
       {editingItem && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Edit Content Item: ${editingItem.title}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setEditingItem(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setEditingItem(null);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
             <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div>
@@ -706,6 +717,7 @@ export const ContentManagementTab: React.FC<ContentManagementTabProps> = ({
               </div>
               <button
                 onClick={() => setEditingItem(null)}
+                aria-label="Close edit content dialog"
                 className="text-phumulani-charcoal hover:text-phumulani-earth p-1 cursor-pointer"
               >
                 ✕

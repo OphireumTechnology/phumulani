@@ -255,6 +255,41 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
     return () => window.removeEventListener('message', handleOAuthPopupMessage);
   }, []);
 
+  useEffect(() => {
+    const hasOpenModal =
+      isWizardOpen ||
+      !!editingPermissionsConn ||
+      !!reauthorizingConn ||
+      !!inspectSyncHistory ||
+      !!inspectCapabilities ||
+      !!inspectEvidence ||
+      !!inspectFolders ||
+      !!triageModal;
+    if (!hasOpenModal) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      if (triageModal) setTriageModal(null);
+      else if (inspectFolders) setInspectFolders(null);
+      else if (inspectEvidence) setInspectEvidence(null);
+      else if (inspectCapabilities) setInspectCapabilities(null);
+      else if (inspectSyncHistory) setInspectSyncHistory(null);
+      else if (reauthorizingConn) setReauthorizingConn(null);
+      else if (editingPermissionsConn) setEditingPermissionsConn(null);
+      else if (isWizardOpen) setIsWizardOpen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [
+    isWizardOpen,
+    editingPermissionsConn,
+    reauthorizingConn,
+    inspectSyncHistory,
+    inspectCapabilities,
+    inspectEvidence,
+    inspectFolders,
+    triageModal,
+  ]);
+
   const handleDiscover = async (email: string) => {
     setWizardEmail(email);
     setOauthConfigError(null);
@@ -1490,7 +1525,15 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       {/* 6-STEP CONNECT EMAIL ACCOUNT WIZARD MODAL (REAL OAUTH INTEGRATION)       */}
       {/* ========================================================================= */}
       {isWizardOpen && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Connect Email Account"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsWizardOpen(false);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4"
+        >
           <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-xl border border-phumulani-charcoal/15 overflow-hidden animate-fade-in">
             {/* Modal Header */}
             <div className="bg-phumulani-charcoal px-6 py-4 text-white flex items-center justify-between shrink-0">
@@ -1500,6 +1543,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               </div>
               <button
                 onClick={() => setIsWizardOpen(false)}
+                aria-label="Close connect email wizard"
                 className="text-phumulani-cream/80 hover:text-white text-lg font-bold cursor-pointer"
               >
                 ✕
@@ -1978,7 +2022,15 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       {/* EDIT PERMISSIONS MODAL                                                    */}
       {/* ========================================================================= */}
       {editingPermissionsConn && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Mailbox Permissions and Policy for ${editingPermissionsConn.emailAddress}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setEditingPermissionsConn(null);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-md w-full shadow-xl border border-phumulani-charcoal/15 p-6 space-y-4 animate-fade-in">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
@@ -1987,6 +2039,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               </div>
               <button
                 onClick={() => setEditingPermissionsConn(null)}
+                aria-label="Close permissions dialog"
                 className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold cursor-pointer"
               >
                 ✕
@@ -2071,7 +2124,15 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       {/* REAUTHORIZATION MODAL                                                    */}
       {/* ========================================================================= */}
       {reauthorizingConn && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Reauthorize Account Connection for ${reauthorizingConn.emailAddress}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setReauthorizingConn(null);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-md w-full shadow-xl border border-phumulani-charcoal/15 p-6 space-y-4 animate-fade-in">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
@@ -2080,6 +2141,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               </div>
               <button
                 onClick={() => setReauthorizingConn(null)}
+                aria-label="Close reauthorization dialog"
                 className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold cursor-pointer"
               >
                 ✕
@@ -2140,7 +2202,15 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
       {/* SYNC HISTORY & DIAGNOSTICS MODAL                                          */}
       {/* ========================================================================= */}
       {inspectSyncHistory && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Synchronization History for ${inspectSyncHistory.emailAddress}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setInspectSyncHistory(null);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-lg w-full shadow-xl border border-phumulani-charcoal/15 p-6 space-y-4 animate-fade-in max-h-[85vh] flex flex-col">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
@@ -2149,6 +2219,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               </div>
               <button
                 onClick={() => setInspectSyncHistory(null)}
+                aria-label="Close synchronization history dialog"
                 className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold cursor-pointer"
               >
                 ✕
@@ -2202,7 +2273,15 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
       {/* Capability Inspection Modal */}
       {inspectCapabilities && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Capability Matrix for ${PROVIDER_DESCRIPTORS[inspectCapabilities.provider]?.name || inspectCapabilities.provider}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setInspectCapabilities(null);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-lg w-full shadow-xl border border-phumulani-charcoal/15 p-6 space-y-4 animate-fade-in">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <h4 className="font-bold font-heading text-phumulani-charcoal text-base">
@@ -2210,6 +2289,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               </h4>
               <button
                 onClick={() => setInspectCapabilities(null)}
+                aria-label="Close capability matrix dialog"
                 className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold cursor-pointer"
               >
                 ✕
@@ -2239,7 +2319,15 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
       {/* Evidence History Inspection Modal */}
       {inspectEvidence && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Provider Verification Evidence for ${inspectEvidence.mailboxEmail}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setInspectEvidence(null);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-xl w-full shadow-xl border border-phumulani-charcoal/15 p-6 space-y-4 animate-fade-in max-h-[85vh] flex flex-col">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
@@ -2248,6 +2336,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               </div>
               <button
                 onClick={() => setInspectEvidence(null)}
+                aria-label="Close evidence history dialog"
                 className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold cursor-pointer"
               >
                 ✕
@@ -2284,7 +2373,15 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
       {/* Folder Inspection Modal */}
       {inspectFolders && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Folder Inspection for ${inspectFolders.mailboxEmail}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setInspectFolders(null);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-md w-full shadow-xl border border-phumulani-charcoal/15 p-6 space-y-4 animate-fade-in">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
@@ -2293,6 +2390,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               </div>
               <button
                 onClick={() => setInspectFolders(null)}
+                aria-label="Close folder inspection dialog"
                 className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold cursor-pointer"
               >
                 ✕
@@ -2330,7 +2428,15 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
 
       {/* AI Triage & Recommendation Modal */}
       {triageModal && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`AI Governed Triage Inspection for ${triageModal.mailboxEmail}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setTriageModal(null);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/75 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-2xl max-w-lg w-full shadow-xl border border-phumulani-charcoal/15 p-6 space-y-4 animate-fade-in">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
@@ -2339,6 +2445,7 @@ export const UniversalEmailConnections: React.FC<UniversalEmailConnectionsProps>
               </div>
               <button
                 onClick={() => setTriageModal(null)}
+                aria-label="Close triage inspection dialog"
                 className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold cursor-pointer"
               >
                 ✕

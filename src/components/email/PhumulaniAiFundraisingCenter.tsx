@@ -390,7 +390,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-xl font-bold tracking-tight text-white font-heading">Phumulani Ai</h2>
-              <span className="px-2 py-0.5 text-xs font-semibold rounded-sm bg-phumulani-teal/20 text-phumulani-teal border border-phumulani-teal/40">
+              <span className="px-2 py-0.5 text-xs font-semibold rounded-sm bg-phumulani-charcoal text-phumulani-teal border border-phumulani-teal/60">
                 Phase 65 Local LLM
               </span>
             </div>
@@ -431,7 +431,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                   : 'Deterministic Fallback'}
               </span>
             </div>
-            <span className="text-white/25">|</span>
+            <span className="text-white/70" aria-hidden="true">|</span>
             <div className="flex items-center gap-1.5">
               <div
                 className={`w-2 h-2 rounded-full ${
@@ -450,7 +450,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
             </div>
             {aiTelemetry?.telemetry && (
               <>
-                <span className="text-white/25">|</span>
+                <span className="text-white/70" aria-hidden="true">|</span>
                 <span className="text-phumulani-teal" title="Persisted AI invocations">
                   {aiTelemetry.telemetry.totalCalls || 0} calls · {aiTelemetry.telemetry.avgLatencyMs || 0}ms
                 </span>
@@ -497,7 +497,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                   : 'text-phumulani-charcoal/80 hover:text-phumulani-earth hover:bg-white/70'
               }`}
             >
-              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-phumulani-charcoal/70'}`} />
+              <Icon className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
               <span>{tab.label}</span>
             </button>
           );
@@ -822,7 +822,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                     </div>
                     <div className="flex flex-col items-end">
                       <span className="text-xl font-bold font-heading text-phumulani-earth tabular-nums">{match.matchScore}%</span>
-                      <span className="text-[10px] text-phumulani-charcoal/65 uppercase font-medium">Match Score</span>
+                      <span className="text-[10px] text-phumulani-charcoal/80 uppercase font-medium">Match Score</span>
                     </div>
                   </div>
 
@@ -1261,7 +1261,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                       <tr key={f.id}>
                         <td className="px-4 py-3 font-semibold text-phumulani-charcoal">
                           {f.prospectName}
-                          <div className="text-[10px] text-phumulani-charcoal/65 font-normal">{f.prospectEmail}</div>
+                          <div className="text-[10px] text-phumulani-charcoal/80 font-normal">{f.prospectEmail}</div>
                         </td>
                         <td className="px-4 py-3 tabular-nums">Step {f.sequenceStep}</td>
                         <td className="px-4 py-3 text-phumulani-charcoal tabular-nums">{f.dueDate}</td>
@@ -1413,7 +1413,7 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                       onClick={() => setSelectedSlot(slot)}
                       className={`p-3 rounded-lg border text-left text-xs transition-all cursor-pointer ${
                         !slot.isAvailable
-                          ? 'bg-phumulani-cream/50 text-phumulani-charcoal/50 border-phumulani-charcoal/10 cursor-not-allowed'
+                          ? 'bg-phumulani-cream/50 text-phumulani-charcoal/75 border-phumulani-charcoal/15 cursor-not-allowed'
                           : selectedSlot?.slotId === slot.slotId
                           ? 'border-phumulani-earth bg-phumulani-earth/10 font-bold text-phumulani-earth ring-1 ring-inset ring-phumulani-earth/25'
                           : 'border-phumulani-charcoal/12 hover:border-phumulani-earth/40 bg-white text-phumulani-charcoal'
@@ -1469,13 +1469,13 @@ export const PhumulaniAiFundraisingCenter: React.FC<PhumulaniAiFundraisingCenter
                   <div className="font-semibold text-phumulani-charcoal">Live Calendar Provider Status:</div>
                   <div className="flex items-center justify-between">
                     <span>Google Calendar:</span>
-                    <span className={calendarProviderStatus?.googleConnected ? 'text-phumulani-green font-bold' : 'text-phumulani-earth font-semibold'}>
+                    <span className={calendarProviderStatus?.googleConnected ? 'bg-phumulani-green/25 text-phumulani-charcoal px-1.5 py-0.5 rounded font-bold' : 'text-phumulani-earth font-semibold'}>
                       {calendarProviderStatus?.googleConnected ? 'CONNECTED' : 'AUTHORIZATION_REQUIRED'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span>Microsoft Graph:</span>
-                    <span className={calendarProviderStatus?.microsoftConnected ? 'text-phumulani-green font-bold' : 'text-phumulani-earth font-semibold'}>
+                    <span className={calendarProviderStatus?.microsoftConnected ? 'bg-phumulani-green/25 text-phumulani-charcoal px-1.5 py-0.5 rounded font-bold' : 'text-phumulani-earth font-semibold'}>
                       {calendarProviderStatus?.microsoftConnected ? 'CONNECTED' : 'AUTHORIZATION_REQUIRED'}
                     </span>
                   </div>

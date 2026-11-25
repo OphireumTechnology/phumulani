@@ -291,14 +291,25 @@ export const StaffManagementTab: React.FC<StaffManagementTabProps> = ({ currentU
 
       {/* Invite Staff Modal */}
       {isInviteModalOpen && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Invite Enterprise Staff Member"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsInviteModalOpen(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setIsInviteModalOpen(false);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-xl max-w-md w-full p-6 shadow-xl border border-phumulani-cream space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-phumulani-cream">
               <h3 className="text-base font-bold text-phumulani-charcoal flex items-center gap-2">
                 <UserPlus className="w-5 h-5 text-phumulani-earth" />
                 Invite Enterprise Staff Member
               </h3>
-              <button onClick={() => setIsInviteModalOpen(false)} className="text-phumulani-charcoal hover:text-phumulani-earth">
+              <button onClick={() => setIsInviteModalOpen(false)} aria-label="Close modal" className="text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer">
                 <XCircle className="w-5 h-5" />
               </button>
             </div>

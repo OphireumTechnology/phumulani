@@ -33,6 +33,46 @@ export default defineConfig(({ command }) => {
             if (id.includes('node_modules/lucide-react')) {
               return 'vendor-icons';
             }
+            if (id.includes('/src/services/emailEnterpriseSeed')) {
+              return 'email-enterprise-seed';
+            }
+            if (id.includes('/src/services/emailEnterpriseService')) {
+              return 'email-enterprise-service';
+            }
+            if (id.includes('/src/services/googleWorkspaceAdapter')) {
+              return 'google-workspace-adapter';
+            }
+            if (id.includes('/src/services/communicationsGovernanceService')) {
+              return 'comms-governance-service';
+            }
+            if (id.includes('/src/services/fundingCommandService')) {
+              return 'funding-command-service';
+            }
+            if (id.includes('/src/services/phumulaniAiAgentService')) {
+              return 'phumulani-ai-agent-service';
+            }
+            if (
+              id.includes('/src/services/seedData') ||
+              id.includes('/src/services/masterAdminSeed') ||
+              id.includes('/src/services/fundraisingSeed') ||
+              id.includes('/src/services/developmentOpsSeed') ||
+              id.includes('/src/services/mealSeed') ||
+              id.includes('/src/services/operationsSeed') ||
+              id.includes('/src/services/communityProgramsSeed') ||
+              id.includes('/src/services/fundingCommandSeed') ||
+              id.includes('/src/services/unifiedAiWorkforceSeed')
+            ) {
+              return 'seed-datasets';
+            }
+            if (
+              id.includes('/src/services/multilingualAccessibilityService') ||
+              id.includes('/src/services/mediaInventory')
+            ) {
+              return 'accessibility-media';
+            }
+            if (id.includes('/src/services/db.ts')) {
+              return 'phumulani-db';
+            }
           },
         },
       },

@@ -224,29 +224,24 @@ export const WebsiteConciergeModal: React.FC = () => {
                   key={idx}
                   className={`flex flex-col ${m.role === 'user' ? 'items-end' : 'items-start'}`}
                 >
-                  <div
-                    className={`max-w-[86%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed whitespace-pre-line ${
-                      m.role === 'user'
-                        ? 'bg-phumulani-earth text-white rounded-br-xs shadow-2xs'
-                        : m.isCrisisAlert
-                        ? 'bg-white border border-phumulani-earth text-phumulani-charcoal rounded-bl-xs font-medium shadow-xs'
-                        : 'bg-white border border-phumulani-charcoal/12 text-phumulani-charcoal rounded-bl-xs shadow-2xs'
-                    }`}
-                  >
-                    {m.text}
-
-                    {m.sourceAttribution && (
-                      <div
-                        className={`mt-2 pt-1.5 border-t text-[10px] font-sans font-medium ${
-                          m.role === 'user'
-                            ? 'border-white/25 text-phumulani-cream'
-                            : 'border-phumulani-charcoal/10 text-phumulani-earth'
-                        }`}
-                      >
-                        Source: {m.sourceAttribution}
-                      </div>
-                    )}
-                  </div>
+                  {m.role === 'user' ? (
+                    <div className="max-w-[86%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed whitespace-pre-line bg-phumulani-earth text-white rounded-br-xs shadow-2xs">
+                      {m.text}
+                    </div>
+                  ) : (
+                    <div
+                      className={`max-w-[86%] rounded-2xl px-3.5 py-2.5 text-xs leading-relaxed whitespace-pre-line bg-white border text-phumulani-charcoal rounded-bl-xs ${
+                        m.isCrisisAlert ? 'border-phumulani-earth font-medium shadow-xs' : 'border-phumulani-charcoal/12 shadow-2xs'
+                      }`}
+                    >
+                      {m.text}
+                      {m.sourceAttribution && (
+                        <div className="mt-2 pt-1.5 border-t border-phumulani-charcoal/10 text-[10px] font-sans font-medium text-phumulani-earth">
+                          Source: {m.sourceAttribution}
+                        </div>
+                      )}
+                    </div>
+                  )}
                   <span className="text-[10px] text-phumulani-charcoal/80 mt-1 px-1">
                     {m.role === 'user' ? 'You' : 'Agent A10 · Public Concierge'}
                   </span>

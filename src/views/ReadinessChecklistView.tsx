@@ -568,7 +568,7 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
                 <button
                   onClick={runAcceptanceTests}
                   disabled={isRunningTests}
-                  className="px-3.5 py-2 bg-phumulani-earth text-white hover:text-phumulani-charcoal rounded-lg text-xs font-semibold hover:bg-phumulani-charcoal flex items-center gap-1.5 transition-colors disabled:opacity-50 cursor-pointer"
+                  className="px-3.5 py-2 bg-phumulani-earth text-white rounded-lg text-xs font-semibold hover:bg-phumulani-charcoal flex items-center gap-1.5 transition-colors disabled:opacity-50 cursor-pointer"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isRunningTests ? 'animate-spin' : ''}`} />
                   <span>{isRunningTests ? 'Executing Tests...' : 'Run Automated Verification'}</span>
@@ -691,7 +691,7 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
                 <button
                   onClick={runAcceptanceTests}
                   disabled={isRunningTests}
-                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-xl font-bold text-xs flex items-center gap-2 transition-colors disabled:opacity-50 cursor-pointer"
+                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl font-bold text-xs flex items-center gap-2 transition-colors disabled:opacity-50 cursor-pointer"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${isRunningTests ? 'animate-spin' : ''}`} />
                   <span>{isRunningTests ? 'Running Test Suite...' : 'Run All Acceptance Tests'}</span>
@@ -814,7 +814,7 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
               </div>
 
               <div className="relative w-full sm:w-64">
-                <Search className="w-3.5 h-3.5 text-phumulani-charcoal/60 absolute left-3 top-2.5" />
+                <Search className="w-3.5 h-3.5 text-phumulani-charcoal/75 absolute left-3 top-2.5" aria-hidden="true" />
                 <input
                   type="text"
                   placeholder="Filter audit modules..."
@@ -878,7 +878,7 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
               </div>
               <button
                 onClick={handleDownloadDbBackup}
-                className="px-3.5 py-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-white hover:text-phumulani-charcoal rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="px-3.5 py-2 bg-phumulani-charcoal hover:bg-phumulani-earth text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 <Download className="w-3.5 h-3.5" />
                 <span>Save Full Audit Snapshot</span>
@@ -903,7 +903,7 @@ export const ReadinessChecklistView: React.FC<ReadinessChecklistViewProps> = ({
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleDownloadDbBackup}
-                  className="px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
+                  className="px-3.5 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Download Backup JSON</span>
@@ -1018,7 +1018,7 @@ CREATE POLICY restricted_intakes_safeguarding_only ON restricted_intakes
                   <button
                     key={v.verb}
                     onClick={() => copyToClipboard(v.cmd, `verb_${v.verb}`)}
-                    className="p-3 bg-phumulani-charcoal hover:bg-phumulani-earth border border-phumulani-teal/40 rounded-xl text-left transition-colors group flex flex-col justify-between text-phumulani-cream hover:text-phumulani-charcoal cursor-pointer"
+                    className="p-3 bg-phumulani-charcoal hover:bg-phumulani-earth border border-phumulani-teal/40 rounded-xl text-left transition-colors group flex flex-col justify-between text-phumulani-cream hover:text-white cursor-pointer"
                   >
                     <div>
                       <div className="flex justify-between items-center">

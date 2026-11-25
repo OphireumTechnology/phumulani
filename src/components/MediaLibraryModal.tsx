@@ -4,7 +4,7 @@
  * Phumulani Authentic Media Library & Safeguarding Inventory Modal
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ShieldCheck, ShieldAlert, FileText, Download, CheckCircle2, Lock, ExternalLink, Filter, Search, Copy, Check } from 'lucide-react';
 import { PHUMULANI_MEDIA_INVENTORY, MediaAsset } from '../services/mediaInventory';
 import { SafeImage } from './SafeImage';
@@ -18,6 +18,15 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -49,7 +58,15 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
   ];
 
   return (
-    <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 no-print">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Phumulani Media Preservation and Safeguarding Registry"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-3 sm:p-6 no-print"
+    >
       <div className="bg-white rounded-2xl max-w-5xl w-full border border-phumulani-charcoal/15 shadow-2xl flex flex-col max-h-[92vh] overflow-hidden animate-in fade-in">
         {/* Header */}
         <div className="bg-phumulani-charcoal text-white p-5 flex items-center justify-between border-b border-phumulani-gold/30">

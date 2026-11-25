@@ -222,7 +222,18 @@ export const CommunityResourceDirectoryTab: React.FC<Props> = ({ currentUser }) 
 
       {/* Submit Modal */}
       {isSubmitModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Submit Verified Community Resource"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsSubmitModalOpen(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setIsSubmitModalOpen(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 p-4"
+        >
           <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl border border-phumulani-cream space-y-4">
             <h3 className="text-lg font-bold font-serif text-phumulani-charcoal">Submit Verified Community Resource</h3>
             <p className="text-xs text-phumulani-charcoal">

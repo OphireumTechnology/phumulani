@@ -5,7 +5,7 @@
  * Supporting 9 distinct dashboard views for the constituent lifecycle
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   LifeBuoy,
   BookOpen,
@@ -75,6 +75,15 @@ export const MemberSelfServiceSection: React.FC<MemberSelfServiceSectionProps> =
 
   // Feedback modal / rating state
   const [activeFeedbackModalReq, setActiveFeedbackModalReq] = useState<IntegratedServiceRequest | null>(null);
+
+  useEffect(() => {
+    if (!activeFeedbackModalReq) return;
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setActiveFeedbackModalReq(null);
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [activeFeedbackModalReq]);
   const [satisfactionScore, setSatisfactionScore] = useState(5);
   const [feedbackComment, setFeedbackComment] = useState('');
 
@@ -404,7 +413,18 @@ export const MemberSelfServiceSection: React.FC<MemberSelfServiceSectionProps> =
 
           {/* Feedback Modal */}
           {activeFeedbackModalReq && (
-            <div className="fixed inset-0 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label={`Rate your experience for ${activeFeedbackModalReq.trackingReference}`}
+              onClick={(e) => {
+                if (e.target === e.currentTarget) setActiveFeedbackModalReq(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'Escape') setActiveFeedbackModalReq(null);
+              }}
+              className="fixed inset-0 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4 z-50"
+            >
               <div className="bg-white rounded-2xl max-w-md w-full p-6 space-y-4 shadow-xl border border-phumulani-charcoal/15">
                 <h4 className="font-heading font-bold text-base text-phumulani-charcoal tabular-nums">
                   Rate Your Experience ({activeFeedbackModalReq.trackingReference})
@@ -423,6 +443,7 @@ export const MemberSelfServiceSection: React.FC<MemberSelfServiceSectionProps> =
                       className="p-1 cursor-pointer"
                     >
                       <Star
+                        aria-hidden="true"
                         className={`w-6 h-6 ${
                           score <= satisfactionScore
                             ? 'text-phumulani-earth fill-phumulani-gold'
@@ -1096,6 +1117,7 @@ export const MemberSelfServiceSection: React.FC<MemberSelfServiceSectionProps> =
                     {[1, 2, 3, 4, 5].map((s) => (
                       <Star
                         key={s}
+                        aria-hidden="true"
                         className={`w-4 h-4 ${s <= 4 ? 'text-phumulani-earth fill-phumulani-gold' : 'text-phumulani-charcoal/30'}`}
                       />
                     ))}

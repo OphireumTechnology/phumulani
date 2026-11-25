@@ -5,7 +5,7 @@
  * Preserving Comfort Dondo's authentic journey, publications, and original videos.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   BookOpen,
   Film,
@@ -29,6 +29,15 @@ const FOUNDER_IMAGE = '/images/leadership/phumulani-founder-official.png';
 
 export const FounderSection: React.FC = () => {
   const [selectedBook, setSelectedBook] = useState<'facing' | 'sacred' | 'gift' | null>(null);
+
+  useEffect(() => {
+    if (!selectedBook) return;
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSelectedBook(null);
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [selectedBook]);
 
   const founderVideo =
     getMediaById('med-vid-001') || PHUMULANI_MEDIA_INVENTORY.find((m) => m.category === 'videos')!;
@@ -431,6 +440,7 @@ export const FounderSection: React.FC = () => {
         <div
           role="dialog"
           aria-modal="true"
+          aria-label="Publication Excerpt and Details"
           onClick={(e) => {
             if (e.target === e.currentTarget) setSelectedBook(null);
           }}

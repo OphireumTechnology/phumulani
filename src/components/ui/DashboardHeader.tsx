@@ -53,13 +53,13 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           <span className="hidden sm:inline">Phumulani</span>
         </button>
 
-        <span className="text-phumulani-charcoal/40 hidden sm:inline">/</span>
+        <span className="text-phumulani-charcoal/75 hidden sm:inline" aria-hidden="true">/</span>
 
         <span className="font-heading font-bold text-xs sm:text-sm text-phumulani-charcoal truncate">
           {portalTitle}
         </span>
 
-        <span className="text-phumulani-charcoal/40 hidden md:inline">/</span>
+        <span className="text-phumulani-charcoal/75 hidden md:inline" aria-hidden="true">/</span>
 
         <span className="font-heading font-bold text-xs text-phumulani-earth hidden md:inline truncate">
           {activeItemLabel}
@@ -121,7 +121,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = ({
           >
             <Bell className="w-4 h-4 text-phumulani-earth" />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 bg-phumulani-earth text-white font-bold text-[9px] px-1.5 py-0.2 rounded-full ring-2 ring-white tabular-nums">
+              <span className="absolute -top-1 -right-1 bg-phumulani-earth text-white font-bold text-[9px] px-1.5 py-0.5 rounded-full ring-2 ring-white tabular-nums">
                 {unreadCount}
               </span>
             )}

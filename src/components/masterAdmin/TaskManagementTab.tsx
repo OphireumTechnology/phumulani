@@ -388,14 +388,25 @@ export const TaskManagementTab: React.FC<TaskManagementTabProps> = ({ currentUse
 
       {/* Create Task Modal */}
       {isCreateModalOpen && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Create New Organizational Task"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsCreateModalOpen(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setIsCreateModalOpen(false);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl border border-phumulani-cream space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-phumulani-cream">
               <h3 className="text-base font-bold text-phumulani-charcoal flex items-center gap-2">
                 <CheckSquare className="w-5 h-5 text-phumulani-earth" />
                 Create New Organizational Task
               </h3>
-              <button onClick={() => setIsCreateModalOpen(false)} className="text-phumulani-charcoal hover:text-phumulani-earth">
+              <button onClick={() => setIsCreateModalOpen(false)} aria-label="Close modal" className="text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer">
                 <XCircle className="w-5 h-5" />
               </button>
             </div>

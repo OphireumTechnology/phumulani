@@ -255,14 +255,25 @@ export const ProgramResourcesTab: React.FC<Props> = ({ currentUserRole, currentU
 
       {/* REQUEST RESOURCE MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4 animate-fadeIn">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Request Program Resource"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsModalOpen(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setIsModalOpen(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/80 backdrop-blur-xs p-4 animate-fadeIn"
+        >
           <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-cream max-w-lg w-full p-6 text-xs space-y-4">
             <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div>
                 <span className="text-[10px] font-mono text-phumulani-earth font-bold uppercase">Resource Request</span>
                 <h3 className="text-base font-bold text-phumulani-charcoal">Request Program Resource</h3>
               </div>
-              <button onClick={() => setIsModalOpen(false)} className="text-phumulani-charcoal hover:text-phumulani-earth font-bold">
+              <button onClick={() => setIsModalOpen(false)} aria-label="Close modal" className="text-phumulani-charcoal hover:text-phumulani-earth font-bold cursor-pointer">
                 ✕
               </button>
             </div>

@@ -193,6 +193,55 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
   const [taskExecutionResult, setTaskExecutionResult] = useState<FundraisingAgentTask | null>(null);
   const [historyDrawerAgent, setHistoryDrawerAgent] = useState<FundraisingAIAgent | null>(null);
 
+  useEffect(() => {
+    const hasOpenModal =
+      showImportModal ||
+      showNewDonorModal ||
+      showDraftModal ||
+      showVerifyModal ||
+      showReconModal ||
+      showTestRunnerModal ||
+      !!executingAgent ||
+      !!historyDrawerAgent ||
+      showAddOppModal ||
+      showLogActivityModal ||
+      !!(decisionModalDraftId && decisionType);
+    if (!hasOpenModal) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      if (decisionModalDraftId && decisionType) {
+        setDecisionModalDraftId(null);
+        setDecisionType(null);
+      } else if (showLogActivityModal) setShowLogActivityModal(false);
+      else if (showAddOppModal) setShowAddOppModal(false);
+      else if (historyDrawerAgent) setHistoryDrawerAgent(null);
+      else if (executingAgent) {
+        setExecutingAgent(null);
+        setTaskExecutionResult(null);
+      } else if (showTestRunnerModal) setShowTestRunnerModal(false);
+      else if (showReconModal) setShowReconModal(false);
+      else if (showVerifyModal) setShowVerifyModal(false);
+      else if (showDraftModal) setShowDraftModal(false);
+      else if (showNewDonorModal) setShowNewDonorModal(false);
+      else if (showImportModal) setShowImportModal(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [
+    showImportModal,
+    showNewDonorModal,
+    showDraftModal,
+    showVerifyModal,
+    showReconModal,
+    showTestRunnerModal,
+    executingAgent,
+    historyDrawerAgent,
+    showAddOppModal,
+    showLogActivityModal,
+    decisionModalDraftId,
+    decisionType,
+  ]);
+
   const refreshState = () => {
     setDonors(db.getFundraisingDonors());
     setOpportunities(db.getFundraisingOpportunities());
@@ -773,7 +822,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             {/* Group 1: OVERVIEW */}
             <div>
               {!sidebarCollapsed && (
-                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/55 mb-1.5">
+                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/75 mb-1.5">
                   01 — Command
                 </div>
               )}
@@ -811,7 +860,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             {/* Group 2: DONOR INTELLIGENCE & CRM */}
             <div>
               {!sidebarCollapsed && (
-                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/55 mb-1.5">
+                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/75 mb-1.5">
                   02 — Donor Database
                 </div>
               )}
@@ -853,7 +902,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             {/* Group 3: PIPELINE & CAMPAIGNS */}
             <div>
               {!sidebarCollapsed && (
-                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/55 mb-1.5">
+                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/75 mb-1.5">
                   03 — Campaigns & Grants
                 </div>
               )}
@@ -889,7 +938,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             {/* Group 4: AI COMMUNICATIONS */}
             <div>
               {!sidebarCollapsed && (
-                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/55 mb-1.5">
+                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/75 mb-1.5">
                   04 — AI & Outreach
                 </div>
               )}
@@ -926,7 +975,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             {/* Group 5: FINANCE & IMPACT */}
             <div>
               {!sidebarCollapsed && (
-                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/55 mb-1.5">
+                <div className="px-2 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/75 mb-1.5">
                   05 — Finance & Programs
                 </div>
               )}
@@ -1149,7 +1198,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                         : 'border-phumulani-charcoal/12 bg-white'
                     }`}
                   >
-                    <div className="flex items-center justify-between text-phumulani-charcoal/60 text-[10px] font-mono">
+                    <div className="flex items-center justify-between text-phumulani-charcoal/75 text-[10px] font-mono">
                       <span>KPI {card.num}</span>
                       <span
                         className={`rounded-sm px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-wide ${
@@ -1166,7 +1215,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                     <div className="mt-2.5">
                       <div className="text-xl font-heading font-extrabold text-phumulani-charcoal tracking-tight tabular-nums">{card.val}</div>
                       <div className="text-xs font-semibold text-phumulani-charcoal mt-0.5">{card.label}</div>
-                      <div className="text-[11px] text-phumulani-charcoal/65 mt-1">{card.sub}</div>
+                      <div className="text-[11px] text-phumulani-charcoal/75 mt-1">{card.sub}</div>
                     </div>
                   </div>
                 ))}
@@ -1181,10 +1230,10 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                     </div>
                     <div>
                       <h3 className="text-sm font-heading font-bold text-phumulani-charcoal">Executive AI Briefing & Today's Fundraising Priorities</h3>
-                      <p className="text-[11px] text-phumulani-charcoal/65">Prepared by A01 Executive Assistant & A07 Fundraising Strategist</p>
+                      <p className="text-[11px] text-phumulani-charcoal/75">Prepared by A01 Executive Assistant & A07 Fundraising Strategist</p>
                     </div>
                   </div>
-                  <span className="text-[11px] font-mono text-phumulani-charcoal/65">
+                  <span className="text-[11px] font-mono text-phumulani-charcoal/75">
                     Updated: {new Date().toLocaleDateString()}
                   </span>
                 </div>
@@ -1333,7 +1382,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                     placeholder="Search by donor name, email, organization, city..."
                     className="w-full rounded-lg border border-phumulani-charcoal/15 bg-white py-1.5 pl-8 pr-3 text-xs text-phumulani-charcoal placeholder-phumulani-charcoal/45 focus:border-phumulani-earth focus:outline-none"
                   />
-                  <svg className="absolute left-2.5 top-2 h-4 w-4 text-phumulani-charcoal/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="absolute left-2.5 top-2 h-4 w-4 text-phumulani-charcoal/75" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
@@ -1401,7 +1450,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                     <tbody className="divide-y divide-phumulani-charcoal/10">
                       {filteredDonors.length === 0 ? (
                         <tr>
-                          <td colSpan={8} className="py-8 text-center text-phumulani-charcoal/65">
+                          <td colSpan={8} className="py-8 text-center text-phumulani-charcoal/75">
                             No donor contacts match current filter criteria.
                           </td>
                         </tr>
@@ -1424,7 +1473,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                               </td>
                               <td className="py-3 px-4">
                                 <div className="text-phumulani-charcoal font-mono text-[11px]">{donor.email}</div>
-                                {donor.phone && <div className="text-[11px] text-phumulani-charcoal/65">{donor.phone}</div>}
+                                {donor.phone && <div className="text-[11px] text-phumulani-charcoal/75">{donor.phone}</div>}
                               </td>
                               <td className="py-3 px-4">
                                 <span className="inline-flex rounded-sm bg-phumulani-cream/90 px-2 py-0.5 text-[10px] font-medium text-phumulani-charcoal border border-phumulani-charcoal/10">
@@ -1570,11 +1619,11 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
                       <div className="grid grid-cols-2 gap-2 bg-phumulani-cream/65 p-2.5 rounded-lg border border-phumulani-charcoal/10 text-xs">
                         <div>
-                          <div className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold">Proposed Commitment</div>
+                          <div className="text-[10px] text-phumulani-charcoal/75 uppercase font-semibold">Proposed Commitment</div>
                           <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm">${p.proposedContribution.toLocaleString()}</div>
                         </div>
                         <div>
-                          <div className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold">Verified Received</div>
+                          <div className="text-[10px] text-phumulani-charcoal/75 uppercase font-semibold">Verified Received</div>
                           <div className="font-mono tabular-nums font-bold text-phumulani-earth text-sm">${p.verifiedContributionReceived.toLocaleString()}</div>
                         </div>
                       </div>
@@ -1675,15 +1724,15 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
                       <div className="grid grid-cols-3 gap-2 border-y border-phumulani-charcoal/10 py-2 text-xs">
                         <div>
-                          <div className="text-[10px] text-phumulani-charcoal/65 uppercase font-medium">Target Amount</div>
+                          <div className="text-[10px] text-phumulani-charcoal/75 uppercase font-medium">Target Amount</div>
                           <div className="font-mono tabular-nums font-bold text-phumulani-charcoal">${opp.targetAmount.toLocaleString()}</div>
                         </div>
                         <div>
-                          <div className="text-[10px] text-phumulani-charcoal/65 uppercase font-medium">Probability</div>
+                          <div className="text-[10px] text-phumulani-charcoal/75 uppercase font-medium">Probability</div>
                           <div className="font-mono tabular-nums font-bold text-phumulani-earth">{opp.probability}%</div>
                         </div>
                         <div>
-                          <div className="text-[10px] text-phumulani-charcoal/65 uppercase font-medium">Close Date</div>
+                          <div className="text-[10px] text-phumulani-charcoal/75 uppercase font-medium">Close Date</div>
                           <div className="font-mono tabular-nums text-phumulani-charcoal">{opp.expectedCloseDate}</div>
                         </div>
                       </div>
@@ -1832,22 +1881,22 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
                       <div className="grid grid-cols-2 gap-2 bg-phumulani-cream/65 p-2.5 rounded-lg border border-phumulani-charcoal/10 text-xs">
                         <div>
-                          <div className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold">Amount Requested</div>
+                          <div className="text-[10px] text-phumulani-charcoal/75 uppercase font-semibold">Amount Requested</div>
                           <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm">${g.amountRequested.toLocaleString()}</div>
                         </div>
                         <div>
-                          <div className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold">Awarded / Verified</div>
+                          <div className="text-[10px] text-phumulani-charcoal/75 uppercase font-semibold">Awarded / Verified</div>
                           <div className="font-mono tabular-nums font-bold text-phumulani-earth text-sm">${g.amountAwarded.toLocaleString()}</div>
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-2 text-xs">
                         <div className="rounded-lg border border-phumulani-charcoal/12 p-2.5">
-                          <span className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold block">Submission Deadline</span>
+                          <span className="text-[10px] text-phumulani-charcoal/75 uppercase font-semibold block">Submission Deadline</span>
                           <span className="font-mono font-semibold text-phumulani-charcoal">{g.submissionDeadline}</span>
                         </div>
                         <div className="rounded-lg border border-phumulani-charcoal/12 p-2.5">
-                          <span className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold block">Reporting Deadline</span>
+                          <span className="text-[10px] text-phumulani-charcoal/75 uppercase font-semibold block">Reporting Deadline</span>
                           <span className="font-mono font-semibold text-phumulani-charcoal">{g.reportingDeadline || 'Quarterly Ongoing'}</span>
                         </div>
                       </div>
@@ -1957,51 +2006,51 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                 {/* 11 Pilot Metrics Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5 text-xs">
                   <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
-                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">1. Authorized Recipients</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75 font-semibold uppercase">1. Authorized Recipients</span>
                     <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.authorizedRecipientsCount} Donors</div>
                   </div>
                   <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
-                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">2. Accepted Sends</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75 font-semibold uppercase">2. Accepted Sends</span>
                     <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.acceptedSendsCount} Dispatched</div>
                   </div>
                   <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
-                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">3. Delivery Outcome</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75 font-semibold uppercase">3. Delivery Outcome</span>
                     <div className="font-mono font-bold text-phumulani-earth text-xs mt-1">{pilotMetrics.providerDeliveryOutcomes}</div>
                   </div>
                   <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
-                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">4. Bounce Rate</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75 font-semibold uppercase">4. Bounce Rate</span>
                     <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.bounceRate}%</div>
                   </div>
                   <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
-                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">5. Spam Complaints</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75 font-semibold uppercase">5. Spam Complaints</span>
                     <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.spamComplaints}</div>
                   </div>
                   <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
-                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">6. Unsubscribes</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75 font-semibold uppercase">6. Unsubscribes</span>
                     <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.unsubscribeRequests}</div>
                   </div>
                   <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
-                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">7. Responses</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75 font-semibold uppercase">7. Responses</span>
                     <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.responsesReceived} Inquiries</div>
                   </div>
                   <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
-                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">8. Qualified Inquiries</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75 font-semibold uppercase">8. Qualified Inquiries</span>
                     <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">{pilotMetrics.qualifiedDonorInquiries} Proposals</div>
                   </div>
                   <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
-                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">9. Follow-Up Rate</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75 font-semibold uppercase">9. Follow-Up Rate</span>
                     <div className="font-mono tabular-nums font-bold text-phumulani-earth text-sm mt-0.5">{pilotMetrics.followUpCompletionRate}%</div>
                   </div>
                   <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
-                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">10. Verified Donations</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75 font-semibold uppercase">10. Verified Donations</span>
                     <div className="font-mono tabular-nums font-bold text-phumulani-earth text-sm mt-0.5">${pilotMetrics.verifiedDonationsAmount.toLocaleString()}</div>
                   </div>
                   <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
-                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">11. Campaign Expenses</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75 font-semibold uppercase">11. Campaign Expenses</span>
                     <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">${pilotMetrics.campaignExpenses.toLocaleString()}</div>
                   </div>
                   <div className="rounded-lg bg-white p-2.5 border border-phumulani-charcoal/10 shadow-2xs">
-                    <span className="text-[10px] text-phumulani-charcoal/65 font-semibold uppercase">Audit Status</span>
+                    <span className="text-[10px] text-phumulani-charcoal/75 font-semibold uppercase">Audit Status</span>
                     <div className="font-mono font-bold text-phumulani-earth text-xs mt-1">STATUS: {pilotMetrics.simulatedStatus}</div>
                   </div>
                 </div>
@@ -2033,7 +2082,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                           <div className="text-lg font-extrabold text-phumulani-charcoal font-mono tabular-nums">
                             ${camp.fundsRaisedVerified.toLocaleString()}
                           </div>
-                          <div className="text-[11px] text-phumulani-charcoal/65">Target: ${camp.fundingTarget.toLocaleString()}</div>
+                          <div className="text-[11px] text-phumulani-charcoal/75">Target: ${camp.fundingTarget.toLocaleString()}</div>
                         </div>
                       </div>
 
@@ -2052,15 +2101,15 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs bg-phumulani-cream/65 rounded-lg p-3 border border-phumulani-charcoal/8">
                         <div>
-                          <span className="text-phumulani-charcoal/65 uppercase text-[10px] font-semibold">Category</span>
+                          <span className="text-phumulani-charcoal/75 uppercase text-[10px] font-semibold">Category</span>
                           <div className="font-medium text-phumulani-charcoal mt-0.5">{camp.programCategory}</div>
                         </div>
                         <div>
-                          <span className="text-phumulani-charcoal/65 uppercase text-[10px] font-semibold">Campaign Dates</span>
+                          <span className="text-phumulani-charcoal/75 uppercase text-[10px] font-semibold">Campaign Dates</span>
                           <div className="font-medium text-phumulani-charcoal mt-0.5">{camp.startDate} to {camp.endDate}</div>
                         </div>
                         <div>
-                          <span className="text-phumulani-charcoal/65 uppercase text-[10px] font-semibold">Eligible Audience</span>
+                          <span className="text-phumulani-charcoal/75 uppercase text-[10px] font-semibold">Eligible Audience</span>
                           <div className="font-medium text-phumulani-charcoal mt-0.5">{camp.eligibleAudienceCount} Verified Donors</div>
                         </div>
                       </div>
@@ -2156,7 +2205,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   <div className="mt-1 text-2xl font-heading font-bold text-phumulani-charcoal font-mono tabular-nums">
                     {agents.reduce((sum, a) => sum + (a.completedTasksCount || 0), 0)}
                   </div>
-                  <div className="text-[11px] text-phumulani-charcoal/65 mt-0.5">
+                  <div className="text-[11px] text-phumulani-charcoal/75 mt-0.5">
                     Immutable Audit Trail Logged
                   </div>
                 </div>
@@ -2216,7 +2265,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   >
                     <span className="text-[10px] font-bold text-phumulani-earth">Grant Pipeline</span>
                     <span className="text-[11px] font-semibold text-phumulani-charcoal">Discovery → Proposal</span>
-                    <span className="text-[9px] text-phumulani-charcoal/65 font-mono mt-1">FUND-AI-005, 006, 010, 007, 009, 008</span>
+                    <span className="text-[9px] text-phumulani-charcoal/75 font-mono mt-1">FUND-AI-005, 006, 010, 007, 009, 008</span>
                   </button>
 
                   <button
@@ -2226,7 +2275,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   >
                     <span className="text-[10px] font-bold text-phumulani-earth">Corporate CSR</span>
                     <span className="text-[11px] font-semibold text-phumulani-charcoal">ESG Triage → Pitch</span>
-                    <span className="text-[9px] text-phumulani-charcoal/65 font-mono mt-1">FUND-AI-011, 007, 009, 008</span>
+                    <span className="text-[9px] text-phumulani-charcoal/75 font-mono mt-1">FUND-AI-011, 007, 009, 008</span>
                   </button>
 
                   <button
@@ -2236,7 +2285,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   >
                     <span className="text-[10px] font-bold text-phumulani-earth">Donor Stewardship</span>
                     <span className="text-[11px] font-semibold text-phumulani-charcoal">Impact Update & Thanks</span>
-                    <span className="text-[9px] text-phumulani-charcoal/65 font-mono mt-1">FUND-AI-012, 007, 008</span>
+                    <span className="text-[9px] text-phumulani-charcoal/75 font-mono mt-1">FUND-AI-012, 007, 008</span>
                   </button>
 
                   <button
@@ -2246,7 +2295,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   >
                     <span className="text-[10px] font-bold text-phumulani-earth">Reconciliation</span>
                     <span className="text-[11px] font-semibold text-phumulani-charcoal">ACH, Checks & Pledges</span>
-                    <span className="text-[9px] text-phumulani-charcoal/65 font-mono mt-1">FUND-AI-016, 017, 018</span>
+                    <span className="text-[9px] text-phumulani-charcoal/75 font-mono mt-1">FUND-AI-016, 017, 018</span>
                   </button>
 
                   <button
@@ -2256,7 +2305,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   >
                     <span className="text-[10px] font-bold text-phumulani-earth">Campaign Velocity</span>
                     <span className="text-[11px] font-semibold text-phumulani-charcoal">Burndown & Attrition</span>
-                    <span className="text-[9px] text-phumulani-charcoal/65 font-mono mt-1">FUND-AI-013, 014, 015</span>
+                    <span className="text-[9px] text-phumulani-charcoal/75 font-mono mt-1">FUND-AI-013, 014, 015</span>
                   </button>
                 </div>
               </div>
@@ -2265,7 +2314,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-3 rounded-xl border border-phumulani-charcoal/12 shadow-2xs">
                 {/* Search */}
                 <div className="relative flex-1 max-w-sm">
-                  <svg className="absolute left-3 top-2.5 h-4 w-4 text-phumulani-charcoal/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="absolute left-3 top-2.5 h-4 w-4 text-phumulani-charcoal/75" aria-hidden="true" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                   <input
@@ -2320,7 +2369,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                           <span className="rounded-sm bg-phumulani-teal/12 px-2 py-0.5 font-mono text-[11px] font-bold text-phumulani-charcoal border border-phumulani-teal/40">
                             {agent.id}
                           </span>
-                          <span className="text-[10px] font-mono text-phumulani-charcoal/65 font-semibold">
+                          <span className="text-[10px] font-mono text-phumulani-charcoal/75 font-semibold">
                             {agent.code}
                           </span>
                         </div>
@@ -2353,7 +2402,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
                       {/* Tools & Safeguards */}
                       <div className="space-y-1.5">
-                        <div className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/65">
+                        <div className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/75">
                           Assigned Capability Tools
                         </div>
                         <div className="flex flex-wrap gap-1">
@@ -2492,7 +2541,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
               <div className="space-y-3">
                 {drafts.length === 0 ? (
-                  <div className="rounded-xl border border-dashed border-phumulani-charcoal/20 bg-white/60 p-8 text-center text-phumulani-charcoal/65 text-xs">
+                  <div className="rounded-xl border border-dashed border-phumulani-charcoal/20 bg-white/60 p-8 text-center text-phumulani-charcoal/75 text-xs">
                     No outreach drafts currently in queue. Select a donor and click "AI Outreach" to generate tailored communications.
                   </div>
                 ) : (
@@ -2656,26 +2705,26 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               {/* Stewardship SLA & Retention Metrics */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
                 <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 space-y-1 shadow-2xs">
-                  <span className="text-[10px] font-semibold uppercase text-phumulani-charcoal/65">48-Hour SLA Compliance</span>
+                  <span className="text-[10px] font-semibold uppercase text-phumulani-charcoal/75">48-Hour SLA Compliance</span>
                   <div className="font-mono tabular-nums font-bold text-phumulani-earth text-lg">100%</div>
                   <p className="text-[11px] text-phumulani-charcoal/70">All gifts acknowledged within 48 hours of bank receipt</p>
                 </div>
                 <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 space-y-1 shadow-2xs">
-                  <span className="text-[10px] font-semibold uppercase text-phumulani-charcoal/65">Active Stewardship Portfolio</span>
+                  <span className="text-[10px] font-semibold uppercase text-phumulani-charcoal/75">Active Stewardship Portfolio</span>
                   <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-lg">
                     {donors.filter((d) => d.stage === 'STEWARDSHIP').length} Donors
                   </div>
                   <p className="text-[11px] text-phumulani-charcoal/70">Currently nurtured post-gift relationships</p>
                 </div>
                 <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 space-y-1 shadow-2xs">
-                  <span className="text-[10px] font-semibold uppercase text-phumulani-charcoal/65">Verified Tax Receipts</span>
+                  <span className="text-[10px] font-semibold uppercase text-phumulani-charcoal/75">Verified Tax Receipts</span>
                   <div className="font-mono tabular-nums font-bold text-phumulani-earth text-lg">
                     {contributions.filter((c) => c.taxReceiptIssued).length} / {contributions.length}
                   </div>
                   <p className="text-[11px] text-phumulani-charcoal/70">501(c)(3) formal tax deduction receipts generated</p>
                 </div>
                 <div className="rounded-xl border border-phumulani-charcoal/12 bg-white p-4 space-y-1 shadow-2xs">
-                  <span className="text-[10px] font-semibold uppercase text-phumulani-charcoal/65">Annual Retention Rate</span>
+                  <span className="text-[10px] font-semibold uppercase text-phumulani-charcoal/75">Annual Retention Rate</span>
                   <div className="font-mono tabular-nums font-bold text-phumulani-earth text-lg">88.4%</div>
                   <p className="text-[11px] text-phumulani-charcoal/70">Second-year and recurring pledge commitment rate</p>
                 </div>
@@ -2685,7 +2734,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               <div className="rounded-xl border border-phumulani-charcoal/12 bg-white shadow-2xs overflow-hidden">
                 <div className="p-3.5 border-b border-phumulani-charcoal/12 bg-phumulani-cream/65 flex items-center justify-between">
                   <h3 className="text-xs font-heading font-bold text-phumulani-charcoal">Stewardship Queue & Impact Engagement</h3>
-                  <span className="text-[11px] text-phumulani-charcoal/65">Click donor row to view actionable timeline</span>
+                  <span className="text-[11px] text-phumulani-charcoal/75">Click donor row to view actionable timeline</span>
                 </div>
                 <div className="divide-y divide-phumulani-charcoal/10">
                   {donors
@@ -2927,12 +2976,12 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-phumulani-charcoal/10 pb-3">
                       <div>
                         <h3 className="text-base font-heading font-bold text-phumulani-charcoal">{rep.title}</h3>
-                        <p className="text-xs text-phumulani-charcoal/65">Generated: {rep.generatedAt}</p>
+                        <p className="text-xs text-phumulani-charcoal/75">Generated: {rep.generatedAt}</p>
                       </div>
                       <div className="flex flex-wrap items-center gap-4">
                         {Object.entries(rep.metrics).map(([k, v]) => (
                           <div key={k} className="text-right">
-                            <span className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold">{k}</span>
+                            <span className="text-[10px] text-phumulani-charcoal/75 uppercase font-semibold">{k}</span>
                             <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm">
                               {typeof v === 'number' && v > 1000 ? `$${v.toLocaleString()}` : v}
                             </div>
@@ -3018,7 +3067,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                         <tr key={item.id} className="hover:bg-phumulani-cream/45 transition-colors">
                           <td className="py-3 px-4">
                             <div className="font-bold text-phumulani-charcoal">{item.component}</div>
-                            <div className="font-mono text-[10px] text-phumulani-charcoal/65">{item.section}</div>
+                            <div className="font-mono text-[10px] text-phumulani-charcoal/75">{item.section}</div>
                           </td>
                           <td className="py-3 px-4">
                             <span
@@ -3041,7 +3090,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                           <td className="py-3 px-4 max-w-xs">
                             <div className="text-phumulani-charcoal text-[11px] font-medium">{item.actualEvidence}</div>
                             {item.relevantLogs && (
-                              <div className="font-mono text-[10px] text-phumulani-charcoal/65 mt-0.5 truncate">
+                              <div className="font-mono text-[10px] text-phumulani-charcoal/75 mt-0.5 truncate">
                                 {item.relevantLogs}
                               </div>
                             )}
@@ -3049,7 +3098,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                           <td className="py-3 px-4 text-[11px]">
                             <div className="font-medium text-phumulani-charcoal">{item.responsibleOwner}</div>
                             {item.responsibleAdministrator && (
-                              <div className="text-[10px] text-phumulani-charcoal/65">{item.responsibleAdministrator}</div>
+                              <div className="text-[10px] text-phumulani-charcoal/75">{item.responsibleAdministrator}</div>
                             )}
                           </td>
                           <td className="py-3 px-4 text-right font-mono tabular-nums text-[11px] text-phumulani-charcoal/75">
@@ -3145,7 +3194,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
         {showRightPanel && selectedDonor && (
           <aside className="w-80 border-l border-phumulani-charcoal/12 bg-white flex flex-col overflow-y-auto p-4 space-y-4">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-2.5">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/65">Donor Profile & Context</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/75">Donor Profile & Context</span>
               <button
                 onClick={() => setShowRightPanel(false)}
                 className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-xs cursor-pointer"
@@ -3171,13 +3220,13 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             {/* Quick Metrics */}
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div className="rounded-lg bg-phumulani-cream/75 border border-phumulani-charcoal/10 p-2.5">
-                <span className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold">Lifetime Giving</span>
+                <span className="text-[10px] text-phumulani-charcoal/75 uppercase font-semibold">Lifetime Giving</span>
                 <div className="font-mono tabular-nums font-bold text-phumulani-charcoal text-sm mt-0.5">
                   ${selectedDonor.lifetimeGiving.toLocaleString()}
                 </div>
               </div>
               <div className="rounded-lg bg-phumulani-cream/75 border border-phumulani-charcoal/10 p-2.5">
-                <span className="text-[10px] text-phumulani-charcoal/65 uppercase font-semibold">Largest Gift</span>
+                <span className="text-[10px] text-phumulani-charcoal/75 uppercase font-semibold">Largest Gift</span>
                 <div className="font-mono tabular-nums font-bold text-phumulani-earth text-sm mt-0.5">
                   ${selectedDonor.largestGift.toLocaleString()}
                 </div>
@@ -3219,7 +3268,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
             {/* Program Interests */}
             <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/65">Program Interests</span>
+              <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/75">Program Interests</span>
               <div className="flex flex-wrap gap-1.5 mt-1.5">
                 {selectedDonor.programInterests.map((interest, i) => (
                   <span key={i} className="rounded-sm bg-phumulani-cream border border-phumulani-charcoal/10 px-2 py-0.5 text-[10px] font-medium text-phumulani-charcoal">
@@ -3302,18 +3351,18 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
             {/* Engagement Activities Timeline (Priority J) */}
             <div>
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/65">Engagement Timeline</span>
-                <span className="text-[10px] font-mono tabular-nums text-phumulani-charcoal/65">{engagementActivities.length} events</span>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/75">Engagement Timeline</span>
+                <span className="text-[10px] font-mono tabular-nums text-phumulani-charcoal/75">{engagementActivities.length} events</span>
               </div>
               <div className="mt-2 space-y-2 max-h-48 overflow-y-auto pr-1">
                 {engagementActivities.length === 0 ? (
-                  <p className="text-[11px] text-phumulani-charcoal/60 italic">No logged engagement activities yet.</p>
+                  <p className="text-[11px] text-phumulani-charcoal/75 italic">No logged engagement activities yet.</p>
                 ) : (
                   engagementActivities.map((act) => (
                     <div key={act.id} className="rounded-lg border border-phumulani-charcoal/10 bg-phumulani-cream/55 p-2.5 text-xs space-y-1">
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-phumulani-charcoal text-[11px] truncate max-w-[170px]">{act.title}</span>
-                        <span className="text-[9px] font-mono text-phumulani-charcoal/65">{act.timestamp ? act.timestamp.split('T')[0] : ''}</span>
+                        <span className="text-[9px] font-mono text-phumulani-charcoal/75">{act.timestamp ? act.timestamp.split('T')[0] : ''}</span>
                       </div>
                       <div className="text-[10px] text-phumulani-charcoal/70 flex items-center justify-between">
                         <span className="rounded-sm bg-white border border-phumulani-charcoal/10 px-1.5 py-0.5 text-[9px] font-bold text-phumulani-earth">{act.activityType}</span>
@@ -3368,14 +3417,22 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 1. IMPORT DONORS MODAL */}
       {showImportModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Import Donor Contacts (CSV or JSON)"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowImportModal(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4"
+        >
           <div className="w-full max-w-2xl rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
                 <h3 className="font-heading text-base font-bold text-phumulani-charcoal">Import Donor Contacts (CSV / JSON)</h3>
                 <p className="text-xs text-phumulani-charcoal/70">Imports and validates donor records with deduplication against existing database.</p>
               </div>
-              <button onClick={() => setShowImportModal(false)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
+              <button onClick={() => setShowImportModal(false)} aria-label="Close import donor contacts dialog" className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
@@ -3457,11 +3514,19 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 2. NEW DONOR MODAL */}
       {showNewDonorModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Create New Donor Contact"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowNewDonorModal(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4"
+        >
           <div className="w-full max-w-md rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <h3 className="font-heading text-base font-bold text-phumulani-charcoal">Create New Donor Contact</h3>
-              <button onClick={() => setShowNewDonorModal(false)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
+              <button onClick={() => setShowNewDonorModal(false)} aria-label="Close create donor dialog" className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
@@ -3570,14 +3635,22 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 3. AI OUTREACH GENERATOR MODAL */}
       {showDraftModal && selectedDonor && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Generate AI Outreach Draft for ${selectedDonor.name}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowDraftModal(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4"
+        >
           <div className="w-full max-w-lg rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
                 <h3 className="font-heading text-base font-bold text-phumulani-charcoal">Generate AI Outreach Draft</h3>
                 <p className="text-xs text-phumulani-charcoal/70">Drafting tailored communication for {selectedDonor.name}</p>
               </div>
-              <button onClick={() => setShowDraftModal(false)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
+              <button onClick={() => setShowDraftModal(false)} aria-label="Close AI outreach draft dialog" className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
@@ -3649,14 +3722,22 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 4. VERIFY CONTRIBUTION MODAL */}
       {showVerifyModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Verify Financial Contribution"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowVerifyModal(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4"
+        >
           <div className="w-full max-w-md rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
                 <h3 className="font-heading text-base font-bold text-phumulani-charcoal">Verify Financial Contribution</h3>
                 <p className="text-xs text-phumulani-charcoal/70">Only verified receipts count as recognized revenue.</p>
               </div>
-              <button onClick={() => setShowVerifyModal(false)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
+              <button onClick={() => setShowVerifyModal(false)} aria-label="Close verify contribution dialog" className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
@@ -3752,8 +3833,15 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 4. FINANCIAL RECONCILIATION & DISCREPANCY AUDIT MODAL (SECTION 03 / DELIVERABLE 04 & 05) */}
       {showReconModal && (
-
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Financial Data Integrity and Program Funding Gap Reconciliation"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowReconModal(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4"
+        >
           <div className="w-full max-w-3xl rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
@@ -3764,7 +3852,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   Financial Data Integrity & Program Funding Gap Reconciliation
                 </h3>
               </div>
-              <button onClick={() => setShowReconModal(false)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
+              <button onClick={() => setShowReconModal(false)} aria-label="Close financial reconciliation dialog" className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
@@ -3872,7 +3960,15 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 5. AUTOMATED ACCEPTANCE TEST SUITE RUNNER MODAL (86 TESTS) */}
       {showTestRunnerModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Automated Acceptance Test Suite Runner"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowTestRunnerModal(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4"
+        >
           <div className="w-full max-w-4xl rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
@@ -3883,7 +3979,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   Automated Acceptance Test Suite Runner ({testSummary ? testSummary.total : 216} Tests Verified)
                 </h3>
               </div>
-              <button onClick={() => setShowTestRunnerModal(false)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
+              <button onClick={() => setShowTestRunnerModal(false)} aria-label="Close test suite runner dialog" className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
@@ -3975,7 +4071,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                         <div className="flex items-center space-x-2">
                           <span className="font-mono font-bold text-phumulani-charcoal">{test.id}</span>
                           <span className="font-semibold text-phumulani-charcoal">{test.name}</span>
-                          <span className="rounded-sm bg-phumulani-cream px-1.5 py-0.2 text-[9px] font-mono text-phumulani-charcoal/80 border border-phumulani-charcoal/10">
+                          <span className="rounded-sm bg-phumulani-cream px-1.5 py-0.5 text-[9px] font-mono text-phumulani-charcoal/80 border border-phumulani-charcoal/10">
                             {test.category}
                           </span>
                         </div>
@@ -4013,7 +4109,18 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 6. AGENT TASK EXECUTION MODAL */}
       {executingAgent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Execute Agent Task for ${executingAgent.name}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setExecutingAgent(null);
+              setTaskExecutionResult(null);
+            }
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4"
+        >
           <div className="w-full max-w-2xl rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
@@ -4032,6 +4139,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   setExecutingAgent(null);
                   setTaskExecutionResult(null);
                 }}
+                aria-label="Close agent task execution dialog"
                 className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer"
               >
                 ✕
@@ -4070,7 +4178,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <label className="font-semibold text-phumulani-charcoal">Input Parameters (JSON)</label>
-                  <span className="text-[10px] text-phumulani-charcoal/65 font-mono">Valid JSON format</span>
+                  <span className="text-[10px] text-phumulani-charcoal/75 font-mono">Valid JSON format</span>
                 </div>
                 <textarea
                   rows={5}
@@ -4164,7 +4272,15 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 7. AGENT TASK AUDIT LOG & HISTORY DRAWER */}
       {historyDrawerAgent && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Agent Task Audit Log for ${historyDrawerAgent.name}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setHistoryDrawerAgent(null);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4"
+        >
           <div className="w-full max-w-3xl rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
@@ -4178,7 +4294,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   Complete chronological mission execution audit trail and human sign-off history.
                 </p>
               </div>
-              <button onClick={() => setHistoryDrawerAgent(null)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
+              <button onClick={() => setHistoryDrawerAgent(null)} aria-label="Close agent history dialog" className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
@@ -4266,14 +4382,22 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 8. CREATE OPPORTUNITY MODAL (COMPONENT 8) */}
       {showAddOppModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Create New Funding Opportunity"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowAddOppModal(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4"
+        >
           <div className="w-full max-w-lg rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
                 <h3 className="font-heading text-base font-bold text-phumulani-charcoal">Create New Funding Opportunity</h3>
                 <p className="text-xs text-phumulani-charcoal/70">Add an institutional grant, major gift, or CSR partnership to the 15-stage pipeline.</p>
               </div>
-              <button onClick={() => setShowAddOppModal(false)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
+              <button onClick={() => setShowAddOppModal(false)} aria-label="Close create opportunity dialog" className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
@@ -4427,14 +4551,22 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 9. LOG ENGAGEMENT ACTIVITY MODAL (COMPONENT 15) */}
       {showLogActivityModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Log Donor Engagement Activity"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowLogActivityModal(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4"
+        >
           <div className="w-full max-w-md rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
                 <h3 className="font-heading text-base font-bold text-phumulani-charcoal">Log Donor Engagement Activity</h3>
                 <p className="text-xs text-phumulani-charcoal/70">Record calls, in-person meetings, site visits, and follow-up deadlines.</p>
               </div>
-              <button onClick={() => setShowLogActivityModal(false)} className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
+              <button onClick={() => setShowLogActivityModal(false)} aria-label="Close log activity dialog" className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer">
                 ✕
               </button>
             </div>
@@ -4540,7 +4672,18 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
 
       {/* 10. APPROVAL DECISION MODAL: REQUEST CHANGES / REJECT (COMPONENT 13) */}
       {decisionModalDraftId && decisionType && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={decisionType === 'REQUEST_CHANGES' ? 'Request Changes on AI Draft' : 'Reject AI Outreach Draft'}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setDecisionModalDraftId(null);
+              setDecisionType(null);
+            }
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-phumulani-charcoal/75 backdrop-blur-xs p-4"
+        >
           <div className="w-full max-w-md rounded-2xl border border-phumulani-charcoal/12 bg-white p-6 shadow-xl space-y-4">
             <div className="flex items-center justify-between border-b border-phumulani-charcoal/10 pb-3">
               <div>
@@ -4556,6 +4699,7 @@ export const FundraisingCommandCenterView: React.FC<FundraisingViewProps> = ({
                   setDecisionModalDraftId(null);
                   setDecisionType(null);
                 }}
+                aria-label="Close approval decision dialog"
                 className="text-phumulani-charcoal/70 hover:text-phumulani-earth text-sm cursor-pointer"
               >
                 ✕

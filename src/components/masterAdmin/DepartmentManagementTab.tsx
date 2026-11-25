@@ -92,7 +92,7 @@ export const DepartmentManagementTab: React.FC<DepartmentManagementTabProps> = (
                   <div className="flex items-center justify-between mb-1.5">
                     <span className="font-bold text-xs text-phumulani-charcoal">{dept.name}</span>
                     {dept.isSafeguardingIsolated && (
-                      <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold bg-phumulani-cream text-phumulani-earth px-1.5 py-0.2 rounded">
+                      <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold bg-phumulani-cream text-phumulani-earth px-1.5 py-0.5 rounded">
                         <Lock className="w-3 h-3" /> VAWA
                       </span>
                     )}

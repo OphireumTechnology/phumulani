@@ -196,6 +196,15 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
 
   // Provisioning Modal State
   const [isProvisionModalOpen, setIsProvisionModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (!isProvisionModalOpen) return;
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsProvisionModalOpen(false);
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isProvisionModalOpen]);
   const [newUserName, setNewUserName] = useState('');
   const [newUserEmail, setNewUserEmail] = useState('');
   const [newUserRole, setNewUserRole] = useState<UserRole>('staff');
@@ -381,7 +390,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
               </span>
               {activeModule === 'email_command_center' && (
                 <>
-                  <span className="text-phumulani-charcoal/40 font-normal hidden sm:inline">/</span>
+                  <span className="text-phumulani-charcoal/75 font-normal hidden sm:inline" aria-hidden="true">/</span>
                   <span className="font-semibold text-phumulani-earth text-xs bg-phumulani-cream border border-phumulani-teal/40 px-2 py-0.5 rounded-md hidden sm:inline">
                     Email Command Center
                   </span>
@@ -556,7 +565,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                   }`}
                 >
                   <div className="flex items-center gap-2.5 min-w-0">
-                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-phumulani-charcoal'}`} />
+                    <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
                     {!isSidebarCollapsed && <span className="truncate">{item.label}</span>}
                   </div>
                   {!isSidebarCollapsed && item.badge && (
@@ -705,7 +714,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                   </button>
                   <button
                     onClick={() => setIsProvisionModalOpen(true)}
-                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal font-bold text-xs rounded-xl border border-phumulani-earth flex items-center gap-2 transition-all cursor-pointer"
+                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-bold text-xs rounded-xl border border-phumulani-earth flex items-center gap-2 transition-all cursor-pointer"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Provision Account</span>
@@ -1449,7 +1458,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                   <button
                     onClick={handleRunProbe}
                     disabled={isProbing}
-                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer disabled:opacity-50"
+                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${isProbing ? 'animate-spin' : ''}`} />
                     <span>{isProbing ? 'Probing Components...' : 'Execute Live Health Probe'}</span>
@@ -1562,7 +1571,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                   <button
                     onClick={handleRunAcceptanceTests}
                     disabled={isRunningTests}
-                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer disabled:opacity-50"
+                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer disabled:opacity-50"
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${isRunningTests ? 'animate-spin' : ''}`} />
                     <span>{isRunningTests ? 'Executing Verification Suite...' : 'Execute All Verification Tests'}</span>
@@ -1667,7 +1676,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                           <button
                             onClick={handleRunAcceptanceTests}
                             disabled={isRunningTests}
-                            className="mt-3 px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-xl text-xs font-bold inline-flex items-center gap-2 shadow-xs transition-all cursor-pointer"
+                            className="mt-3 px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl text-xs font-bold inline-flex items-center gap-2 shadow-xs transition-all cursor-pointer"
                           >
                             <Play className="w-3 h-3" />
                             <span>Run 15 Production Verification Tests Now</span>
@@ -1699,7 +1708,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setIsProvisionModalOpen(true)}
-                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer"
+                    className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-xl text-xs font-bold flex items-center gap-2 shadow-xs transition-all cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
                     <span>Provision Account</span>
@@ -1910,7 +1919,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                         <span className="text-[11px] text-phumulani-charcoal/80">Lead: {portal.officer}</span>
                         <button
                           onClick={() => onViewChange(portal.viewKey)}
-                          className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold inline-flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
+                          className="px-3 py-1 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-bold inline-flex items-center gap-1.5 transition-all shadow-xs cursor-pointer"
                         >
                           <span>Launch Portal</span>
                           <ExternalLink className="w-3 h-3" />
@@ -2067,7 +2076,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                                 message: `Volunteer application ${app.trackingId} for ${app.fullName} has been approved for active service.`,
                               });
                             }}
-                            className="px-2.5 py-1 text-xs bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg font-bold transition-colors cursor-pointer"
+                            className="px-2.5 py-1 text-xs bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold transition-colors cursor-pointer"
                           >
                             Approve
                           </button>
@@ -2304,7 +2313,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                                 db.updateSystemSetting(s.key, settingTempValue);
                                 setEditingSettingKey(null);
                               }}
-                              className="px-2.5 py-1 text-xs bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal font-bold rounded-lg cursor-pointer"
+                              className="px-2.5 py-1 text-xs bg-phumulani-earth hover:bg-phumulani-charcoal text-white font-bold rounded-lg cursor-pointer"
                             >
                               Save
                             </button>
@@ -2344,7 +2353,18 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
 
       {/* PROVISION USER ACCOUNT MODAL (Section 2 & 5) */}
       {isProvisionModalOpen && (
-        <div className="fixed inset-0 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fadeIn">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Provision Authorized User Account"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsProvisionModalOpen(false);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setIsProvisionModalOpen(false);
+          }}
+          className="fixed inset-0 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fadeIn"
+        >
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-phumulani-charcoal/12 space-y-4">
             <div className="flex justify-between items-center border-b border-phumulani-charcoal/10 pb-3">
               <div className="flex items-center gap-2">
@@ -2355,6 +2375,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
               </div>
               <button
                 onClick={() => setIsProvisionModalOpen(false)}
+                aria-label="Close provision user account dialog"
                 className="text-phumulani-charcoal hover:text-phumulani-earth text-lg font-bold cursor-pointer"
               >
                 ✕
@@ -2460,7 +2481,7 @@ export const MasterAdministratorView: React.FC<MasterAdministratorViewProps> = (
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg font-bold shadow-xs transition-all cursor-pointer"
+                  className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold shadow-xs transition-all cursor-pointer"
                 >
                   Provision & Issue Verification Token
                 </button>

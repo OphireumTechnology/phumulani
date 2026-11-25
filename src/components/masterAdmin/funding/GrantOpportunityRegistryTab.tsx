@@ -285,7 +285,18 @@ export const GrantOpportunityRegistryTab: React.FC<GrantOpportunityRegistryTabPr
 
       {/* M26.03: Grant Eligibility Assessment Modal */}
       {selectedEligibilityOpp && eligibilityAssessment && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Eligibility Assessment: ${selectedEligibilityOpp.funder}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedEligibilityOpp(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setSelectedEligibilityOpp(null);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-xl max-w-2xl w-full p-6 shadow-xl border border-phumulani-cream space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-3 border-b border-phumulani-cream">
               <div>
@@ -298,7 +309,8 @@ export const GrantOpportunityRegistryTab: React.FC<GrantOpportunityRegistryTabPr
               </div>
               <button
                 onClick={() => setSelectedEligibilityOpp(null)}
-                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold"
+                aria-label="Close eligibility assessment modal"
+                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold cursor-pointer"
               >
                 ✕
               </button>
@@ -372,7 +384,18 @@ export const GrantOpportunityRegistryTab: React.FC<GrantOpportunityRegistryTabPr
 
       {/* M26.04: Go / No-Go Decision Gate Modal */}
       {selectedGoNoGoOpp && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Executive Go / No-Go Determination"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedGoNoGoOpp(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setSelectedGoNoGoOpp(null);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-xl max-w-xl w-full p-6 shadow-xl border border-phumulani-cream space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-phumulani-cream">
               <div>
@@ -385,7 +408,8 @@ export const GrantOpportunityRegistryTab: React.FC<GrantOpportunityRegistryTabPr
               </div>
               <button
                 onClick={() => setSelectedGoNoGoOpp(null)}
-                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold"
+                aria-label="Close decision modal"
+                className="text-phumulani-charcoal hover:text-phumulani-earth text-sm font-bold cursor-pointer"
               >
                 ✕
               </button>

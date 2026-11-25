@@ -186,7 +186,7 @@ export const RestrictedFundsTab: React.FC<RestrictedFundsTabProps> = ({ currentU
                 <AlertTriangle className="w-3.5 h-3.5 text-phumulani-earth shrink-0" />
                 <span className="font-semibold">Unallowable Funder Expenses:</span>
                 {fund.unallowableExpenses.map((u) => (
-                  <span key={u} className="bg-phumulani-cream px-1.5 py-0.2 rounded font-mono text-[10px]">
+                  <span key={u} className="bg-phumulani-cream px-1.5 py-0.5 rounded font-mono text-[10px]">
                     {u}
                   </span>
                 ))}
@@ -198,13 +198,24 @@ export const RestrictedFundsTab: React.FC<RestrictedFundsTabProps> = ({ currentU
 
       {/* Record Expenditure Modal */}
       {selectedFund && (
-        <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Record Restricted Program Expenditure"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedFund(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setSelectedFund(null);
+          }}
+          className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-xl max-w-lg w-full p-6 shadow-xl border border-phumulani-cream space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-phumulani-cream">
               <h3 className="text-base font-serif font-bold text-phumulani-charcoal">
                 Record Restricted Program Expenditure
               </h3>
-              <button onClick={() => setSelectedFund(null)} className="text-phumulani-charcoal hover:text-phumulani-earth">✕</button>
+              <button onClick={() => setSelectedFund(null)} aria-label="Close modal" className="text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer">✕</button>
             </div>
 
             <div className="p-3 bg-phumulani-cream border border-phumulani-cream rounded-lg text-xs space-y-1">

@@ -5,7 +5,7 @@
  * Enforces VAWA survivor isolation & synthetic demonstration data protection
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   ShieldAlert,
   ShieldCheck,
@@ -43,6 +43,15 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
   const [testVolRole, setTestVolRole] = useState('Youth Mentor');
   const [testVolSuccess, setTestVolSuccess] = useState(false);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleSimulateDonation = (e: React.FormEvent) => {
@@ -58,7 +67,15 @@ export const ClientStagingModal: React.FC<ClientStagingModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-label="Client Staging Preview Sandbox"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+      className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+    >
       <div className="bg-white rounded-2xl shadow-2xl border border-phumulani-charcoal/15 max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden animate-fadeIn">
         {/* TOP STAGING BANNER */}
         <div className="bg-phumulani-cream text-phumulani-charcoal px-5 py-2.5 flex items-center justify-between font-bold text-xs tracking-wider uppercase border-b border-phumulani-gold/40">

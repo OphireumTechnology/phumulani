@@ -169,7 +169,7 @@ export const AdvancedReportingExportsTab: React.FC<Props> = ({ currentUser }) =>
                 <div className="flex items-center gap-2">
                   <span className="font-mono font-bold text-phumulani-earth">{log.id}</span>
                   <span className="font-bold text-phumulani-charcoal">{log.domain}</span>
-                  <span className="bg-phumulani-cream px-1.5 py-0.2 rounded font-mono">{log.format}</span>
+                  <span className="bg-phumulani-cream px-1.5 py-0.5 rounded font-mono">{log.format}</span>
                 </div>
                 <div className="text-phumulani-charcoal">
                   User: {log.userId} ({log.userRole}) • {log.timestamp}

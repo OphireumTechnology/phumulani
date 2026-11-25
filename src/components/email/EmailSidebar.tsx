@@ -129,10 +129,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
           {!isCollapsed && (
             <button
               onClick={() => toggleGroup('everyday')}
-              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/65 hover:text-phumulani-earth cursor-pointer"
+              aria-expanded={groupOpen.everyday}
+              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/80 hover:text-phumulani-earth cursor-pointer rounded focus-visible:ring-2 focus-visible:ring-phumulani-earth"
             >
               <span>Everyday Email</span>
-              {groupOpen.everyday ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+              {groupOpen.everyday ? <ChevronDown className="w-3 h-3" aria-hidden="true" /> : <ChevronRight className="w-3 h-3" aria-hidden="true" />}
             </button>
           )}
 
@@ -153,7 +154,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                   {!isCollapsed && <span className="truncate font-bold">Phumulani Ai</span>}
                 </div>
                 {!isCollapsed && (
-                  <span className={`text-[9px] font-mono font-bold px-1.5 py-0.2 rounded-sm ${activeTab === 'phumulani_ai' ? 'bg-phumulani-charcoal text-phumulani-teal' : 'bg-phumulani-earth text-white'}`}>
+                  <span className={`text-[9px] font-mono font-bold px-1.5 py-0.5 rounded-sm ${activeTab === 'phumulani_ai' ? 'bg-phumulani-charcoal text-phumulani-teal' : 'bg-phumulani-earth text-white'}`}>
                     LOCAL
                   </span>
                 )}
@@ -175,10 +176,10 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 </div>
                 {!isCollapsed && unreadCount > 0 && (
                   <span
-                    className={`text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded-sm font-bold ${
+                    className={`text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded-sm font-bold ${
                       activeTab === 'all_mailboxes' || activeTab === 'conversations'
                         ? 'bg-phumulani-charcoal text-phumulani-teal'
-                        : 'bg-phumulani-earth/10 text-phumulani-earth'
+                        : 'bg-phumulani-cream text-phumulani-earth'
                     }`}
                   >
                     {unreadCount}
@@ -202,8 +203,8 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 </div>
                 {!isCollapsed && priorityCount > 0 && (
                   <span
-                    className={`text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded-sm font-bold ${
-                      activeTab === 'priority' ? 'bg-phumulani-charcoal text-phumulani-teal' : 'bg-phumulani-earth/10 text-phumulani-earth'
+                    className={`text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded-sm font-bold ${
+                      activeTab === 'priority' ? 'bg-phumulani-charcoal text-phumulani-teal' : 'bg-phumulani-cream text-phumulani-earth'
                     }`}
                   >
                     {priorityCount}
@@ -248,8 +249,8 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                 </div>
                 {!isCollapsed && approvalsCount > 0 && (
                   <span
-                    className={`text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded-sm font-bold ${
-                      activeTab === 'approvals' ? 'bg-phumulani-charcoal text-phumulani-teal' : 'bg-phumulani-gold/20 text-phumulani-charcoal'
+                    className={`text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded-sm font-bold ${
+                      activeTab === 'approvals' ? 'bg-phumulani-charcoal text-phumulani-teal' : 'bg-phumulani-gold text-phumulani-charcoal'
                     }`}
                   >
                     {approvalsCount}
@@ -293,7 +294,7 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
                   {!isCollapsed && <span className="truncate">Follow-ups</span>}
                 </div>
                 {!isCollapsed && followUpsCount > 0 && (
-                  <span className="text-[10px] font-mono tabular-nums px-1.5 py-0.2 rounded bg-phumulani-cream text-phumulani-charcoal">
+                  <span className="text-[10px] font-mono tabular-nums px-1.5 py-0.5 rounded bg-phumulani-cream text-phumulani-charcoal">
                     {followUpsCount}
                   </span>
                 )}
@@ -339,10 +340,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
           {!isCollapsed && (
             <button
               onClick={() => toggleGroup('contacts')}
-              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/65 hover:text-phumulani-earth cursor-pointer"
+              aria-expanded={groupOpen.contacts}
+              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/80 hover:text-phumulani-earth cursor-pointer rounded focus-visible:ring-2 focus-visible:ring-phumulani-earth"
             >
               <span>Contacts & CRM</span>
-              {groupOpen.contacts ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+              {groupOpen.contacts ? <ChevronDown className="w-3 h-3" aria-hidden="true" /> : <ChevronRight className="w-3 h-3" aria-hidden="true" />}
             </button>
           )}
 
@@ -408,10 +410,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
           {!isCollapsed && (
             <button
               onClick={() => toggleGroup('management')}
-              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/65 hover:text-phumulani-earth cursor-pointer"
+              aria-expanded={groupOpen.management}
+              className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/80 hover:text-phumulani-earth cursor-pointer rounded focus-visible:ring-2 focus-visible:ring-phumulani-earth"
             >
               <span>Management & Reports</span>
-              {groupOpen.management ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+              {groupOpen.management ? <ChevronDown className="w-3 h-3" aria-hidden="true" /> : <ChevronRight className="w-3 h-3" aria-hidden="true" />}
             </button>
           )}
 
@@ -491,10 +494,11 @@ export const EmailSidebar: React.FC<EmailSidebarProps> = ({
             {!isCollapsed && (
               <button
                 onClick={() => toggleGroup('settings')}
-                className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/65 hover:text-phumulani-earth cursor-pointer"
+                aria-expanded={groupOpen.settings}
+                className="w-full flex items-center justify-between px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-phumulani-charcoal/80 hover:text-phumulani-earth cursor-pointer rounded focus-visible:ring-2 focus-visible:ring-phumulani-earth"
               >
                 <span>Settings & Connectors</span>
-                {groupOpen.settings ? <ChevronDown className="w-3 h-3" /> : <ChevronRight className="w-3 h-3" />}
+                {groupOpen.settings ? <ChevronDown className="w-3 h-3" aria-hidden="true" /> : <ChevronRight className="w-3 h-3" aria-hidden="true" />}
               </button>
             )}
 

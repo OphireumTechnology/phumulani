@@ -4,7 +4,7 @@
  * Staff Command Center (Application 4)
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { db } from '../services/db';
 import { aiOrchestrator } from '../services/aiOrchestrator';
 import { InboxMessage, User, VolunteerApplication, EventItem } from '../types';
@@ -69,6 +69,15 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
 
   // New Event Form State
   const [showNewEventModal, setShowNewEventModal] = useState(false);
+
+  useEffect(() => {
+    if (!showNewEventModal) return;
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setShowNewEventModal(false);
+    };
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [showNewEventModal]);
   const [newEventTitle, setNewEventTitle] = useState('');
   const [newEventDate, setNewEventDate] = useState('2026-11-20');
   const [newEventTime, setNewEventTime] = useState('10:00 AM - 1:00 PM CST');
@@ -270,7 +279,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
             <button
               type="button"
               onClick={() => onViewChange('email-command')}
-              className="bg-phumulani-earth hover:bg-phumulani-charcoal border border-phumulani-teal/50 rounded-xl p-3 text-center min-w-[110px] cursor-pointer transition-colors text-white hover:text-phumulani-charcoal"
+              className="bg-phumulani-earth hover:bg-phumulani-charcoal border border-phumulani-teal/50 rounded-xl p-3 text-center min-w-[110px] cursor-pointer transition-colors text-white"
               title="Open Master Email Administration (/admin/master/email)"
             >
               <div className="font-heading text-lg font-bold">Email Admin</div>
@@ -456,7 +465,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                         ) : (
                           <button
                             onClick={() => handleApproveSend(selectedMessage.id)}
-                            className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
+                            className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
                           >
                             <Send className="w-3.5 h-3.5" />
                             <span>Authorize &amp; Send Email</span>
@@ -621,7 +630,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
               </div>
               <button
                 onClick={() => setShowNewEventModal(true)}
-                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
+                className="px-4 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
               >
                 <PlusCircle className="w-3.5 h-3.5" />
                 <span>Create New Event</span>
@@ -810,7 +819,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                           db.resolveApprovalTask(task.id, 'approved', 'Staff approved without change.');
                           setActionFeedback(`Task ${task.id} approved and executed.`);
                         }}
-                        className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
+                        className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5 cursor-pointer"
                       >
                         <Check className="w-4 h-4" />
                         <span>Approve &amp; Authorize Action</span>
@@ -901,7 +910,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                         setActionFeedback(`Confidential safety protocol initiated for reference ${item.anonymousCode}. A certified trauma advocate will make discreet contact during the designated safe window.`);
                         setTimeout(() => setActionFeedback(null), 6000);
                       }}
-                      className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg font-bold cursor-pointer transition-colors"
+                      className="px-4 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold cursor-pointer transition-colors"
                     >
                       Initiate Safe Outreach
                     </button>
@@ -935,7 +944,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                   <button
                     type="button"
                     onClick={onOpenMediaRegistry}
-                    className="px-4 py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal text-xs font-bold rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
+                    className="px-4 py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-bold rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
                   >
                     <Eye className="w-4 h-4" />
                     <span>Inspect Full Registry Modal</span>
@@ -1029,7 +1038,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                           <button
                             type="button"
                             onClick={() => handleApproveMediaRelease(asset.id)}
-                            className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal text-xs font-bold rounded-lg transition-colors cursor-pointer"
+                            className="px-3 py-1.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white text-xs font-bold rounded-lg transition-colors cursor-pointer"
                           >
                             Authorize Release
                           </button>
@@ -1132,7 +1141,18 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
 
         {/* CREATE EVENT MODAL */}
         {showNewEventModal && (
-          <div className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Create and Publish Community Event"
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowNewEventModal(false);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') setShowNewEventModal(false);
+            }}
+            className="fixed inset-0 z-50 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4"
+          >
             <div className="bg-white rounded-2xl max-w-lg w-full border border-phumulani-charcoal/15 shadow-2xl p-6 space-y-4">
               <div className="flex justify-between items-start border-b border-phumulani-charcoal/12 pb-3">
                 <h3 className="font-heading text-lg font-bold text-phumulani-charcoal">
@@ -1231,7 +1251,7 @@ export const StaffCommandCenterView: React.FC<StaffCommandCenterViewProps> = ({
                   </button>
                   <button
                     type="submit"
-                    className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg font-bold cursor-pointer transition-colors"
+                    className="px-5 py-2 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg font-bold cursor-pointer transition-colors"
                   >
                     Publish Event
                   </button>

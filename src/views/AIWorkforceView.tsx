@@ -190,7 +190,7 @@ export const AIWorkforceView: React.FC<AIWorkforceViewProps> = ({
             {/* Controls / Filter Bar */}
             <div className="flex flex-col sm:flex-row justify-between gap-4">
               <div className="relative flex-1 max-w-md">
-                <Search className="w-4 h-4 absolute left-3 top-2.5 text-phumulani-charcoal/60" />
+                <Search className="w-4 h-4 absolute left-3 top-2.5 text-phumulani-charcoal/75" aria-hidden="true" />
                 <input
                   type="text"
                   value={searchTerm}
@@ -472,7 +472,7 @@ export const AIWorkforceView: React.FC<AIWorkforceViewProps> = ({
 
               <button
                 onClick={handleRunEvaluations}
-                className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white hover:text-phumulani-charcoal rounded-lg text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shrink-0"
+                className="px-5 py-2.5 bg-phumulani-earth hover:bg-phumulani-charcoal text-white rounded-lg text-xs font-bold transition-colors flex items-center gap-2 cursor-pointer shrink-0"
               >
                 <Zap className="w-4 h-4" />
                 <span>Run Automated Test Suite</span>

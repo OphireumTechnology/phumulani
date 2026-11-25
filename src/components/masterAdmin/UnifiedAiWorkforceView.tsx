@@ -327,7 +327,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
             }`}
           >
             <span>Division A: Organizational</span>
-            <span className="px-1.5 py-0.2 bg-phumulani-charcoal text-phumulani-teal rounded text-[10px]">18</span>
+            <span className="px-1.5 py-0.5 bg-phumulani-charcoal text-phumulani-teal rounded text-[10px]">18</span>
           </button>
           <button
             onClick={() => setActiveTab('FUNDRAISING')}
@@ -338,7 +338,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
             }`}
           >
             <span>Division B: Fundraising</span>
-            <span className="px-1.5 py-0.2 bg-phumulani-earth text-phumulani-cream rounded text-[10px]">18</span>
+            <span className="px-1.5 py-0.5 bg-phumulani-earth text-phumulani-cream rounded text-[10px]">18</span>
           </button>
           <button
             onClick={() => setActiveTab('APPROVALS')}
@@ -349,7 +349,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
             }`}
           >
             <span>Human Approvals</span>
-            <span className="px-1.5 py-0.2 bg-phumulani-gold text-phumulani-charcoal rounded text-[10px]">
+            <span className="px-1.5 py-0.5 bg-phumulani-gold text-phumulani-charcoal rounded text-[10px]">
               {kpis.pendingApprovalsCount}
             </span>
           </button>
@@ -736,7 +736,18 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
 
       {/* AGENT DETAIL INSPECTION MODAL */}
       {selectedAgent && (
-        <div className="fixed inset-0 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Agent details for ${selectedAgent.name}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setSelectedAgent(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setSelectedAgent(null);
+          }}
+          className="fixed inset-0 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4 z-50"
+        >
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-xl border border-phumulani-cream space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div>
@@ -746,7 +757,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                 <h3 className="font-serif text-lg font-bold text-phumulani-charcoal mt-1">{selectedAgent.name}</h3>
                 <div className="text-xs text-phumulani-charcoal">{selectedAgent.role} • {selectedAgent.ownerDepartment}</div>
               </div>
-              <button onClick={() => setSelectedAgent(null)} className="text-phumulani-charcoal hover:text-phumulani-earth">
+              <button onClick={() => setSelectedAgent(null)} aria-label="Close modal" className="text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -800,7 +811,18 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
 
       {/* AGENT TEST EXECUTION MODAL */}
       {executionModalAgent && (
-        <div className="fixed inset-0 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4 z-50">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Execute Agent ${executionModalAgent.name}`}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setExecutionModalAgent(null);
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') setExecutionModalAgent(null);
+          }}
+          className="fixed inset-0 bg-phumulani-charcoal/80 backdrop-blur-xs flex items-center justify-center p-4 z-50"
+        >
           <div className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-xl border border-phumulani-cream space-y-4 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between border-b border-phumulani-cream pb-3">
               <div>
@@ -809,7 +831,7 @@ export const UnifiedAiWorkforceView: React.FC<UnifiedAiWorkforceViewProps> = ({
                 </h3>
                 <div className="text-xs text-phumulani-charcoal">Division: {executionModalAgent.division} • Supervisor: {executionModalAgent.supervisorName}</div>
               </div>
-              <button onClick={() => setExecutionModalAgent(null)} className="text-phumulani-charcoal hover:text-phumulani-earth">
+              <button onClick={() => setExecutionModalAgent(null)} aria-label="Close modal" className="text-phumulani-charcoal hover:text-phumulani-earth cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>

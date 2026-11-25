@@ -75,7 +75,7 @@ export const SafeImage: React.FC<SafeImageProps> = ({
           aria-label={alt || 'Phumulani Organization Logo'}
           className={`flex items-center justify-center bg-phumulani-earth text-white rounded-lg shadow-xs select-none ${className}`}
         >
-          <div className="flex items-center justify-center font-serif font-black text-phumulani-gold text-lg tracking-wider">
+          <div className="flex items-center justify-center font-serif font-black text-phumulani-cream text-lg tracking-wider">
             P
           </div>
         </div>
@@ -117,8 +117,8 @@ export const SafeImage: React.FC<SafeImageProps> = ({
           <p className="text-xs text-phumulani-cream leading-relaxed max-w-sm">
             {fallbackText || 'A safe, culturally grounded haven empowering African immigrant and refugee survivors in Minnesota.'}
           </p>
-          <div className="flex items-center gap-2 text-[10px] font-semibold text-phumulani-gold">
-            <Shield className="w-3.5 h-3.5" />
+          <div className="flex items-center gap-2 text-[10px] font-semibold text-phumulani-cream">
+            <Shield className="w-3.5 h-3.5" aria-hidden="true" />
             <span>Peace · Rest · Autonomy</span>
           </div>
         </div>

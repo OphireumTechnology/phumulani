@@ -140,7 +140,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
             <div className="p-2 bg-phumulani-earth rounded-xl relative border border-phumulani-gold/30">
               <Bell className="w-5 h-5 text-phumulani-gold" />
               {unreadCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-phumulani-gold text-phumulani-charcoal text-[10px] font-bold tabular-nums px-1.5 py-0.2 rounded-md ring-2 ring-phumulani-charcoal">
+                <span className="absolute -top-1.5 -right-1.5 bg-phumulani-gold text-phumulani-charcoal text-[10px] font-bold tabular-nums px-1.5 py-0.5 rounded-md ring-2 ring-phumulani-charcoal">
                   {unreadCount}
                 </span>
               )}
