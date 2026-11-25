@@ -130,6 +130,32 @@ async function run(): Promise<void> {
       `valid=${schemaIntegrity.valid}, verifiedTables=${schemaIntegrity.verifiedTables.length}, missing=${schemaIntegrity.missingTables.length}`
     );
 
+    const financialModeBefore = process.env.PHUMULANI_OPERATIONAL_MODE;
+    try {
+      process.env.PHUMULANI_OPERATIONAL_MODE = 'PRODUCTION_ONLY';
+      const financialRecords = [
+        { id: 'gift-genuine-325k', amount: 325000, isSynthetic: false, paymentStatus: 'succeeded' },
+        { id: 'gift-genuine-175k', amount: 175000, isSynthetic: false, paymentStatus: 'VERIFIED_ACH' },
+        { id: 'gift-genuine-50k', amount: 50000, isSynthetic: false, paymentStatus: 'succeeded' },
+        { id: 'fixture-synthetic-325k', amount: 325000, isSynthetic: true, paymentStatus: 'succeeded' },
+        { id: 'gift-pending-50k', amount: 50000, isSynthetic: false, paymentStatus: 'pending' },
+      ];
+      const verifiedFinancialRecords = EnvironmentService.filterProductionDonations(financialRecords);
+      const verifiedFinancialTotal = EnvironmentService.calculateVerifiedProductionRevenue(financialRecords);
+      const verifiedIds = verifiedFinancialRecords.map((record) => record.id).sort().join(',');
+      record(
+        'P79-14',
+        'Block 79.1',
+        'Production donation filtering preserves genuine verified gifts at historical fixture amounts and excludes synthetic or unverified records',
+        verifiedIds === 'gift-genuine-175k,gift-genuine-325k,gift-genuine-50k' &&
+          verifiedFinancialTotal === 550000,
+        `verifiedIds=${verifiedIds}, verifiedTotal=${verifiedFinancialTotal}`
+      );
+    } finally {
+      if (financialModeBefore === undefined) delete process.env.PHUMULANI_OPERATIONAL_MODE;
+      else process.env.PHUMULANI_OPERATIONAL_MODE = financialModeBefore;
+    }
+
     // Seed isolated test connections inside tmpRuntimeDir for Blocks 79.2–79.4 OAuth/dispatch verification
     connectorRegistry.seedCanonicalConnectionsForTesting();
 
