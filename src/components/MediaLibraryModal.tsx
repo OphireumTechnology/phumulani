@@ -136,6 +136,7 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
             <Search className="w-4 h-4 text-phumulani-charcoal shrink-0" />
             <input
               type="text"
+              aria-label="Search media by title, caption or ID"
               placeholder="Search title, caption, ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -148,6 +149,7 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
+                aria-pressed={selectedCategory === cat.id}
                 className={`px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-colors cursor-pointer whitespace-nowrap ${
                   selectedCategory === cat.id
                     ? 'bg-phumulani-earth text-white'
