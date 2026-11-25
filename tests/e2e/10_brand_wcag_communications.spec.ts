@@ -95,3 +95,34 @@ test.describe('Phumulani Brand System, WCAG 2.2 AA & Communications Governance',
     }
   });
 });
+
+test('Phase 81 concierge keyboard focus and rendered launcher contrast', async ({ page }) => {
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  const launcher = page.getByRole('button', { name: 'Open Website Concierge' });
+  await expect(launcher).toBeVisible();
+  const contrast = () => launcher.evaluate(el => {
+    const style = getComputedStyle(el);
+    const luminance = (value: string) => {
+      const rgb = value.match(/[\d.]+/g)?.slice(0, 3).map(Number);
+      if (!rgb || rgb.length !== 3) throw new Error('Unsupported computed color: ' + value);
+      return rgb.map(v => v / 255).map(v => v <= 0.04045 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4)
+        .reduce((sum, v, i) => sum + v * [0.2126, 0.7152, 0.0722][i], 0);
+    };
+    const a = luminance(style.color), b = luminance(style.backgroundColor);
+    return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  });
+  expect(await contrast()).toBeGreaterThanOrEqual(4.5);
+  await launcher.hover();
+  await expect.poll(contrast).toBeGreaterThanOrEqual(4.5);
+  await launcher.focus();
+  await page.keyboard.press('Enter');
+  const dialog = page.getByRole('dialog', { name: /Website Concierge/ });
+  await expect(dialog).toBeVisible();
+  for (const key of ['Tab', 'Shift+Tab', 'Tab', 'Tab']) {
+    await page.keyboard.press(key);
+    await expect.poll(() => dialog.evaluate(el => el.contains(document.activeElement))).toBe(true);
+  }
+  await page.keyboard.press('Escape');
+  await expect(dialog).toBeHidden();
+  await expect(launcher).toBeFocused();
+});
