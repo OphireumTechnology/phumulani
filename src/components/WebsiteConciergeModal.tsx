@@ -67,13 +67,14 @@ export const WebsiteConciergeModal: React.FC = () => {
     restoreLauncherFocus.current = true;
     dialog.focus();
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.defaultPrevented) return;
       if (e.key === 'Escape') {
         e.preventDefault();
         setIsOpen(false);
       } else if (e.key === 'Tab') {
         const controls = Array.from(dialog.querySelectorAll<HTMLElement>(
           'button:not([disabled]), select:not([disabled]), input:not([disabled]), textarea:not([disabled]), a[href], [tabindex="0"]'
-        )).filter(el => el.getClientRects().length > 0 && el.tabIndex >= 0);
+        )).filter(el => el.getClientRects().length > 0 && el.tabIndex >= 0 && getComputedStyle(el).visibility === 'visible');
         const first = controls[0];
         const last = controls[controls.length - 1];
         if (!first || !last) { e.preventDefault(); dialog.focus(); return; }
