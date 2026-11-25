@@ -112,26 +112,38 @@ export class OAuthService {
     return false;
   }
 
+  private isProductionVaultContext(): boolean {
+    const policy = EnvironmentService.getDatabasePolicy();
+    return (
+      policy.nodeEnv === 'production' ||
+      policy.requireLiveDatabase ||
+      process.env.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT'
+    );
+  }
+
   private resolveVaultSecret(): Buffer | string {
     const rawPrimary = process.env.OAUTH_TOKEN_ENCRYPTION_KEY?.trim();
     const rawSafeguarding = process.env.SAFEGUARDING_MASTER_KEY?.trim();
 
-    if (rawPrimary !== undefined && rawPrimary.length > 0) {
+    if (rawPrimary) {
       if (this.isWeakKeyMaterial(rawPrimary)) {
         throw new Error('OAUTH_TOKEN_ENCRYPTION_KEY is too weak (requires >=32 high-entropy characters).');
       }
       return rawPrimary;
     }
-    if (rawSafeguarding && !this.isWeakKeyMaterial(rawSafeguarding)) {
-      return rawSafeguarding;
-    }
+
+    // A safeguarding key is never an OAuth encryption key in production. Legacy
+    // safeguarding-key ciphertext may be read through resolvePreviousVaultSecret()
+    // only after an independent OAuth key is configured.
     if (
-      EnvironmentService.isProductionOnly() ||
-      process.env.PHUMULANI_OPERATIONAL_MODE === 'CONTROLLED_LIVE_PILOT' ||
-      process.env.NODE_ENV === 'production' ||
+      this.isProductionVaultContext() ||
       process.env.SAFEGUARDING_REQUIRE_CONFIGURED_KEY === 'true'
     ) {
       throw new Error('OAUTH_TOKEN_ENCRYPTION_KEY (minimum 32 high-entropy characters) is required for encrypted OAuth token storage in production.');
+    }
+
+    if (rawSafeguarding && !this.isWeakKeyMaterial(rawSafeguarding)) {
+      return rawSafeguarding;
     }
     if (!this.ephemeralVaultSecret) {
       this.ephemeralVaultSecret = crypto.randomBytes(32);
@@ -151,20 +163,17 @@ export class OAuthService {
       }
       return { valid: true, keySource: 'OAUTH_TOKEN_ENCRYPTION_KEY' };
     }
-    const rawSafeguarding = process.env.SAFEGUARDING_MASTER_KEY?.trim();
-    if (rawSafeguarding && !this.isWeakKeyMaterial(rawSafeguarding)) {
-      return { valid: true, keySource: 'SAFEGUARDING_FALLBACK' };
-    }
     return {
       valid: false,
       keySource: 'EPHEMERAL_DISALLOWED',
-      reason: 'OAUTH_TOKEN_ENCRYPTION_KEY (minimum 32 high-entropy characters) is missing in production.',
+      reason: 'A dedicated OAUTH_TOKEN_ENCRYPTION_KEY (minimum 32 high-entropy characters) is required; SAFEGUARDING_MASTER_KEY is not an acceptable substitute.',
     };
   }
 
   public isUsingEphemeralKey(): boolean {
     const rawPrimary = process.env.OAUTH_TOKEN_ENCRYPTION_KEY?.trim();
     if (rawPrimary && !this.isWeakKeyMaterial(rawPrimary)) return false;
+    if (this.isProductionVaultContext()) return true;
     const rawSafeguarding = process.env.SAFEGUARDING_MASTER_KEY?.trim();
     if (rawSafeguarding && !this.isWeakKeyMaterial(rawSafeguarding)) return false;
     return true;
@@ -175,13 +184,20 @@ export class OAuthService {
   }
 
   private resolvePreviousVaultSecret(): string | null {
-    const prev = (
-      process.env.OAUTH_TOKEN_ENCRYPTION_KEY_PREVIOUS ||
-      process.env.SAFEGUARDING_MASTER_KEY_PREVIOUS ||
-      ''
-    ).trim();
-    if (prev && !this.isWeakKeyMaterial(prev)) {
-      return prev;
+    const candidates = [
+      process.env.OAUTH_TOKEN_ENCRYPTION_KEY_PREVIOUS,
+      process.env.SAFEGUARDING_MASTER_KEY_PREVIOUS,
+      // Migration-only compatibility: once a separate OAuth key exists, the former
+      // safeguarding key may decrypt legacy entries; encryptTokens() always uses OAuth.
+      process.env.OAUTH_TOKEN_ENCRYPTION_KEY?.trim()
+        ? process.env.SAFEGUARDING_MASTER_KEY
+        : undefined,
+    ];
+    for (const candidate of candidates) {
+      const previous = candidate?.trim();
+      if (previous && !this.isWeakKeyMaterial(previous)) {
+        return previous;
+      }
     }
     return null;
   }

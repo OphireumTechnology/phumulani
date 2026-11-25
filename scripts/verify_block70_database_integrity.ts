@@ -114,6 +114,7 @@ async function run(): Promise<void> {
   const origNodeEnv = process.env.NODE_ENV;
   const origMode = process.env.PHUMULANI_OPERATIONAL_MODE;
   const origDbUrl = process.env.DATABASE_URL;
+  const origNonProdHosts = process.env.PHUMULANI_NONPROD_DATABASE_HOSTS;
 
   try {
     console.log('=== BLOCK 70 SUITE: 1. Database Environment Policy ===');
@@ -146,19 +147,30 @@ async function run(): Promise<void> {
     const polStagedProd = EnvironmentService.getDatabasePolicy();
     record(
       'B70-03',
-      polStagedProd.policyCode === 'STAGED_DEVELOPMENT_AUTHORIZED' &&
-        polStagedProd.requireLiveDatabase === false &&
-        polStagedProd.allowEmbeddedFallback === true,
-      `Explicit STAGED_DEVELOPMENT preserves authorized embedded mode`
+      polStagedProd.policyCode === 'NODE_ENV_PRODUCTION_STAGED_FORBIDDEN' &&
+        polStagedProd.effectiveMode === 'PRODUCTION_ONLY' &&
+        polStagedProd.requireLiveDatabase === true &&
+        polStagedProd.allowEmbeddedFallback === false,
+      `NODE_ENV=production rejects explicit STAGED_DEVELOPMENT and fails closed (${polStagedProd.policyCode})`
     );
 
     process.env.NODE_ENV = 'test';
-    delete process.env.PHUMULANI_OPERATIONAL_MODE;
-    const polLocal = EnvironmentService.getDatabasePolicy();
+    const polStagedTest = EnvironmentService.getDatabasePolicy();
     record(
       'B70-04',
+      polStagedTest.policyCode === 'STAGED_DEVELOPMENT_AUTHORIZED' &&
+        polStagedTest.effectiveMode === 'STAGED_DEVELOPMENT' &&
+        polStagedTest.requireLiveDatabase === false &&
+        polStagedTest.allowEmbeddedFallback === true,
+      `Non-production test environment preserves explicit STAGED_DEVELOPMENT (${polStagedTest.policyCode})`
+    );
+
+    process.env.PHUMULANI_OPERATIONAL_MODE = 'LOCAL_DEVELOPMENT';
+    const polLocal = EnvironmentService.getDatabasePolicy();
+    record(
+      'B70-04-LOCAL',
       polLocal.policyCode === 'LOCAL_DEVELOPMENT' && polLocal.allowEmbeddedFallback === true,
-      `Non-production test environment preserves embedded storage (${polLocal.policyCode})`
+      `Non-production test environment preserves LOCAL_DEVELOPMENT (${polLocal.policyCode})`
     );
 
     console.log('\n=== BLOCK 70 SUITE: 2. Fail-Closed Initialization & Readiness ===');
@@ -186,6 +198,7 @@ async function run(): Promise<void> {
     // Configured but unreachable DATABASE_URL in STAGED_DEVELOPMENT must ALSO fail closed (no silent JSON fallback)
     process.env.NODE_ENV = 'development';
     process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
+    process.env.PHUMULANI_NONPROD_DATABASE_HOSTS = '127.0.0.1';
     const unreachableAdapter = createIsolatedAdapter(path.join(tempRoot, 'unreachable-pg'));
     (unreachableAdapter as any).databaseUrl = 'postgres://phumulani_user:UltraSecretPass99@127.0.0.1:59999/phumulani_db';
     let unreachableErr = '';
@@ -376,6 +389,8 @@ async function run(): Promise<void> {
     else process.env.PHUMULANI_OPERATIONAL_MODE = origMode;
     if (origDbUrl === undefined) delete process.env.DATABASE_URL;
     else process.env.DATABASE_URL = origDbUrl;
+    if (origNonProdHosts === undefined) delete process.env.PHUMULANI_NONPROD_DATABASE_HOSTS;
+    else process.env.PHUMULANI_NONPROD_DATABASE_HOSTS = origNonProdHosts;
 
     fs.rmSync(tempRoot, { recursive: true, force: true });
   }

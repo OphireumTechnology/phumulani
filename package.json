@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",
-    "start": "sh -c 'if [ -z \"$DATABASE_URL\" ] && [ -z \"$PHUMULANI_OPERATIONAL_MODE\" ]; then export PHUMULANI_OPERATIONAL_MODE=STAGED_DEVELOPMENT; fi; exec node dist-server/server.mjs \"$@\"' _",
+    "start": "sh -c 'if [ -z \"$NODE_ENV\" ]; then echo \"FATAL: NODE_ENV must be explicitly set before starting the server. Use npm run dev for local development.\" >&2; exit 1; fi; exec node dist-server/server.mjs \"$@\"' _",
     "build": "vite build && npm run build:server",
     "build:client": "vite build",
     "build:server": "esbuild server.ts --bundle --platform=node --format=esm --packages=external --outfile=dist-server/server.mjs",

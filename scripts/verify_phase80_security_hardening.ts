@@ -90,11 +90,48 @@ async function run() {
   const { VolunteerOperationsService } = await import('../src/services/volunteerOperationsService');
 
   // ---------------------------------------------------------------------------
+  // BLOCK 80.1: Startup and non-production database targets fail closed
+  // ---------------------------------------------------------------------------
+  const startCommand = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'package.json'), 'utf8')).scripts?.start || '';
+  const startupEnvGuardPass =
+    startCommand.includes('NODE_ENV must be explicitly set') &&
+    startCommand.includes('[ -z "$NODE_ENV" ]');
+  record('P80-STARTUP-NODE-ENV', startupEnvGuardPass, `startRequiresExplicitNodeEnv=${startupEnvGuardPass}`);
+
+  const supabaseShapedUrl = 'postgres://user:pass@db.projectref.supabase.co:5432/postgres?sslmode=require';
+  const supabaseUnlisted = PostgresPersistenceAdapter.validateDatabaseTarget(
+    supabaseShapedUrl,
+    'STAGED_DEVELOPMENT',
+    []
+  );
+  const supabaseAllowlisted = PostgresPersistenceAdapter.validateDatabaseTarget(
+    supabaseShapedUrl,
+    'STAGED_DEVELOPMENT',
+    ['db.projectref.supabase.co']
+  );
+  const productionTargetAllowed = PostgresPersistenceAdapter.validateDatabaseTarget(
+    supabaseShapedUrl,
+    'PRODUCTION_ONLY',
+    []
+  );
+  const dbHostAllowlistPass =
+    !supabaseUnlisted.valid &&
+    supabaseUnlisted.error?.includes('DATABASE_TARGET_NOT_ALLOWLISTED') === true &&
+    supabaseAllowlisted.valid &&
+    productionTargetAllowed.valid;
+  record(
+    'P80-DB-HOST-ALLOWLIST',
+    dbHostAllowlistPass,
+    `supabaseUnlistedBlocked=${!supabaseUnlisted.valid}, explicitStagingAllowlist=${supabaseAllowlisted.valid}, productionMode=${productionTargetAllowed.valid}`
+  );
+
+  // ---------------------------------------------------------------------------
   // BLOCK 80.2: Strict Operational Modes & Fail-Closed Database Policy
   // ---------------------------------------------------------------------------
   const origMode = process.env.PHUMULANI_OPERATIONAL_MODE;
   const origNodeEnv = process.env.NODE_ENV;
   const origDbUrl = process.env.DATABASE_URL;
+  const origNonProdHosts = process.env.PHUMULANI_NONPROD_DATABASE_HOSTS;
   const origDevFixtures = process.env.PHUMULANI_ENABLE_DEV_FIXTURES;
   const origEmailFixtures = process.env.PHUMULANI_EMAIL_TEST_FIXTURES;
 
@@ -117,16 +154,33 @@ async function run() {
       localInProdPolicy.requireLiveDatabase === true &&
       localInProdPolicy.allowEmbeddedFallback === false;
 
-    // 3. STAGED_DEVELOPMENT forbids production database URLs
+    // 2b. STAGED_DEVELOPMENT must also fail closed whenever the process is production,
+    // regardless of whether DATABASE_URL is absent or present.
+    process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
+    process.env.NODE_ENV = 'production';
+    delete process.env.DATABASE_URL;
+    const stagedInProdNoDbPolicy = EnvironmentService.getDatabasePolicy();
+    process.env.DATABASE_URL = 'postgres://user:pass@db.projectref.supabase.co:5432/postgres?sslmode=require';
+    const stagedInProdWithDbPolicy = EnvironmentService.getDatabasePolicy();
+    const stagedInProdBlocked =
+      [stagedInProdNoDbPolicy, stagedInProdWithDbPolicy].every(
+        (policy) =>
+          policy.effectiveMode === 'PRODUCTION_ONLY' &&
+          policy.requireLiveDatabase === true &&
+          policy.allowEmbeddedFallback === false
+      );
+
+    // 3. STAGED_DEVELOPMENT forbids production database URLs in non-production test mode
     process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
     process.env.NODE_ENV = 'development';
     const adapter = PostgresPersistenceAdapter.getInstance();
+    process.env.PHUMULANI_NONPROD_DATABASE_HOSTS = '';
     process.env.DATABASE_URL = 'postgres://user:pass@prod-db.internal:5432/phumulani_production?sslmode=require';
     let stagedProdUrlBlocked = false;
     try {
       await adapter.initialize();
     } catch (e: any) {
-      stagedProdUrlBlocked = e.message.includes('PRODUCTION_NOT_AUTHORIZED');
+      stagedProdUrlBlocked = e.message.includes('DATABASE_TARGET_NOT_ALLOWLISTED');
     }
     delete process.env.DATABASE_URL;
     await adapter.initialize();
@@ -150,6 +204,7 @@ async function run() {
       localFixturesDefault === false &&
       localFixturesOptIn === true &&
       localInProdBlocked === true &&
+      stagedInProdBlocked === true &&
       stagedProdUrlBlocked === true &&
       prodPolicy.requireLiveDatabase === true &&
       prodPolicy.allowEmbeddedFallback === false &&
@@ -159,7 +214,7 @@ async function run() {
     record(
       'P80-DB-MODES',
       p80_2_pass,
-      `localReady=${localCfg.isProductionReady}, fixturesDefault=${localFixturesDefault}, fixturesOptIn=${localFixturesOptIn}, localInProdBlocked=${localInProdBlocked}, stagedProdUrlBlocked=${stagedProdUrlBlocked}, prodNoDbBlocked=${prodMissingDbBlocked}/${prodMissingDbHealth.applicationReadiness}`
+      `localReady=${localCfg.isProductionReady}, fixturesDefault=${localFixturesDefault}, fixturesOptIn=${localFixturesOptIn}, localInProdBlocked=${localInProdBlocked}, stagedInProdBlocked=${stagedInProdBlocked}, stagedProdUrlBlocked=${stagedProdUrlBlocked}, prodNoDbBlocked=${prodMissingDbBlocked}/${prodMissingDbHealth.applicationReadiness}`
     );
   } finally {
     if (origMode === undefined) delete process.env.PHUMULANI_OPERATIONAL_MODE;
@@ -168,6 +223,8 @@ async function run() {
     else process.env.NODE_ENV = origNodeEnv;
     if (origDbUrl === undefined) delete process.env.DATABASE_URL;
     else process.env.DATABASE_URL = origDbUrl;
+    if (origNonProdHosts === undefined) delete process.env.PHUMULANI_NONPROD_DATABASE_HOSTS;
+    else process.env.PHUMULANI_NONPROD_DATABASE_HOSTS = origNonProdHosts;
     if (origDevFixtures === undefined) delete process.env.PHUMULANI_ENABLE_DEV_FIXTURES;
     else process.env.PHUMULANI_ENABLE_DEV_FIXTURES = origDevFixtures;
     if (origEmailFixtures === undefined) delete process.env.PHUMULANI_EMAIL_TEST_FIXTURES;
@@ -186,6 +243,7 @@ async function run() {
     const prevOauthKey = process.env.OAUTH_TOKEN_ENCRYPTION_KEY;
     const prevOauthPrev = process.env.OAUTH_TOKEN_ENCRYPTION_KEY_PREVIOUS;
     const prevSafeKey = process.env.SAFEGUARDING_MASTER_KEY;
+    const prevSafePrev = process.env.SAFEGUARDING_MASTER_KEY_PREVIOUS;
     const prevSessSec = process.env.SESSION_SECRET;
     const prevNodeEnv = process.env.NODE_ENV;
 
@@ -199,6 +257,23 @@ async function run() {
 
       const oauthSvc = OAuthService.getInstance();
       const missingKeyCheck = oauthSvc.validateProductionKeyConfiguration();
+      const safeguardingOnlyKey = crypto.randomBytes(32).toString('hex');
+      process.env.SAFEGUARDING_MASTER_KEY = safeguardingOnlyKey;
+      const safeguardingFallbackCheck = oauthSvc.validateProductionKeyConfiguration();
+      let safeguardingFallbackWriteBlocked = false;
+      try {
+        oauthSvc.storeEncryptedTokens('test-prod-safeguarding-fallback', {
+          accessToken: 'safeguarding-fallback-access',
+          refreshToken: 'safeguarding-fallback-refresh',
+          tokenType: 'Bearer',
+          expiresAt: Date.now() + 3600000,
+          provider: 'GOOGLE',
+          updatedAt: new Date().toISOString(),
+        });
+      } catch (e: any) {
+        safeguardingFallbackWriteBlocked = e.message.includes('OAUTH_TOKEN_ENCRYPTION_KEY');
+      }
+
       let ephemeralThrowsInProd = false;
       try {
         oauthSvc.storeEncryptedTokens('test-prod-ephem', {
@@ -226,8 +301,32 @@ async function run() {
         cleanupRefusesMissingSecret = e.message.includes('SESSION_SECRET');
       }
 
-      // D. Restart durability + key rotation verification
+      // D. Backward-compatible migration: old safeguarding-encrypted entries may be
+      // decrypted only after a dedicated OAuth key is configured, then are re-encrypted.
+      const legacySafeguardingKey = crypto.randomBytes(32).toString('hex');
+      process.env.PHUMULANI_OPERATIONAL_MODE = 'STAGED_DEVELOPMENT';
+      process.env.NODE_ENV = 'development';
+      delete process.env.OAUTH_TOKEN_ENCRYPTION_KEY;
+      delete process.env.OAUTH_TOKEN_ENCRYPTION_KEY_PREVIOUS;
+      delete process.env.SAFEGUARDING_MASTER_KEY_PREVIOUS;
+      process.env.SAFEGUARDING_MASTER_KEY = legacySafeguardingKey;
+      oauthSvc.storeEncryptedTokens('vault-legacy-safeguarding', {
+        accessToken: 'legacy-safeguarding-access',
+        refreshToken: 'legacy-safeguarding-refresh',
+        tokenType: 'Bearer',
+        expiresAt: Date.now() + 3600000,
+        verifiedEmail: 'legacy@phumulani.org',
+        provider: 'GOOGLE',
+        updatedAt: new Date().toISOString(),
+      });
       process.env.OAUTH_TOKEN_ENCRYPTION_KEY = oauthKeyA;
+      process.env.PHUMULANI_OPERATIONAL_MODE = 'PRODUCTION_ONLY';
+      process.env.NODE_ENV = 'production';
+      const migratedLegacyTokens = oauthSvc.getDecryptedTokens('vault-legacy-safeguarding');
+      const legacyMigrationPass =
+        migratedLegacyTokens?.refreshToken === 'legacy-safeguarding-refresh';
+
+      // E. Restart durability + key rotation verification
       process.env.SESSION_SECRET = sessionSecretStrong;
       oauthSvc.storeEncryptedTokens('vault-durability-key', {
         accessToken: 'live-access-token-abc',
@@ -269,8 +368,11 @@ async function run() {
 
       const vaultPass =
         missingKeyCheck.valid === false &&
+        safeguardingFallbackCheck.valid === false &&
+        safeguardingFallbackWriteBlocked === true &&
         ephemeralThrowsInProd === true &&
         weakKeyCheck.valid === false &&
+        legacyMigrationPass === true &&
         cleanupRefusesMissingSecret === true &&
         afterRestart?.refreshToken === 'live-refresh-token-xyz' &&
         rotationRes.rotatedCount >= 1 &&
@@ -281,7 +383,7 @@ async function run() {
       record(
         'P80-VAULT-HARDENING',
         vaultPass,
-        `ephemeralBlocked=${ephemeralThrowsInProd}, weakBlocked=${!weakKeyCheck.valid}, cleanupSecretReq=${cleanupRefusesMissingSecret}, restartDurable=${afterRestart?.refreshToken === 'live-refresh-token-xyz'}, rotated=${rotationRes.rotatedCount}, noHashExposed=${noHashExposed}`
+        `safeguardingFallbackBlocked=${safeguardingFallbackWriteBlocked}, ephemeralBlocked=${ephemeralThrowsInProd}, weakBlocked=${!weakKeyCheck.valid}, legacySafeguardingMigrated=${legacyMigrationPass}, cleanupSecretReq=${cleanupRefusesMissingSecret}, restartDurable=${afterRestart?.refreshToken === 'live-refresh-token-xyz'}, rotated=${rotationRes.rotatedCount}, noHashExposed=${noHashExposed}`
       );
     } finally {
       if (prevMode === undefined) delete process.env.PHUMULANI_OPERATIONAL_MODE;
@@ -294,6 +396,8 @@ async function run() {
       else process.env.OAUTH_TOKEN_ENCRYPTION_KEY_PREVIOUS = prevOauthPrev;
       if (prevSafeKey === undefined) delete process.env.SAFEGUARDING_MASTER_KEY;
       else process.env.SAFEGUARDING_MASTER_KEY = prevSafeKey;
+      if (prevSafePrev === undefined) delete process.env.SAFEGUARDING_MASTER_KEY_PREVIOUS;
+      else process.env.SAFEGUARDING_MASTER_KEY_PREVIOUS = prevSafePrev;
       if (prevSessSec === undefined) delete process.env.SESSION_SECRET;
       else process.env.SESSION_SECRET = prevSessSec;
     }

@@ -18,6 +18,7 @@ export interface DatabaseEnvironmentPolicy {
     | 'PRODUCTION_ONLY'
     | 'PRODUCTION_AUTHORIZED'
     | 'NODE_ENV_PRODUCTION_DEFAULT'
+    | 'NODE_ENV_PRODUCTION_STAGED_FORBIDDEN'
     | 'STAGED_DEVELOPMENT_AUTHORIZED'
     | 'LOCAL_DEVELOPMENT';
   reason: string;
@@ -123,13 +124,25 @@ export class EnvironmentService {
     }
 
     if (rawOperationalMode === 'STAGED_DEVELOPMENT') {
+      if (nodeEnv === 'production') {
+        return {
+          nodeEnv,
+          rawOperationalMode,
+          effectiveMode: 'PRODUCTION_ONLY',
+          requireLiveDatabase: true,
+          allowEmbeddedFallback: false,
+          requireStrictTls: true,
+          policyCode: 'NODE_ENV_PRODUCTION_STAGED_FORBIDDEN',
+          reason: 'STAGED_DEVELOPMENT is prohibited when NODE_ENV=production; failing closed into PRODUCTION_ONLY.',
+        };
+      }
       return {
         nodeEnv,
         rawOperationalMode,
         effectiveMode: 'STAGED_DEVELOPMENT',
         requireLiveDatabase: false,
         allowEmbeddedFallback: true,
-        requireStrictTls: nodeEnv === 'production',
+        requireStrictTls: false,
         policyCode: 'STAGED_DEVELOPMENT_AUTHORIZED',
         reason: 'PHUMULANI_OPERATIONAL_MODE=STAGED_DEVELOPMENT permits isolated non-production test infrastructure and is never production-ready.',
       };
@@ -144,7 +157,7 @@ export class EnvironmentService {
         allowEmbeddedFallback: false,
         requireStrictTls: true,
         policyCode: 'NODE_ENV_PRODUCTION_DEFAULT',
-        reason: 'NODE_ENV=production requires a live PostgreSQL database unless PHUMULANI_OPERATIONAL_MODE=STAGED_DEVELOPMENT is explicitly authorized.',
+        reason: 'NODE_ENV=production requires a live PostgreSQL database; STAGED_DEVELOPMENT is prohibited.'
       };
     }
 
