@@ -55,6 +55,12 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
     };
   }, [dialogOpen]);
 
+  useEffect(() => {
+    if (!copiedId) return;
+    const timer = window.setTimeout(() => setCopiedId(null), 3000);
+    return () => window.clearTimeout(timer);
+  }, [copiedId]);
+
   if (!isOpen) return null;
 
   const filteredMedia = PHUMULANI_MEDIA_INVENTORY.filter((item) => {
@@ -66,10 +72,13 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
     return matchesCat && matchesSearch;
   });
 
-  const handleCopyManifest = () => {
-    navigator.clipboard.writeText(JSON.stringify(PHUMULANI_MEDIA_INVENTORY, null, 2));
-    setCopiedId('manifest');
-    setTimeout(() => setCopiedId(null), 3000);
+  const handleCopyManifest = async () => {
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(PHUMULANI_MEDIA_INVENTORY, null, 2));
+      setCopiedId('manifest');
+    } catch {
+      setCopiedId('error');
+    }
   };
 
   const categories = [
@@ -155,7 +164,7 @@ export const MediaLibraryModal: React.FC<MediaLibraryModalProps> = ({ isOpen, on
             className="flex items-center gap-1.5 px-3 py-1.5 bg-white hover:bg-phumulani-gold/20 text-phumulani-earth border border-phumulani-earth/30 rounded-lg font-bold transition-colors cursor-pointer whitespace-nowrap"
           >
             {copiedId === 'manifest' ? <Check className="w-3.5 h-3.5 text-phumulani-green" /> : <Copy className="w-3.5 h-3.5" />}
-            <span>{copiedId === 'manifest' ? 'Manifest Copied!' : 'Copy JSON Manifest'}</span>
+            <span role="status">{copiedId === 'manifest' ? 'Manifest Copied!' : copiedId === 'error' ? 'Copy failed. Try again.' : 'Copy JSON Manifest'}</span>
           </button>
         </div>
 
